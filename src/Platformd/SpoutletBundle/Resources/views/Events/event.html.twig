@@ -1,0 +1,18 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% block title %}
+Event | {{ event.name }}
+{% endblock %}
+
+{% block content %}
+<h2>{{ event.name }}<h2>
+<div>
+	<label for="starts_at">Starts At</label>
+	<div id="starts_at">{{ event.startsAt|date }}</div>
+	<label for="ends_at">Ends At</label>
+	<div id="ends_at">{{ event.endsAt|date }}</div>
+	<label for="location">Location</label>
+	<div id="location">{{ event.city }}, {{ event.metroArea.label }}, {{ event.country }}</div>
+	<label for="content">Details</label>
+	<div id="content">{{ event.content }}</div>	
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(function() {
+$(".featured-content-header a").click(function() {
+        var id = $(this).attr("id");
+        $(".featured-content-header a.active").removeClass("active");
+        $(this).addClass("active");
+        $(".featured-content-category").removeClass('active');
+        $(".featured-content-category#featured-content-"+id).addClass('active');
+});
+});
+//]]>
+</script>
+<div id="header">
+    <div id="topHeader">
+        <div class="wide-950">
+            <div class="left">
+                {% include 'SpoutletBundle::region.html.twig' %}
+            </div>
+
+            <div class="right">
+                <div class="links">
+                    <ul>
+                        <li class="separator">
+                            {% include 'SpoutletBundle::user.html.twig' %}
+                        </li>
+                        <li class="separator"><a href="http://www.alienwarearena.com/pages/about.php">About</a></li>
+                        <li><a href="http://www.alienwarearena.com/pages/contact.php">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="position: relative;" class="wide-950">
+        <div style="position: absolute; right: 0; top: 50px;" class="search">
+            <div class="input">
+                <input type="text" onkeypress="CheckEnter(this, event)" value=
+                "Search..." name="criteria" />
+            </div>
+        </div>
+
+        <div style=
+        "background: url('/bundles/spoutlet/images/alienhead.png') left no-repeat; height: 115px;" id=
+        "logo">
+            <a href="{{ path('default_index') }}"></a>
+        </div>
+    </div>
+</div>

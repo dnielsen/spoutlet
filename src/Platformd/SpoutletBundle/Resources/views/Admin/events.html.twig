@@ -1,0 +1,46 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}
+Events
+{% endblock %}
+{% block content %}
+<div id="admin-events">
+    <div class="widget-100">
+    <div class="widget-header">
+        <div class="widget-title">
+            Current Events
+        </div>
+    </div>
+    <div class="widget-content">
+        <table>
+            <tbody>
+                <tr>
+                    <th style="width:121px;">START DATE</th>
+                    <th style="width:259px;">EVENT</th>
+                    <th style="width:212px;">GAMES</th>
+                    <th style="width:191px;">HOSTED BY</th>
+                    <th style="width:133px;">LOCATION</th>
+                </tr>
+                {% for event in events %}
+                <tr class="eventListGroup_online">
+                    <td title="{{ event.startsAt|date }}">
+                    	{{ event.startsAt|date('M') }}
+                    	<span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
+                    </td>
+                    <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
+                    <td>{{ event.game }}</td>
+                    <td>{{ event.hostedBy }}</td>
+                    <td>{{ event.metroArea.label }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="widget-footer">
+        <a class="aw-link" href="events/new" style="margin-right:10px;">Create new event</a>
+        <div class="clear"></div>
+    </div>
+</div>
+</div>
+<div style="width:100%;text-align:right;padding-top:20px;"></div>
+{% endblock %}

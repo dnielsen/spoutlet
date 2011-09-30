@@ -1,0 +1,43 @@
+default_index:
+    pattern:  /
+    defaults: { _controller: SpoutletBundle:Default:index }
+
+admin_index:
+    pattern: /admin
+    defaults: { _controller: SpoutletBundle:Admin:index }
+
+admin_events_index:
+    pattern: /admin/events
+    defaults: { _controller: SpoutletBundle:Admin:events }
+
+admin_events_new:
+    pattern: /admin/events/new
+    defaults: { _controller: SpoutletBundle:Admin:newEvent }
+
+admin_events_edit:
+    pattern: /admin/events/edit/{id}
+    defaults: { _controller: SpoutletBundle:Admin:editEvent }
+
+events_index:
+    pattern: /events
+    defaults: { _controller: SpoutletBundle:Events:index }
+
+events_detail:
+    pattern: /event/{id}
+    defaults: { _controller: SpoutletBundle:Events:event }
+
+accounts_profile:
+    pattern: /account/profile
+    defaults: { _controller: SpoutletBundle:Account:profile }
+
+accounts_profile_edit:
+    pattern: /account/profile/edit
+    defaults: { _controller: SpoutletBundle:Account:editProfile }
+
+accounts_index:
+    pattern: /account
+    defaults: { _controller: SpoutletBundle:Account:account }
+
+accounts_change_password:
+    pattern: /account/change-password
+    defaults: { _controller: SpoutletBundle:Account:changePassword }

@@ -1,0 +1,53 @@
+#registrationArea {
+    background: url("/bundles/spoutlet/images/register-bg.png") no-repeat scroll left top transparent;
+    padding: 8px 20px 0;
+    width: 750px;
+}
+#registrationArea h2 {
+    color: #E7E7E7;
+    font-family: "verdana";
+    margin: 10px 0 25px;
+}
+#registrationArea .tbl {
+    margin: 0 auto;
+    padding: 5px 0 0;
+    vertical-align: middle;
+}
+#registrationArea .tbl th {
+    padding: 0 6px;
+}
+#registrationArea .tbl th, #loginArea .tbl td {
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+#registrationArea .info {
+    margin: 0 auto;
+    padding-top: 15px;
+    width: 425px;
+}
+#registrationArea .forgot {
+    font-size: 12px;
+    padding: 0 0 20px;
+    text-align: center;
+}
+#btnSignIn {
+    padding-right: 10px;
+    padding-top: 6px;
+}
+#btnSignIn a {
+    background-image: url("/bundles/spoutlet/images/btnSignIn.gif");
+    width: 136px;
+}
+#formId_register {
+}
+#formId_register td {
+    padding: 3px 2px;
+}
+.registration-underage {
+    background: none repeat scroll 0 0 #5A1212;
+    border: 2px solid #F62929;
+    font-size: 15px;
+    margin: 20px auto;
+    padding: 10px;
+    width: 400px;
+}

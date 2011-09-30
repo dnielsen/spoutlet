@@ -1,0 +1,12 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}
+Edit Event | {{ event.name }}
+{% endblock %}
+
+{% block content %}
+<form action="{{ path('admin_events_edit', { 'id' : event.id }) }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+
+    <input type="submit" />
+</form>
+{% endblock %}

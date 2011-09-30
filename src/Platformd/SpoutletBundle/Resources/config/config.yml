@@ -1,0 +1,3 @@
+doctrine:
+    dbal:
+            dbname:   'pd_spoutlet'

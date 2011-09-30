@@ -1,0 +1,77 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% block content %}
+<div class="std_1col">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                Current Events
+            </div>
+        </div>
+        <div class="widget-content">
+            <table>
+                <tbody>
+                    <tr>
+                        <th style="width:121px;">START DATE</th>
+                        <th style="width:259px;">EVENT</th>
+                        <th style="width:212px;">GAMES</th>
+                        <th style="width:191px;">HOSTED BY</th>
+                        <th style="width:133px;">LOCATION</th>
+                    </tr>
+                    {% for event in current_events %}
+                    <tr class="eventListGroup_online">
+                        <td>
+                        	{{ event.startsAt|date('M') }}
+                        	<span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
+                        </td>
+                        <td><a href="{{ path('events_detail', { 'id' : event.id }) }}">{{ event.name }}</a></td>
+                        <td>{{ event.game }}</td>
+                        <td>{{ event.hostedBy }}</td>
+                        <td>{{ event.metroArea.label }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div><br />
+
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                Upcoming Events
+            </div>
+        </div>
+
+        <div class="widget-content">
+            <table>
+                <tbody>
+                    <tr>
+                        <th style="width:121px;">START DATE</th>
+
+                        <th style="width:259px;">EVENT</th>
+
+                        <th style="width:212px;">GAMES</th>
+
+                        <th style="width:191px;">HOSTED BY</th>
+
+                        <th style="width:133px;">LOCATION</th>
+                    </tr>
+
+                    <tr>
+                        <td style="text-align:center; padding:20px 0;" colspan="5">
+                        <strong>There are no upcoming events at this
+                        moment.</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div><br />
+</div>
+{% endblock %}
