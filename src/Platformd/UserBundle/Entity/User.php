@@ -90,7 +90,7 @@ class User extends BaseUser
     /**
      * @var boolean $has_alienware_system
      *
-     * @ORM\Column(name="has_alienware_system", type="boolean")
+     * @ORM\Column(name="has_alienware_system", type="boolean", nullable="true")
      */
     protected $hasAlienwareSystem;
     
@@ -104,14 +104,14 @@ class User extends BaseUser
     /**
      * @var String $subscribe_arena_news
      *
-     * @ORM\Column(name="subscribed_arena_news", type="boolean")
+     * @ORM\Column(name="subscribed_arena_news", type="boolean", nullable="true")
      */
     protected $subscribedArenaNews;
 
     /**
      * @var String $subscribe_gaming_news
      *
-     * @ORM\Column(name="subscribed_gaming_news", type="boolean")
+     * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable="true")
      */
     protected $subscribedGamingNews;
 
