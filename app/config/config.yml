@@ -62,3 +62,7 @@ fos_user:
     db_driver:       orm
     firewall_name:   main
     user_class:      Platformd\UserBundle\Entity\User
+    registration:
+        form:
+            type: platformd_user_registration
+
