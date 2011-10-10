@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AccountController extends Controller
 {
-	public function profileAction() 
+	public function profileAction($username)
 	{
 		return $this->render('SpoutletBundle:Account:profile.html.twig');		
 	}
