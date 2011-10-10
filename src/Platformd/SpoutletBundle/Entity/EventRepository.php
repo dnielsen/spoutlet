@@ -16,8 +16,7 @@ class EventRepository extends EntityRepository
     public function getCurrentEvents($limit = null)
     {
         $query = $this->createQueryBuilder('e')
-            ->where('e.starts_at < :cut_off')
-            ->andWhere('e.ends_at > :cut_off')
+            ->where('e.ends_at > :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
             ->getQuery();
@@ -25,10 +24,10 @@ class EventRepository extends EntityRepository
         return $this->addQueryLimit($query, $limit)->getResult();
     }
 
-    public function getUpcomingEvents($limit = null)
+    public function getPastEvents($limit = null)
     {
         $query = $this->createQueryBuilder('e')
-            ->where('e.starts_at > :cut_off')
+            ->where('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
             ->getQuery();

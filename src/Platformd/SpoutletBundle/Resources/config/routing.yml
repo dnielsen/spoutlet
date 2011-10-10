@@ -26,9 +26,9 @@ events_current:
     pattern: /events/current
     defaults: { _controller: SpoutletBundle:Events:current }
 
-events_upcoming:
-    pattern: /events/upcoming
-    defaults: { _controller: SpoutletBundle:Events:upcoming }
+events_past:
+    pattern: /events/past
+    defaults: { _controller: SpoutletBundle:Events:past }
 
 events_detail:
     pattern: /event/{id}
