@@ -70,3 +70,8 @@
 [DoctrineFixturesBundle]
     git=http://github.com/symfony/DoctrineFixturesBundle.git
     target=/bundles/Symfony/Bundle/DoctrineFixturesBundle
+
+; I18n Routing
+[JMSI18nRoutingBundle]
+    git=http://github.com/schmittjoh/JMSI18nRoutingBundle.git
+    target=/bundles/JMS/I18nRoutingBundle

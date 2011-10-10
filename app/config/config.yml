@@ -76,3 +76,8 @@ parameters:
         search_engine: Search engine
         youtube: Youtube
         other: Other
+
+jms_i18n_routing:
+    default_locale: en
+    locales: [en, jp, cn]
+    strategy: prefix_except_default

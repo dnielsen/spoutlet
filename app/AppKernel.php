@@ -20,6 +20,7 @@ class AppKernel extends Kernel
 
             // third part bundles
             new FOS\UserBundle\FOSUserBundle(),
+            new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
