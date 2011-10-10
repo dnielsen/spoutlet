@@ -32,7 +32,7 @@ class Event
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle:User", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="user")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

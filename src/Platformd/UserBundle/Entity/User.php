@@ -28,7 +28,7 @@ class User extends BaseUser
     /**
      * @var Platformd\SpoutletBundle\Entity\Event $events
      *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", mappedBy="user")
      */
     private $events;
 
