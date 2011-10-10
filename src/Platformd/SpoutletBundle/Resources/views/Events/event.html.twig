@@ -40,5 +40,8 @@
         </div>
     </div>
 
+    {# TODO - change event.id to the event slug when we have slugging #}
+    {% render "FOSCommentBundle:Thread:show" with {"id": event.id } %}
+
 </div>
 {% endblock %}

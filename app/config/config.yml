@@ -81,3 +81,10 @@ jms_i18n_routing:
     default_locale: en
     locales: [en, jp, cn]
     strategy: prefix_except_default
+
+fos_comment:
+    db_driver: orm
+    class:
+        model:
+            comment: Platformd\CommentBundle\Entity\Comment
+            thread: Platformd\CommentBundle\Entity\Thread

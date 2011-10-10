@@ -21,10 +21,12 @@ class AppKernel extends Kernel
             // third part bundles
             new FOS\UserBundle\FOSUserBundle(),
             new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
+            new FOS\CommentBundle\FOSCommentBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
             new Platformd\UserBundle\UserBundle(),
+            new Platformd\CommentBundle\CommentBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -75,3 +75,7 @@
 [JMSI18nRoutingBundle]
     git=http://github.com/schmittjoh/JMSI18nRoutingBundle.git
     target=/bundles/JMS/I18nRoutingBundle
+
+[FOSCommentBundle]
+    git=git://github.com/FriendsOfSymfony/FOSCommentBundle.git
+    target=bundles/FOS/CommentBundle
