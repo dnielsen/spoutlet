@@ -61,4 +61,4 @@ jms_security_extra:
 fos_user:
     db_driver:       orm
     firewall_name:   main
-    user_class:      Platformd\SpoutletBundle\Entity\User
+    user_class:      Platformd\UserBundle\Entity\User

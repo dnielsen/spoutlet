@@ -2,7 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
-use Platformd\SpoutletBundle\Entity\User,
+use Platformd\UserBundle\Entity\User,
     Platformd\SpoutletBundle\Entity\MetroArea;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -32,7 +32,7 @@ class Event
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="UserBundle:User", inversedBy="user")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
@@ -141,9 +141,9 @@ class Event
     /**
      * Set user
      *
-     * @param Platformd\SpoutletBundle\Entity\User $user
+     * @param Platformd\UserBundle\Entity\User $user
      */
-    public function setUser(\Platformd\SpoutletBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -151,7 +151,7 @@ class Event
     /**
      * Get user
      *
-     * @return Platformd\SpoutletBundle\Entity\User 
+     * @return Platformd\UserBundle\Entity\User
      */
     public function getUser()
     {

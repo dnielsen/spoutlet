@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\UserBundle\Entity;
 
 use Platformd\SpoutletBundle\Entity\Event;
 
@@ -9,10 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Platformd\SpoutletBundle\Entity\User
+ * Platformd\UserBundle\Entity\User
  *
  * @ORM\Table(name="FosUser")
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  */
 class User extends BaseUser
 {
@@ -53,7 +53,7 @@ class User extends BaseUser
      *
      * @param Platformd\SpoutletBundle\Entity\Event $events
      */
-    public function setEvents(\Platformd\SpoutletBundle\Entity\Event $events)
+    public function setEvents(Event $events)
     {
         $this->events = $events;
     }

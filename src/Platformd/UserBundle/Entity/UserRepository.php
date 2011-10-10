@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

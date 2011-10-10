@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Entity\EventRepository,
 	Platformd\SpoutletBundle\Form\Type\EventType,
-	Platformd\SpoutletBundle\Entity\User;
+	Platformd\UserBundle\Entity\User;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

@@ -2,9 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\User,
-	Platformd\SpoutletBundle\Entity\UserRepository;
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AccountController extends Controller
