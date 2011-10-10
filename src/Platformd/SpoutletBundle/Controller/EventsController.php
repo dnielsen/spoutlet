@@ -9,49 +9,36 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EventsController extends Controller
 {
-	public function indexAction() 
+	public function indexAction()
 	{
-		$current_events = $this->getCurrentEvents();
-		$past_events = $this->getPastEvents();
+		$current_events  = $this->getEventsRepo()->getCurrentEvents();
+		$upcoming_events = $this->getEventsRepo()->getUpcomingEvents();
 
 		return $this->render('SpoutletBundle:Events:index.html.twig',
 			array(
 				'current_events' 	=> $current_events,
-				'past_events' 		=> $past_events,
+				'upcoming_events'   => $upcoming_events,
 			));
 	}
 
-	public function eventAction($id) {
+	public function eventAction($id)
+	{
 		$event = $this->getEventsRepo()->findOneById($id);
 		return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
 	}
+
+	private function getCurrentEvents()
+	{
+		return $this->getEventsRepo()->getCurrentEvents();
+	}
+
+	private function getUpcomingEvents()
+	{
+		return $this->getEventsRepo()->getUpcomingEvents();
+	}
 	
-	private function getPastEvents()
+	private function getEventsRepo()
 	{
-		$repo = $this->getEventsRepo();
-		$query = $repo->createQueryBuilder('e')
-			->where('e.starts_at < :cut_off')
-			->setParameter('cut_off', new \DateTime('now'))
-			->orderBy('e.starts_at', 'ASC')
-			->getQuery();
-		
-		return $query->getResult();
-	}
-
-	private function getCurrentEvents() 
-	{
-
-		$repo = $this->getEventsRepo();
-		$query = $repo->createQueryBuilder('e')
-			->where('e.starts_at > :cut_off')
-			->setParameter('cut_off', new \DateTime('now'))
-			->orderBy('e.starts_at', 'ASC')
-			->getQuery();
-		
-		return $query->getResult();
-	}
-
-	private function getEventsRepo() {
 		$em = $this->getDoctrine()->getEntityManager();
 		return $em->getRepository('SpoutletBundle:Event');
 	}
