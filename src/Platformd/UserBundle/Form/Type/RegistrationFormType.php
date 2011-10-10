@@ -28,6 +28,7 @@ class RegistrationFormType extends BaseType
         $builder
             ->add('firstname')
             ->add('lastname')
+            ->add('email', 'repeated', array('type' => 'email'))
             ->add('birthdate', 'date')
             ->add('phoneNumber')
             ->add('country', 'country')
