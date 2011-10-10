@@ -1,102 +1,103 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-    {% block head %}
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    {% stylesheets '@SpoutletBundle/Resources/public/css/*' filter='cssrewrite' %}
-    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-    {% javascripts '@SpoutletBundle/Resources/public/js/*' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
-    <script type="text/javascript">
+	<head>
+		{% block head %}
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		{% stylesheets '@SpoutletBundle/Resources/public/css/*' filter='cssrewrite' %}
+		<link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+		{% endstylesheets %}
+		{% javascripts '@SpoutletBundle/Resources/public/js/*' %}
+		<script type="text/javascript" src="{{ asset_url }}"></script>
+		{% endjavascripts %}
+		<title>{% block title %}{% endblock %}</title>
+		{% endblock %}
+		<script type="text/javascript">
 
-        $(document).ready(function(){
-            $("ul.sf-menu").supersubs({
-                minWidth:   12,   // minimum width of sub-menus in em units
-                maxWidth:   27,   // maximum width of sub-menus in em units
-                extraWidth: 1     // extra width can ensure lines don't sometimes turn over
-                                  // due to slight rounding differences and font-family
-            }).superfish({
-                delay:		150
-            });           // call supersubs first, then superfish, so that subs are
-                                  // not display:none when measuring. Call before initialising
-                                  // containing tabs for same reason.
+		    $(document).ready(function(){
+		        $("ul.sf-menu").supersubs({
+		            minWidth:   12,   // minimum width of sub-menus in em units
+		            maxWidth:   27,   // maximum width of sub-menus in em units
+		            extraWidth: 1     // extra width can ensure lines don't sometimes turn over
+		                              // due to slight rounding differences and font-family
+		        }).superfish({
+					delay:		150
+				});           // call supersubs first, then superfish, so that subs are
+		                              // not display:none when measuring. Call before initialising
+		                              // containing tabs for same reason.
 
-        });
-    </script>
-    <script type="text/javascript">
-        function CheckEnter(e, event)
-        {
-            var code;
-            if (event.charCode)
-                code = event.charCode;
-            else
-                code = event.keyCode;
+		    });
+		</script>
+		<script type="text/javascript">
+			function CheckEnter(e, event)
+			{
+				var code;
+				if (event.charCode)
+					code = event.charCode;
+				else
+					code = event.keyCode;
 
-            if (code == 13)
-            {
-                var term = $(".search input").val();
-                if (term && term != 'Search...')
-                    window.location = '/search/view/'+encodeURIComponent(term)+'/';
-            }
-        }
+				if (code == 13)
+				{
+					var term = $(".search input").val();
+					if (term && term != 'Search...')
+						window.location = '/search/view/'+encodeURIComponent(term)+'/';
+				}
+			}
 
-        $(document).ready(function(){
-            $('#toggleRegion').click(function(){
-            $('#selectRegion').toggle();
-            $('#selectLanguage').hide();
-            });
+			$(document).ready(function(){
+				$('#toggleRegion').click(function(){
+				$('#selectRegion').toggle();
+				$('#selectLanguage').hide();
+				});
 
-            $('#toggleLanguage').click(function(){
-            $('#selectLanguage').toggle();
-            $('#selectRegion').hide();
-            });
+				$('#toggleLanguage').click(function(){
+				$('#selectLanguage').toggle();
+				$('#selectRegion').hide();
+				});
 
-            //search
-            $(".search .submit").click(function() {
-                var term = $(".search input").val();
-                window.location = '/search/view/'+encodeURIComponent(term)+'/';
-            });
+				//search
+				$(".search .submit").click(function() {
+					var term = $(".search input").val();
+					window.location = '/search/view/'+encodeURIComponent(term)+'/';
+				});
 
-            var curSearchTerm;
-            $(".search input").focus(function() {
-                curSearchTerm = $(this).val();
-                $(this).val("");
-            });
+				var curSearchTerm;
+				$(".search input").focus(function() {
+					curSearchTerm = $(this).val();
+					$(this).val("");
+				});
 
-            $(".search input").blur(function() {
-                if ($(this).val() == "")
-                    $(this).val(curSearchTerm);
-            });
+				$(".search input").blur(function() {
+					if ($(this).val() == "")
+						$(this).val(curSearchTerm);
+				});
 
-        });
+			});
 
 
-    </script>
-</head>
-<body>
-    <div id="omni">
-        <div id="page">
-            <div class="background-takeover" id="custom_background_top">
-                <div class="background-takeover" id="custom_background_bot">
-                    <div id="header">
-                        {% include 'SpoutletBundle::header.html.twig' %}
-                    </div>
-                    <div id="mainNav-wrapper">
-                        {% include 'SpoutletBundle::navigation.html.twig' %}
-                    </div>
-                    <div id="content">
-                        {% block content %}
-                        {% endblock %}
-                    </div>
-                    <div class="ad_728x90 ad"></div>
-                    {% include 'SpoutletBundle::footer.html.twig' %}
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+		</script>
+	</head>
+	<body>
+		<div id="omni">
+	        <div id="page">
+	            <div class="background-takeover" id="custom_background_top">
+	                <div class="background-takeover" id="custom_background_bot">
+	                    <div id="header">
+	                    	{% include 'SpoutletBundle::header.html.twig' %}
+	                    </div>
+	                    <div id="mainNav-wrapper">
+	                        {% include 'SpoutletBundle::navigation.html.twig' %}
+	                    </div>
+	                    <div id="content">
+                            {% block pre_content_nav %}{% endblock %}
+
+	                    	{% block content %}{% endblock %}
+	                    </div>
+	                    <div class="ad_728x90 ad"></div>
+	                    {% include 'SpoutletBundle::footer.html.twig' %}
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</body>
 </html>
