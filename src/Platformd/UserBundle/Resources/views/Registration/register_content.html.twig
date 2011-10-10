@@ -2,6 +2,8 @@
 
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
 
+    {{ form_errors(form) }}
+
     {{ form_row(form.username) }}
 
     {{ form_row(form.email) }}
@@ -33,6 +35,7 @@
     {{ form_row(form.subscribedGamingNews) }}
 
     <div>
+        {{ form_rest(form) }}
         <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
     </div>
 </form>
