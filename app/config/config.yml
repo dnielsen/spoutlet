@@ -88,3 +88,6 @@ fos_comment:
         model:
             comment: Platformd\CommentBundle\Entity\Comment
             thread: Platformd\CommentBundle\Entity\Thread
+    service:
+        blamer:
+            comment: fos_comment.blamer.comment.security
