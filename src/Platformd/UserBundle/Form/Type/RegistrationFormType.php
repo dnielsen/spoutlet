@@ -24,7 +24,7 @@ class RegistrationFormType extends BaseType
             ->add('latestNewsSource')
             ->add('subscribedArenaNews')
             ->add('subscribedGamingNews')
-            ->add('termsAccepted');
+            ->add('termsAccepted', 'checkbox', array('required' => false));
 
     }
 

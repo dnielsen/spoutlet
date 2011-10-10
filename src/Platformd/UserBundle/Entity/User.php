@@ -118,7 +118,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policies")
+     * @Assert\True(message="You must accept the terms and conditions and the privacy policies", groups={"Registration"})
      */
     protected $termsAccepted;
 
