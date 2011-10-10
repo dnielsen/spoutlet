@@ -20,7 +20,13 @@
 		    {% endjavascripts %}
         {% endblock %}
 
-		<title>{% block title %}{% endblock %}</title>
+        <title>
+            {%- if block('title') -%}
+                {{ block('title') }} | {{ 'platformd.layout.title_suffix' | trans }}
+            {%- else -%}
+            {{ 'platformd.layout.default_title' | trans }}
+            {%- endif -%}
+        </title>
 
 		<script type="text/javascript">
 
