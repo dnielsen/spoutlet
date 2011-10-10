@@ -3,41 +3,42 @@
 {% block content %}
 <div id="content">
     <div class="std_1col">
-    <div id="eventHeader" style="background:url(http://c578254.r54.cf2.rackcdn.com/header-giveaway-32-city-of-heroes-freedom-giveaway.en.jpg) no-repeat; height: 120px;">
+        <div id="eventHeader" style="background:url(http://c578254.r54.cf2.rackcdn.com/header-giveaway-32-city-of-heroes-freedom-giveaway.en.jpg) no-repeat; height: 120px;"></div>
     </div>
-</div>
 
-<div class="std_2col">
-    <div class="right">
-        <div class="widget-33" id="giveaway-getkey">
-            <div class="widget-header">
-                <div class="widget-title">Redeem</div>
-            </div>
-            <div class="widget-content">
-                <ol>
-                    <li><span class="item"><a href="{{ path('fos_user_registration_register') }}">Create or login to an Alienware Arena account.</a></span></li>
-                </ol>
+    <div class="std_2col">
+        <div class="right">
+            <div class="widget-33" id="giveaway-getkey">
+                <div class="widget-header">
+                    <div class="widget-title">Redeem</div>
+                </div>
+                <div class="widget-content">
+                    <ol>
+                        <li><span class="item"><a href="{{ path('fos_user_registration_register') }}">Create or login to an Alienware Arena account.</a></span></li>
+                    </ol>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="left">
-        <div class="widget-66" id="giveaway-info">
-            <div class="widget-header">
-                <div class="widget-title">{{ event.name }}</div>
-            </div>
-            <div id="giveaway-details" class="widget-content">
-                <div>
-                    <label for="starts_at">Starts At</label>
-                    <div id="starts_at">{{ event.startsAt|date }}</div>
-                    <label for="ends_at">Ends At</label>
-                    <div id="ends_at">{{ event.endsAt|date }}</div>
-                    <label for="location">Location</label>
-                    <div id="location">{{ event.city }}, {{ event.metroArea.label }}, {{ event.country }}</div>
-                    <label for="content">Details</label>
-                    <div id="content">{{ event.content }}</div> 
+        <div class="left">
+            <div class="widget-66" id="giveaway-info">
+                <div class="widget-header">
+                    <div class="widget-title">{{ event.name }}</div>
+                </div>
+                <div id="giveaway-details" class="widget-content">
+                    <div>
+                        <label for="starts_at">Starts At</label>
+                        <div id="starts_at">{{ event.startsAt|date }}</div>
+                        <label for="ends_at">Ends At</label>
+                        <div id="ends_at">{{ event.endsAt|date }}</div>
+                        <label for="location">Location</label>
+                        <div id="location">{{ event.city }}, {{ event.metroArea.label }}, {{ event.country }}</div>
+                        <label for="content">Details</label>
+                        <div id="content">{{ event.content }}</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
 {% endblock %}
