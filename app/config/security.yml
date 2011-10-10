@@ -12,7 +12,9 @@ security:
             anonymous:    true
 
     access_control:
-        - { path: ^/comments/new, role: ROLE_USER }
+        # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
+        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
+        - { path: ^/([\w]+\/)?admin/events, role: ROLE_ORGANIZER }
         - { path: ^/admin/, role: ROLE_ADMIN }
 
     role_hierarchy:
