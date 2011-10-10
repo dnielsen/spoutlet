@@ -1,4 +1,0 @@
-# import the core bundle routes
-fos_comment:
-    resource: "@FOSCommentBundle/Resources/config/routing.yml"
-    prefix:   "/comments"

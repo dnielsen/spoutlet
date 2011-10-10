@@ -2,10 +2,6 @@ PlatformDSpoutletBundle:
     resource: "@SpoutletBundle/Resources/config/routing.yml"
     prefix:   /
 
-platformd_comment_bundle:
-    resource: "@CommentBundle/Resources/config/routing.yml"
-    prefix:   /
-
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
@@ -20,3 +16,8 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /account
+
+# commenting bundle import
+fos_comment:
+    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+    prefix:   "/comments"
