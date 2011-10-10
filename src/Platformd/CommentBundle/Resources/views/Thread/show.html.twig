@@ -11,7 +11,11 @@
 
 <div class="fos_comment_thread_show">
 
-    {% include "FOSCommentBundle:Comment:new.html.twig" with {"form": newCommentForm, "first": 0 == thread.numComments, "thread": thread} %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        {% include "FOSCommentBundle:Comment:new.html.twig" with {"form": newCommentForm, "first": 0 == thread.numComments, "thread": thread} %}
+    {% else %}
+        {{ 'platformd.comment.login_to_comment' | trans({'login_url': path('fos_user_security_login')}) | raw }}
+    {% endif %}
 
     <a href="{{ path("fos_comment_thread_show_feed", {"id": thread.id}) }}">{% trans from 'FOSCommentBundle' %}fos_comment_rss_feed{% endtrans %}</a>
 
