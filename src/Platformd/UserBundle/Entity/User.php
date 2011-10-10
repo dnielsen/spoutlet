@@ -33,7 +33,7 @@ class User extends BaseUser
     /**
      * @var String $firstname
      *
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      *
      * @Assert\NotBlank(message="Please enter your firstname", groups={"Registration"})
      * @Assert\MinLength(limit="3", message="The firstname is too short", groups={"Registration"})
@@ -44,7 +44,7 @@ class User extends BaseUser
     /**
      * @var String $lastname
      *
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      *
      * @Assert\NotBlank(message="Please enter your lastname", groups={"Registration"})
      * @Assert\MinLength(limit="3", message="The lastname is too short", groups={"Registration"})
@@ -55,7 +55,7 @@ class User extends BaseUser
     /**
      * @var Datetime $birthdate
      *
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * 
      * @Assert\NotBlank(message="Please enter your birthdate", groups={"Registration"})
      * @Assert\Date(groups={"Registration"})
@@ -65,14 +65,14 @@ class User extends BaseUser
     /**
      * @var String $phone_number
      *
-     * @ORM\Column(name="phone_number", type="string", length="255", nullable="true")
+     * @ORM\Column(name="phone_number", type="string", length="255", nullable=true)
      */
     protected $phoneNumber;
 
     /**
      * @var String $country
      *
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      *
      * @Assert\NotBlank(message="Please enter the country you're currently living in", groups={"Registration"})
      */
@@ -81,7 +81,7 @@ class User extends BaseUser
     /**
      * @var String $state
      * 
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="2", nullable=true)
      *
      * @Assert\NotBlank(message="Please enter the state you're currently living in", groups={"Registration"})
      */
@@ -90,28 +90,28 @@ class User extends BaseUser
     /**
      * @var boolean $has_alienware_system
      *
-     * @ORM\Column(name="has_alienware_system", type="boolean", nullable="true")
+     * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
      */
     protected $hasAlienwareSystem;
     
     /**
      * @var String $latest_news_source
      *
-     * @ORM\Column(name="latest_news_source", type="string", length="255")
+     * @ORM\Column(name="latest_news_source", type="string", length="255", nullable=true)
      */
     protected $latestNewsSource;
     
     /**
      * @var String $subscribe_arena_news
      *
-     * @ORM\Column(name="subscribed_arena_news", type="boolean", nullable="true")
+     * @ORM\Column(name="subscribed_arena_news", type="boolean", nullable=true)
      */
     protected $subscribedArenaNews;
 
     /**
      * @var String $subscribe_gaming_news
      *
-     * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable="true")
+     * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable=true)
      */
     protected $subscribedGamingNews;
 
