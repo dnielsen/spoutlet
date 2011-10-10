@@ -11,14 +11,28 @@ class EventsController extends Controller
 {
 	public function indexAction()
 	{
-		$current_events  = $this->getEventsRepo()->getCurrentEvents();
-		$upcoming_events = $this->getEventsRepo()->getUpcomingEvents();
+		$current_events  = $this->getEventsRepo()->getCurrentEvents(5);
+		$upcoming_events = $this->getEventsRepo()->getUpcomingEvents(5);
 
 		return $this->render('SpoutletBundle:Events:index.html.twig',
 			array(
 				'current_events' 	=> $current_events,
 				'upcoming_events'   => $upcoming_events,
 			));
+	}
+
+	public function currentAction()
+	{
+		return $this->render('SpoutletBundle:Events:current.html.twig', array(
+			'events' => $this->getEventsRepo()->getCurrentEvents(),
+		));
+	}
+
+	public function upcomingAction()
+	{
+		return $this->render('SpoutletBundle:Events:upcoming.html.twig', array(
+			'events' => $this->getEventsRepo()->getUpcomingEvents(),
+		));
 	}
 
 	public function eventAction($id)
