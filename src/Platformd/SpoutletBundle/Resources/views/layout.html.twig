@@ -1,16 +1,27 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		{% block head %}
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		{% stylesheets '@SpoutletBundle/Resources/public/css/*' filter='cssrewrite' %}
-		<link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
-		{% endstylesheets %}
-		{% javascripts '@SpoutletBundle/Resources/public/js/*' %}
-		<script type="text/javascript" src="{{ asset_url }}"></script>
-		{% endjavascripts %}
+
+        {% block stylesheets %}
+		    {% stylesheets
+		        '@SpoutletBundle/Resources/public/css/*'
+		        filter='cssrewrite'
+		    %}
+		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+		    {% endstylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+		    {% javascripts
+		        '@SpoutletBundle/Resources/public/js/*'
+		    %}
+		    <script type="text/javascript" src="{{ asset_url }}"></script>
+		    {% endjavascripts %}
+        {% endblock %}
+
 		<title>{% block title %}{% endblock %}</title>
-		{% endblock %}
+
 		<script type="text/javascript">
 
 		    $(document).ready(function(){
