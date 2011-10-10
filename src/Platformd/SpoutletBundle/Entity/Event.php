@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Platformd\SpoutletBundle\Entity\Event
  *
- * @ORM\Table()
+ * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\EventRepository")
  */
 class Event

@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Platformd\SpoutletBundle\Entity\MetroArea
  *
- * @ORM\Table()
+ * @ORM\Table(name="metro_area")
  * @ORM\Entity
  */
 class MetroArea
