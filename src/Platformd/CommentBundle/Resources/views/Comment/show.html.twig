@@ -13,7 +13,7 @@
 {% set children = children|default([]) %}
 {% set displayDepth = displayDepth|default(0) %}
 
-<div class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }}" id="{{ comment.id }}">
+<div class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }}" id="comment-message-{{ comment.id }}">
     <div class="fos_comment_comment_metas">
         {% trans from 'FOSCommentBundle' %}fos_comment_comment_show_by{% endtrans %} {{ comment.authorName }} - {{ comment.createdAt|date }}
         {% if comment is fos_comment_votable %}

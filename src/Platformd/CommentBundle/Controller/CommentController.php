@@ -21,6 +21,9 @@ class CommentController extends BaseCommentController
         $threadId = $form->getData()->getThread()->getId();
         $url = $this->container->get('router')->generate('events_detail', array('id' => $threadId));
 
+        // append the dom ID to the comment, for auto-scroll
+        $url .= '#comment-message-'.$form->getData()->getId();
+
         return new RedirectResponse($url);
     }
 }
