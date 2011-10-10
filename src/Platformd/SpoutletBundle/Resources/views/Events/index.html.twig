@@ -22,19 +22,19 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                Upcoming Events
+                Past Events
             </div>
         </div>
 
         <div class="widget-content">
             {% include 'SpoutletBundle:Events:eventList.html.twig' with {
-                'events': upcoming_events,
-                'no_events_message': 'There are no upcoming events at this moment.'
+                'events': past_events,
+                'no_events_message': 'There are no past events at this moment.'
             } %}
         </div>
 
         <div class="widget-footer">
-            <a href="{{ path('events_upcoming') }}">More upcoming events</a>
+            <a href="{{ path('events_past') }}">More past events</a>
         </div>
     </div><br />
 </div>
