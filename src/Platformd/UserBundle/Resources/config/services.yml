@@ -3,6 +3,7 @@ services:
         class: Platformd\UserBundle\Form\Type\RegistrationFormType
         arguments:
             - %fos_user.model.user.class%
+            - %platformd.news_source%
         tags:
             - { name: form.type, alias: platformd_user_registration } 
 

@@ -66,3 +66,13 @@ fos_user:
         form:
             type: platformd_user_registration
 
+parameters:
+    platformd.news_source:
+        alienware: Alienware
+        cevo: CEVO
+        facebook: Facebook
+        live_event: Live event
+        ea: EA
+        search_engine: Search engine
+        youtube: Youtube
+        other: Other
