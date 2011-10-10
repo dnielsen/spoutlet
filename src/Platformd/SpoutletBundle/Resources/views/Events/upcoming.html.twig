@@ -1,0 +1,21 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% block content %}
+<div class="std_1col">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                Upcoming Events
+            </div>
+        </div>
+        <div class="widget-content">
+            {% include 'SpoutletBundle:Events:eventList.html.twig' with {
+                'events': events,
+                'no_events_message': 'There are no upcoming events at this moment.'
+            } %}
+        </div>
+
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div><br />
+{% endblock %}

@@ -22,6 +22,14 @@ events_index:
     pattern: /events
     defaults: { _controller: SpoutletBundle:Events:index }
 
+events_current:
+    pattern: /events/current
+    defaults: { _controller: SpoutletBundle:Events:current }
+
+events_upcoming:
+    pattern: /events/upcoming
+    defaults: { _controller: SpoutletBundle:Events:upcoming }
+
 events_detail:
     pattern: /event/{id}
     defaults: { _controller: SpoutletBundle:Events:event }
