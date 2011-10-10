@@ -50,7 +50,7 @@ body { background: url('/bundles/spoutlet/images/body-bg-gradient.png') repeat-x
 
 /** GENERAL STYLES */
 
-.clear { clear:both; }
+.clear { clear:both; font-size: 1px; display: block; height: 1px; }
 .right { float: right; }
 .left { float: left; }
 
@@ -549,7 +549,7 @@ html body .lastBlurb { margin-bottom:0; }
 .currentPage { display: inline-block; margin: 0 1px; padding: 3px 5px; background: #121212; border: 1px solid #01A2D2; }
 a.page-warp { color: #009cda; font-size: 9px; }
 
-.forumComment { padding-bottom:19px; float: left;}
+.forumComment { padding-bottom:19px;}
 .forumComment .left { float:left; width:145px; } 
 .forumComment .right { float:right; width:738px; } 
 #commentsView .forumComment .right { width:490px; }
@@ -578,10 +578,27 @@ a.page-warp { color: #009cda; font-size: 9px; }
 .forumSig p { margin:0; padding-top:10px;  background:url(/bundles/spoutlet/images/forums/sig-liner2.png) top left repeat-x; color:#9b9b9b; }
 
 .forumTextWrapper {  }
-.forumText { padding:0px 20px 0 20px; min-height:60px; overflow: auto; }
+.forumText { padding:10px 20px 0 20px; overflow: auto; }
 .forumText p { padding-top:10px; margin:0; }
 .row1 .forumTextWrapper, .row1 .forumBottom { background:url(/bundles/spoutlet/images/forums/text-bg.png) top left repeat; }
 .row2 .forumTextWrapper, .row2 .forumBottom { background:url(/bundles/spoutlet/images/forums/text2-bg.png) top left repeat; }
+
+.forumTextWrapper {
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.forumBottom {
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 .staffComment .forumTextWrapper, .staffComment .forumBottom { background:url(/bundles/spoutlet/images/forums/text-staff-bg.png) top left repeat; }
 
 .forumNumber { float:right; width:48px; height:20px; padding-top:15px; text-align:center; background:url(/bundles/spoutlet/images/forums/post-number-bg.png) bottom right no-repeat; }

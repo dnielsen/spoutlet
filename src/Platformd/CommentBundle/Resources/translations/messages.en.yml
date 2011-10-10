@@ -1,3 +1,5 @@
 platformd:
     comment:
         login_to_comment: You must first <a href="%login_url%">log in</a> to comment on this post.
+
+        posted_date_label: Posted

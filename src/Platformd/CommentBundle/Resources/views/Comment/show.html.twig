@@ -13,24 +13,46 @@
 {% set children = children|default([]) %}
 {% set displayDepth = displayDepth|default(0) %}
 
-<div class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }}" id="comment-message-{{ comment.id }}">
-    <div class="fos_comment_comment_metas">
-        {% trans from 'FOSCommentBundle' %}fos_comment_comment_show_by{% endtrans %} {{ comment.authorName }} - {{ comment.createdAt|date }}
-        {% if comment is fos_comment_votable %}
-        <button data-url="{{ path("fos_comment_vote_add_up", {"commentId": comment.id}) }}" class="fos_comment_comment_vote">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_voteup{% endtrans %}</button>
-        <button data-url="{{ path("fos_comment_vote_add_down", {"commentId": comment.id}) }}" class="fos_comment_comment_vote">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_votedown{% endtrans %}</button>
-        <div class="fos_comment_comment_score">{{ comment.score }}</div>
-        {% endif %}
-    </div>
-    <div class="fos_comment_comment_body">
-        {{ comment.body }}
-    </div>
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <div class="fos_comment_comment_reply">
-            <button data-url="{{ path('fos_comment_comment_create', {"threadId": comment.thread.id, "parentId": comment.id}) }}" data-name="{{ comment.authorName }}" class="fos_comment_comment_reply_show_form">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
+<div class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }} forumComment row{{ altRowNumber | default('1') }}" id="comment-message-{{ comment.id }}">
+    <div class="fos_comment_comment_body right">
+        <div class="forumTextWrapper forumText png">
+            {{ comment.body }}
         </div>
-    {% endif %}
-    <div class="fos_comment_comment_replies">
-        {% include "FOSCommentBundle:Comment:tree.html.twig" with { "nodes": children, "depth": depth + 1, "displayDepth": displayDepth, "sorter": sorter } %}
+        <div class="forumBottom png">
+            <div class="forumSig">
+                <p></p>
+                {# unused currently - used to be the person's signature #}
+            </div>
+            <div class="forumNumber png">
+                {# unused currently - used to be the number of the comment (1, 2, 3, 4, etc) #}
+            </div>
+            <div class="forumInfo">
+                {{ 'platformd.comment.posted_date_label' | trans }}
+                {{ comment.createdAt|date('l, F jS, Y') }}
+
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <div class="fos_comment_comment_reply">
+                        <button data-url="{{ path('fos_comment_comment_create', {"threadId": comment.thread.id, "parentId": comment.id}) }}" data-name="{{ comment.authorName }}" class="fos_comment_comment_reply_show_form">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
+
+    <div class="left">
+        <div class="profileInfo png">
+            <div class="profileAvatar">
+                <span class="png"></span>
+                <img src="http://placehold.it/84x84" alt="placeholder - todo" />
+            </div>
+            <div class="profileName">
+                {# we should always have an author, but just in case... #}
+                {% if comment.author %}
+                    <a href="{{ path('accounts_profile', {'username': comment.author.username }) }}">{{ comment.author.username }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="commentEnd"></div>
 </div>

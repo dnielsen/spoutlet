@@ -10,5 +10,9 @@
 #}
 
 {% for node in nodes %}
-    {% include "FOSCommentBundle:Comment:show.html.twig" with { "comment": node } %}
+    {# 1, 2 row number is how the odd/even was done in the existing design #}
+    {% include "FOSCommentBundle:Comment:show.html.twig" with {
+        "comment": node,
+        "altRowNumber": (loop.index is odd) ? '1' : '2'
+    } %}
 {% endfor %}

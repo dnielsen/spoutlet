@@ -14,15 +14,6 @@
 div.fos_comment_thread_show {
     margin-top: 2em;
     padding: 1em 20px;
-    width: 472px;
-    background: #f0f0f0;
-    box-shadow: 0 0 7px #bbb;
-    -moz-box-shadow: 0 0 7px #bbb;
-    -webkit-box-shadow: 0 0 7px #bbb;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
 }
 div.fos_comment_thread_show h3 {
     font-size: 1.3em;
@@ -31,7 +22,7 @@ div.fos_comment_thread_show h3 {
     color: #a0a0a0;
 }
 div.fos_comment_comment_show {
-    color: #555;
+    color: #fff;
 }
 div.fos_comment_comment_metas {
     margin: 1.5em 0 0.5em 0;
