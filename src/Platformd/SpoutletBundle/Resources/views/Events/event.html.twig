@@ -12,19 +12,19 @@
         <div class="right">
             <div class="widget-33" id="giveaway-getkey">
                 <div class="widget-header">
-                    <div class="widget-title">Redeem</div>
+                    <div class="widget-title">{{ 'platformd.events.event_show.register' | trans }}</div>
                 </div>
                 <div class="widget-content">
                     {% if app.user and app.user.events.contains(event) %}
                     <p>{{ 'You are registered to this event' | trans }}</p>
                     {% else %}
-                    <p><a href="{{ path('events_register', { "slug": event.slug }) }}">{{ "Register for event" | trans }}</a></p>
+                    <p><a href="{{ path('events_register', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.register_event" | trans }}</a></p>
                     {% endif %}
 
                     {# this link is a bit useless since the "register for event" link will redirect to the login/register form anyway #}
                     {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                     <ol>
-                        <li><span class="item"><a href="{{ path('fos_user_registration_register') }}">Create or login to an Alienware Arena account.</a></span></li>
+                        <li><span class="item"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.events.event_show.create_or_login' | trans }}</a></span></li>
                     </ol>
                     {% endif %}
                 </div>
@@ -37,14 +37,16 @@
                 </div>
                 <div id="giveaway-details" class="widget-content">
                     <div>
-                        <label for="starts_at">Starts At</label>
+                        <label for="starts_at">{{ 'platformd.events.event_listing.start_date' | trans }}</label>
                         <div id="starts_at">{{ event.startsAt|date }}</div>
-                        <label for="ends_at">Ends At</label>
+                        <label for="ends_at">{{ 'platformd.events.event_listing.end_date' | trans }}</label>
                         <div id="ends_at">{{ event.endsAt|date }}</div>
-                        <label for="location">Location</label>
+                        <label for="location">{{ 'platformd.events.event_listing.location' | trans }}</label>
                         <div id="location">{{ event.city }}, {{ event.metroArea.label }}, {{ event.country }}</div>
-                        <label for="content">Details</label>
-                        <div id="content">{{ event.content }}</div>
+                        <label for="hostedBy">{{ 'platformd.events.event_listing.hosted_by' | trans }}</label>
+                        <div id="hostedBy">{{ event.hostedBy }}</div>
+                        <label for="contentDetails">{{ 'platformd.events.event_listing.details' | trans }}</label>
+                        <div id="contentDetails">{{ event.content }}</div>
                     </div>
                 </div>
             </div>

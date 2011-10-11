@@ -45,7 +45,10 @@ platformd:
     events:
         event_listings:
             current_events: Current Events
+            more_current_events: More Current Events
             start_date: Start Date
+            end_date: End Date
+            details: Details
             event: Event
             games: Games
             hosted_by: Hosted by
@@ -53,7 +56,14 @@ platformd:
             upcoming_events: Upcoming Events
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
             past_events: Past Events
+            more_past_Events: More Past Events
             online: Online
+            no_past_events: There are no past events at this moment.
+            no_current_events: There are no current events at this moment.
+        event_show:
+            register_event: Register for event
+            create_or_login: Create or login to an Alienware Arena account.
+            register:       Register
 
     account_page:
         account:

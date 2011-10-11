@@ -16,6 +16,9 @@
   background: -moz-linear-gradient(top,#0094b4,#00596e);
   background: -webkit-gradient(linear,left top,left bottom,from(#0094b4),to(#00596e));
 }
+a.button:hover {
+  color: #ddd;
+}
 
 .interstitial {
     -moz-border-radius: 4px;

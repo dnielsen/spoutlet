@@ -10,7 +10,7 @@
                     {% if events|length == 0 %}
                     <tr>
                         <td style="text-align:center; padding:20px 0;" colspan="5">
-                        <strong>{{ no_events_message }}</strong></td>
+                        <strong>{{ no_events_message | trans }}</strong></td>
                     </tr>
                     {% else %}
                     {% for event in events %}

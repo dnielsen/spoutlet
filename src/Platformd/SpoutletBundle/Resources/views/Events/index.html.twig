@@ -1,43 +1,43 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title 'Events' %}
+{% block title 'platformd.layout.main_menu.events' | trans %}
 
 {% block content %}
 <div class="std_1col">
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                Current Events
+                {{ 'platformd.events.event_listings.current_events' | trans }}
             </div>
         </div>
         <div class="widget-content">
             {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                 'events': current_events,
-                'no_events_message': 'There are no current events at this moment.'
+                'no_events_message': 'platformd.events.event_listings.no_current_events'
             } %}
         </div>
 
         <div class="widget-footer">
-            <a href="{{ path('events_current') }}">More current events</a>
+            <a href="{{ path('events_current') }}">{{ 'platformd.events.event_listings.more_current_events' | trans }}</a>
         </div>
     </div><br />
 
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                Past Events
+                {{ 'platformd.events.event_listings.past_events' | trans }}
             </div>
         </div>
 
         <div class="widget-content">
             {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                 'events': past_events,
-                'no_events_message': 'There are no past events at this moment.'
+                'no_events_message': 'platformd.events.event_listings.no_past_events'
             } %}
         </div>
 
         <div class="widget-footer">
-            <a href="{{ path('events_past') }}">More past events</a>
+            <a href="{{ path('events_past') }}">{{ 'platformd.events.event_listings.more_past_Events' | trans }}</a>
         </div>
     </div><br />
 </div>
