@@ -1,5 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block title %}Admin{% endblock %}
+
 {# overridden to add the admin navigation above the content #}
 {% block pre_content_nav %}
     {% include 'SpoutletBundle::Admin/adminNavigation.html.twig' %}

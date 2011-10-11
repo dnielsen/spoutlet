@@ -1,7 +1,6 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}
-| Create New Event
-{% endblock %}
+{% block title 'Create New Event' %}
+
 {% block content %}
 <form action="{{ path('admin_events_new') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
