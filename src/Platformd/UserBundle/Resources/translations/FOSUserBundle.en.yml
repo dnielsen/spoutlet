@@ -30,3 +30,4 @@ fos_user_registration_form_subscribedArenaNews: "Subscribe me to receive news on
 fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email View Dell Privacy Policy"
 fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
+fos_user_registration_form_birthdate: "Date of Birth"
