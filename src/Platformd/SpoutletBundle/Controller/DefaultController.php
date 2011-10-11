@@ -22,4 +22,9 @@ class DefaultController extends Controller
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array('all_events' => $all_events));
     }
+
+    public function supportAction()
+    {
+        return $this->render('SpoutletBundle:Default:support.html.twig');
+    }
 }

@@ -2,6 +2,10 @@ default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
 
+support:
+    pattern: /pages/support
+    defaults: { _controller: SpoutletBundle:Default:support }
+
 _spoutlet_admin:
     resource: routing/admin.yml
 
