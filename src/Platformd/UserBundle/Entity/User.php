@@ -135,6 +135,13 @@ class User extends BaseUser
      */
     private $events;
 
+    /**
+     * @var String $avatar
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $avatar;
+
     public function __construct() 
     {
         parent::__construct();
@@ -400,5 +407,22 @@ class User extends BaseUser
     public function setTermsAccepted($accepted)
     {
         $this->termsAccepted = $accepted;
+    }
+
+    public function getWebPath()
+    {
+        return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
+    }
+
+    protected function getUploadRootDir()
+    {
+
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+
+        return 'uploads/avatars';
     }
 }
