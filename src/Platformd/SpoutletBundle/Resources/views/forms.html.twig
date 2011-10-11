@@ -1,0 +1,53 @@
+{# global forms override file #}
+{% extends 'form_div_layout.html.twig' %}
+
+{# adds some classes to labels #}
+{% block generic_label %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-lbl'}) %}
+    {% if required %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
+    {% endif %}
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ id|trans([], 'forms') }}</label>
+{% endspaceless %}
+{% endblock %}
+
+{# adds a class to the errors #}
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ul class="form-msg-error">
+        {% for error in errors %}
+            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
+{% block text_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
+
+    {{ block ('field_widget') }}
+{% endspaceless %}
+{% endblock text_widget %}
+
+{% block password_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
+
+    {{ parent() }}
+{% endspaceless %}
+{% endblock password_widget %}
+
+{# give a form_row class to all form row divs #}
+{% block field_row %}
+{% spaceless %}
+    <div class="form_row">
+        {{ form_label(form, label|default(null)) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock field_row %}
