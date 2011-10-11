@@ -82,4 +82,15 @@ class Comment extends BaseComment implements SignedCommentInterface
     {
         return ($this->getAuthor()) ? $this->getAuthor()->getUsername() : parent::getAuthorName();
     }
+
+    public function getParentId()
+    {
+        if (!$this->ancestors) {
+            
+            return null;
+        }
+
+        $ancestors = explode('/', $this->ancestors);
+        return (int)array_pop($ancestors);
+    }
 }

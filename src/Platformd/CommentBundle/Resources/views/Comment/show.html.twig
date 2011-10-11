@@ -27,8 +27,12 @@
                 {# unused currently - used to be the number of the comment (1, 2, 3, 4, etc) #}
             </div>
             <div class="forumInfo">
-                {{ 'platformd.comment.posted_date_label' | trans }}
+                {{ 'platformd.comment.posted_date_label' | trans({}, "FOSCommentBundle") }}
                 {{ comment.createdAt|date('l, F jS, Y') }}
+
+                {% if comment.parentId %}
+                    <a href="#comment-message-{{ comment.parentId }}">{{ "fos_comment_in_reply_to" | trans({}, "FOSCommentBundle") }}</a>
+                {% endif %}
 
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <div class="fos_comment_comment_reply">

@@ -99,6 +99,8 @@ fos_comment:
             comment: Platformd\CommentBundle\Entity\Comment
             thread: Platformd\CommentBundle\Entity\Thread
     service:
+        sorting:
+            default: date_asc
         blamer:
             comment: fos_comment.blamer.comment.security
 
