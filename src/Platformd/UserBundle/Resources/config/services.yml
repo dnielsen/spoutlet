@@ -6,4 +6,6 @@ services:
             - %platformd.news_source%
         tags:
             - { name: form.type, alias: platformd_user_registration } 
-
+    platformd_user.manager:
+        class: Platformd\UserBundle\Entity\UserManager
+        parent: fos_user.user_manager.default

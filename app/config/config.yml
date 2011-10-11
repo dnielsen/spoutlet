@@ -70,6 +70,8 @@ fos_user:
     registration:
         form:
             type: platformd_user_registration
+    service:
+        user_manager: platformd_user.manager 
 
 parameters:
     platformd.news_source:
