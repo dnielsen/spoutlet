@@ -1,5 +1,5 @@
 services:
-    platformd_user.registration.from.type:
+    platformd_user.registration.form.type:
         class: Platformd\UserBundle\Form\Type\RegistrationFormType
         arguments:
             - %fos_user.model.user.class%
