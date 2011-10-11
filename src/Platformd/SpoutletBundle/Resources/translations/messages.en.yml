@@ -42,3 +42,15 @@ platformd:
             need_a_kick_ass_rig_checkout_alienware: "Need a kick ass rig? Checkout Alienware"
             copyright_2012_alienware_corporation_all_rights_reserved: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    events:
+        event_listings:
+            current_events: Current Events
+            start_date: Start Date
+            event: Event
+            games: Games
+            hosted_by: Hosted by
+            location: Location
+            upcoming_events: Upcoming Events
+            there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
+            past_events: Past Events
+            online: Online
