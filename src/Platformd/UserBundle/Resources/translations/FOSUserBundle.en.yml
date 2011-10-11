@@ -32,3 +32,7 @@ fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienw
 fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
 fos_user_registration_form_birthdate: "Date of Birth"
+
+fos_user_profile_form_user_firstname: "First name"
+fos_user_profile_form_user_lastname: "Last name"
+
