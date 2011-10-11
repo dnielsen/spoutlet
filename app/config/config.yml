@@ -94,3 +94,8 @@ fos_comment:
     service:
         blamer:
             comment: fos_comment.blamer.comment.security
+
+ewz_recaptcha:
+    public_key: %recaptcha.public_key%
+    private_key: %recaptcha.private_key%
+    secure: false

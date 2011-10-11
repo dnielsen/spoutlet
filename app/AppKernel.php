@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
             new FOS\CommentBundle\FOSCommentBundle(),
+            new EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
