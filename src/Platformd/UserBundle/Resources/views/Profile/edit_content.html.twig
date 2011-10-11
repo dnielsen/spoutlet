@@ -2,6 +2,8 @@
 
 <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
 
+    {{ form_errors(form) }}
+
     {{ form_row(form.user.username) }}
     {{ form_row(form.user.email) }}
     {{ form_row(form.user.firstname) }}
