@@ -33,6 +33,14 @@
 {% endspaceless %}
 {% endblock text_widget %}
 
+{% block email_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
+
+    {{ block ('field_widget') }}
+{% endspaceless %}
+{% endblock email_widget %}
+
 {% block password_widget %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
