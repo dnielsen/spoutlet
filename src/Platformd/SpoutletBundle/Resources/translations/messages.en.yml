@@ -30,6 +30,8 @@ platformd:
             see_more: See More
             photo_gallery: Photo Gallery
             view_all: View All
+            redeem: Redeem
+            keys_available: Keys Available
 
         bottom_menu:
             contact_us: Contact Us
