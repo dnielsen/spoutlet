@@ -5,8 +5,8 @@
 
         {% block stylesheets %}
 		    {% stylesheets
-		        '@SpoutletBundle/Resources/public/css/*'
-		        '@CommentBundle/Resources/public/css/comments.css'
+		        'bundles/spoutlet/css/*'
+		        'bundles/comment/css/comments.css'
 		        filter='cssrewrite'
 		    %}
 		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
@@ -15,8 +15,8 @@
 
         {% block javascripts %}
 		    {% javascripts
-		        '@SpoutletBundle/Resources/public/js/*'
-		        '@CommentBundle/Resources/public/js/comments.js'
+		        'bundles/spoutlet/js/*'
+		        'bundles/comment/js/comments.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
 		    {% endjavascripts %}
