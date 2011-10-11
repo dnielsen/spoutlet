@@ -5,6 +5,8 @@ Edit Event | {{ event.name }}
 
 {% block content %}
 <form action="{{ path('admin_events_edit', { 'id' : event.id }) }}" method="post" {{ form_enctype(form) }}>
+
+    {{ form_errors(form) }}
     
     {{ form_row(form.name) }}
 
@@ -22,15 +24,15 @@ Edit Event | {{ event.name }}
 
     {{ form_row(form.country) }}
 
-    <div class="form_row">
-    {{ form_label(form.content) }}
-    {{ form_errors(form.content) }}
-    {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
-    </div>
-
     {{ form_row(form.hosted_by) }}
 
     {{ form_row(form.game) }}
+
+    <div class="form_row">
+        {{ form_label(form.content) }}
+        {{ form_errors(form.content) }}
+        {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
 
     {{ form_rest(form) }}
 
