@@ -3,10 +3,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+		<script type="text/javascript">
+			var CKEDITOR_BASEPATH = '/ckeditor/';
+		</script>
+ 
         {% block stylesheets %}
 		    {% stylesheets
 		        'bundles/spoutlet/css/*'
 		        'bundles/comment/css/comments.css'
+		        'ckeditor/skins/kama/editor.css'
 		        filter='cssrewrite'
 		    %}
 		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
@@ -17,6 +22,9 @@
 		    {% javascripts
 		        'bundles/spoutlet/js/*'
 		        'bundles/comment/js/comments.js'
+		        'ckeditor/ckeditor.js'
+		        'ckeditor/config.js'
+		        'ckeditor/lang/en.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
 		    {% endjavascripts %}
