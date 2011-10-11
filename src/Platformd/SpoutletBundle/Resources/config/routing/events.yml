@@ -3,11 +3,11 @@ events_index:
     defaults: { _controller: SpoutletBundle:Events:index }
 
 events_current:
-    pattern: /events
+    pattern: /current
     defaults: { _controller: SpoutletBundle:Events:current }
 
 events_past:
-    pattern: /events
+    pattern: /past
     defaults: { _controller: SpoutletBundle:Events:past }
 
 events_detail:
