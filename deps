@@ -91,3 +91,4 @@
 [StofDoctrineExtensionsBundle]
     git=git://github.com/stof/StofDoctrineExtensionsBundle.git
     target=bundles/Stof/DoctrineExtensionsBundle
+    version=1.0.0
