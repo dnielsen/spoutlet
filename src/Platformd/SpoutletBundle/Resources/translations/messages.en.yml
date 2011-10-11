@@ -54,3 +54,11 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
             past_events: Past Events
             online: Online
+
+    account_page:
+        account:
+            welcome_to_control: Welcome to your Control Panel
+            hello_user: "Hello %firstname%! You are logged in with the username %username%."
+            ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
+            warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf!"
+            alienware_not_responsible: "Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
