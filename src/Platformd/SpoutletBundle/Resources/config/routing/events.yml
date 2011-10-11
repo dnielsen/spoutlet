@@ -11,5 +11,5 @@ events_past:
     defaults: { _controller: SpoutletBundle:Events:past }
 
 events_detail:
-    pattern: /{id}
+    pattern: /{slug}
     defaults: { _controller: SpoutletBundle:Events:event }

@@ -84,3 +84,11 @@
     git=git://github.com/excelwebzone/EWZRecaptchaBundle.git
     target=/bundles/EWZ/Bundle/RecaptchaBundle
 
+[DoctrineExtensions]
+    git=git://github.com/l3pp4rd/DoctrineExtensions.git
+    target=gedmo-doctrine-extensions
+
+[StofDoctrineExtensionsBundle]
+    git=git://github.com/stof/StofDoctrineExtensionsBundle.git
+    target=bundles/Stof/DoctrineExtensionsBundle
+    version=1.0.0

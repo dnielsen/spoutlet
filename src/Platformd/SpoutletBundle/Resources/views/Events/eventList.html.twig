@@ -19,7 +19,7 @@
                             {{ event.startsAt|date('M') }}
                             <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
                         </td>
-                        <td><a href="{{ path('events_detail', { 'id' : event.id }) }}">{{ event.name }}</a></td>
+                        <td><a href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a></td>
                         <td>{{ event.game }}</td>
                         <td>{{ event.hostedBy }}</td>
                         <td>{{ event.metroArea.label }}</td>

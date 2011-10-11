@@ -38,16 +38,16 @@ class EventsController extends Controller
     /**
      * The event show page
      *
-     * @param $id
+     * @param string $slug
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      * @throws \Symfony\Bundle\FrameworkBundle\Controller\NotFoundHttpException
      */
-	public function eventAction($id)
+	public function eventAction($slug)
 	{
-		$event = $this->getEventsRepo()->find($id);
+		$event = $this->getEventsRepo()->findOneBySlug($slug);
 
         if (!$event) {
-            throw $this->createNotFoundException(sprintf('No event for id "%s"', $id));
+            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
         }
 
 		return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
