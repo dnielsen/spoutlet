@@ -6,12 +6,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AccountController extends Controller
 {
-	public function profileAction($username)
+	public function profileAction($username = null)
 	{
-        $manager = $this->get('fos_user.user_manager');
-        if (!$user = $manager->findUserByUsername($username)) {
-            
-            throw $this->createNotFoundException(sprintf('Unable to find an user with username "%s"', $username));
+        if (!$username) {
+            $manager = $this->get('fos_user.user_manager');
+            if (!$user = $manager->findUserByUsername($username)) {
+                
+                throw $this->createNotFoundException(sprintf('Unable to find an user with username "%s"', $username));
+            }
+        } else {
+            $user = $this->get('security.context')->getToken()->getUser();
         }
 
 		return $this->render('FOSUserBundle:Profile:show.html.twig', array('user' => $user));		

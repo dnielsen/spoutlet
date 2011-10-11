@@ -13,5 +13,5 @@ accounts_events:
 # profile page - null username means *this* user
 accounts_profile:
     pattern: /profile/{username}
-    defaults: { _controller: SpoutletBundle:Account:profile }
+    defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 
