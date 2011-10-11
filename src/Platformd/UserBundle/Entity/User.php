@@ -104,13 +104,6 @@ class User extends BaseUser
      * @ORM\Column(name="latest_news_source", type="string", length="255", nullable=true)
      */
     protected $latestNewsSource;
-    
-    /**
-     * @var String $subscribe_arena_news
-     *
-     * @ORM\Column(name="subscribed_arena_news", type="boolean", nullable=true)
-     */
-    protected $subscribedArenaNews;
 
     /**
      * @var String $subscribe_gaming_news

@@ -41,6 +41,24 @@
     display: inline-block;
     width: 70px;
 }
+ul.form-msg-error {
+    padding: 6px 10px 5px;
+    display: block;
+    height: auto;
+    margin: -0.3em 0 0.5em;
+    margin-left: 70px;
+    padding-left: 27px;
+   	font-size:0.9em;
+   	border-bottom: 1px solid #ccc;
+    background: #fad0d0 url(../images/form-ic-error.png) no-repeat 5px 4px;
+   	border-color:#f6abab;
+   	color:#b01717;
+    width: 170px;
+}
+.form-msg-error {
+}
+.form-msg-error {
+}
 
 /* login page */
 .login_page_interstitial {
@@ -59,6 +77,9 @@
 .fos_user_change_password input.button {
     margin-left: 110px;
 }
+.fos_user_change_password ul.form-msg-error {
+    margin-left: 110px;
+}
 
 /* comments */
 .profileAvatar img {
@@ -68,4 +89,21 @@
 /* support styles */
 .support ul {
     list-style-type: none;
+}
+
+/* registration page */
+.fos_user_registration_register label, .label_space {
+    width: 350px;
+    text-align: right;
+    margin-right: 10px;
+}
+.fos_user_registration_register input.button {
+    margin-left: 360px;
+    margin-top: 10px;
+}
+.fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
+    margin-left: 360px;
+}
+.fos_user_registration_register #recaptcha_widget_div {
+    margin-bottom: 10px;
 }
