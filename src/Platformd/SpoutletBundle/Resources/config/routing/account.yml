@@ -2,8 +2,15 @@ accounts_index:
     pattern: /
     defaults: { _controller: SpoutletBundle:Account:account }
 
+accounts_profile_edit:
+    pattern: /profile/edit
+    defaults: { _controller: SpoutletBundle:Account:editProfile }
+
+accounts_events:
+    pattern: /profile/events
+    defaults: { _controller: SpoutletBundle:Account:events }
+    
 # profile page - null username means *this* user
 accounts_profile:
     pattern: /profile/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
-

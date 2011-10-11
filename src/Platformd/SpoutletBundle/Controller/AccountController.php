@@ -27,4 +27,9 @@ class AccountController extends Controller
 	{
 		return $this->render('SpoutletBundle:Account:account.html.twig');
 	}
+
+    public function eventsAction()
+    {
+        return $this->render('SpoutletBundle:Account:events.html.twig');
+    }
 }
