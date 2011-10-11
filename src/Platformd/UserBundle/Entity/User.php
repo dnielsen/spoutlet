@@ -7,7 +7,9 @@ use Platformd\SpoutletBundle\Entity\Event;
 use FOS\UserBundle\Entity\User as BaseUser;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+
+use Doctrine\Common\Collections\ArrayCollection,
+    Doctrine\Common\Collections\Collection;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -131,7 +133,7 @@ class User extends BaseUser
     /**
      * @var Platformd\SpoutletBundle\Entity\Event $events
      *
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", mappedBy="user")
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", inversedBy="users")
      */
     private $events;
 
@@ -154,9 +156,9 @@ class User extends BaseUser
     /**
      * Set events
      *
-     * @param Platformd\SpoutletBundle\Entity\Event $events
+     * @param Doctrine\Common\Collections\Collection $events
      */
-    public function setEvents(Event $events)
+    public function setEvents(Collection $events)
     {
         $this->events = $events;
     }
@@ -164,11 +166,19 @@ class User extends BaseUser
     /**
      * Get events
      *
-     * @return Platformd\SpoutletBundle\Entity\Event 
+     * @return Doctrine\Common\Collections\Collection
      */
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * @param Platformd\SpoutletBundle\Entity\Event $event
+     */
+    public function addEvent(Event $event)
+    {
+        $this->events->add($event);
     }
     
     /**

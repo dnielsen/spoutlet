@@ -53,16 +53,51 @@ class EventsController extends Controller
 		return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
 	}
 
+	/**
+	 * Registers the current user to an event
+	 *
+	 * @param string $slug
+	 */
+	public function registerAction($slug)
+	{
+		$event = $this->getEventsRepo()->findOneBySlug($slug);
+
+		if (!$event) {
+			throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+		}
+
+		if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+			return $this->redirect($this->generateUrl('fos_user_registration_register'));
+		}
+
+		$user = $this->get('security.context')->getToken()->getUser();
+		$user->addEvent($event);
+
+		$this->getDoctrine()->getEntityManager()->persist($user);
+		$this->getDoctrine()->getEntityManager()->flush();
+
+		return $this->redirect($this->generateUrl('events_detail', array('slug' => $event->getSlug())));
+	}
+
+	/**
+	 * @return Doctrine\Common\Collections\Collection
+	 */
 	private function getCurrentEvents()
 	{
 		return $this->getEventsRepo()->getCurrentEvents();
 	}
 
+	/**
+	 * @return Doctrine\Common\Collections\Collection
+	 */
 	private function getUpcomingEvents()
 	{
 		return $this->getEventsRepo()->getUpcomingEvents();
 	}
 	
+	/**
+	 * @return Plateformd\SproutletBundle\Entity\EventRepository
+	 */
 	private function getEventsRepo()
 	{
 		$em = $this->getDoctrine()->getEntityManager();

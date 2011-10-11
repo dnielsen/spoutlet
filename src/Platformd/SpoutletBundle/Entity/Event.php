@@ -7,6 +7,9 @@ use Platformd\UserBundle\Entity\User,
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\Common\Collections\Collection,
+    Doctrine\Common\Collections\ArrayCollection;
+
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -42,10 +45,9 @@ class Event
     private $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="user")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User", mappedBy="events")
      */
-    private $user;
+    private $users;
 
     /**
      * @var boolean $ready
@@ -118,6 +120,11 @@ class Event
      */
     private $game;
 
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
     /**
      * Get id
      *
@@ -126,6 +133,36 @@ class Event
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Get users
+     *
+     * @param Doctrine\Common\Collections\Collection $users
+     */
+    public function setUsers(Collection $users)
+    {
+        $this->users = $users;
+    }
+
+    /**
+     * Get users
+     *
+     * @return Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Add an user
+     *
+     * @param Platformd\UserBundle\Entity\User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
     }
 
     /**
