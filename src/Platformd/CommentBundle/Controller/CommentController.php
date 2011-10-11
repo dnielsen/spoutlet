@@ -15,11 +15,8 @@ class CommentController extends BaseCommentController
      */
     protected function onCreateSuccess(Form $form)
     {
-        // the id we gave to this thread
-        // @TODO - when we change to slugging events, the id should be the slug
-        // and this will need to be updated
-        $threadId = $form->getData()->getThread()->getId();
-        $url = $this->container->get('router')->generate('events_detail', array('id' => $threadId));
+        $threadSlug = $form->getData()->getThread()->getId();
+        $url = $this->container->get('router')->generate('events_detail', array('slug' => $threadSlug));
 
         // append the dom ID to the comment, for auto-scroll
         $url .= '#comment-message-'.$form->getData()->getId();

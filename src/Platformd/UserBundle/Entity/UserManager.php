@@ -3,6 +3,7 @@
 namespace Platformd\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\UserManager as BaseUserManager;
+use FOS\UserBundle\Model\UserInterface;
 
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
@@ -20,6 +21,18 @@ class UserManager extends BaseUserManager
         }
 
         return $user; 
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function updateUser(UserInterface $user, $andFlush = true)
+    {
+        if ($user instanceof User) {
+            $user->updateAvatar();
+        }
+
+        parent::updateUser($user, $andFlush);
     }
 }
 

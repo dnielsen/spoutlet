@@ -1,0 +1,14 @@
+<div class="fos_user_user_show">
+    <h2>{{ "profile.show.title" | trans({ "%username%": user.username }, 'FOSUserBundle') }}</h2>
+
+    {% if user.avatar %}
+        <div class="profileAvatar"> 
+            <img src="{{ user.webPath }}" alt="{{ user.username }}" />
+        </div>
+    {% endif %}
+
+    <p>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}: {{ user.username }}</p>
+    <p>{{ 'profile.show.firstname'|trans({}, 'FOSUserBundle') }}: {{ user.firstname}}</p>
+    <p>{{ 'profile.show.lastname'|trans({}, 'FOSUserBundle') }}: {{ user.lastname }}</p>
+    <p>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}: {{ user.email }}</p>
+</div>

@@ -5,16 +5,12 @@
 <div class="std_1col">
     <div id="accountHeader">
         <ul class="links">
-            <li><a href="{{ path('accounts_index') }}">Account Home</a></li>
-            <li><a href="{{ path('fos_user_change_password') }}">Change Pass</a></li>
-            <li><a href="#">Messages</a></li>
+            <li><a href="{{ path('accounts_index') }}">{{ "Account Home" | trans({}, 'account') }}</a></li>
+            <li><a href="{{ path('fos_user_profile_edit') }}">{{ "Edit account" | trans({}, 'account') }}</a></li>
+            <li><a href="{{ path('fos_user_change_password') }}">{{ "Change Pass" | trans({}, 'account') }}</a></li>
             <li><a href="{{ path('accounts_profile') }}">Profile</a></li>
-            <li><a href="{{ path('accounts_events') }}">My Events</a></li>
-            <li><a href="#">Game IDs</a></li>
-            <li><a href="#">Payments</a></li>
-            <li><a href="#">Match Client</a></li>
-            <li><a href="#">Giveaway Keys</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="{{ path('accounts_events') }}">Registered Events</a></li>
+            <li><a href="{{ path('support') }}">{{ "Help" | trans({}, 'account') }}</a></li>
             <li><a href="{{ path('fos_user_security_logout') }}">Sign Out</a></li>
         </ul>
     </div>

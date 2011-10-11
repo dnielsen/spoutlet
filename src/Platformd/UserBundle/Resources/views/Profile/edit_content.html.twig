@@ -1,14 +1,29 @@
 {% form_theme form theme %}
 
-<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+<h2>{{ 'platformd.user.edit_account_header' | trans }}</h2>
+
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit form">
 
     {{ form_errors(form) }}
 
     {{ form_row(form.user.username) }}
+    
     {{ form_row(form.user.email) }}
+    
     {{ form_row(form.user.firstname) }}
+    
     {{ form_row(form.user.lastname) }}
+    
     {{ form_row(form.current) }}
+
+    {% if app.user.avatar %}
+        <div class="current_avatar">
+            <h3>Your current avatar</h3>
+            <img src="{{ app.user.webPath }}" alt="Current avatar" />
+        </div>
+    {% endif %}
+
+    {{ form_row(form.user.file) }}
 
     <div>
         {{ form_rest(form) }}

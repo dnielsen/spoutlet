@@ -14,3 +14,4 @@ accounts_events:
 accounts_profile:
     pattern: /profile/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
+

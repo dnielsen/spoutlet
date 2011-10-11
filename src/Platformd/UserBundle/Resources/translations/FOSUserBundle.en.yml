@@ -35,4 +35,9 @@ fos_user_registration_form_birthdate: "Date of Birth"
 
 fos_user_profile_form_user_firstname: "First name"
 fos_user_profile_form_user_lastname: "Last name"
+fos_user_profile_form_user_file: "Avatar"
+
+profile.show.title: "%username%'s profile"
+profile.show.firstname: "First name"
+profile.show.lastname: "Last name"
 
