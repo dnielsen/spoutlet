@@ -70,6 +70,9 @@ fos_user:
     registration:
         form:
             type: platformd_user_registration
+    profile:
+        form:
+            type: platformd_user_profile
     service:
         user_manager: platformd_user.manager 
 

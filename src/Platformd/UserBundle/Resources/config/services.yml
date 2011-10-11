@@ -1,4 +1,5 @@
 services:
+    # Forms
     platformd_user.registration.form.type:
         class: Platformd\UserBundle\Form\Type\RegistrationFormType
         arguments:
@@ -6,6 +7,13 @@ services:
             - %platformd.news_source%
         tags:
             - { name: form.type, alias: platformd_user_registration } 
+    platformd_user.profile.form.type:
+        class: Platformd\UserBundle\Form\Type\ProfileFormType
+        arguments:
+            - %fos_user.model.user.class%
+        tags:
+            - { name: form.type, alias: platformd_user_profile } 
+    # User
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager
         parent: fos_user.user_manager.default
