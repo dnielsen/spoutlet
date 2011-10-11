@@ -20,3 +20,6 @@
 
     authnet.login     =
     authnet.tran_key  =
+
+    recaptcha.public_key = 
+    recaptcha.private_key =
