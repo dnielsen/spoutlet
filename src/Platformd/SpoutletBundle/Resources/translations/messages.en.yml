@@ -39,6 +39,26 @@ platformd:
             terms_and_conditions: "Terms & Conditions"
             stream_community: Stream Community
             xfire_community: Xfire Community
-            need_a_kick_ass_rig_checkout_alienware: "Need a kick ass rig? Checkout Alienware"
-            copyright_2012_alienware_corporation_all_rights_reserved: "Copyright 2012 Alienware Corporation. All Rights Reserved."
+            kick_ass_rig: "Need a kick ass rig? Checkout Alienware"
+            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    events:
+        event_listings:
+            current_events: Current Events
+            start_date: Start Date
+            event: Event
+            games: Games
+            hosted_by: Hosted by
+            location: Location
+            upcoming_events: Upcoming Events
+            there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
+            past_events: Past Events
+            online: Online
+
+    account_page:
+        account:
+            welcome_to_control: Welcome to your Control Panel
+            hello_user: "Hello %firstname%! You are logged in with the username %username%."
+            ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
+            warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf!"
+            alienware_not_responsible: "Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
