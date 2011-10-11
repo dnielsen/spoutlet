@@ -15,6 +15,7 @@ class ProfileFormType extends BaseProfileFormType
 
         $builder
             ->add('firstname')
-            ->add('lastname');
+            ->add('lastname')
+            ->add('file');
     }
 }

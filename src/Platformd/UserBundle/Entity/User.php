@@ -18,6 +18,7 @@ use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
  *
  * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
+ * @ORM\haslifecyclecallbacks
  */
 class User extends BaseUser
 {
@@ -124,9 +125,11 @@ class User extends BaseUser
     protected $termsAccepted;
 
     /**
-     * @Recaptcha\True(groups={"Registration"})
+     * @var String $avatar
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    public $recaptcha;
+    protected $avatar;
 
     /**
      * @var Platformd\SpoutletBundle\Entity\Event $events
@@ -136,16 +139,42 @@ class User extends BaseUser
     private $events;
 
     /**
-     * @var String $avatar
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Recaptcha\True(groups={"Registration"})
      */
-    protected $avatar;
+    public $recaptcha;
+
+    /** 
+     * @Assert\File(maxSize="6000000", groups={"Profile"})
+     */
+    public $file;
 
     public function __construct() 
     {
         parent::__construct();
         $this->events = new ArrayCollection();   
+    }
+
+    public function updateAvatar()
+    {
+        if (null == $this->file) {
+            
+            return;
+        }
+
+        $this->avatar = sha1($this->getUsername().'-'.uniqid()).'.'.$this->file->guessExtension();
+        $this->file->move($this->getUploadRootDir(), $this->avatar);
+
+        unset($this->file);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
     }
 
     /**
