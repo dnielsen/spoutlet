@@ -22,7 +22,19 @@
 
     {{ form_row(form.state) }}
     
-    {# Add captcha field #}
+    {# Change form theme so the captcha can be displayed #}
+    {% form_theme form 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
+    
+    {# Switch back to previous theme #}
+
+    {{ form_errors(form.recaptcha) }}
+
+    {{ form_widget(form.recaptcha, { "attr" : {
+            "options" : { "theme" : "red" }
+        }
+    }) }}
+
+    {% form_theme form theme %}
 
     {{ form_row(form.hasAlienwareSystem) }}
 
