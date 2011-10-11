@@ -146,7 +146,11 @@ class User extends BaseUser
     public $recaptcha;
 
     /** 
-     * @Assert\File(maxSize="6000000", groups={"Profile"})
+     * @Assert\File(
+        maxSize="6000000", 
+        mimeTypes={"image/png", "image/jpeg", "image/jpg"}, 
+        mimeTypesMessage="Please choose a valid JPEG/PNG file",
+        groups={"Profile"})
      */
     public $file;
 
