@@ -6,30 +6,30 @@ platformd:
         title_suffix: Alienware Arena
 
         #translations that are not used yet
-        top_menu:
+                top_menu:
             sign_in: Sign in
             sign_out: Sign out
             join: Join
-        	about: About
-        	contact: Contact
-        	search: Search
-	
+            about: About
+            contact: Contact
+            search: Search
+    
         main_menu:
-        	home: Home
-        	alienware: Alienware
-        	events: Events
-        	news: News
-        	microsoft: Microsoft
-	
+            home: Home
+            alienware: Alienware
+            events: Events
+            news: News
+            microsoft: Microsoft
+    
         page_content:
-        	featured: Featured
-        	giveaways: Giveaways
-        	competitions: Competitions
-        	on_tour: On Tour
-        	all: All
-        	see_more: See More
-        	photo_gallery: Photo Gallery
-        	view_all: View All
+            featured: Featured
+            giveaways: Giveaways
+            competitions: Competitions
+            on_tour: On Tour
+            all: All
+            see_more: See More
+            photo_gallery: Photo Gallery
+            view_all: View All
 
         bottom_menu:
             contact_us: Contact Us
@@ -39,5 +39,3 @@ platformd:
             xfire_community: Xfire Community
             need_a_kick_ass_rig_checkout_alienware: "Need a kick ass rig? Checkout Alienware"
             copyright_2012_alienware_corporation_all_rights_reserved: "Copyright 2012 Alienware Corporation. All Rights Reserved."
-    
-	
