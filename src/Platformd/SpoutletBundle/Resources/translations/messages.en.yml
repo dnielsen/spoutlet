@@ -6,7 +6,7 @@ platformd:
         title_suffix: Alienware Arena
 
         #translations that are not used yet
-                top_menu:
+        top_menu:
             sign_in: Sign in
             sign_out: Sign out
             join: Join
