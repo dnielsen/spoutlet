@@ -797,8 +797,3 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 /* qtip styles */
 .qtip-content { font-size: 14px; }
 .tooltip { font-size: 14px; }
-
-/* misc styles */
-.support ul {
-    list-style-type: none;
-}
