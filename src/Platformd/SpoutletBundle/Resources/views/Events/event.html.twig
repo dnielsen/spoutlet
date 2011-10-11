@@ -18,9 +18,13 @@
                     {% else %}
                     <p><a href="{{ path('events_register', { "slug": event.slug }) }}">{{ "Register for event" | trans }}</a></p>
                     {% endif %}
+
+                    {# this link is a bit useless since the "register for event" link will redirect to the login/register form anyway #}
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                     <ol>
                         <li><span class="item"><a href="{{ path('fos_user_registration_register') }}">Create or login to an Alienware Arena account.</a></span></li>
                     </ol>
+                    {% endif %}
                 </div>
             </div>
         </div>
