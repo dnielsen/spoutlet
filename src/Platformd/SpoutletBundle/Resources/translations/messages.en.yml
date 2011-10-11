@@ -4,3 +4,8 @@ platformd:
         default_title: Alienware Arena - Gamers Wanted
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
+
+        #translations that are not used yet
+        top_menu:
+            sign_in: Sign in
+            sign_out: Sign out
