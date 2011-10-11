@@ -14,6 +14,13 @@
     
     {{ form_row(form.current) }}
 
+    {% if app.user.avatar %}
+        <div class=current_avatar">
+            <h3>Your current avatar</h3>
+            <img src="{{ app.user.webPath }}" alt="Current avatar" />
+        </div>
+    {% endif %}
+
     {{ form_row(form.user.file) }}
 
     <div>

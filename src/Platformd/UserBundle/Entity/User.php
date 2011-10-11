@@ -437,6 +437,12 @@ class User extends BaseUser
     {
         $this->termsAccepted = $accepted;
     }
+    
+    public function getAvatar()
+    {
+        
+        return $this->avatar;
+    }
 
     public function getWebPath()
     {
@@ -452,6 +458,6 @@ class User extends BaseUser
     protected function getUploadDir()
     {
 
-        return 'uploads/avatars';
+        return '/uploads/avatars';
     }
 }
