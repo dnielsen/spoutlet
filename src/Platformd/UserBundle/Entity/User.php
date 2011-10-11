@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
 /**
  * Platformd\UserBundle\Entity\User
@@ -121,6 +122,11 @@ class User extends BaseUser
      * @Assert\True(message="You must accept the terms and conditions and the privacy policies", groups={"Registration"})
      */
     protected $termsAccepted;
+
+    /**
+     * @Recaptcha\True(groups={"Registration"})
+     */
+    public $recaptcha;
 
     /**
      * @var Platformd\SpoutletBundle\Entity\Event $events
