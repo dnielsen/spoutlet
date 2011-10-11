@@ -7,6 +7,7 @@ fos_user_profile_form_user_email: "Email:"
 fos_user_profile_form_current: "Current Password:"
 
 fos_user_registration_form_username: "Username:"
+security.login.username_or_email: "Username or Email:"
 fos_user_registration_form_email: "Email:"
 fos_user_registration_form_plainPassword_first: "Password:"
 fos_user_registration_form_plainPassword_second: "Confirm Password:"
