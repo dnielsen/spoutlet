@@ -10,3 +10,6 @@ platformd:
             terms_label: Terms & Conditions
             privacy_label: Privacy Policy
             country_label: Choose a country
+
+        login:
+            title: Login to your account

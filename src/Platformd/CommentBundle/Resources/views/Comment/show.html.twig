@@ -36,7 +36,7 @@
 
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <div class="fos_comment_comment_reply">
-                        <button data-url="{{ path('fos_comment_comment_create', {"threadId": comment.thread.id, "parentId": comment.id}) }}" data-name="{{ comment.authorName }}" class="fos_comment_comment_reply_show_form">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
+                        <button data-url="{{ path('fos_comment_comment_create', {"threadId": comment.thread.id, "parentId": comment.id}) }}" data-name="{{ comment.authorName }}" class="fos_comment_comment_reply_show_form button">{% trans from 'FOSCommentBundle' %}fos_comment_comment_show_reply{% endtrans %}</button>
                     </div>
                 {% endif %}
             </div>

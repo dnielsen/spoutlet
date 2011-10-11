@@ -50,10 +50,6 @@ div.fos_comment_comment_reply.replying {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
 }
-button.fos_comment_comment_reply_show_form {
-    padding: 2px 5px;
-    font-size: 0.8em;
-}
 div.fos_comment_comment_reply.replying button.fos_comment_comment_reply_show_form {
     display: none;
 }
