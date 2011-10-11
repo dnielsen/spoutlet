@@ -1,0 +1,33 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+<h2>{{ 'platformd.user.login_header' | trans }}</h2>
+
+<div class="login_page_interstitial interstitial">
+{% if error %}
+    <div>{{ error }}</div>
+{% endif %}
+
+<form action="{{ path("fos_user_security_check") }}" method="post">
+
+    <div class="form_row">
+        <label for="username">{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}</label>
+        <input type="text" class="input-txt" id="username" name="_username" value="{{ last_username }}" />
+    </div>
+
+    <div class="form_row">
+        <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
+        <input type="password" class="input-txt" id="password" name="_password" />
+    </div>
+
+    {#
+        hidden for now - just for simplicity
+        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+        <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+    #}
+
+    <input type="submit" id="_submit" class="button" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
+</form>
+
+</div>
+{% endblock fos_user_content %}

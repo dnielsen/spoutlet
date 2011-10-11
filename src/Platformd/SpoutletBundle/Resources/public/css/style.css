@@ -550,7 +550,7 @@ html body .lastBlurb { margin-bottom:0; }
 a.page-warp { color: #009cda; font-size: 9px; }
 
 .forumComment { padding-bottom:19px;}
-.forumComment .left { float:left; width:145px; } 
+.forumComment .left { float:left; width:146px; }
 .forumComment .right { float:right; width:738px; } 
 #commentsView .forumComment .right { width:490px; }
 .submitComment #topicReply { width: 100%; height: 250px; }
