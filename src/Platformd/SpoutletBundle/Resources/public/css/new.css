@@ -44,7 +44,7 @@ a.button:hover {
     display: inline-block;
     width: 70px;
 }
-ul.form-msg-error {
+.form-msg-error {
     padding: 6px 10px 5px;
     display: block;
     height: auto;
@@ -57,10 +57,6 @@ ul.form-msg-error {
    	border-color:#f6abab;
    	color:#b01717;
     width: 170px;
-}
-.form-msg-error {
-}
-.form-msg-error {
 }
 
 /* login page */

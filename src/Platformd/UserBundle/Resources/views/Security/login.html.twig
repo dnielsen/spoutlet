@@ -6,11 +6,12 @@
 <h2>{{ 'platformd.user.login_header' | trans }}</h2>
 
 <div class="login_page_interstitial interstitial">
-{% if error %}
-    <div>{{ error }}</div>
-{% endif %}
 
 <form action="{{ path("fos_user_security_check") }}" method="post" class="form">
+
+    {% if error %}
+        <div class="form-msg-error">{{ error }}</div>
+    {% endif %}
 
     <div class="form_row">
         <label for="username">{{ 'security.login.username_or_email'|trans({}, 'FOSUserBundle') }}</label>

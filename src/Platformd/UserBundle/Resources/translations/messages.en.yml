@@ -2,7 +2,7 @@ platformd:
     user:
         login_header: Enter Login Information
         change_password_header: Change Your Password
-        edit_account_header: Edit your account informations
+        edit_account_header: Edit your account information
 
         register_title: Create Arena Account
 
