@@ -1,3 +1,4 @@
 platformd:
     user:
         login_header: Enter Login Information
+        change_password_header: Change Your Password

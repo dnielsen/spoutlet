@@ -9,6 +9,7 @@
   border-radius: 3px;
   text-align: center;
   border: none;
+  cursor: pointer;
 
   background: #0094b4;
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#0094b4',endColorstr='#00596e');
@@ -22,23 +23,8 @@
     margin: auto;
 }
 
-/* login page */
-.login_page_interstitial {
-    padding:  0 20px 20px 20px;
-    margin-top: 20px;
-    width: 400px;
-}
-.login_page_interstitial label {
-    display: -moz-inline-box;
-    display: inline-block;
-    width: 70px;
-}
-.login_page_interstitial input.button {
-    margin-left: 70px;
-}
-
 /* generic form stuff - ugly, but quick */
-input.input-txt {
+.form input.form-txt {
     border: none;
     padding: 4px 4px;
     -moz-border-radius: 3px;
@@ -47,6 +33,29 @@ input.input-txt {
     font-size: 12px;
     width: 200px;
 }
-div.form_row {
+.form div.form_row {
     margin-bottom: 10px;
+}
+.form label {
+    display: -moz-inline-box;
+    display: inline-block;
+    width: 70px;
+}
+
+/* login page */
+.login_page_interstitial {
+    padding:  0 20px 20px 20px;
+    margin-top: 20px;
+    width: 400px;
+}
+.login_page_interstitial input.button {
+    margin-left: 70px;
+}
+
+/* change password */
+.fos_user_change_password label {
+    width: 110px;
+}
+.fos_user_change_password input.button {
+    margin-left: 110px;
 }

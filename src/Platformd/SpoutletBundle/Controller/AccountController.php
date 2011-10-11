@@ -27,9 +27,4 @@ class AccountController extends Controller
 	{
 		return $this->render('SpoutletBundle:Account:account.html.twig');
 	}
-
-	public function changePasswordAction()
-	{
-		return $this->render('SpoutletBundle:Account:changePassword.html.twig');
-	}
 }
