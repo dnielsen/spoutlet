@@ -7,6 +7,3 @@ accounts_profile:
     pattern: /profile/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 
-accounts_profile_edit:
-    pattern: /profile/edit
-    defaults: { _controller: SpoutletBundle:Account:editProfile }
