@@ -1,0 +1,35 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block content %}
+<div class="std_2col control_panel">
+    <div class="right">
+        <div id="mainAd">
+        </div>
+    </div>
+    <div class="left">
+        <div class="pad">
+            <div class="std_1col">
+                <div class="widget-100">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            Your registered events
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        {% include 'SpoutletBundle:Events:eventList.html.twig' with {
+                            'events': app.user.events,
+                            'no_events_message': 'You have not registered to any event yet.'
+                        } %}
+                    </div>
+
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div><br />
+            </div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+</div>
+{% endblock %}

@@ -13,3 +13,7 @@ events_past:
 events_detail:
     pattern: /{slug}
     defaults: { _controller: SpoutletBundle:Events:event }
+
+events_register:
+    pattern: /{slug}/register
+    defaults: { _controller: SpoutletBundle:Events:register }
