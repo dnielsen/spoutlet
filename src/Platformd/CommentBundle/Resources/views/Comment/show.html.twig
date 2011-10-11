@@ -43,7 +43,8 @@
         <div class="profileInfo png">
             <div class="profileAvatar">
                 <span class="png"></span>
-                <img src="http://placehold.it/84x84" alt="placeholder - todo" />
+                <img src="{{ comment.author.avatar ? comment.author.webPath : "http://placehold.it/84x84" }}" alt="placeholder - todo" />
+                
             </div>
             <div class="profileName">
                 {# we should always have an author, but just in case... #}
