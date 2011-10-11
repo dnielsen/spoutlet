@@ -1,0 +1,15 @@
+admin_index:
+    pattern: /admin
+    defaults: { _controller: SpoutletBundle:Admin:index }
+
+admin_events_index:
+    pattern: /admin/events
+    defaults: { _controller: SpoutletBundle:Admin:events }
+
+admin_events_new:
+    pattern: /admin/events/new
+    defaults: { _controller: SpoutletBundle:Admin:newEvent }
+
+admin_events_edit:
+    pattern: /admin/events/edit/{id}
+    defaults: { _controller: SpoutletBundle:Admin:editEvent }

@@ -1,0 +1,15 @@
+events_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:Events:index }
+
+events_current:
+    pattern: /events
+    defaults: { _controller: SpoutletBundle:Events:current }
+
+events_past:
+    pattern: /events
+    defaults: { _controller: SpoutletBundle:Events:past }
+
+events_detail:
+    pattern: /{id}
+    defaults: { _controller: SpoutletBundle:Events:event }

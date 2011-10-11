@@ -2,50 +2,13 @@ default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
 
-admin_index:
-    pattern: /admin
-    defaults: { _controller: SpoutletBundle:Admin:index }
+_spoutlet_admin:
+    resource: routing/admin.yml
 
-admin_events_index:
-    pattern: /admin/events
-    defaults: { _controller: SpoutletBundle:Admin:events }
+_spoutlet_events:
+    resource: routing/events.yml
+    prefix:   /events
 
-admin_events_new:
-    pattern: /admin/events/new
-    defaults: { _controller: SpoutletBundle:Admin:newEvent }
-
-admin_events_edit:
-    pattern: /admin/events/edit/{id}
-    defaults: { _controller: SpoutletBundle:Admin:editEvent }
-
-events_index:
-    pattern: /events
-    defaults: { _controller: SpoutletBundle:Events:index }
-
-events_current:
-    pattern: /events/current
-    defaults: { _controller: SpoutletBundle:Events:current }
-
-events_past:
-    pattern: /events/past
-    defaults: { _controller: SpoutletBundle:Events:past }
-
-events_detail:
-    pattern: /event/{id}
-    defaults: { _controller: SpoutletBundle:Events:event }
-
-accounts_profile:
-    pattern: /account/profile/{username}
-    defaults: { _controller: SpoutletBundle:Account:profile }
-
-accounts_profile_edit:
-    pattern: /account/profile/edit
-    defaults: { _controller: SpoutletBundle:Account:editProfile }
-
-accounts_index:
-    pattern: /account
-    defaults: { _controller: SpoutletBundle:Account:account }
-
-accounts_change_password:
-    pattern: /account/change-password
-    defaults: { _controller: SpoutletBundle:Account:changePassword }
+_spoutlet_account:
+    resource: routing/account.yml
+    prefix:   /account
