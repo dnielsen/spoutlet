@@ -1,3 +1,7 @@
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /account/profile
+
 PlatformDSpoutletBundle:
     resource: "@SpoutletBundle/Resources/config/routing.yml"
     prefix:   /
@@ -5,9 +9,6 @@ PlatformDSpoutletBundle:
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
-fos_user_profile:
-    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
-    prefix: /account/profile-lol
 
 fos_user_register:
     resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
