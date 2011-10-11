@@ -59,3 +59,9 @@
 .fos_user_change_password input.button {
     margin-left: 110px;
 }
+
+/* comments */
+.profileAvatar img {
+    width: 84px;
+    height: 84px; 
+}
