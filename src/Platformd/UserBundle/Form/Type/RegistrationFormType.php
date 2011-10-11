@@ -33,6 +33,7 @@ class RegistrationFormType extends BaseType
             ->add('phoneNumber')
             ->add('country', 'country')
             ->add('state')
+            ->add('recaptcha', 'ewz_recaptcha')
             ->add('hasAlienwareSystem', 'checkbox', array('required' => false))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
