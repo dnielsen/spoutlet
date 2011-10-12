@@ -86,6 +86,22 @@ ul.form-msg-error {
     width: 84px;
 }
 
+/* Profile */
+
+.memberProfileLeft {
+    width:200px;
+    float: left;
+}
+
+.memberProfileRight {
+    margin-left: 210px;
+    width: 420px;
+}
+.profileAvatar_big img {
+    width: 184px;
+    border:2px solid #ccc;
+}
+
 /* support styles */
 .support ul {
     list-style-type: none;
@@ -106,4 +122,25 @@ ul.form-msg-error {
 }
 .fos_user_registration_register #recaptcha_widget_div {
     margin-bottom: 10px;
+}
+
+/* Common / useful styles */
+.clear {
+    visibility: hidden;
+    clear: both;
+}
+
+/* Title */
+.memberProfile h2 {
+    margin: 20px 0 10px 0;
+}
+
+.memberProfile h3 {
+    border-bottom: 1px solid #4a4a4a;
+    font-size: 18px;
+    padding: 3px 0 1px 0;
+}
+
+.profileBloc {
+    margin-bottom: 15px;
 }
