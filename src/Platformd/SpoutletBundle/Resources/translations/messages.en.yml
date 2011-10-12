@@ -54,6 +54,10 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
             past_events: Past Events
             online: Online
+        admin:
+            approve: Approve
+            approved: Event "%event_title%" has been approved and is now published. 
+            unknown: Unknown event \#%event_id% !
 
     account_page:
         account:

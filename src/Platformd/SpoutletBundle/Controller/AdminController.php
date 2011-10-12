@@ -65,6 +65,27 @@ class AdminController extends Controller
     		array('form' => $form->createView(), 'event' => $event));
     }
 
+    public function approveEventAction($id)
+    {
+        $repository = $this->getEventsRepo();
+        $translator = $this->get('translator');
+
+        if (!$event = $repository->findOneBy(array('id' => $id))) {
+            
+            throw $this->createNotFoundException($translator->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
+        }
+
+        $event->setPublished(true);
+        $this->getEventsManager()->flush();
+        
+        $this
+            ->getRequest()
+            ->getSession()
+            ->setFlash('notice', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
+
+        return $this->redirect($this->generateUrl('admin_events_index'));
+    }
+
     private function saveEvent($event_form)
     {
     	// save to db

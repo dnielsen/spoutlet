@@ -18,6 +18,7 @@
                     <th style="width:212px;">GAMES</th>
                     <th style="width:191px;">HOSTED BY</th>
                     <th style="width:133px;">LOCATION</th>
+                    <th>Actions</th>
                 </tr>
                 {% for event in events %}
                 <tr class="eventListGroup_online">
@@ -29,6 +30,11 @@
                     <td>{{ event.game }}</td>
                     <td>{{ event.hostedBy }}</td>
                     <td>{{ event.metroArea.label }}</td>
+                    <td>
+                        {% if not event.published %}
+                            <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
