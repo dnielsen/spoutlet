@@ -1,5 +1,7 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
+{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+
 {% block content %}
 <div class="std_2col control_panel">
     <div class="right">
@@ -12,7 +14,7 @@
                 <div class="widget-100">
                     <div class="widget-header">
                         <div class="widget-title">
-                            Your registered events
+                            {{ "platformd.events.event_listings.your_registered_events" | trans }}
                         </div>
                     </div>
                     <div class="widget-content">

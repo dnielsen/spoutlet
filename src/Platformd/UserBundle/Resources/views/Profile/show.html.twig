@@ -1,0 +1,11 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ "profile.show.title" | trans({ 
+                "%username%": user.username,
+                "%firstname%" : user.firstname,
+                "%lastname%" : user.lastname
+            }, 'FOSUserBundle') }}{% endblock %}
+
+{% block content %}
+{% include "FOSUserBundle:Profile:show_content.html.twig" %}
+{% endblock content %}

@@ -44,6 +44,7 @@ platformd:
 
     events:
         event_listings:
+            your_registered_events: Your Registered Events 
             current_events: Current Events
             more_current_events: More Current Events
             start_date: Start Date
@@ -75,3 +76,5 @@ platformd:
             hello_user: "Hello %firstname%! You are logged in with the username %username%."
             ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
             warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
+            edit_your_account: Edit your account information
+            change_your_password: Change your password
