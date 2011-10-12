@@ -13,10 +13,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class EventRepository extends EntityRepository
 {
+    
+    /**
+     * Return current events
+     * 
+     * @param integer $limit
+     * @return array
+     */
     public function getCurrentEvents($limit = null)
     {
-        $query = $this->createQueryBuilder('e')
-            ->where('e.ends_at > :cut_off')
+        $query = $this->getBaseQueryBuilder()
+            ->andWhere('e.ends_at > :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
             ->getQuery();
@@ -24,15 +31,35 @@ class EventRepository extends EntityRepository
         return $this->addQueryLimit($query, $limit)->getResult();
     }
 
+    /**
+     * Return past events
+     * 
+     * @param integer $limit
+     * @return array
+     */
     public function getPastEvents($limit = null)
     {
-        $query = $this->createQueryBuilder('e')
-            ->where('e.ends_at < :cut_off')
+        $query = $this->getBaseQueryBuilder()
+            ->andWhere('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
             ->getQuery();
         
         return $this->addQueryLimit($query, $limit)->getResult();
+    }
+    
+    /**
+     * Return a query builder instance that should be used for frontend request
+     * basically, it only adds a criteria to retrieve only published events
+     * 
+     * @param String $alias
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    public function getBaseQueryBuilder($alias = 'e')
+    {
+        
+        return $this->createQueryBuilder($alias)
+            ->where($alias.'.published = 1');
     }
 
     private function addQueryLimit(Query $query, $limit)
