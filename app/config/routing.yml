@@ -8,7 +8,7 @@ PlatformDSpoutletBundle:
 
 PlatformDUserBundle:
     resource: "@UserBundle/Resources/config/routing/admin.yml"
-    prefix:   /admin/user
+    prefix:   /admin/users
 
 
 fos_user_security:
