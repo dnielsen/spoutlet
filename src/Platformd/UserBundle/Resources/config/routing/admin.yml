@@ -1,3 +1,6 @@
 Platformd_UserBundle_admin_index:
     pattern: /
     defaults: { _controller: UserBundle:Admin:index }
+Platformd_UserBundle_admin_delete:
+    pattern: /{id}/delete
+    defaults: { _controller: UserBundle:Admin:delete }

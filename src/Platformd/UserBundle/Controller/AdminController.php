@@ -22,5 +22,25 @@ class AdminController extends Controller
             'pager' => $pager
         ));
     }
+    
+    public function deleteAction($id)
+    {
+        $manager = $this->get('fos_user.user_manager');
+        
+        if (!$user = $manager->findUserBy(array('id' => $id))) {
+            
+            throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
+        }
+        
+        // TODO : Use a confirm page and a DELETE HTTP Method
 
+        $manager->deleteUser($user);
+
+        $this
+            ->getRequest()
+            ->getSession()
+            ->setFlash('notice', sprintf('User "%s" has been successfully deleted', $user->getUsername()));
+
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+    }
 }
