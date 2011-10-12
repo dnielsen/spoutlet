@@ -97,7 +97,7 @@ class Event
      * @ORM\ManyToOne(targetEntity="MetroArea", inversedBy="metro_area")
      * @ORM\JoinColumn(name="metro_area_id", referencedColumnName="id")
      */
-    private $metro_area;
+    private $metro_area = null;
 
     /**
      * @var text $content
