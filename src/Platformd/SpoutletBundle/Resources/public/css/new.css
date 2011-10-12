@@ -151,7 +151,10 @@ a.button:hover {
 
 /* Admin */
 table.list {
-    width: 100%:
+    width: 100%;
+}
+table.list thead th {
+    text-align: left;
 }
 
 table.list td {
