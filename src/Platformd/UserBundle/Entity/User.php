@@ -166,6 +166,16 @@ class User extends BaseUser
         unset($this->file);
     }
 
+    public function getAbsolutePath() 
+    {
+        if (!$this->avatar) {
+            
+            return null;
+        }
+
+        return $this->getUploadRootDir().'/'.$this->avatar;
+    }
+
     /**
      * @ORM\PostRemove()
      */
