@@ -13,3 +13,7 @@ admin_events_new:
 admin_events_edit:
     pattern: /admin/events/edit/{id}
     defaults: { _controller: SpoutletBundle:Admin:editEvent }
+
+admin_event_approve:
+    pattern: /admin/events/approve/{id}
+    defaults: { _controller: SpoutletBundle:Admin:approveEvent }

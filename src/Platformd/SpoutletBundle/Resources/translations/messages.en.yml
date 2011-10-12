@@ -64,6 +64,10 @@ platformd:
             register_event: Register for event
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
+        admin:
+            approve: Approve
+            approved: Event "%event_title%" has been approved and is now published. 
+            unknown: Unknown event \#%event_id% !
 
     account_page:
         account:
