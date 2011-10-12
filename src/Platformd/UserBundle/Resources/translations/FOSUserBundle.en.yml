@@ -52,3 +52,4 @@ fos_user_admin_edit: Edit
 
 fos_user_admin_user_edit: Edit
 fos_user_admin_edit_success: User "%username%" has been successfully updated !
+fos_user_admin_delete_success: User "%username%" has been successfully deleted !

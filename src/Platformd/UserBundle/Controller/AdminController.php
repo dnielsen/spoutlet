@@ -65,6 +65,7 @@ class AdminController extends Controller
     public function deleteAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
+        $translator = $this->get('translator');
         
         if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
             
@@ -78,8 +79,10 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('notice', sprintf('User "%s" has been successfully deleted', $user->getUsername()));
-
+            ->setFlash('notice', $translator->trans('fos_user_admin_delete_success', array(
+                '%username' => $user->getUsername() 
+            ), 'FOSUserBundle'));
+            
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 }
