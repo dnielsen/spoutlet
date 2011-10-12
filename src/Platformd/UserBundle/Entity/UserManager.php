@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserManager extends BaseUserManager
 {
+    const DEFAULT_SORTING_FIELD = 'email';
+
     /**
      * {@inheritDoc}
      */
@@ -33,6 +35,17 @@ class UserManager extends BaseUserManager
         }
 
         parent::updateUser($user, $andFlush);
+    }
+
+    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD) 
+    {
+
+        return $this
+            ->repository
+            ->createQueryBuilder('u')
+            ->orderBy('u.'.$sort_by)
+            ->getQuery();
+        
     }
 }
 

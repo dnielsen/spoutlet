@@ -3,5 +3,37 @@
 {% block title %}Manage users{% endblock %}
 
 {% block content %}
+    {% if pager.nbResults > 0 %}
+        <table class="list">
+            <thead>
+                <tr>
+                    <th>{{ "fos_user_admin_index_username" | trans({}, "FOSUserBundle") }}</th>
+                    <th>{{ "fos_user_admin_index_firstname" | trans({}, "FOSUserBundle") }}</th>
+                    <th>{{ "fos_user_admin_index_lastname" | trans({}, "FOSUserBundle") }}</th>
+                    <th>{{ "fos_user_admin_index_email" | trans({}, "FOSUserBundle") }}</th>
+                    <th>{{ "fos_user_admin_index_actions" | trans({}, "FOSUserBundle") }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for index, user in pager %}
+                <tr class="{{ index is odd ? "odd" : "even" }}">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <a href="">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a>
+                        <a href="">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if pager.haveToPaginate %}
+        {{ pagerfanta(pager, 'default', {'routeName' : 'Platformd_UserBundle_admin_index'}) }}
+    {% endif %}
 
 {% endblock %} 
