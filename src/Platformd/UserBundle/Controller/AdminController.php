@@ -27,11 +27,11 @@ class AdminController extends Controller
     {
         $manager = $this->get('fos_user.user_manager');
         
-        if (!$user = $manager->findUserBy(array('id' => $id))) {
+        if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
             
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
-        
+
         // TODO : Use a confirm page and a DELETE HTTP Method
 
         $manager->deleteUser($user);
