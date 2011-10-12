@@ -3,7 +3,7 @@
 {% block title %}{{ "fos_user_admin_user_edit_title" | trans({ "%username%" : user.username }, "FOSUserBundle") }}{% endblock %}
 
 {% block content %}
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id}) }}">
+    <form method="post" action="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id}) }}" class="form">
         {{ form_errors(form) }}
         
         {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
