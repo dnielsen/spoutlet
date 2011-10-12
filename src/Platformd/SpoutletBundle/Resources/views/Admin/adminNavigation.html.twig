@@ -1,6 +1,9 @@
 <div style="padding:10px 0 20px 0;">
 	<div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_index') }}">Admin Home</a></div>
-	<div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_events_index') }}">Manage Events</a></div>
-	<div style="display:inline-table;padding-right: 10px;"><a href="{{ path('Platformd_UserBundle_admin_index') }}">Manage Users</a></div>
-	<div style="display:inline-table;padding-right: 10px;"><a href="#">Manage Content</a></div>
+    {% if is_granted('ROLE_ORGANIZER') %}
+	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_events_index') }}">Manage Events</a></div>
+    {% endif %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('Platformd_UserBundle_admin_index') }}">Manage Users</a></div>
+    {% endif %}
 </div>
