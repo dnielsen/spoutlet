@@ -92,3 +92,11 @@
     git=git://github.com/stof/StofDoctrineExtensionsBundle.git
     target=bundles/Stof/DoctrineExtensionsBundle
     version=1.0.0
+
+[pagerfanta]
+    git=https://github.com/whiteoctober/Pagerfanta.git
+    target=/pagerfanta
+
+[WhiteOctoberPagerfantaBundle]
+    git=git://github.com/whiteoctober/WhiteOctoberPagerfantaBundle.git
+    target=bundles/WhiteOctober/PagerfantaBundle
