@@ -6,6 +6,11 @@ PlatformDSpoutletBundle:
     resource: "@SpoutletBundle/Resources/config/routing.yml"
     prefix:   /
 
+PlatformDUserBundle:
+    resource: "@UserBundle/Resources/config/routing/admin.yml"
+    prefix:   /admin/user
+
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

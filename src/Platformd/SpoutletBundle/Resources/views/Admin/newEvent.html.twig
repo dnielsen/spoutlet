@@ -2,9 +2,8 @@
 {% block title 'Create New Event' %}
 
 {% block content %}
-<form action="{{ path('admin_events_new') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_widget(form) }}
-
-    <input type="submit" />
-</form>
+{% include 'SpoutletBundle:Admin:eventForm.html.twig' with {
+    'form': form,
+    'route': path('admin_events_new')
+} %}
 {% endblock %}

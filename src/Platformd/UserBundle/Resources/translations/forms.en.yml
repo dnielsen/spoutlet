@@ -5,3 +5,8 @@ fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
 fos_user_registration_form_latestNewsSource: "How did you most recently hear about Alienware Arena?"
 fos_user_registration_form_termsAccepted: "I have read and agree to the Terms & Conditions and Privacy Policy"
 fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email"
+
+fos_user_profile_form_user_username: "Username"
+fos_user_profile_form_user_firstname: "First name"
+fos_user_profile_form_user_lastname: "Last name"
+fos_user_profile_form_user_email: "Email"

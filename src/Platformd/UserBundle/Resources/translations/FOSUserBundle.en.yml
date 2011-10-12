@@ -29,11 +29,27 @@ fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
 
 
-fos_user_profile_form_user_firstname: "First name"
 fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_file: "Avatar"
 
-profile.show.title: "%username%'s profile"
+profile.show.title: '%firstname% "%username%" %lastname%'
 profile.show.firstname: "First name"
 profile.show.lastname: "Last name"
+profile.show.friends: "My Friends"
+profile.show.signature: "Signature"
+profile.show.arena_reward_point_feed: "Arena Reward Points Feed"
+profile.show.chat_wall: "Chat Wall"
+profile.show.my_rig: "My Rig"
 
+fos_user_admin_user_edit_title: 'Edit user %username%' 
+fos_user_admin_index_username: User Name
+fos_user_admin_index_firstname: First Name
+fos_user_admin_index_lastname: Last Name
+fos_user_admin_index_email: Email
+fos_user_admin_index_actions: Actions
+fos_user_admin_delete: Delete
+fos_user_admin_edit: Edit 
+
+fos_user_admin_user_edit: Edit
+fos_user_admin_edit_success: User "%username%" has been successfully updated !
+fos_user_admin_delete_success: User "%username%" has been successfully deleted !

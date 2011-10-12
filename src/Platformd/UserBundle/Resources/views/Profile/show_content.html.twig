@@ -1,14 +1,39 @@
-<div class="fos_user_user_show">
-    <h2>{{ "profile.show.title" | trans({ "%username%": user.username }, 'FOSUserBundle') }}</h2>
+<div class="fos_user_user_show memberProfile">
+    <div class="memberProfileLeft">
 
-    {% if user.avatar %}
-        <div class="profileAvatar"> 
-            <img src="{{ user.webPath }}" alt="{{ user.username }}" />
+            <div class="profileAvatar_big"> 
+                <img src="{{ user.avatar ? user.webPath : "/images/profile-default.png" }}" alt="{{ user.username }}" />
+            </div>
+        
+        <div class="profileBloc">
+            <h3>{{ "profile.show.friends" | trans({}, "FOSUserBundle") }}</h3>
+            <p>no friends</p>
         </div>
-    {% endif %}
+    </div>
+    
+    <div class="memberProfileRight">
+        <h2>{{ "profile.show.title" | trans({ 
+                "%username%": user.username,
+                "%firstname%" : user.firstname,
+                "%lastname%" : user.lastname
+            }, 'FOSUserBundle') }}</h2>
 
-    <p>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}: {{ user.username }}</p>
-    <p>{{ 'profile.show.firstname'|trans({}, 'FOSUserBundle') }}: {{ user.firstname}}</p>
-    <p>{{ 'profile.show.lastname'|trans({}, 'FOSUserBundle') }}: {{ user.lastname }}</p>
-    <p>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}: {{ user.email }}</p>
+        <div class="profileBloc">
+            <h3>{{ "profile.show.signature" | trans({}, "FOSUserBundle") }}</h3>
+        </div>
+        
+        <div class="profileBloc">
+            <h3>{{ "profile.show.arena_reward_point_feed" | trans({}, "FOSUserBundle") }}</h3>
+        </div>
+        
+        <div class="profileBloc">
+            <h3>{{ "profile.show.chat_wall" | trans({}, "FOSUserBundle") }}</h3>
+        </div>
+        
+        <div class="profileBloc">
+            <h3>{{ "profile.show.my_rig" | trans({}, "FOSUserBundle") }}</h3>
+        </div>
+    </div>
+
+    <hr class="clear" />
 </div>
