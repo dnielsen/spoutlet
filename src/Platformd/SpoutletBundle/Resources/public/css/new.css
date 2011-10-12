@@ -95,6 +95,7 @@ ul.form-msg-error {
 
 .memberProfileRight {
     margin-left: 210px;
+    padding-top: 10px;
     width: 420px;
 }
 .profileAvatar_big img {
@@ -133,11 +134,15 @@ ul.form-msg-error {
 /* Title */
 .memberProfile h2 {
     margin: 20px 0 10px 0;
+    font-weight: bold;
+    color: #B3B3B3;
 }
 
-.memberProfile h3 {
+
+.memberProfile .profileBloc h3 {
     border-bottom: 1px solid #4a4a4a;
     font-size: 18px;
+    color: #fff;
     padding: 3px 0 1px 0;
 }
 
