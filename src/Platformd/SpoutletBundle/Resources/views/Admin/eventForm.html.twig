@@ -1,0 +1,30 @@
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form">
+
+    {{ form_errors(form) }}
+    
+    {{ form_row(form.name) }}
+
+    {{ form_row(form.published) }}
+
+    {{ form_row(form.starts_at) }}
+
+    {{ form_row(form.ends_at) }}
+
+    {{ form_row(form.city) }}
+
+    {{ form_row(form.country) }}
+
+    {{ form_row(form.hosted_by) }}
+
+    {{ form_row(form.game) }}
+
+    <div class="form_row">
+        {{ form_label(form.content) }}
+        {{ form_errors(form.content) }}
+        {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
+
+    {{ form_rest(form) }}
+
+    <input type="submit" class="button" />
+</form>
