@@ -42,6 +42,9 @@ platformd:
             kick_ass_rig: "Need a kick ass rig? Checkout Alienware"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    help: 
+        help_page:
+            contact_and_support: Contact Us & Support
     events:
         event_listings:
             your_registered_events: Your Registered Events 
