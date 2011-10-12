@@ -149,3 +149,20 @@ ul.form-msg-error {
 .profileBloc {
     margin-bottom: 15px;
 }
+
+/* Admin */
+table.list {
+    width: 100%:
+}
+
+table.list td {
+    padding:2px;
+}
+
+table.list tr.odd {
+
+}
+
+table.list tr.even {
+
+}
