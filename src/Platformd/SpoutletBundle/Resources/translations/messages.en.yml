@@ -16,7 +16,7 @@ platformd:
             about: About
             contact: Contact
             search: Search
-            logged_in_as: Logged in as
+            logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
         
         admin_menu:
             admin_home: Admin Home
