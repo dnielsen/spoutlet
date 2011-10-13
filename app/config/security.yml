@@ -14,6 +14,7 @@ security:
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
+        - { path: ^/([\w]+\/)?admin/events/approve.*, role: ROLE_SUPER_ADMIN }
         - { path: ^/([\w]+\/)?admin/events, role: ROLE_ORGANIZER }
         # admin is the lowest admin role - catch all for admin routes
         - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN }

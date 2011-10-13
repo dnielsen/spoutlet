@@ -18,7 +18,9 @@
                     <th>GAMES</th>
                     <th>HOSTED BY</th>
                     <th>LOCATION</th>
-                    <th>Actions</th>
+                    {% if app.user.isSuperAdmin %}
+                        <th>Actions</th>
+                    {% endif %}
                 </tr>
                 {% for event in events %}
                 <tr class="eventListGroup_online">
@@ -30,11 +32,13 @@
                     <td>{{ event.game }}</td>
                     <td>{{ event.hostedBy }}</td>
                     <td>{{ event.metroArea.label }}</td>
+                    {% if app.user.isSuperAdmin %}
                     <td>
                         {% if not event.published %}
                             <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
                         {% endif %}
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
