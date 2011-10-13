@@ -15,8 +15,8 @@ platformd:
             change: Change
             change_region: Change your region
             global: Global
-            usa_canada: USA/Canada
-            malasia_singapore: Malasia/Singapore
+            usa_canada: "USA/Canada"
+            malasia_singapore: "Malasia/Singapore"
             américa_latina: América Latina
             europe: Europe
             japan: Japan
