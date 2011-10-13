@@ -1,24 +1,26 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title 'Events Admin' %}
+{% block title %}{{ "platformd.events.admin.title" | trans }}{% endblock %}
 
 {% block content %}
 <div id="admin-events">
     <div class="widget-100">
     <div class="widget-header">
         <div class="widget-title">
-            Current Events
+            {{ "platformd.events.event_listings.current_events" | trans }}
         </div>
     </div>
     <div class="widget-content">
-        <table>
+        <table width="100%">
             <tbody>
                 <tr>
-                    <th style="width:121px;">START DATE</th>
-                    <th style="width:259px;">EVENT</th>
-                    <th style="width:212px;">GAMES</th>
-                    <th style="width:191px;">HOSTED BY</th>
-                    <th style="width:133px;">LOCATION</th>
-                    <th>Actions</th>
+                    <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
+                    <th>{{ "platformd.events.event_listings.event" | trans }}</th>
+                    <th>{{ "platformd.events.event_listings.games" | trans }}</th>
+                    <th>{{ "platformd.events.event_listings.hosted_by" | trans }}</th>
+                    <th>{{ "platformd.events.event_listings.location" | trans }}</th>
+                    {% if app.user.isSuperAdmin %}
+                        <th>{{ "platformd.commons.actions" | trans }}</th>
+                    {% endif %}
                 </tr>
                 {% for event in events %}
                 <tr class="eventListGroup_online">
@@ -30,11 +32,13 @@
                     <td>{{ event.game }}</td>
                     <td>{{ event.hostedBy }}</td>
                     <td>{{ event.metroArea.label }}</td>
+                    {% if app.user.isSuperAdmin %}
                     <td>
                         {% if not event.published %}
                             <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
                         {% endif %}
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
@@ -42,7 +46,7 @@
     </div>
 
     <div class="widget-footer">
-        <a class="aw-link" href="events/new" style="margin-right:10px;">Create new event</a>
+        <a class="aw-link" href="events/new" style="margin-right:10px;">{{ "platformd.events.admin.create" | trans }}</a>
         <div class="clear"></div>
     </div>
 </div>

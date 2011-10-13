@@ -2,6 +2,8 @@ platformd:
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - Gamers Wanted
+        # title user by default in Admin area (if not overriden)
+        default_admin_title: Admin
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
 
@@ -13,7 +15,12 @@ platformd:
             about: About
             contact: Contact
             search: Search
-    
+        
+        admin_menu:
+            admin_home: Admin Home
+            manage_events: Manage Events
+            manage_users: Manage Users
+        
         main_menu:
             home: Home
             alienware: Alienware
@@ -42,8 +49,18 @@ platformd:
             kick_ass_rig: "Need a kick ass rig? Checkout Alienware"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    help: 
+        help_page:
+            contact_and_support: Contact Us & Support
+    commons:
+        actions: Actions
+    users:
+        user_listings:
+            title: Manage Users
+            super_admin_cant_be_modified: Super admin users can't be modified
     events:
         event_listings:
+            your_registered_events: Your Registered Events 
             current_events: Current Events
             more_current_events: More Current Events
             start_date: Start Date
@@ -65,13 +82,22 @@ platformd:
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
         admin:
+            title: Event admin
+            edit_event: Edit Event | %event_title%
+            create: Create New Event
             approve: Approve
             approved: Event "%event_title%" has been approved and is now published. 
             unknown: Unknown event \#%event_id% !
+            save_event: Save Event
 
     account_page:
+        events:
+            no_registered_events: You have not registered to any event yet.
         account:
             welcome_to_control: Welcome to your Control Panel
             hello_user: "Hello %firstname%! You are logged in with the username %username%."
             ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
             warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
+            under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
+            edit_your_account: Edit your account information
+            change_your_password: Change your password
