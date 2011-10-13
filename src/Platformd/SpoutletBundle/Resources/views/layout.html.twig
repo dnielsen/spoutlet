@@ -55,21 +55,6 @@
 		    });
 		</script>
 		<script type="text/javascript">
-			function CheckEnter(e, event)
-			{
-				var code;
-				if (event.charCode)
-					code = event.charCode;
-				else
-					code = event.keyCode;
-
-				if (code == 13)
-				{
-					var term = $(".search input").val();
-					if (term && term != 'Search...')
-						window.location = '/search/view/'+encodeURIComponent(term)+'/';
-				}
-			}
 
 			$(document).ready(function(){
 				$('#toggleRegion').click(function(){
@@ -81,27 +66,7 @@
 				$('#selectLanguage').toggle();
 				$('#selectRegion').hide();
 				});
-
-				//search
-				$(".search .submit").click(function() {
-					var term = $(".search input").val();
-					window.location = '/search/view/'+encodeURIComponent(term)+'/';
-				});
-
-				var curSearchTerm;
-				$(".search input").focus(function() {
-					curSearchTerm = $(this).val();
-					$(this).val("");
-				});
-
-				$(".search input").blur(function() {
-					if ($(this).val() == "")
-						$(this).val(curSearchTerm);
-				});
-
 			});
-
-
 		</script>
 	</head>
 	<body>

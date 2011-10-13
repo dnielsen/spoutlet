@@ -206,13 +206,6 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #logo { width: 100%; }
 #logo a { display: block; height:115px; width:420px; margin: 0 auto; background:url('/bundles/spoutlet/images/logo.png') center center no-repeat; }
 
-/* header search */
-#header .search { float:right; height:19px; width:200px; margin: 0px 0 0 0; }
-#header .search .input { float:left; height:19px; padding-left:11px; }
-#header .search .input input { height:16px; width:155px; background: #181818; border:1px solid #2a2a2a; border-right: none; color:#FFFFFF; padding: 3px; font-size:11px; }
-#header .search .submit { float:right; height: 22px; display: inline-block; width: 25px; border: 1px solid #2a2a2a;  background: url('/bundles/spoutlet/images/link-icon.png') center center no-repeat #181818; }
-#header .search .submit:hover { cursor: pointer; }
-
 /** MAIN NAV **/
 #nav, #sub-nav { text-transform: uppercase; }
 #mainNav-wrapper { height: 30px; background: url('/bundles/spoutlet/images/nav_bg.png') repeat-x; }
