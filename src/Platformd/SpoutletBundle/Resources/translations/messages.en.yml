@@ -47,6 +47,10 @@ platformd:
             contact_and_support: Contact Us & Support
     commons:
         actions: Actions
+    users:
+        user_listings:
+            title: Manage Users
+            super_admin_cant_be_modified: Super admin users can't be modified
     events:
         event_listings:
             your_registered_events: Your Registered Events 

@@ -1,6 +1,6 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block title %}Manage users{% endblock %}
+{% block title %}{{ "platformd.users.user_listings.title" | trans }}{% endblock %}
 
 {% block content %}
     {% if pager.nbResults > 0 %}
@@ -28,7 +28,7 @@
                             <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a>
                             <a href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
                         {% else %}
-                            Super admin users can't be modified
+                            {{ "platformd.users.user_listings.super_admin_cant_be_modified" | trans }}
                         {% endif %}    
                     </td>
                 </tr>
