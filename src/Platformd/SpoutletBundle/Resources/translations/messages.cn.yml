@@ -6,6 +6,21 @@ platformd:
         title_suffix: Alienware Arena
 
         #translations that are not used yet
+        region:
+            region: 地区
+            register: 注册
+            china: 中国
+            change: 切换
+            change_region: 切换地区
+            global: 全球
+            usa_canada: "美国/加拿大"
+            malasia_singapore: "马来西亚/新加坡"
+            américa_latina: 拉丁美洲
+            europe: 欧洲
+            japan: 日本
+            change_language: 改变首选语言
+            english: 英语
+            español: 西班牙语
 
         top_menu:
             sign_in: 登录
