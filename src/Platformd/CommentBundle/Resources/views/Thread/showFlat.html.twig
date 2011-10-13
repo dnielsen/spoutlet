@@ -17,9 +17,6 @@
         {{ 'platformd.comment.login_to_comment' | trans({'%login_url%': path('fos_user_security_login')}) | raw }}
     {% endif %}
 
-
-    <a href="{{ path("fos_comment_thread_show_feed", {"id": thread.id}) }}">{% trans from 'FOSCommentBundle' %}fos_comment_rss_feed{% endtrans %}</a>
-
     {% if thread.numComments > 0 %}
         <h3>
             {% transchoice thread.numComments with {'%num%': thread.numComments} from "FOSCommentBundle" %}
