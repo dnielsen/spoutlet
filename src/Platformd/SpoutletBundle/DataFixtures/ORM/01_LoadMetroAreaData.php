@@ -4,10 +4,10 @@ namespace Platformd\SploutletBundle\DataFixtures\ORM;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Platformd\SpoutletBundle\Entity\MetroArea;
 
-class LoadMetroAreaData extends AbstractFixture
+class LoadMetroAreaData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load($manager)
     {
@@ -27,5 +27,10 @@ class LoadMetroAreaData extends AbstractFixture
 
         $this->addReference('metro-area-one', $metroAreaOne);
         $this->addReference('metro-area-two', $metroAreaTwo);
+    }
+
+    public function getOrder()
+    {
+        return 1;
     }
 }
