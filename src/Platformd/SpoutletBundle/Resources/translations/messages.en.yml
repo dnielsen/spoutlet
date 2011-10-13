@@ -49,6 +49,7 @@ platformd:
             featured: Featured
             giveaways: Giveaways
             competitions: Competitions
+            events: Events
             on_tour: On Tour
             all: All
             see_more: See More
