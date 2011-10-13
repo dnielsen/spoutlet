@@ -4,13 +4,14 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                Current and Upcoming Events
+                {{ "platformd.events.event_listings.current_and_upcoming_events" | trans }}
             </div>
         </div>
         <div class="widget-content">
+            {% set no_events_message %}{{ "platformd.events.event_listings.no_current_events" | trans }}{% endset %}
             {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                 'events': events,
-                'no_events_message': 'There are no current events at this moment.'
+                'no_events_message': no_events_message 
             } %}
         </div>
 

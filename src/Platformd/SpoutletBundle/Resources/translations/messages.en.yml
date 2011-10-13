@@ -9,6 +9,7 @@ platformd:
 
         #translations that are not used yet
         top_menu:
+            account: Account
             sign_in: Sign in
             sign_out: Sign out
             join: Join
@@ -68,7 +69,13 @@ platformd:
     help: 
         help_page:
             contact_and_support: Contact Us & Support
-    commons:
+            contact_dell: For questions about products or support please contact Dell directly at <a href="http://support.dell.com" target="_blank">http://support.dell.com</a>   commons:
+            contact_alienwarearena: For general Alienware Arena inquiries you may contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
+            regional_addresses: Regional Addresses
+            regional_addresses_north_america: North America
+            regional_addresses_europe: Europe
+            regional_addresses_latin_america: Latin america
+            questions: For questions or assistance with specific events refer to the 'support' link on the respective event micro-site. 
         actions: Actions
     users:
         user_listings:
@@ -78,6 +85,7 @@ platformd:
         event_listings:
             your_registered_events: Your Registered Events 
             current_events: Current Events
+            current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
             start_date: Start Date
             end_date: End Date
