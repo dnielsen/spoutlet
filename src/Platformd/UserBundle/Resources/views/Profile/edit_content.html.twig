@@ -17,7 +17,7 @@
     {{ form_row(form.current) }}
 
     {% if app.user.avatar %}
-        <h3>Your current avatar</h3>
+        <h3>{{ "fos_user_profile_form_current_avatar" | trans }}</h3>
         <div class="profileAvatar">
             <img src="{{ app.user.webPath }}" alt="{{ app.user.username }}" />
         </div>

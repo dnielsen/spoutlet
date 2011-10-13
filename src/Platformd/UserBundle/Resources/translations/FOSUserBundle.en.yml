@@ -32,6 +32,7 @@ fos_user_registration_form_email_second: "Confirm E-mail:"
 fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_firstname: "First name"
 fos_user_profile_form_user_file: "Avatar"
+fos_user_profile_form_current_avatar: "Your current avatar"
 
 profile.show.title: '%firstname% "%username%" %lastname%'
 profile.show.firstname: "First name"

@@ -1,5 +1,5 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title 'Create New Event' %}
+{% block title %}{{ "platformd.events.event_create.create_new_event" | trans }}{% endblock %}
 
 {% block content %}
 {% include 'SpoutletBundle:Admin:eventForm.html.twig' with {
