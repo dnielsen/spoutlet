@@ -76,7 +76,7 @@ platformd:
             approve: Approve
             approved: Event "%event_title%" has been approved and is now published. 
             unknown: Unknown event \#%event_id% !
-            edit_event: Edit Event
+            save_event: Save Event
 
     account_page:
         account:
