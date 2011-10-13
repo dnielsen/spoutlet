@@ -37,10 +37,6 @@ fos_user_profile_form_current_avatar: "Your current avatar"
 profile.show.title: '%firstname% "%username%" %lastname%'
 profile.show.firstname: "First name"
 profile.show.lastname: "Last name"
-profile.show.friends: "My Friends"
-profile.show.signature: "Signature"
-profile.show.arena_reward_point_feed: "Arena Reward Points Feed"
-profile.show.chat_wall: "Chat Wall"
 profile.show.my_rig: "My Rig"
 
 fos_user_admin_user_edit_title: 'Edit user %username%' 

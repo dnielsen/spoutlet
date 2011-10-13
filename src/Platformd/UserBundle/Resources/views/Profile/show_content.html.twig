@@ -4,11 +4,6 @@
             <div class="profileAvatar_big"> 
                 <img src="{{ user.avatar ? user.webPath : "/images/profile-default.png" }}" alt="{{ user.username }}" />
             </div>
-        
-        <div class="profileBloc">
-            <h3>{{ "profile.show.friends" | trans({}, "FOSUserBundle") }}</h3>
-            <p>no friends</p>
-        </div>
     </div>
     
     <div class="memberProfileRight">
@@ -18,18 +13,6 @@
                 "%lastname%" : user.lastname
             }, 'FOSUserBundle') }}</h2>
 
-        <div class="profileBloc">
-            <h3>{{ "profile.show.signature" | trans({}, "FOSUserBundle") }}</h3>
-        </div>
-        
-        <div class="profileBloc">
-            <h3>{{ "profile.show.arena_reward_point_feed" | trans({}, "FOSUserBundle") }}</h3>
-        </div>
-        
-        <div class="profileBloc">
-            <h3>{{ "profile.show.chat_wall" | trans({}, "FOSUserBundle") }}</h3>
-        </div>
-        
         <div class="profileBloc">
             <h3>{{ "profile.show.my_rig" | trans({}, "FOSUserBundle") }}</h3>
         </div>
