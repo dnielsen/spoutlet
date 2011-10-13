@@ -85,6 +85,27 @@ a.button:hover {
     width: 84px;
 }
 
+#commentsView h3 {
+    padding:0;
+    font-size: 21px;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+#commentsView {
+    margin: 0;
+    padding: 0;
+}
+
+#commentsView textarea {
+    height:250px;
+}
+
+#commentsView .fos_comment_submit {
+    text-align: center;
+    padding: 5px;
+}
+
 /* Profile */
 
 .memberProfileLeft {
@@ -168,3 +189,4 @@ table.list tr.odd {
 table.list tr.even {
 
 }
+
