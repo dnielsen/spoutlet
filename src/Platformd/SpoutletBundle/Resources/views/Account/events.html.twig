@@ -18,9 +18,10 @@
                         </div>
                     </div>
                     <div class="widget-content">
+                        {% set no_events_messages %}{% trans %}platformd.account_page.events.no_registered_events{% endtrans %}{% endset %}
                         {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                             'events': app.user.events,
-                            'no_events_message': 'You have not registered to any event yet.'
+                            'no_events_message': no_events_messages
                         } %}
                     </div>
 

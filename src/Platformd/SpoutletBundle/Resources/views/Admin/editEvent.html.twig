@@ -1,6 +1,8 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block title %}Edit Event | {{ event.name }} {% endblock %}
+{% block title %}{{ "platformd.events.admin.edit_event" | trans({
+        "%event_title%" : event.name
+    }) }}{% endblock %}
 
 {% block content %}
 {% include 'SpoutletBundle:Admin:eventForm.html.twig' with {

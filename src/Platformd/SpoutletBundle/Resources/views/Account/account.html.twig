@@ -11,27 +11,15 @@
     </div>
     <div class="left">
         <div class="pad">
-            <h2 id="welcomeControlPanel">Welcome To Your Control Panel</h2>
-            <p><strong>Hello {{ app.user.username }}</strong> You are logged in with the username
-            <strong>{{ app.user.username }}</strong>. <a href="{{ path('fos_user_security_logout') }}">Sign Out</a></p>
-            <p>Are you ready to game? The Alienware Arena Control Panel is your
-            primary method of interacting with the Arena. You can join a team,
-            sign up for an event, and manage scheduling all through here. Listed
-            below are the most common tasks people need to do in their control
-            panel. If you have any problems, please feel free to <a href="/pages/support/">
-            contact the Arena Support Team</a>. Remember, we're different from
-            the tech support department. Please do not call them as they cannot
-            help you.</p>
+            <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | trans({
+                "%username%" : app.user.username
+            }) }}</h2>
 
-            <p><strong class="red">Warning: Never give your password to anyone
-            else!</strong> They might do something stupid, like disband your
-            team, or forfeit a match! Alienware Arena is not responsible, and
-            might not be able to fix problems caused by others using your
-            account. So save yourself the hassle and keep your account
-            information to yourself.</p>
+            <p>{{ "platformd.account_page.account.ready_to_game" | trans }}</p> 
+            
+            <p>{{ "platformd.account_page.account.warning" | trans }}</p> 
 
-            <p><em>Note: Alienware Arena is currently under construction, so come
-            back later if a feature is not enabled yet.</em></p>
+            <p>{{ "platformd.account_page.account.under_construction" | trans }}</p>
         </div>
     </div>
 
