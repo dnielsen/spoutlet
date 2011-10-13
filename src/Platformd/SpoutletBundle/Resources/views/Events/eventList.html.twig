@@ -1,11 +1,11 @@
             <table>
                 <tbody>
                     <tr>
-                        <th style="width:121px;">START DATE</th>
-                        <th style="width:259px;">EVENT</th>
-                        <th style="width:212px;">GAMES</th>
-                        <th style="width:191px;">HOSTED BY</th>
-                        <th style="width:133px;">LOCATION</th>
+                        <th style="width:121px;">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
+                        <th style="width:259px;">{{ 'platformd.events.event_listings.event' | trans }}</th>
+                        <th style="width:212px;">{{ 'platformd.events.event_listings.games' | trans }}</th>
+                        <th style="width:191px;">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
+                        <th style="width:133px;">{{ 'platformd.events.event_listings.location' | trans }}</th>
                     </tr>
                     {% if events|length == 0 %}
                     <tr>
