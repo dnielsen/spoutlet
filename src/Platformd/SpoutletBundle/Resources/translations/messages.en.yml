@@ -8,6 +8,22 @@ platformd:
         title_suffix: Alienware Arena
 
         #translations that are not used yet
+        region:
+            region: Region
+            register: Register
+            china: China
+            change: Change
+            change_region: Change your region
+            global: Global
+            usa_canada: USA/Canada
+            malasia_singapore: Malasia/Singapore
+            américa_latina: América Latina
+            europe: Europe
+            japan: Japan
+            change_language: Change preferred language
+            english: English
+            español: Español
+
         top_menu:
             account: Account
             sign_in: Sign in
