@@ -45,6 +45,8 @@ platformd:
     help: 
         help_page:
             contact_and_support: Contact Us & Support
+    commons:
+        actions: Actions
     events:
         event_listings:
             your_registered_events: Your Registered Events 
@@ -69,6 +71,8 @@ platformd:
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
         admin:
+            title: Event admin
+            create: Create New Event
             approve: Approve
             approved: Event "%event_title%" has been approved and is now published. 
             unknown: Unknown event \#%event_id% !
