@@ -4,10 +4,10 @@ namespace Platformd\SploutletBundle\DataFixtures\ORM;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Platformd\SpoutletBundle\Entity\Event;
 
-class LoadEventData extends AbstractFixture
+class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load($manager)
     {
@@ -60,5 +60,10 @@ class LoadEventData extends AbstractFixture
         $manager->persist($event);
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }

@@ -15,6 +15,7 @@ platformd:
             about: About
             contact: Contact
             search: Search
+            logged_in_as: Logged in as
         
         admin_menu:
             admin_home: Admin Home
@@ -27,6 +28,21 @@ platformd:
             events: Events
             news: News
             microsoft: Microsoft
+
+        region:
+            change: (change)
+            region: Region
+            change_your_region: Change your region:
+            change_preferred_language: Change preferred language:
+            global: Global
+            usa_canada: USA/Canada
+            malaysia: Malaysia/Singapore
+            america_latina: América Latina
+            europe: Europe
+            china: China
+            japan: Japan
+            english: English
+            espanol: Español
     
         page_content:
             featured: Featured

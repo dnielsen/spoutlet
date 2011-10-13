@@ -120,6 +120,8 @@ $interpreter = PHP_OS == 'WINNT' ? 'php.exe' : '';
 // Update the bootstrap files
 system(sprintf('%s %s', $interpreter, escapeshellarg($rootDir.'/vendor/bundles/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php')));
 
+system(sprintf('cp %s/vendor/../app/bootstrap.php.cache %s/app/bootstrap.php.cache', $rootDir, $rootDir));
+
 // Update assets
 system(sprintf('%s %s assets:install %s --symlink', $interpreter, escapeshellarg($rootDir.'/app/console'), escapeshellarg($rootDir.'/web/')));
 
