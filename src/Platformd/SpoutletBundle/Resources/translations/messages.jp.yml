@@ -9,29 +9,29 @@ platformd:
 
         #translations that are not used yet
         region:
-            region: 地区
-            register: 注册
+            region: 地域
+            register: 登録登録
             china: 中国
-            change: 切换
-            change_region: 切换地区
-            global: 全球
-            usa_canada: "美国/加拿大"
-            malasia_singapore: "马来西亚/新加坡"
-            america_latina: 拉丁美洲
-            europe: 欧洲
+            change: 変更
+            change_region: 地域変更
+            global: 全世界
+            usa_canada: "北米/カナダ"
+            malasia_singapore: "マレーシア/シンガポール"
+            america_latina: 南米
+            europe: ヨーロッパ
             japan: 日本
-            change_language: 改变首选语言
-            english: 英语
-            espanol: 西班牙语
-
+            change_language: 言語変更
+            english: 英語
+            espanol: スペイン語
+            
         top_menu:
             account: Account
-            sign_in: 登录
-            sign_out: 退出
-            join: 注册
-            about: 关于我们
-            contact: 联系我们
-            search: 搜索
+            sign_in: ログイン
+            sign_out: ログアウト
+            join: 参加する
+            about: Alienware Arenaについて
+            contact: お問い合わせ
+            search: 検索
             logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
 
         admin_menu:
@@ -40,33 +40,33 @@ platformd:
             manage_users: Manage Users
 
         main_menu:
-            home: 首页
-            alienware: 外星人顶级游戏电脑
-            events: 活动
-            news: 新闻
-            microsoft: 微软
+            home: ホーム
+            alienware: Alienware
+            events: イベント
+            news: ニュース
+            microsoft: マイクロソフト
     
         page_content:
-            featured: 专栏
-            giveaways: 邀请码
-            competitions: 比赛
+            featured: トピックス
+            giveaways: キャンペーン
+            competitions: 大会
             events: Events
-            on_tour: 巡回赛
-            all: 所有
-            see_more: 更多
-            photo_gallery: 照片库
-            view_all: 查看所有
-            redeem: 兑换
-            keys_available: 有邀请码
+            on_tour: ツアー
+            all: すべて
+            see_more: 詳しく見る
+            photo_gallery: フォトギャラリー
+            view_all: すべて見る
+            redeem: 交換
+            keys_available: 利用可能なゲームキー
 
         bottom_menu:
-            contact_us: 联系我们
-            privacy_policy: 隐私条款
-            terms_and_conditions: 服务条款
-            steam_community: Steam社区
-            xfire_community: Xfire社区
-            kick_ass_rig: "需要一个牛逼的装备? 请看看 ALienware"
-            copyright_2012: "©2012版权所有，Alienware公司"
+            contact_us: お問い合わせ
+            privacy_policy: 個人情報保護方針
+            terms_and_conditions: 利用条項
+            steam_community: Steam コミュニティ
+            xfire_community: Xfire コミュニティ
+            kick_ass_rig: "Alienware.jpへ移動する"
+            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
         help_page:
@@ -87,21 +87,21 @@ platformd:
     events:
         event_listings:
             your_registered_events: Your Registered Events
-            current_events: 当前活动
+            current_events: 現在のイベント
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
-            start_date: 开始时间
+            start_date: 開始日
             end_date: End Date
             details: Details
-            event: 活动
-            games: 游戏
-            hosted_by: 举办方
-            location: 地点
-            upcoming_events: 活动预告
-            there_are_no_upcoming_events_at_this_moment: 暂无事件预告
-            past_events: 过去活动
+            event: イベント名
+            games: ゲーム名
+            hosted_by: 主催
+            location: 実施場所
+            upcoming_events: 今後のイベント
+            there_are_no_upcoming_events_at_this_moment: 予定されているイベントは現在ありません。
+            past_events: 終了したイベント
             more_past_Events: More Past Events
-            online: 在线
+            online: オンライン
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
         event_create:
@@ -123,14 +123,13 @@ platformd:
         events:
             no_registered_events: You have not registered to any event yet.
         account:
-            welcome_to_control: 欢迎来到管理中心
-            hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
-            ready_to_game: 准备开始玩游戏吗？Alienware竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
-            warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！Alienware 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
+            welcome_to_control: あなたの管理画面へようこそ
+            hello_user: "こんにちは%firstname%さん。ユーザーネーム%username%でログイン中です。"
+            ready_to_game: ゲームへの準備はできていますか？このAlienware Arena管理画面は、あなたがArenaと交流するための主要ツールです。 現在、あなたはイベントのためにサインアップしコメントを残すことができます。私たちは毎月新しいトピックを追加するでしょう。もし何か問題が起こった場合は、いつでもArenaサポートチームへコンタクトしてください。
+            warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。Alienware Arenaはその責任を
             under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
             edit_your_account: Edit your account information
             change_your_password: Change your password
-
             
     
     

@@ -3,7 +3,7 @@ platformd.comment.posted_date_label: "Posted on"
 
 fos_comment_comment_new_headline_first:       Be the first to comment
 fos_comment_comment_new_headline:             Add Your Comment
-fos_comment_comment_new_submit:               Add Reply
+fos_comment_comment_new_submit:               返答する
 
 fos_comment_comment_reply_reply_to:           Replying to
 fos_comment_comment_reply_cancel:             Cancel

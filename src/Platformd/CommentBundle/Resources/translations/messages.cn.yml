@@ -1,10 +1,8 @@
 platformd:
     comment:
-        commenting:
-            login_to_comment: 你没有登录。留言请先登录。
-            posted_date: 发表于 %date_posted%
-            comments: 评论
-            add_reply: 加回复
+        login_to_comment: 你没有登录。留言请先登录。
+        posted_date_label: 发表于
+        comments: 评论
             
     
     

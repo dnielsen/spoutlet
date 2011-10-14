@@ -1,6 +1,5 @@
 platformd:
     comment:
         login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
-        posted_date: Posted %date_posted%
+        posted_date_label: Posted
         comments: Comments
-        add_reply: Add Reply

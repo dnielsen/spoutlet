@@ -12,17 +12,17 @@ platformd:
             region: Region
             register: Register
             china: China
-            change: Change
+            change: (change)
             change_region: Change your region
             global: Global
             usa_canada: "USA/Canada"
             malasia_singapore: "Malasia/Singapore"
-            américa_latina: América Latina
+            america_latina: América Latina
             europe: Europe
             japan: Japan
             change_language: Change preferred language
             english: English
-            español: Español
+            espanol: Español
 
         top_menu:
             account: Account
@@ -45,21 +45,6 @@ platformd:
             events: Events
             news: News
             microsoft: Microsoft
-
-        region:
-            change: (change)
-            region: Region
-            change_your_region: Change your region:
-            change_preferred_language: Change preferred language:
-            global: Global
-            usa_canada: USA/Canada
-            malaysia: Malaysia/Singapore
-            america_latina: América Latina
-            europe: Europe
-            china: China
-            japan: Japan
-            english: English
-            espanol: Español
     
         page_content:
             featured: Featured
@@ -98,6 +83,7 @@ platformd:
         user_listings:
             title: Manage Users
             super_admin_cant_be_modified: Super admin users can't be modified
+
     events:
         event_listings:
             your_registered_events: Your Registered Events 

@@ -1,0 +1,9 @@
+platformd:
+    comment:
+        commenting:
+            login_to_comment: ログインされていません。最初にログインしてからメッセージを残してください。
+            posted_date: %date_posted%
+            comments: コメント
+            
+    
+    
