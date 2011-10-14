@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+    Overridden to hack around the security framework. Basically, the i18n
+    routing bundle prefixes all URLs with /cn and /jp. That's great, except
+    that this doesn't really help for URLs like /login_check and /logout,
+    where the security framework is listening on JUST those specific URLs.
+
+    Fortunately, the routing bundle skips any routes whose names start with
+    an underscore. So, to make life simpler, we'll prefix these routes with
+    that.
+
+    To make matters worse, the LogoutListener and HttpUtils classes muck
+    things up after redirecting after logout. Instead just redirecting, the
+    search to see if there is a route matching the current URL. If there
+    is (and there of course is in our case), it grabs the locale from that
+    route and makes it the current locale. This means that we *almost* don't
+    care that we're sending a chinese user to /logout. But, since it sniffs
+    out that URL and finds the I18n route with the english _locale, the user
+    is sent into the wrong locale. This is solved by adding that underscore
+    at the front of the URL
+-->
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="fos_user_security_login" pattern="/login">
+        <default key="_controller">FOSUserBundle:Security:login</default>
+    </route>
+
+    <route id="_fos_user_security_check" pattern="/login_check">
+        <default key="_controller">FOSUserBundle:Security:check</default>
+    </route>
+
+    <route id="_fos_user_security_logout" pattern="/logout">
+        <default key="_controller">FOSUserBundle:Security:logout</default>
+    </route>
+
+</routes>

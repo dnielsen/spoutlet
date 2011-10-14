@@ -8,8 +8,11 @@ security:
             pattern: ^/
             form_login:
                 provider: fos_userbundle
-            logout:       true
+                login_path: fos_user_security_login
             anonymous:    true
+            logout:
+                path:     /logout
+                target:   default_index
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)

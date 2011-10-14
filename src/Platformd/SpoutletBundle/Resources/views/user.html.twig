@@ -3,7 +3,7 @@
     '%username%': app.user.username,
     '%route%': path('accounts_profile', { 'username': app.user.username } )
 }) | raw }}
-	<li class="separator"><a href="{{ path('fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
+	<li class="separator"><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
 {% else %}
 	<li class="separator"><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
