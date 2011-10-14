@@ -1,4 +1,8 @@
 platformd:
+    not_found:
+        title: Page not found
+        body: We're sorry - but we can't find the page you're looking for
+
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - Gamers Wanted
