@@ -1,7 +1,15 @@
+{% if (app.session.locale == 'cn') %}
+    {% set localeName = 'platformd.layout.region.china' | trans %}
+{% elseif (app.session.locale == 'jp') %}
+    {% set localeName = 'platformd.layout.region.japan' | trans %}
+{% else %}
+    {% set localeName = 'platformd.layout.region.usa_canada' | trans %}
+{% endif %}
+
 <div class="to_alienware" id="regionLink">
     <a class="grey" href="#" id="toggleRegion" onclick=
     "s_objectID=&quot;http://www.alienwarearena.com/#_1&quot;;return this.s_oc?this.s_oc(e):true"
-    name="toggleRegion">{{ 'platformd.layout.region.region' | trans }} {{ 'platformd.layout.region.china' | trans }} <span class="change">{{ 'platformd.layout.region.change' | trans }}</span></a>
+    name="toggleRegion">{{ 'platformd.layout.region.region' | trans }} {{ localeName }} <span class="change">{{ 'platformd.layout.region.change' | trans }}</span></a>
 </div>
 
 <div style="display:none;" id="selectRegion">
