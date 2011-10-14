@@ -1,0 +1,53 @@
+
+# Form field labels
+fos_user_group_form_name: "Group name:"
+
+fos_user_profile_form_user_username: "Username:"
+fos_user_profile_form_user_email: "Email:"
+fos_user_profile_form_current: "Current Password:"
+
+fos_user_registration_form_username: "Username:"
+security.login.username_or_email: "Username or Email:"
+fos_user_registration_form_email: "Email:"
+fos_user_registration_form_plainPassword_first: "Password:"
+fos_user_registration_form_plainPassword_second: "Confirm Password:"
+
+fos_user_resetting_form_new_first: "New password:"
+fos_user_resetting_form_new_second: "Confirm Password:"
+
+fos_user_change_password_form_new_first: "New password:"
+fos_user_change_password_form_new_second: "Confirm Password:"
+fos_user_change_password_form_current: "Current password:"
+
+# some labels are on the "forms" domain
+fos_user_registration_form_firstname: "First name:"
+fos_user_registration_form_lastname: "Last name:"
+fos_user_registration_form_phoneNumber: "Phone:"
+fos_user_registration_form_country: "Country:"
+fos_user_registration_form_state: "State/Province:"
+fos_user_registration_form_email_first: "E-mail:"
+fos_user_registration_form_email_second: "Confirm E-mail:"
+
+
+fos_user_profile_form_user_lastname: "Last name"
+fos_user_profile_form_user_firstname: "First name"
+fos_user_profile_form_user_file: "Avatar"
+fos_user_profile_form_current_avatar: "Your current avatar"
+
+profile.show.title: '%firstname% "%username%" %lastname%'
+profile.show.firstname: "First name"
+profile.show.lastname: "Last name"
+profile.show.my_rig: "My Rig"
+
+fos_user_admin_user_edit_title: 'Edit user %username%' 
+fos_user_admin_index_username: User Name
+fos_user_admin_index_firstname: First Name
+fos_user_admin_index_lastname: Last Name
+fos_user_admin_index_email: Email
+fos_user_admin_index_actions: Actions
+fos_user_admin_delete: Delete
+fos_user_admin_edit: Edit 
+
+fos_user_admin_user_edit: Edit
+fos_user_admin_edit_success: User "%username%" has been successfully updated !
+fos_user_admin_delete_success: User "%username%" has been successfully deleted !
