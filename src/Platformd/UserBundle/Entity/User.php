@@ -282,7 +282,7 @@ class User extends BaseUser
      *
      * @param \Datetime $date
      */
-    public function setBirthdate(\Datetime $date)
+    public function setBirthdate(\Datetime $date = null)
     {
         $this->birthdate = $date;
     }
