@@ -75,7 +75,7 @@ resetting.password_already_requested: The password for this user has already bee
 resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
 resetting.request.invalid_username: The username or email address "%username%" does not exist.
 resetting.request.username: "Username or email address:"
-resetting.request.submit: Reset password
+resetting.request.submit: Reset my Password
 resetting.reset.submit: Change password
 resetting.flash.success: The password has been reset successfully
 
