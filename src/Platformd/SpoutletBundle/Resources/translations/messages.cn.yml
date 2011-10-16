@@ -125,7 +125,7 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: You have not registered to any event yet.
+            no_registered_events: 您还没有注册任何活动
         account:
             welcome_to_control: 欢迎来到管理中心
             hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
