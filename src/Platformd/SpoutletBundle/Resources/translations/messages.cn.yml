@@ -74,14 +74,14 @@ platformd:
 
     help:
         help_page:
-            contact_and_support: Contact Us & Support
-            contact_dell: For questions about products or support please contact Dell directly at <a href="http://support.dell.com" target="_blank">http://support.dell.com</a>
-            contact_alienwarearena: For general Alienware Arena inquiries you may contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
-            regional_addresses: Regional Addresses
-            regional_addresses_north_america: North America
-            regional_addresses_europe: Europe
-            regional_addresses_latin_america: Latin america
-            questions: For questions or assistance with specific events refer to the 'support' link on the respective event micro-site.
+            contact_and_support: 联系我们/支持
+            contact_dell: 有关产品问题和支持请直接联系Dell公司，网址 <a href="http://support.dell.com" target="_blank">http://support.dell.com</a>
+            contact_alienwarearena: 有关Alienware Arena问题，您可以通过邮箱 <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> 联系我们.
+            regional_addresses: 区域邮箱
+            regional_addresses_north_america: 北美
+            regional_addresses_europe: 欧洲
+            regional_addresses_latin_america: 拉丁美洲 
+            questions: 有关事件问题请参考各活动小网站的“支持”链接。
         actions: Actions
     users:
         user_listings:
