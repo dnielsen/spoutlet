@@ -90,7 +90,7 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: Your Registered Events 
+            your_registered_events: My Events
             current_events: Current Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
@@ -126,6 +126,7 @@ platformd:
     account_page:
         events:
             no_registered_events: You have not registered to any event yet.
+            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
         account:
             welcome_to_control: Welcome to your Control Panel
             hello_user: "Hello %firstname%! You are logged in with the username %username%."

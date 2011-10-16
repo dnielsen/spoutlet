@@ -126,6 +126,7 @@ platformd:
     account_page:
         events:
             no_registered_events: You have not registered to any event yet.
+            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
         account:
             welcome_to_control: あなたの管理画面へようこそ
             hello_user: "こんにちは%firstname%さん。ユーザーネーム%username%でログイン中です。"

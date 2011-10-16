@@ -16,6 +16,23 @@ profile.show.title: '%firstname% "%username%" %lastname%'
 profile.show.firstname: "First name"
 profile.show.lastname: "Last name"
 profile.show.my_rig: "My Rig"
+profile.show.update: "Update"
+profile.show.my_rig: "My Rig"
+profile.show.signature: "My Rig"
+profile.show.edit: "My Rig"
+profile.show.type: "Type"
+profile.show.manufacturer: "Manufacturer"
+profile.show.operating_system: "Operating System"
+profile.show.cpu: "CPU"
+profile.show.memory: "Memory"
+profile.show.video_card: "Video Card"
+profile.show.sound_card: "Sound Card"
+profile.show.hard_drive: "Hard Drive"
+profile.show.headphones: "Headphones"
+profile.show.mouse: "Mouse"
+profile.show.mousepad: "Mousepad"
+profile.show.keyboard: "Keyboard"
+profile.show.monitor: "Monitor"
 
 fos_user_admin_user_edit_title: 'Edit user %username%' 
 fos_user_admin_index_username: 用户名

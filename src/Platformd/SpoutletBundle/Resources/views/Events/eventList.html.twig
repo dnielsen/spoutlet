@@ -10,7 +10,14 @@
                     {% if events|length == 0 %}
                     <tr>
                         <td style="text-align:center; padding:20px 0;" colspan="5">
-                        <strong>{{ no_events_message | trans }}</strong></td>
+                            {# basically a hack, in one case I need another message, that has an HTML anchor tag in it #}
+                            {% if no_events_pre_message is defined %}
+                                <p>
+                                    {{ no_events_pre_message | raw }}
+                                </p>
+                            {% endif %}
+                            <strong>{{ no_events_message | trans }}</strong>
+                        </td>
                     </tr>
                     {% else %}
                     {% for event in events %}
