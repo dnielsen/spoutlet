@@ -13,15 +13,15 @@ platformd:
 
         login:
             title: Login to your account
-            forgot_password: Forgot Password?
-            need_help: Need Help?
-            not_a_member_join: Not a Member? Join for Free!
-            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used please contact support.
+            forgot_password: 忘记密码
+            need_help: 帮助？
+            not_a_member_join: 非会员？免费注册！
+            password_message: 密码区分大小写，请确认大写键未开启。如忘记密码，请重新设置。如果你忘记注册时所用邮箱，请联系我们的客服。
 
         reset:
-            title:  Reset Your Password
+            title:  重设密码
 
         request_rest:
-            title: Forgot Your Password?
-            help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
-            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+            title: 忘记密码？
+            help_message: 如果你忘记了密码，没关系。填写以下信息，我们将会将新密码发送至你的邮箱。如果你忘记了用户名和/或邮箱，请联系我们的客服。
+            spam_message: 重要提示：请检查你的垃圾邮件！- 我们在努力，但是有时垃圾邮件过滤器会误将我们的邮件当做垃圾邮件。密码重置大概需要30分钟完成。其实往往只需要几秒钟的时间，但有时候邮件会延迟到达你的邮箱。
