@@ -126,7 +126,7 @@ platformd:
     account_page:
         events:
             no_registered_events: 您还没有注册任何活动
-            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+            join_event_message: 如要参加某活动，请点击活动小网站的 “注册”链接。参考当前活动。 <a href="%events_url%">current events</a>
         account:
             welcome_to_control: 欢迎来到管理中心
             hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
