@@ -18,7 +18,7 @@ profile.show.lastname: "Last name"
 profile.show.my_rig: "My Rig"
 
 fos_user_admin_user_edit_title: 'Edit user %username%' 
-fos_user_admin_index_username: User Name
+fos_user_admin_index_username: 用户名
 fos_user_admin_index_firstname: First Name
 fos_user_admin_index_lastname: Last Name
 fos_user_admin_index_email: Email
@@ -40,7 +40,7 @@ group.flash.deleted: The group has been deleted
 
 # Security
 security.login.username: "Username:"
-security.login.password: "Password:"
+security.login.password: "密码:"
 security.login.remember_me: Remember me
 security.login.submit: Login
 
@@ -104,7 +104,7 @@ fos_user_profile_form_current: "Current Password:"
 security.login.username_or_email: "Username:"
 fos_user_registration_form_email: "Email:"
 fos_user_registration_form_plainPassword_first: "Password:"
-fos_user_registration_form_plainPassword_second: "Verification:"
+fos_user_registration_form_plainPassword_second: "验证:"
 
 fos_user_resetting_form_new_first: "New password:"
 fos_user_resetting_form_new_second: "Verification:"
