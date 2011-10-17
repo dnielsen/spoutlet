@@ -17,8 +17,8 @@
     {{ form_row(form.lastname) }}
 
     <div class="form_row">
-        {{ form_label(form.birthdate) }}
         {{ form_errors(form.birthdate) }}
+        {{ form_label(form.birthdate) }}
 
         {{ form_widget(form.birthdate.month) }}
         {{ form_widget(form.birthdate.day) }}
