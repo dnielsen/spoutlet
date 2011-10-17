@@ -134,6 +134,97 @@ class User extends BaseUser
     private $events;
 
     /**
+     * @var String $type
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $type;
+
+    /**
+     * @var String $manufacturer
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $manufacturer;
+
+    /**
+     * @var String $operatingSystem
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $operatingSystem;
+
+    /**
+     * @var String $cpu
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $cpu;
+
+    /**
+     * @var String $memory
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $memory;
+
+    /**
+     * @var String $videoCard
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $videoCard;
+
+    /**
+     * @var String $soundCard
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $soundCard;
+
+    /**
+     * @var String $hardDrive
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $hardDrive;
+
+    /**
+     * @var String $headPhones
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $headphones;
+
+    /**
+     * @var String $mouse
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $mouse;
+
+    /**
+     * @var String $mousePad
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $mousePad;
+
+    /**
+     * @var String $keyboard
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $keyboard;
+
+    /**
+     * @var String $monitor
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $monitor;
+
+    /**
      * @Recaptcha\True(groups={"Registration"})
      */
     public $recaptcha;
@@ -465,6 +556,149 @@ class User extends BaseUser
         return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
     }
 
+    public function getType() 
+    {
+        
+        return $this->type;
+    }
+
+    public function setType($type) 
+    {
+        $this->type = $type;
+    }
+
+    public function getManufacturer() 
+    {
+        
+        return $this->manufacturer;
+    }
+
+    public function setManufacturer($manufactuer) 
+    {
+        $this->manufacturer;
+    }
+
+    public function getOperatingSystem()
+    {
+        
+        return $this->operatingSystem;
+    }
+
+    public function setOperatingSystem($os) 
+    {
+        $this->operatingSystem = $os;
+    }
+
+    public function getCPU() 
+    {
+        
+        return $this->cpu;
+    }
+
+    public function setCPU($cpu)
+    {
+        $this->cpu = $cpu;
+    }
+
+    public function getMemory()
+    {
+        
+        return $this->memory;
+    }
+
+    public function setMemory($memory) 
+    {
+        $this->memory = $memory;
+    }
+    
+    public function getVideoCard()
+    {
+        
+        return $this->videoCard;
+    }
+
+    public function setVideoCard($card) 
+    {
+        $this->videoCard = $card;
+    }
+
+    public function getSoundCard()
+    {
+
+        return $this->soundCard;
+    }
+
+    public function setSoundCard($card)
+    {
+        $this->soundCard = $card;
+    }
+
+    public function getHardDrive()
+    {
+        
+        return $this->hardDrive;
+    }
+
+    public function setHardDrive($drive) 
+    {
+        $this->hardDrive = $drive;
+    }
+
+    public function getHeadphones()
+    {
+    
+        return $this->headphones;
+    }
+
+    public function setHeadphones($phones)
+    {
+        $this->headphones = $phones;
+    }
+
+    public function getMouse()
+    {
+        
+        return $this->mouse;
+    }
+
+    public function setMouse($mouse) 
+    {
+        $this->mouse = $mouse;
+    }
+
+    public function getMousePad()
+    {
+
+        return $this->mousePad;
+    }
+
+    public function setMousePad($pad)
+    {
+        $this->mousePad = $pad;
+    }
+
+    public function getKeyboard()
+    {
+        
+        return $this->keyboard;
+    }
+
+    public function setKeyboard($keyboard)
+    {
+        $this->keyboard = $keyboard;
+    }
+
+    public function getMonitor()
+    {
+        
+        return $this->monitor;
+    }
+
+    public function setMonitor($monitor)
+    {
+        $this->monitor = $monitor;    
+    }
+    
     protected function getUploadRootDir()
     {
 
