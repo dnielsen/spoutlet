@@ -113,6 +113,7 @@ platformd:
             create_new_event: Create new event
         event_show:
             register_event: Register for event
+            registered_event: You are Registered
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
         admin:
