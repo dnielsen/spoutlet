@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -32,6 +34,7 @@ class Event
     /**
      * @var string $name
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
@@ -54,14 +57,14 @@ class Event
      *
      * @ORM\Column(name="ready", type="boolean")
      */
-    private $ready;
+    private $ready = true;
 
     /**
      * @var boolean $published
      *
      * @ORM\Column(name="published", type="boolean")
      */
-    private $published;
+    private $published = true;
 
     /**
      * @var datetime $starts_at
@@ -80,14 +83,14 @@ class Event
     /**
      * @var string $city
      *
-     * @ORM\Column(name="city", type="string", length=255)
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
     /**
      * @var string $country
      *
-     * @ORM\Column(name="country", type="string", length=255)
+     * @ORM\Column(name="country", type="string", length=255, nullable=true)
      */
     private $country;
 
@@ -102,21 +105,21 @@ class Event
     /**
      * @var text $content
      *
-     * @ORM\Column(name="content", type="text")
+     * @ORM\Column(name="content", type="text", nullable=true)
      */
     private $content;
     
     /**
      * @var string hosted_by
      *
-     * @ORM\Column(name="hosted_by", type="string", length=255)
+     * @ORM\Column(name="hosted_by", type="string", length=255, nullable=true)
      */
     private $hosted_by;
 
     /**
      * @var string game
      *
-     * @ORM\Column(name="game", type="string", length=255)
+     * @ORM\Column(name="game", type="string", length=255, nullable=true)
      */
     private $game;
 
@@ -348,7 +351,7 @@ class Event
     /**
      * Set metro_area
      *
-     * @param Platformd\SpoutletBundle\Entity\MetroArea $metro_area
+     * @param \Platformd\SpoutletBundle\Entity\MetroArea $metro_area
      */
     public function setMetroArea($metro_area)
     {
@@ -358,11 +361,21 @@ class Event
     /**
      * Get metro_area
      *
-     * @return Platformd\SpoutletBundle\Entity\MetroArea
+     * @return \Platformd\SpoutletBundle\Entity\MetroArea
      */
     public function getMetroArea()
     {
         return $this->metro_area;
+    }
+
+    /**
+     * Easy (and safe) way to get at the metro area name
+     *
+     * @return string
+     */
+    public function getMetroAreaName()
+    {
+        return $this->getMetroArea() ? $this->getMetroArea()->getLabel() : '';
     }
 
     /**

@@ -31,7 +31,7 @@
                     <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
                     <td>{{ event.game }}</td>
                     <td>{{ event.hostedBy }}</td>
-                    <td>{{ event.metroArea.label }}</td>
+                    <td>{{ event.metroAreaName }}</td>
                     {% if app.user.isSuperAdmin %}
                     <td>
                         {% if not event.published %}

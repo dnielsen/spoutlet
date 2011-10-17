@@ -29,7 +29,7 @@
                         <td><a href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a></td>
                         <td>{{ event.game }}</td>
                         <td>{{ event.hostedBy }}</td>
-                        <td>{{ event.metroArea.label }}</td>
+                        <td>{{ event.metroAreaName }}</td>
                     </tr>
                     {% endfor %}
                     {% endif %}

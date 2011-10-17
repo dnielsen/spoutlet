@@ -42,7 +42,7 @@
                         <label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>
                         <div id="ends_at">{{ event.endsAt|date }}</div>
                         <label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>
-                        <div id="location">{{ event.city }}, {{ event.metroArea.label }}, {{ event.country }}</div>
+                        <div id="location">{{ event.city }}, {{ event.metroAreaName }}, {{ event.country }}</div>
                         <label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>
                         <div id="hostedBy">{{ event.hostedBy }}</div>
                         <label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>
