@@ -6,6 +6,14 @@ support:
     pattern: /pages/support
     defaults: { _controller: SpoutletBundle:Default:support }
 
+privacy:
+    pattern: /privacy_policy
+    defaults: { _controller: SpoutletBundle:Default:privacy }
+
+terms_conditions:
+    pattern: terms_and_conditions
+    defaults: { _controller: SpoutletBundle:Default:terms_conditions }
+
 microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
