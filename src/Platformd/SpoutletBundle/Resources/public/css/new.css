@@ -198,3 +198,7 @@ table.list tr.odd {
 table.list tr.even {
 
 }
+
+div#content.microsoft {
+  text-align: center;
+}
