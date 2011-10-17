@@ -16,6 +16,20 @@ class ProfileFormType extends BaseProfileFormType
         $builder
             ->add('firstname')
             ->add('lastname')
-            ->add('file');
+            ->add('file')
+            // My rig
+            ->add('type')
+            ->add('manufacturer')
+            ->add('operating_system')
+            ->add('cpu')
+            ->add('memory')
+            ->add('video_card')
+            ->add('sound_card')
+            ->add('hard_drive')
+            ->add('headphones')
+            ->add('mouse')
+            ->add('mousepad')
+            ->add('keyboard')
+            ->add('monitor');
     }
 }

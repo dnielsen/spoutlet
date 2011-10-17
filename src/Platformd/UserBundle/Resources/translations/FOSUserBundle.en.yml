@@ -118,6 +118,19 @@ fos_user_group_form_name: "Group name:"
 fos_user_profile_form_user_username: "Username:"
 fos_user_profile_form_user_email: "Email:"
 fos_user_profile_form_current: "Current Password:"
+fos_user_profile_form_user_type: "Type"
+fos_user_profile_form_user_manufacturer: "Manufacturer"
+fos_user_profile_form_user_operating_system: "Operating system"
+fos_user_profile_form_user_cpu: CPU
+fos_user_profile_form_user_memory: Memory
+fos_user_profile_form_user_video_card: Video Card
+fos_user_profile_form_user_sound_card: Sound Card
+fos_user_profile_form_user_hard_drive: Hard Drive
+fos_user_profile_form_user_headphones: Headphones
+fos_user_profile_form_user_mouse: Mouse
+fos_user_profile_form_user_mousepad: Mousepad
+fos_user_profile_form_user_keyboard: Keyboard
+fos_user_profile_form_user_monitor: Monitor
 
 security.login.username_or_email: "Username or Email:"
 fos_user_registration_form_email: "Email:"
