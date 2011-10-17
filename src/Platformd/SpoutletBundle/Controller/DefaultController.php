@@ -18,7 +18,7 @@ class DefaultController extends Controller
     	$all_events = $this->getDoctrine()
     		->getEntityManager()
     		->getRepository('SpoutletBundle:Event')
-    		->findAll();
+    		->findPublished();
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array('all_events' => $all_events));
     }

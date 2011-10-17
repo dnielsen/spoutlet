@@ -61,6 +61,17 @@ class EventRepository extends EntityRepository
         return $this->createQueryBuilder($alias)
             ->where($alias.'.published = 1');
     }
+    
+    /**
+     * Retrieve published events
+     *
+     * @return array
+     */
+    public function findPublished() 
+    {
+        
+        return $this->findBy(array('published' => true));
+    }
 
     private function addQueryLimit(Query $query, $limit)
     {
