@@ -20,3 +20,5 @@
 
     recaptcha.public_key = 
     recaptcha.private_key =
+
+    base_host         = site.com

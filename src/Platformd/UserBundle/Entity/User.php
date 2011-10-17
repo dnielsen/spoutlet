@@ -39,9 +39,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(message="Please enter your firstname", groups={"Registration"})
-     * @Assert\MinLength(limit="3", message="The firstname is too short", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", message="The firstname is too long", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $firstname;
 
@@ -50,9 +50,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(message="Please enter your lastname", groups={"Registration"})
-     * @Assert\MinLength(limit="3", message="The lastname is too short", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", message="The lastname is too long", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $lastname;
 
@@ -61,7 +61,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      * 
-     * @Assert\NotBlank(message="Please enter your birthdate", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
@@ -78,7 +78,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(message="Please enter the country you're currently living in", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
      */
     protected $country;
 
@@ -87,7 +87,7 @@ class User extends BaseUser
      * 
      * @ORM\Column(type="string", length="2", nullable=true)
      *
-     * @Assert\NotBlank(message="Please enter the state you're currently living in", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"})
      */
     protected $state;
 
@@ -115,7 +115,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policies", groups={"Registration"})
+     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration"})
      */
     protected $termsAccepted;
 
@@ -142,7 +142,6 @@ class User extends BaseUser
      * @Assert\File(
         maxSize="6000000", 
         mimeTypes={"image/png", "image/jpeg", "image/jpg"}, 
-        mimeTypesMessage="Please choose a valid JPEG/PNG file",
         groups={"Profile"})
      */
     public $file;
