@@ -20,7 +20,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setEndsat(new \DateTime('september 1, 2010'));
         $event->setCity('Lyon');
         $event->setCountry('France');
-        $event->setMetroArea($this->getReference('metro-area-one'));
+        $event->setLocation('online');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Lyon');
         $event->setGame('StarCraft 2');
@@ -36,7 +36,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setEndsat(new \DateTime('november 1'));
         $event->setCity('Lyon');
         $event->setCountry('France');
-        $event->setMetroArea($this->getReference('metro-area-one'));
+        $event->setLocation('online');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Lyon');
         $event->setGame('Portal 2');
@@ -52,7 +52,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setEndsAt(new \DateTime('december 1'));
         $event->setCity('Nashville');
         $event->setCountry('USA');
-        $event->setMetroArea($this->getReference('metro-area-two'));
+        $event->setLocation('online');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Nashville');
         $event->setGame('Batman Arkham City');

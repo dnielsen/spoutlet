@@ -2,9 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
-use Platformd\UserBundle\Entity\User,
-    Platformd\SpoutletBundle\Entity\MetroArea;
-
+use Platformd\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\Collection,
@@ -95,12 +93,11 @@ class Event
     private $country;
 
     /**
-     * @var Platformd\SpoutletBundle\Entity\MetroArea
+     * @var string $location
      *
-     * @ORM\ManyToOne(targetEntity="MetroArea", inversedBy="metro_area")
-     * @ORM\JoinColumn(name="metro_area_id", referencedColumnName="id")
+     * @ORM\Column(name="location", type="string", length=255, nullable=true)
      */
-    private $metro_area = null;
+    private $location;
 
     /**
      * @var text $content
@@ -349,36 +346,6 @@ class Event
     }
 
     /**
-     * Set metro_area
-     *
-     * @param \Platformd\SpoutletBundle\Entity\MetroArea $metro_area
-     */
-    public function setMetroArea($metro_area)
-    {
-        $this->metro_area = $metro_area;
-    }
-
-    /**
-     * Get metro_area
-     *
-     * @return \Platformd\SpoutletBundle\Entity\MetroArea
-     */
-    public function getMetroArea()
-    {
-        return $this->metro_area;
-    }
-
-    /**
-     * Easy (and safe) way to get at the metro area name
-     *
-     * @return string
-     */
-    public function getMetroAreaName()
-    {
-        return $this->getMetroArea() ? $this->getMetroArea()->getLabel() : '';
-    }
-
-    /**
      * Set content
      *
      * @param text $content
@@ -436,6 +403,22 @@ class Event
     public function setGame($game)
     {
         $this->game = $game;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param string $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
     }
 
 }
