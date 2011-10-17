@@ -35,7 +35,7 @@ profile.show.keyboard: "Keyboard"
 profile.show.monitor: "Monitor"
 
 fos_user_admin_user_edit_title: 'Edit user %username%' 
-fos_user_admin_index_username: User Name
+fos_user_admin_index_username: Username
 fos_user_admin_index_firstname: First Name
 fos_user_admin_index_lastname: Last Name
 fos_user_admin_index_email: Email

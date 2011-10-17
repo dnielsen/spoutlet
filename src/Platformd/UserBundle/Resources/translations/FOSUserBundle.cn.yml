@@ -59,10 +59,10 @@ group.flash.deleted: The group has been deleted
 security.login.username: "用户名:"
 security.login.password: "密码:"
 security.login.remember_me: Remember me
-security.login.submit: Login
+security.login.submit: 登陆
 
 # Profile
-profile.show.username: Username
+profile.show.username: 用户名
 profile.show.email: Email
 profile.edit.submit: Update
 profile.flash.updated: The profile has been updated
@@ -91,7 +91,7 @@ registration.email: |
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
 resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
 resetting.request.invalid_username: The username or email address "%username%" does not exist.
-resetting.request.username: "Username or email address:"
+resetting.request.username: "用户名:"
 resetting.request.submit: Reset password
 resetting.reset.submit: Change password
 resetting.flash.success: The password has been reset successfully
@@ -118,14 +118,14 @@ fos_user_profile_form_user_username: "用户名:"
 fos_user_profile_form_user_email: "Email:"
 fos_user_profile_form_current: "Current Password:"
 
-security.login.username_or_email: "Username:"
+security.login.username_or_email: "用户名:"
 fos_user_registration_form_email: "Email:"
-fos_user_registration_form_plainPassword_first: "Password:"
+fos_user_registration_form_plainPassword_first: "密码:"
 fos_user_registration_form_plainPassword_second: "验证:"
 
 fos_user_resetting_form_new_first: "New password:"
-fos_user_resetting_form_new_second: "Verification:"
+fos_user_resetting_form_new_second: "验证:"
 
 fos_user_change_password_form_new_first: "New password:"
-fos_user_change_password_form_new_second: "Verification:"
+fos_user_change_password_form_new_second: "验证:"
 fos_user_change_password_form_current: "Current password:"
