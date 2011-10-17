@@ -98,7 +98,7 @@ a.button:hover {
 }
 
 #commentsView textarea {
-    height:250px;
+    height:80px;
 }
 
 #commentsView .fos_comment_submit {
