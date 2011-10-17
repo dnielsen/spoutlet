@@ -166,6 +166,15 @@ a.button:hover {
     padding: 3px 0 1px 0;
 }
 
+.rig_list td:first-child {
+    font-weight: bold;
+}
+
+.rig_list td {
+    background-color: #101010;
+    padding:2px;
+}
+
 .profileBloc {
     margin-bottom: 15px;
 }
@@ -189,4 +198,3 @@ table.list tr.odd {
 table.list tr.even {
 
 }
-
