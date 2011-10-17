@@ -2,7 +2,7 @@
 
 <h2>{{ 'platformd.user.edit_account_header' | trans }}</h2>
 
-<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit form">
+<form novalidate="novalidate" action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit form">
 
     {{ form_errors(form) }}
 
