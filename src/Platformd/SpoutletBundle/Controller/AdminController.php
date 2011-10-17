@@ -100,6 +100,11 @@ class AdminController extends Controller
     	$em = $this->getEventsManager();
     	$em->persist($event);
     	$em->flush();
+
+        $this
+            ->getRequest()
+            ->getSession()
+            ->setFlash('notice', $this->get('translator')->trans('platformd.events.admin.saved'));
     }
 
     private function getEventsRepo()
