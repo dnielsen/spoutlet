@@ -202,3 +202,11 @@ table.list tr.even {
 div#content.microsoft {
   text-align: center;
 }
+
+#mainAd {
+  background-image: url('/images/ads/AA_300x250deals.jpg') !important;
+}
+
+.ad_728x90 {
+  background-image: url('/images/ads/aw-ms7-728x90.jpg') !important;
+}
