@@ -32,4 +32,15 @@ class DefaultController extends Controller
     {
         return $this->render('SpoutletBundle:Default:microsoft.html.twig');
     }
+
+    public function privacyAction()
+    {
+        return $this->render('SpoutletBundle:Default:privacy.html.twig');
+    }
+
+    public function terms_conditionsAction()
+    {
+        return $this->render('SpoutletBundle:Default:terms_conditions.html.twig');
+    }
+
 }

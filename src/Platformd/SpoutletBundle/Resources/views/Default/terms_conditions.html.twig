@@ -1,0 +1,9 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Terms and Conditions' | trans }}{% endblock %}
+
+{% block content %}
+<div id="content" class="terms">
+    {% include ['SpoutletBundle:Default:terms_conditions/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:terms_conditions/en.html.twig'] %}
+</div>
+{% endblock %}

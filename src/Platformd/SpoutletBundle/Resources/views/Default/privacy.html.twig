@@ -1,0 +1,9 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Privacy Policy' | trans }}{% endblock %}
+
+{% block content %}
+<div id="content" class="privacy">
+    {% include ['SpoutletBundle:Default:privacy/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:privacy/en.html.twig'] %}
+</div>
+{% endblock %}
