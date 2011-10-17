@@ -7,11 +7,11 @@ support:
     defaults: { _controller: SpoutletBundle:Default:support }
 
 privacy:
-    pattern: /privacy_policy
+    pattern: /legal/privacy
     defaults: { _controller: SpoutletBundle:Default:privacy }
 
 terms_conditions:
-    pattern: terms_and_conditions
+    pattern: /legal/terms
     defaults: { _controller: SpoutletBundle:Default:terms_conditions }
 
 microsoft:
