@@ -62,7 +62,7 @@ class Event
      *
      * @ORM\Column(name="published", type="boolean")
      */
-    private $published = true;
+    private $published = false;
 
     /**
      * @var datetime $starts_at

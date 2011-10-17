@@ -48,6 +48,11 @@ class AdminController extends Controller
     public function editEventAction(Request $request, $id)
     {
         $event = $this->getEventsRepo()->findOneById($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException('No event for that id');
+        }
+
         $form = $this->createForm(new EventType(), $event);
 
         if($request->getMethod() == 'POST')
