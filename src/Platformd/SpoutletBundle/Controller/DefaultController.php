@@ -27,4 +27,9 @@ class DefaultController extends Controller
     {
         return $this->render('SpoutletBundle:Default:support.html.twig');
     }
+
+    public function microsoftAction()
+    {
+        return $this->render('SpoutletBundle:Default:microsoft.html.twig');
+    }
 }
