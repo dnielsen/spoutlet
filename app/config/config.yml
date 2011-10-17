@@ -89,8 +89,12 @@ parameters:
 
 jms_i18n_routing:
     default_locale: en
-    locales: [en, jp, cn]
-    strategy: prefix_except_default
+    locales: [en, ja, zh]
+    strategy: custom
+    hosts:
+        en: %base_host%
+        ja: japan.%base_host%
+        zh: china.%base_host%
 
 fos_comment:
     db_driver: orm
