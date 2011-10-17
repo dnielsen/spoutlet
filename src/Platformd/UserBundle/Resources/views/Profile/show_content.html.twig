@@ -15,6 +15,61 @@
 
         <div class="profileBloc">
             <h3>{{ "profile.show.my_rig" | trans({}, "FOSUserBundle") }}</h3>
+
+            <table class="rig_list" width="100%">
+                <tr>
+                    <td>{{ "profile.show.type" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.type }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.manufacturer" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.manufacturer }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.operating_system" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.operatingsystem }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.cpu" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.cpu }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.memory" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.memory }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.video_card" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.videocard }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.sound_card" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.soundcard }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.hard_drive" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.harddrive }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.headphones" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.headphones }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.mouse" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.mouse }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.mousepad" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.mousepad }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.keyboard" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.keyboard }}</td>
+                </tr>
+                <tr>
+                    <td>{{ "profile.show.monitor" | trans({}, "FOSUserBundle") }}</td>
+                    <td>{{ user.monitor }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 
