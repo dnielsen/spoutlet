@@ -29,6 +29,7 @@ platformd:
             espanol: Español
 
         top_menu:
+            admin: Admin
             account: Account
             sign_in: Sign in
             sign_out: Sign out
