@@ -46,7 +46,7 @@
                         <label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>
                         <div id="hostedBy">{{ event.hostedBy }}</div>
                         <label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>
-                        <div id="contentDetails">{{ event.content }}</div>
+                        <div id="contentDetails">{{ event.content | raw }}</div>
                     </div>
                 </div>
             </div>
