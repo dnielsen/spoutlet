@@ -20,7 +20,9 @@ class AdminController extends Controller
 
     public function eventsAction() 
     {
-        $events = $this->getEventsRepo()->findAll();
+        $events = $this->getEventsRepo()->findBy(array(
+            'locale' => $this->get('session')->getLocale(),
+        ));
     	return $this->render('SpoutletBundle:Admin:events.html.twig', 
             array('events' => $events));
     }
