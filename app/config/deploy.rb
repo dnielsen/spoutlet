@@ -3,7 +3,7 @@ set :stage_dir, "app/config/deploy"
 require 'capistrano/ext/multistage'
 
 
-set :domain,      "ec2-107-22-22-251.compute-1.amazonaws.com"
+set :domain,      "184.73.162.139"
 ssh_options[:port] = "22"
 
 set :repository,  "file:///Users/ryan/Sites/clients/Platformd"
