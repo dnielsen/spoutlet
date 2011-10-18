@@ -40,6 +40,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
             true,
             true
         );
+        $this->getUserManipulator()->addRole('admin', 'ROLE_SUPER_ADMIN');
     }
 
     public function setContainer(ContainerInterface $container = null)

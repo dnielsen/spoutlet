@@ -20,7 +20,9 @@ class AdminController extends Controller
 
     public function eventsAction() 
     {
-        $events = $this->getEventsRepo()->findAll();
+        $events = $this->getEventsRepo()->findBy(array(
+            'locale' => $this->get('session')->getLocale(),
+        ));
     	return $this->render('SpoutletBundle:Admin:events.html.twig', 
             array('events' => $events));
     }
@@ -93,13 +95,14 @@ class AdminController extends Controller
 
     private function saveEvent($event_form)
     {
-    	// save to db
-    	$user = $this->get('security.context')->getToken()->getUser();
-    	$event = $event_form->getData();
-    	$event->setUser($user);
-    	$em = $this->getEventsManager();
-    	$em->persist($event);
-    	$em->flush();
+        // save to db
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = $event_form->getData();
+        $event->setUser($user);
+        $event->setLocale($this->get('session')->getLocale());
+        $em = $this->getEventsManager();
+        $em->persist($event);
+        $em->flush();
 
         $this
             ->getRequest()
