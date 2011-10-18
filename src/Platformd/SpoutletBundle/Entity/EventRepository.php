@@ -20,9 +20,9 @@ class EventRepository extends EntityRepository
      * @param integer $limit
      * @return array
      */
-    public function getCurrentEvents($limit = null)
+    public function getCurrentEvents($locale, $limit = null)
     {
-        $query = $this->getBaseQueryBuilder()
+        $query = $this->getBaseQueryBuilder($locale)
             ->andWhere('e.ends_at > :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
@@ -37,9 +37,9 @@ class EventRepository extends EntityRepository
      * @param integer $limit
      * @return array
      */
-    public function getPastEvents($limit = null)
+    public function getPastEvents($locale, $limit = null)
     {
-        $query = $this->getBaseQueryBuilder()
+        $query = $this->getBaseQueryBuilder($locale)
             ->andWhere('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'ASC')
@@ -55,11 +55,13 @@ class EventRepository extends EntityRepository
      * @param String $alias
      * @return Doctrine\ORM\QueryBuilder
      */
-    public function getBaseQueryBuilder($alias = 'e')
+    public function getBaseQueryBuilder($locale, $alias = 'e')
     {
         
         return $this->createQueryBuilder($alias)
-            ->where($alias.'.published = 1');
+            ->where($alias.'.published = 1')
+            ->andWhere($alias.'.locale = :locale')
+            ->setParameter('locale', $locale);
     }
     
     /**
@@ -67,10 +69,13 @@ class EventRepository extends EntityRepository
      *
      * @return array
      */
-    public function findPublished() 
+    public function findPublished($locale) 
     {
         
-        return $this->findBy(array('published' => true));
+        return $this->findBy(array(
+            'locale'    => $locale,
+            'published' => true
+        ));
     }
 
     private function addQueryLimit(Query $query, $limit)

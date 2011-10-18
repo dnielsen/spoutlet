@@ -120,6 +120,13 @@ class Event
      */
     private $game;
 
+    /**
+     * @var string $locale
+     *
+     * @ORM\Column(name="locale", type="string", length="2", nullable=false)
+     */
+    private $locale;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -419,6 +426,22 @@ class Event
     public function setLocation($location)
     {
         $this->location = $location;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 
 }

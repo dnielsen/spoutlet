@@ -9,10 +9,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class EventsController extends Controller
 {
+	private function getLocale()
+	{
+		return $this->get('session')->getLocale();
+	}
+
 	public function indexAction()
 	{
-		$current_events = $this->getEventsRepo()->getCurrentEvents(5);
-		$past_events    = $this->getEventsRepo()->getPastEvents(5);
+		$current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 5);
+		$past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 5);
 
 		return $this->render('SpoutletBundle:Events:index.html.twig',
 			array(
@@ -24,14 +29,14 @@ class EventsController extends Controller
 	public function currentAction()
 	{
 		return $this->render('SpoutletBundle:Events:current.html.twig', array(
-			'events' => $this->getEventsRepo()->getCurrentEvents(),
+			'events' => $this->getEventsRepo()->getCurrentEvents($this->getLocale()),
 		));
 	}
 
 	public function pastAction()
 	{
 		return $this->render('SpoutletBundle:Events:past.html.twig', array(
-			'events' => $this->getEventsRepo()->getPastEvents(),
+			'events' => $this->getEventsRepo()->getPastEvents($this->getLocale()),
 		));
 	}
 
@@ -44,7 +49,10 @@ class EventsController extends Controller
      */
 	public function eventAction($slug)
 	{
-		$event = $this->getEventsRepo()->findOneBySlug($slug);
+		$event = $this->getEventsRepo()->findOneBy(array(
+			'locale' => $this->getLocale(),
+			'slug'   => $slug
+		));
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
@@ -60,7 +68,10 @@ class EventsController extends Controller
 	 */
 	public function registerAction($slug)
 	{
-		$event = $this->getEventsRepo()->findOneBySlug($slug);
+		$event = $this->getEventsRepo()->findOneBy(array(
+			'locale' => $this->getLocale(),
+			'slug'   => $slug
+		));
 
 		if (!$event) {
 			throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
