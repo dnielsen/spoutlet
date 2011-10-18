@@ -93,14 +93,14 @@ class AdminController extends Controller
 
     private function saveEvent($event_form)
     {
-    	// save to db
-    	$user = $this->get('security.context')->getToken()->getUser();
-    	$event = $event_form->getData();
-    	$event->setUser($user);
+        // save to db
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = $event_form->getData();
+        $event->setUser($user);
         $event->setLocale($this->get('session')->getLocale());
-    	$em = $this->getEventsManager();
-    	$em->persist($event);
-    	$em->flush();
+        $em = $this->getEventsManager();
+        $em->persist($event);
+        $em->flush();
 
         $this
             ->getRequest()
