@@ -228,7 +228,7 @@ class User extends BaseUser
      * @Recaptcha\True(groups={"Registration"})
      */
     public $recaptcha;
-
+    
     /** 
      * @Assert\File(
         maxSize="6000000", 
@@ -697,6 +697,35 @@ class User extends BaseUser
     public function setMonitor($monitor)
     {
         $this->monitor = $monitor;    
+    }
+
+    public function getIsOrganizer()
+    {
+        return $this->hasRole('ROLE_ORGANIZER');
+    }
+
+    public function setIsOrganizer($is_organizer)
+    {
+        $this->switchRole('ROLE_ORGANIZER', $is_organizer);
+    }
+
+    public function getIsSuperAdmin()
+    {
+        return $this->hasRole('ROLE_SUPER_ADMIN');
+    }
+
+    public function setIsSuperAdmin($is_super_admin)
+    {
+        $this->switchRole('ROLE_SUPER_ADMIN', $is_super_admin);
+    }
+
+    private function switchRole($role, $bool)
+    {
+        if ($bool) {
+            $this->addRole($role);
+        } else {
+            $this->removeRole($role);
+        }
     }
     
     protected function getUploadRootDir()

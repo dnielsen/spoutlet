@@ -35,7 +35,7 @@ class AdminController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        $form = $this->createForm(new EditUserFormType(), $user);
+        $form = $this->createForm(new EditUserFormType(), $user, array('allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')));
         $request = $this->getRequest();
 
         // TODO : use update http method

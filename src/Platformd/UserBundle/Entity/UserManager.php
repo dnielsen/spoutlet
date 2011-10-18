@@ -34,6 +34,14 @@ class UserManager extends BaseUserManager
             $user->updateAvatar();
         }
 
+        if ($user->getIsOrganizer()) {
+            $user->addRole('ROLE_ORGANIZER');
+        }
+
+        if ($user->getIsSuperAdmin()) {
+            $user->addRole('ROLE_SUPER_ADMIN');
+        }
+
         parent::updateUser($user, $andFlush);
     }
 

@@ -15,12 +15,24 @@ class EditUserFormType extends AbstractType
             ->add('firstname')
             ->add('lastname')
             ->add('email');
+        
+        if ($options['allow_promote']) {
+            $builder
+                ->add('is_organizer', 'checkbox')
+                ->add('is_super_admin', 'checkbox');
+        }
     }
 
     public function getName()
-    {
-        
+    {   
         return 'fos_user_profile_form_user';
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array_merge($options, array(
+            'allow_promote' => false
+        ));
     }
 
 }
