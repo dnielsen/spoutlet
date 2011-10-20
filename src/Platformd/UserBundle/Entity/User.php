@@ -282,6 +282,8 @@ class User extends BaseUser
         $this->file->move($this->getUploadRootDir(), $this->avatar);
 
         unset($this->file);
+
+        $this->disapproveAvatar();
     }
 
     public function getAbsolutePath() 
