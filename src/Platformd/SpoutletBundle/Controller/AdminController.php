@@ -126,6 +126,9 @@ class AdminController extends Controller
         $event = $event_form->getData();
         $event->setUser($user);
         $event->setLocale($this->get('session')->getLocale());
+
+        $event->updateBannerImage();
+
         $em = $this->getEventsManager();
         $em->persist($event);
         $em->flush();

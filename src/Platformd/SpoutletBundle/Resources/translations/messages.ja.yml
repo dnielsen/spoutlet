@@ -126,6 +126,7 @@ platformd:
             unpublished_title: Edit your unpublished event
             new_title: Create a new event
             published_title: Edit your published event
+            banner_note: Image is best at 950x120
 
     account_page:
         events:
