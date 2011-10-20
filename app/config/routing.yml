@@ -30,3 +30,7 @@ fos_user_change_password:
 fos_comment:
     resource: "@FOSCommentBundle/Resources/config/routing.yml"
     prefix:   "/comments"
+
+fos_comment_extra:
+    resource: "@CommentBundle/Resources/config/routing_extra.yml"
+    prefix:   "/comments"

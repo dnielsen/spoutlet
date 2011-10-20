@@ -17,6 +17,7 @@
                 <div class="widget-content">
                     {% if app.user and app.user.events.contains(event) %}
                     <p>{{ 'platformd.events.event_show.registered_event' | trans }}</p>
+                    <p><a href="{{ path('events_unregister', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.unregister_event" | trans }}</a></p>
                     {% else %}
                     <p><a href="{{ path('events_register', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.register_event" | trans }}</a></p>
                     {% endif %}

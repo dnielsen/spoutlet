@@ -61,6 +61,30 @@ class EventsController extends Controller
 		return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
 	}
 
+	public function unregisterAction($slug)
+	{
+		$event = $this->getEventsRepo()->findOneBy(array(
+			'locale' => $this->getLocale(),
+			'slug'   => $slug,
+		));
+
+		if (!$event) {
+			throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+		}
+
+		if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+			return $this->redirect($this->generateUrl('fos_user_registration_register'));
+		}
+
+		$user = $this->get('security.context')->getToken()->getUser();
+		$user->removeEvent($event);
+
+		$this->getDoctrine()->getEntityManager()->persist($user);
+		$this->getDoctrine()->getEntityManager()->flush();
+
+		return $this->redirect($this->generateUrl('events_detail', array('slug' => $event->getSlug())));
+	}
+
 	/**
 	 * Registers the current user to an event
 	 *

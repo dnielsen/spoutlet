@@ -17,3 +17,7 @@ events_detail:
 events_register:
     pattern: /{slug}/register
     defaults: { _controller: SpoutletBundle:Events:register }
+
+events_unregister:
+    pattern: /{slug}/unregister
+    defaults: { _controller: SpoutletBundle:Events:unregister }

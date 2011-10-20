@@ -30,6 +30,10 @@
                 {{ 'platformd.comment.posted_date_label' | trans({}, "FOSCommentBundle") }}
                 {{ comment.createdAt|date('l, F jS, Y') }}
 
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    - <a href="{{ path('FOSCommentBundle_delete', { 'id' : comment.id }) }}">{{ "fos_comment_delete" | trans({}, "FOSCommentBundle") }}</a>
+                {% endif %}
+
                 {% if comment.parentId %}
                     <a href="#comment-message-{{ comment.parentId }}">{{ "fos_comment_in_reply_to" | trans({}, "FOSCommentBundle") }}</a>
                 {% endif %}
@@ -47,7 +51,8 @@
         <div class="profileInfo png">
             <div class="profileAvatar">
                 <span class="png"></span>
-                <img src="{{ comment.author.avatar ? comment.author.webPath : "/images/profile-default.png" }}" alt="{{ comment.author.username }}" />
+                {# A twig test would be cleaned #}
+                <img src="{{ comment.author.avatar and comment.author.isAvatarApproved ? comment.author.webPath : "/images/profile-default.png" }}" alt="{{ comment.author.username }}" />
                 
             </div>
             <div class="profileName">

@@ -7,6 +7,7 @@
         <table class="list" width="100%">
             <thead>
                 <tr>
+                    <th></th>
                     <th>{{ "fos_user_admin_index_username" | trans({}, "FOSUserBundle") }}</th>
                     <th>{{ "fos_user_admin_index_firstname" | trans({}, "FOSUserBundle") }}</th>
                     <th>{{ "fos_user_admin_index_lastname" | trans({}, "FOSUserBundle") }}</th>
@@ -18,6 +19,11 @@
             <tbody>
             {% for index, user in pager %}
                 <tr class="{{ index is odd ? "odd" : "even" }}">
+                    <td>
+                        {% if user.avatar %}
+                            <a href="{{ user.webPath }}" title="See avatar in real size"><img src="{{user.webPath }}" alt="{{ user.username }}" width="100" /></a>
+                        {% endif %}
+                    </td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
@@ -30,6 +36,9 @@
                         {% else %}
                             {{ "platformd.users.user_listings.super_admin_cant_be_modified" | trans }}
                         {% endif %}    
+                        {% if user.avatar and not user.isAvatarApproved %}
+                            <a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}">{{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

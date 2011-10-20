@@ -1,0 +1,3 @@
+FOSCommentBundle_delete:
+    pattern: /delete/{id}
+    defaults: { _controller: FOSCommentBundle:Comment:delete }

@@ -2,7 +2,8 @@
     <div class="memberProfileLeft">
 
             <div class="profileAvatar_big"> 
-                <img src="{{ user.avatar ? user.webPath : "/images/profile-default.png" }}" alt="{{ user.username }}" />
+                {# A twig test would be cleaner #}
+                <img src="{{ user.avatar and user.isAvatarApproved ? user.webPath : "/images/profile-default.png" }}" alt="{{ user.username }}" />
             </div>
     </div>
     

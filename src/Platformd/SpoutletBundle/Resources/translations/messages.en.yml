@@ -114,6 +114,7 @@ platformd:
             create_new_event: Create new event
         event_show:
             register_event: Register for event
+            unregister_event: Unregister for event
             registered_event: You are Registered
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
@@ -122,7 +123,9 @@ platformd:
             edit_event: Edit Event | %event_title%
             create: Create New Event
             approve: Approve
+            unpublish: Unpublish
             approved: Event "%event_title%" has been approved and is now published. 
+            unpublished: Event "%event_title%" has been unpublished. 
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
             save_event: Save Event

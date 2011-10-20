@@ -225,6 +225,13 @@ class User extends BaseUser
     protected $monitor;
 
     /**
+     * @var Boolean $avatarApproved
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    protected $avatar_approved;
+
+    /**
      * @Recaptcha\True(groups={"Registration"})
      */
     public $recaptcha;
@@ -242,6 +249,27 @@ class User extends BaseUser
         parent::__construct();
         $this->events = new ArrayCollection();   
     }
+    
+    /** 
+     * Return true if the user's avatar has been approved
+     * 
+     * @return Boolean
+     */
+    public function isAvatarApproved()
+    {
+        
+        return $this->avatar_approved;
+    }
+
+    public function approveAvatar()
+    {
+        $this->avatar_approved = true;
+    }
+
+    public function disapproveAvatar()
+    {
+        $this->avatar_approved = false;
+    }
 
     public function updateAvatar()
     {
@@ -254,6 +282,8 @@ class User extends BaseUser
         $this->file->move($this->getUploadRootDir(), $this->avatar);
 
         unset($this->file);
+
+        $this->disapproveAvatar();
     }
 
     public function getAbsolutePath() 
@@ -312,6 +342,14 @@ class User extends BaseUser
     public function addEvent(Event $event)
     {
         $this->events->add($event);
+    }
+
+    /**
+     * @param Platformd\SpoutletBundle\Entity\Event $event
+     */
+    public function removeEvent(Event $event)
+    {
+        $this->events->removeElement($event);
     }
     
     /**
