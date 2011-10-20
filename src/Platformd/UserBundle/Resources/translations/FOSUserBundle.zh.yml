@@ -1,5 +1,5 @@
 # some labels are on the "forms" domain
-fos_user_registration_form_username: "用户名"
+fos_user_registration_form_username: "用户名:"
 fos_user_registration_form_firstname: "名字:"
 fos_user_registration_form_lastname: "姓:"
 fos_user_registration_form_phoneNumber: "电话:"
