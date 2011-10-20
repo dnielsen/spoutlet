@@ -225,6 +225,13 @@ class User extends BaseUser
     protected $monitor;
 
     /**
+     * @var Boolean $avatarApproved
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    protected $avatar_approved;
+
+    /**
      * @Recaptcha\True(groups={"Registration"})
      */
     public $recaptcha;
@@ -241,6 +248,27 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->events = new ArrayCollection();   
+    }
+    
+    /** 
+     * Return true if the user's avatar has been approved
+     * 
+     * @return Boolean
+     */
+    public function isAvatarApproved()
+    {
+        
+        return $this->avatar_approved;
+    }
+
+    public function approveAvatar()
+    {
+        $this->avatar_approved = true;
+    }
+
+    public function disapproveAvatar()
+    {
+        $this->avatar_approved = false;
     }
 
     public function updateAvatar()
