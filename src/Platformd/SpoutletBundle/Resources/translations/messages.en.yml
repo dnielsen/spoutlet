@@ -122,7 +122,9 @@ platformd:
             edit_event: Edit Event | %event_title%
             create: Create New Event
             approve: Approve
+            unpublish: Unpublish
             approved: Event "%event_title%" has been approved and is now published. 
+            unpublished: Event "%event_title%" has been unpublished. 
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
             save_event: Save Event

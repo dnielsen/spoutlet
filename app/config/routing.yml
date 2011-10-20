@@ -31,6 +31,6 @@ fos_comment:
     resource: "@FOSCommentBundle/Resources/config/routing.yml"
     prefix:   "/comments"
 
-/*fos_comment_extra:
+fos_comment_extra:
     resource: "@CommentBundle/Resources/config/routing_extra.yml"
     prefix:   "/comments"

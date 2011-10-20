@@ -17,3 +17,7 @@ admin_events_edit:
 admin_event_approve:
     pattern: /admin/events/approve/{id}
     defaults: { _controller: SpoutletBundle:Admin:approveEvent }
+
+admin_event_unpublish:
+    pattern: /admin/events/unpublish/{id}
+    defaults: { _controller: SpoutletBundle:Admin:unpublishEvent }

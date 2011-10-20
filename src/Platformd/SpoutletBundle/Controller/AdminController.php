@@ -93,6 +93,32 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
 
+    public function unpublishEventAction($id)
+    {
+        $translator = $this->get('translator');
+        $event = $this->retrieveEvent($id);
+        $event->setPublished(false);
+        
+        $this->getEventsManager()->flush();
+
+        $this
+            ->getRequest()
+            ->getSession()
+            ->setFlash('notice', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
+
+        return $this->redirect($this->generateUrl('admin_events_index'));
+    }
+
+    protected function retrieveEvent($id) 
+    {
+        
+        if (!$event = $this->getEventsRepo()->findOneBy(array('id' => $id))) {
+            
+            throw $this->createNotFoundException();
+        }
+
+        return $event;
+    } 
     private function saveEvent($event_form)
     {
         // save to db
