@@ -1,13 +1,13 @@
 platformd:
     not_found:
-        title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        title: 页面未找到
+        body: 抱歉-您所需页面未找到
 
     layout:
         # title used by default (if not overriden)
-        default_title: Alienware Arena - Gamers Wanted
+        default_title: Alienware Arena - 玩家所求
         # title user by default in Admin area (if not overriden)
-        default_admin_title: Admin
+        default_admin_title: 管理员
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
 
@@ -29,19 +29,20 @@ platformd:
             espanol: 西班牙语
 
         top_menu:
-            account: Account
+            account: 账户
             sign_in: 登录
             sign_out: 退出
             join: 注册
             about: 关于我们
             contact: 联系我们
             search: 搜索
-            logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
+            logged_in_as: 已登陆<strong><a href="%route%">%username%</a></strong>
+
 
         admin_menu:
-            admin_home: Admin Home
-            manage_events: Manage Events
-            manage_users: Manage Users
+            admin_home: 管理首页
+            manage_events: 管理活动
+            manage_users: 管理用户
 
         main_menu:
             home: 首页
@@ -82,21 +83,21 @@ platformd:
             regional_addresses_europe: 欧洲
             regional_addresses_latin_america: 拉丁美洲 
             questions: 有关事件问题请参考各活动小网站的“支持”链接。
-        actions: Actions
+        actions: 操作
     users:
         user_listings:
-            title: Manage Users
-            super_admin_cant_be_modified: Super admin users can't be modified
+            title: 管理用户
+            super_admin_cant_be_modified: 超级管理员用户无法修改
 
     events:
         event_listings:
-            your_registered_events: Your Registered Events
+            your_registered_events: 我的活动
             current_events: 当前活动
-            current_and_upcoming_events: Current and Upcoming Events
-            more_current_events: More Current Events
+            current_and_upcoming_events: 当前活动及活动预告
+            more_current_events: 更多当前活动
             start_date: 开始时间
-            end_date: End Date
-            details: Details
+            end_date: 结束日期
+            details: 详情
             event: 活动
             games: 游戏
             hosted_by: 举办方
@@ -104,25 +105,25 @@ platformd:
             upcoming_events: 活动预告
             there_are_no_upcoming_events_at_this_moment: 暂无事件预告
             past_events: 过去活动
-            more_past_Events: More Past Events
+            more_past_Events: 更多以往活动
             online: 在线
-            no_past_events: There are no past events at this moment.
-            no_current_events: There are no current events at this moment.
+            no_past_events: 无以往活动
+            no_current_events: 无当前活动
             published: Published?
         event_create:
-            create_new_event: Create new event
+            create_new_event: 创建活动
         event_show:
-            register_event: Register for event
-            create_or_login: Create or login to an Alienware Arena account.
-            register:       Register
+            register_event: 注册活动
+            create_or_login: 创建或登陆Alienware Arena账户
+            register:       注册
         admin:
-            title: Event admin
-            edit_event: Edit Event | %event_title%
-            create: Create New Event
-            approve: Approve
-            approved: Event "%event_title%" has been approved and is now published.
-            unknown: Unknown event \#%event_id% !
-            save_event: Save Event
+            title: 活动管理
+            edit_event: 编辑活动%event_title%
+            create: 创建新活动
+            approve: 批准
+            approved: 活动"%event_title%" 已获批准即将发布
+            unknown: 未知活动#%event_id% !
+            save_event: 保存活动
             unpublished_title: Edit your unpublished event
             new_title: Create a new event
             published_title: Edit your published event
@@ -136,9 +137,9 @@ platformd:
             hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
             ready_to_game: 准备开始玩游戏吗？Alienware竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
             warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！Alienware 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
-            under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
-            edit_your_account: Edit your account information
-            change_your_password: Change your password
+            under_construction: "注：Alienware Arena建设中，如某项功能无法启用，请稍后访问。"
+            edit_your_account: 编辑账户信息
+            change_your_password: 修改密码
 
             
     

@@ -1,18 +1,18 @@
 platformd:
     user:
         login_header: 输入登陆信息
-        change_password_header: Change Your Password
+        change_password_header: 修改密码
         edit_account_header: Edit your account information
 
-        register_title: Create Arena Account
+        register_title: 创建Arena账户
 
         register:
             terms_label: 服务条款
             privacy_label: 隐私条款
-            country_label: Choose a country
+            country_label: 选择国家
 
         login:
-            title: Login to your account
+            title: 登陆您的账户
             forgot_password: 忘记密码
             need_help: 帮助？
             not_a_member_join: 非会员？免费注册！
