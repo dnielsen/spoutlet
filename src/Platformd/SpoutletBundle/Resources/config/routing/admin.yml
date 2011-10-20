@@ -21,3 +21,7 @@ admin_event_approve:
 admin_event_unpublish:
     pattern: /admin/events/unpublish/{id}
     defaults: { _controller: SpoutletBundle:Admin:unpublishEvent }
+
+admin_user_approve_avatar:
+    pattern: /admin/user/{id}/avatar/approve
+    defaults: { _controller: UserBundle:Admin:approveAvatar }
