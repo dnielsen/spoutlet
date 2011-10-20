@@ -5,8 +5,6 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 
 CKEDITOR.editorConfig = function( config )
 {
+    config.toolbar_Basic[0].push('Source');
     config.toolbar = 'Basic';
-	// Define changes to default configuration here. For example:
-	// config.language = 'fr';
-	// config.uiColor = '#AADC6E';
 };
