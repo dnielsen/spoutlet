@@ -313,6 +313,14 @@ class User extends BaseUser
     {
         $this->events->add($event);
     }
+
+    /**
+     * @param Platformd\SpoutletBundle\Entity\Event $event
+     */
+    public function removeEvent(Event $event)
+    {
+        $this->events->removeElement($event);
+    }
     
     /**
      * Get user's lastname
