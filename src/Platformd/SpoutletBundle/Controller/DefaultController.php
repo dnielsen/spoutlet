@@ -43,4 +43,9 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:terms_conditions.html.twig');
     }
 
+    public function aboutAction()
+    {
+        return $this->render('SpoutletBundle:Default:about.html.twig');
+    }
+
 }
