@@ -1,123 +1,122 @@
 # some labels are on the "forms" domain
-fos_user_registration_form_username: "Username:"
-fos_user_registration_form_firstname: "First name:"
-fos_user_registration_form_lastname: "Last name:"
-fos_user_registration_form_phoneNumber: "Phone:"
-fos_user_registration_form_country: "Country:"
-fos_user_registration_form_state: "State/Province:"
-fos_user_registration_form_email_first: "E-mail:"
-fos_user_registration_form_email_second: "Confirm E-mail:"
+fos_user_registration_form_username: "ユーザー名"
+fos_user_registration_form_firstname: "姓:"
+fos_user_registration_form_lastname: "姓:"
+fos_user_registration_form_phoneNumber: "電話:"
+fos_user_registration_form_country: "国:"
+fos_user_registration_form_state: "都道府県:"
+fos_user_registration_form_email_first: "メールアドレス:"
+fos_user_registration_form_email_second: "メールアドレスの確認:"
 
-fos_user_profile_form_user_lastname: "Last name"
-fos_user_profile_form_user_firstname: "First name"
-fos_user_profile_form_user_file: "Avatar"
-fos_user_profile_form_current_avatar: "Your current avatar"
+fos_user_profile_form_user_lastname: "姓"
+fos_user_profile_form_user_firstname: "姓"
+fos_user_profile_form_user_file: "アバター"
+fos_user_profile_form_current_avatar: "現在のアバター"
 
 profile.show.title: '%firstname% "%username%" %lastname%'
-profile.show.firstname: "First name"
-profile.show.lastname: "Last name"
-profile.show.my_rig: "My Rig"
-profile.show.update: "Update"
-profile.show.my_rig: "My Rig"
-profile.show.signature: "My Rig"
-profile.show.edit: "My Rig"
-profile.show.type: "Type"
-profile.show.manufacturer: "Manufacturer"
-profile.show.operating_system: "Operating System"
+profile.show.firstname: "名"
+profile.show.lastname: "姓"
+profile.show.my_rig: "マイ装備"
+profile.show.update: "更新"
+profile.show.signature: "署名"
+profile.show.edit: "編集"
+profile.show.type: "モデル"
+profile.show.manufacturer: "製造元"
+profile.show.operating_system: "OS"
 profile.show.cpu: "CPU"
-profile.show.memory: "Memory"
-profile.show.video_card: "Video Card"
-profile.show.sound_card: "Sound Card"
-profile.show.hard_drive: "Hard Drive"
-profile.show.headphones: "Headphones"
-profile.show.mouse: "Mouse"
-profile.show.mousepad: "Mousepad"
-profile.show.keyboard: "Keyboard"
-profile.show.monitor: "Monitor"
+profile.show.memory: "メモリ"
+profile.show.video_card: "ビデオカード"
+profile.show.sound_card: "サウンドカード"
+profile.show.hard_drive: "ハードドライブ"
+profile.show.headphones: "ヘッドフォン"
+profile.show.mouse: "マウス"
+profile.show.mousepad: "マウスパッド"
+profile.show.keyboard: "キーボード"
+profile.show.monitor: "モニター"
 
-fos_user_admin_user_edit_title: 'Edit user %username%'
-fos_user_admin_index_username: User Name
-fos_user_admin_index_firstname: First Name
-fos_user_admin_index_lastname: Last Name
-fos_user_admin_index_email: Email
-fos_user_admin_index_actions: Actions
-fos_user_admin_delete: Delete
-fos_user_admin_edit: Edit
+fos_user_admin_user_edit_title: '%username%ユーザーの編集'
+fos_user_admin_index_username: ユーザー名
+fos_user_admin_index_firstname: 姓
+fos_user_admin_index_lastname: 姓
+fos_user_admin_index_email: メールアドレス
+fos_user_admin_index_actions: 操作
+fos_user_admin_delete: 削除
+fos_user_admin_edit: 編集
 
-fos_user_admin_user_edit: Edit
-fos_user_admin_edit_success: User "%username%" has been successfully updated !
-fos_user_admin_delete_success: User "%username%" has been successfully deleted !
+fos_user_admin_user_edit: 編集
+fos_user_admin_edit_success:  %username% のユーザーが正常に更新されました。
+fos_user_admin_delete_success: %username% のユーザーが正常に削除されました。
 
 # Group
-group.edit.submit: Update group
-group.show.name: Group name
-group.new.submit: Create group
-group.flash.updated: The group has been updated
-group.flash.created: The group has been created
-group.flash.deleted: The group has been deleted
+group.edit.submit: グループの更新
+group.show.name: グループ名
+group.new.submit: グループの作成
+group.flash.updated: グループが更新されました
+group.flash.created: グループが作成されました
+group.flash.deleted: グループが削除されました
 
 # Security
 security.login.username: "Username:"
 security.login.password: "Password:"
-security.login.remember_me: Remember me
+security.login.remember_me: ログイン情報を記憶する
 security.login.submit: Login
 
 # Profile
 profile.show.username: Username
-profile.show.email: Email
-profile.edit.submit: Update
-profile.flash.updated: The profile has been updated
+profile.show.email: メールアドレス
+profile.edit.submit: 更新
+profile.flash.updated: プロファイルが更新されました
 
 # Password change
-change_password.submit: Change password
-change_password.flash.success: The password has been changed
+change_password.submit: パスワードの変更
+change_password.flash.success: パスワードが変更されました
 
 # Registration
-registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
-registration.confirmed: Congrats %username%, your account is now confirmed.
-registration.back: Back to the originating page.
-registration.submit: Register
-registration.flash.user_created: The user has been created successfully
+registration.check_email: %email%宛にメールが送信されました。同メールには、アカウントをアクティベートするためにクリックする必要があるアクティベーションリンクが含まれています。
+registration.confirmed: %username%様、おめでとうございます。お客様のアカウント確認を完了しました。
+registration.back: 元のページに戻る
+registration.submit: 登録
+registration.flash.user_created: ユーザーが正常に作成されました
 
 registration.email: |
-    Welcome %username%!
-    Hello %username%!
+    %username%様ようこそ。
 
-    To finish validating your account - please visit %confirmationUrl%
+    アカウントの認証を完了するため、%confirmationUrl%にアクセスしてください。
 
-    Regards,
-    the Team.
+    よろしくお願いします。
+    チーム一同より
 
 # Password resetting
-resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
-resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
-resetting.request.invalid_username: The username or email address "%username%" does not exist.
-resetting.request.username: "Username or email address:"
-resetting.request.submit: Reset password
-resetting.reset.submit: Change password
-resetting.flash.success: The password has been reset successfully
+resetting.password_already_requested: このユーザーのパスワードは、過去24時間以内に既に求められました。
+resetting.check_email: %email%宛にメールが送信されました。同メールには、パスワードをリセットするためにクリックする必要があるリンクが含まれています。
+resetting.request.invalid_username:  %username% のユーザー名またはメールアドレスは存在しません。
+resetting.request.username: "ユーザー名またはメールアドレス:"
+resetting.request.submit: パスワードのリセット
+resetting.reset.submit: パスワードの変更
+resetting.flash.success: パスワードが正常にリセットされました
 
 resetting.email: |
-    Reset Password
-    Hello %username%!
+    パスワードのリセット
+    %username%様、こんにちは。
 
-    To reset your password - please visit %confirmationUrl%
+    パスワードをリセットするには、%confirmationUrl%にアクセスしてください。
 
-    Regards,
-    the Team.
+    よろしくお願いします。
+    チーム一同より
+
 
 # Global strings
-layout.logout: Logout
+layout.logout: ログアウト
 layout.login: Login
-layout.register: Register
-layout.logged_in_as: Logged in as %username%
+layout.register: 登録
+layout.logged_in_as: %username% としてログイン済み
 
 # Form field labels
-fos_user_group_form_name: "Group name:"
+fos_user_group_form_name: "グループ名:"
 
-fos_user_profile_form_user_username: "Username:"
-fos_user_profile_form_user_email: "Email:"
-fos_user_profile_form_current: "Current Password:"
+fos_user_profile_form_user_username: "ユーザー名:"
+fos_user_profile_form_user_email: "メールアドレス:"
+fos_user_profile_form_current: "現在のパスワード:"
 fos_user_profile_form_user_type: "Type"
 fos_user_profile_form_user_manufacturer: "Manufacturer"
 fos_user_profile_form_user_operating_system: "Operating system"
@@ -132,14 +131,14 @@ fos_user_profile_form_user_mousepad: "Mousepad"
 fos_user_profile_form_user_keyboard: "Keyboard"
 fos_user_profile_form_user_monitor: "Monitor"
 
-security.login.username_or_email: "Username:"
-fos_user_registration_form_email: "Email:"
-fos_user_registration_form_plainPassword_first: "Password:"
-fos_user_registration_form_plainPassword_second: "Verification:"
+security.login.username_or_email: "ユーザー名:"
+fos_user_registration_form_email: "メールアドレス:"
+fos_user_registration_form_plainPassword_first: "パスワード:"
+fos_user_registration_form_plainPassword_second: "認証:"
 
-fos_user_resetting_form_new_first: "New password:"
-fos_user_resetting_form_new_second: "Verification:"
+fos_user_resetting_form_new_first: "新しいパスワード:"
+fos_user_resetting_form_new_second: "認証:"
 
-fos_user_change_password_form_new_first: "New password:"
-fos_user_change_password_form_new_second: "Verification:"
+fos_user_change_password_form_new_first: "新しいパスワード:"
+fos_user_change_password_form_new_second: "認証:"
 fos_user_change_password_form_current: "Current password:"

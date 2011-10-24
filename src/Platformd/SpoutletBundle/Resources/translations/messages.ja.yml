@@ -1,13 +1,13 @@
 platformd:
     not_found:
-        title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        title: ページが見つかりません
+        body: お探しのページが見つかりません
 
     layout:
         # title used by default (if not overriden)
-        default_title: Alienware Arena - Gamers Wanted
+        default_title: Alienware Arena - ゲーマー募集中
         # title user by default in Admin area (if not overriden)
-        default_admin_title: Admin
+        default_admin_title: 管理者
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
 
@@ -29,19 +29,19 @@ platformd:
             espanol: スペイン語
             
         top_menu:
-            account: Account
+            account: アカウント
             sign_in: ログイン
             sign_out: ログアウト
             join: 参加する
             about: Alienware Arenaについて
             contact: お問い合わせ
             search: 検索
-            logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
+            logged_in_as: <strong><a href="%route%">%username%</a></strong>としてログイン済み
 
         admin_menu:
-            admin_home: Admin Home
-            manage_events: Manage Events
-            manage_users: Manage Users
+            admin_home: 管理者ホーム
+            manage_events: イベント管理
+            manage_users: ユーザー管理
 
         main_menu:
             home: ホーム
@@ -74,29 +74,29 @@ platformd:
 
     help:
         help_page:
-            contact_and_support: Contact Us & Support
-            contact_dell: For questions about products or support please contact Dell directly at <a href="http://support.dell.com" target="_blank">http://support.dell.com</a>
-            contact_alienwarearena: For general Alienware Arena inquiries you may contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
-            regional_addresses: Regional Addresses
-            regional_addresses_north_america: North America
-            regional_addresses_europe: Europe
-            regional_addresses_latin_america: Latin america
-            questions: For questions or assistance with specific events refer to the 'support' link on the respective event micro-site.
-        actions: Actions
+            contact_and_support: お問い合わせ&サポート
+            contact_dell: 製品またはサポートについてのご質問は、Dell (http://support.dell.com) に直接連絡してください。
+            contact_alienwarearena: Alienware Arenaについての一般的なお問い合わせは、contact@alienwarearena.comまでお寄せください。
+            regional_addresses: 各地域のメールアドレス
+            regional_addresses_north_america: 北米
+            regional_addresses_europe: 欧州
+            regional_addresses_latin_america: 中南米
+            questions: 特定のイベントについてのご質問またはサポートは、該当するイベントのマイクロサイトで「サポート」リンクを参照してください。
+        actions: 操作
     users:
         user_listings:
-            title: Manage Users
-            super_admin_cant_be_modified: Super admin users can't be modified
+            title: ユーザー管理
+            super_admin_cant_be_modified: スーパー管理者ユーザーは変更できません
 
     events:
         event_listings:
-            your_registered_events: Your Registered Events
+            your_registered_events: マイ・イベント
             current_events: 現在のイベント
-            current_and_upcoming_events: Current and Upcoming Events
-            more_current_events: More Current Events
+            current_and_upcoming_events: 現在および将来のイベント
+            more_current_events: 現在のイベントをもっと表示
             start_date: 開始日
-            end_date: End Date
-            details: Details
+            end_date: 終了日
+            details: 詳細
             event: イベント名
             games: ゲーム名
             hosted_by: 主催
@@ -104,25 +104,25 @@ platformd:
             upcoming_events: 今後のイベント
             there_are_no_upcoming_events_at_this_moment: 予定されているイベントは現在ありません。
             past_events: 終了したイベント
-            more_past_Events: More Past Events
+            more_past_Events: 過去のイベントをもっと表示
             online: オンライン
-            no_past_events: There are no past events at this moment.
-            no_current_events: There are no current events at this moment.
+            no_past_events: 現在、過去のイベントはありません。
+            no_current_events: 現在、現在のイベントはありません。
             published: Published?
         event_create:
-            create_new_event: Create new event
+            create_new_event: 新しいイベントの作成
         event_show:
-            register_event: Register for event
-            create_or_login: Create or login to an Alienware Arena account.
-            register:       Register
+            register_event: イベントに登録
+            create_or_login: Alientware Arenaアカウントを作成するか、ログインしてください。
+            register:       登録
         admin:
-            title: Event admin
-            edit_event: Edit Event | %event_title%
-            create: Create New Event
-            approve: Approve
-            approved: Event "%event_title%" has been approved and is now published.
-            unknown: Unknown event \#%event_id% !
-            save_event: Save Event
+            title: イベント管理者
+            edit_event: イベントの編集 | %event_title%
+            create: 新しいイベントの作成
+            approve: 承認
+            approved: %event_title%のイベントが承認され、公開されました。
+            unknown: 不明なイベント \#%event_id% !
+            save_event: イベントの保存
             unpublished_title: Edit your unpublished event
             new_title: Create a new event
             published_title: Edit your published event
@@ -130,15 +130,15 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: You have not registered to any event yet.
-            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+            no_registered_events: どのイベントにも登録していません
+            join_event_message: イベントに参加するには、該当するイベントのマイクロサイトで「登録」リンクをクリックしてください。最新のイベントを見る
         account:
             welcome_to_control: あなたの管理画面へようこそ
             hello_user: "こんにちは%firstname%さん。ユーザーネーム%username%でログイン中です。"
             ready_to_game: ゲームへの準備はできていますか？このAlienware Arena管理画面は、あなたがArenaと交流するための主要ツールです。 現在、あなたはイベントのためにサインアップしコメントを残すことができます。私たちは毎月新しいトピックを追加するでしょう。もし何か問題が起こった場合は、いつでもArenaサポートチームへコンタクトしてください。
             warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。Alienware Arenaはその責任を
-            under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
-            edit_your_account: Edit your account information
-            change_your_password: Change your password
+            under_construction: "注：Alienware Arenaは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
+            edit_your_account: アカウント情報の編集
+            change_your_password: パスワードの変更
     about:
         title: Alienware Arena™について
