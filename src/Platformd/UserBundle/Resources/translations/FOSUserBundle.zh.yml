@@ -88,7 +88,7 @@ registration.email: |
 
 # Password resetting
 resetting.password_already_requested: 请不要在24小时之内重复发送获取密码请求。
-resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
+resetting.check_email: 邮件已发送至你的%email%邮箱，点击链接重置密码。
 resetting.request.invalid_username: 用户名或邮箱地址“%username%”不存在。
 resetting.request.username: "用户名:"
 resetting.request.submit: 重设密码
@@ -106,30 +106,30 @@ resetting.email: |
 layout.logout: 登出
 layout.login: 登陆
 layout.register: 注册
-layout.logged_in_as: Logged in as %username%
+layout.logged_in_as: 登录名%username%
 
 # Form field labels
 fos_user_group_form_name: "群组名称:"
 
 fos_user_profile_form_user_username: "用户名:"
-fos_user_profile_form_user_email: "Email:"
+fos_user_profile_form_user_email: "邮箱:"
 fos_user_profile_form_current: "当前密码:"
-fos_user_profile_form_user_type: "Type"
-fos_user_profile_form_user_manufacturer: "Manufacturer"
-fos_user_profile_form_user_operating_system: "Operating system"
+fos_user_profile_form_user_type: "类型"
+fos_user_profile_form_user_manufacturer: "制造商"
+fos_user_profile_form_user_operating_system: "操作系统"
 fos_user_profile_form_user_cpu: "CPU"
-fos_user_profile_form_user_memory: "Memory"
-fos_user_profile_form_user_video_card: "Video Card"
-fos_user_profile_form_user_sound_card: "Sound Card"
-fos_user_profile_form_user_hard_drive: "Hard Drive"
-fos_user_profile_form_user_headphones: "Headphones"
-fos_user_profile_form_user_mouse: "Mouse"
-fos_user_profile_form_user_mousepad: "Mousepad"
-fos_user_profile_form_user_keyboard: "Keyboard"
-fos_user_profile_form_user_monitor: "Monitor"
+fos_user_profile_form_user_memory: "内存"
+fos_user_profile_form_user_video_card: "显卡"
+fos_user_profile_form_user_sound_card: "声卡"
+fos_user_profile_form_user_hard_drive: "硬盘"
+fos_user_profile_form_user_headphones: "耳机"
+fos_user_profile_form_user_mouse: "鼠标"
+fos_user_profile_form_user_mousepad: "鼠标垫"
+fos_user_profile_form_user_keyboard: "键盘"
+fos_user_profile_form_user_monitor: "显示器"
 
 security.login.username_or_email: "用户名:"
-fos_user_registration_form_email: "Email:"
+fos_user_registration_form_email: "邮箱:"
 fos_user_registration_form_plainPassword_first: "密码:"
 fos_user_registration_form_plainPassword_second: "验证:"
 

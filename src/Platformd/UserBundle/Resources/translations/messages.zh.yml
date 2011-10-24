@@ -2,7 +2,7 @@ platformd:
     user:
         login_header: 输入登陆信息
         change_password_header: 修改密码
-        edit_account_header: Edit your account information
+        edit_account_header: 编辑账户信息
 
         register_title: 创建Arena账户
 
