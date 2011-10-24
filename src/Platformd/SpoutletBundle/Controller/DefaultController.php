@@ -30,7 +30,23 @@ class DefaultController extends Controller
 
     public function microsoftAction()
     {
-        return $this->render('SpoutletBundle:Default:microsoft.html.twig');
+        $image = sprintf('microsoft.%s.jpg', $this->getLocale());
+        switch ($this->getLocale()) {
+            case 'en':
+            case 'zh':
+                $url = 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn';
+                break;
+            case 'ja':
+                $url = 'http://www.alienware.jp';
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Invalid locale "%s"', $this->getLocale()));
+        }
+
+        return $this->render('SpoutletBundle:Default:microsoft.html.twig', array(
+            'image' => $image,
+            'url'   => $url,
+        ));
     }
 
     public function privacyAction()
@@ -51,5 +67,10 @@ class DefaultController extends Controller
     public function contactAction()
     {
         return $this->render('SpoutletBundle:Default:contact.html.twig');
+    }
+
+    private function getLocale()
+    {
+        return $this->getRequest()->getSession()->getLocale();
     }
 }
