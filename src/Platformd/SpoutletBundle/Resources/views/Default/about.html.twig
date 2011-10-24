@@ -6,6 +6,6 @@
 <div id="content" class="terms">
     <h1>{{ 'platformd.about.title' | trans | raw }}</h1>
 
-    {% include ['SpoutletBundle:Default:about/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:terms_conditions/en.html.twig'] %}
+    {% include ['SpoutletBundle:Default:about/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:about/en.html.twig'] %}
 </div>
 {% endblock %}

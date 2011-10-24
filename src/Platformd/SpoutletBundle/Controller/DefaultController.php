@@ -48,4 +48,8 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:about.html.twig');
     }
 
+    public function contactAction()
+    {
+        return $this->render('SpoutletBundle:Default:contact.html.twig');
+    }
 }

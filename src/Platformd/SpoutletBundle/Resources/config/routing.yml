@@ -18,6 +18,10 @@ about:
     pattern: /about
     defaults: { _controller: SpoutletBundle:Default:about }
 
+contact:
+    pattern: /contact
+    defaults: { _controller: SpoutletBundle:Default:contact }
+
 microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }

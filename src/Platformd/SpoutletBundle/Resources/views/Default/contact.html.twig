@@ -1,0 +1,11 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'platformd.layout.top_menu.contact' | trans }}{% endblock %}
+
+{% block content %}
+<div id="content" class="contact">
+    <h1>{{ 'platformd.layout.top_menu.contact' | trans }}</h1>
+
+    {% include ['SpoutletBundle:Default:contact/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:contact/en.html.twig'] %}
+</div>
+{% endblock %}
