@@ -30,6 +30,9 @@
 
     {{ form_row(form.game) }}
 
+    {{ form_row(form.bannerImageFile) }}
+    <div>{{ 'platformd.events.admin.banner_note' | trans }}</div>
+
     <div class="form_row">
         {{ form_label(form.content) }}
         {{ form_errors(form.content) }}

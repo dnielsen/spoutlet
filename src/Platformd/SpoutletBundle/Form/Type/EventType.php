@@ -18,6 +18,7 @@ class EventType extends AbstractType
         $builder->add('hosted_by', 'text');
         $builder->add('game', 'text');
         $builder->add('location', 'text');
+        $builder->add('bannerImageFile', 'file');
     }
 
     public function getName()

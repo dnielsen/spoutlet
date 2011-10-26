@@ -5,7 +5,9 @@
 {% block content %}
 <div id="content">
     <div class="std_1col">
-        <div id="eventHeader" style="background:url(http://c578254.r54.cf2.rackcdn.com/header-giveaway-32-city-of-heroes-freedom-giveaway.en.jpg) no-repeat; height: 120px;"></div>
+        {% if event.bannerImage %}
+            <div id="eventHeader" style="background:url('{{ asset(event.webPath) }}') no-repeat; height: 120px;"></div>
+        {% endif %}
     </div>
 
     <div class="std_2col">

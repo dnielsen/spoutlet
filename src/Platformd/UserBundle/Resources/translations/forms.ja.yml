@@ -1,14 +1,14 @@
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
-fos_user_registration_form_birthdate: "Date of Birth"
-fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
-fos_user_registration_form_latestNewsSource: "How did you most recently hear about Alienware Arena?"
-fos_user_registration_form_termsAccepted: "I have read and agree to the Terms & Conditions and Privacy Policy"
-fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email"
+fos_user_registration_form_birthdate: "生年月日"
+fos_user_registration_form_hasAlienwareSystem: "Alienwareシステムをお持ちですか?"
+fos_user_registration_form_latestNewsSource: "Alienware Arenaについて最近聞いたのはどこですか?"
+fos_user_registration_form_termsAccepted: "サービス規約およびプライバシーポリシーを読んだ上、同意する"
+fos_user_registration_form_subscribedGamingNews: "Alienware/Dellからのゲームニュースやキャンペーン情報をメールで受け取る"
 
-fos_user_profile_form_user_username: "Username"
-fos_user_profile_form_user_firstname: "First name"
-fos_user_profile_form_user_lastname: "Last name"
-fos_user_profile_form_user_email: "Email"
+fos_user_profile_form_user_username: "ユーザー名"
+fos_user_profile_form_user_firstname: "名"
+fos_user_profile_form_user_lastname: "姓"
+fos_user_profile_form_user_email: "メールアドレス"
 fos_user_profile_form_user_is_organizer: "Organizer"
 fos_user_profile_form_user_is_super_admin: "Super-admin"

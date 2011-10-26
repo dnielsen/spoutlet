@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AccountController extends Controller
 {
@@ -29,11 +30,22 @@ class AccountController extends Controller
 
 	public function accountAction()
 	{
+        $this->checkSecurity();
+
 		return $this->render('SpoutletBundle:Account:account.html.twig');
 	}
 
     public function eventsAction()
     {
+        $this->checkSecurity();
+
         return $this->render('SpoutletBundle:Account:events.html.twig');
+    }
+
+    protected function checkSecurity()
+    {
+        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            throw new AccessDeniedException();
+        }
     }
 }

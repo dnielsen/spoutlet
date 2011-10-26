@@ -1,0 +1,11 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'platformd.about.title' | trans | raw }}{% endblock %}
+
+{% block content %}
+<div id="content" class="terms">
+    <h1>{{ 'platformd.about.title' | trans | raw }}</h1>
+
+    {% include ['SpoutletBundle:Default:about/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:about/en.html.twig'] %}
+</div>
+{% endblock %}

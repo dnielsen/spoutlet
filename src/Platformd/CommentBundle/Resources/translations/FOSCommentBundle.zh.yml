@@ -1,20 +1,20 @@
-fos_comment_in_reply_to: "In reply to..."
+fos_comment_in_reply_to: "回复"
 platformd.comment.posted_date_label: 发表于
 
-fos_comment_comment_new_headline_first:       Be the first to comment
-fos_comment_comment_new_headline:             Add Your Comment
+fos_comment_comment_new_headline_first:       第一个进行评论
+fos_comment_comment_new_headline:             评论
 fos_comment_comment_new_submit:               加回复
 
-fos_comment_comment_reply_reply_to:           Replying to
-fos_comment_comment_reply_cancel:             Cancel
+fos_comment_comment_reply_reply_to:           回复
+fos_comment_comment_reply_cancel:             取消
 
-fos_comment_comment_show_by:                  By
-fos_comment_comment_show_voteup:              Vote up
-fos_comment_comment_show_votedown:            Vote down
-fos_comment_comment_show_reply:               Reply
+fos_comment_comment_show_by:                  由
+fos_comment_comment_show_voteup:              投票
+fos_comment_comment_show_votedown:            否决
+fos_comment_comment_show_reply:               回复
 
-fos_comment_comment_tree_load_more:           Load More Replies
+fos_comment_comment_tree_load_more:           查看更多回复
 
-Showing %num% comment|Showing %num% comments: Showing %num% comment|Showing %num% comments
+Showing %num% comment|Showing %num% comments: 显示%num%条评论|显示%num%条评论
 
-fos_comment_rss_feed:                         RSS Feed
+fos_comment_rss_feed:                         RSS 源

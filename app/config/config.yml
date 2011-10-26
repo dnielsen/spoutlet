@@ -173,11 +173,15 @@ parameters:
 jms_i18n_routing:
     default_locale: %locale%
     locales: [en, ja, zh]
-    strategy: custom
-    hosts:
-        en: %base_host%
-        ja: japan.%base_host%
-        zh: china.%base_host%
+    strategy: prefix_except_default
+    # the following *should* be used eventually, but it's not used now
+    # until we have the subdomains setup on production
+    # this is a temporary solution
+    #strategy: custom
+    #hosts:
+    #    en: %base_host%
+    #    ja: japan.%base_host%
+    #    zh: china.%base_host%
 
 fos_comment:
     db_driver: orm

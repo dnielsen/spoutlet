@@ -127,6 +127,19 @@ class Event
      */
     private $locale;
 
+    /**
+     * @ORM\Column(name="bannerImage", type="string", length=255, nullable=true)
+     */
+    protected $bannerImage;
+
+    /**
+     * @Assert\File(
+        maxSize="6000000",
+        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     * )
+     */
+    protected $bannerImageFile;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -444,4 +457,69 @@ class Event
         $this->locale = $locale;
     }
 
+    public function getBannerImage()
+    {
+        return $this->bannerImage;
+    }
+
+    public function setBannerImage($bannerImage)
+    {
+        $this->bannerImage = $bannerImage;
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\File
+     */
+    public function getBannerImageFile()
+    {
+        return $this->bannerImageFile;
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\File $bannerImageFile
+     */
+    public function setBannerImageFile($bannerImageFile)
+    {
+        $this->bannerImageFile = $bannerImageFile;
+    }
+
+    protected function getUploadRootDir()
+    {
+
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+
+        return '/uploads/events';
+    }
+
+    public function updateBannerImage()
+    {
+        if (null == $this->bannerImageFile) {
+
+            return;
+        }
+
+        $this->bannerImage = sha1($this->getId().'-'.uniqid()).'.'.$this->bannerImageFile->guessExtension();
+        $this->bannerImageFile->move($this->getUploadRootDir(), $this->bannerImage);
+
+        unset($this->bannerImageFile);
+    }
+
+    public function getAbsolutePath()
+    {
+        if (!$this->bannerImage) {
+
+            return null;
+        }
+
+        return $this->getUploadRootDir().'/'.$this->bannerImage;
+    }
+
+    public function getWebPath()
+    {
+        return null === $this->bannerImage ? null : $this->getUploadDir().'/'.$this->bannerImage;
+    }
 }

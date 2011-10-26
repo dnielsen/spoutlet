@@ -132,6 +132,7 @@ platformd:
             unpublished_title: Edit your unpublished event
             new_title: Create a new event
             published_title: Edit your published event
+            banner_note: Image is best at 950x120
 
     account_page:
         events:
@@ -145,3 +146,6 @@ platformd:
             under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
             edit_your_account: Edit your account information
             change_your_password: Change your password
+
+    about:
+        title: About Alienware Arena&trade;

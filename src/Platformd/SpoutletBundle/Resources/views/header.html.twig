@@ -24,8 +24,8 @@ $(".featured-content-header a").click(function() {
                         <li class="separator">
                             {% include 'SpoutletBundle::user.html.twig' %}
                         </li>
-                        <li class="separator"><a href="http://www.alienwarearena.com/pages/about">{{ "platformd.layout.top_menu.about" | trans }}</a></li>
-                        <li><a href="http://www.alienwarearena.com/pages/contact">{{ "platformd.layout.top_menu.contact" | trans }}</a></li>
+                        <li class="separator"><a href="{{ path('about') }}">{{ "platformd.layout.top_menu.about" | trans }}</a></li>
+                        <li><a href="{{ path('contact') }}">{{ "platformd.layout.top_menu.contact" | trans }}</a></li>
                     </ul>
                 </div>
             </div>
