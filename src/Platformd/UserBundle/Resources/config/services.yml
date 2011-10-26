@@ -6,7 +6,7 @@ services:
             - %fos_user.model.user.class%
             - %platformd.news_source%
         calls:
-            - [ setPrefectures, [ %platformd.prefectures%, %locale% ] ]
+            - [ setPrefectures, [ %platformd.prefectures%, @session ] ]
         tags:
             - { name: form.type, alias: platformd_user_registration } 
     platformd_user.profile.form.type:

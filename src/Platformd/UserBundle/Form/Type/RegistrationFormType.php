@@ -29,8 +29,9 @@ class RegistrationFormType extends BaseType
         $this->sources = $sources;
     }
     
-    public function setPrefectures(array $list, $locale)
+    public function setPrefectures(array $list, Session $session)
     {
+        $locale = $session->getLocale();
         $this->prefectures = isset($list[$locale]) ? $list[$locale] : array();
     }
     
