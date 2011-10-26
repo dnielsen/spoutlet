@@ -4,6 +4,7 @@ namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use Symfony\Component\HttpFoundation\Session;
 
 class RegistrationFormType extends BaseType
 {
@@ -13,12 +14,34 @@ class RegistrationFormType extends BaseType
     private $sources;
 
     /**
+     * @var A potential list of (japaneses ?) prefectures
+     */
+    private $prefectures = array();
+    
+    /**
+     * @var String user's locale
+     */
+    private $locale;
+
+    protected static $countries = array(
+        'ja' => 'JP',
+        'zh' => 'CN'
+    );
+
+    /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array())
+    public function __construct($class, array $sources = array(), Session $session)
     {
         parent::__construct($class);
+
+        $this->locale = $session->getLocale();
         $this->sources = $sources;
+    }
+    
+    public function setPrefectures(array $list)
+    {
+        $this->prefectures = isset($list[$this->locale]) ? $list[$this->locale] : array();
     }
     
     public function buildForm(FormBuilder $builder, array $options)
@@ -31,9 +54,6 @@ class RegistrationFormType extends BaseType
             ->add('email', 'repeated', array('type' => 'email'))
             ->add('birthdate', 'birthday', array('empty_value' => ''))
             ->add('phoneNumber')
-            ->add('country', 'country', array('empty_value' => 'platformd.user.register.country_label'))
-            ->add('state')
-            ->add('recaptcha', 'ewz_recaptcha')
             ->add('hasAlienwareSystem', 'choice', array(
                 'required' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
@@ -45,7 +65,29 @@ class RegistrationFormType extends BaseType
             ))
             ->add('subscribedGamingNews')
             ->add('termsAccepted', 'checkbox', array('required' => false));
+        
+        // if we have preferectures we use a choice
+        if (sizeof((array)$this->prefectures) > 0) {
+            $prefs = array();
+            foreach ($this->prefectures as $prefecture) {
+                $prefs[$prefecture] = $prefecture;
+            }
 
+            $builder->add('state', 'choice', array(
+                'empty_value' => '',
+                'choices' => $prefs
+            ));
+        } else {
+            $builder->add('state', 'text');
+        }
+
+        $countryOptions = array();
+        if (isset(self::$countries[$this->locale])) {
+            $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
+        } else {
+            $countryOptions['empty_value'] = 'platformd.user.register.country_label'; 
+        }
+        $builder->add('country', 'country', $countryOptions);
     }
 
     public function getName()

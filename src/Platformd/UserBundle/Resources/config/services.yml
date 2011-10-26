@@ -5,6 +5,9 @@ services:
         arguments:
             - %fos_user.model.user.class%
             - %platformd.news_source%
+            - @session
+        calls:
+            - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
             - { name: form.type, alias: platformd_user_registration } 
     platformd_user.profile.form.type:
