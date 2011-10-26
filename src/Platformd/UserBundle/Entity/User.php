@@ -229,7 +229,7 @@ class User extends BaseUser
      * 
      * @ORM\Column(type="boolean")
      */
-    protected $avatar_approved;
+    protected $avatar_approved = false;
 
     /**
      * @Recaptcha\True(groups={"Registration"})
