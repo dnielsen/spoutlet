@@ -2,6 +2,11 @@
 
 <h1>{{ 'platformd.user.register_title' | trans }}</h1>
 
+<div class="registration-requirements">
+    <p>{{ 'platformd.user.register.requirements' | trans }}</p>
+    <p>{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}</p>
+</div>
+
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form">
 
     {{ form_errors(form) }}
