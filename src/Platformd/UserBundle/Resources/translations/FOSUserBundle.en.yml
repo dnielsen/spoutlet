@@ -9,7 +9,7 @@ fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Yes
-
+fos_user_registration_form_latestNewsSource: "How did you most recently hear about Alienware Arena?"
 
 fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_firstname: "First name"
