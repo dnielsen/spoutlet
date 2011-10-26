@@ -85,7 +85,7 @@ class User extends BaseUser
     /**
      * @var String $state
      * 
-     * @ORM\Column(type="string", length="2", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      *
      * @Assert\NotBlank(groups={"Registration"})
      */

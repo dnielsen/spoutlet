@@ -71,7 +71,7 @@ class RegistrationFormType extends BaseType
                 'choices' => $prefs
             ));
         } else {
-            $builder->add('state');
+            $builder->add('state', 'text');
         }
     }
 
