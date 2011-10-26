@@ -18,12 +18,11 @@
 		    {% endstylesheets %}
         {% endblock %}
 
-        <script type="text/javascript" src="{{ asset('bundles/spoutlet/alt_js/jquery.countdown.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/spoutlet/alt_js/jquery.plugins.js') }}"></script>
 
         {% block javascripts %}
 		    {% javascripts
 		        'bundles/spoutlet/js/*'
+		        'bundles/spoutlet/alt_js/*'
 		        'bundles/comment/js/comments.js'
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.js'
