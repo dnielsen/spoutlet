@@ -208,4 +208,13 @@ div#content.microsoft {
 }
 
 .ad_728x90 {
+  background-image: url('/images/ads/aw-ms7-728x90.jpg') !important;
+}
+
+#fos_user_registration_form_hasAlienwareSystem {
+    display: inline;
+}
+
+#fos_user_registration_form_hasAlienwareSystem label {
+    width:30px;
 }
