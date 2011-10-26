@@ -7,6 +7,8 @@ platformd:
         register_title: Create Arena Account
 
         register:
+            requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
+            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログインして下さい。>"
             terms_label: サービス規約
             privacy_label: プライバシーポリシー
             country_label: Choose a country
