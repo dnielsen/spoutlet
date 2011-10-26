@@ -7,6 +7,8 @@ fos_user_registration_form_country: "国家:"
 fos_user_registration_form_state: "州/省:"
 fos_user_registration_form_email_first: "邮箱:"
 fos_user_registration_form_email_second: "确认邮箱:"
+fos_user_registration_form_hasAlienwareSystem_0: 没有
+fos_user_registration_form_hasAlienwareSystem_1: 是的
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "名字"

@@ -7,6 +7,9 @@ fos_user_registration_form_country: "Country:"
 fos_user_registration_form_state: "State/Province:"
 fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
+fos_user_registration_form_hasAlienwareSystem_0: No
+fos_user_registration_form_hasAlienwareSystem_1: Yes
+
 
 fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_firstname: "First name"

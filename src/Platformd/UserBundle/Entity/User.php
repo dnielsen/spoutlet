@@ -96,7 +96,7 @@ class User extends BaseUser
      *
      * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
      */
-    protected $hasAlienwareSystem;
+    protected $hasAlienwareSystem = false;
     
     /**
      * @var String $latest_news_source

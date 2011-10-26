@@ -7,6 +7,8 @@ fos_user_registration_form_country: "国:"
 fos_user_registration_form_state: "都道府県:"
 fos_user_registration_form_email_first: "メールアドレス:"
 fos_user_registration_form_email_second: "メールアドレスの確認:"
+fos_user_registration_form_hasAlienwareSystem_0: いいえ
+fos_user_registration_form_hasAlienwareSystem_1: はい
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "姓"
