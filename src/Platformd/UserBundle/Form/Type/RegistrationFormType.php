@@ -18,21 +18,30 @@ class RegistrationFormType extends BaseType
      */
     private $prefectures = array();
     
-    private $language;
+    /**
+     * @var String user's locale
+     */
+    private $locale;
+
+    protected static $countries = array(
+        'ja' => 'JP',
+        'zh' => 'CN'
+    );
 
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array())
+    public function __construct($class, array $sources = array(), Session $session)
     {
         parent::__construct($class);
+
+        $this->locale = $session->getLocale();
         $this->sources = $sources;
     }
     
-    public function setPrefectures(array $list, Session $session)
+    public function setPrefectures(array $list)
     {
-        $locale = $session->getLocale();
-        $this->prefectures = isset($list[$locale]) ? $list[$locale] : array();
+        $this->prefectures = isset($list[$this->locale]) ? $list[$this->locale] : array();
     }
     
     public function buildForm(FormBuilder $builder, array $options)
@@ -45,7 +54,6 @@ class RegistrationFormType extends BaseType
             ->add('email', 'repeated', array('type' => 'email'))
             ->add('birthdate', 'birthday', array('empty_value' => ''))
             ->add('phoneNumber')
-            ->add('country', 'country', array('empty_value' => 'platformd.user.register.country_label'))
             ->add('hasAlienwareSystem', 'choice', array(
                 'required' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
@@ -72,6 +80,14 @@ class RegistrationFormType extends BaseType
         } else {
             $builder->add('state', 'text');
         }
+
+        $countryOptions = array();
+        if (isset(self::$countries[$this->locale])) {
+            $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
+        } else {
+            $countryOptions['empty_value'] = 'platformd.user.register.country_label'; 
+        }
+        $builder->add('country', 'country', $countryOptions);
     }
 
     public function getName()
