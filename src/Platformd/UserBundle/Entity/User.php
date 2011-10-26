@@ -231,11 +231,6 @@ class User extends BaseUser
      */
     protected $avatar_approved = false;
 
-    /**
-     * @Recaptcha\True(groups={"Registration"})
-     */
-    public $recaptcha;
-    
     /** 
      * @Assert\File(
         maxSize="6000000", 

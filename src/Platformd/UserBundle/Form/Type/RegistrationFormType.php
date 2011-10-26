@@ -46,7 +46,6 @@ class RegistrationFormType extends BaseType
             ->add('birthdate', 'birthday', array('empty_value' => ''))
             ->add('phoneNumber')
             ->add('country', 'country', array('empty_value' => 'platformd.user.register.country_label'))
-            ->add('recaptcha', 'ewz_recaptcha')
             ->add('hasAlienwareSystem', 'choice', array(
                 'required' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
