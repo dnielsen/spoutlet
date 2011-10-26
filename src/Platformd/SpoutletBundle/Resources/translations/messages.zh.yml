@@ -24,6 +24,7 @@ platformd:
             america_latina: 拉丁美洲
             europe: 欧洲
             japan: 日本
+            india: 印
             change_language: 改变首选语言
             english: 英语
             espanol: 西班牙语
@@ -63,6 +64,7 @@ platformd:
             view_all: 查看所有
             redeem: 兑换
             keys_available: 有邀请码
+            ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
 
         bottom_menu:
             contact_us: 联系我们
@@ -70,7 +72,8 @@ platformd:
             terms_and_conditions: 服务条款
             steam_community: Steam社区
             xfire_community: Xfire社区
-            kick_ass_rig: "需要一个牛逼的装备? 请看看 ALienware"
+            link: "需要一个牛逼的装备? 请看看 ALienware"
+            link_url: "http://lt.dell.com/lt/lt.aspx?CID=59747&amp;LID=1511112&amp;DGC=SM&amp;DGSeg=DHS&amp;DURL=http://alienware.com/"
             copyright_2012: "©2012版权所有，Alienware公司"
 
     help:

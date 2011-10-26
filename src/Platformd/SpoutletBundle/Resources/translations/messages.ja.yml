@@ -24,6 +24,7 @@ platformd:
             america_latina: 南米
             europe: ヨーロッパ
             japan: 日本
+            india: インド
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
@@ -32,9 +33,9 @@ platformd:
             account: アカウント
             sign_in: ログイン
             sign_out: ログアウト
-            join: 参加する
+            join: アカウントの作成
             about: Alienware Arenaについて
-            contact: お問い合わせ
+            contact: "お問い合わせ & サポート"
             search: 検索
             logged_in_as: <strong><a href="%route%">%username%</a></strong>としてログイン済み
 
@@ -62,14 +63,16 @@ platformd:
             view_all: すべて見る
             redeem: 交換
             keys_available: 利用可能なゲームキー
+            ad_url: "/images/ads/aw-ms7-728x90-jp.jpg"
 
         bottom_menu:
-            contact_us: お問い合わせ
+            contact_us: "お問い合わせ & サポート"
             privacy_policy: 個人情報保護方針
             terms_and_conditions: 利用条項
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            kick_ass_rig: "Alienware.jpへ移動する"
+            link: "Alienware.jpへ移動する"
+            link_url: "http://alienware.jp/"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:

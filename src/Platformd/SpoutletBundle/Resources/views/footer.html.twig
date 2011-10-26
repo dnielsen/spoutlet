@@ -4,12 +4,18 @@
             <li><a href="{{ path('contact') }}">{{ 'platformd.layout.bottom_menu.contact_us' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('privacy') }}">{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('terms_conditions') }}">{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}</a></li>
+            {% if app.session.locale == 'en' %}
             <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
             <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
+            {% endif %}
+            {% if app.session.locale == 'ja' %}
+            <li><a href="http://www.twitter.com/Alienware_JP"><img src="http://twitter-badges.s3.amazonaws.com/twitter-b.png" alt="Follow Alienware on Twitter" height="20"/></a></li>
+            {% endif %}
         </ul>
         <div class="right">
-            <a target="_blank" href="http://lt.dell.com/lt/lt.aspx?CID=59747&amp;LID=1511112&amp;DGC=SM&amp;DGSeg=DHS&amp;DURL=http://alienware.com/">{{ 'platformd.layout.bottom_menu.kick_ass_rig' | trans }}</a>
+            <a target="_blank" href="{{ 'platformd.layout.bottom_menu.link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans }}</a>
         </div>
+        <div style="clear:both;"></div>
         <div class="legal">
             {{ 'platformd.layout.bottom_menu.copyright_2012' | trans }}
         </div>

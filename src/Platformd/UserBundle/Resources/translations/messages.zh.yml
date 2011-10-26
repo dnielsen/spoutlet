@@ -7,6 +7,8 @@ platformd:
         register_title: 创建Arena账户
 
         register:
+            requirements: Participation in the Alienware Arena requires an account.
+            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
             terms_label: 服务条款
             privacy_label: 隐私条款
             country_label: 选择国家
