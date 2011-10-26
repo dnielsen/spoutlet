@@ -419,7 +419,7 @@ html body .lastBlurb { margin-bottom:0; }
 
 /** footer **/
 #footer { clear:both; padding-top:40px; padding-bottom:20px; background:url(/bundles/spoutlet/images/footer-bg.gif) top left repeat-x; }
-#footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 26px; }
+#footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 20px; }
 #footer .nav a {  color:#b3b3b3; }
 #footer .nav li { float:left; margin-left:5px; padding-right:5px; border-right:#575757 solid 1px; }
 #footer .nav li.noborder { border:none; }
