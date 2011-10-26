@@ -69,7 +69,8 @@ platformd:
             terms_and_conditions: 利用条項
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            kick_ass_rig: "Alienware.jpへ移動する"
+            link: "Alienware.jpへ移動する"
+            link_url: "http://alienware.jp/"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:

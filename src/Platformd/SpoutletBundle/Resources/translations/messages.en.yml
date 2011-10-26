@@ -70,7 +70,8 @@ platformd:
             terms_and_conditions: "Terms & Conditions"
             steam_community: Steam Community
             xfire_community: Xfire Community
-            kick_ass_rig: "Need a kick ass rig? Checkout Alienware"
+            link: "Need a kick ass rig? Checkout Alienware"
+            link_url: "http://lt.dell.com/lt/lt.aspx?CID=59747&amp;LID=1511112&amp;DGC=SM&amp;DGSeg=DHS&amp;DURL=http://alienware.com/"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help: 
