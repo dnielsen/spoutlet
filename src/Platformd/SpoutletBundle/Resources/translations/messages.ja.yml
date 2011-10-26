@@ -63,6 +63,7 @@ platformd:
             view_all: すべて見る
             redeem: 交換
             keys_available: 利用可能なゲームキー
+            ad_url: "/images/ads/aw-ms7-728x90-jp.jpg"
 
         bottom_menu:
             contact_us: お問い合わせ
