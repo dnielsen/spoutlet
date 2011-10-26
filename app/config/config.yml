@@ -79,7 +79,6 @@ fos_user:
 parameters:
     platformd.news_source:
         alienware: Alienware
-        cevo: CEVO
         facebook: Facebook
         live_event: Live event
         ea: EA
