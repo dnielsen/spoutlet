@@ -30,6 +30,7 @@ platformd:
             espanol: スペイン語
             
         top_menu:
+            admin: Admin
             account: アカウント
             sign_in: ログイン
             sign_out: ログアウト
