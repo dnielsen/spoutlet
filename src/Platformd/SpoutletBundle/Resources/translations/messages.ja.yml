@@ -35,7 +35,7 @@ platformd:
             sign_out: ログアウト
             join: アカウントの作成
             about: Alienware Arenaについて
-            contact: お問い合わせ
+            contact: "お問い合わせ & サポート"
             search: 検索
             logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
 
@@ -66,7 +66,7 @@ platformd:
             ad_url: "/images/ads/aw-ms7-728x90-jp.jpg"
 
         bottom_menu:
-            contact_us: お問い合わせ
+            contact_us: "お問い合わせ & サポート"
             privacy_policy: 個人情報保護方針
             terms_and_conditions: 利用条項
             steam_community: Steam コミュニティ
