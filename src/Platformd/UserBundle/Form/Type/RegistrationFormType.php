@@ -4,6 +4,7 @@ namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use Symfony\Component\HttpFoundation\Session;
 
 class RegistrationFormType extends BaseType
 {
@@ -13,12 +14,24 @@ class RegistrationFormType extends BaseType
     private $sources;
 
     /**
+     * @var A potential list of (japaneses ?) prefectures
+     */
+    private $prefectures = array();
+    
+    private $language;
+
+    /**
      * @param string $class The User class name
      */
     public function __construct($class, array $sources = array())
     {
         parent::__construct($class);
         $this->sources = $sources;
+    }
+    
+    public function setPrefectures(array $list, $locale)
+    {
+        $this->prefectures = isset($list[$locale]) ? $list[$locale] : array();
     }
     
     public function buildForm(FormBuilder $builder, array $options)
@@ -32,7 +45,6 @@ class RegistrationFormType extends BaseType
             ->add('birthdate', 'birthday', array('empty_value' => ''))
             ->add('phoneNumber')
             ->add('country', 'country', array('empty_value' => 'platformd.user.register.country_label'))
-            ->add('state')
             ->add('recaptcha', 'ewz_recaptcha')
             ->add('hasAlienwareSystem', 'choice', array(
                 'required' => true,
@@ -45,7 +57,21 @@ class RegistrationFormType extends BaseType
             ))
             ->add('subscribedGamingNews')
             ->add('termsAccepted', 'checkbox', array('required' => false));
+        
+        // if we have preferectures we use a choice
+        if (sizeof((array)$this->prefectures) > 0) {
+            $prefs = array();
+            foreach ($this->prefectures as $prefecture) {
+                $prefs[$prefecture] = $prefecture;
+            }
 
+            $builder->add('state', 'choice', array(
+                'empty_value' => '',
+                'choices' => $prefs
+            ));
+        } else {
+            $builder->add('state');
+        }
     }
 
     public function getName()
