@@ -139,7 +139,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     display:none;
     background-color:#323232;
     position:absolute;
-    width:170px;
+    width:200px;
     z-index:100;
     border:1px #5d5d5d;
     text-align:left;
@@ -170,7 +170,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     display:none;
     background-color:#323232;
     position:absolute;
-    width:170px;
+    width:200px;
     z-index:100;
     border:1px #5d5d5d;
     text-align:left;
