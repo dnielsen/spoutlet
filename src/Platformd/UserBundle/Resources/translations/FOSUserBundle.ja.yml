@@ -1,17 +1,23 @@
 # some labels are on the "forms" domain
 fos_user_registration_form_username: "ユーザー名:"
-fos_user_registration_form_firstname: "姓:"
-fos_user_registration_form_lastname: "姓:"
-fos_user_registration_form_phoneNumber: "電話:"
+fos_user_registration_form_firstname: "姓 (漢字もしくは英字):"
+fos_user_registration_form_lastname: "名 (漢字もしくは英字):"
+fos_user_registration_form_phoneNumber: "電話番号"
 fos_user_registration_form_country: "国:"
 fos_user_registration_form_state: "都道府県:"
-fos_user_registration_form_email_first: "メールアドレス:"
-fos_user_registration_form_email_second: "メールアドレスの確認:"
+fos_user_registration_form_email_first: "Eメールアドレス:"
+fos_user_registration_form_email_second: "確認のためもう一度ご入力ください:"
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "姓"
 fos_user_profile_form_user_file: "アバター"
 fos_user_profile_form_current_avatar: "現在のアバター"
+
+fos_user_registration_form_hasAlienwareSystem: "Alienware ゲーミングＰＣ をお持ちですか？"
+fos_user_registration_form_latestNewsSource: "どこでAlienwareArena を知りましたか？"
+fos_user_registration_form_birthdate: "生年月日:"
+fos_user_registration_form_termsAccepted: "サービス規約およびプライバシーポリシーを読んだ上、同意する"
+fos_user_registration_form_subscribedGamingNews: "Alienware/Dellからのゲームニュースやキャンペーン情報をメールで受け取る"
 
 profile.show.title: '%firstname% "%username%" %lastname%'
 profile.show.firstname: "名"
