@@ -32,7 +32,7 @@ platformd:
             account: Account
             sign_in: ログイン
             sign_out: ログアウト
-            join: 参加する
+            join: アカウントの作成
             about: Alienware Arenaについて
             contact: お問い合わせ
             search: 検索
