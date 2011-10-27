@@ -23,7 +23,7 @@ platformd:
         reset:
             title:  Forgot Your Password?
 
-        request_rest:
+        request_reset:
             title: Forgot Your Password?
             help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
             spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
