@@ -123,6 +123,10 @@ a.button:hover {
     border:2px solid #ccc;
 }
 
+.fos_user_profile_edit label {
+    width: 110px;
+}
+
 /* support styles */
 .support ul {
     list-style-type: none;
