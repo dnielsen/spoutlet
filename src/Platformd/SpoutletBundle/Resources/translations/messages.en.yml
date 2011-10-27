@@ -25,6 +25,7 @@ platformd:
             europe: Europe
             japan: Japan
             india: India
+            australia_new_zealand: "Australia/New Zealand"
             change_language: Change preferred language
             english: English
             espanol: Español

@@ -25,6 +25,7 @@ platformd:
             europe: 欧洲
             japan: 日本
             india: 印
+            australia_new_zealand: "澳大利亚/新西兰"
             change_language: 改变首选语言
             english: 英语
             espanol: 西班牙语
