@@ -1,6 +1,6 @@
-{% if (app.session.locale == 'cn') %}
+{% if (app.session.locale == 'zh') %}
     {% set localeName = 'platformd.layout.region.china' | trans %}
-{% elseif (app.session.locale == 'jp') %}
+{% elseif (app.session.locale == 'ja') %}
     {% set localeName = 'platformd.layout.region.japan' | trans %}
 {% else %}
     {% set localeName = 'platformd.layout.region.usa_canada' | trans %}
