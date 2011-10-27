@@ -49,6 +49,7 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
+            alienware_url: http://alienware.com/
             events: Events
             news: News
             microsoft: Microsoft

@@ -49,6 +49,7 @@ platformd:
         main_menu:
             home: ホーム
             alienware: Alienware
+            alienware_url: http://www.alienware.jp/
             events: イベント
             news: ニュース
             microsoft: マイクロソフト

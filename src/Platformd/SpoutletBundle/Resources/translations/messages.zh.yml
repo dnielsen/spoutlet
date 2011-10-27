@@ -50,6 +50,7 @@ platformd:
         main_menu:
             home: 首页
             alienware: 外星人顶级游戏电脑
+            alienware_url: http://www.alienware.com.cn
             events: 活动
             news: 新闻
             microsoft: 微软
