@@ -9,6 +9,7 @@ fos_user_registration_form_email_first: "邮箱:"
 fos_user_registration_form_email_second: "确认邮箱:"
 fos_user_registration_form_hasAlienwareSystem_0: 没有
 fos_user_registration_form_hasAlienwareSystem_1: 是的
+fos_user_registration_form_latestNewsSource: "AlienwareArena您是从哪里听到的？"
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "名字"
@@ -20,7 +21,6 @@ profile.show.firstname: "名字"
 profile.show.lastname: "姓"
 profile.show.my_rig: 我的设备
 profile.show.update: 更新
-profile.show.my_rig: 我的设备
 profile.show.signature: 我的设备
 profile.show.edit: 我的设备
 profile.show.type: 类型
