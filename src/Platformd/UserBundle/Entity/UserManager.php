@@ -47,15 +47,23 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
-    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD) 
+    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD)
     {
 
-        return $this
+        $qb = $this
             ->repository
             ->createQueryBuilder('u')
             ->orderBy('u.'.$sort_by)
-            ->getQuery();
-        
+        ;
+
+        if ($this->getLocale()) {
+            $qb
+                ->andWhere('u.locale = :locale')
+                ->setParameter('locale', $this->getLocale())
+            ;
+        }
+
+        return $qb->getQuery();
     }
 
     /**
