@@ -66,6 +66,7 @@ platformd:
             keys_available: Keys Available
             ad_url: "/images/ads/aw-ms7-728x90-en.jpg"
             deals_add_url: "/images/ads/AA_300x250deals.jpg"
+            landing_image_url: "/images/AWinvades-jp.jpg"
 
         bottom_menu:
             contact_us: Contact Us
