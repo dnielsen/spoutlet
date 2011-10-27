@@ -47,8 +47,16 @@
         {{ form_errors(form.termsAccepted) }}
         <label>&nbsp;</label>
         {{ form_widget(form.termsAccepted) }}
-        {{ 'fos_user_registration_form_termsAccepted' | trans({}, 'forms') }}
         <span class="required">*</span>
+        {{ 'fos_user_registration_form_termsAccepted' | trans({}, 'forms') }}
+    </div>
+
+    <div class="form_row">
+        {{ form_errors(form.subscribedAlienwareEvents) }}
+        <div class="floating_form_container">
+            {{ form_widget(form.subscribedAlienwareEvents) }}
+            {{ 'fos_user_registration_form_subscribedAlienwareEvents' | trans({}, 'forms') }}
+        </div>
     </div>
 
     <div class="form_row">

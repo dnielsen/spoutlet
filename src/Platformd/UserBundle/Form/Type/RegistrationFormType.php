@@ -68,6 +68,7 @@ class RegistrationFormType extends BaseType
                 'required' => false,
             ))
             ->add('subscribedGamingNews')
+            ->add('subscribedAlienwareEvents')
             ->add('termsAccepted', 'checkbox', array('required' => false));
         
         // if we have preferectures we use a choice

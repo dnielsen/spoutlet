@@ -145,6 +145,9 @@ a.button:hover {
 .fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
     margin-left: 360px;
 }
+.floating_form_container {
+    margin-left: 363px;
+}
 .fos_user_registration_register #recaptcha_widget_div {
     margin-bottom: 10px;
 }

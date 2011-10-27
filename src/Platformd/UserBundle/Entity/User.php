@@ -107,11 +107,21 @@ class User extends BaseUser
     protected $latestNewsSource;
 
     /**
-     * @var String $subscribe_gaming_news
+     * @var bool $subscribe_gaming_news
      *
      * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable=true)
      */
     protected $subscribedGamingNews;
+
+    /**
+     * This is the checkbox for:
+     *     Subscribe me to receive news on the latest giveaways, contests,
+     *     events and more from Alienware Arena via email.
+     *
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $subscribedAlienwareEvents;
 
     /**
      * @var Boolean $terms_accepted
@@ -772,5 +782,21 @@ class User extends BaseUser
     {
 
         return '/uploads/avatars';
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSubscribedAlienwareEvents()
+    {
+        return $this->subscribedAlienwareEvents;
+    }
+
+    /**
+     * @param boolean $subscribedAlienwareEvents
+     */
+    public function setSubscribedAlienwareEvents($subscribedAlienwareEvents)
+    {
+        $this->subscribedAlienwareEvents = $subscribedAlienwareEvents;
     }
 }
