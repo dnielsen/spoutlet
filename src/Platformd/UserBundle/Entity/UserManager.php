@@ -58,7 +58,7 @@ class UserManager extends BaseUserManager
 
         if ($this->getLocale()) {
             $qb
-                ->andWhere('u.locale = :locale')
+                ->andWhere('u.locale = :locale OR u.locale IS NULL')
                 ->setParameter('locale', $this->getLocale())
             ;
         }
