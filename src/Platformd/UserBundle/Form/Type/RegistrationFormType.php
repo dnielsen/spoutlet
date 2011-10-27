@@ -5,6 +5,8 @@ namespace Platformd\UserBundle\Form\Type;
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 
 class RegistrationFormType extends BaseType
 {
@@ -49,11 +51,11 @@ class RegistrationFormType extends BaseType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstname')
-            ->add('lastname')
-            ->add('email', 'repeated', array('type' => 'email'))
-            ->add('birthdate', 'birthday', array('empty_value' => '--'))
-            ->add('phoneNumber')
+            ->add('firstname', null, array('required' => true))
+            ->add('lastname', null, array('required' => true))
+            ->add('email', 'repeated', array('type' => 'email', 'required' => true))
+            ->add('birthdate', 'birthday', array('empty_value' => '--', 'required' => true))
+            ->add('phoneNumber', null, array('required' => false))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
                 'required' => true,
@@ -62,7 +64,8 @@ class RegistrationFormType extends BaseType
             ))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
-                'choices' => $this->sources
+                'choices' => $this->sources,
+                'required' => false,
             ))
             ->add('subscribedGamingNews')
             ->add('termsAccepted', 'checkbox', array('required' => false));
@@ -76,13 +79,14 @@ class RegistrationFormType extends BaseType
 
             $builder->add('state', 'choice', array(
                 'empty_value' => '',
-                'choices' => $prefs
+                'choices' => $prefs,
+                'required' => true
             ));
         } else {
-            $builder->add('state', 'text');
+            $builder->add('state', 'text', array('required' => true));
         }
 
-        $countryOptions = array();
+        $countryOptions = array('required' => true);
         if (isset(self::$countries[$this->locale])) {
             $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
         } else {
@@ -95,5 +99,14 @@ class RegistrationFormType extends BaseType
     {
         
         return 'patformd_user_registration';
+    }
+
+    public function buildViewBottomUp(FormView $view, FormInterface $form)
+    {
+        parent::buildViewBottomUp($view, $form);
+
+        // makes it so that the required label doesn't cascade down onto the two option labels
+        $view['hasAlienwareSystem'][0]->set('required', false);
+        $view['hasAlienwareSystem'][1]->set('required', false);
     }
 }

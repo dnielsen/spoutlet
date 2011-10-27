@@ -218,3 +218,7 @@ div#content.microsoft {
 #fos_user_registration_form_hasAlienwareSystem label {
     width:30px;
 }
+
+span.required {
+    color: #B01717;
+}

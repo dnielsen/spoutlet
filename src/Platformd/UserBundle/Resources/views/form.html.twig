@@ -1,0 +1,15 @@
+{#
+    overridden so we can keep the strange trans key from FOS, but get the extra
+    required asterisk label stuff we have in our normal theme
+#}
+
+{% block field_label %}
+{% spaceless %}
+    <label for="{{ id }}" class="form-lbl{{ required ? ' required' : '' }}">
+        {{ id|trans([], 'FOSUserBundle') }}
+        {% if required %}
+            <span class="required">*</span>
+        {% endif %}
+    </label>
+{% endspaceless %}
+{% endblock field_label %}

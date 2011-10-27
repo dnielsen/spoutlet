@@ -38,7 +38,7 @@
     {{ form_row(form.country) }}
 
     {{ form_row(form.state) }}
-    
+
     {{ form_row(form.hasAlienwareSystem) }}
 
     {{ form_row(form.latestNewsSource) }}
@@ -48,6 +48,7 @@
         <label>&nbsp;</label>
         {{ form_widget(form.termsAccepted) }}
         {{ 'fos_user_registration_form_termsAccepted' | trans({}, 'forms') }}
+        <span class="required">*</span>
     </div>
 
     <div class="form_row">
