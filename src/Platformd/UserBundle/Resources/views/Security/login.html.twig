@@ -29,12 +29,6 @@
         <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
     #}
 
-    {# a glorious hack to control the redirect if it's not stored in the session #}
-    {# redirects back to the homepage of the user's locale #}
-    {% if not app.session.get('_security.target_path') %}
-        <input type="hidden" name="_target_path" value="{{ (app.session.locale == 'en') ? '/' : '/'~app.session.locale }}" />
-    {% endif %}
-
     <input type="submit" id="_submit" class="button" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
 </form>
 
