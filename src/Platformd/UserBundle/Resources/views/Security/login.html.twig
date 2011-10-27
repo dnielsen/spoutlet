@@ -30,6 +30,8 @@
     #}
 
     <input type="submit" id="_submit" class="button" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
+    
+    <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | trans }}</a>
 </form>
 
 </div>
