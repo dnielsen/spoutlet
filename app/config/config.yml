@@ -59,7 +59,7 @@ swiftmailer:
     host:      %mailer_host%
     username:  %mailer_user%
     password:  %mailer_password%
-    sender_address: noreply@%base_host%
+    sender_address: %sender_email_address%
 
 jms_security_extra:
     secure_controllers:  true
@@ -69,9 +69,14 @@ fos_user:
     db_driver:       orm
     firewall_name:   main
     user_class:      Platformd\UserBundle\Entity\User
+    from_email:
+        address:        %sender_email_address%
+        sender_name:    noreply
     registration:
         form:
             type: platformd_user_registration
+        confirmation:
+            enabled: true
     profile:
         form:
             type: platformd_user_profile
@@ -79,6 +84,7 @@ fos_user:
         user_manager: platformd_user.manager 
 
 parameters:
+    sender_email_address: "noreply@%base_host%"
     platformd.news_source:
         alienware: Alienware
         facebook: Facebook

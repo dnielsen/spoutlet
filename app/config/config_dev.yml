@@ -19,5 +19,8 @@ monolog:
             type:  firephp
             level: info
 
+swiftmailer:
+    delivery_address: weaverryan@gmail.com
+
 assetic:
     use_controller: true
