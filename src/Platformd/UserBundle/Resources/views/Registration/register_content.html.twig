@@ -25,9 +25,12 @@
         {{ form_errors(form.birthdate) }}
         {{ form_label(form.birthdate) }}
 
-        {{ form_widget(form.birthdate.month) }}
-        {{ form_widget(form.birthdate.day) }}
         {{ form_widget(form.birthdate.year) }}
+        {{ 'year' | trans({}, 'forms') }}
+        {{ form_widget(form.birthdate.month) }}
+        {{ 'month' | trans({}, 'forms') }}
+        {{ form_widget(form.birthdate.day) }}
+        {{ 'day' | trans({}, 'forms') }}
     </div>
 
     {{ form_row(form.phoneNumber) }}

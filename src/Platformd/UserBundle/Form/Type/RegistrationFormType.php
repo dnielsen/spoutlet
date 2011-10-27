@@ -52,7 +52,7 @@ class RegistrationFormType extends BaseType
             ->add('firstname')
             ->add('lastname')
             ->add('email', 'repeated', array('type' => 'email'))
-            ->add('birthdate', 'birthday', array('empty_value' => ''))
+            ->add('birthdate', 'birthday', array('empty_value' => '--'))
             ->add('phoneNumber')
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,

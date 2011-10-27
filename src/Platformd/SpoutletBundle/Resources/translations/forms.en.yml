@@ -10,3 +10,7 @@ event_content: "Description"
 event_hosted_by: "Hosted by"
 event_game: "Game"
 event_bannerImageFile: "Banner Image"
+
+year: Year
+month: Month
+day: Day

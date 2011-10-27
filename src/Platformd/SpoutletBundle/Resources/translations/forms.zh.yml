@@ -10,3 +10,7 @@ event_content: "说明"
 event_hosted_by: "举办方"
 event_game: "游戏"
 event_bannerImageFile: "Banner Image"
+
+year:
+month:
+day:
