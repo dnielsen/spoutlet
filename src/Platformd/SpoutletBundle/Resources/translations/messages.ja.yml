@@ -150,3 +150,6 @@ platformd:
             change_your_password: パスワードの変更
     about:
         title: Alienware Arena™について
+
+    microsoft:
+        link_url: http://www.alienware.jp/
