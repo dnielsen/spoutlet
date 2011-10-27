@@ -1,0 +1,20 @@
+<div style="padding-top:0;" class="right_section">
+    <div class="widget-33" id="hs-widget">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ 'platformd.layout.page_content.photo_gallery' | trans }}<br />
+            </div>
+            <div class="widget-icon"><img src="/bundles/spoutlet/images/photo-icon.png" /></div>
+        </div>
+        <div class="widget-content">
+            <img src="{{ asset('/images/gallery/gallery.'~app.session.locale~'.jpg') }}" />
+        </div>
+        <div class="widget-footer">
+            {#
+                removed for now
+                <a href="http://www.tbd.com/photos/alienwarearena/" class="aw-link">{{ 'platformd.layout.page_content.view_all' | trans }}</a>
+                <div class="clear"></div>
+            #}
+        </div>
+    </div>
+</div>

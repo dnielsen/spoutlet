@@ -1,13 +1,16 @@
 <div class="widget-66" id="featured-content">
 	<div class="featured-content-header">
         <a href="javascript:void(0);" class="active" id="featured-news">{{ 'platformd.layout.main_menu.news' | trans }}</a>
+        {% if not onlyNews %}
 		<a href="javascript:void(0);" id="featured-events">{{ 'platformd.layout.page_content.events' | trans }}</a>
+        {% endif %}
 		<div style="clear: left;"></div>
 	</div>
     <div class="widget-content">
         <div id="featured-content-featured-news" class="featured-content-category active">
         	{% include 'SpoutletBundle:News:launch.html.twig' %}
         </div>
+        {% if not onlyNews %}
         <div id="featured-content-featured-events" class="featured-content-category">
         	{% for event in all_events %}
             <div class="widget-item">
@@ -15,9 +18,11 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
     <div class="widget-footer">
-        <a href="{{ path('events_index') }}" class="aw-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <a href="{{ path('news') }}" class="aw-link" id="featured-footer-featured-news">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <a href="{{ path('events_index') }}" class="aw-link" id="featured-footer-featured-events" style="display: none;">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         <div class="clear"></div>
     </div>
 </div>

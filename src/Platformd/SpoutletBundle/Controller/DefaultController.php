@@ -13,14 +13,21 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
-    public function featuredContentAction()
+    /**
+     * @param bool $onlyNews Whether to show *just* the news tab
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     */
+    public function featuredContentAction($onlyNews = false)
     {
     	$all_events = $this->getDoctrine()
     		->getEntityManager()
     		->getRepository('SpoutletBundle:Event')
     		->findPublished($this->get('session')->getLocale());
 
-    	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array('all_events' => $all_events));
+    	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+            'all_events' => $all_events,
+            'onlyNews'   => $onlyNews,
+        ));
     }
 
     public function supportAction()
@@ -67,6 +74,11 @@ class DefaultController extends Controller
     public function contactAction()
     {
         return $this->render('SpoutletBundle:Default:contact.html.twig');
+    }
+
+    public function newsAction()
+    {
+        return $this->render('SpoutletBundle:Default:news.html.twig');
     }
 
     private function getLocale()

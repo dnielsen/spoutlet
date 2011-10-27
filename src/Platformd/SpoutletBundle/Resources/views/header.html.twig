@@ -7,6 +7,10 @@ $(".featured-content-header a").click(function() {
         $(this).addClass("active");
         $(".featured-content-category").removeClass('active');
         $(".featured-content-category#featured-content-"+id).addClass('active');
+
+        // show the widget footer
+        $('.widget-footer a').hide();
+        $(".widget-footer #featured-footer-"+id).show();
 });
 });
 //]]>
