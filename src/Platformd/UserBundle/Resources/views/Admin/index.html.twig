@@ -32,7 +32,7 @@
                         {# You can't delete a super admin #}
                         {% if not user.isSuperAdmin %}
                             <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a>
-                            <a href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
+                            <a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}" data-confirm="Delete this user?">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
                         {% else %}
                             {{ "platformd.users.user_listings.super_admin_cant_be_modified" | trans }}
                         {% endif %}    
@@ -49,5 +49,29 @@
     {% if pager.haveToPaginate %}
         {{ pagerfanta(pager, 'default', {'routeName' : 'Platformd_UserBundle_admin_index'}) }}
     {% endif %}
+
+    <script type="text/javascript">
+        /**
+         * Delete links - hooks up as form submit, adds confirm
+         *
+         * If a data-confirm attribute is present, that will be used as the confirm text
+         */
+        $('a.delete_link').click(function() {
+            var confirmMsg = $(this).attr('data-confirm') ? $(this).attr('data-confirm') : 'Delete this?';
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+
+            var tmpForm = $('<form method="POST"><input type="hidden" name="_method" value="DELETE"></form>');
+            tmpForm.attr('action', $(this).attr('href'));
+            tmpForm.css({position: 'absolute', visibility: 'none'});
+            tmpForm.appendTo($('body'));
+
+            tmpForm.submit();
+            tmpForm.remove();
+
+            return false;
+        });
+    </script>
 
 {% endblock %} 
