@@ -13,6 +13,7 @@
 		        'bundles/comment/css/comments.css'
 		        'ckeditor/skins/kama/editor.css'
 		        filter='cssrewrite'
+		        output='css/packed/layout.css'
 		    %}
 		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
 		    {% endstylesheets %}
@@ -27,6 +28,7 @@
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.js'
 		        'ckeditor/lang/en.js'
+		        output='js/packed/layout.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
 		    {% endjavascripts %}

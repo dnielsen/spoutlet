@@ -23,4 +23,4 @@ swiftmailer:
     delivery_address: weaverryan@gmail.com
 
 assetic:
-    use_controller: true
+    use_controller: false
