@@ -242,6 +242,12 @@ class User extends BaseUser
      */
     protected $avatar_approved = false;
 
+    /**
+     * @var string The locale in which this user registered
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    protected $locale;
+
     /** 
      * @Assert\File(
         maxSize="6000000", 
@@ -798,5 +804,21 @@ class User extends BaseUser
     public function setSubscribedAlienwareEvents($subscribedAlienwareEvents)
     {
         $this->subscribedAlienwareEvents = $subscribedAlienwareEvents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

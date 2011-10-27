@@ -20,3 +20,5 @@ services:
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager
         parent: fos_user.user_manager.default
+        calls:
+            - [ setContainer, ['@service_container'] ]

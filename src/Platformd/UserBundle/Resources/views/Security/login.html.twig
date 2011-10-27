@@ -10,7 +10,7 @@
 <form action="{{ path("_fos_user_security_check") }}" method="post" class="form">
 
     {% if error %}
-        <div class="form-msg-error">{{ error }}</div>
+        <div class="form-msg-error">{{ error | trans }}</div>
     {% endif %}
 
     <div class="form_row">
