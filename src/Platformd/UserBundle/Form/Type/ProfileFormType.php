@@ -30,6 +30,6 @@ class ProfileFormType extends BaseProfileFormType
             ->add('mouse', null, array('required' => false))
             ->add('mousepad', null, array('required' => false))
             ->add('keyboard', null, array('required' => false))
-            ->add('monitor'), null, array('required' => false);
+            ->add('monitor', null, array('required' => false));
     }
 }
