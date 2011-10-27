@@ -4,13 +4,13 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                Past Events
+                {{ 'platformd.events.event_listings.past_events' | trans }}
             </div>
         </div>
         <div class="widget-content">
             {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                 'events': events,
-                'no_events_message': 'There are no past events at this moment.'
+                'no_events_message': 'platformd.events.event_listings.no_past_events' | trans
             } %}
         </div>
 
