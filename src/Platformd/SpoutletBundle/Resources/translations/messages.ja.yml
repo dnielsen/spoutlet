@@ -151,5 +151,5 @@ platformd:
     about:
         title: Alienware Arena™について
 
-    microsoft:
-        link_url: http://www.alienware.jp/
+    general:
+        alienware_link_url: http://www.alienware.jp/
