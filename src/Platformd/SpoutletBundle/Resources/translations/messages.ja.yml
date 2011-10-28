@@ -37,7 +37,7 @@ platformd:
             sign_out: ログアウト
             join: アカウントの作成
             about: Alienware Arenaについて
-            contact: "お問い合わせ & サポート"
+            contact: "お問い合わせ"
             search: 検索
             logged_in_as: <strong><a href="%route%">%username%</a></strong>としてログイン済み
 
