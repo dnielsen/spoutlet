@@ -2,7 +2,10 @@
 # but for some reason, they're run through the forms domain...
 fos_user_registration_form_birthdate: "Date of Birth"
 fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
-fos_user_registration_form_termsAccepted: "I have read and agree to the Terms & Conditions and Privacy Policy"
+fos_user_registration_form_termsAccepted: |
+    I have read and agree to the
+    <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
+    <a href="%privacy_url%" target="_blank">Privacy Policy</a>
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
 fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email"
 

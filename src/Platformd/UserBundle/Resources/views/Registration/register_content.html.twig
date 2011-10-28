@@ -48,7 +48,13 @@
         <label>&nbsp;</label>
         {{ form_widget(form.termsAccepted) }}
         <span class="required">*</span>
-        {{ 'fos_user_registration_form_termsAccepted' | trans({}, 'forms') }}
+        {{ 'fos_user_registration_form_termsAccepted' | trans(
+            {
+                '%terms_url%': path('terms_conditions'),
+                '%privacy_url%': path('privacy')
+            },
+            'forms'
+        ) | raw }}
     </div>
 
     <div class="form_row">
