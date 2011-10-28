@@ -49,6 +49,7 @@ fos_user_admin_edit: 編集
 fos_user_admin_user_edit: 編集
 fos_user_admin_edit_success:  %username% のユーザーが正常に更新されました。
 fos_user_admin_delete_success: %username% のユーザーが正常に削除されました。
+fos_user_admin_approve_avatar: Approve avatar
 
 # Group
 group.edit.submit: グループの更新

@@ -49,6 +49,7 @@ fos_user_admin_edit: 编辑
 fos_user_admin_user_edit: 编辑
 fos_user_admin_edit_success: 用户"%username%"已更新成功！
 fos_user_admin_delete_success: 用户"%username%"已成功删除！
+fos_user_admin_approve_avatar: Approve avatar
 
 # Group
 group.edit.submit: 升级群组
