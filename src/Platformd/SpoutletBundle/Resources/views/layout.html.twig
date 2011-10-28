@@ -107,7 +107,9 @@
 	                    	{% block content %}{% endblock %}
 	                    </div>
 	                    <div class="ad_728x90 ad">
-	                       <img src="{{ 'platformd.layout.page_content.ad_url' | trans }}" />
+                            <a href="{{ path('microsoft') }}">
+	                            <img src="{{ 'platformd.layout.page_content.ad_url' | trans }}" />
+                            </a>
 	                    </div>
 	                    {% include 'SpoutletBundle::footer.html.twig' %}
 	                </div>
