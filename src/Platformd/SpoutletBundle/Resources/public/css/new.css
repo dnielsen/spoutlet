@@ -219,7 +219,8 @@ div#content.microsoft {
 }
 
 #fos_user_registration_form_hasAlienwareSystem label {
-    width:30px;
+    width: auto;
+    margin-left: 5px;
 }
 
 span.required {

@@ -35,7 +35,7 @@ platformd:
             account: アカウント
             sign_in: ログイン
             sign_out: ログアウト
-            join: アカウントの作成
+            join: アカント作成
             about: Alienware Arenaについて
             contact: "お問い合わせ"
             search: 検索
@@ -61,7 +61,7 @@ platformd:
             events: イベント
             on_tour: ツアー
             all: すべて
-            see_more: 詳しく見る
+            see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
             redeem: 交換
@@ -71,7 +71,7 @@ platformd:
             landing_image_url: "/images/AWinvades-jp.jpg"
 
         bottom_menu:
-            contact_us: "お問い合わせ & サポート"
+            contact_us: "お問い合わせ &"
             privacy_policy: 個人情報保護方針
             terms_and_conditions: 利用条項
             steam_community: Steam コミュニティ

@@ -29,3 +29,9 @@ platformd:
             spam_message: 重要提示：请检查你的垃圾邮件！- 我们在努力，但是有时垃圾邮件过滤器会误将我们的邮件当做垃圾邮件。密码重置大概需要30分钟完成。其实往往只需要几秒钟的时间，但有时候邮件会延迟到达你的邮箱。
 
 "Bad credentials": "Invalid username or password"
+
+# registration drop-down choices
+"Select one": "Select one"
+"Live event": "Live event"
+"Search engine": "Search engine"
+"Other": "Other"

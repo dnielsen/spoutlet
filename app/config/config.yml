@@ -87,7 +87,9 @@ parameters:
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
         alienware: Alienware
+        cevo: CEVO
         facebook: Facebook
+        mixi:  Mixi
         live_event: Live event
         ea: EA
         search_engine: Search engine

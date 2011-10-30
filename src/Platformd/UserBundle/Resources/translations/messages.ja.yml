@@ -8,7 +8,7 @@ platformd:
 
         register:
             requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
-            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログインして下さい。>"
+            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
             terms_label: サービス規約
             privacy_label: プライバシーポリシー
             country_label: 国の選択
@@ -29,3 +29,9 @@ platformd:
             spam_message: 重要：スパムフォルダをご確認ください。一部のメールフィルタにより、弊社からのメールが「迷惑メール」として分類されることがあります。パスワードがリセットされるまでに、最大30分かかる場合があります。通常は、数秒でリセットされますが、弊社からのリセット通知のメールが遅れることがあります。
 
 "Bad credentials": "Invalid username or password"
+
+# registration drop-down choices
+"Select one": "----お選びください ----"
+"Live event": "イベント"
+"Search engine": "検索サイト"
+"Other": "その他"
