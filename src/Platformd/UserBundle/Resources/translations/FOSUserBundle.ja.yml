@@ -90,11 +90,12 @@ registration.email: |
     よろしくお願いします。
     チーム一同より
 
+
 # Password resetting
 resetting.password_already_requested: このユーザーのパスワードは、過去24時間以内に既に求められました。
 resetting.check_email: %email%宛にメールが送信されました。同メールには、パスワードをリセットするためにクリックする必要があるリンクが含まれています。
 resetting.request.invalid_username:  %username% のユーザー名またはメールアドレスは存在しません。
-resetting.request.username: "ユーザー名またはメールアドレス:"
+resetting.request.username: "メールアドレス:"
 resetting.request.submit: パスワードのリセット
 resetting.reset.submit: パスワードの変更
 resetting.flash.success: パスワードが正常にリセットされました
@@ -135,7 +136,7 @@ fos_user_profile_form_user_mousepad: "マウスパッド"
 fos_user_profile_form_user_keyboard: "キーボード"
 fos_user_profile_form_user_monitor: "モニター"
 
-security.login.username_or_email: "ユーザー名:"
+security.login.username_or_email: "メールアドレス:"
 fos_user_registration_form_email: "メールアドレス:"
 fos_user_registration_form_plainPassword_first: "パスワード:"
 fos_user_registration_form_plainPassword_second: "確認のためもう一度ご入力ください:"

@@ -93,7 +93,7 @@ registration.email: |
 resetting.password_already_requested: 请不要在24小时之内重复发送获取密码请求。
 resetting.check_email: 邮件已发送至你的%email%邮箱，点击链接重置密码。
 resetting.request.invalid_username: 用户名或邮箱地址“%username%”不存在。
-resetting.request.username: "用户名:"
+resetting.request.username: "邮箱:"
 resetting.request.submit: 重设密码
 resetting.reset.submit: 修改密码
 resetting.flash.success: 密码已重置
@@ -131,7 +131,7 @@ fos_user_profile_form_user_mousepad: "鼠标垫"
 fos_user_profile_form_user_keyboard: "键盘"
 fos_user_profile_form_user_monitor: "显示器"
 
-security.login.username_or_email: "用户名:"
+security.login.username_or_email: "邮箱:"
 fos_user_registration_form_email: "邮箱:"
 fos_user_registration_form_plainPassword_first: "密码:"
 fos_user_registration_form_plainPassword_second: "验证:"
