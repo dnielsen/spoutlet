@@ -19,7 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *      "event"     = "Platformd\SpoutletBundle\Entity\Event",
- *      "giveaway"  = "Platformd\SpoutletBundle\Entity\Giveaway"
+ *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway"
  * })
  */
 class AbstractEvent

@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Platformd\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Collection,
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Platformd\SpoutletBundle\Entity\GiveawayPool
+ * Platformd\GiveawayBundle\Entity\GiveawayPool
  *
  * @ORM\Entity()
  * @ORM\Table(name="giveaway_pool")
@@ -31,7 +31,7 @@ class GiveawayPool
      * Many to one with Giveaway
      *
      * @var Giveaway
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Giveaway", inversedBy="giveawayPools")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="giveawayPools")
      */
     protected $giveaway;
 
@@ -79,7 +79,7 @@ class GiveawayPool
     protected $isActive = false;
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Giveaway
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway
      */
     public function getGiveaway()
     {
@@ -87,7 +87,7 @@ class GiveawayPool
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Giveaway $giveaway
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      */
     public function setGiveaway($giveaway)
     {

@@ -1,19 +1,21 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Platformd\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
+use Platformd\SpoutletBundle\Entity\AbstractEvent;
+use Platformd\SpoutletBundle\Entity\GiveawayPool;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Platformd\SpoutletBundle\Entity\Giveaway
+ * Platformd\GiveawayBundle\Entity\Giveaway
  *
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GiveawayRepository")
+ * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
  */
 class Giveaway extends AbstractEvent
 {
@@ -21,7 +23,7 @@ class Giveaway extends AbstractEvent
      * One to Many with GiveawayPool
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GiveawayPool", mappedBy="giveaways")
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaways")
      */
     protected $giveawayPools;
 
