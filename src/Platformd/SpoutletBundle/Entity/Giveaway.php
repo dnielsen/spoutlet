@@ -38,6 +38,20 @@ class Giveaway extends AbstractEvent
      */
     protected $redemptionInstructions;
 
+    /**
+     * A string enum status
+     *
+     * @var string
+     * @ORM\Column(type="string", length=15)
+     */
+    protected $status;
+
+    static protected $validStatuses = array(
+        'disabled',
+        'inactive',
+        'active',
+    );
+
     public function __construct()
     {
         $this->giveawayPools = new ArrayCollection();
@@ -67,5 +81,25 @@ class Giveaway extends AbstractEvent
     public function addUser(GiveawayPool $pool)
     {
         $this->giveawayPools->add($pool);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        if (!in_array($status, self::$validStatuses)) {
+            throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
+        }
+
+        $this->status = $status;
     }
 }
