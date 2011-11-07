@@ -25,6 +25,19 @@ class Giveaway extends AbstractEvent
      */
     protected $giveawayPools;
 
+    /**
+     * This is a raw HTML field, but with a special format.
+     *
+     * Each line will be exploded into an array, and used for numbered
+     * instructions on the giveaway.
+     *
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank
+     *
+     * @var string
+     */
+    protected $redemptionInstructions;
+
     public function __construct()
     {
         $this->giveawayPools = new ArrayCollection();
