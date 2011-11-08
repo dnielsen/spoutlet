@@ -4,6 +4,7 @@ namespace Platformd\GiveawayBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * GiveawayKey  Repository
@@ -34,6 +35,10 @@ class GiveawayKeyRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayKey|null
+     */
     public function getUnassignedKey(GiveawayPool $pool) 
     {
         return $this
@@ -43,7 +48,7 @@ class GiveawayKeyRepository extends EntityRepository
             ->setMaxResults(1)
             ->setParameter('pool', $pool->getId())
             ->getQuery()
-            ->getSingleResult();   
+            ->getOneOrNullResult();
     }
 
     /**
@@ -56,5 +61,24 @@ class GiveawayKeyRepository extends EntityRepository
     public function getTotalForPool(GiveawayPool $pool)
     {
         return 10000;
+    }
+
+    /**
+     * @param $id
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayKey
+     */
+    public function findOneByIdAndUser($id, User $user)
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->where('k.user = :user')
+            ->andWhere('k.id = :id')
+            ->setParameters(array(
+                'id'    => $id,
+                'user'  => $user,
+            ))
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

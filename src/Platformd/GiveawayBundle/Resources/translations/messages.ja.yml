@@ -3,6 +3,7 @@ platformd:
         giveaway: Giveaway
         redeem:   Redeem
         get_key:  GET KEY
+        no_keys_left: There are no keys available for this giveaway
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -19,8 +20,17 @@ platformd:
             inactive: Active but with zero keys
             active:   Active
             blank_value: Choose status
+        show:
+            availaible_keys: Availaible keys : %%count%%
         giveaways_listings:
             giveaways: Giveaways
+        assigned:
+            message: |
+                You have been assigned a key. You may review this key at any
+                time by visiting your giveaway key page from your Alienware
+                Arena user account panel.
+            may_require_activation: Your key may require activation! Check the giveaway page for details.
+            key: Key
     giveaway_pool:
         pool: Giveaway pool
         admin:

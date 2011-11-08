@@ -7,6 +7,9 @@ platformd:
         title: Page not found
         body: We're sorry - but we can't find the page you're looking for
 
+    flash:
+        error_title: Error!
+
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - Gamers Wanted

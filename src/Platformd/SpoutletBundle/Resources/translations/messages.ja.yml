@@ -7,6 +7,9 @@ platformd:
         title: ページが見つかりません
         body: お探しのページが見つかりません
 
+    flash:
+        error_title: Error!
+
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - ゲーマー募集中

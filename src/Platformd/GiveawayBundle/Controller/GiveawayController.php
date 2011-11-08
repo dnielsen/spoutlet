@@ -19,7 +19,13 @@ class GiveawayController extends Controller
         ));
     }
 
-    public function showAction($slug)
+    /**
+     * @param $slug
+     * @param integer $keyId Optional key id that was just assigned
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     * @throws \Symfony\Bundle\FrameworkBundle\Controller\NotFoundHttpException
+     */
+    public function showAction($slug, $keyId)
     {
         if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
             
@@ -27,15 +33,18 @@ class GiveawayController extends Controller
         }
 
         $pool = $giveaway->getActivePool();
-        $keys = $this
-            ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('GiveawayBundle:GiveawayKey');
+
+        if ($keyId) {
+            $assignedKey = $this->getKeyRepository()->findOneByIdAndUser($keyId, $this->getUser());
+        } else {
+            $assignedKey = null;
+        }
 
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $giveaway->getRedemptionInstructionsArray(),
-            'available_keys'    => $keys->getUnassignedForPool($pool)
+            'available_keys'    => $this->getKeyRepository()->getUnassignedForPool($pool),
+            'assignedKey'       => $assignedKey,
         ));
     }
 
@@ -48,15 +57,27 @@ class GiveawayController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
         $pool = $giveaway->getActivePool();
-        $key = $this
-            ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('GiveawayBundle:GiveawayKey')
-            ->getUnassignedKey($pool)->assign($user);
 
+        $key = $this->getKeyRepository()
+            ->getUnassignedKey($pool)
+        ;
+
+        if (!$key) {
+            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
+
+            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        }
+
+
+        $key->assign($user);
         $this->getDoctrine()->getEntityManager()->flush();
 
-        return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        return $this->redirect($this->generateUrl('giveaway_show', array(
+            'slug' => $slug,
+            'keyId' => $key->getId(),
+        )));
+
+
     }
 
     /**
@@ -69,5 +90,17 @@ class GiveawayController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway');
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
+     */
+    protected function getKeyRepository()
+    {
+
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:GiveawayKey');
     }
 }

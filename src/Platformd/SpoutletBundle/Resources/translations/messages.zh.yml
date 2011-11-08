@@ -7,6 +7,9 @@ platformd:
         title: 页面未找到
         body: 抱歉-您所需页面未找到
 
+    flash:
+        error_title: Error!
+
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - 玩家所求

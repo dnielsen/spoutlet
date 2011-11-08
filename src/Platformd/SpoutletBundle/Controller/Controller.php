@@ -26,4 +26,19 @@ class Controller extends BaseController
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway');
     }
+
+    protected function setFlash($key, $message)
+    {
+        return $this->container->get('session')->setFlash($key, $message);
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\User
+     */
+    protected function getUser()
+    {
+        return $this->container->get('security.context')
+            ->getToken()
+            ->getUser();
+    }
 }

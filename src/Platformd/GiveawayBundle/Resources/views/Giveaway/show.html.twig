@@ -8,9 +8,31 @@
 
 {% block title giveaway.name %}
 
+{# only use the flash if we have an assigned key #}
+{% block flash_type %}{{ assignedKey ? 'success' : false }}{% endblock %}
+
+{# only really need to populate this if we have an assigned key #}
+{% block flash %}
+    {% if assignedKey %}
+        <h3>Success!</h3>
+
+        <p>
+            {{ 'platformd.giveaway.assigned.message' | trans }}
+            <br/><br/>
+            {{ 'platformd.giveaway.assigned.may_require_activation' | trans }}
+        </p>
+
+        <p class="notice-data">
+            {# assignedKey.value #}
+            {{ 'platformd.giveaway.assigned.key' | trans }}: {{ assignedKey.value }}
+        </p>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div id="content">
         <div class="std_1col">
+
             <div id="giveawaytHeader">
                 <img src="{{ giveaway.webPath }}" alt="{{ giveaway.name }}"/>
             </div>

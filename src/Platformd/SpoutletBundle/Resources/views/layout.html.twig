@@ -104,6 +104,42 @@
 	                    <div id="content">
                             {% block pre_content_nav %}{% endblock %}
 
+                            {#
+                                Messy, but taken from the old site
+                                To show a flash message, set the "flash" block
+                                to your actual message. Then set the "flash_type"
+                                block to: success, warning, or error
+
+                                This also works out of the box for "error"
+                                session flashes - given an "error" type and
+                                the message is dumped out with some markup
+                            #}
+
+                            {% if block('flash_type') or app.session.hasFlash('error') %}
+                                {% set flashType = block('flash_type') ? block('flash_type') : 'error' %}
+                                <div class="xnotices">
+                                    <div class="{{ flashType }}Notice notice">
+                                        <div class="pad">
+                                            <div class="pad2">
+                                                <div class="pad3">
+                                                    <div class="pad4">
+                                                        {% if app.session.hasFlash('error') %}
+                                                            <h3>{{ 'platformd.flash.error_title' | trans }}</h3>
+
+                                                            <p>
+                                                                {{ app.session.getFlash('error') | trans }}
+                                                            </p>
+                                                        {% else %}
+                                                            {{ block('flash') }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
 	                    	{% block content %}{% endblock %}
 	                    </div>
 	                    <div class="ad_728x90 ad">
