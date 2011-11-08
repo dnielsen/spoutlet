@@ -27,7 +27,8 @@ class GiveawayController extends Controller
         }
 
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
-            'giveaway' => $giveaway
+            'giveaway' => $giveaway,
+            'redemptionSteps' => $giveaway->getRedemptionInstructionsArray(),
         ));
     }
 

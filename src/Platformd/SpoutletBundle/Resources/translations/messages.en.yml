@@ -1,6 +1,8 @@
 url:  URL
 
 platformd:
+    create_account_or_login: Create or login to an Alienware Arena account.
+
     not_found:
         title: Page not found
         body: We're sorry - but we can't find the page you're looking for

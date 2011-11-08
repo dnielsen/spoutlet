@@ -1,5 +1,11 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
+{% endblock %}
+
 {% block title giveaway.name %}
 
 {% block content %}
@@ -12,7 +18,35 @@
 
         <div class="std_2col">
             <div class="right">
-            
+                <div class="widget-33" id="giveaway-getkey">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ 'platformd.giveaway.redeem' | trans }}</div>
+                    </div>
+                    <div class="widget-content">
+                        <ol>
+                            <li>
+                                <span class="item">
+                                    <a href="{{ path('fos_user_registration_register') }}">
+                                        {{ 'platformd.create_account_or_login' | trans }}
+                                    </a>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="item">
+                                    {# todo - fill in this URL #}
+                                    <a href="#">
+                                        {{ 'platformd.giveaway.get_key' | trans }}
+                                    </a>
+                                </span>
+                            </li>
+                            {% for redemptionStep in redemptionSteps %}
+                            <li>
+                                <span class="item">{{ redemptionStep | raw }}</span>
+                            </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
             </div><!-- right -->
             
             <div class="left">

@@ -1,6 +1,8 @@
 platformd:
     giveaway:
         giveaway: Giveaway
+        redeem:   Redeem
+        get_key:  GET KEY
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -11,6 +13,8 @@ platformd:
             redemption_instructions_note: |
                 Create a new line for each "instruction" step. HTML tags
                 are accepted (e.g. <a href="/events">Link to events</a>).
+                The first two steps - about creating an account and getting
+                the key - will automatically be added.
             manage_pools: Manage pools
         status:
             disabled: Totally disabled

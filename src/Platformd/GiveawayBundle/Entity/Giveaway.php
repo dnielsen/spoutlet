@@ -159,4 +159,14 @@ class Giveaway extends AbstractEvent
     {
         $this->redemptionInstructions = $redemptionInstructions;
     }
+
+    /**
+     * Explodes the redemptionInstructions by new line into an array of instructions
+     *
+     * @return array
+     */
+    public function getRedemptionInstructionsArray()
+    {
+        return explode("\n", $this->getRedemptionInstructions());
+    }
 }

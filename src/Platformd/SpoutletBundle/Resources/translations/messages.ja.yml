@@ -1,6 +1,8 @@
 url:  URL
 
 platformd:
+    create_account_or_login: Create or login to an Alienware Arena account.
+
     not_found:
         title: ページが見つかりません
         body: お探しのページが見つかりません
