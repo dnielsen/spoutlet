@@ -43,7 +43,7 @@ class GiveawayKey
     protected $user;
 
     /**
-     * @ORM\Column(name="assigned_at", type="datetime")
+     * @ORM\Column(name="assigned_at", type="datetime", nullable=true)
      */
     protected $assignedAt;
 
