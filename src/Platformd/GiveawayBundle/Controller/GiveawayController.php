@@ -38,6 +38,11 @@ class GiveawayController extends Controller
         ));
     }
 
+    public function keyAction($giveaway_id)
+    {
+                
+    }
+
     /**
      * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
      */

@@ -19,7 +19,7 @@
                     <div class="widget-content">
                         <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
                         <div class="blueButton" id="buttonGetKey">
-                            <a href="#">GET KEY<br></a>
+                            <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">GET KEY</a>
                         </div>            
                     </div>
                 </div>
