@@ -2,7 +2,7 @@
 
 namespace Platformd\GiveawayBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 
 /**
 * 
@@ -12,7 +12,7 @@ class GiveawayController extends Controller
 
     public function indexAction()
     {
-        $giveaways = $this->getRepository()->findActives();
+        $giveaways = $this->getRepository()->findActives($this->getLocale());
 
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
             'giveaways' => $giveaways
@@ -21,7 +21,7 @@ class GiveawayController extends Controller
 
     public function showAction($slug)
     {
-        if (!$giveaway = $this->getRepository()->findOneBySlug($slug)) {
+        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
             
             throw $this->createNotFoundException();
         }
@@ -38,6 +38,9 @@ class GiveawayController extends Controller
         ));
     }
 
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
+     */
     protected function getRepository()
     {
 

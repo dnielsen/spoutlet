@@ -2,7 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 
 
 class DefaultController extends Controller
@@ -24,10 +24,8 @@ class DefaultController extends Controller
     		->getRepository('SpoutletBundle:Event')
     		->findPublished($this->get('session')->getLocale());
 
-        $allGiveaways = $this->getDoctrine()
-       		->getEntityManager()
-       		->getRepository('GiveawayBundle:Giveaway')
-       		->findActives()
+        $allGiveaways = $this->getGiveawayRepo()
+            ->findActives($this->getLocale())
         ;
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
@@ -73,10 +71,5 @@ class DefaultController extends Controller
     public function newsAction()
     {
         return $this->render('SpoutletBundle:Default:news.html.twig');
-    }
-
-    private function getLocale()
-    {
-        return $this->getRequest()->getSession()->getLocale();
     }
 }
