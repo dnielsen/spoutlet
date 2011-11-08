@@ -13,6 +13,7 @@ class GiveawayKeyRepository extends EntityRepository
     /**
      * Returns the number of keys that have been assigned for the given pool
      *
+     * @todo
      * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      * @return int
      */
@@ -24,6 +25,7 @@ class GiveawayKeyRepository extends EntityRepository
     /**
      * Returns the total number of keys for the given pool
      *
+     * @todo
      * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      * @return int
      */
