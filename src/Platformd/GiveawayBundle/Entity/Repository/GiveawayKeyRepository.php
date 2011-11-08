@@ -134,6 +134,22 @@ class GiveawayKeyRepository extends EntityRepository
     }
 
     /**
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @return array
+     */
+    public function findAssignedToUser(User $user)
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->where('k.user = :user')
+            ->setParameters(array(
+                'user'  => $user,
+            ))
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Whether or not a given pool should "appear" to have zero available
      * keys even if it has more
      *

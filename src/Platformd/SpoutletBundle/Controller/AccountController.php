@@ -41,10 +41,29 @@ class AccountController extends Controller
         return $this->render('SpoutletBundle:Account:events.html.twig');
     }
 
+    public function giveawaysAction()
+    {
+        $this->checkSecurity();
+
+        return $this->render('SpoutletBundle:Account:giveaways.html.twig', array(
+            'giveawayKeys' => $this->getGiveawayKeyRepository()->findAssignedToUser($this->getUser())
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw new AccessDeniedException();
         }
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
+     */
+    protected function getGiveawayKeyRepository()
+    {
+        return $this->getDoctrine()
+            ->getRepository('GiveawayBundle:GiveawayKey')
+        ;
     }
 }

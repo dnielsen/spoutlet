@@ -37,6 +37,8 @@ class GiveawayKey
     protected $pool;
 
     /**
+     * The user assigned to this key
+     *
      * @ORM\JoinColumn(name="user", referencedColumnName="id", onDelete="CASCADE")
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="giveawayKeys", cascade={"persist", "remove", "merge"})
      */
@@ -114,5 +116,10 @@ class GiveawayKey
     public function getIpAddress()
     {
         return $this->ipAddress;
+    }
+
+    public function getAssignedAt()
+    {
+        return $this->assignedAt;
     }
 }

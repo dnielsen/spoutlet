@@ -4,6 +4,7 @@ platformd:
         redeem:   Redeem
         get_key:  GET KEY
         no_keys_left: There are no keys available for this giveaway
+        view_giveaway_site: View Giveaway Site
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -14,6 +15,8 @@ platformd:
             redemption_instructions_note: |
                 Create a new line for each "instruction" step. HTML tags
                 are accepted (e.g. <a href="/events">Link to events</a>).
+                The first two steps - about creating an account and getting
+                the key - will automatically be added.
             manage_pools: Manage pools
         status:
             disabled: Totally disabled
@@ -31,6 +34,7 @@ platformd:
                 Arena user account panel.
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
+            assigned_at: Assigned
     giveaway_pool:
         pool: Giveaway pool
         admin:

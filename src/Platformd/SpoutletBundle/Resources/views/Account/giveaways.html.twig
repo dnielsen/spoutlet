@@ -1,0 +1,54 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+
+{% block content %}
+<div class="std_2col control_panel">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+    <div class="left">
+        <div class="pad">
+            <div class="std_1col">
+                <div>
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            <h2>{{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}</h2>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="text">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>{{ 'platformd.giveaway.giveaway' | trans }}</th>
+                                        <th>{{ 'platformd.giveaway.assigned.key' | trans }}</th>
+                                        <th>{{ 'platformd.giveaway.assigned.assigned_at' | trans }}</th>
+                                        <th></th>
+                                    </tr>
+                                    {% for giveawayKey in giveawayKeys %}
+                                    <tr>
+                                        <td>{{ giveawayKey.pool.giveaway.name }}</td>
+                                        <td>{{ giveawayKey.value }}</td>
+                                        <td>{{ giveawayKey.assignedAt | date('D, M jS') }}</td>
+                                        <td>
+                                            <a href="{{ path('giveaway_show', {'slug': giveawayKey.pool.giveaway.slug} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div><br />
+            </div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+</div>
+{% endblock %}

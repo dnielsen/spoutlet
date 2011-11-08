@@ -4,6 +4,7 @@ platformd:
         redeem:   Redeem
         get_key:  GET KEY
         no_keys_left: There are no keys available for this giveaway
+        view_giveaway_site: View Giveaway Site
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -33,6 +34,7 @@ platformd:
                 Arena user account panel.
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
+            assigned_at: Assigned
     giveaway_pool:
         pool: Giveaway pool
         admin:
