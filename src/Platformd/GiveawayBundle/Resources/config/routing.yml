@@ -10,7 +10,7 @@ giveaway_show:
     pattern: /giveaways/{slug}/{keyId}
     defaults: { _controller: GiveawayBundle:Giveaway:show, keyId: null }
     requirements:
-        keyId: \d
+        keyId: \d+
 
 giveaway_get_key:
     pattern: /giveaways/{slug}/key
