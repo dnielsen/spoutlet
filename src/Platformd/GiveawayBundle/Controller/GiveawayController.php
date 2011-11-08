@@ -28,10 +28,7 @@ class GiveawayController extends Controller
      */
     public function showAction($slug, $keyId)
     {
-        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
-            
-            throw $this->createNotFoundException();
-        }
+        $giveaway = $this->findGiveaway($slug);
 
         $pool = $giveaway->getActivePool();
 
@@ -51,12 +48,10 @@ class GiveawayController extends Controller
 
     public function keyAction($slug, Request $request)
     {
+        // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
-            
-            throw $this->createNotFoundException();
-        }
+        $giveaway = $this->findGiveaway($slug);
 
         $user = $this->get('security.context')->getToken()->getUser();
         $pool = $giveaway->getActivePool();
@@ -81,6 +76,25 @@ class GiveawayController extends Controller
         )));
 
 
+    }
+
+    /**
+     * @param $slug
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway
+     * @throws \Symfony\Bundle\FrameworkBundle\Controller\NotFoundHttpException
+     */
+    protected function findGiveaway($slug)
+    {
+        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
+            throw $this->createNotFoundException();
+        }
+
+        // not technically needed - findOneBySlug checks this... but this reads better, feels safer
+        if ($giveaway->isDisabled()) {
+            throw $this->createNotFoundException('Giveaway is disabled');
+        }
+
+        return $giveaway;
     }
 
     /**

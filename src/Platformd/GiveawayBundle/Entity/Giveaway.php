@@ -145,6 +145,14 @@ class Giveaway extends AbstractEvent
     }
 
     /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->getStatus() == 'disabled';
+    }
+
+    /**
      * @return string
      */
     public function getRedemptionInstructions()
