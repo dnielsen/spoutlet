@@ -11,17 +11,17 @@ admin_giveaway_edit:
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:edit }
 
 admin_giveaway_poll_index:
-    pattern: /pools
+    pattern: /{giveaway}/pools
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:index }
 
 admin_giveaway_pool_new:
-    pattern: /pools/new
+    pattern: /{giveaway}/pools/new
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:new }
 
 admin_giveaway_pool_edit:
-    pattern: /pools/edit/{id}
+    pattern: /{giveaway}/pools/edit/{pool}
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:edit }
 
 admin_giveaway_pool_delete:
-    pattern: /pools/delete/{id}
+    pattern: /{giveaway}/pools/delete/{pool}
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:delete }

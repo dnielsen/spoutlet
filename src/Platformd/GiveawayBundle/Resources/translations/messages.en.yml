@@ -11,7 +11,7 @@ platformd:
             redemption_instructions_note: |
                 Create a new line for each "instruction" step. HTML tags
                 are accepted (e.g. <a href="/events">Link to events</a>).
-
+            manage_pools: Manage pools
         status:
             disabled: Totally disabled
             inactive: Active but with zero keys

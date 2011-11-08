@@ -18,7 +18,6 @@ class GiveawayPoolType extends AbstractType
         $builder
             ->add('giveaway', 'entity', array(
                 'class'         => 'GiveawayBundle:Giveaway',
-                'empty_value'   => ''
             ))
             ->add('description', 'textarea')
             ->add('maxKeysPerIp', 'integer')

@@ -18,25 +18,42 @@ class GiveawayPoolAdminController extends Controller
     /**
      * Index action for Giveway pools management
      */
-    public function indexAction()
+    public function indexAction($giveaway)
     {
-        $pools = $this
+        $manager = $this
             ->getDoctrine()
-            ->getEntityManager()
+            ->getEntityManager();
+
+        $giveaway = $manager
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findOneBy(array('id' => $giveaway));
+
+        if (!$giveaway) {
+            
+            throw $this->createNotFoundException();    
+        }
+
+        $pools = $manager
             ->getRepository('GiveawayBundle:GiveawayPool')
-            ->findAll();
+            ->findBy(array('giveaway' => $giveaway->getId()));
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:index.html.twig', array(
-            'pools' => $pools
+            'pools'     => $pools,
+            'giveaway'  => $giveaway
         ));
     }
 
-    public function newAction()
+    public function newAction($giveaway)
     {
         $manager = $this
             ->getDoctrine()
             ->getEntityManager();      
+
+        $giveaway = $this->retrieveGiveawayById($giveaway);
+
         $pool = new GiveawayPool();
+        $pool->setGiveaway($giveaway);
+
         $request = $this->getRequest();
 
         $form = $this->createForm(new GiveawayPoolType(), $pool);
@@ -47,23 +64,26 @@ class GiveawayPoolAdminController extends Controller
             if ($form->isValid()) {
                 $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_poll_index'));
+                return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+                    'giveaway' => $giveaway->getId()
+                )));
             }
         }
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
-            'form' => $form->createView()
+            'form'      => $form->createView(),
+            'giveaway'  => $giveaway
         ));
     }
 
-    public function editAction($id)
+    public function editAction($giveaway, $pool)
     {
         $manager = $this
             ->getDoctrine()
             ->getEntityManager();
 
         $pool = $manager->getRepository('GiveawayBundle:GiveawayPool')
-            ->findOneBy(array('id' => $id));
+            ->findOneBy(array('id' => $pool));
 
         if (!$pool) {
             throw $this->createNotFoundException();
@@ -79,7 +99,9 @@ class GiveawayPoolAdminController extends Controller
             if ($form->isValid()) {
                 $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_poll_index'));
+                return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+                    'giveaway' => $giveaway
+                )));
             }
         }
 
@@ -89,14 +111,14 @@ class GiveawayPoolAdminController extends Controller
         ));
     }
 
-    public function deleteAction($id)
+    public function deleteAction($giveaway, $pool)
     {
         $manager = $this
             ->getDoctrine()
             ->getEntityManager();
 
         $pool = $manager->getRepository('GiveawayBundle:GiveawayPool')
-            ->findOneBy(array('id' => $id));
+            ->findOneBy(array('id' => $pool));
 
         if (!$pool) {
             
@@ -106,7 +128,9 @@ class GiveawayPoolAdminController extends Controller
         $manager->remove($pool);
         $manager->flush();
 
-        return $this->redirect($this->generateUrl('admin_giveaway_poll_index'));
+        return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+            'giveaway' => $giveaway
+        )));
     }
 
     /**
@@ -133,5 +157,28 @@ class GiveawayPoolAdminController extends Controller
             ->getRequest()
             ->getSession()
             ->setFlash('notice', $this->get('translator')->trans('platformd.giveaway_pool.admin.saved'));
+    }
+
+    /**
+     * Retrieve a Giveaway using its id
+     *
+     * @param integer $id
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    protected function retrieveGiveawayById($id)
+    {
+        $giveaway = $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findOneBy(array('id' => $id));
+        
+        if (!$giveaway) {
+            
+            throw $this->createNotFoundException();
+        }
+
+        return $giveaway;
     }
 }

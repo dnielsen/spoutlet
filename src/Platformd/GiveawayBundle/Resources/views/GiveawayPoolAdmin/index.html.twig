@@ -21,12 +21,22 @@
                     </tr>
                     {% for pool in pools %}
                     <tr class="eventListGroup_online">
-                        <td><a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">{{ pool.description }}</a></td>
+                        <td><a href="{{ path('admin_giveaway_pool_edit', { 
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id 
+                            }) 
+                        }}">{{ pool.description }}</a></td>
                         {% if app.user.isSuperAdmin %}
                             <td>
-                                <a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">Edit</a>
+                                <a href="{{ path('admin_giveaway_pool_edit', { 
+                                    'giveaway' : pool.giveaway.id,
+                                    'pool' : pool.id 
+                                }) }}">Edit</a>
                                 |
-                                <a href="{{ path('admin_giveaway_pool_delete', { 'id' : pool.id }) }}" class="delete_link">Delete</a>
+                                <a href="{{ path('admin_giveaway_pool_delete', { 
+                                    'giveaway' : pool.giveaway.id,
+                                    'pool' : pool.id 
+                                }) }}" class="delete_link">Delete</a>
                             </td>
                         {% endif %}
                     </tr>
@@ -36,7 +46,9 @@
         </div>
 
         <div class="widget-footer">
-            <a class="aw-link" href="{{ path('admin_giveaway_pool_new') }}" style="margin-right:10px;">{{ "platformd.giveaway_pool.admin.create" | trans }}</a>
+            <a class="aw-link" href="{{ path('admin_giveaway_pool_new', {
+                "giveaway" : giveaway.id
+            }) }}" style="margin-right:10px;">{{ "platformd.giveaway_pool.admin.create" | trans }}</a>
             <div class="clear"></div>
         </div>
     </div>

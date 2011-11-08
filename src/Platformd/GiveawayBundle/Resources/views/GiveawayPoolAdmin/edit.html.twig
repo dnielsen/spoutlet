@@ -2,10 +2,11 @@
 {% block title %}{{ "platformd.giveaway_pool.admin.edit_pool" | trans }}{% endblock %}
 
 {% block content %}
-    {% %}
-
     {% include 'GiveawayBundle:GiveawayPoolAdmin:giveawayPoolForm.html.twig' with {
         'form': form,
-        'route': path('admin_giveaway_pool_edit', { "id" : pool.id })
+        'route': path('admin_giveaway_pool_edit', { 
+            "pool"      : pool.id,
+            "giveaway"  : pool.giveaway.id
+        })
     } %}
 {% endblock %}
