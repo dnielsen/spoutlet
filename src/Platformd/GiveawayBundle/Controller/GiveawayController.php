@@ -19,6 +19,18 @@ class GiveawayController extends Controller
         ));
     }
 
+    public function showAction($slug)
+    {
+        if (!$giveaway = $this->getRepository()->findOneBy(array('slug' => $slug))) {
+            
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
+            'giveaway' => $giveaway
+        ));
+    }
+
     protected function getRepository()
     {
 
