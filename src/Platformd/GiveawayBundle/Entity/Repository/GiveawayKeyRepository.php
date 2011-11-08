@@ -34,6 +34,18 @@ class GiveawayKeyRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getUnassignedKey(GiveawayPool $pool) 
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->where('k.user IS NULL')
+            ->andWhere('k.pool = :pool')
+            ->setMaxResults(1)
+            ->setParameter('pool', $pool->getId())
+            ->getQuery()
+            ->getSingleResult();   
+    }
+
     /**
      * Returns the total number of keys for the given pool
      *
