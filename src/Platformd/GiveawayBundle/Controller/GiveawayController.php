@@ -50,6 +50,8 @@ class GiveawayController extends Controller
 
     public function keyAction($slug)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
             
             throw $this->createNotFoundException();

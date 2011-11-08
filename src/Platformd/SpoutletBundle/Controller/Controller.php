@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Our custom base controller
@@ -40,5 +41,18 @@ class Controller extends BaseController
         return $this->container->get('security.context')
             ->getToken()
             ->getUser();
+    }
+
+    /**
+     * Shortcut for enforcing security
+     *
+     * @param array $roles
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    protected function basicSecurityCheck(array $roles)
+    {
+        if (!$this->container->get('security.context')->isGranted($roles)) {
+            throw new AccessDeniedException();
+        }
     }
 }
