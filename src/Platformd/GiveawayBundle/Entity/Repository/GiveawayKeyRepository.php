@@ -150,6 +150,34 @@ class GiveawayKeyRepository extends EntityRepository
     }
 
     /**
+     * Returns whether or not the given IP should be given more keys
+     *
+     * @param string $ip
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     * @return bool
+     */
+    public function canIpHaveMoreKeys($ip, GiveawayPool $pool)
+    {
+        // if we have a zero max keys, then there is no limit
+        if ($pool->getMaxKeysPerIp() <=0 ) {
+            return true;
+        }
+
+        $currentCount = (int)$this
+            ->createQueryBuilder('k')
+            ->select('COUNT(k.id)')
+            ->andWhere('k.pool = :pool')
+            ->setParameter('pool', $pool->getId())
+            ->andWhere('k.ipAddress = :ip')
+            ->setParameter('ip', $ip)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        return $currentCount < $pool->getMaxKeysPerIp();
+    }
+
+    /**
      * Whether or not a given pool should "appear" to have zero available
      * keys even if it has more
      *

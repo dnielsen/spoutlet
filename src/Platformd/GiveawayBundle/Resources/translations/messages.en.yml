@@ -4,6 +4,7 @@ platformd:
         redeem:   Redeem
         get_key:  GET KEY
         no_keys_left: There are no keys available for this giveaway
+        max_ip_limit: Your IP address does not have access to any more keys
         view_giveaway_site: View Giveaway Site
         admin:
             title: Giveaway admin
