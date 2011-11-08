@@ -22,9 +22,7 @@
                         <th>{{ "giveway_pool_lower_upper_display" | trans({}, 'forms') }}</th>
                         <th>{{ "giveway_pool_assigned_total" | trans({}, 'forms') }}</th>
                         <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
-                        {% if app.user.isSuperAdmin %}
-                            <th>{{ "platformd.help.actions" | trans }}</th>
-                        {% endif %}
+                        <th>{{ "platformd.help.actions" | trans }}</th>
                     </tr>
                     {% for pool in pools %}
                     <tr class="eventListGroup_online">
@@ -58,19 +56,17 @@
                             {{ pool.isActive ? 'Active' : 'Inactive' }}
                         </td>
 
-                        {% if app.user.isSuperAdmin %}
-                            <td>
-                                <a href="{{ path('admin_giveaway_pool_edit', { 
-                                    'giveaway' : pool.giveaway.id,
-                                    'pool' : pool.id 
-                                }) }}">Edit</a>
-                                |
-                                <a href="{{ path('admin_giveaway_pool_delete', { 
-                                    'giveaway' : pool.giveaway.id,
-                                    'pool' : pool.id 
-                                }) }}" class="delete_link">Delete</a>
-                            </td>
-                        {% endif %}
+                        <td>
+                            <a href="{{ path('admin_giveaway_pool_edit', {
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id
+                            }) }}">Edit</a>
+                            |
+                            <a href="{{ path('admin_giveaway_pool_delete', {
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id
+                            }) }}" class="delete_link">Delete</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

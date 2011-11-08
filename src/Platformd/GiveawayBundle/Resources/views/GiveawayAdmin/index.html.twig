@@ -14,9 +14,7 @@
             <tbody>
                 <tr>
                     <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
-                    {% if app.user.isSuperAdmin %}
-                        <th>{{ "platformd.help.actions" | trans }}</th>
-                    {% endif %}
+                    <th>{{ "platformd.help.actions" | trans }}</th>
                 </tr>
                 {% for giveaway in giveaways %}
                 <tr class="eventListGroup_online">
