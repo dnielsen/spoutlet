@@ -1,3 +1,5 @@
+url:  URL
+
 platformd:
     not_found:
         title: 页面未找到

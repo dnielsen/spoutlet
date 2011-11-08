@@ -48,10 +48,15 @@ class Giveaway extends AbstractEvent
      */
     protected $status = 'disabled';
 
+    /**
+     * Key of valid status to a text translation key for that status
+     *
+     * @var array
+     */
     static protected $validStatuses = array(
-        'disabled',
-        'inactive',
-        'active',
+        'disabled' => 'platformd.giveaway.status.disabled',
+        'inactive' => 'platformd.giveaway.status.inactive',
+        'active' => 'platformd.giveaway.status.active',
     );
 
     public function __construct()
@@ -108,11 +113,35 @@ class Giveaway extends AbstractEvent
             return;
         }
 
-        if (!in_array($status, self::$validStatuses)) {
+        if (!in_array($status, array_keys(self::$validStatuses))) {
             throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
         }
 
         $this->status = $status;
+    }
+
+    /**
+     * Returns the "text" for the current status
+     *
+     * The text is actually just a translation key
+     *
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return self::$validStatuses[$this->getStatus()];
+    }
+
+    /**
+     * Returns a key-value pair of valid status keys and their text translation
+     *
+     * Useful in forms
+     *
+     * @return array
+     */
+    static public function getValidStatusesMap()
+    {
+        return self::$validStatuses;
     }
 
     /**
