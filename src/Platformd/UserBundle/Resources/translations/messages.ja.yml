@@ -28,6 +28,15 @@ platformd:
             help_message: パスワードをお忘れになった場合でも、ご心配することはありません。下記の情報を入力すれば、お客様のメールアドレス宛に新しいパスワードを送信します。ユーザー名またはメールアドレスをお忘れの場合は、サポートまでご連絡ください。
             spam_message: 重要：スパムフォルダをご確認ください。一部のメールフィルタにより、弊社からのメールが「迷惑メール」として分類されることがあります。パスワードがリセットされるまでに、最大30分かかる場合があります。通常は、数秒でリセットされますが、弊社からのリセット通知のメールが遅れることがあります。
 
+        account:
+            account_home: Account Home
+            edit_account: Edit Account
+            change_password: Change Password
+            profile:      Profile
+            registered_events: Registered Events
+            my_giveaways: My Giveaways
+            help: ヘルプが必要ですか?
+
 "Bad credentials": "Invalid username or password"
 
 # registration drop-down choices

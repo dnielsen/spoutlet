@@ -5,14 +5,14 @@
 <div class="std_1col">
     <div id="accountHeader">
         <ul class="links">
-            <li><a href="{{ path('accounts_index') }}">{{ "Account Home" | trans({}, 'account') }}</a></li>
-            <li><a href="{{ path('fos_user_profile_edit') }}">{{ "Edit account" | trans({}, 'account') }}</a></li>
-            <li><a href="{{ path('fos_user_change_password') }}">{{ "Change Pass" | trans({}, 'account') }}</a></li>
-            <li><a href="{{ path('accounts_profile') }}">Profile</a></li>
-            <li><a href="{{ path('accounts_events') }}">Registered Events</a></li>
-            <li><a href="{{ path('accounts_giveaways') }}">My Giveaways</a></li>
-            <li><a href="{{ path('support') }}">{{ "Help" | trans({}, 'account') }}</a></li>
-            <li><a href="{{ path('_fos_user_security_logout') }}">Sign Out</a></li>
+            <li><a href="{{ path('accounts_index') }}">{{ "platformd.user.account.account_home" | trans }}</a></li>
+            <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
+            <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | trans }}</a></li>
+            <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
+            <li><a href="{{ path('accounts_events') }}">{{ "platformd.user.account.registered_events" | trans }}</a></li>
+            <li><a href="{{ path('accounts_giveaways') }}">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
+            <li><a href="{{ path('support') }}">{{ "platformd.user.account.help" | trans }}</a></li>
+            <li><a href="{{ path('_fos_user_security_logout') }}">{{ "platformd.layout.top_menu.sign_out" | trans }}</a></li>
         </ul>
     </div>
 </div>
