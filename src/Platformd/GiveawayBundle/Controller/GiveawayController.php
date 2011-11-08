@@ -3,6 +3,7 @@
 namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
 * 
@@ -48,7 +49,7 @@ class GiveawayController extends Controller
         ));
     }
 
-    public function keyAction($slug)
+    public function keyAction($slug, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
@@ -70,8 +71,8 @@ class GiveawayController extends Controller
             return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
         }
 
-
-        $key->assign($user);
+        // assign this key to this user - record ip address
+        $key->assign($user, $request->getClientIp());
         $this->getDoctrine()->getEntityManager()->flush();
 
         return $this->redirect($this->generateUrl('giveaway_show', array(

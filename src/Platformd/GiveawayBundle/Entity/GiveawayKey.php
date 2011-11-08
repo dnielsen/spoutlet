@@ -47,6 +47,11 @@ class GiveawayKey
      */
     protected $assignedAt;
 
+    /**
+     * @ORM\Column(name="ip_address", type="string", nullable=true, length=100)
+     */
+    protected $ipAddress;
+
     public function __construct($value) 
     {
         $this->setValue($value);    
@@ -99,9 +104,15 @@ class GiveawayKey
         return $this->pool;
     }
 
-    public function assign(User $user)
+    public function assign(User $user, $ipAddress)
     {
         $this->user = $user;
         $this->assignedAt = new \DateTime();
+        $this->ipAddress = $ipAddress;
+    }
+
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
     }
 }
