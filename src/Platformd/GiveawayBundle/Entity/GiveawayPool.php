@@ -98,6 +98,11 @@ class GiveawayPool
         $this->giveawayKeys = new ArrayCollection();
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * @return \Platformd\GiveawayBundle\Entity\Giveaway
      */
