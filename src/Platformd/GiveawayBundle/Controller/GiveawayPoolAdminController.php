@@ -53,6 +53,8 @@ class GiveawayPoolAdminController extends Controller
 
                 $manager->persist($pool);
                 $manager->flush();
+
+                return $this->redirect($this->generateUrl('admin_giveaway_poll_index'));
             }
         }
 
