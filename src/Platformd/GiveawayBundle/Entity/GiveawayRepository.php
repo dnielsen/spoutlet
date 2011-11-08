@@ -12,19 +12,6 @@ use Doctrine\ORM\NoResultException;
 class GiveawayRepository extends AbstractEventRepository
 {
     /**
-     * Create a QueryBuilder instance with base criterias
-     *
-     * @return Doctrine\ORM\QueryBuilder
-     */
-    protected function createActiveQueryBuilder()
-    {
-        return $this
-            ->createQueryBuilder('g')
-            ->where('g.status != :flag')
-            ->setParameter('flag', 'disabled');
-    }
-
-    /**
      * Find actives giveaways
      *
      * @return array
@@ -58,5 +45,18 @@ class GiveawayRepository extends AbstractEventRepository
 
             return null;
         }
+    }
+
+    /**
+     * Create a QueryBuilder instance with base criterias
+     *
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    protected function createActiveQueryBuilder()
+    {
+        return $this
+            ->createQueryBuilder('g')
+            ->where('g.status != :flag')
+            ->setParameter('flag', 'disabled');
     }
 }
