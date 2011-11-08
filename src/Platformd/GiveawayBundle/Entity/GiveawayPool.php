@@ -168,6 +168,17 @@ class GiveawayPool
     }
 
     /**
+     * The upper and lower limit stuff will only be enforced if both values
+     * are present and non-zero
+     *
+     * @return bool
+     */
+    public function shouldEnforceUpperAndLower()
+    {
+        return $this->getLowerLimit() > 0 && $this->getUpperLimit() >0;
+    }
+
+    /**
      * @param int $maxKeysPerIp
      */
     public function setMaxKeysPerIp($maxKeysPerIp)

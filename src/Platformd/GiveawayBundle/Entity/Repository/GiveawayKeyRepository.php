@@ -5,30 +5,13 @@ namespace Platformd\GiveawayBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\UserBundle\Entity\User;
+use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 
 /**
  * GiveawayKey  Repository
  */
 class GiveawayKeyRepository extends EntityRepository
 {
-    /**
-     * Returns the number of keys that have been assigned for the given pool
-     *
-     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
-     * @return int
-     */
-    public function getAssignedForPool(GiveawayPool $pool)
-    {
-        return (int)$this
-            ->createQueryBuilder('k')
-            ->select('COUNT(k.id)')
-            ->where('k.user IS NOT NULL')
-            ->andWhere('k.pool = :pool')
-            ->setParameter('pool', $pool->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
     /**
      * Returns the number of keys that should "appear" to be available based on:
      *
@@ -46,14 +29,15 @@ class GiveawayKeyRepository extends EntityRepository
             return 0;
         }
 
-        return (int)$this
-            ->createQueryBuilder('k')
-            ->select('COUNT(k.id)')
-            ->where('k.user IS NULL')
-            ->andWhere('k.pool = :pool')
-            ->setParameter('pool', $pool->getId())
-            ->getQuery()
-            ->getSingleScalarResult();
+        // offload the work to something that we can easily unit test
+        $util = new KeyCounterUtil();
+
+        return $util->getTrueDisplayCount(
+            $this->getTotalForPool($pool),
+            $this->getUnassignedForPool($pool),
+            $pool->getLowerLimit(),
+            $pool->getUpperLimit()
+        );
     }
 
     /**
@@ -75,6 +59,42 @@ class GiveawayKeyRepository extends EntityRepository
             ->setParameter('pool', $pool->getId())
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * Returns the TRUE number of keys that have been assigned for the given pool
+     *
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     * @return int
+     */
+    public function getAssignedForPool(GiveawayPool $pool)
+    {
+        return (int)$this
+            ->createQueryBuilder('k')
+            ->select('COUNT(k.id)')
+            ->where('k.user IS NOT NULL')
+            ->andWhere('k.pool = :pool')
+            ->setParameter('pool', $pool->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the TRUE number of keys that have NOTbeen assigned for the given pool
+     *
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     * @return int
+     */
+    public function getUnassignedForPool(GiveawayPool $pool)
+    {
+        return (int)$this
+            ->createQueryBuilder('k')
+            ->select('COUNT(k.id)')
+            ->where('k.user IS NULL')
+            ->andWhere('k.pool = :pool')
+            ->setParameter('pool', $pool->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

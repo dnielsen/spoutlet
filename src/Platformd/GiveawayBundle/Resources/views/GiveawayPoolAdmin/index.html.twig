@@ -45,7 +45,7 @@
                         </td>
 
                         <td>
-                            {% if pool.lowerLimit and pool.upperLimit %}
+                            {% if pool.shouldEnforceUpperAndLower %}
                                 {{ pool.lowerLimit }}/{{ pool.upperLimit }}
                             {% else %}
                                 <i>none</i>
