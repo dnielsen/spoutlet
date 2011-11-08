@@ -39,7 +39,8 @@ class GiveawayPoolAdminController extends Controller
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:index.html.twig', array(
             'pools'     => $pools,
-            'giveaway'  => $giveaway
+            'giveaway'  => $giveaway,
+            'keyRepo'   => $this->getGiveawayKeyRepository(),
         ));
     }
 
@@ -181,5 +182,15 @@ class GiveawayPoolAdminController extends Controller
         }
 
         return $giveaway;
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
+     */
+    protected function getGiveawayKeyRepository()
+    {
+        return $this->getDoctrine()
+            ->getRepository('GiveawayBundle:GiveawayKey')
+        ;
     }
 }

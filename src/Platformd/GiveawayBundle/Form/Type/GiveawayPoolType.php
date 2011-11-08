@@ -19,7 +19,8 @@ class GiveawayPoolType extends AbstractType
             ->add('giveaway', 'entity', array(
                 'class'         => 'GiveawayBundle:Giveaway',
             ))
-            ->add('description', 'textarea', array('required' => false))
+            // this is a long field, but it's mean for users not to put much here
+            ->add('description', 'text', array('required' => false))
             ->add('maxKeysPerIp', 'integer', array('required' => false))
             ->add('upperLimit', 'integer', array('required' => false))
             ->add('lowerLimit', 'integer', array('required' => false))

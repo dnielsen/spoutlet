@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Platformd\GiveawayBundle\Entity\GiveawayKey
  * 
  * @ORM\Table(name="giveaway_key")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository")
  */
 class GiveawayKey
 {

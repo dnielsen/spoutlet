@@ -17,6 +17,11 @@
                 <tbody>
                     <tr>
                         <th>{{ "platformd.giveaway_pool.pool" | trans }}</th>
+                        <th>{{ "giveway_pool_description" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_maxKeysPerIp" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_lower_upper_display" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_assigned_total" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
                         {% if app.user.isSuperAdmin %}
                             <th>{{ "platformd.help.actions" | trans }}</th>
                         {% endif %}
@@ -28,6 +33,31 @@
                                 'pool' : pool.id 
                             }) 
                         }}">{{ pool.description }}</a></td>
+
+                        <td>
+                            {{ pool.description }}
+                        </td>
+
+                        <td>
+                            {{ pool.maxKeysPerIp }}
+                        </td>
+
+                        <td>
+                            {% if pool.lowerLimit and pool.upperLimit %}
+                                {{ pool.lowerLimit }}/{{ pool.upperLimit }}
+                            {% else %}
+                                <i>none</i>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ keyRepo.getAssignedForPool(pool) }} / {{ keyRepo.getTotalForPool(pool) }}
+                        </td>
+
+                        <td>
+                            {{ pool.isActive ? 'Active' : 'Inactive' }}
+                        </td>
+
                         {% if app.user.isSuperAdmin %}
                             <td>
                                 <a href="{{ path('admin_giveaway_pool_edit', { 
