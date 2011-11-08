@@ -185,9 +185,10 @@ jms_i18n_routing:
     locales: [en, ja, zh]
     strategy: custom
     hosts:
-        en: demo.%base_host%
-        ja: japan.%base_host%
-        zh: china.%base_host%
+        # %host_suffix% might be something like "staging"
+        en: demo%host_suffix%.%base_host%
+        ja: japan%host_suffix%.%base_host%
+        zh: china%host_suffix%.%base_host%
 
 fos_comment:
     db_driver: orm
