@@ -1,1 +1,1 @@
-set :deploy_to,   "/var/www/beta.usedhogparts.com"
+set :deploy_to,   "/var/www/staging/deploy"
