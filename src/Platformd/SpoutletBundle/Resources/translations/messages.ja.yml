@@ -154,3 +154,6 @@ platformd:
 
     general:
         alienware_link_url: http://www.alienware.jp/
+
+    navigation:
+        back: Go Back

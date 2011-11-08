@@ -10,7 +10,7 @@ admin_giveaway_edit:
     pattern: /edit/{id}
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:edit }
 
-admin_giveaway_poll_index:
+admin_giveaway_pool_index:
     pattern: /{giveaway}/pools
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:index }
 

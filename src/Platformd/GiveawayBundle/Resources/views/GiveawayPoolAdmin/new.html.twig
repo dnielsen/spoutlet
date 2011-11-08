@@ -4,6 +4,7 @@
 {% block content %}
     {% include 'GiveawayBundle:GiveawayPoolAdmin:giveawayPoolForm.html.twig' with {
         'form': form,
-        'route': path('admin_giveaway_pool_new', { "giveaway" : giveaway.id })
+        'route': path('admin_giveaway_pool_new', { "giveaway" : giveawayId }),
+        'giveawayId': giveawayId
     } %}
 {% endblock %}

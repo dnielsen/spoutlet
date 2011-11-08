@@ -64,7 +64,7 @@ class GiveawayPoolAdminController extends Controller
             if ($form->isValid()) {
                 $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+                return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
                     'giveaway' => $giveaway->getId()
                 )));
             }
@@ -72,7 +72,7 @@ class GiveawayPoolAdminController extends Controller
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
             'form'      => $form->createView(),
-            'giveaway'  => $giveaway
+            'giveawayId'  => $giveaway->getId()
         ));
     }
 
@@ -99,7 +99,7 @@ class GiveawayPoolAdminController extends Controller
             if ($form->isValid()) {
                 $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+                return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
                     'giveaway' => $giveaway
                 )));
             }
@@ -107,7 +107,8 @@ class GiveawayPoolAdminController extends Controller
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:edit.html.twig', array(
             'pool' => $pool,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'giveawayId' => $giveaway,
         ));
     }
 
@@ -128,7 +129,7 @@ class GiveawayPoolAdminController extends Controller
         $manager->remove($pool);
         $manager->flush();
 
-        return $this->redirect($this->generateUrl('admin_giveaway_poll_index', array(
+        return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
             'giveaway' => $giveaway
         )));
     }
