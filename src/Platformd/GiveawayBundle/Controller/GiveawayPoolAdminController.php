@@ -2,11 +2,12 @@
 
 namespace Platformd\GiveawayBundle\Controller;
 
-use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\GiveawayBundle\Entity\GiveawayPool;
+use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
+
 
 /**
 * 
@@ -32,13 +33,22 @@ class GiveawayPoolAdminController extends Controller
 
     public function newAction()
     {
-        $giveaways = $this
+        $manager = $this
             ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('GiveawayBundle:Giveaway')
-            ->findAll();
+            ->getEntityManager();      
+        $pool = new GiveawayPool();
+        $request = $this->getRequest();
 
-        $form = $this->createForm(new GiveawayPoolType($giveaways));
+        $form = $this->createForm(new GiveawayPoolType(), $pool);
+
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $manager->persist($pool);
+                $manager->flush();
+            }
+        }
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
             'form' => $form->createView()

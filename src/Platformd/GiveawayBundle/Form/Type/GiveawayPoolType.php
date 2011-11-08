@@ -11,24 +11,13 @@ use Symfony\Component\Form\FormBuilder;
 class GiveawayPoolType extends AbstractType
 {
     /**
-     * A list of giveaways
-     * @var array
-     */
-    private $giveaways;
-
-    public function __construct(array $giveaways = array())
-    {
-        $this->giveaways = $giveaways;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('giveaway', 'choice', array(
-                'choices'       => $this->getGiveaways(),
+            ->add('giveaway', 'entity', array(
+                'class'         => 'GiveawayBundle:Giveaway',
                 'empty_value'   => ''
             ))
             ->add('description', 'textarea')
@@ -45,15 +34,5 @@ class GiveawayPoolType extends AbstractType
     {
         
         return 'giveway_pool';
-    }
-
-    protected function getGiveaways()
-    {
-        $choices = array();
-        foreach ($this->giveaways as $giveaway) {
-            $choices[$giveaway->getId()] = $giveaway->getName();
-        }
-
-        return $choices;
     }
 }

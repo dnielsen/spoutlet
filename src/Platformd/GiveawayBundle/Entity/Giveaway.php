@@ -59,6 +59,12 @@ class Giveaway extends AbstractEvent
         $this->giveawayPools = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        
+        return $this->getName();
+    }
+    
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
