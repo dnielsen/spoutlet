@@ -45,6 +45,12 @@ class GiveawayPoolAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+                if ($loadedKeys = $pool->loadKeysFromFile()) {
+                    foreach ($loadedKeys as $key) {
+                        $manager->persist($key);
+                    }
+                }
+
                 $manager->persist($pool);
                 $manager->flush();
             }

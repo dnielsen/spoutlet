@@ -24,7 +24,8 @@ class GiveawayPoolType extends AbstractType
             ->add('maxKeysPerIp', 'integer')
             ->add('upperLimit', 'integer')
             ->add('lowerLimit', 'integer')
-            ->add('isActive', 'checkbox');
+            ->add('isActive', 'checkbox')
+            ->add('keysfile', 'file');
     }
 
     /**
