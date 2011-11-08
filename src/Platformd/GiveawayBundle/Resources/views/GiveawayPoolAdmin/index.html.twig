@@ -21,10 +21,10 @@
                     </tr>
                     {% for pool in pools %}
                     <tr class="eventListGroup_online">
-                        <td><a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">{{ pool.giveaway.name }}</a></td>
+                        <td><a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">{{ pool.description }}</a></td>
                         {% if app.user.isSuperAdmin %}
                             <td>
-                                TODO: Actions: edit | delete
+                                <a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">Edit</a> | delete
                             </td>
                         {% endif %}
                     </tr>
