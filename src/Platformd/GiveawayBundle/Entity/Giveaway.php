@@ -23,7 +23,7 @@ class Giveaway extends AbstractEvent
      * One to Many with GiveawayPool
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaways")
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaway")
      */
     protected $giveawayPools;
 
@@ -168,5 +168,13 @@ class Giveaway extends AbstractEvent
     public function getRedemptionInstructionsArray()
     {
         return explode("\n", $this->getRedemptionInstructions());
+    }
+
+    /**
+     * @return Platformd\GiveawayBundle\Entity\GiveawayPool
+     */
+    public function getActivePool()
+    {
+        return $this->getGiveawayPools()->first();
     }
 }

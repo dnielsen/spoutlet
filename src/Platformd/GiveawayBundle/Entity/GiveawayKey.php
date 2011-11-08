@@ -4,6 +4,8 @@ namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Platformd\UserBundle\Entity\User;
+
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayKey
  * 
@@ -33,6 +35,17 @@ class GiveawayKey
      * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", inversedBy="giveawayKeys", cascade={"persist", "remove", "merge"})
      */
     protected $pool;
+
+    /**
+     * @ORM\JoinColumn(name="user", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="giveawayKeys", cascade={"persist", "remove", "merge"})
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(name="assigned_at", type="datetime")
+     */
+    protected $assignedAt;
 
     public function __construct($value) 
     {
@@ -84,5 +97,11 @@ class GiveawayKey
     {
 
         return $this->pool;
+    }
+
+    public function assign(User $user)
+    {
+        $this->user = $user;
+        $this->assignedAt = new \DateTime();
     }
 }

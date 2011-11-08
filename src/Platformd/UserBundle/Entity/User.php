@@ -248,6 +248,14 @@ class User extends BaseUser
      */
     protected $locale;
 
+    /**
+     * One to Many with GiveawayKey
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayKey", mappedBy="user")
+     */
+    protected $giveawayKeys;
+
     /** 
      * @Assert\File(
         maxSize="6000000", 
@@ -259,7 +267,8 @@ class User extends BaseUser
     public function __construct() 
     {
         parent::__construct();
-        $this->events = new ArrayCollection();   
+        $this->events = new ArrayCollection();
+        $this->giveawayKeys = new ArrayCollection();
     }
     
     /** 

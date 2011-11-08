@@ -21,6 +21,8 @@ platformd:
             inactive: Active but with zero keys
             active:   Active
             blank_value: Choose status
+        show:
+            availaible_keys: Availaible keys : %%count%%
         giveaways_listings:
             giveaways: Giveaways
     giveaway_pool:

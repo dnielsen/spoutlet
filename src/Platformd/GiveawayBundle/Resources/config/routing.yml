@@ -9,3 +9,7 @@ giveaway_index:
 giveaway_show:
     pattern: /giveaways/{slug}
     defaults: { _controller: GiveawayBundle:Giveaway:show }
+
+giveaway_get_key:
+    pattern: /giveaways/{slug}/key
+    defaults: { _controller: GiveawayBundle:Giveaway:key }
