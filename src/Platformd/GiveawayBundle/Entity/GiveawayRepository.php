@@ -9,4 +9,9 @@ use Platformd\SpoutletBundle\Entity\AbstractEventRepository;
  */
 class GiveawayRepository extends AbstractEventRepository
 {
+    public function findActives()
+    {
+        
+        return $this->findAll();
+    }
 }

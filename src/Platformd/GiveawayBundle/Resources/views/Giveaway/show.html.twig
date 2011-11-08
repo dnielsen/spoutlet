@@ -1,0 +1,35 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title giveaway.name %}
+
+{% block content %}
+    <div id="content">
+        <div class="std_1col">
+            <div id="giveawaytHeader">
+                <img src="{{ giveaway.webPath }}" alt="{{ giveaway.name }}"/>
+            </div>
+        </div><!-- std_1col -->
+
+        <div class="std_2col">
+            <div class="right">
+            
+            </div><!-- right -->
+            
+            <div class="left">
+                <div id="giveaway-info" class="widget-66">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ giveaway.name }}</div>
+                    </div><!-- widget-header -->
+
+                    <div class="widget-content" id="giveaway-details">
+                        {{ giveaway.content | raw }}
+                    </div><!-- giveaway-details -->
+                </div><!-- giveaway-info -->
+            </div><!-- left -->
+            
+            <div class="clear">
+            
+            </div><!-- clear -->
+        </div><!-- std_2col -->
+    </div>
+{% endblock %}
