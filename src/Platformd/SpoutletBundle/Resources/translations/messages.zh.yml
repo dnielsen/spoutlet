@@ -156,3 +156,6 @@ platformd:
 
     general:
         alienware_link_url: http://alienware.com.cn/
+
+    navigation:
+        back: Go Back

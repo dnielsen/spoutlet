@@ -1,12 +1,14 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.giveaway_pool.admin.create" | trans }}{% endblock %}
+
+{% set title = "platformd.giveaway_pool.admin.title" | trans({'%giveaway_name%': giveaway.name}) %}
+{% block title title %}
 
 {% block content %}
 <div id="admin-events">
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                {{ "platformd.giveaway_pool.admin.title" | trans }}
+                {{ title }}
             </div>
         </div>
         

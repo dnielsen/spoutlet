@@ -160,3 +160,6 @@ platformd:
 
     general:
         alienware_link_url: http://alienware.com
+
+    navigation:
+        back: Go Back
