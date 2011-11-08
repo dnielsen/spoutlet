@@ -6,7 +6,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Form;
+use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
 
 /**
 * 
@@ -28,5 +28,20 @@ class GiveawayPoolAdminController extends Controller
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:index.html.twig', array(
             'pools' => $pools
         ));
-    }  
+    }
+
+    public function newAction()
+    {
+        $giveaways = $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findAll();
+
+        $form = $this->createForm(new GiveawayPoolType($giveaways));
+
+        return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
 }

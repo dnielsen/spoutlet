@@ -1,0 +1,24 @@
+<h1>
+    {{ 'platformd.giveaway.admin.create' | trans }}
+</h1>
+
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
+
+    {{ form_errors(form) }}
+    
+    {{ form_row(form.giveaway)}}
+
+    {{ form_row(form.description)}}
+
+    {{ form_row(form.maxKeysPerIp)}}
+
+    {{ form_row(form.upperLimit)}}
+
+    {{ form_row(form.lowerLimit)}}
+
+    {{ form_row(form.isActive)}}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" class="button" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
+</form>
