@@ -1,5 +1,5 @@
 <h1>
-    {{ 'platformd.giveaway.admin.create' | trans }}
+    {{ 'platformd.giveaway_pool.admin.create' | trans }}
 </h1>
 
 <form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
@@ -22,5 +22,5 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="button" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
+    <input type="submit" class="button" value="{{ "platformd.giveaway_pool.admin.save_giveaway_pool" | trans }}" formnovalidate />
 </form>

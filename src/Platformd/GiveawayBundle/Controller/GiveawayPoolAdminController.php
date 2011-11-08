@@ -89,6 +89,26 @@ class GiveawayPoolAdminController extends Controller
         ));
     }
 
+    public function deleteAction($id)
+    {
+        $manager = $this
+            ->getDoctrine()
+            ->getEntityManager();
+
+        $pool = $manager->getRepository('GiveawayBundle:GiveawayPool')
+            ->findOneBy(array('id' => $id));
+
+        if (!$pool) {
+            
+            throw $this->createNotFoundException();
+        }
+
+        $manager->remove($pool);
+        $manager->flush();
+
+        return $this->redirect($this->generateUrl('admin_giveaway_poll_index'));
+    }
+
     /**
      * Save a pool & add keys stored in the uploaded file
      *

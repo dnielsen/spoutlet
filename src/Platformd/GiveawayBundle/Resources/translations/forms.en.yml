@@ -3,3 +3,10 @@ giveaway_content: "Description"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"
 giveaway_redemptionInstructions: Redemption Instructions
+giveway_pool_giveaway: Giveaway
+giveway_pool_description: Description
+giveway_pool_maxKeysPerIp: Max key per IP
+giveway_pool_upperLimit: Upper limit
+giveway_pool_lowerLimit: Lower limit
+giveway_pool_isActive: Active
+giveway_pool_keysfile: Keys file

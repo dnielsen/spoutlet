@@ -24,7 +24,9 @@
                         <td><a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">{{ pool.description }}</a></td>
                         {% if app.user.isSuperAdmin %}
                             <td>
-                                <a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">Edit</a> | delete
+                                <a href="{{ path('admin_giveaway_pool_edit', { 'id' : pool.id }) }}">Edit</a>
+                                |
+                                <a href="{{ path('admin_giveaway_pool_delete', { 'id' : pool.id }) }}" class="delete_link">Delete</a>
                             </td>
                         {% endif %}
                     </tr>
@@ -41,5 +43,19 @@
 </div>
 
 <div style="width:100%;text-align:right;padding-top:20px;"></div>
+
+<script type="text/javascript">
+jQuery(function($) {
+    $(".delete_link").bind("click", function(event) {
+        
+        if (!confirm('Are you sure you want to delete this pool?')) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            return false;
+        }
+    });
+});
+</script>
 
 {% endblock %}

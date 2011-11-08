@@ -17,3 +17,9 @@ platformd:
             inactive: Active but with zero keys
             active:   Active
             blank_value: Choose status
+    giveaway_pool:
+        pool: Giveaway pool
+        admin:
+            title: Giveaway pools
+            create: Create a new pool
+            save_giveaway_pool: Save giveaway pool

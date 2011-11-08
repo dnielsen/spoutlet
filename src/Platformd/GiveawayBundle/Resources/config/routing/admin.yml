@@ -21,3 +21,7 @@ admin_giveaway_pool_new:
 admin_giveaway_pool_edit:
     pattern: /pools/edit/{id}
     defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:edit }
+
+admin_giveaway_pool_delete:
+    pattern: /pools/delete/{id}
+    defaults: { _controller: GiveawayBundle:GiveawayPoolAdmin:delete }

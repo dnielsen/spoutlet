@@ -29,7 +29,8 @@ class GiveawayKey
     protected $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", inversedBy="giveawayKeys")
+     * @ORM\JoinColumn(name="pool", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", inversedBy="giveawayKeys", cascade={"persist", "remove", "merge"})
      */
     protected $pool;
 
