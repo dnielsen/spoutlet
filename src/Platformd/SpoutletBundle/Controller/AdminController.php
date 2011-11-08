@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Form\Type\EventType,
 	Platformd\UserBundle\Entity\User;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller

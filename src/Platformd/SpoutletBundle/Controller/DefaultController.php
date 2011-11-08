@@ -2,9 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller;
-
-
 class DefaultController extends Controller
 {
     
