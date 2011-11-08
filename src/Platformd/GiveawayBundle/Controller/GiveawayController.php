@@ -26,8 +26,15 @@ class GiveawayController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $pool = $giveaway->getActivePool();
+        $keys = $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:GiveawayKey');
+
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
-            'giveaway' => $giveaway
+            'giveaway'          => $giveaway,
+            'available_keys'    => $keys->getUnassignedForPool($pool)
         ));
     }
 
