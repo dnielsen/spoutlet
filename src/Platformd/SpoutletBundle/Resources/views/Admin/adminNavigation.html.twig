@@ -3,6 +3,11 @@
     {% if is_granted('ROLE_ORGANIZER') %}
 	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_events_index') }}">{{ "platformd.layout.admin_menu.manage_events" | trans }}</a></div>
     {% endif %}
+
+    {% if is_granted('ROLE_ORGANIZER') %}
+	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_giveaway_index') }}">{{ "platformd.layout.admin_menu.manage_giveaways" | trans }}</a></div>
+    {% endif %}
+
     {% if is_granted('ROLE_SUPER_ADMIN') %}
 	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('Platformd_UserBundle_admin_index') }}">{{ "platformd.layout.admin_menu.manage_users" | trans }}</a></div>
     {% endif %}

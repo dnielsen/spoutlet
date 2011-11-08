@@ -226,3 +226,19 @@ div#content.microsoft {
 span.required {
     color: #B01717;
 }
+
+.giveawayForm label {
+    width: 110px;
+}
+.giveawayForm ul.form-msg-error {
+    margin-left: 110px;
+}
+.giveawayForm textarea {
+    width: 800px;
+    height: 150px;
+}
+
+.form-help {
+    margin-bottom: 10px;
+    font-style: italic;
+}

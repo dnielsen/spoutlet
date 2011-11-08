@@ -19,6 +19,7 @@ security:
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
         - { path: ^/([\w]+\/)?admin/events/(approve|unpublish).*, role: ROLE_SUPER_ADMIN }
         - { path: ^/([\w]+\/)?admin/events, role: ROLE_ORGANIZER }
+        - { path: ^/([\w]+\/)?admin/giveaways, role: ROLE_ORGANIZER }
         # admin is the lowest admin role - catch all for admin routes
         - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN }
 

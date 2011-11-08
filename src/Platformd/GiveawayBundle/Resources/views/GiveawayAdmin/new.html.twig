@@ -1,0 +1,9 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway.admin.create" | trans }}{% endblock %}
+
+{% block content %}
+{% include 'GiveawayBundle:GiveawayAdmin:giveawayForm.html.twig' with {
+    'form': form,
+    'route': path('admin_giveaway_new')
+} %}
+{% endblock %}

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
-use Platformd\SpoutletBundle\Entity\GiveawayPool;
+use Platformd\GiveawayBundle\Entity\GiveawayPool;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -46,7 +46,7 @@ class Giveaway extends AbstractEvent
      * @var string
      * @ORM\Column(type="string", length=15)
      */
-    protected $status;
+    protected $status = 'disabled';
 
     static protected $validStatuses = array(
         'disabled',
@@ -98,10 +98,30 @@ class Giveaway extends AbstractEvent
      */
     public function setStatus($status)
     {
+        if (!$status) {
+            return;
+        }
+
         if (!in_array($status, self::$validStatuses)) {
             throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
         }
 
         $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedemptionInstructions()
+    {
+        return $this->redemptionInstructions;
+    }
+
+    /**
+     * @param string $redemptionInstructions
+     */
+    public function setRedemptionInstructions($redemptionInstructions)
+    {
+        $this->redemptionInstructions = $redemptionInstructions;
     }
 }

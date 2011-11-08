@@ -1,0 +1,3 @@
+_admin_giveaway:
+    resource: "routing/admin.yml"
+    prefix:   /admin/giveaways

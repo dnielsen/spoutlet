@@ -44,6 +44,7 @@ platformd:
         admin_menu:
             admin_home: 管理者ホーム
             manage_events: イベント管理
+            manage_giveaways: Manage Giveaways
             manage_users: ユーザー管理
 
         main_menu:

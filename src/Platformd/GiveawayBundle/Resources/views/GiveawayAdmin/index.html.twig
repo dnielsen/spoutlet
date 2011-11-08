@@ -1,0 +1,40 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
+
+{% block content %}
+<div id="admin-events">
+    <div class="widget-100">
+    <div class="widget-header">
+        <div class="widget-title">
+            {{ "platformd.giveaway.admin.title" | trans }}
+        </div>
+    </div>
+    <div class="widget-content">
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
+                    {% if app.user.isSuperAdmin %}
+                        <th>{{ "platformd.help.actions" | trans }}</th>
+                    {% endif %}
+                </tr>
+                {% for giveaway in giveaways %}
+                <tr class="eventListGroup_online">
+                    <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
+                    <td>
+                        TODO: Actions: edit | delete
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="widget-footer">
+        <a class="aw-link" href="{{ path('admin_giveaway_new') }}" style="margin-right:10px;">{{ "platformd.giveaway.admin.create" | trans }}</a>
+        <div class="clear"></div>
+    </div>
+</div>
+</div>
+<div style="width:100%;text-align:right;padding-top:20px;"></div>
+{% endblock %}

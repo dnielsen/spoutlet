@@ -10,6 +10,10 @@ PlatformDUserBundle:
     resource: "@UserBundle/Resources/config/routing/admin.yml"
     prefix:   /admin/users
 
+PlatformDGiveawayBundle:
+    resource: "@GiveawayBundle/Resources/config/routing.yml"
+    prefix:   /
+
 
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
