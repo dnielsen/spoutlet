@@ -5,7 +5,7 @@ namespace Platformd\GiveawayBundle\Controller;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Form\Type\GiveawayType;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
@@ -13,9 +13,7 @@ class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
-        $giveaways = $this->getGiveawayRepo()->findBy(array(
-            'locale' => $this->get('session')->getLocale(),
-        ));
+        $giveaways = $this->getGiveawayRepo()->findAllForLocale($this->getLocale());
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
             array('giveaways' => $giveaways));
@@ -86,7 +84,7 @@ EOT
     {
         // save to db
         $giveaway = $giveawayForm->getData();
-        $giveaway->setLocale($this->get('session')->getLocale());
+        $giveaway->setLocale($this->getLocale());
 
         $giveaway->updateBannerImage();
 
@@ -98,15 +96,6 @@ EOT
             ->getRequest()
             ->getSession()
             ->setFlash('notice', $this->get('translator')->trans('platformd.giveaway.admin.saved'));
-    }
-
-    /**
-     * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
-     */
-    private function getGiveawayRepo()
-    {
-        return $this->getEntityManager()
-            ->getRepository('GiveawayBundle:Giveaway');
     }
 
     private function getEntityManager()

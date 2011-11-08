@@ -5,15 +5,10 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Entity\EventRepository;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 
 class EventsController extends Controller
 {
-	private function getLocale()
-	{
-		return $this->get('session')->getLocale();
-	}
-
 	public function indexAction()
 	{
 		$current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 5);
