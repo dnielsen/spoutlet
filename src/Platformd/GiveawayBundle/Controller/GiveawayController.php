@@ -38,9 +38,24 @@ class GiveawayController extends Controller
         ));
     }
 
-    public function keyAction($giveaway_id)
+    public function keyAction($slug)
     {
-                
+        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
+            
+            throw $this->createNotFoundException();
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $pool = $giveaway->getActivePool();
+        $key = $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:GiveawayKey')
+            ->getUnassignedKey($pool)->assign($user);
+
+        $this->getDoctrine()->getEntityManager()->flush();
+
+        return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }
 
     /**
