@@ -20,6 +20,7 @@ platformd:
     giveaway_pool:
         pool: Giveaway pool
         admin:
-            title: Giveaway pools
+            title: Giveaway pools for "%giveaway_name%"
             create: Create a new pool
+            edit_pool: Edit pool
             save_giveaway_pool: Save giveaway pool

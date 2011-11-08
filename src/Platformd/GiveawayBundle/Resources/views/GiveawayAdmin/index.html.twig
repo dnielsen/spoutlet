@@ -23,7 +23,6 @@
                     <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
                     <td>
                         <a href="{{ path('admin_giveaway_poll_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
-                        TODO: Actions: edit | delete
                     </td>
                 </tr>
                 {% endfor %}

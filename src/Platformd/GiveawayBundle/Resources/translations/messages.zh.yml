@@ -11,9 +11,16 @@ platformd:
             redemption_instructions_note: |
                 Create a new line for each "instruction" step. HTML tags
                 are accepted (e.g. <a href="/events">Link to events</a>).
-
+            manage_pools: Manage pools
         status:
             disabled: Totally disabled
             inactive: Active but with zero keys
             active:   Active
             blank_value: Choose status
+    giveaway_pool:
+        pool: Giveaway pool
+        admin:
+            title: Giveaway pools for "%giveaway_name%"
+            create: Create a new pool
+            edit_pool: Edit pool
+            save_giveaway_pool: Save giveaway pool
