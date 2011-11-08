@@ -3,6 +3,7 @@
         <a href="javascript:void(0);" class="active" id="featured-news">{{ 'platformd.layout.main_menu.news' | trans }}</a>
         {% if not onlyNews %}
 		<a href="javascript:void(0);" id="featured-events">{{ 'platformd.layout.page_content.events' | trans }}</a>
+        <a href="javascript:void(0);" id="featured-giveaways">{{ 'platformd.layout.page_content.giveaways' | trans }}</a>
         {% endif %}
 		<div style="clear: left;"></div>
 	</div>
@@ -15,6 +16,13 @@
         	{% for event in all_events %}
             <div class="widget-item">
                 <a class="widget-link" href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div id="featured-content-featured-giveaways" class="featured-content-category">
+        	{% for giveaway in all_giveaways %}
+            <div class="widget-item">
+                <a class="widget-link" href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a>
             </div>
             {% endfor %}
         </div>

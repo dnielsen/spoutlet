@@ -24,8 +24,15 @@ class DefaultController extends Controller
     		->getRepository('SpoutletBundle:Event')
     		->findPublished($this->get('session')->getLocale());
 
+        $allGiveaways = $this->getDoctrine()
+       		->getEntityManager()
+       		->getRepository('GiveawayBundle:Giveaway')
+       		->findActives()
+        ;
+
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events' => $all_events,
+            'all_giveaways' => $allGiveaways,
             'onlyNews'   => $onlyNews,
         ));
     }
