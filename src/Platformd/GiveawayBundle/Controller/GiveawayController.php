@@ -21,7 +21,7 @@ class GiveawayController extends Controller
 
     public function showAction($slug)
     {
-        if (!$giveaway = $this->getRepository()->findOneBy(array('slug' => $slug))) {
+        if (!$giveaway = $this->getRepository()->findOneBySlug($slug)) {
             
             throw $this->createNotFoundException();
         }
