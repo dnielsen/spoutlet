@@ -41,7 +41,7 @@ class GiveawayController extends Controller
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $giveaway->getRedemptionInstructionsArray(),
-            'available_keys'    => $this->getKeyRepository()->getUnassignedForPool($pool),
+            'available_keys'    => $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool),
             'assignedKey'       => $assignedKey,
         ));
     }
@@ -53,9 +53,7 @@ class GiveawayController extends Controller
 
         $giveaway = $this->findGiveaway($slug);
 
-        $user = $this->get('security.context')->getToken()->getUser();
         $pool = $giveaway->getActivePool();
-
         $key = $this->getKeyRepository()
             ->getUnassignedKey($pool)
         ;
@@ -67,7 +65,7 @@ class GiveawayController extends Controller
         }
 
         // assign this key to this user - record ip address
-        $key->assign($user, $request->getClientIp());
+        $key->assign($this->getUser(), $request->getClientIp());
         $this->getDoctrine()->getEntityManager()->flush();
 
         return $this->redirect($this->generateUrl('giveaway_show', array(

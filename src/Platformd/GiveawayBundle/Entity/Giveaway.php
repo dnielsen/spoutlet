@@ -152,6 +152,11 @@ class Giveaway extends AbstractEvent
         return $this->getStatus() == 'disabled';
     }
 
+    public function isActive()
+    {
+        return $this->getStatus() == 'active';
+    }
+
     /**
      * @return string
      */
@@ -179,10 +184,17 @@ class Giveaway extends AbstractEvent
     }
 
     /**
-     * @return Platformd\GiveawayBundle\Entity\GiveawayPool
+     * Returns the "active" pool, which is just the first one we find that
+     * is indeed active
+     *
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayPool
      */
     public function getActivePool()
     {
-        return $this->getGiveawayPools()->first();
+        foreach($this->getGiveawayPools() as $pool) {
+            if ($pool->getIsActive()) {
+                return $pool;
+            }
+        }
     }
 }

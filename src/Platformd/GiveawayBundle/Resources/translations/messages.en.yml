@@ -40,3 +40,4 @@ platformd:
             create: Create a new pool
             edit_pool: Edit pool
             save_giveaway_pool: Save giveaway pool
+        first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
