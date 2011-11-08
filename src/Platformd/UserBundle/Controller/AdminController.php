@@ -48,7 +48,7 @@ class AdminController extends Controller
 
                 $request
                     ->getSession()
-                    ->setFlash('notice', $translator->trans('fos_user_admin_edit_success', array(
+                    ->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
                         '%username%' => $user->getUsername()
                     ), 'FOSUserBundle'));
 
@@ -79,7 +79,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('notice', $translator->trans('fos_user_admin_delete_success', array(
+            ->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
                 '%username' => $user->getUsername() 
             ), 'FOSUserBundle'));
             

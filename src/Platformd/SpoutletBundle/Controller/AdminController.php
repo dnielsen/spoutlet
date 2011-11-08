@@ -84,10 +84,7 @@ class AdminController extends Controller
         $event->setPublished(true);
         $this->getEventsManager()->flush();
         
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
@@ -100,10 +97,7 @@ class AdminController extends Controller
         
         $this->getEventsManager()->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
@@ -130,10 +124,7 @@ class AdminController extends Controller
         $em->persist($event);
         $em->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $this->get('translator')->trans('platformd.events.admin.saved'));
+        $this->setFlash('success', $this->get('translator')->trans('platformd.events.admin.saved'));
     }
 
     private function getEventsRepo()

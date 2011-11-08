@@ -5,7 +5,7 @@ namespace Platformd\GiveawayBundle\Controller;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -155,10 +155,7 @@ class GiveawayPoolAdminController extends Controller
         $manager->persist($pool);
         $manager->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $this->get('translator')->trans('platformd.giveaway_pool.admin.saved'));
+        $this->setFlash('success', 'platformd.giveaway_pool.admin.saved');
     }
 
     /**

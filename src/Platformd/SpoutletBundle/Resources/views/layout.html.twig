@@ -111,23 +111,41 @@
                                 block to: success, warning, or error
 
                                 This also works out of the box for "error"
-                                session flashes - given an "error" type and
-                                the message is dumped out with some markup
+                                and "success"session flashes - given an "error"
+                                type and the message is dumped out with
+                                some markup
+
+                                Also, yes, I know this is hideous...
                             #}
 
-                            {% if block('flash_type') or app.session.hasFlash('error') %}
-                                {% set flashType = block('flash_type') ? block('flash_type') : 'error' %}
+                            {% if app.session.hasFlash('error') %}
+                                {% set sessionFlashType = 'error' %}
+                            {% elseif (app.session.hasFlash('success')) %}
+                                {% set sessionFlashType = 'success' %}
+                            {% else %}
+                                {% set sessionFlashType = false %}
+                            {% endif %}
+
+                            {% if block('flash_type') or sessionFlashType %}
+                                {% set flashType = block('flash_type') ? block('flash_type') : sessionFlashType %}
                                 <div class="xnotices">
                                     <div class="{{ flashType }}Notice notice">
                                         <div class="pad">
                                             <div class="pad2">
                                                 <div class="pad3">
                                                     <div class="pad4">
-                                                        {% if app.session.hasFlash('error') %}
-                                                            <h3>{{ 'platformd.flash.error_title' | trans }}</h3>
+                                                        {% if sessionFlashType %}
+                                                            {#
+                                                                funny, I had to set this as a variable - concatenating
+                                                                and translating the string all in one line was a fail
+                                                            #}
+                                                            {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
+                                                            <h3>
+                                                                {{ flashTitleKey | trans }}
+                                                            </h3>
 
                                                             <p>
-                                                                {{ app.session.getFlash('error') | trans }}
+                                                                {{ app.session.getFlash(sessionFlashType) | trans }}
                                                             </p>
                                                         {% else %}
                                                             {{ block('flash') }}

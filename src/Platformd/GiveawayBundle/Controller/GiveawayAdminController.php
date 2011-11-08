@@ -39,7 +39,9 @@ EOT
     		if($form->isValid())
     		{
     			$this->saveGiveaway($form);
-    			return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
+
+                // redirect to the "new pool" page
+    			return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
     		}
     	}
 
@@ -92,10 +94,7 @@ EOT
         $em->persist($giveaway);
         $em->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $this->get('translator')->trans('platformd.giveaway.admin.saved'));
+        $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
 
     private function getEntityManager()

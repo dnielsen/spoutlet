@@ -10,6 +10,7 @@ platformd:
 
     flash:
         error_title: Error!
+        success_title: Success!
 
     layout:
         # title used by default (if not overriden)
