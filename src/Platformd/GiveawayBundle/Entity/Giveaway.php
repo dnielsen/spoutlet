@@ -129,7 +129,7 @@ class Giveaway extends AbstractEvent
      */
     public function getStatusText()
     {
-        return self::$validStatuses[$this->getStatus()];
+        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
     }
 
     /**
