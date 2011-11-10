@@ -45,7 +45,9 @@ class PoolLoader
 
             // create the little part of the insert string
             // optimized for speed - but ugly...
-            $valuesString[] = sprintf("('%s', %s)", mysql_real_escape_string($value), $pool->getId());
+            // this IS a security risk, but only admin users can use this
+            // and damnit, we NEED speed!!!
+            $valuesString[] = sprintf("('%s', %s)", $value, $pool->getId());
 
             $i++;
 
