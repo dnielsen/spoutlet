@@ -33,9 +33,9 @@
     <div id="content">
         <div class="std_1col">
 
-            <div id="giveawaytHeader">
-                <img src="{{ giveaway.webPath }}" alt="{{ giveaway.name }}"/>
-            </div>
+            {% if giveaway.bannerImage %}
+                <div id="eventHeader" style="background:url('{{ asset(giveaway.webPath) }}') no-repeat;"></div>
+            {% endif %}
         </div><!-- std_1col -->
 
         <div class="std_2col">

@@ -242,3 +242,8 @@ span.required {
     margin-bottom: 10px;
     font-style: italic;
 }
+
+#eventHeader {
+    height: 120px;
+    max-width: 950px;
+}
