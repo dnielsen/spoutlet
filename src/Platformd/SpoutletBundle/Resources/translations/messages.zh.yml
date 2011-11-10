@@ -50,7 +50,6 @@ platformd:
             search: 搜索
             logged_in_as: 已登陆<strong><a href="%route%">%username%</a></strong>
 
-
         admin_menu:
             admin_home: 管理首页
             manage_events: 管理活动
@@ -132,6 +131,8 @@ platformd:
             create_new_event: 创建活动
         event_show:
             register_event: 注册活动
+            unregister_event: Unregister for event
+            registered_event: You are Registered
             create_or_login: 创建或登陆Alienware Arena账户
             register:       注册
         admin:
@@ -139,7 +140,10 @@ platformd:
             edit_event: 编辑活动%event_title%
             create: 创建新活动
             approve: 批准
+            unpublish: Unpublish
             approved: 活动"%event_title%" 已获批准即将发布
+            unpublished: Event "%event_title%" has been unpublished.
+            saved: Event has been saved.
             unknown: 未知活动#%event_id% !
             save_event: 保存活动
             unpublished_title: Edit your unpublished event
@@ -159,6 +163,8 @@ platformd:
             under_construction: "注：Alienware Arena建设中，如某项功能无法启用，请稍后访问。"
             edit_your_account: 编辑账户信息
             change_your_password: 修改密码
+        giveaway:
+            your_giveaway_keys: My Giveaway Keys
 
     about:
         title: 关于Alienware ArenaTM

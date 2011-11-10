@@ -2,7 +2,7 @@ url:  URL
 edit: 編集
 
 platformd:
-    create_account_or_login: Create or login to an Alienware Arena account.
+    create_account_or_login: Alienware Arenaアカウントを作成しログインします。
 
     not_found:
         title: ページが見つかりません
@@ -10,7 +10,7 @@ platformd:
 
     flash:
         error_title: Error!
-        success_title: Success!
+        success_title: 成功！
 
     layout:
         # title used by default (if not overriden)
@@ -75,15 +75,15 @@ platformd:
             photo_gallery: フォトギャラリー
             view_all: すべて見る
             redeem: 交換
-            keys_available: 利用可能なゲームキー
+            keys_available: キー残数
             ad_url: "/images/ads/aw-ms7-728x90-jp.jpg"
             deals_add_url: "/images/ads/jp-deals.jpg"
             landing_image_url: "/images/AWinvades-jp.jpg"
 
         bottom_menu:
             contact_us: "お問い合わせ &"
-            privacy_policy: 個人情報保護方針
-            terms_and_conditions: 利用条項
+            privacy_policy: プライバシーポリシー
+            terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
             link: "Alienware.jpへ移動する"
@@ -131,6 +131,8 @@ platformd:
             create_new_event: 新しいイベントの作成
         event_show:
             register_event: イベントに登録
+            unregister_event: Unregister for event
+            registered_event: You are Registered
             create_or_login: Alientware Arenaアカウントを作成するか、ログインしてください。
             register:       登録
         admin:
@@ -138,13 +140,16 @@ platformd:
             edit_event: イベントの編集 | %event_title%
             create: 新しいイベントの作成
             approve: 承認
+            unpublish: Unpublish
             approved: %event_title%のイベントが承認され、公開されました。
+            unpublished: Event "%event_title%" has been unpublished.
+            saved: Event has been saved.
             unknown: 不明なイベント \#%event_id% !
             save_event: イベントの保存
-            unpublished_title: Edit your unpublished event
-            new_title: Create a new event
-            published_title: Edit your published event
-            banner_note: Image is best at 950x120
+            unpublished_title: 未公開イベントの編集
+            new_title: 新規イベントの作成
+            published_title: 公開済みイベントの編集
+            banner_note: 推奨サイズ 950x120
 
     account_page:
         events:
@@ -158,6 +163,9 @@ platformd:
             under_construction: "注：Alienware Arenaは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
             edit_your_account: アカウント情報の編集
             change_your_password: パスワードの変更
+        giveaway:
+            your_giveaway_keys: 取得済みキー
+
     about:
         title: Alienware Arena™について
 

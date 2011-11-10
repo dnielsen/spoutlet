@@ -14,6 +14,6 @@ fos_user_profile_form_user_username: "ユーザー名:"
 fos_user_profile_form_user_firstname: "名:"
 fos_user_profile_form_user_lastname: "姓:"
 fos_user_profile_form_user_email: "メールアドレス:"
-fos_user_profile_form_user_is_organizer: "Organizer:"
-fos_user_profile_form_user_is_super_admin: "Super-admin:"
+fos_user_profile_form_user_is_organizer: "主催者:"
+fos_user_profile_form_user_is_super_admin: "スーパーアドミン:"
 

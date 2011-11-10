@@ -7,8 +7,8 @@ platformd:
         register_title: Arenaアカウントの作成
 
         register:
-            requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
-            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
+            requirements: Alienware Arenaに参加するにはアカウントが必要です。
+            already: "Alienware Arenaアカウントを既にお持ちですか？この手順をスキップして、今すぐログインしてください。"
             terms_label: サービス規約
             privacy_label: プライバシーポリシー
             country_label: 国の選択
@@ -41,6 +41,6 @@ platformd:
 
 # registration drop-down choices
 "Select one": "----お選びください ----"
-"Live event": "イベント"
-"Search engine": "検索サイト"
+"Live event": "ライブイベント"
+"Search engine": "検索エンジン"
 "Other": "その他"

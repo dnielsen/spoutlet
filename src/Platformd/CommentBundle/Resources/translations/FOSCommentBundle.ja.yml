@@ -1,5 +1,5 @@
 fos_comment_in_reply_to: "返信対象メール"
-platformd.comment.posted_date_label: "Posted on"
+platformd.comment.posted_date_label: "投稿日"
 
 fos_comment_comment_new_headline_first:       最初のコメントを投稿
 fos_comment_comment_new_headline:             コメントの追加

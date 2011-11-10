@@ -1,12 +1,12 @@
 platformd:
     giveaway:
-        giveaway: Giveaway
-        redeem:   Redeem
-        get_key:  GET KEY
+        giveaway: プレゼント
+        redeem:   引き換え
+        get_key:  キー入手
         no_keys_left: There are no keys available for this giveaway
         max_ip_limit: Your IP address does not have access to any more keys
         already_assigned: You were already assigned a key for this giveaway
-        view_giveaway_site: View Giveaway Site
+        view_giveaway_site: プレゼント
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -31,12 +31,10 @@ platformd:
             giveaways: Giveaways
         assigned:
             message: |
-                You have been assigned a key. You may review this key at any
-                time by visiting your giveaway key page from your Alienware
-                Arena user account panel.
-            may_require_activation: Your key may require activation! Check the giveaway page for details.
-            key: Key
-            assigned_at: Assigned
+                キーが割り当てられました。Alienware Arenaコントロールパネルの取得済みキーでいつでもキーを確認できます。
+            may_require_activation: アクティベーションが必要な場合もあります。詳細は、プレゼントページをご覧ください。
+            key: キー
+            assigned_at: プレゼント
     giveaway_pool:
         pool: Giveaway pool
         admin:
