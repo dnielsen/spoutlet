@@ -55,8 +55,16 @@ class GiveawayController extends Controller
 
         $pool = $giveaway->getActivePool();
 
+        // check the IP limit
         if (!$this->getKeyRepository()->canIpHaveMoreKeys($request->getClientIp(), $pool)) {
             $this->setFlash('error', 'platformd.giveaway.max_ip_limit');
+
+            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        }
+
+        // does this user already have a key?
+        if ($this->getKeyRepository()->doesUserHaveKeyForGiveaway($this->getUser(), $giveaway)) {
+            $this->setFlash('error', 'platformd.giveaway.already_assigned');
 
             return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
         }

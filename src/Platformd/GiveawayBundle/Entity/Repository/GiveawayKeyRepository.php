@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Util\KeyCounterUtil;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
  * GiveawayKey  Repository
@@ -175,6 +176,32 @@ class GiveawayKeyRepository extends EntityRepository
         ;
 
         return $currentCount < $pool->getMaxKeysPerIp();
+    }
+
+    /**
+     * Determines whether or not the given user has a key for any pool from
+     * the given Giveaway
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return bool
+     */
+    public function doesUserHaveKeyForGiveaway(User $user, Giveaway $giveaway)
+    {
+        $count = (int)$this
+            ->createQueryBuilder('k')
+            ->select('COUNT(k.id)')
+            ->leftJoin('k.pool', 'p')
+            ->andWhere('k.user = :user')
+            ->andWhere('p.giveaway = :giveaway')
+            ->setParameters(array(
+                'user'      => $user,
+                'giveaway'  => $giveaway,
+            ))
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $count > 0;
     }
 
     /**
