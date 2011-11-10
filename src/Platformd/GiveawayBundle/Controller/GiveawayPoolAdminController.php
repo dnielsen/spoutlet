@@ -142,18 +142,14 @@ class GiveawayPoolAdminController extends Controller
      */
     protected function savePool(GiveawayPool $pool) 
     {
-        $manager = $this
-            ->getDoctrine()
-            ->getEntityManager();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($pool);
+        $em->flush();
 
-        if ($loadedKeys = $pool->loadKeysFromFile()) {
-            foreach ($loadedKeys as $key) {
-                $manager->persist($key);
-            }
+        if ($pool->getKeysfile()) {
+            $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
+            $loader->loadKeysFromFile($pool->getKeysfile(), $pool);
         }
-        
-        $manager->persist($pool);
-        $manager->flush();
 
         $this->setFlash('success', 'platformd.giveaway_pool.admin.saved');
     }

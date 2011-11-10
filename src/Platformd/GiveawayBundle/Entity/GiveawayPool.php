@@ -226,35 +226,4 @@ class GiveawayPool
 
         return $this->keysfile;
     }
-
-    /**
-     * Take an "Symfony\Component\HttpFoundation\File\UploadedFile" and load its content
-     * @return ArrayCollection
-     */ 
-    public function loadKeysFromFile()
-    {
-        if (is_null($this->keysfile)) {
-
-            return;
-        }
-
-        try {
-            $content = $this->keysfile->openFile();
-
-            while (!$content->eof()) {
-                $value = $content->fgets();
-                if (!$value || empty($value)) {
-                    continue;
-                }
-
-                $key = new GiveawayKey($value);
-                $key->setPool($this);
-                $this->giveawayKeys->add($key);
-            }
-            
-            return $this->giveawayKeys;
-        } catch(\RuntimeException $e) {
-            // Handle error
-        }
-    }
 }
