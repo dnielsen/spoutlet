@@ -81,7 +81,7 @@ platformd:
             landing_image_url: "/images/AWinvades-jp.jpg"
 
         bottom_menu:
-            contact_us: "お問い合わせ &"
+            contact_us: "お問い合わせ"
             privacy_policy: プライバシーポリシー
             terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
@@ -167,7 +167,7 @@ platformd:
             your_giveaway_keys: 取得済みキー
 
     about:
-        title: Alienware Arena™について
+        title: Alienware Arenaについて
 
     general:
         alienware_link_url: http://www.alienware.jp/

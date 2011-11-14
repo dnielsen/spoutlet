@@ -40,7 +40,7 @@ class User extends BaseUser
      * @ORM\Column(type="string", length="255", nullable=true)
      *
      * @Assert\NotBlank(groups={"Registration"})
-     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $firstname;
@@ -51,7 +51,7 @@ class User extends BaseUser
      * @ORM\Column(type="string", length="255", nullable=true)
      *
      * @Assert\NotBlank(groups={"Registration"})
-     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $lastname;

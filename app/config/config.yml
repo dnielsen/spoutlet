@@ -86,14 +86,15 @@ fos_user:
 parameters:
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
-        alienware: Alienware
+        alienware: source_alienware
         cevo: CEVO
+        it_news_site: Tech News Site
+        email: Email
         facebook: Facebook
-        mixi:  Mixi
-        live_event: Live event
-        ea: EA
-        search_engine: Search engine
+        twitter: Twitter
         youtube: Youtube
+        friends: Friends or Family
+        blog: Blog
         other: Other
     platformd.prefectures:
         ja:

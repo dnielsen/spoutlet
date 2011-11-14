@@ -41,6 +41,9 @@ platformd:
 
 # registration drop-down choices
 "Select one": "Select one"
+source_alienware: Alienware
+"Tech News Site": Tech News Site
+"Email": 邮箱
 "Live event": "Live event"
 "Search engine": "Search engine"
 "Other": "Other"

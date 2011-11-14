@@ -26,7 +26,7 @@ platformd:
             active:   Active
             blank_value: Choose status
         show:
-            availaible_keys: Availaible keys : %%count%%
+            availaible_keys: キー残数: %%count%%
         giveaways_listings:
             giveaways: Giveaways
         assigned:

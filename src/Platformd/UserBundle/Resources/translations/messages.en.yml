@@ -39,3 +39,6 @@ platformd:
             help: Help
 
 "Bad credentials": "Invalid username or password"
+
+# for sources drop-down on registration
+source_alienware: Alienware
