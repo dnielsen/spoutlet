@@ -51,20 +51,7 @@
                         </div>
 
                         <ol>
-                            <li>
-                                <span class="item">
-                                    <a href="{{ path('fos_user_registration_register') }}">
-                                        {{ 'platformd.create_account_or_login' | trans }}
-                                    </a>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="item">
-                                    <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">
-                                        {{ 'platformd.giveaway.get_key' | trans }}
-                                    </a>
-                                </span>
-                            </li>
+                            {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
                             {% for redemptionStep in redemptionSteps %}
                             <li>
                                 <span class="item">{{ redemptionStep | raw }}</span>

@@ -2,7 +2,7 @@ giveaway_name: "名称"
 giveaway_content: "说明"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"
-giveaway_redemptionInstructions: Redemption Instructions
+giveaway_redemptionInstructionsArray: Redemption Instructions
 giveway_pool_giveaway: Giveaway
 giveway_pool_description: Description
 giveway_pool_maxKeysPerIp: Max/IP

@@ -10,7 +10,21 @@
 
     {{ form_row(form.status) }}
 
-    {{ form_row(form.redemptionInstructions) }}
+    <div class="form_row redemption-instructions-inputs">
+        {{ form_label(form.redemptionInstructionsArray) }}
+        {{ form_errors(form.redemptionInstructionsArray) }}
+
+        <ol class="normal-margin">
+            {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
+            {% for redemptionForm in form.redemptionInstructionsArray %}
+                <li>
+                    {{ form_widget(redemptionForm) }}
+                </li>
+            {% endfor %}
+        </ol>
+        {{ form_widget(form.redemptionInstructionsArray) }}
+    </div>
+
     <div class="form-help">{{ 'platformd.giveaway.admin.redemption_instructions_note' | trans }}</div>
 
     {{ form_row(form.bannerImageFile) }}

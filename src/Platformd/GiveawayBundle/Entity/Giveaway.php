@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Platformd\GiveawayBundle\Entity\Giveaway
  *
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Giveaway extends AbstractEvent
 {
@@ -184,6 +185,17 @@ class Giveaway extends AbstractEvent
     }
 
     /**
+     * Allows you to set the redemption instructions where each step is
+     * an item in an array
+     *
+     * @param array $instructions
+     */
+    public function setRedemptionInstructionsArray(array $instructions)
+    {
+        $this->setRedemptionInstructions(implode("\n", $instructions));
+    }
+
+    /**
      * Returns the "active" pool, which is just the first one we find that
      * is indeed active
      *
@@ -196,5 +208,16 @@ class Giveaway extends AbstractEvent
                 return $pool;
             }
         }
+    }
+
+    /**
+     * Makes sure the redemption instructions are trimmed
+     *
+     * @ORM\prePersist
+     * @ORM\preUpdate
+     */
+    public function trimRedemptionInstructions()
+    {
+        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
     }
 }

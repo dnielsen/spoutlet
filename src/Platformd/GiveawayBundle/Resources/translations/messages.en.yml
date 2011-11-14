@@ -15,10 +15,8 @@ platformd:
             save_giveaway: Save Giveaway
             edit_title: Edit your Giveaway
             redemption_instructions_note: |
-                Create a new line for each "instruction" step. HTML tags
-                are accepted (e.g. <a href="/events">Link to events</a>).
-                The first two steps - about creating an account and getting
-                the key - will automatically be added.
+                Each box is a redemption step - leave blank any boxes you
+                don't need. You can also use HTML (e.g. <a href="/events">Link to events</a>).
             manage_pools: Manage pools
         status:
             disabled: Totally disabled

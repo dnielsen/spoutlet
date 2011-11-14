@@ -2,7 +2,7 @@ giveaway_name: "名前"
 giveaway_content: "説明"
 giveaway_bannerImageFile: "バナー画像"
 giveaway_status: "Status"
-giveaway_redemptionInstructions: Redemption Instructions
+giveaway_redemptionInstructionsArray: Redemption Instructions
 giveway_pool_giveaway: プレゼント
 giveway_pool_description: Description
 giveway_pool_maxKeysPerIp: Max/IP

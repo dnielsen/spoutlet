@@ -20,7 +20,7 @@ a.button:hover {
   color: #ddd;
 }
 
-ul.normal-margin {
+ul.normal-margin, ol.normal-margin {
     margin-left: 40px;
 }
 
@@ -250,4 +250,9 @@ span.required {
 #eventHeader {
     height: 120px;
     max-width: 950px;
+}
+
+.redemption-instructions-inputs input {
+    margin-bottom: 5px;
+    width: 300px;
 }

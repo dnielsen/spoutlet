@@ -22,13 +22,9 @@ class GiveawayAdminController extends Controller
     public function newAction(Request $request)
     {
     	$giveaway = new Giveaway();
-        // give them some sample stuff
-        $giveaway->setRedemptionInstructions(<<<EOT
-Open EA's Origin client (or download it <a href="http://www.origin.com/about">here</a> if you don't already have it installed).
-Click the cog icon, select "Redeem Product Code" and enter your dog tag code.
-Your dog tog will be unlocked the next time you play Battlefield 3.
-EOT
-        );
+
+        // guarantee we have at least 5 open giveaway boxes
+        $this->setupEmptyRedemptionInstructions($giveaway);
 
     	$form = $this->createForm(new GiveawayType(), $giveaway);
 
@@ -45,12 +41,16 @@ EOT
     		}
     	}
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array('form' => $form->createView(),));
+    	return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
+            'form' => $form->createView(),
+            'giveaway' => $giveaway,
+        ));
     }
 
     public function editAction(Request $request, $id)
     {
         $giveaway = $this->getGiveawayRepo()->findOneById($id);
+        $this->setupEmptyRedemptionInstructions($giveaway);
 
         if (!$giveaway) {
             throw $this->createNotFoundException('No giveaway for that id');
@@ -80,6 +80,16 @@ EOT
         }
 
         return $giveaway;
+    }
+
+    private function setupEmptyRedemptionInstructions(Giveaway $giveaway)
+    {
+        $instructions = $giveaway->getRedemptionInstructionsArray();
+        while (count($instructions) < 5) {
+            $instructions[] = '';
+        }
+
+        $giveaway->setRedemptionInstructionsArray($instructions);
     }
 
     private function saveGiveaway(Form $giveawayForm)
