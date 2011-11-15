@@ -71,8 +71,12 @@
 
                     <div class="widget-content" id="giveaway-details">
                         {{ giveaway.content | raw }}
+
                     </div><!-- giveaway-details -->
+                    
+
                 </div><!-- giveaway-info -->
+                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": giveaway.slug } %}
             </div><!-- left -->
             
             <div class="clear">
