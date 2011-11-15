@@ -107,3 +107,17 @@
 [DoctrineMigrationsBundle]
     git=http://github.com/symfony/DoctrineMigrationsBundle.git
     target=/bundles/Symfony/Bundle/DoctrineMigrationsBundle
+
+[Gaufrette]
+    git=git@github.com:knplabs/Gaufrette.git
+
+[KnpGaufretteBundle]
+    git=git@github.com:knplabs/KnpGaufretteBundle.git
+    target=bundles/Knp/KnpGaufretteBundle
+
+[MediaExposer]
+    git=git@github.com:knplabs/MediaExposer.git
+
+[KnpMediaExposerBundle]
+    git=git@github.com:knplabs/KnpMediaExposerBundle.git
+    target=bundles/Knp/KnpMediaExposerBundle
