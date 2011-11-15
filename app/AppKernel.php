@@ -29,6 +29,7 @@ class AppKernel extends Kernel
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),

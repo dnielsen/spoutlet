@@ -227,3 +227,6 @@ knp_gaufrette:
         platformd.banner:
             adapter: platformd.banner
             alias: banner_filesystem
+
+knp_media_exposer:
+    base_url: http://%base_host%
