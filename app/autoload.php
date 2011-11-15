@@ -3,6 +3,8 @@
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
+require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
+
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
     'Symfony'                        => array(__DIR__.'/../vendor/symfony/src', __DIR__.'/../vendor/bundles'),

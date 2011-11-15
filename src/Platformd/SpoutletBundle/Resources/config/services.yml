@@ -2,6 +2,13 @@ parameters:
 #    spoutlet.example.class: Platformd\SpoutletBundle\Example
 
 services:
-#    spoutlet.example:
-#        class: %spoutlet.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+  platformd.s3: 
+    class: AmazonS3
+    arguments:
+      - %s3.access_key%
+      - %s3.secret_key%
+
+#<service id="acme.s3.adapter" class="Gaufrette\Adapter\AmazonS3">
+#    <argument type="service" id="acme.s3"></argument>
+#    <argument>%acme.s3.bucket_name%</argument>
+#</service>
