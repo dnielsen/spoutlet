@@ -23,3 +23,8 @@ services:
         calls:
             - [ setContainer, ['@service_container'] ]
             - [ setFilesystem, ['@avatar_filesystem']]
+
+    platformd.avatar_resolver:
+        class:  'Platformd\Userbundle\AvatarPathResolver'
+        tags:
+            - { name: 'knp_media_exposer.resolver' }
