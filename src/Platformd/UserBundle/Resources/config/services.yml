@@ -22,3 +22,4 @@ services:
         parent: fos_user.user_manager.default
         calls:
             - [ setContainer, ['@service_container'] ]
+            - [ setFilesystem, ['@avatar_filesystem']]

@@ -113,7 +113,7 @@
 
 [KnpGaufretteBundle]
     git=git@github.com:knplabs/KnpGaufretteBundle.git
-    target=bundles/Knp/KnpGaufretteBundle
+    target=/bundles/Knp/Bundle/GaufretteBundle
 
 [MediaExposer]
     git=git@github.com:knplabs/MediaExposer.git

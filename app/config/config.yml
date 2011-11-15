@@ -211,3 +211,19 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+
+knp_gaufrette:
+    adapters:
+        platformd.avatar:
+            local:
+                directory: %kernel.root_dir%/../web/uploads/avatars
+        platformd.banner:
+            local:
+                directory: %kernel.root_dir%/../web/uploads/banners
+    filesystems:
+        platformd.avatar:
+            adapter: platformd.avatar
+            alias: avatar_filesystem
+        platformd.banner:
+            adapter: platformd.banner
+            alias: banner_filesystem
