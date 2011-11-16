@@ -22,3 +22,6 @@
     recaptcha.private_key =
 
     base_host         = site.com
+
+    s3.access_key     =
+    s3.secret_key     =
