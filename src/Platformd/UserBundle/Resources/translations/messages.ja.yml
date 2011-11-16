@@ -10,7 +10,7 @@ platformd:
             requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
             already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
             terms_label: サービス規約
-            privacy_label: プライバシーポリシー
+            dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
 
         login:
@@ -29,15 +29,17 @@ platformd:
             spam_message: 重要：スパムフォルダをご確認ください。一部のメールフィルタにより、弊社からのメールが「迷惑メール」として分類されることがあります。パスワードがリセットされるまでに、最大30分かかる場合があります。通常は、数秒でリセットされますが、弊社からのリセット通知のメールが遅れることがあります。
 
         account:
-            account_home: Account Home
-            edit_account: Edit Account
-            change_password: Change Password
-            profile:      Profile
-            registered_events: Registered Events
-            my_giveaways: My Giveaways
-            help: ヘルプが必要ですか?
+            account_home: アカウントホーム
+            edit_account: アカウント編集
+            change_password: パスワード変更
+            profile:      プロファイル
+            registered_events: 参加済みイベントEvents
+            my_giveaways: 参加済みキャンペーン
+            help: お問い合わせ
 
 "Bad credentials": "Invalid username or password"
+"The presented password is invalid.": "Invalid username or password"
+"The presented password cannot be empty.": "Please enter a password"
 
 # registration drop-down choices
 "Select one": "----お選びください ----"

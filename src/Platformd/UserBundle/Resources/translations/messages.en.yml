@@ -10,7 +10,7 @@ platformd:
             requirements: Participation in the Alienware Arena requires an account.
             already: "Already have an Alienware Arena Account? Skip this step and <login now>."
             terms_label: Terms & Conditions
-            privacy_label: Privacy Policy
+            dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
 
         login:
@@ -38,7 +38,9 @@ platformd:
             my_giveaways: My Giveaways
             help: Help
 
-"Bad credentials": "Invalid username or password"
+"Bad credentials": "Invalid email or password"
+"The presented password is invalid.": "Invalid email or password"
+"The presented password cannot be empty.": "Please enter a password"
 
 # for sources drop-down on registration
 source_alienware: Alienware
