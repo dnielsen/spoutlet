@@ -138,19 +138,19 @@ ul.normal-margin, ol.normal-margin {
 
 /* registration page */
 .fos_user_registration_register label, .label_space {
-    width: 350px;
+    width: 300px;
     text-align: right;
     margin-right: 10px;
 }
 .fos_user_registration_register input.button {
-    margin-left: 360px;
+    margin-left: 310px;
     margin-top: 10px;
 }
 .fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
-    margin-left: 360px;
+    margin-left: 310px;
 }
 .floating_form_container {
-    margin-left: 363px;
+    margin-left: 313px;
 }
 .fos_user_registration_register #recaptcha_widget_div {
     margin-bottom: 10px;
