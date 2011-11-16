@@ -25,6 +25,22 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
+                {{ 'platformd.giveaway.giveaways_listings.giveaways' | trans }}
+            </div>
+        </div>
+
+        <div class="widget-content">
+            {% include 'GiveawayBundle:Giveaway:_giveawayList.html.twig' with {
+                'giveaways': giveaways,
+                'no_events_message': 'platformd.events.event_listings.no_active_giveaways'
+            } %}
+        </div>
+
+    </div><br />
+
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
                 {{ 'platformd.events.event_listings.past_events' | trans }}
             </div>
         </div>

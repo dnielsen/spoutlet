@@ -18,6 +18,14 @@
                 <a class="widget-link" href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a>
             </div>
             {% endfor %}
+
+            {# also list giveaways here #}
+            {# @todo this might change later - how should we be "mixing" events and giveaways #}
+            {% for giveaway in all_giveaways %}
+               <div class="widget-item">
+                   <a class="widget-link" href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a>
+               </div>
+            {% endfor %}
         </div>
         <div id="featured-content-featured-giveaways" class="featured-content-category">
         	{% for giveaway in all_giveaways %}
