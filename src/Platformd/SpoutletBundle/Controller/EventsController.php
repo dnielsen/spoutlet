@@ -106,22 +106,6 @@ class EventsController extends Controller
 
 		return $this->redirect($this->generateUrl('events_detail', array('slug' => $event->getSlug())));
 	}
-
-	/**
-	 * @return Doctrine\Common\Collections\Collection
-	 */
-	private function getCurrentEvents()
-	{
-		return $this->getEventsRepo()->getCurrentEvents();
-	}
-
-	/**
-	 * @return Doctrine\Common\Collections\Collection
-	 */
-	private function getUpcomingEvents()
-	{
-		return $this->getEventsRepo()->getUpcomingEvents();
-	}
 	
 	/**
 	 * @return Plateformd\SproutletBundle\Entity\EventRepository
