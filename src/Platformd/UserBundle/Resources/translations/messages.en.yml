@@ -12,6 +12,7 @@ platformd:
             terms_label: Terms & Conditions
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
 
         login:
             title: Login to your account

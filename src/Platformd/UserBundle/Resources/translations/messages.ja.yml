@@ -12,6 +12,7 @@ platformd:
             terms_label: サービス規約
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
 
         login:
             title: アカウントにログイン

@@ -10,6 +10,10 @@ PlatformDUserBundle:
     resource: "@UserBundle/Resources/config/routing/admin.yml"
     prefix:   /admin/users
 
+PlatformDUserBundle_registration:
+    resource: "@UserBundle/Resources/config/routing/registration.yml"
+    prefix:   /
+
 PlatformDGiveawayBundle:
     resource: "@GiveawayBundle/Resources/config/routing.yml"
     prefix:   /
