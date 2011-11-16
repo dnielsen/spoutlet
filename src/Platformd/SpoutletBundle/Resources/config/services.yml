@@ -2,13 +2,15 @@ parameters:
 #    spoutlet.example.class: Platformd\SpoutletBundle\Example
 
 services:
-  platformd.s3: 
-    class: AmazonS3
-    arguments:
-      - %s3.access_key%
-      - %s3.secret_key%
-
-#<service id="acme.s3.adapter" class="Gaufrette\Adapter\AmazonS3">
-#    <argument type="service" id="acme.s3"></argument>
-#    <argument>%acme.s3.bucket_name%</argument>
-#</service>
+    platformd.s3: 
+        class: AmazonS3
+        arguments:
+            - %s3.access_key%
+            - %s3.secret_key%
+    
+    platformd.path_resolver:
+        class:  'Platformd\SpoutletBundle\PathResolver'
+        public: false
+        abstract: true
+        calls:
+            - [ setBucket, [ "platformd-testing" ]]

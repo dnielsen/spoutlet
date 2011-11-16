@@ -28,11 +28,11 @@ services:
         class:  'Platformd\Userbundle\AvatarPathResolver'
         arguments:
             - @avatar_filesystem
-        calls:
-            - [ setBucket, [ "platformd-testing", @platformd.s3]]
+            - avatar
+        parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
-
+        
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
         arguments:

@@ -118,8 +118,9 @@ class UserManager extends BaseUserManager
             return;
         }
 
-        $filename = 'avatar-'.sha1($user->getUsername().'-'.uniqid()).'.'.$user->file->guessExtension();
-        $this->filesystem->write($filename, file_get_contents($user->file->getPathname()));
+        // todo : use config
+        $filename = sha1($user->getUsername().'-'.uniqid()).'.'.$user->file->guessExtension();
+        $this->filesystem->write('avatar/'.$filename, file_get_contents($user->file->getPathname()));
 
         $user->setAvatar($filename);
         $user->disapproveAvatar();
