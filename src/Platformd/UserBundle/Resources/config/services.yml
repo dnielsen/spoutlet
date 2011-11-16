@@ -28,8 +28,8 @@ services:
         class:  'Platformd\Userbundle\AvatarPathResolver'
         arguments:
             - @avatar_filesystem
-#        calls:
-#            - [ setBucket, [ "platformd-testing", @platformd.s3]]
+        calls:
+            - [ setBucket, [ "platformd-testing", @platformd.s3]]
         tags:
             - { name: 'knp_media_exposer.resolver' }
 
