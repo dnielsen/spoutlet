@@ -9,6 +9,13 @@
     database_user     = root
     database_password =
 
+    session_database_driver = pdo_mysql
+    session_database_host = localhost
+    session_database_port = 
+    session_database_name = platformd_sessions
+    session_database_user = root
+    session_database_password = 
+
     mailer_transport  = smtp
     mailer_host       = localhost
     mailer_user       =
