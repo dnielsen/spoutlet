@@ -16,6 +16,8 @@ framework:
         default_locale: %locale%
         auto_start:     true
         domain:         .%base_host%
+        storage_id:     session.storage.pdo
+
 
 # Twig Configuration
 twig:
@@ -211,3 +213,15 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+
+services:
+    pdo_session:
+        class: PDO
+        arguments:
+            dsn:      "mysql:dbname=%session_database_name%"
+            user:     %session_database_user%
+            password: %session_database_password%
+
+    session.storage.pdo:
+        class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
+        arguments: [@pdo_session, %session.storage.options%, { db_table: %session_database_table% }]
