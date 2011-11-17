@@ -20,7 +20,7 @@ class EventManager
         $this->manager = $manager;
     }
 
-    public function save(Event $event)
+    public function save(AbstractEvent $event)
     {
         // Todo : handle upload to S3
         $this->updateBannerImage($event);
@@ -33,7 +33,7 @@ class EventManager
      *
      * @param \Platformd\SpoutletBundle\Entity\Event $event
      */
-    protected function updateBannerImage(Event $event)
+    protected function updateBannerImage(AbstractEvent $event)
     {   
         $file = $event->getBannerImageFile();
 

@@ -88,12 +88,10 @@ EOT
         $giveaway = $giveawayForm->getData();
         $giveaway->setLocale($this->get('session')->getLocale());
 
-        $giveaway->updateBannerImage();
-
-        $em = $this->getEntityManager();
-        $em->persist($giveaway);
-        $em->flush();
-
+        $this
+            ->get('platformd.events_manager')
+            ->save($giveaway);
+            
         $this
             ->getRequest()
             ->getSession()
