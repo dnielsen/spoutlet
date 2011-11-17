@@ -2,7 +2,6 @@
 	<div class="featured-content-header">
         <a href="javascript:void(0);" class="active" id="featured-news">{{ 'platformd.layout.main_menu.news' | trans }}</a>
         {% if not onlyNews %}
-		<a href="javascript:void(0);" id="featured-events">{{ 'platformd.layout.page_content.all' | trans }}</a>
         <a href="javascript:void(0);" id="featured-giveaways">{{ 'platformd.layout.page_content.giveaways' | trans }}</a>
         {% endif %}
 		<div style="clear: left;"></div>
@@ -12,21 +11,6 @@
         	{% include 'SpoutletBundle:News:launch.html.twig' %}
         </div>
         {% if not onlyNews %}
-        <div id="featured-content-featured-events" class="featured-content-category">
-        	{% for event in all_events %}
-            <div class="widget-item">
-                <a class="widget-link" href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a>
-            </div>
-            {% endfor %}
-
-            {# also list giveaways here #}
-            {# @todo this might change later - how should we be "mixing" events and giveaways #}
-            {% for giveaway in all_giveaways %}
-               <div class="widget-item">
-                   <a class="widget-link" href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a>
-               </div>
-            {% endfor %}
-        </div>
         <div id="featured-content-featured-giveaways" class="featured-content-category">
         	{% for giveaway in all_giveaways %}
             <div class="widget-item">
@@ -38,7 +22,6 @@
     </div>
     <div class="widget-footer">
         <a href="{{ path('news') }}" class="aw-link" id="featured-footer-featured-news">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
-        <a href="{{ path('events_index') }}" class="aw-link" id="featured-footer-featured-events" style="display: none;">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         <div class="clear"></div>
     </div>
 </div>
