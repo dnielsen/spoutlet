@@ -1,0 +1,3 @@
+NewsBundle_homepage:
+    pattern:  /admin/news
+    defaults: { _controller: NewsBundle:Admin:index }
