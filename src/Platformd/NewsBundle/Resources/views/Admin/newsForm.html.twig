@@ -1,7 +1,11 @@
 <form method="post" action="{{ route }}" class="form">
     {{ form_row(form.title) }}
 
-    {{ form_row(form.body) }}
+    <div class="form_row">
+        {{ form_label(form.body) }}
+        {{ form_errors(form.body) }}
+        {{ form_widget(form.body, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
 
     {{ form_rest(form) }}
 
