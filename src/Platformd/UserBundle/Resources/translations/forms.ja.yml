@@ -7,7 +7,7 @@ fos_user_registration_form_termsAccepted: |
     および
     <a href="%privacy_url%" target="_blank">プライバシーポリシー</a>
     を読んだ上、同意します。
-fos_user_registration_form_subscribedAlienwareEvents: "最新の景品、コンテスト、イベント、その他に関してのお知らせをAlienware Arena からE-メールで受け取ります。"
+fos_user_registration_form_subscribedAlienwareEvents: 最新の景品、コンテスト、イベント、その他に関してのお知らせを Alienware ArenaからE-メールで受け取れます。
 fos_user_registration_form_subscribedGamingNews: "Alienware/Dell ゲーム情報やキャンペーン情報をE-メールで受け取ります。"
 
 fos_user_profile_form_user_username: "ユーザー名:"
