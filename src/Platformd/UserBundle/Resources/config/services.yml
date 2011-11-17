@@ -32,9 +32,3 @@ services:
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
-        
-    platformd.avatar.s3.adapter:
-        class: Gaufrette\Adapter\AmazonS3
-        arguments:
-            - @platformd.s3
-            - "platformd-testing"
