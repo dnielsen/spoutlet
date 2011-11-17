@@ -6,7 +6,7 @@
 <div id="content">
     <div class="std_1col">
         {% if event.bannerImage %}
-            <div id="eventHeader" style="background:url('{{ asset(event.webPath) }}') no-repeat; height: 120px;"></div>
+            <div id="eventHeader" style="background:url('{{ asset(media_path(event)) }}') no-repeat; height: 120px;"></div>
         {% endif %}
     </div>
 
