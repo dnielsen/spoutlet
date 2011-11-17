@@ -1,0 +1,9 @@
+<form method="post" action="{{ route }}" class="form">
+    {{ form_row(form.title) }}
+
+    {{ form_row(form.body) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" class="button" value="{{ "platformd.news.admin.save_news" | trans }}" formnovalidate />
+</form>

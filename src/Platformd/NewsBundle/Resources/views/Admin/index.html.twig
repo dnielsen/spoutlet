@@ -12,12 +12,32 @@
 
         <div class="widget-content">
             <table width="100%">
+                <thead>
+                    <tr>
+                        <th>{{ "" | trans }}</th>
+                        <th>{{ "" | trans }}</th>
+                    </tr>
+                </thead>
+
                 <tbody>
+                    {% for item in news %}
+                    <tr>
+                        <td>{{ item.title }}</td>
+                        <td>Edit - Delete</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
 
     </div>
+
+
+    <div class="widget-footer">
+        <a class="aw-link" href="{{ path('NewsBundle_admin_new') }}" style="margin-right:10px;">{{ "platformd.news.admin.create" | trans }}</a>
+        <div class="clear"></div>
+    </div>
+
 </div>
 <div style="width:100%;text-align:right;padding-top:20px;"></div>
 {% endblock %}
