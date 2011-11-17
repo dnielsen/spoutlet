@@ -23,7 +23,9 @@
                     {% for item in news %}
                     <tr>
                         <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
-                        <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">Edit</a> - Delete</td>
+                        <td>
+                            <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">Edit</a> - 
+                            <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -40,4 +42,17 @@
 
 </div>
 <div style="width:100%;text-align:right;padding-top:20px;"></div>
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $("a.delete_link").bind("click", function(event) {
+            if (!confirm("{{ 'platformd.news.admin.confirm_delete' | trans }}")) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+
+            console.log($("<form />", { "method":"post", "action":$(this).attr("href")}).submit().remove());
+        })     
+    });
+</script>
 {% endblock %}

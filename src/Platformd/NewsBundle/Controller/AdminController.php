@@ -93,4 +93,27 @@ class AdminController extends Controller
             'news' => $news
         ));   
     }
+
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $news = $em
+            ->getRepository('NewsBundle:News')
+            ->findOneBy(array('id' => $id));
+        
+        if (!$news) {
+
+            throw $this->createNotFoundException('Unable to retrieve news item #'.$id);
+        }
+
+        $em->remove($news);
+        $em->flush();
+
+        $this
+            ->getRequest()
+            ->getSession()
+            ->setFlash('notice', 'Your news item has been deleted!');
+                
+        return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+    }
 }

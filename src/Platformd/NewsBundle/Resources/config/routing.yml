@@ -9,3 +9,7 @@ NewsBundle_admin_new:
 NewsBundle_admin_edit:
     pattern:  /admin/news/{id}/edit
     defaults: { _controller: NewsBundle:Admin:edit }
+
+NewsBundle_admin_delete:
+    pattern:  /admin/news/{id}/delete
+    defaults: { _controller: NewsBundle:Admin:delete }
