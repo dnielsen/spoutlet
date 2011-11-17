@@ -78,6 +78,7 @@ platformd:
             ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
             deals_add_url: "/images/ads/cn-deals.jpg"
             landing_image_url: "/images/AWinvades-cn.jpg"
+            landing_image_target: '/news'
 
         bottom_menu:
             contact_us: 联系我们
