@@ -2,7 +2,6 @@
                 <tbody>
                     <tr>
                         <th style="width:659px;">{{ 'platformd.giveaway.giveaway' | trans }}</th>
-                        <th style="width:212px;">{{ 'platformd.giveaway.giveaway_listings.keys_remaining' | trans }}</th>
                     </tr>
                     {% if giveaways|length == 0 %}
                     <tr>
@@ -15,9 +14,6 @@
                     {% for giveaway in giveaways %}
                     <tr class="eventListGroup_online">
                         <td><a href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a></td>
-                        <td>
-                            XXXXXX
-                        </td>
                     </tr>
                     {% endfor %}
                     {% endif %}
