@@ -12,7 +12,7 @@ fos_user_registration_form_email_second: "確認のためもう一度ご入力�
 fos_user_registration_form_latestNewsSource: "どこでAlienwareArena を知りましたか？"
 
 fos_user_profile_form_user_lastname: "姓"
-fos_user_profile_form_user_firstname: "姓"
+fos_user_profile_form_user_firstname: "名"
 fos_user_profile_form_user_file: "アバター"
 fos_user_profile_form_current_avatar: "現在のアバター"
 

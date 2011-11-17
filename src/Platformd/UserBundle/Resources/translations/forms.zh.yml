@@ -7,6 +7,7 @@ fos_user_registration_form_termsAccepted: "已阅读并同意相关条款及隐�
 fos_user_registration_form_subscribedAlienwareEvents: "通过邮件订阅Alienware Arena最新邀请码、比赛、活动以及更多精彩内容。"
 fos_user_registration_form_subscribedGamingNews: "邮件订阅Alienware/Dell游戏资讯及其他特别信息"
 
+# I don't believe these (or some of these) are used - they are in FOSUserBundle.*.yml
 fos_user_profile_form_user_username: "用户名"
 fos_user_profile_form_user_firstname: "名字"
 fos_user_profile_form_user_lastname: "姓"

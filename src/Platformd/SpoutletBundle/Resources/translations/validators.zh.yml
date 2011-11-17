@@ -24,3 +24,5 @@ state_not_blank: Please enter a state
 "This value is not a valid captcha":  验证码无效
 
 "You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
+
+"The entered password is invalid.": The entered password is invalid.

@@ -24,3 +24,5 @@ state_not_blank: 都道府県を選択してください
 "This value is not a valid captcha": 有効なcaptcha値ではありません
 
 "You must accept the terms and conditions and the privacy policy": サービス規約とプライバシーポリシー をお読みになりチェックをしてください。
+
+"The entered password is invalid.": 入力されたパスワードが無効です

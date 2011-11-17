@@ -1,6 +1,6 @@
 platformd:
     comment:
-        login_to_comment: ログインされていません。最初にログインしてからメッセージを残してください。
+        login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
         comments: コメント
             
     
