@@ -83,6 +83,7 @@ registration.submit: 登録
 registration.flash.user_created: ユーザーが正常に作成されました
 
 registration.email: |
+    Alienware Arena 登録確認
     %username%様ようこそ。
 
     アカウントの認証を完了するため、%confirmationUrl%にアクセスしてください。
@@ -101,10 +102,11 @@ resetting.reset.submit: パスワードの変更
 resetting.flash.success: パスワードが正常にリセットされました
 
 resetting.email: |
+    Alienware Arena パスワード確認
     パスワードのリセット
     %username%様、こんにちは。
 
-    パスワードをリセットするには、%confirmationUrl%にアクセスしてください。
+    パスワードをリセットするには、%confirmationUrl% にアクセスしてください。
 
     よろしくお願いします。
     チーム一同より
