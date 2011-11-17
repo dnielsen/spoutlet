@@ -34,15 +34,15 @@ platformd:
             edit_account: アカウント編集
             change_password: パスワード変更
             profile:      プロファイル
-            registered_events: 参加済みイベントEvents
+            registered_events: 参加済みイベント
             my_giveaways: 参加済みキャンペーン
             help: お問い合わせ
 
 # I'm not sure how we have two different potential "wrong password messages"...
-"Bad credentials": "パスワードが無効です"
-"The presented password is invalid.": "パスワードが無効です"
-"The presented password cannot be empty.": "Please enter a password"
-"User account is disabled.": アカウントが無効です
+"Bad credentials": "ユーザーネームとパスワードが無効ですA"
+"The presented password is invalid.": "ユーザーネームとパスワードが無効ですA"
+"The presented password cannot be empty.": "パスワードを入力してください"
+"User account is disabled.": アカウントが無効で
 
 # registration drop-down choices
 "Select one": "----お選びください ----"
