@@ -7,9 +7,16 @@
 		<div style="clear: left;"></div>
 	</div>
     <div class="widget-content">
+
         <div id="featured-content-featured-news" class="featured-content-category active">
-        	{% include 'SpoutletBundle:News:launch.html.twig' %}
+            {% for item in news %}
+                <div class="widget-item">
+                    <h3>{{ item.title }}</h3>
+                    {{ item.body | raw }}
+                </div>
+            {% endfor %}
         </div>
+
         {% if not onlyNews %}
         <div id="featured-content-featured-events" class="featured-content-category">
         	{% for event in all_events %}

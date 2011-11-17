@@ -19,14 +19,21 @@ class DefaultController extends Controller
      */
     public function featuredContentAction($onlyNews = false)
     {
-    	$all_events = $this->getDoctrine()
-    		->getEntityManager()
+        $em = $this->getDoctrine()
+            ->getEntityManager();
+
+    	$all_events = $em
     		->getRepository('SpoutletBundle:Event')
     		->findPublished($this->get('session')->getLocale());
+        
+        $news = $em
+            ->getRepository('NewsBundle:News')
+            ->findAll();
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'all_events' => $all_events,
-            'onlyNews'   => $onlyNews,
+            'all_events'    => $all_events,
+            'news'          => $news,
+            'onlyNews'      => $onlyNews,
         ));
     }
 

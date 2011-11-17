@@ -26,10 +26,6 @@ microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
 
-news:
-    pattern: /news
-    defaults: { _controller: SpoutletBundle:Default:news }
-
 _spoutlet_admin:
     resource: routing/admin.yml
 
