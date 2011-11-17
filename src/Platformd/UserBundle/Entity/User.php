@@ -39,7 +39,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="first_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
@@ -50,7 +50,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="last_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
@@ -61,7 +61,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      * 
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="birthdate_not_blank")
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
@@ -87,7 +87,7 @@ class User extends BaseUser
      * 
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="state_not_blank")
      */
     protected $state;
 

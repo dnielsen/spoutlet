@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" datatype="plaintext" original="file.ext">
+        <!-- THIS FILE was copied from the core - but renamed so that it is used simple for the zh locale (not the zh_CN locale) -->
         <body>
             <trans-unit id="1">
                 <source>This value should be false</source>

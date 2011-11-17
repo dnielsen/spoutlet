@@ -1,3 +1,8 @@
+first_name_not_blank: Please enter your first name
+last_name_not_blank: Please enter your last name
+birthdate_not_blank: Please enter your birthdate
+state_not_blank: Please enter a state
+
 "The username is already used": 用户名已被使用
 "The email is already used":  邮件地址已被使用
 "Please enter a username":  请输入用户名
@@ -18,8 +23,4 @@
 "The name is too long":  名字过长
 "This value is not a valid captcha":  验证码无效
 
-
-
-
-
-
+"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
