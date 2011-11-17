@@ -1,12 +1,12 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.news.admin.title" | trans }}{% endblock %}
+{% block title %}{{ "platformd.admin.news.heading" | trans }}{% endblock %}
 
 {% block content %}
 <div id="admin-news">
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                {{ "platformd.news.admin.title" | trans }}
+                {{ "platformd.admin.news.heading" | trans }}
             </div>
         </div>
 
@@ -14,8 +14,8 @@
             <table width="100%">
                 <thead>
                     <tr>
-                        <th>{{ "" | trans }}</th>
-                        <th>{{ "" | trans }}</th>
+                        <th>{{ "platformd.admin.news.title" | trans }}</th>
+                        <th>{{ "platformd.help.actions" | trans }}</th>
                     </tr>
                 </thead>
 
@@ -24,19 +24,23 @@
                     <tr>
                         <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
                         <td>
-                            <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">Edit</a> - 
-                            <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">Delete</a></td>
+                            <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ "platformd.admin.news.edit" | trans }}</a> - 
+                            <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">{{ "platformd.admin.news.delete" | trans }}</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            {% if news.haveToPaginate %}
+                {{ pagerfanta(news, 'default', {'routeName' : 'NewsBundle_admin_index'}) }}
+            {% endif %}
         </div>
 
     </div>
 
 
     <div class="widget-footer">
-        <a class="aw-link" href="{{ path('NewsBundle_admin_new') }}" style="margin-right:10px;">{{ "platformd.news.admin.create" | trans }}</a>
+        <a class="aw-link" href="{{ path('NewsBundle_admin_new') }}" style="margin-right:10px;">{{ "platformd.admin.news.create" | trans }}</a>
         <div class="clear"></div>
     </div>
 
@@ -46,7 +50,7 @@
 <script type="text/javascript">
     jQuery(function($) {
         $("a.delete_link").bind("click", function(event) {
-            if (!confirm("{{ 'platformd.news.admin.confirm_delete' | trans }}")) {
+            if (!confirm("{{ 'platformd.admin.news.delete_confirm' | trans }}")) {
                 event.stopPropagation();
                 event.preventDefault();
             }
