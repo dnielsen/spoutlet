@@ -217,24 +217,16 @@ knp_gaufrette:
         platformd.avatar:
             service:
                 id: platformd.avatar.s3.adapter 
-#            local:
-#                directory: %kernel.root_dir%/../web/uploads/avatars
-#        platformd.banner:
-#            local:
-#                directory: %kernel.root_dir%/../web/uploads/banners
-#    filesystems:
-#        platformd.avatar:
-#            adapter: platformd.avatar.s3.adapter #platformd.avatar
-#            alias: avatar_filesystem
-#        platformd.banner:
-#            adapter: platformd.banner
-#            alias: banner_filesystem
-#
-#knp_gaufrette:
+        platformd.event:
+            service:
+                id: platformd.event.s3.adapter 
     filesystems:
         platformd.avatar:
-            adapter: platformd.avatar #platformd.avatar.s3.adapter #platformd.avatar
+            adapter: platformd.avatar
             alias: avatar_filesystem
+        platformd.event:
+            adapter: platformd.event
+            alias: event_filesystem
 
 knp_media_exposer:
     base_url: http://%base_host%

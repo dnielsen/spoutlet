@@ -1,0 +1,6 @@
+services:
+    platformd.events_manager:
+        class: Platformd\SpoutletBundle\Entity\EventManager
+        arguments:
+            - @event_filesystem
+            - @doctrine.orm.entity_manager
