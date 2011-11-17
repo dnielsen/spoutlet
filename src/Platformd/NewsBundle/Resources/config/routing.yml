@@ -5,3 +5,7 @@ NewsBundle_admin_homepage:
 NewsBundle_admin_new:
     pattern:  /admin/news/new
     defaults: { _controller: NewsBundle:Admin:new }
+
+NewsBundle_admin_edit:
+    pattern:  /admin/news/{id}/edit
+    defaults: { _controller: NewsBundle:Admin:edit }

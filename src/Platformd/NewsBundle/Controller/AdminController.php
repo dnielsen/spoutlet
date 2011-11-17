@@ -56,4 +56,41 @@ class AdminController extends Controller
             'form' => $form->createView()
         ));   
     }
+
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $news = $em
+            ->getRepository('NewsBundle:News')
+            ->findOneBy(array('id' => $id));
+
+        if (!$news) {
+
+            throw $this->createNotFoundException('Unable to retrieve news item #'.$id);
+        }
+
+        $form = $this->createForm(new CreateNewsFormType(), $news);
+        $request = $this->getRequest();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+            
+            if ($form->isValid()) {
+                $em->persist($news);
+                $em->flush();
+                
+                $request
+                    ->getSession()
+                    ->setFlash('notice', 'Your news item has been modified!');
+                
+                return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+            }
+        }
+        
+        return $this->render('NewsBundle:Admin:edit.html.twig', array(
+            'form' => $form->createView(),
+            'news' => $news
+        ));   
+    }
 }

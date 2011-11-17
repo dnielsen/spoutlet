@@ -22,8 +22,8 @@
                 <tbody>
                     {% for item in news %}
                     <tr>
-                        <td>{{ item.title }}</td>
-                        <td>Edit - Delete</td>
+                        <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
+                        <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">Edit</a> - Delete</td>
                     </tr>
                     {% endfor %}
                 </tbody>
