@@ -264,6 +264,13 @@ class User extends BaseUser
      */
     public $file;
 
+    /**
+     * Little flag so we know if the avatar was changed on this request
+     *
+     * @var bool
+     */
+    protected $avatarChanged = false;
+
     public function __construct() 
     {
         parent::__construct();
@@ -302,7 +309,7 @@ class User extends BaseUser
         $this->avatar = sha1($this->getUsername().'-'.uniqid()).'.'.$this->file->guessExtension();
         $this->file->move($this->getUploadRootDir(), $this->avatar);
 
-        unset($this->file);
+        $this->avatarChanged = true;
 
         $this->disapproveAvatar();
     }
@@ -848,5 +855,13 @@ class User extends BaseUser
              ->y;
 
         return ($age < 13);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAvatarChanged()
+    {
+        return $this->avatarChanged;
     }
 }

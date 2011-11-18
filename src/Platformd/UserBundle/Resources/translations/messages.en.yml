@@ -46,3 +46,5 @@ platformd:
 
 # for sources drop-down on registration
 source_alienware: Alienware
+
+avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
