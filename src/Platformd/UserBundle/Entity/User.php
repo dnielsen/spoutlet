@@ -580,7 +580,7 @@ class User extends BaseUser
      */
     public function setSubscribedGamingNews($subscribed)
     {
-        $this->subscribedGamingNews;
+        $this->subscribedGamingNews = $subscribed;
     }
 
     /**
@@ -632,9 +632,9 @@ class User extends BaseUser
         return $this->manufacturer;
     }
 
-    public function setManufacturer($manufactuer) 
+    public function setManufacturer($manufacturer)
     {
-        $this->manufacturer;
+        $this->manufacturer = $manufacturer;
     }
 
     public function getOperatingSystem()
