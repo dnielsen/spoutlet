@@ -90,16 +90,7 @@ platformd:
             link_url: "http://alienware.com"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
-    help: 
-        help_page:
-            contact_and_support: Contact Us & Support
-            contact_dell: For questions about products or support please contact Dell directly at <a href="http://support.dell.com" target="_blank">http://support.dell.com</a>
-            contact_alienwarearena: For general Alienware Arena inquiries you may contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
-            regional_addresses: Regional Addresses
-            regional_addresses_north_america: North America
-            regional_addresses_europe: Europe
-            regional_addresses_latin_america: Latin america
-            questions: For questions or assistance with specific events refer to the 'support' link on the respective event micro-site. 
+    help:
         actions: Actions
     users:
         user_listings:

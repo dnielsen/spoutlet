@@ -91,15 +91,6 @@ platformd:
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
-        help_page:
-            contact_and_support: お問合せ＆サポート
-            contact_dell: 製品またはサポートについてのご質問は、Dell (http://support.dell.com) に直接連絡してください。
-            contact_alienwarearena: Alienware Arenaについての一般的なお問い合わせは、contact@alienwarearena.comまでお寄せください。
-            regional_addresses: 各地域のメールアドレス
-            regional_addresses_north_america: 北米
-            regional_addresses_europe: 欧州
-            regional_addresses_latin_america: 中南米
-            questions: 特定のイベントについてのご質問またはサポートは、該当するイベントのマイクロサイトで「サポート」リンクを参照してください。
         actions: 操作
     users:
         user_listings:

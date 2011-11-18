@@ -32,11 +32,6 @@ class DefaultController extends Controller
         ));
     }
 
-    public function supportAction()
-    {
-        return $this->render('SpoutletBundle:Default:support.html.twig');
-    }
-
     public function microsoftAction()
     {
         $image = sprintf('microsoft.%s.jpg', $this->getLocale());
