@@ -81,7 +81,8 @@ fos_user:
         form:
             type: platformd_user_profile
     service:
-        user_manager: platformd_user.manager 
+        user_manager: platformd_user.manager
+        mailer:       platformd_user.mailer
 
 parameters:
     sender_email_address: "noreply@%base_host%"

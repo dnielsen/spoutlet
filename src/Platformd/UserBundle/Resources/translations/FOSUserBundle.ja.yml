@@ -82,14 +82,19 @@ registration.back: 元のページに戻る
 registration.submit: 登録
 registration.flash.user_created: ユーザーが正常に作成されました
 
+# the first line is the subject of the email
 registration.email: |
     Alienware Arena 登録確認
-    %username%様ようこそ。
+    <h3>%username%様ようこそ。</h3>
 
-    アカウントの認証を完了するため、%confirmationUrl%にアクセスしてください。
+    <p>
+        アカウントの認証を完了するため、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+    </p>
 
-    よろしくお願いします。
+    <p>
+    よろしくお願いします。<br/>
     チーム一同より
+    </p>
 
 
 # Password resetting
@@ -101,15 +106,19 @@ resetting.request.submit: パスワードのリセット
 resetting.reset.submit: パスワードの変更
 resetting.flash.success: パスワードが正常にリセットされました
 
+# the first line is the subject of the email
 resetting.email: |
-    Alienware Arena パスワード確認
-    パスワードのリセット
-    %username%様、こんにちは。
+    Alienware Arena パスワードのリセット
+    <h3>%username%様、こんにちは。</h3>
 
-    パスワードをリセットするには、%confirmationUrl% にアクセスしてください。
+    <p>
+        パスワードをリセットするには、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+    </p>
 
-    よろしくお願いします。
+    <p>
+    よろしくお願いします。<br/>
     チーム一同より
+    </p>
 
 
 # Global strings

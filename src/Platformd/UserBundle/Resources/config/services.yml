@@ -22,3 +22,8 @@ services:
         parent: fos_user.user_manager.default
         calls:
             - [ setContainer, ['@service_container'] ]
+
+    # our custom mailer
+    platformd_user.mailer:
+        class: Platformd\UserBundle\Mailer\Mailer
+        parent: fos_user.mailer.default

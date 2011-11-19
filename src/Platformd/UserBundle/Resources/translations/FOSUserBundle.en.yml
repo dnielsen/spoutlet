@@ -82,14 +82,20 @@ registration.back: Back to the originating page.
 registration.submit: Register
 registration.flash.user_created: The user has been created successfully
 
+# the first line is the subject of the email
 registration.email: |
     Welcome %username%!
-    Hello %username%!
+    <h3>Hello %username%!</h3>
 
-    To finish validating your account - please visit %confirmationUrl%
+    <p>
+        To finish validating your account - please click the following link
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
 
-    Regards,
+    <p>
+    Regards,<br/>
     the Team.
+    </p>
 
 # Password resetting
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
@@ -100,14 +106,20 @@ resetting.request.submit: Reset my Password
 resetting.reset.submit: Change password
 resetting.flash.success: The password has been reset successfully
 
+# the first line is the subject of the email
 resetting.email: |
     Reset Password
-    Hello %username%!
+    <h3>Hello %username%!</h3>
 
-    To reset your password - please visit %confirmationUrl%
+    <p>
+        To reset your password - please visit
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
 
-    Regards,
+    <p>
+    Regards,<br/>
     the Team.
+    </p>
 
 # Global strings
 layout.logout: Logout

@@ -82,12 +82,19 @@ registration.back: 返回起始页
 registration.submit: 注册
 registration.flash.user_created: 创建用户成功
 
+# the first line is the subject of the email
 registration.email: |
     %username%，欢迎你！
-    %username%， 你好！
-    请登录%confirmationUrl%完成账号验证。
-    致敬
+    <h3>%username%， 你好！</h3>
+
+    <p>
+        请登录<a href="%confirmationUrl%">%confirmationUrl%</a>完成账号验证。
+    </p>
+
+    <p>
+    致敬<br/>
     团队
+    </p>
 
 # Password resetting
 resetting.password_already_requested: 请不要在24小时之内重复发送获取密码请求。
@@ -98,12 +105,19 @@ resetting.request.submit: 重设密码
 resetting.reset.submit: 修改密码
 resetting.flash.success: 密码已重置
 
+# the first line is the subject of the email
 resetting.email: |
     重置密码
-    你好%username%！
-    要重置密码，请访问%confirmationUrl%
-    致敬
+    <h3>你好%username%！</h3>
+
+    <p>
+        要重置密码，请访问<a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
+
+    <p>
+    致敬<br/>
     团队
+    </p>
 
 # Global strings
 layout.logout: 登出
