@@ -71,7 +71,7 @@ fos_user:
     user_class:      Platformd\UserBundle\Entity\User
     from_email:
         address:        %sender_email_address%
-        sender_name:    noreply
+        sender_name:    AlienwareArena
     registration:
         form:
             type: platformd_user_registration
