@@ -9,13 +9,13 @@ platformd:
         body: お探しのページが見つかりません
 
     flash:
-        error_title: Error!
+        error_title: エラー！
         success_title: 成功！
 
     layout:
-        # title used by default (if not overriden)
+        # title used by default (if not overridden)
         default_title: Alienware Arena - ゲーマー募集中
-        # title user by default in Admin area (if not overriden)
+        # title user by default in Admin area (if not overridden)
         default_admin_title: 管理者
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
