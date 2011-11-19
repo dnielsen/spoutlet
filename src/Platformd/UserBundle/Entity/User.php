@@ -864,4 +864,17 @@ class User extends BaseUser
     {
         return $this->avatarChanged;
     }
+
+    /**
+     * Overridden so that this is shorter - the client wanted a shorter URL
+     *
+     * @return string
+     */
+    protected function generateToken()
+    {
+        $token = parent::generateToken();
+        $length = 6;
+
+        return substr($token, 0, $length);
+    }
 }
