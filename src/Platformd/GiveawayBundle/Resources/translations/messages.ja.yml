@@ -5,7 +5,7 @@ platformd:
         get_key:  キー入手
         no_keys_left: There are no keys available for this giveaway
         max_ip_limit: Your IP address does not have access to any more keys
-        already_assigned: あなたは既にこのプレゼントのためのキーが割り当てられていました
+        already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
         admin:
             title: Giveaway admin
