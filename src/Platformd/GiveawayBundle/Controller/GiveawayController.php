@@ -55,6 +55,13 @@ class GiveawayController extends Controller
 
         $pool = $giveaway->getActivePool();
 
+        if (!$pool) {
+            // repeated below if there is no unassigned keys
+            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
+
+            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        }
+
         // check the IP limit
         if (!$this->getKeyRepository()->canIpHaveMoreKeys($request->getClientIp(), $pool)) {
             $this->setFlash('error', 'platformd.giveaway.max_ip_limit');

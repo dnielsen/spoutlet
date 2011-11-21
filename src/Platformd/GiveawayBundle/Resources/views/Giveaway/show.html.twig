@@ -46,9 +46,11 @@
                     </div>
                     <div class="widget-content">
                         <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
-                        <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
-                            <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
-                        </div>
+                        {% if available_keys > 0 %}
+                            <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
+                                <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
+                            </div>
+                        {% endif %}
 
                         <ol>
                             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
