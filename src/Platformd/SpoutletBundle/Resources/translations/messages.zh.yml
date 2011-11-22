@@ -132,10 +132,10 @@ platformd:
             approved: 活动"%event_title%" 已获批准即将发布
             unknown: 未知活动#%event_id% !
             save_event: 保存活动
-            unpublished_title: Edit your unpublished event
-            new_title: Create a new event
-            published_title: Edit your published event
-            banner_note: Image is best at 950x120
+            unpublished_title: "管理未发布活动"
+            new_title: "创建新事件"
+            published_title: "管理已发布活动"
+            banner_note: "图像尺寸950x120为最佳"
 
     account_page:
         events:
