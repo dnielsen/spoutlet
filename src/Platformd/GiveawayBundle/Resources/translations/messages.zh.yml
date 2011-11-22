@@ -1,46 +1,43 @@
 platformd:
     giveaway:
-        giveaway: Giveaway
-        redeem:   Redeem
-        get_key:  GET KEY
-        no_keys_left: There are no keys available for this giveaway
-        max_ip_limit: Your IP address does not have access to any more keys
+        giveaway: 邀请码
+        redeem:   操作说明
+        get_key:  获取邀请码
+        no_keys_left: 该邀请码没有可用的激活码
+        max_ip_limit: 你的IP地址
         already_assigned: You were already assigned a key for this giveaway
-        view_giveaway_site: View Giveaway Site
+        view_giveaway_site: 查看邀请码站点
         admin:
-            title: Giveaway admin
-            edit_giveaway: Edit Giveaway | %giveaway_title%
-            create: Create New Giveaway
-            saved: Giveaway has been saved.
-            save_giveaway: Save Giveaway
-            edit_title: Edit your Giveaway
+            title: 管理邀请码
+            edit_giveaway: 编辑邀请码 | %giveaway_title%
+            create: 创建新的邀请码
+            saved: 邀请码已保存
+            save_giveaway: 保存邀请码
+            edit_title: y编辑你的邀请码
             redemption_instructions_note: |
-                Each box is a redemption step - leave blank any boxes you
-                don't need. You can also use HTML (e.g. <a href="/events">Link to events</a>).
+                每一栏都是一个步骤-如果不需要，请留空。你也可以使用HTML (e.g. <a href="/events">Link to events</a>)。
             manage_pools: Manage pools
         status:
-            disabled: Totally disabled
-            inactive: Active but with zero keys
-            active:   Active
-            blank_value: Choose status
+            disabled: 完全不可用
+            inactive: 已激活但无剩余激活码
+            active:   已激活
+            blank_value: 选择状态
         show:
-            availaible_keys: Availaible keys : %%count%%
+            availaible_keys: 可用的激活码 : %%count%%
         giveaways_listings:
-            giveaways: Giveaways
+            giveaways: 邀请码
         assigned:
             message: |
-                You have been assigned a key. You may review this key at any
-                time by visiting your giveaway key page from your Alienware
-                Arena user account panel.
-            may_require_activation: Your key may require activation! Check the giveaway page for details.
-            key: Key
-            assigned_at: Assigned
+                已经为您分配激活码。您可以随时访问你的邀请码激活码页面在Alienware Arena用户管理面板查看该激活码。
+            may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
+            key: 激活码
+            assigned_at: 已分配
     giveaway_pool:
-        pool: Giveaway pool
+        pool: 邀请码库
         admin:
-            title: Giveaway pools for "%giveaway_name%"
-            create: Create a new pool
-            edit_pool: Edit pool
-            save_giveaway_pool: Save giveaway pool
-            saved: Giveaway pool has been saved.
-        first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
+            title: "%giveaway_name%" 的邀请码库
+            create: 创建新的邀请码库
+            edit_pool: 编辑邀请码库
+            save_giveaway_pool: 保存邀请码库
+            saved: 邀请码库已保存
+        first_active_used: 注：第一个“激活库”将是站点目前正在使用的。
