@@ -1,16 +1,16 @@
 giveaway_name: "名前"
 giveaway_content: "説明"
 giveaway_bannerImageFile: "バナー画像"
-giveaway_status: "Status"
-giveaway_redemptionInstructionsArray: Redemption Instructions
+giveaway_status: "ステータス"
+giveaway_redemptionInstructionsArray:  回復指示
 giveway_pool_giveaway: プレゼント
-giveway_pool_description: Description
-giveway_pool_maxKeysPerIp: Max/IP
-giveway_pool_upperLimit: Upper limit
-giveway_pool_lowerLimit: Lower limit
-giveway_pool_isActive: Active
-giveway_pool_keysfile: Keys file
+giveway_pool_description:  説明
+giveway_pool_maxKeysPerIp:  最大IP
+giveway_pool_upperLimit:  上限
+giveway_pool_lowerLimit:  下限
+giveway_pool_isActive:  有効
+giveway_pool_keysfile:  キーファイル
 
 # not an actual field - but used on the index page
-giveway_pool_lower_upper_display: L/U Display
-giveway_pool_assigned_total: Assigned/Total
+giveway_pool_lower_upper_display: L/Uディスプレー
+giveway_pool_assigned_total:  アサイン/合計
