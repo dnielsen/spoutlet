@@ -75,13 +75,13 @@ ul.normal-margin, ol.normal-margin {
 
 /* change password */
 .fos_user_change_password label {
-    width: 110px;
+    width: 150px;
 }
 .fos_user_change_password input.button {
-    margin-left: 110px;
+    margin-left: 150px;
 }
 .fos_user_change_password ul.form-msg-error {
-    margin-left: 110px;
+    margin-left: 150px;
 }
 
 /* comments */
