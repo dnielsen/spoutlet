@@ -13,6 +13,7 @@ platformd:
             dell_privacy_label: 隐私条款
             country_label: 选择国家
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+            name_fields: %first_name% %last_name%
 
         login:
             title: 登陆您的账户

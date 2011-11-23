@@ -17,9 +17,10 @@
 
     {{ form_row(form.plainPassword) }}
 
-    {{ form_row(form.firstname) }}
-
-    {{ form_row(form.lastname) }}
+    {{ 'platformd.user.register.name_fields' | trans({
+        '%first_name%': form_row(form.firstname),
+        '%last_name%': form_row(form.lastname)
+    }) | raw }}
 
     <div class="form_row">
         {{ form_errors(form.birthdate) }}
