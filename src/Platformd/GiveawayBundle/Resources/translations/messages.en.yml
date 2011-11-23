@@ -35,6 +35,7 @@ platformd:
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
             assigned_at: Assigned
+            view_giveaway: View Giveaway
     giveaway_pool:
         pool: Giveaway pool
         admin:

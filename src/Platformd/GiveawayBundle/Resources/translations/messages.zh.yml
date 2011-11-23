@@ -32,6 +32,7 @@ platformd:
             may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
             key: 激活码
             assigned_at: 已分配
+            view_giveaway: View Giveaway
     giveaway_pool:
         pool: 邀请码库
         admin:

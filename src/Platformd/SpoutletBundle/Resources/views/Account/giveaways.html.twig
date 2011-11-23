@@ -24,13 +24,13 @@
                                         <th>{{ 'platformd.giveaway.giveaway' | trans }}</th>
                                         <th>{{ 'platformd.giveaway.assigned.key' | trans }}</th>
                                         <th>{{ 'platformd.giveaway.assigned.assigned_at' | trans }}</th>
-                                        <th></th>
+                                        <th>{{ 'platformd.giveaway.assigned.view_giveaway' | trans }}</th>
                                     </tr>
                                     {% for giveawayKey in giveawayKeys %}
                                     <tr>
                                         <td>{{ giveawayKey.pool.giveaway.name }}</td>
                                         <td>{{ giveawayKey.value }}</td>
-                                        <td>{{ giveawayKey.assignedAt | date('D, M jS') }}</td>
+                                        <td>{{ giveawayKey.assignedAt | date('m-d-Y') }}</td>
                                         <td>
                                             <a href="{{ path('giveaway_show', {'slug': giveawayKey.pool.giveaway.slug} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
                                         </td>

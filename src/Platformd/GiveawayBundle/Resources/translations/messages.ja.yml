@@ -32,7 +32,8 @@ platformd:
                 キーが割り当てられました。Alienware Arenaコントロールパネルの取得済みキーでいつでもキーを確認できます。
             may_require_activation: アクティベーションが必要な場合もあります。詳細は、プレゼントページをご覧ください。
             key: キー
-            assigned_at: プレゼント
+            assigned_at: 日付
+            view_giveaway: 情報
     giveaway_pool:
         pool: ギブアウェイプール
         admin:
