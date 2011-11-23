@@ -6,6 +6,8 @@ platformd:
 
         register_title: Arenaアカウントの作成
 
+        name_fields_order: %last_name% %first_name%
+
         register:
             requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
             already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
@@ -13,7 +15,6 @@ platformd:
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
             underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
-            name_fields: %last_name% %first_name%
 
         login:
             title: アカウントにログイン

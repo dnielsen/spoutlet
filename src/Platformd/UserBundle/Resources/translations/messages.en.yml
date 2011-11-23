@@ -6,6 +6,8 @@ platformd:
 
         register_title: Create Arena Account
 
+        name_fields_order: %first_name% %last_name%
+
         register:
             requirements: Participation in the Alienware Arena requires an account.
             already: "Already have an Alienware Arena Account? Skip this step and <login now>."
@@ -13,7 +15,6 @@ platformd:
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
-            name_fields: %first_name% %last_name%
 
         login:
             title: Login to your account

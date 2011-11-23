@@ -17,7 +17,7 @@
 
     {{ form_row(form.plainPassword) }}
 
-    {{ 'platformd.user.register.name_fields' | trans({
+    {{ 'platformd.user.name_fields_order' | trans({
         '%first_name%': form_row(form.firstname),
         '%last_name%': form_row(form.lastname)
     }) | raw }}
