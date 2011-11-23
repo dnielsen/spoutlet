@@ -10,7 +10,7 @@ platformd:
 
     flash:
         error_title: エラー！
-        success_title: 成功！
+        success_title: 登録完了
 
     layout:
         # title used by default (if not overridden)
