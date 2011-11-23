@@ -6,7 +6,7 @@
 		<script type="text/javascript">
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
- 
+
         {% block stylesheets %}
 		    {% stylesheets
 		        'bundles/spoutlet/css/*'
@@ -123,27 +123,26 @@
                             {% elseif (app.session.hasFlash('success')) %}
                                 {% set sessionFlashType = 'success' %}
                             {% else %}
-                                {% set sessionFlashType = false %}
+                                {% set sessionFlashType = block('flash_type') %}
                             {% endif %}
 
-                            {% if block('flash_type') or sessionFlashType %}
-                                {% set flashType = block('flash_type') ? block('flash_type') : sessionFlashType %}
+                            {% if  sessionFlashType %}
                                 <div class="xnotices">
-                                    <div class="{{ flashType }}Notice notice">
+                                    <div class="{{ sessionFlashType }}Notice notice">
                                         <div class="pad">
                                             <div class="pad2">
                                                 <div class="pad3">
                                                     <div class="pad4">
-                                                        {% if sessionFlashType %}
-                                                            {#
-                                                                funny, I had to set this as a variable - concatenating
-                                                                and translating the string all in one line was a fail
-                                                            #}
-                                                            {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
-                                                            <h3>
-                                                                {{ flashTitleKey | trans }}
-                                                            </h3>
+                                                        {#
+                                                            funny, I had to set this as a variable - concatenating
+                                                            and translating the string all in one line was a fail
+                                                        #}
+                                                        {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
+                                                        <h3>
+                                                            {{ flashTitleKey | trans }}
+                                                        </h3>
 
+                                                        {% if app.session.getFlash(sessionFlashType) %}
                                                             <p>
                                                                 {{ app.session.getFlash(sessionFlashType) | trans }}
                                                             </p>
