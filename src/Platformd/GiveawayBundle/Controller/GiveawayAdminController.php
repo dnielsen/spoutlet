@@ -98,13 +98,21 @@ class GiveawayAdminController extends Controller
         $giveaway = $giveawayForm->getData();
         $giveaway->setLocale($this->getLocale());
 
-        $giveaway->updateBannerImage();
-
-        $em = $this->getEntityManager();
-        $em->persist($giveaway);
-        $em->flush();
-
+        $this
+            ->get('platformd.events_manager')
+            ->save($giveaway);
+            
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
+     */
+    private function getGiveawayRepo()
+    {
+        return $this->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+        ;
     }
 
     private function getEntityManager()

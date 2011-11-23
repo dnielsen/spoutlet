@@ -118,11 +118,15 @@ class AdminController extends Controller
         $event = $event_form->getData();
         $event->setLocale($this->get('session')->getLocale());
 
-        $event->updateBannerImage();
+        /*$event->updateBannerImage();
 
         $em = $this->getEventsManager();
         $em->persist($event);
-        $em->flush();
+        $em->flush();*/
+
+        $this
+            ->get('platformd.events_manager')
+            ->save($event);
 
         $this->setFlash('success', $this->get('translator')->trans('platformd.events.admin.saved'));
     }

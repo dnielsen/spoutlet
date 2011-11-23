@@ -2,6 +2,27 @@ parameters:
 #    spoutlet.example.class: Platformd\SpoutletBundle\Example
 
 services:
-#    spoutlet.example:
-#        class: %spoutlet.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    platformd.s3: 
+        class: AmazonS3
+        arguments:
+            - %s3.access_key%
+            - %s3.secret_key%
+    
+    platformd.path_resolver:
+        class:  'Platformd\SpoutletBundle\PathResolver'
+        public: false
+        abstract: true
+        calls:
+            - [ setBucket, [ "platformd-testing" ]]
+
+    platformd.avatar.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "platformd-testing"
+
+    platformd.event.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "platformd-testing"

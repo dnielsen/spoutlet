@@ -230,19 +230,6 @@ class AbstractEvent
         return '/uploads/events';
     }
 
-    public function updateBannerImage()
-    {
-        if (null == $this->bannerImageFile) {
-
-            return;
-        }
-
-        $this->bannerImage = sha1($this->getId().'-'.uniqid()).'.'.$this->bannerImageFile->guessExtension();
-        $this->bannerImageFile->move($this->getUploadRootDir(), $this->bannerImage);
-
-        unset($this->bannerImageFile);
-    }
-
     public function getAbsolutePath()
     {
         if (!$this->bannerImage) {

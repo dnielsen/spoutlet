@@ -4,12 +4,20 @@ namespace Platformd\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
+
+use Gaufrette\Filesystem;
+
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserManager extends BaseUserManager
 {
     const DEFAULT_SORTING_FIELD = 'email';
+
+    /**
+     * @var \Gaufrette\Filesystem
+     */
+    protected $filesystem;
 
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
@@ -41,7 +49,7 @@ class UserManager extends BaseUserManager
     public function updateUser(UserInterface $user, $andFlush = true)
     {
         if ($user instanceof User) {
-            $user->updateAvatar();
+            $this->updateAvatar($user);
         }
 
         parent::updateUser($user, $andFlush);
@@ -90,6 +98,32 @@ class UserManager extends BaseUserManager
     public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
+    }
+
+    public function setFilesystem(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+    }
+
+    /** 
+     * Update a user's avatar
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    protected function updateAvatar(User $user)
+    {   
+        // User didn't upload a new avatar
+        if (is_null($user->file)) {
+
+            return;
+        }
+
+        // todo : use config
+        $filename = sha1($user->getUsername().'-'.uniqid()).'.'.$user->file->guessExtension();
+        $this->filesystem->write('avatar/'.$filename, file_get_contents($user->file->getPathname()));
+
+        $user->setAvatar($filename);
+        $user->disapproveAvatar();
     }
 
     private function getLocale()

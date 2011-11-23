@@ -214,3 +214,22 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+
+knp_gaufrette:
+    adapters:
+        platformd.avatar:
+            service:
+                id: platformd.avatar.s3.adapter 
+        platformd.event:
+            service:
+                id: platformd.event.s3.adapter 
+    filesystems:
+        platformd.avatar:
+            adapter: platformd.avatar
+            alias: avatar_filesystem
+        platformd.event:
+            adapter: platformd.event
+            alias: event_filesystem
+
+knp_media_exposer:
+    base_url: http://%base_host%
