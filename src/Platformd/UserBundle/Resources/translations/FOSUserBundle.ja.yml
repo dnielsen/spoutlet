@@ -1,7 +1,7 @@
 # some labels are on the "forms" domain
 fos_user_registration_form_username: "ユーザー名:"
-fos_user_registration_form_firstname: "姓 (漢字もしくは英字):"
-fos_user_registration_form_lastname: "名 (漢字もしくは英字):"
+fos_user_registration_form_firstname: "名 (漢字もしくは英字):"
+fos_user_registration_form_lastname: "姓 (漢字もしくは英字):"
 fos_user_registration_form_phoneNumber: "電話番号:"
 fos_user_registration_form_country: "国:"
 fos_user_registration_form_state: "都道府県:"
