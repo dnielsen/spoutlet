@@ -21,7 +21,7 @@
                 <tr class="{{ index is odd ? "odd" : "even" }}">
                     <td>
                         {% if user.avatar %}
-                            <a href="{{ user.webPath }}" title="See avatar in real size"><img src="{{user.webPath }}" alt="{{ user.username }}" width="100" /></a>
+                            <a href="{{ asset(media_path(user)) }}" title="See avatar in real size"><img src="{{ asset(media_path(user)) }}" alt="{{ user.username }}" width="100" /></a>
                         {% endif %}
                     </td>
                     <td>{{ user.username }}</td>
