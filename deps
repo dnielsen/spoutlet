@@ -110,6 +110,7 @@
 
 [Gaufrette]
     git=git@github.com:knplabs/Gaufrette.git
+    target=/gaufrette
 
 [aws-sdk]
     git=https://github.com/amazonwebservices/aws-sdk-for-php
