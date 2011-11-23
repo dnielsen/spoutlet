@@ -3,12 +3,12 @@ last_name_not_blank: 名前を入力してください
 birthdate_not_blank: 生年月日を選択してください
 state_not_blank: 都道府県を選択してください
 
-"The username is already used": ユーザー名が既に使用されています。
+"The username is already used": ユーザー名が既に使用されています
 "The email is already used": メールアドレスが既に使用されています
 "Please enter a username": ユーザー名を入力してください
 "The username is too short": ユーザー名が短すぎます
 "The username is too long": ユーザー名が長すぎます
-"Please enter an email": 既に使われています。
+"Please enter an email": 既に使われています
 "The email is too short": メールアドレスが短すぎます
 "The email is too long": メールアドレスが長すぎます
 "The email is not valid": メールアドレスが有効ではありません
@@ -23,6 +23,6 @@ state_not_blank: 都道府県を選択してください
 "The name is too long": 名前が長すぎます
 "This value is not a valid captcha": 有効なcaptcha値ではありません
 
-"You must accept the terms and conditions and the privacy policy": サービス規約とプライバシーポリシー をお読みになりチェックをしてください。
+"You must accept the terms and conditions and the privacy policy": サービス規約とプライバシーポリシー をお読みになりチェックをしてください
 
 "The entered password is invalid.": 入力されたパスワードが無効です
