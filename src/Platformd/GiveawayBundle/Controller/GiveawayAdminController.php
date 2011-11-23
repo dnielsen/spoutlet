@@ -105,16 +105,6 @@ class GiveawayAdminController extends Controller
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
 
-    /**
-     * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
-     */
-    private function getGiveawayRepo()
-    {
-        return $this->getEntityManager()
-            ->getRepository('GiveawayBundle:Giveaway')
-        ;
-    }
-
     private function getEntityManager()
     {
         return $this->getDoctrine()
