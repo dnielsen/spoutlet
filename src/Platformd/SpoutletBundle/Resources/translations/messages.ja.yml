@@ -145,7 +145,10 @@ platformd:
     account_page:
         events:
             no_registered_events: 現在、どのイベントにも登録していません。
-            join_event_message: イベントに参加するには、マイクロサイトで「登録」リンクからおねがいします。<br/> 参加したイベントを確認する場合は　「参加済みキャンペーン」をクリックしてください 。
+            join_event_message: |
+                イベントに参加するには、マイクロサイトで「登録」リンクからおねがいします。
+                <br/>
+                参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
             hello_user: "こんにちは%firstname%さん。ユーザーネーム%username%でログイン中です。"
