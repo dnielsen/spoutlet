@@ -120,7 +120,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #headerPad { height: 139px; /*padding-top:68px;*/ }
 #topHeader { padding: 5px 0; height: 14px; background: url('/bundles/spoutlet/images/top_nav_bg.png') repeat-x; }
 /* header left */
-#header .left { float:left; width:310px; height:30px; }
+#header .left { float:left; width:280px; height:30px; }
 #header .left a { color:#b3b3b3; }
 #header .left .change { font-size: 9px; }
 
@@ -188,7 +188,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #selectLanguage p { margin: 6px 0 6px 0; }
 
 /* header right */
-#header .right { float:right; width:630px; height:24px; }
+#header .right { float:right; width:660px; height:24px; }
 /* header links */
 #header .links { height:16px; }
 #header .links ul { list-style:none; float:right; }
