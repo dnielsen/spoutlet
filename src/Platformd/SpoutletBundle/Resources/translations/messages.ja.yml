@@ -99,7 +99,7 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: マイ・イベント
+            your_registered_events: 参加済みイベント
             current_events: 現在のイベント
             current_and_upcoming_events: 現在および将来のイベント
             more_current_events: 現在のイベントをもっと表示
