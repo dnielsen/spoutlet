@@ -1,0 +1,15 @@
+services:
+  platformd.homepage_banner.s3.adapter:
+    class: Gaufrette\Adapter\AmazonS3
+    arguments:
+      - @platformd.s3
+      - "%s3_bucket_name%"
+    calls:
+      - [ "setDirectory", [ "homepage-banners"]]
+
+  platformd.homepage_banner.manager:
+    class: Platformd\SpoutletBundle\Entity\HomepageBannerManager
+    arguments:
+      - @doctrine.orm.entity_manager
+      - @homepage_banners_filesystem
+

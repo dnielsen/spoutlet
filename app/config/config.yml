@@ -245,6 +245,9 @@ knp_gaufrette:
         platformd.event:
             service:
                 id: platformd.event.s3.adapter 
+        platformd.homepage_banners:
+            service:
+                id: platformd.homepage_banner.s3.adapter
     filesystems:
         platformd.avatar:
             adapter: platformd.avatar
@@ -252,6 +255,9 @@ knp_gaufrette:
         platformd.event:
             adapter: platformd.event
             alias: event_filesystem
+        platformd.homepage_banners:
+            adapter: platformd.homepage_banners
+            alias: homepage_banners_filesystem
 
 knp_media_exposer:
     base_url: http://%base_host%
