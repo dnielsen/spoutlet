@@ -605,6 +605,9 @@ class User extends BaseUser
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+
+        // set a flag so we can give the user a message
+        $this->avatarChanged = true;
     }
 
     public function getWebPath()

@@ -18,6 +18,7 @@ class ProfileController extends BaseProfileController
         // then user has a new avatar that must need approving
         $form = $this->container->get('fos_user.profile.form');
         $user = $form->getData()->user;
+
         if ($response instanceof RedirectResponse && $user->isAvatarChanged()) {
             // just do a sanity check, make sure they *do* need approval
 
