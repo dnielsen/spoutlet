@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\Userbundle;
+namespace Platformd\UserBundle;
 
 use Platformd\SpoutletBundle\PathResolver;
 use Platformd\UserBundle\Entity\User;
