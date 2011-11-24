@@ -99,6 +99,13 @@ parameters:
         friends: Friends or Family
         blog: Blog
         other: Other
+
+    pdo.session_db_options:
+        db_table:    session
+        db_id_col:   session_id
+        db_data_col: session_value
+        db_time_col: session_time
+
     platformd.prefectures:
         ja:
             - 北海道
@@ -221,10 +228,10 @@ services:
     pdo_session:
         class: PDO
         arguments:
-            dsn:      "mysql:dbname=%session_database_name%"
-            user:     %session_database_user%
-            password: %session_database_password%
+            dsn:      "mysql:dbname=%database_name%;host=%database_host%"
+            user:     %database_user%
+            password: %database_password%
 
     session.storage.pdo:
         class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
-        arguments: [@pdo_session, %session.storage.options%, { db_table: %session_database_table% }]
+        arguments: [@pdo_session, %session.storage.options%, %pdo.session_db_options% ]
