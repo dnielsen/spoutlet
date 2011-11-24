@@ -32,7 +32,7 @@
         <div class="std_1col">
 
             {% if giveaway.bannerImage %}
-                <div id="eventHeader" style="background:url('{{ asset(giveaway.webPath) }}') no-repeat;"></div>
+                <div id="eventHeader" style="background:url('{{ asset(media_path(giveaway)) }}') no-repeat;"></div>
             {% endif %}
         </div><!-- std_1col -->
 
