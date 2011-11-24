@@ -299,21 +299,6 @@ class User extends BaseUser
         $this->avatar_approved = false;
     }
 
-    public function updateAvatar()
-    {
-        if (null == $this->file) {
-            
-            return;
-        }
-
-        $this->avatar = sha1($this->getUsername().'-'.uniqid()).'.'.$this->file->guessExtension();
-        $this->file->move($this->getUploadRootDir(), $this->avatar);
-
-        $this->avatarChanged = true;
-
-        $this->disapproveAvatar();
-    }
-
     public function getAbsolutePath() 
     {
         if (!$this->avatar) {
@@ -615,6 +600,11 @@ class User extends BaseUser
     {
         
         return $this->avatar;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 
     public function getWebPath()

@@ -224,6 +224,7 @@ stof_doctrine_extensions:
         default:
             sluggable: true
 
+
 services:
     pdo_session:
         class: PDO
@@ -235,3 +236,22 @@ services:
     session.storage.pdo:
         class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
         arguments: [@pdo_session, %session.storage.options%, %pdo.session_db_options% ]
+
+knp_gaufrette:
+    adapters:
+        platformd.avatar:
+            service:
+                id: platformd.avatar.s3.adapter 
+        platformd.event:
+            service:
+                id: platformd.event.s3.adapter 
+    filesystems:
+        platformd.avatar:
+            adapter: platformd.avatar
+            alias: avatar_filesystem
+        platformd.event:
+            adapter: platformd.event
+            alias: event_filesystem
+
+knp_media_exposer:
+    base_url: http://%base_host%

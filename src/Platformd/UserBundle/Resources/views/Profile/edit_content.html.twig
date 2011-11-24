@@ -17,10 +17,10 @@
     
     {{ form_row(form.current) }}
 
-    {% if app.user.avatar %}
+    {% if app.user.avatar and app.user.isAvatarApproved %}
         <h3>{{ "fos_user_profile_form_current_avatar" | trans({}, 'FOSUserBundle') }}</h3>
         <div class="profileAvatar">
-            <img src="{{ app.user.webPath }}" alt="{{ app.user.username }}" />
+            <img src="{{ media_path(app.user) }}" alt="{{ app.user.username }}" />
         </div>
     {% endif %}
 
