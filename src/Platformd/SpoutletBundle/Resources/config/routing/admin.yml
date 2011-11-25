@@ -33,3 +33,9 @@ admin_homepage_banner_index:
 admin_homepage_banner_new:
     pattern: /admin/homepage-banners/new
     defaults: { _controller: SpoutletBundle:HomepageBanner:new }
+
+admin_homepage_banner_edit:
+    pattern: /admin/homepage-banners/edit/{id}
+    defaults: { _controller: SpoutletBundle:HomepageBanner:edit }
+    requirements:
+        id: \d+

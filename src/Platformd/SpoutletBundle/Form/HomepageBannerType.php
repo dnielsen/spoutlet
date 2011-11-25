@@ -14,8 +14,8 @@ class HomepageBannerType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('thumb_file', 'file')
-            ->add('banner_file', 'file')
+            ->add('thumb_file', 'file', array('required' => false))
+            ->add('banner_file', 'file', array('required' => false))
             ->add('position')
             ->add('url');
     }
