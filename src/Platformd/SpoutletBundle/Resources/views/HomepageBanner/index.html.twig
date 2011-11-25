@@ -17,7 +17,7 @@
                 <td>{{ banner.id }}</td>
                 <td>{{ banner.thumb }}</td>
                 <td>{{ banner.url }}</td>
-                <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">edit</a> | delete</td>
+                <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">edit</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">delete</a></td>
             </tr>
         {% endfor %}
         </tbody>

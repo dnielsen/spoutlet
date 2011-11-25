@@ -63,7 +63,7 @@ class HomepageBannerController extends Controller
             ));
         
         if (!$banner) {
-            
+
             throw $this->createNotFoundException();    
         }
 
@@ -85,6 +85,29 @@ class HomepageBannerController extends Controller
             'banner' => $banner,
             'form' => $form->createView()
         ));
+    }
+
+    public function deleteAction($id)
+    {
+        $manager = $this
+            ->getDoctrine()
+            ->getEntityManager();
+        
+        $banner = $manager
+            ->getRepository('SpoutletBundle:HomepageBanner')
+            ->findOneBy(array('id' => $id));
+        
+        if (!$banner) {
+
+            throw $this->createNotFoundException();
+        }
+
+        $manager->remove($banner);
+        $manager->flush();
+
+        $this->setFlash('notice', 'success');
+        
+        return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
     }
 
     private function getManager()

@@ -39,3 +39,9 @@ admin_homepage_banner_edit:
     defaults: { _controller: SpoutletBundle:HomepageBanner:edit }
     requirements:
         id: \d+
+
+admin_homepage_banner_delete:
+    pattern: /admin/homepage-banners/delete/{id}
+    defaults: { _controller: SpoutletBundle:HomepageBanner:delete }
+    requirements:
+        id: \d+
