@@ -18,7 +18,7 @@ class HomepageBannerManager
   /**
    * @var Gaufrette\Filesystem
    */
-  private $filesystem
+  private $filesystem;
 
   public function __construct(EntityManager $manager, Filesystem $filesystem) 
   {

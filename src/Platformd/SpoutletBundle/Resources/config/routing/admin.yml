@@ -25,3 +25,7 @@ admin_event_unpublish:
 admin_user_approve_avatar:
     pattern: /admin/user/{id}/avatar/approve
     defaults: { _controller: UserBundle:Admin:approveAvatar }
+
+admin_homepage_banner_index:
+    pattern: /admin/homepage-banners
+    defaults: { _controller: SpoutletBundle:HomepageBanner:index }
