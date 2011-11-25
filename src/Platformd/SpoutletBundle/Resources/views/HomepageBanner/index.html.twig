@@ -23,7 +23,7 @@
                 {% for banner in banners %}
                     <tr>
                         <td>{{ banner.id }}</td>
-                        <td>{{ banner.thumb }}</td>
+                        <td><a href="{{ media_path(banner, { "size": banner }) }}"><img src="{{ media_path(banner) }}" alt="Banner thumb" width="50" /></a></td>
                         <td>{{ banner.url }}</td>
                         <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.edit" | trans }}</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.delete" | trans }}</a></td>
                     </tr>
