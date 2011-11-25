@@ -13,3 +13,11 @@ services:
       - @doctrine.orm.entity_manager
       - @homepage_banners_filesystem
 
+  platformd.homepage_banner_resolver:
+    class:  'Platformd\SpoutletBundle\HomepageBannerPathResolver'
+    arguments:
+      - @homepage_banners_filesystem
+      - homepage-banners
+    parent: platformd.path_resolver
+    tags:
+      - { name: 'knp_media_exposer.resolver' }
