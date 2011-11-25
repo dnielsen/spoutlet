@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>banner</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        {% for banner in banners %}
+            <tr>
+                <td>{{ banner.id }}</td>
+                <td>{{ banner.thumb }}</td>
+                <td>edit | delete</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

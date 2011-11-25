@@ -36,11 +36,21 @@ class HomepageBanner
     private $thumb;
 
     /**
+     * @var Symfony\Component\HttpFoundation\File\File
+     */
+    public $thumb_file;
+
+    /**
      * @var string $banner
      *
      * @ORM\Column(name="banner", type="string", length=255)
      */
     private $banner;
+
+    /**
+     * @var Symfony\Component\HttpFoundation\File\File
+     */
+    public $banner_file;
 
     /**
      * @var integer $position

@@ -1,0 +1,19 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+    <h1>Add a new homepage banner</h1>
+
+    <form method="post" action="{{ path('admin_homepage_banner_new') }}" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+        {{ form_row(form.thumb_file) }}
+
+        {{ form_row(form.banner_file) }}
+
+        {{ form_row(form.position) }}
+
+        {{ form_row(form.url) }}
+
+        <input type="submit" value="Submit" />
+        {{ form_rest(form) }}
+    </form>
+{% endblock %}

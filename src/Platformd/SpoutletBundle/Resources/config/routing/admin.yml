@@ -29,3 +29,7 @@ admin_user_approve_avatar:
 admin_homepage_banner_index:
     pattern: /admin/homepage-banners
     defaults: { _controller: SpoutletBundle:HomepageBanner:index }
+
+admin_homepage_banner_new:
+    pattern: /admin/homepage-banners/new
+    defaults: { _controller: SpoutletBundle:HomepageBanner:new }
