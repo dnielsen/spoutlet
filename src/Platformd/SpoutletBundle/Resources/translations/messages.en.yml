@@ -156,7 +156,16 @@ platformd:
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
-
+    homepage_banner:
+        banners:
+            title: Homepage banners
+            id: ID
+            thumb: Thumb
+            url: URL
+        admin:
+            create: Create a new homepage banner
+            edit: Edit
+            delete: Delete
     about:
         title: About Alienware Arena&trade;
 

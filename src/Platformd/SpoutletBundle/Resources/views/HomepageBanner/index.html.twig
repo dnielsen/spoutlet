@@ -1,25 +1,41 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block content %}
-    <table>
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>banner</th>
-                <th>url</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-        {% for banner in banners %}
-            <tr>
-                <td>{{ banner.id }}</td>
-                <td>{{ banner.thumb }}</td>
-                <td>{{ banner.url }}</td>
-                <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">edit</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">delete</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div id="admin-events">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ "platformd.homepage_banner.banners.title" | trans }}
+            </div>
+        </div>
+        <div class="widget-content">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>{{ "platformd.homepage_banner.banners.id" | trans }}</th>
+                        <th>{{ "platformd.homepage_banner.banners.thumb" | trans }}</th>
+                        <th>{{ "platformd.homepage_banner.banners.url" | trans }}</th>
+                        <th>{{ "platformd.help.actions" | trans }}</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                {% for banner in banners %}
+                    <tr>
+                        <td>{{ banner.id }}</td>
+                        <td>{{ banner.thumb }}</td>
+                        <td>{{ banner.url }}</td>
+                        <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.edit" | trans }}</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.delete" | trans }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+
+        <div class="widget-footer">
+            <a class="aw-link" href="{{ path('admin_homepage_banner_new') }}" style="margin-right:10px;">{{ "platformd.homepage_banner.admin.create" | trans }}</a>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
