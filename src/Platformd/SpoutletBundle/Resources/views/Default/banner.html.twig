@@ -1,0 +1,34 @@
+ <div id="gallery" class="ad-gallery">
+  <div class="ad-image-wrapper">
+  </div>
+  
+  <div class="ad-controls">
+  </div>
+  
+  <div class="ad-nav">
+    <div class="ad-thumbs">
+      <ul class="ad-thumb-list">
+        {% for index, banner in banners %}
+        <li>
+          <a href="{{ media_path(banner, { "size" : "banner" }) }}">
+            <img src="{{ media_path(banner) }}" class="image{{ index }}">
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+/**
+ * Todo : move this in a global javascript file
+ */
+jQuery(function($) {
+  console.log($.fn.adGallery);
+
+  var galleries = $('.ad-gallery').adGallery({
+    width: 600,
+    height: 400
+  });
+})
+</script>
