@@ -48,9 +48,9 @@ jQuery(function($) {
         }
         
         if (url) {
-          $("div.ad-image img").bind("click", handleFullsizeClick);
+          $("div.ad-image img").css("cursor", "pointer").bind("click", handleFullsizeClick);
         } else {
-          $("div.ad-image img").unbind("unclick", handleFullsizeClick);
+          $("div.ad-image img").css("cursor", "default").unbind("unclick", handleFullsizeClick);
         }
       }
     }
