@@ -12,4 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class HomepageBannerRepository extends EntityRepository
 {
+    /**
+     *
+     */
+    public function findForLocale($locale)
+    {
+        
+        return $this
+            ->createQueryBuilder('h')
+            ->where('h.locale = ?0')
+            ->orderBy('h.position', 'ASC')
+            ->getQuery()
+            ->execute(array($locale));
+    }
 }

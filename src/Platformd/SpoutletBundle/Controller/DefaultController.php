@@ -64,4 +64,15 @@ class DefaultController extends Controller
     {
         return $this->render('SpoutletBundle:Default:news.html.twig');
     }
+
+    public function bannerAction()
+    {
+        $banners = $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:HomepageBanner')
+            ->findForLocale($this->getLocale());
+
+        return $this->render('SpoutletBundle:Default:banner.html.twig', array('banners' => $banners));
+    }
 }
