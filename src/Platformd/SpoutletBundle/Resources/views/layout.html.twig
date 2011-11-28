@@ -9,6 +9,7 @@
 
         {% block stylesheets %}
 		    {% stylesheets
+                'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
 		        'bundles/spoutlet/css/*'
 		        'bundles/comment/css/comments.css'
 		        'ckeditor/skins/kama/editor.css'
@@ -28,6 +29,7 @@
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.js'
 		        'ckeditor/lang/en.js'
+                'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
 		        output='js/packed/layout.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
