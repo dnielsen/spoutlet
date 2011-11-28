@@ -16,13 +16,8 @@ class BannerPathResolver extends PathResolver
    */
   public function getPath($event, array $options)
   {
-    $prefix = isset($options['size']) ? $options['size'] : $this->prefix;
-    if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 
-        return sprintf('http://s3.amazonaws.com/%s/%s/%s', $this->bucketName, $prefix, $path);
-    }
-
-    return '/uploads/'.$prefix.'/'.$path;
+    return parent::getPath($media->getBanner(), $options);
   }
 
   /**
