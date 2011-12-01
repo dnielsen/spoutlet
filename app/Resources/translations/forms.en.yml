@@ -1,3 +1,20 @@
+event_name: "Name"
+event_ready: "Ready?"
+event_published: "Published?"
+event_starts_at: "Starts at"
+event_ends_at: "Ends date"
+event_city: "City"
+event_location: "Location"
+event_country: "Country"
+event_content: "Description"
+event_hosted_by: "Hosted by"
+event_game: "Game"
+event_bannerImageFile: "Banner Image"
+
+year: Year
+month: Month
+day: Day
+
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
 fos_user_registration_form_birthdate: "Date of Birth"
@@ -16,3 +33,20 @@ fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_email: "Email"
 fos_user_profile_form_user_is_organizer: "Organizer"
 fos_user_profile_form_user_is_super_admin: "Super-admin"
+
+giveaway_name: "Name"
+giveaway_content: "Description"
+giveaway_bannerImageFile: "Banner Image"
+giveaway_status: "Status"
+giveaway_redemptionInstructionsArray: Redemption Instructions
+giveway_pool_giveaway: Giveaway
+giveway_pool_description: Description
+giveway_pool_maxKeysPerIp: Max/IP
+giveway_pool_upperLimit: Upper limit
+giveway_pool_lowerLimit: Lower limit
+giveway_pool_isActive: Active
+giveway_pool_keysfile: Keys file
+
+# not an actual field - but used on the index page
+giveway_pool_lower_upper_display: L/U Display
+giveway_pool_assigned_total: Assigned/Total

@@ -165,3 +165,106 @@ platformd:
 
     navigation:
         back: Go Back
+
+    comment:
+        login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
+        comments: Comments
+
+    user:
+        login_header: Enter Login Information
+        change_password_header: Change Your Password
+        edit_account_header: Edit your account information
+
+        register_title: Create Arena Account
+
+        name_fields_order: %first_name% %last_name%
+
+        register:
+            requirements: Participation in the Alienware Arena requires an account.
+            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
+            terms_label: Terms & Conditions
+            dell_privacy_label: Dell Privacy Policy
+            country_label: Choose a country
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+
+        login:
+            title: Login to your account
+            forgot_password: Forgot Password?
+            need_help: Need Help?
+            not_a_member_join: Not a Member? Join for Free!
+            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used please contact support.
+
+        reset:
+            title:  Forgot Your Password?
+
+        request_reset:
+            title: Forgot Your Password?
+            help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
+            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+
+        account:
+            account_home: Account Home
+            edit_account: Edit Account
+            change_password: Change Password
+            profile:      Profile
+            # checked up until here
+            registered_events: Registered Events
+            my_giveaways: My Giveaways
+            help: Help
+
+    giveaway:
+        giveaway: Giveaway
+        redeem:   Redeem
+        get_key:  GET KEY
+        no_keys_left: There are no keys available for this giveaway
+        max_ip_limit: Your IP address does not have access to any more keys
+        already_assigned: You were already assigned a key for this giveaway
+        view_giveaway_site: View Giveaway Site
+        admin:
+            title: Giveaway admin
+            edit_giveaway: Edit Giveaway | %giveaway_title%
+            create: Create New Giveaway
+            saved: Giveaway has been saved.
+            save_giveaway: Save Giveaway
+            edit_title: Edit your Giveaway
+            redemption_instructions_note: |
+                Each box is a redemption step - leave blank any boxes you
+                don't need. You can also use HTML (e.g. <a href="/events">Link to events</a>).
+            manage_pools: Manage pools
+        status:
+            disabled: Totally disabled
+            inactive: Active but with zero keys
+            active:   Active
+            blank_value: Choose status
+        show:
+            availaible_keys: Availaible keys: %%count%%
+        giveaways_listings:
+            giveaways: Giveaways
+        assigned:
+            message: |
+                You have been assigned a key. You may review this key at any
+                time by visiting your giveaway key page from your Alienware
+                Arena user account panel.
+            may_require_activation: Your key may require activation! Check the giveaway page for details.
+            key: Key
+            assigned_at: Assigned
+            view_giveaway: View Giveaway
+    giveaway_pool:
+        pool: Giveaway pool
+        admin:
+            title: Giveaway pools for "%giveaway_name%"
+            create: Create a new pool
+            edit_pool: Edit pool
+            save_giveaway_pool: Save giveaway pool
+            saved: Giveaway pool has been saved.
+        first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
+
+"Bad credentials": "Invalid email or password"
+"The presented password is invalid.": "Invalid email or password"
+"The presented password cannot be empty.": "Please enter a password"
+"User account is disabled.": Your account is disabled - check your email for an activation link
+
+# for sources drop-down on registration
+source_alienware: Alienware
+
+avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
