@@ -47,3 +47,6 @@ giveway_pool_keysfile: 激活码文件
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/U显示
 giveway_pool_assigned_total: 已分配/全部
+
+news_title: Title
+news_body: Body

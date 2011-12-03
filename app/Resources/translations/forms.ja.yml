@@ -51,3 +51,6 @@ giveway_pool_keysfile:  キーファイル
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/Uディスプレー
 giveway_pool_assigned_total:  アサイン/合計
+
+news_title: Title
+news_body: Body
