@@ -1,7 +1,0 @@
-parameters:
-#    news.example.class: Platformd\NewsBundle\Example
-
-services:
-#    news.example:
-#        class: %news.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
