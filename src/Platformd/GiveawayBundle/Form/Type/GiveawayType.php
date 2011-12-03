@@ -4,6 +4,7 @@ namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 class GiveawayType extends AbstractType
 {
@@ -12,13 +13,11 @@ class GiveawayType extends AbstractType
         $builder->add('name', 'text');
     	$builder->add('content', 'textarea');
         $builder->add('bannerImageFile', 'file');
-        $builder->add('redemptionInstructions', 'textarea');
+        $builder->add('redemptionInstructionsArray', 'collection', array(
+            'type' => 'text',
+        ));
         $builder->add('status', 'choice', array(
-            'choices' => array(
-                'disabled' => 'platformd.giveaway.status.disabled',
-                'inactive' => 'platformd.giveaway.status.inactive',
-                'active'   => 'platformd.giveaway.status.active',
-            ),
+            'choices' => Giveaway::getValidStatusesMap(),
             'empty_value' => 'platformd.giveaway.status.blank_value',
         ));
     }

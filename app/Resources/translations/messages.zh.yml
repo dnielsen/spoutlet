@@ -1,0 +1,273 @@
+url:  URL
+edit: 编辑
+
+platformd:
+    create_account_or_login: Create or login to an Alienware Arena account.
+
+    not_found:
+        title: 页面未找到
+        body: 抱歉-您所需页面未找到
+
+    flash:
+        error_title: Error!
+        success_title: Success!
+
+    layout:
+        # title used by default (if not overriden)
+        default_title: Alienware Arena - 玩家所求
+        # title user by default in Admin area (if not overriden)
+        default_admin_title: 管理员
+        # suffixed after an overridden title (e.g. "My title | Title Suffix")
+        title_suffix: Alienware Arena
+
+        #translations that are not used yet
+        region:
+            region: 地区
+            register: 注册
+            china: 中国
+            change: 切换
+            change_region: 切换地区
+            global: 全球
+            usa_canada: "美国/加拿大"
+            malasia_singapore: "马来西亚/新加坡"
+            america_latina: 拉丁美洲
+            europe: 欧洲
+            japan: 日本
+            india: 印
+            australia_new_zealand: "澳大利亚/新西兰"
+            change_language: 改变首选语言
+            english: 英语
+            espanol: 西班牙语
+
+        top_menu:
+            admin: Admin
+            account: 账户
+            sign_in: 登录
+            sign_out: 退出
+            join: 注册
+            about: 关于我们
+            contact: 联系我们
+            search: 搜索
+            logged_in_as: 已登陆<strong><a href="%route%">%username%</a></strong>
+
+        admin_menu:
+            admin_home: 管理首页
+            manage_events: 管理活动
+            manage_giveaways: Manage Giveaways
+            manage_users: 管理用户
+
+        main_menu:
+            home: 首页
+            alienware: 外星人顶级游戏电脑
+            alienware_url: http://www.alienware.com.cn
+            events: 活动
+            news: 新闻
+            microsoft: 微软
+    
+        page_content:
+            featured: 专栏
+            giveaways: 邀请码
+            competitions: 比赛
+            on_tour: 巡回赛
+            all: 所有
+            see_more: 更多
+            photo_gallery: 照片库
+            view_all: 查看所有
+            redeem: 兑换
+            keys_available: 有邀请码
+            ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
+            deals_add_url: "/images/ads/cn-deals.jpg"
+            landing_image_url: "/images/AWinvades-cn.jpg"
+            landing_image_target: '/news'
+
+        bottom_menu:
+            contact_us: 联系我们
+            privacy_policy: 隐私条款
+            terms_and_conditions: 服务条款
+            steam_community: Steam社区
+            xfire_community: Xfire社区
+            link: "需要一个牛逼的装备? 请看看 ALienware"
+            link_url: "http://alienware.com.cn/"
+            copyright_2012: "©2012版权所有，Alienware公司"
+
+    help:
+        actions: 操作
+    users:
+        user_listings:
+            title: 管理用户
+            super_admin_cant_be_modified: 超级管理员用户无法修改
+
+    events:
+        event_listings:
+            your_registered_events: 我的活动
+            current_events: 当前活动
+            current_and_upcoming_events: 当前活动及活动预告
+            more_current_events: 更多当前活动
+            start_date: 开始时间
+            end_date: 结束日期
+            details: 详情
+            event: 活动
+            games: 游戏
+            hosted_by: 举办方
+            location: 地点
+            upcoming_events: 活动预告
+            there_are_no_upcoming_events_at_this_moment: 暂无事件预告
+            past_events: 过去活动
+            more_past_Events: 更多以往活动
+            online: 在线
+            no_past_events: 无以往活动
+            no_current_events: 无当前活动
+            published: Published?
+        event_create:
+            create_new_event: 创建活动
+        event_show:
+            register_event: 注册活动
+            unregister_event: Unregister for event
+            registered_event: You are Registered
+            create_or_login: 创建或登陆Alienware Arena账户
+            register:       注册
+        admin:
+            title: 活动管理
+            edit_event: 编辑活动%event_title%
+            create: 创建新活动
+            approve: 批准
+            unpublish: Unpublish
+            approved: 活动"%event_title%" 已获批准即将发布
+            unpublished: Event "%event_title%" has been unpublished.
+            saved: Event has been saved.
+            unknown: 未知活动#%event_id% !
+            save_event: 保存活动
+            unpublished_title: "管理未发布活动"
+            new_title: "创建新事件"
+            published_title: "管理已发布活动"
+            banner_note: "图像尺寸950x120为最佳"
+
+    account_page:
+        events:
+            no_registered_events: 您还没有注册任何活动
+            join_event_message: 如要参加某活动，请点击活动小网站的 “注册”链接。参考当前活动。 <a href="%events_url%">current events</a>
+        account:
+            welcome_to_control: 欢迎来到管理中心
+            hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
+            ready_to_game: 准备开始玩游戏吗？Alienware竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
+            warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！Alienware 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
+            under_construction: "注：Alienware Arena建设中，如某项功能无法启用，请稍后访问。"
+            edit_your_account: 编辑账户信息
+            change_your_password: 修改密码
+        giveaway:
+            your_giveaway_keys: My Giveaway Keys
+
+    about:
+        title: 关于Alienware ArenaTM
+
+    general:
+        alienware_link_url: http://alienware.com.cn/
+
+    navigation:
+        back: Go Back
+
+    comment:
+        login_to_comment: 你没有登录。留言请先登录。
+        comments: 评论
+
+    user:
+        login_header: 输入登陆信息
+        change_password_header: 修改密码
+        edit_account_header: 编辑账户信息
+
+        register_title: 创建Arena账户
+
+        name_fields_order: %first_name% %last_name%
+
+        register:
+            requirements: Participation in the Alienware Arena requires an account.
+            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
+            terms_label: 服务条款
+            dell_privacy_label: 隐私条款
+            country_label: 选择国家
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+
+        login:
+            title: 登陆您的账户
+            forgot_password: 忘记密码
+            need_help: 帮助？
+            not_a_member_join: 非会员？免费注册！
+            password_message: 密码区分大小写，请确认大写键未开启。如忘记密码，请重新设置。如果你忘记注册时所用邮箱，请联系我们的客服。
+
+        reset:
+            title:  重设密码
+
+        request_reset:
+            title: 忘记密码？
+            help_message: 如果你忘记了密码，没关系。填写以下信息，我们将会将新密码发送至你的邮箱。如果你忘记了用户名和/或邮箱，请联系我们的客服。
+            spam_message: 重要提示：请检查你的垃圾邮件！- 我们在努力，但是有时垃圾邮件过滤器会误将我们的邮件当做垃圾邮件。密码重置大概需要30分钟完成。其实往往只需要几秒钟的时间，但有时候邮件会延迟到达你的邮箱。
+
+        account:
+            account_home: Account Home
+            edit_account: Edit Account
+            change_password: Change Password
+            profile:      Profile
+            registered_events: Registered Events
+            my_giveaways: My Giveaways
+            help: 帮助？
+
+    giveaway:
+        giveaway: 邀请码
+        redeem:   操作说明
+        get_key:  获取邀请码
+        no_keys_left: 该邀请码没有可用的激活码
+        max_ip_limit: 你的IP地址
+        already_assigned: You were already assigned a key for this giveaway
+        view_giveaway_site: 查看邀请码站点
+        admin:
+            title: 管理邀请码
+            edit_giveaway: 编辑邀请码 | %giveaway_title%
+            create: 创建新的邀请码
+            saved: 邀请码已保存
+            save_giveaway: 保存邀请码
+            edit_title: y编辑你的邀请码
+            redemption_instructions_note: |
+                每一栏都是一个步骤-如果不需要，请留空。你也可以使用HTML (e.g. <a href="/events">Link to events</a>)。
+            manage_pools: Manage pools
+        status:
+            disabled: 完全不可用
+            inactive: 已激活但无剩余激活码
+            active:   已激活
+            blank_value: 选择状态
+        show:
+            availaible_keys: 可用的激活码 : %%count%%
+        giveaways_listings:
+            giveaways: 邀请码
+        assigned:
+            message: |
+                已经为您分配激活码。您可以随时访问你的邀请码激活码页面在Alienware Arena用户管理面板查看该激活码。
+            may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
+            key: 激活码
+            assigned_at: 已分配
+            view_giveaway: View Giveaway
+    giveaway_pool:
+        pool: 邀请码库
+        admin:
+            title: "%giveaway_name%" 的邀请码库
+            create: 创建新的邀请码库
+            edit_pool: 编辑邀请码库
+            save_giveaway_pool: 保存邀请码库
+            saved: 邀请码库已保存
+        first_active_used: 注：第一个“激活库”将是站点目前正在使用的。
+
+"Bad credentials": "Invalid username or password"
+"The presented password is invalid.": "Invalid username or password"
+"The presented password cannot be empty.": "Please enter a password"
+"User account is disabled.": Your account is disabled - check your email for an activation link
+
+# registration drop-down choices
+"Select one": "Select one"
+source_alienware: Alienware
+CEVO: CEVO
+"Tech News Site": Tech News Site
+"Email": 邮箱
+"Friends or Family": Friends or Family
+"Blog": Blog
+"Other": Other
+
+avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"

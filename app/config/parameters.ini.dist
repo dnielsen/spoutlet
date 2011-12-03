@@ -22,3 +22,8 @@
     recaptcha.private_key =
 
     base_host         = site.com
+    host_suffix       =
+
+    s3.access_key     =
+    s3.secret_key     =
+    s3_bucket_name    = platformd-testing

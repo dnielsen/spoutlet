@@ -1,0 +1,53 @@
+event_name: "名前"
+event_ready: "準備OK?"
+event_published: "公開済み?"
+event_starts_at: "開始日"
+event_ends_at: "終了日"
+event_city: "市町村"
+event_location: "実施場所"
+event_country: "国"
+event_content: "説明"
+event_hosted_by: "主催者"
+event_game: "ゲーム"
+event_bannerImageFile: "バナー画像"
+
+year: 年
+month: 月
+day: 日
+
+# some of these should really be in FOSUserBundle.en.yml with the rest of the labels
+# but for some reason, they're run through the forms domain...
+fos_user_registration_form_birthdate: "生年月日:"
+fos_user_registration_form_hasAlienwareSystem: "Alienware ゲーミングＰＣ をお持ちですか？"
+fos_user_registration_form_termsAccepted: |
+    <a href="%terms_url%" target="_blank">サービス規約</a>
+    および
+    <a href="%privacy_url%" target="_blank">プライバシーポリシー</a>
+    を読んだ上、同意します。
+fos_user_registration_form_subscribedAlienwareEvents: 最新の景品、コンテスト、イベント、その他に関してのお知らせを Alienware ArenaからE-メールで受け取れます。
+fos_user_registration_form_subscribedGamingNews: "Alienware/Dell ゲーム情報やキャンペーン情報をE-メールで受け取ります。"
+
+# I don't believe these (or some of these) are used - they are in FOSUserBundle.*.yml
+fos_user_profile_form_user_username: "ユーザー名:"
+fos_user_profile_form_user_firstname: "名:"
+fos_user_profile_form_user_lastname: "姓:"
+fos_user_profile_form_user_email: "メールアドレス:"
+fos_user_profile_form_user_is_organizer: "主催者:"
+fos_user_profile_form_user_is_super_admin: "スーパーアドミン:"
+
+giveaway_name: "名前"
+giveaway_content: "説明"
+giveaway_bannerImageFile: "バナー画像"
+giveaway_status: "ステータス"
+giveaway_redemptionInstructionsArray:  回復指示
+giveway_pool_giveaway: プレゼント
+giveway_pool_description:  説明
+giveway_pool_maxKeysPerIp:  最大IP
+giveway_pool_upperLimit:  上限
+giveway_pool_lowerLimit:  下限
+giveway_pool_isActive:  有効
+giveway_pool_keysfile:  キーファイル
+
+# not an actual field - but used on the index page
+giveway_pool_lower_upper_display: L/Uディスプレー
+giveway_pool_assigned_total:  アサイン/合計

@@ -4,9 +4,6 @@
 
 {% block content %}
 <div class="std_2col control_panel">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-    </div>
     <div class="left">
         <div class="pad">
             <div class="std_1col">
@@ -18,7 +15,9 @@
                     </div>
                     <div class="widget-content">
                         {% set no_events_messages %}{% trans %}platformd.account_page.events.no_registered_events{% endtrans %}{% endset %}
-                        {% set no_events_pre_message = 'platformd.account_page.events.join_event_message' | trans %}
+                        {% set no_events_pre_message = 'platformd.account_page.events.join_event_message' | trans({
+                            '%events_url%': path('events_index')
+                        }) %}
                         {% include 'SpoutletBundle:Events:eventList.html.twig' with {
                             'events': app.user.events,
                             'no_events_message': no_events_messages,

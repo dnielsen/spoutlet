@@ -6,7 +6,7 @@
 		<script type="text/javascript">
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
- 
+
         {% block stylesheets %}
 		    {% stylesheets
 		        'bundles/spoutlet/css/*'
@@ -90,7 +90,7 @@
             </script>
         {% endif %}
 	</head>
-	<body>
+	<body class="site-{{ app.session.locale }}">
 		<div id="omni">
 	        <div id="page">
 	            <div class="background-takeover" id="custom_background_top">
@@ -103,6 +103,59 @@
 	                    </div>
 	                    <div id="content">
                             {% block pre_content_nav %}{% endblock %}
+
+                            {#
+                                Messy, but taken from the old site
+                                To show a flash message, set the "flash" block
+                                to your actual message. Then set the "flash_type"
+                                block to: success, warning, or error
+
+                                This also works out of the box for "error"
+                                and "success"session flashes - given an "error"
+                                type and the message is dumped out with
+                                some markup
+
+                                Also, yes, I know this is hideous...
+                            #}
+
+                            {% if app.session.hasFlash('error') %}
+                                {% set sessionFlashType = 'error' %}
+                            {% elseif (app.session.hasFlash('success')) %}
+                                {% set sessionFlashType = 'success' %}
+                            {% else %}
+                                {% set sessionFlashType = block('flash_type') %}
+                            {% endif %}
+
+                            {% if  sessionFlashType %}
+                                <div class="xnotices">
+                                    <div class="{{ sessionFlashType }}Notice notice">
+                                        <div class="pad">
+                                            <div class="pad2">
+                                                <div class="pad3">
+                                                    <div class="pad4">
+                                                        {#
+                                                            funny, I had to set this as a variable - concatenating
+                                                            and translating the string all in one line was a fail
+                                                        #}
+                                                        {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
+                                                        <h3>
+                                                            {{ flashTitleKey | trans }}
+                                                        </h3>
+
+                                                        {% if app.session.getFlash(sessionFlashType) %}
+                                                            <p>
+                                                                {{ app.session.getFlash(sessionFlashType) | trans }}
+                                                            </p>
+                                                        {% else %}
+                                                            {{ block('flash') }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
 
 	                    	{% block content %}{% endblock %}
 	                    </div>

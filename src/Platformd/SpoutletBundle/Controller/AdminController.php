@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Form\Type\EventType,
 	Platformd\UserBundle\Entity\User;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
@@ -85,10 +84,7 @@ class AdminController extends Controller
         $event->setPublished(true);
         $this->getEventsManager()->flush();
         
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
@@ -101,10 +97,7 @@ class AdminController extends Controller
         
         $this->getEventsManager()->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
@@ -125,16 +118,17 @@ class AdminController extends Controller
         $event = $event_form->getData();
         $event->setLocale($this->get('session')->getLocale());
 
-        $event->updateBannerImage();
+        /*$event->updateBannerImage();
 
         $em = $this->getEventsManager();
         $em->persist($event);
-        $em->flush();
+        $em->flush();*/
 
         $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('notice', $this->get('translator')->trans('platformd.events.admin.saved'));
+            ->get('platformd.events_manager')
+            ->save($event);
+
+        $this->setFlash('success', $this->get('translator')->trans('platformd.events.admin.saved'));
     }
 
     private function getEventsRepo()

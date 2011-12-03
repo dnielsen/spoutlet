@@ -17,9 +17,10 @@
 
     {{ form_row(form.plainPassword) }}
 
-    {{ form_row(form.firstname) }}
-
-    {{ form_row(form.lastname) }}
+    {{ 'platformd.user.name_fields_order' | trans({
+        '%first_name%': form_row(form.firstname),
+        '%last_name%': form_row(form.lastname)
+    }) | raw }}
 
     <div class="form_row">
         {{ form_errors(form.birthdate) }}
@@ -74,8 +75,7 @@
 
     <div>
         <label>&nbsp;</label>
-        <a href="{{ path('terms_conditions') }}" target="_blank">{{ 'platformd.user.register.terms_label' | trans }}</a>
-        <a href="{{ path('privacy') }}" target="_blank">{{ 'platformd.user.register.privacy_label' | trans }}</a>
+        <a href="http://www1.jp.dell.com/content/topics/segtopic.aspx/policy/policy?c=jp&l=ja&s=gen&~section=privacy" target="_blank">{{ 'platformd.user.register.dell_privacy_label' | trans }}</a>
     </div>
 
     <div>

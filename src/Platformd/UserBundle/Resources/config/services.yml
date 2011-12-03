@@ -22,3 +22,18 @@ services:
         parent: fos_user.user_manager.default
         calls:
             - [ setContainer, ['@service_container'] ]
+            - [ setFilesystem, ['@avatar_filesystem']]
+
+    platformd.avatar_resolver:
+        class:  'Platformd\UserBundle\AvatarPathResolver'
+        arguments:
+            - @avatar_filesystem
+            - avatar
+        parent: platformd.path_resolver
+        tags:
+            - { name: 'knp_media_exposer.resolver' }
+
+    # our custom mailer
+    platformd_user.mailer:
+        class: Platformd\UserBundle\Mailer\Mailer
+        parent: fos_user.mailer.default

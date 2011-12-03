@@ -52,7 +52,7 @@
             <div class="profileAvatar">
                 <span class="png"></span>
                 {# A twig test would be cleaned #}
-                <img src="{{ comment.author.avatar and comment.author.isAvatarApproved ? comment.author.webPath : "/images/profile-default.png" }}" alt="{{ comment.author.username }}" />
+                <img src="{{ asset(comment.author.avatar and comment.author.isAvatarApproved ? media_path(comment.author) : "/images/profile-default.png") }}" alt="{{ comment.author.username }}" />
                 
             </div>
             <div class="profileName">

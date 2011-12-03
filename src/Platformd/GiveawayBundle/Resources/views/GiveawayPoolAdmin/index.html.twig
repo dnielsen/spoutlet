@@ -1,0 +1,105 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% set title = "platformd.giveaway_pool.admin.title" | trans({'%giveaway_name%': giveaway.name}) %}
+{% block title title %}
+
+{% block content %}
+<div id="admin-events">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ title }}
+            </div>
+        </div>
+        
+        <div class="widget-content">
+            <div class="form-help">
+                {{ 'platformd.giveaway_pool.first_active_used' | trans }}
+            </div>
+
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <th>{{ "platformd.giveaway_pool.pool" | trans }}</th>
+                        <th>{{ "giveway_pool_description" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_maxKeysPerIp" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_lower_upper_display" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveway_pool_assigned_total" | trans({}, 'forms') }}</th>
+                        <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
+                        <th>{{ "platformd.help.actions" | trans }}</th>
+                    </tr>
+                    {% for pool in pools %}
+                    <tr class="eventListGroup_online">
+                        <td><a href="{{ path('admin_giveaway_pool_edit', { 
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id 
+                            }) 
+                        }}">{{ pool.description }}</a></td>
+
+                        <td>
+                            {{ pool.description }}
+                        </td>
+
+                        <td>
+                            {{ pool.maxKeysPerIp }}
+                        </td>
+
+                        <td>
+                            {% if pool.shouldEnforceUpperAndLower %}
+                                {{ pool.lowerLimit }}/{{ pool.upperLimit }}
+                            {% else %}
+                                <i>none</i>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ keyRepo.getAssignedForPool(pool) }} / {{ keyRepo.getTotalForPool(pool) }}
+                        </td>
+
+                        <td>
+                            {{ pool.isActive ? 'Active' : 'Inactive' }}
+                        </td>
+
+                        <td>
+                            <a href="{{ path('admin_giveaway_pool_edit', {
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id
+                            }) }}">Edit</a>
+                            |
+                            <a href="{{ path('admin_giveaway_pool_delete', {
+                                'giveaway' : pool.giveaway.id,
+                                'pool' : pool.id
+                            }) }}" class="delete_link">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="widget-footer">
+            <a class="aw-link" href="{{ path('admin_giveaway_pool_new', {
+                "giveaway" : giveaway.id
+            }) }}" style="margin-right:10px;">{{ "platformd.giveaway_pool.admin.create" | trans }}</a>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div style="width:100%;text-align:right;padding-top:20px;"></div>
+
+<script type="text/javascript">
+jQuery(function($) {
+    $(".delete_link").bind("click", function(event) {
+        
+        if (!confirm('Are you sure you want to delete this pool?')) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            return false;
+        }
+    });
+});
+</script>
+
+{% endblock %}

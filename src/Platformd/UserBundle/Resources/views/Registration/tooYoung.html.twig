@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.user.register_title' | trans %}
+
+{% block content %}
+<h1>{{ 'platformd.user.register_title' | trans }}</h1>
+
+<div class="registration-requirements">
+    <p>{{ 'platformd.user.register.requirements' | trans }}</p>
+    <p>{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}</p>
+</div>
+
+<div class="registration-underage">
+    {{ 'platformd.user.register.underage_message' | trans }}
+</div>
+{% endblock %}

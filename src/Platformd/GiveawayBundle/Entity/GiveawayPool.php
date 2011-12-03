@@ -3,12 +3,13 @@
 namespace Platformd\GiveawayBundle\Entity;
 
 use Platformd\UserBundle\Entity\User;
-use Doctrine\ORM\Mapping as ORM;
 
-use Doctrine\Common\Collections\Collection,
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile,
+    Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayPool
@@ -34,6 +35,14 @@ class GiveawayPool
      * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="giveawayPools")
      */
     protected $giveaway;
+
+    /**
+     * One to Many with GiveawayPool
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayKey", mappedBy="pool")
+     */
+    protected $giveawayKeys;
 
     /**
      * Internally-used only notes field
@@ -77,6 +86,22 @@ class GiveawayPool
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $isActive = false;
+
+    /**
+     * @var \Symfony\Component\HttpFoundation\File\UploadedFile
+     * @Assert\File(maxSize="6000000")
+     */
+    protected $keysfile;
+
+    public function __construct()
+    {
+        $this->giveawayKeys = new ArrayCollection();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return \Platformd\GiveawayBundle\Entity\Giveaway
@@ -143,6 +168,17 @@ class GiveawayPool
     }
 
     /**
+     * The upper and lower limit stuff will only be enforced if both values
+     * are present and non-zero
+     *
+     * @return bool
+     */
+    public function shouldEnforceUpperAndLower()
+    {
+        return $this->getLowerLimit() > 0 && $this->getUpperLimit() >0;
+    }
+
+    /**
      * @param int $maxKeysPerIp
      */
     public function setMaxKeysPerIp($maxKeysPerIp)
@@ -172,5 +208,22 @@ class GiveawayPool
     public function getUpperLimit()
     {
         return $this->upperLimit;
+    }
+
+    /**
+     * @param Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    public function setKeysfile(UploadedFile $file)
+    {
+        $this->keysfile = $file;
+    }
+
+    /**
+     * @return Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    public function getKeysfile()
+    {
+
+        return $this->keysfile;
     }
 }

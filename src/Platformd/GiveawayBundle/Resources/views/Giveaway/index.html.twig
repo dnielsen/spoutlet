@@ -1,0 +1,34 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.layout.main_menu.giveaways' | trans %}
+
+{% block content %}
+<div class="std_1col">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ 'platformd.giveaway.giveaways_listings.giveaways' | trans }}
+            </div>
+        </div>
+
+        <div class="widget-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
+                    </tr>
+                </thead>
+            {% for giveaway in giveaways %}
+                <tr>
+                    <td><a href="{{ path("giveaway_show", {"slug" : giveaway.slug}) }}">{{ giveaway.name }}</a></td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+
+        <div class="widget-footer">
+            <a href="{{ path('events_current') }}">{{ 'platformd.events.event_listings.more_current_events' | trans }}</a>
+        </div>
+    </div><br />
+</div>
+{% endblock %}

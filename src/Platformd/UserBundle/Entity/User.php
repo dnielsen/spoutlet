@@ -39,8 +39,8 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
-     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="first_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $firstname;
@@ -50,8 +50,8 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
-     * @Assert\MinLength(limit="3", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="last_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration"})
      * @Assert\MaxLength(limit="255", groups={"Registration"})
      */
     protected $lastname;
@@ -61,7 +61,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      * 
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="birthdate_not_blank")
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
@@ -87,7 +87,7 @@ class User extends BaseUser
      * 
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="state_not_blank")
      */
     protected $state;
 
@@ -248,6 +248,14 @@ class User extends BaseUser
      */
     protected $locale;
 
+    /**
+     * One to Many with GiveawayKey
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayKey", mappedBy="user")
+     */
+    protected $giveawayKeys;
+
     /** 
      * @Assert\File(
         maxSize="6000000", 
@@ -256,10 +264,18 @@ class User extends BaseUser
      */
     public $file;
 
+    /**
+     * Little flag so we know if the avatar was changed on this request
+     *
+     * @var bool
+     */
+    protected $avatarChanged = false;
+
     public function __construct() 
     {
         parent::__construct();
-        $this->events = new ArrayCollection();   
+        $this->events = new ArrayCollection();
+        $this->giveawayKeys = new ArrayCollection();
     }
     
     /** 
@@ -281,21 +297,6 @@ class User extends BaseUser
     public function disapproveAvatar()
     {
         $this->avatar_approved = false;
-    }
-
-    public function updateAvatar()
-    {
-        if (null == $this->file) {
-            
-            return;
-        }
-
-        $this->avatar = sha1($this->getUsername().'-'.uniqid()).'.'.$this->file->guessExtension();
-        $this->file->move($this->getUploadRootDir(), $this->avatar);
-
-        unset($this->file);
-
-        $this->disapproveAvatar();
     }
 
     public function getAbsolutePath() 
@@ -571,7 +572,7 @@ class User extends BaseUser
      */
     public function setSubscribedGamingNews($subscribed)
     {
-        $this->subscribedGamingNews;
+        $this->subscribedGamingNews = $subscribed;
     }
 
     /**
@@ -601,6 +602,14 @@ class User extends BaseUser
         return $this->avatar;
     }
 
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        // set a flag so we can give the user a message
+        $this->avatarChanged = true;
+    }
+
     public function getWebPath()
     {
         return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
@@ -623,9 +632,9 @@ class User extends BaseUser
         return $this->manufacturer;
     }
 
-    public function setManufacturer($manufactuer) 
+    public function setManufacturer($manufacturer)
     {
-        $this->manufacturer;
+        $this->manufacturer = $manufacturer;
     }
 
     public function getOperatingSystem()
@@ -820,5 +829,45 @@ class User extends BaseUser
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * Determines whether or not this user is a "minor" (under 13)
+     *
+     * @Assert\False(message="You must be 13 years old to register", groups={"Registration"})
+     */
+    public function isAMinor()
+    {
+        // if we don't know, we don't know, sooooo not a minor
+        if (!$this->getBirthdate()) {
+            return false;
+        }
+
+        $age = $this->getBirthdate()
+             ->diff(new \DateTime('now'))
+             ->y;
+
+        return ($age < 13);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAvatarChanged()
+    {
+        return $this->avatarChanged;
+    }
+
+    /**
+     * Overridden so that this is shorter - the client wanted a shorter URL
+     *
+     * @return string
+     */
+    protected function generateToken()
+    {
+        $token = parent::generateToken();
+        $length = 6;
+
+        return substr($token, 0, $length);
     }
 }

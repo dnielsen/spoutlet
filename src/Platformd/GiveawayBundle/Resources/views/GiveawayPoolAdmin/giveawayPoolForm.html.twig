@@ -1,0 +1,28 @@
+<h1>
+    {{ 'platformd.giveaway_pool.admin.create' | trans }}
+</h1>
+    
+<a href="{{ path('admin_giveaway_pool_index', {'giveaway': giveawayId}) }}">{{ 'platformd.navigation.back' | trans }}</a>
+
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
+
+    {{ form_errors(form) }}
+    
+    {{ form_row(form.giveaway)}}
+
+    {{ form_row(form.description)}}
+
+    {{ form_row(form.maxKeysPerIp)}}
+
+    {{ form_row(form.lowerLimit)}}
+
+    {{ form_row(form.upperLimit)}}
+
+    {{ form_row(form.isActive)}}
+
+    {{ form_row(form.keysfile)}}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" class="button" value="{{ "platformd.giveaway_pool.admin.save_giveaway_pool" | trans }}" formnovalidate />
+</form>

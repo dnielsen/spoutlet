@@ -2,9 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
-
 class DefaultController extends Controller
 {
     
@@ -30,16 +27,16 @@ class DefaultController extends Controller
             ->getRepository('NewsBundle:News')
             ->findAll();
 
+        $allGiveaways = $this->getGiveawayRepo()
+            ->findActives($this->getLocale())
+        ;
+
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'    => $all_events,
             'news'          => $news,
+            'all_giveaways' => $allGiveaways,
             'onlyNews'      => $onlyNews,
         ));
-    }
-
-    public function supportAction()
-    {
-        return $this->render('SpoutletBundle:Default:support.html.twig');
     }
 
     public function microsoftAction()
@@ -73,10 +70,5 @@ class DefaultController extends Controller
     public function newsAction()
     {
         return $this->render('SpoutletBundle:Default:news.html.twig');
-    }
-
-    private function getLocale()
-    {
-        return $this->getRequest()->getSession()->getLocale();
     }
 }

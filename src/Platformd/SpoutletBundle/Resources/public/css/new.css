@@ -20,6 +20,10 @@ a.button:hover {
   color: #ddd;
 }
 
+ul.normal-margin, ol.normal-margin {
+    margin-left: 40px;
+}
+
 .interstitial {
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -42,14 +46,14 @@ a.button:hover {
 .form label {
     display: -moz-inline-box;
     display: inline-block;
-    width: 70px;
+    width: 110px;
 }
 .form-msg-error {
     padding: 6px 10px 5px;
     display: block;
     height: auto;
     margin: -0.3em 0 0.5em;
-    margin-left: 70px;
+    margin-left: 110px;
     padding-left: 27px;
    	font-size:0.9em;
    	border-bottom: 1px solid #ccc;
@@ -66,18 +70,18 @@ a.button:hover {
     width: 400px;
 }
 .login_page_interstitial input.button {
-    margin-left: 70px;
+    margin-left: 110px;
 }
 
 /* change password */
 .fos_user_change_password label {
-    width: 110px;
+    width: 150px;
 }
 .fos_user_change_password input.button {
-    margin-left: 110px;
+    margin-left: 150px;
 }
 .fos_user_change_password ul.form-msg-error {
-    margin-left: 110px;
+    margin-left: 150px;
 }
 
 /* comments */
@@ -134,19 +138,19 @@ a.button:hover {
 
 /* registration page */
 .fos_user_registration_register label, .label_space {
-    width: 350px;
+    width: 300px;
     text-align: right;
     margin-right: 10px;
 }
 .fos_user_registration_register input.button {
-    margin-left: 360px;
+    margin-left: 310px;
     margin-top: 10px;
 }
 .fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
-    margin-left: 360px;
+    margin-left: 310px;
 }
 .floating_form_container {
-    margin-left: 363px;
+    margin-left: 313px;
 }
 .fos_user_registration_register #recaptcha_widget_div {
     margin-bottom: 10px;
@@ -241,4 +245,14 @@ span.required {
 .form-help {
     margin-bottom: 10px;
     font-style: italic;
+}
+
+#eventHeader {
+    height: 120px;
+    max-width: 950px;
+}
+
+.redemption-instructions-inputs input {
+    margin-bottom: 5px;
+    width: 300px;
 }

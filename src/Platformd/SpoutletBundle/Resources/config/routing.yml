@@ -2,10 +2,6 @@ default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
 
-support:
-    pattern: /pages/support
-    defaults: { _controller: SpoutletBundle:Default:support }
-
 privacy:
     pattern: /legal/privacy
     defaults: { _controller: SpoutletBundle:Default:privacy }

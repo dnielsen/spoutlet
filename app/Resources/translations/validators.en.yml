@@ -1,0 +1,28 @@
+first_name_not_blank: Please enter your first name
+last_name_not_blank: Please enter your last name
+birthdate_not_blank: Please enter your birthdate
+state_not_blank: Please enter a state
+
+"The username is already used": The username is already used
+"The email is already used":  The email is already used
+"Please enter a username":  Please enter a username
+"The username is too short":  The username is too short
+"The username is too long":  The username is too long
+"Please enter an email":  Please enter an email
+"The email is too short":  The email is too short
+"The email is too long":  The email is too long
+"The email is not valid":  The email is not valid
+"Please enter a password":  Please enter a password
+"The password is too short":  The password is too short
+"Please enter a new password":  Please enter a new password
+"The new password is too short":  The new password is too short
+"Please enter a new password":  Please enter a new password
+"The new password is too short":  The new password is too short
+"Please enter a name":  Please enter a name
+"The name is too short":  The name is too short
+"The name is too long":  The name is too long
+"This value is not a valid captcha":  This value is not a valid captcha
+
+"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
+
+"The entered password is invalid.": The entered password is invalid.

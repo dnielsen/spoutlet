@@ -16,6 +16,8 @@ framework:
         default_locale: %locale%
         auto_start:     true
         domain:         .%base_host%
+        storage_id:     session.storage.pdo
+
 
 # Twig Configuration
 twig:
@@ -71,7 +73,7 @@ fos_user:
     user_class:      Platformd\UserBundle\Entity\User
     from_email:
         address:        %sender_email_address%
-        sender_name:    noreply
+        sender_name:    Alienware Arena
     registration:
         form:
             type: platformd_user_registration
@@ -81,20 +83,29 @@ fos_user:
         form:
             type: platformd_user_profile
     service:
-        user_manager: platformd_user.manager 
+        user_manager: platformd_user.manager
+        mailer:       platformd_user.mailer
 
 parameters:
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
-        alienware: Alienware
+        alienware: source_alienware
         cevo: CEVO
+        it_news_site: Tech News Site
+        email: Email
         facebook: Facebook
-        mixi:  Mixi
-        live_event: Live event
-        ea: EA
-        search_engine: Search engine
+        twitter: Twitter
         youtube: Youtube
+        friends: Friends or Family
+        blog: Blog
         other: Other
+
+    pdo.session_db_options:
+        db_table:    session
+        db_id_col:   session_id
+        db_data_col: session_value
+        db_time_col: session_time
+
     platformd.prefectures:
         ja:
             - 北海道
@@ -185,9 +196,10 @@ jms_i18n_routing:
     locales: [en, ja, zh]
     strategy: custom
     hosts:
-        en: demo.%base_host%
-        ja: japan.%base_host%
-        zh: china.%base_host%
+        # %host_suffix% might be something like "staging"
+        en: demo%host_suffix%.%base_host%
+        ja: japan%host_suffix%.%base_host%
+        zh: china%host_suffix%.%base_host%
 
 fos_comment:
     db_driver: orm
@@ -211,3 +223,35 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+
+
+services:
+    pdo_session:
+        class: PDO
+        arguments:
+            dsn:      "mysql:dbname=%database_name%;host=%database_host%"
+            user:     %database_user%
+            password: %database_password%
+
+    session.storage.pdo:
+        class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
+        arguments: [@pdo_session, %session.storage.options%, %pdo.session_db_options% ]
+
+knp_gaufrette:
+    adapters:
+        platformd.avatar:
+            service:
+                id: platformd.avatar.s3.adapter 
+        platformd.event:
+            service:
+                id: platformd.event.s3.adapter 
+    filesystems:
+        platformd.avatar:
+            adapter: platformd.avatar
+            alias: avatar_filesystem
+        platformd.event:
+            adapter: platformd.event
+            alias: event_filesystem
+
+knp_media_exposer:
+    base_url: http://%base_host%

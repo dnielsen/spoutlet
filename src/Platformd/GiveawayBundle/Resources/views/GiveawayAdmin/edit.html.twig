@@ -7,6 +7,7 @@
 {% block content %}
 {% include 'GiveawayBundle:GiveawayAdmin:giveawayForm.html.twig' with {
     'form': form,
-    'route': path('admin_giveaway_edit', { 'id' : giveaway.id })
+    'route': path('admin_giveaway_edit', { 'id' : giveaway.id }),
+    'giveaway': giveaway
 } %}
 {% endblock %}

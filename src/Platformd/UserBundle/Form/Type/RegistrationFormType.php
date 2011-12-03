@@ -54,7 +54,10 @@ class RegistrationFormType extends BaseType
             ->add('firstname', null, array('required' => true))
             ->add('lastname', null, array('required' => true))
             ->add('email', 'repeated', array('type' => 'email', 'required' => true))
-            ->add('birthdate', 'birthday', array('empty_value' => '--', 'required' => true))
+            ->add('birthdate', 'birthday', array(
+                'empty_value' => '--', 'required' => true,
+                'years' => range(1940, date('Y')),
+            ))
             ->add('phoneNumber', null, array('required' => false))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,

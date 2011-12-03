@@ -16,7 +16,7 @@
                                     {{ no_events_pre_message | raw }}
                                 </p>
                             {% endif %}
-                            <strong>{{ no_events_message | trans }}</strong>
+                            <strong>{{ no_events_message | trans | raw }}</strong>
                         </td>
                     </tr>
                     {% else %}

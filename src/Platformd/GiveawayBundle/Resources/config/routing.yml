@@ -1,3 +1,17 @@
 _admin_giveaway:
     resource: "routing/admin.yml"
     prefix:   /admin/giveaways
+
+giveaway_index: 
+    pattern: /giveaways
+    defaults: { _controller: GiveawayBundle:Giveaway:index }
+
+giveaway_show:
+    pattern: /giveaways/{slug}/{keyId}
+    defaults: { _controller: GiveawayBundle:Giveaway:show, keyId: null }
+    requirements:
+        keyId: \d+
+
+giveaway_get_key:
+    pattern: /giveaways/{slug}/key
+    defaults: { _controller: GiveawayBundle:Giveaway:key }

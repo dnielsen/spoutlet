@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Platformd\GiveawayBundle\Entity\Giveaway
  *
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Giveaway extends AbstractEvent
 {
@@ -23,7 +24,7 @@ class Giveaway extends AbstractEvent
      * One to Many with GiveawayPool
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaways")
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaway")
      */
     protected $giveawayPools;
 
@@ -48,10 +49,15 @@ class Giveaway extends AbstractEvent
      */
     protected $status = 'disabled';
 
+    /**
+     * Key of valid status to a text translation key for that status
+     *
+     * @var array
+     */
     static protected $validStatuses = array(
-        'disabled',
-        'inactive',
-        'active',
+        'disabled' => 'platformd.giveaway.status.disabled',
+        'inactive' => 'platformd.giveaway.status.inactive',
+        'active' => 'platformd.giveaway.status.active',
     );
 
     public function __construct()
@@ -59,6 +65,12 @@ class Giveaway extends AbstractEvent
         $this->giveawayPools = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        
+        return $this->getName();
+    }
+    
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -102,11 +114,48 @@ class Giveaway extends AbstractEvent
             return;
         }
 
-        if (!in_array($status, self::$validStatuses)) {
+        if (!in_array($status, array_keys(self::$validStatuses))) {
             throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
         }
 
         $this->status = $status;
+    }
+
+    /**
+     * Returns the "text" for the current status
+     *
+     * The text is actually just a translation key
+     *
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
+    }
+
+    /**
+     * Returns a key-value pair of valid status keys and their text translation
+     *
+     * Useful in forms
+     *
+     * @return array
+     */
+    static public function getValidStatusesMap()
+    {
+        return self::$validStatuses;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->getStatus() == 'disabled';
+    }
+
+    public function isActive()
+    {
+        return $this->getStatus() == 'active';
     }
 
     /**
@@ -123,5 +172,52 @@ class Giveaway extends AbstractEvent
     public function setRedemptionInstructions($redemptionInstructions)
     {
         $this->redemptionInstructions = $redemptionInstructions;
+    }
+
+    /**
+     * Explodes the redemptionInstructions by new line into an array of instructions
+     *
+     * @return array
+     */
+    public function getRedemptionInstructionsArray()
+    {
+        return explode("\n", $this->getRedemptionInstructions());
+    }
+
+    /**
+     * Allows you to set the redemption instructions where each step is
+     * an item in an array
+     *
+     * @param array $instructions
+     */
+    public function setRedemptionInstructionsArray(array $instructions)
+    {
+        $this->setRedemptionInstructions(implode("\n", $instructions));
+    }
+
+    /**
+     * Returns the "active" pool, which is just the first one we find that
+     * is indeed active
+     *
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayPool
+     */
+    public function getActivePool()
+    {
+        foreach($this->getGiveawayPools() as $pool) {
+            if ($pool->getIsActive()) {
+                return $pool;
+            }
+        }
+    }
+
+    /**
+     * Makes sure the redemption instructions are trimmed
+     *
+     * @ORM\prePersist
+     * @ORM\preUpdate
+     */
+    public function trimRedemptionInstructions()
+    {
+        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
     }
 }

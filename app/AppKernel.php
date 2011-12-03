@@ -27,6 +27,10 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
 
+            // KNP bundles
+            new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
+            new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
+
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
             new Platformd\UserBundle\UserBundle(),

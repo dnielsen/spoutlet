@@ -5,24 +5,22 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Entity\EventRepository;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 class EventsController extends Controller
 {
-	private function getLocale()
-	{
-		return $this->get('session')->getLocale();
-	}
-
 	public function indexAction()
 	{
 		$current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 5);
 		$past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 5);
 
+        $allGiveaways = $this->getGiveawayRepo()
+            ->findActives($this->getLocale())
+        ;
+
 		return $this->render('SpoutletBundle:Events:index.html.twig',
 			array(
 				'current_events' => $current_events,
 				'past_events'    => $past_events,
+                'giveaways'      => $allGiveaways,
 			));
 	}
 
@@ -112,22 +110,6 @@ class EventsController extends Controller
 		$this->getDoctrine()->getEntityManager()->flush();
 
 		return $this->redirect($this->generateUrl('events_detail', array('slug' => $event->getSlug())));
-	}
-
-	/**
-	 * @return Doctrine\Common\Collections\Collection
-	 */
-	private function getCurrentEvents()
-	{
-		return $this->getEventsRepo()->getCurrentEvents();
-	}
-
-	/**
-	 * @return Doctrine\Common\Collections\Collection
-	 */
-	private function getUpcomingEvents()
-	{
-		return $this->getEventsRepo()->getUpcomingEvents();
 	}
 	
 	/**
