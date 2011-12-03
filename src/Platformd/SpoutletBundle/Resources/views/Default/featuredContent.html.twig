@@ -10,9 +10,10 @@
 
         <div id="featured-content-featured-news" class="featured-content-category active">
             {% for item in news %}
-                <div class="widget-item">
-                    <h3>{{ item.title }}</h3>
-                    {{ item.body | raw }}
+                <div class="widget-item featured-news">
+                    {% include 'NewsBundle:Default:_news.html.twig' with {
+                        'item': item
+                    } %}
                 </div>
             {% endfor %}
         </div>

@@ -3,6 +3,7 @@
 namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -24,6 +25,7 @@ class News
     /**
      * @var string $title
      *
+     * @Assert\NotBlank
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -31,6 +33,7 @@ class News
     /**
      * @var text $body
      *
+     * @Assert\NotBlank
      * @ORM\Column(name="body", type="text")
      */
     private $body;
@@ -69,7 +72,7 @@ class News
     /**
      * Set body
      *
-     * @param text $body
+     * @param string $body
      */
     public function setBody($body)
     {
@@ -79,7 +82,7 @@ class News
     /**
      * Get body
      *
-     * @return text 
+     * @return string
      */
     public function getBody()
     {
