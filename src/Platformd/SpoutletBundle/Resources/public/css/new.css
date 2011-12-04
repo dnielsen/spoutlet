@@ -285,3 +285,9 @@ span.required {
 #homepage-gallery .ad-controls {
     display: none;
 }
+
+.admin-homepage-banner-form .form-help {
+    margin-left: 110px;
+    width: 400px;
+    color: #dcdcdc;
+}

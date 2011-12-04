@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Add a new homepage banner</h1>
     
-    <form method="post" action="{{ path('admin_homepage_banner_new') }}" {{ form_enctype(form) }} class="form">
+    <form method="post" action="{{ path('admin_homepage_banner_new') }}" {{ form_enctype(form) }} class="form admin-homepage-banner-form">
         {% include 'SpoutletBundle:HomepageBanner:_form.html.twig' with { 
             "form"      : form
         } %}

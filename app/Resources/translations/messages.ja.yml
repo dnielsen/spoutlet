@@ -175,6 +175,15 @@ platformd:
             create: Create a new homepage banner
             edit: Edit
             delete: Delete
+            thumb_note: |
+                This image should be 120x60. If it should have rounded corners,
+                then for best results, the image should have rounded corners
+                using etheir transparency (as a .png) or a fade into a background
+                color of #323232
+            banner_note: |
+                This image should be 635x183. If it should have rounded corners,
+                then the image should have rounded corners that fade into
+                a totally black background.
 
     about:
         title: Alienware Arenaについて
