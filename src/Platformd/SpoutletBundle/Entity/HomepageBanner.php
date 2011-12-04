@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Platformd\SpoutletBundle\Entity\HomepageBanner
  *
- * @ORM\Table()
+ * @ORM\Table(name="sp_homepage_banner")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\HomepageBannerRepository")
  */
 class HomepageBanner
