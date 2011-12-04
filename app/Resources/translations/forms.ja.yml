@@ -11,6 +11,11 @@ event_hosted_by: "主催者"
 event_game: "ゲーム"
 event_bannerImageFile: "バナー画像"
 
+platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
+platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner
+platformd_spoutletbundle_homepagebannertype_position: Position
+platformd_spoutletbundle_homepagebannertype_url: URL
+
 year: 年
 month: 月
 day: 日

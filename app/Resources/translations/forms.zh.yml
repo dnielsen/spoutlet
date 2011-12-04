@@ -11,6 +11,11 @@ event_hosted_by: "举办方"
 event_game: "游戏"
 event_bannerImageFile: "广告图片"
 
+platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
+platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner
+platformd_spoutletbundle_homepagebannertype_position: Position
+platformd_spoutletbundle_homepagebannertype_url: URL
+
 year: ''
 month: ''
 day: ''
