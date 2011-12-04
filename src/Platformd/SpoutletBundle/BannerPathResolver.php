@@ -6,7 +6,7 @@ use Platformd\SpoutletBundle\PathResolver;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 /**
-* 
+* Path resolver for the event banner
 */
 class BannerPathResolver extends PathResolver
 {
@@ -17,7 +17,7 @@ class BannerPathResolver extends PathResolver
   public function getPath($event, array $options)
   {
 
-    return parent::getPath($media->getBanner(), $options);
+    return parent::getPath($event->getBanner(), $options);
   }
 
   /**

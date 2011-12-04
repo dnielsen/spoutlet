@@ -15,5 +15,9 @@
     {% if is_granted('ROLE_SUPER_ADMIN') %}
 	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('NewsBundle_admin_homepage') }}">{{ "platformd.layout.admin_menu.manage_news" | trans }}</a></div>
     {% endif %}
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+	    <div style="display:inline-table;padding-right: 10px;"><a href="{{ path('admin_homepage_banner_index') }}">{{ "platformd.layout.admin_menu.manage_homepage_banners" | trans }}</a></div>
+    {% endif %}
 </div>
 

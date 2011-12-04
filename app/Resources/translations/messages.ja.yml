@@ -56,6 +56,7 @@ platformd:
             manage_giveaways: Manage Giveaways
             manage_users: ユーザー管理
             manage_news: Manage News
+            manage_homepage_banners: Manage Homepage Banners
 
         main_menu:
             home: ホーム

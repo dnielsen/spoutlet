@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Platformd\SpoutletBundle\Entity\HomepageBanner
@@ -37,6 +38,7 @@ class HomepageBanner
 
     /**
      * @var Symfony\Component\HttpFoundation\File\File
+     * @Assert\NotBlank
      */
     public $thumb_file;
 
@@ -49,6 +51,7 @@ class HomepageBanner
 
     /**
      * @var Symfony\Component\HttpFoundation\File\File
+     * @Assert\NotBlank
      */
     public $banner_file;
 
@@ -57,12 +60,13 @@ class HomepageBanner
      *
      * @ORM\Column(name="position", type="integer")
      */
-    private $position;
+    private $position = 0;
 
     /**
      * @var string $url
      *
      * @ORM\Column(name="url", type="string", length=255)
+     * @Assert\NotBlank
      */
     private $url;
 
