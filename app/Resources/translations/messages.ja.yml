@@ -165,6 +165,17 @@ platformd:
         giveaway:
             your_giveaway_keys: 取得済みキー
 
+    homepage_banner:
+        banners:
+            title: Homepage banners
+            thumb: Thumb
+            full: バナー画像
+            url: URL
+        admin:
+            create: Create a new homepage banner
+            edit: Edit
+            delete: Delete
+
     about:
         title: Alienware Arenaについて
 

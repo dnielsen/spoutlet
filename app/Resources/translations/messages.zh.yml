@@ -159,6 +159,17 @@ platformd:
         giveaway:
             your_giveaway_keys: My Giveaway Keys
 
+    homepage_banner:
+        banners:
+            title: Homepage banners
+            thumb: Thumb
+            full: 广告图片
+            url: URL
+        admin:
+            create: Create a new homepage banner
+            edit: Edit
+            delete: Delete
+
     about:
         title: 关于Alienware ArenaTM
 

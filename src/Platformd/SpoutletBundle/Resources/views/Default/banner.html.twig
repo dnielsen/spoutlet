@@ -1,4 +1,4 @@
- <div id="gallery" class="ad-gallery">
+ <div id="homepage-gallery" class="ad-gallery">
   <div class="ad-image-wrapper">
   </div>
   
@@ -26,9 +26,15 @@
 jQuery(function($) {
 
   var galleries = $('.ad-gallery').adGallery({
-    width: 600,
-    height: 400,
+    width: 635,
+    height: 183,
     display_next_and_prev: false,
+    slideshow: {
+        enable: true,
+        autostart: true,
+        speed: 5000,
+        stop_on_scroll: false // Should the slideshow stop if the user scrolls the thumb list?
+    },
     callbacks: {
       afterImageVisible: function() {
         var 

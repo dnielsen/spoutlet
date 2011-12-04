@@ -12,9 +12,10 @@
             <table width="100%">
                 <thead>
                     <tr>
-                        <th>{{ "platformd.homepage_banner.banners.id" | trans }}</th>
                         <th>{{ "platformd.homepage_banner.banners.thumb" | trans }}</th>
+                        <th>{{ "platformd.homepage_banner.banners.full" | trans }}</th>
                         <th>{{ "platformd.homepage_banner.banners.url" | trans }}</th>
+                        <th>{{ "platformd_spoutletbundle_homepagebannertype_position"| trans({}, 'forms') }}</th>
                         <th>{{ "platformd.help.actions" | trans }}</th>
                     </tr>
                 </thead>
@@ -22,9 +23,12 @@
                 <tbody>
                 {% for banner in banners %}
                     <tr>
-                        <td>{{ banner.id }}</td>
-                        <td><a href="{{ media_path(banner, { "size": banner }) }}"><img src="{{ media_path(banner) }}" alt="Banner thumb" width="50" /></a></td>
+                        <td><a href="{{ media_path(banner, { "size": 'thumb' }) }}"><img src="{{ media_path(banner, {"size": 'thumb'}) }}" alt="Banner icon" width="50" /></a></td>
+                        <td>
+                            <a href="{{ media_path(banner, { "size": 'banner' }) }}"><img src="{{ media_path(banner, {'size': 'banner'}) }}" alt="Banner image" width="50" /></a>
+                        </td>
                         <td>{{ banner.url }}</td>
+                        <td>{{ banner.position }}</td>
                         <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.edit" | trans }}</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.delete" | trans }}</a></td>
                     </tr>
                 {% endfor %}

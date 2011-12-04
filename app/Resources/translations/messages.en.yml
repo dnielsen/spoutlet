@@ -161,8 +161,8 @@ platformd:
     homepage_banner:
         banners:
             title: Homepage banners
-            id: ID
             thumb: Thumb
+            full: Banner
             url: URL
         admin:
             create: Create a new homepage banner
