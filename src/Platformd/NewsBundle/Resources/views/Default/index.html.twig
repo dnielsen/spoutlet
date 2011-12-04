@@ -9,7 +9,13 @@
         {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
     </div>
     <div class="left">
-        {% render 'SpoutletBundle:Default:featuredContent' with {'onlyNews': true} %}
+        <div class="widget-item featured-news">
+            {% for item in news %}
+                {% include 'NewsBundle:Default:_news.html.twig' with {
+                    'item': item
+                } %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

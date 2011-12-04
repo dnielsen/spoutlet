@@ -28,6 +28,16 @@ class Controller extends BaseController
             ->getRepository('GiveawayBundle:Giveaway');
     }
 
+    /**
+     * @return \Platformd\NewsBundle\Entity\NewsRepository
+     */
+    protected function getNewsRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('NewsBundle:News');
+    }
+
     protected function setFlash($key, $message)
     {
         return $this->container->get('session')->setFlash($key, $message);

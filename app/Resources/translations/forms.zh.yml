@@ -1,8 +1,24 @@
+event_name: "名称"
+event_ready: "回复？"
+event_published: "发表？"
+event_starts_at: "开始时间"
+event_ends_at: "结束日期"
+event_city: "城市"
+event_location: "地点"
+event_country: "国家"
+event_content: "说明"
+event_hosted_by: "举办方"
+event_game: "游戏"
+event_bannerImageFile: "广告图片"
+
+year: ''
+month: ''
+day: ''
+
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
 fos_user_registration_form_birthdate: "出生年月"
 fos_user_registration_form_hasAlienwareSystem: "您是否拥有Alienware系统？"
-fos_user_registration_form_latestNewsSource: "你最近一次是通过什么了解到Alienware Arena的？"
 fos_user_registration_form_termsAccepted: "已阅读并同意相关条款及隐私政策"
 fos_user_registration_form_subscribedAlienwareEvents: "通过邮件订阅Alienware Arena最新邀请码、比赛、活动以及更多精彩内容。"
 fos_user_registration_form_subscribedGamingNews: "邮件订阅Alienware/Dell游戏资讯及其他特别信息"
@@ -14,3 +30,23 @@ fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_email: "邮箱"
 fos_user_profile_form_user_is_organizer: "组织人："
 fos_user_profile_form_user_is_super_admin: "高级管理"
+
+giveaway_name: "名称"
+giveaway_content: "说明"
+giveaway_bannerImageFile: "广告图片"
+giveaway_status: "状态"
+giveaway_redemptionInstructionsArray: 操作说明
+giveway_pool_giveaway: 邀请码
+giveway_pool_description: 说明
+giveway_pool_maxKeysPerIp: 最大/IP
+giveway_pool_upperLimit: 上限
+giveway_pool_lowerLimit: 下限
+giveway_pool_isActive: 已激活
+giveway_pool_keysfile: 激活码文件
+
+# not an actual field - but used on the index page
+giveway_pool_lower_upper_display: L/U显示
+giveway_pool_assigned_total: 已分配/全部
+
+news_title: Title
+news_body: Body

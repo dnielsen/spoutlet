@@ -55,6 +55,7 @@ platformd:
             manage_events: イベント管理
             manage_giveaways: Manage Giveaways
             manage_users: ユーザー管理
+            manage_news: Manage News
 
         main_menu:
             home: ホーム
@@ -171,3 +172,126 @@ platformd:
 
     navigation:
         back: Go Back
+
+    comment:
+        login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
+        comments: コメント
+
+    user:
+        login_header: ログイン情報の入力
+        change_password_header: パスワードの変更
+        edit_account_header: アカウント情報の編集
+
+        register_title: Arenaアカウントの作成
+
+        name_fields_order: %last_name% %first_name%
+
+        register:
+            requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
+            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
+            terms_label: サービス規約
+            dell_privacy_label: デルのプライバシーポリシー
+            country_label: 国の選択
+            underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
+
+        login:
+            title: アカウントにログイン
+            forgot_password: パスワードをお忘れですか?
+            need_help: ヘルプが必要ですか?
+            not_a_member_join: まだメンバーではありません?今すぐ無料登録。
+            password_message: パスワードは大小文字が区別されます。Caps-Lockがオフになっていることを確認してください。パスワードをお忘れの場合は、リセットを依頼できます。ご登録のメールアドレスをお忘れの場合は、サポートまでご連絡ください。
+
+        reset:
+            title:  パスワードをお忘れですか?
+
+        request_reset:
+            title: パスワードをお忘れですか?
+            help_message: パスワードを忘れた場合メールにてパスワードを送信します。ユーザー名またはメールアドレスを忘れた方はサポートまでご連絡下さい。
+            spam_message: 重要：スパムフォルダをご確認ください。一部のメールフィルタにより、弊社からのメールが「迷惑メール」として分類されることがあります。パスワードがリセットされるまでに、最大30分かかる場合があります。通常は、数秒でリセットされますが、弊社からのリセット通知のメールが遅れることがあります。
+
+        account:
+            account_home: アカウントホーム
+            edit_account: アカウント編集
+            change_password: パスワード変更
+            profile:      プロファイル
+            registered_events: 参加済みイベント
+            my_giveaways: 参加済みキャンペーン
+            help: お問い合わせ
+
+    giveaway:
+        giveaway: プレゼント
+        redeem:   引き換え
+        get_key:  キー入手
+        no_keys_left: このギブアウェイでキーはありません
+        max_ip_limit: あなたのIPアドレスではこれ以上のキーは取得できません
+        already_assigned: 既にギブアウェイキーを取得しています。
+        view_giveaway_site: プレゼント
+        admin:
+            title: ギブアウェイ管理
+            edit_giveaway: ギブアウェイを編集 | %giveaway_title%
+            create: 新規ギブアウェイ作成
+            saved: ギブアウェイはセーブされました
+            save_giveaway: ギブアウェイをセーブ
+            edit_title: ギブアウェイを編集
+            redemption_instructions_note: |
+                それぞれのボックスは回復ステップにあります。必要ではないボックスはブランクにしてください。
+                HTMLを使用することもできます　例　(e.g. <a href="/events">Link to events</a>).
+            manage_pools:  プールを管理
+        status:
+            disabled:  すべて不可
+            inactive:  有効ですがキーがありません
+            active:    有効
+            blank_value:  ステータスを選択する
+        show:
+            availaible_keys: キー残数: %%count%%
+        giveaways_listings:
+            giveaways: ギブアウェイ
+        assigned:
+            message: |
+                キーが割り当てられました。Alienware Arenaコントロールパネルの取得済みキーでいつでもキーを確認できます。
+            may_require_activation: アクティベーションが必要な場合もあります。詳細は、プレゼントページをご覧ください。
+            key: キー
+            assigned_at: 日付
+            view_giveaway: 情報
+    giveaway_pool:
+        pool: ギブアウェイプール
+        admin:
+            title: "%giveaway_name%" 用のギブアウェイ
+            create:  新しいプール作成
+            edit_pool:  プールを編集
+            save_giveaway_pool: ギブアウェイプールを保存
+            saved:  ギブアウェイプールは保存されました
+        first_active_used:  注意：最初の”有効”プールはこのサイトで使用されているものです。
+
+    admin:
+        news:
+            heading: Manage news
+            title: Title
+            edit:  Edit
+            delete: Delete
+            delete_confirm: Are you sure you want to delete this news item?
+            create: Create a new item
+            save_news: Save news
+            create_title: Create a news item
+            created: Your news item has been created !
+            modified: Your news item has been modified !
+            deleted: Your news item has been deleted !
+            edit_title: Edit a news item
+
+# I'm not sure how we have two different potential "wrong password messages"...
+"Bad credentials": "パスワードまたはメールアドレスが無効です"
+"The presented password is invalid.": "パスワードまたはメールアドレスが無効です"
+"The presented password cannot be empty.": "パスワードを入力してください"
+"User account is disabled.": アカウントが無効です
+
+# registration drop-down choices
+"Select one": "----お選びください ----"
+source_alienware: Alienware 公式サイト
+CEVO: "ゲーム系ニュースサイト"
+"Tech News Site": IT系ニュースサイト
+"Email": Eメール
+"Friends or Family": 友人・知人から聞いた
+"Blog": 個人ブログ・サイト
+"Other": "その他"
+
+avatar_awaiting_approval: あなたのアバターが正常にアップロードされましたが、それが表示される前に承認する必要があります

@@ -1,0 +1,19 @@
+NewsBundle_admin_homepage:
+    pattern:  /admin/news
+    defaults: { _controller: NewsBundle:Admin:index }
+
+NewsBundle_admin_new:
+    pattern:  /admin/news/new
+    defaults: { _controller: NewsBundle:Admin:new }
+
+NewsBundle_admin_edit:
+    pattern:  /admin/news/{id}/edit
+    defaults: { _controller: NewsBundle:Admin:edit }
+
+NewsBundle_admin_delete:
+    pattern:  /admin/news/{id}/delete
+    defaults: { _controller: NewsBundle:Admin:delete }
+
+news:
+    pattern: /news
+    defaults: { _controller: NewsBundle:Default:index }
