@@ -55,6 +55,7 @@ platformd:
             manage_events: イベント管理
             manage_giveaways: Manage Giveaways
             manage_users: ユーザー管理
+            manage_news: Manage News
 
         main_menu:
             home: ホーム

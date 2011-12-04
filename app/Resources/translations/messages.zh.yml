@@ -55,6 +55,7 @@ platformd:
             manage_events: 管理活动
             manage_giveaways: Manage Giveaways
             manage_users: 管理用户
+            manage_news: Manage News
 
         main_menu:
             home: 首页
