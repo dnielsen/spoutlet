@@ -290,7 +290,10 @@
           link.click(
             function() {
               context.showImage(i);
-              context.slideshow.stop();
+              // commented out by Ryan
+              // we wanted the slideshow to continue after clicking a thumbnail image
+              // and it doesn't seem possible without doing this
+              //context.slideshow.stop();
               return false;
             }
           ).hover(
