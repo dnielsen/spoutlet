@@ -270,7 +270,7 @@ span.required {
     padding-right: 1px;
 }
 #homepage-gallery .ad-thumbs li a img {
-    border-color:#323232;
+    border-color:#252525;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
@@ -280,7 +280,7 @@ span.required {
     border-color: #68bcd8;
 }
 #homepage-gallery .ad-nav {
-    background: #323232;
+    background: #252525;
 }
 #homepage-gallery .ad-controls {
     display: none;
