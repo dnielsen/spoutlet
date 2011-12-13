@@ -291,3 +291,33 @@ span.required {
     width: 400px;
     color: #dcdcdc;
 }
+
+/* custom progress bar for the gallery */
+#rotator {
+    position: relative;
+}
+#progress-bar {
+    position: absolute;
+    bottom: 85px;
+    z-index: 100;
+    width: 100%;
+}
+#progress-bar .ui-progressbar-value {
+    display: block !important;
+    background: #fff;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+    margin: auto;
+    -moz-border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    -khtml-border-radius: 0 !important;
+    border-radius: 0 !important;
+    border: none;
+}
+#progress-bar .ui-progressbar {
+    height: 5px;
+    background: none;
+    border: none;
+    width: 30px;
+    margin: auto;
+}

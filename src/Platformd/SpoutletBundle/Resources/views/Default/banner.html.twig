@@ -19,6 +19,11 @@
     </div>
   </div>
 </div>
+
+<div id="progress-bar">
+    <div class="pbar"></div>
+</div>
+
 <script type="text/javascript">
 /**
  * Todo : move this in a global javascript file
@@ -32,13 +37,16 @@ jQuery(function($) {
     display_next_and_prev: false,
     display_back_and_forward: false,
     slideshow: {
+
+
         enable: true,
         autostart: true,
         speed: 7000,
-        stop_on_scroll: false // Should the slideshow stop if the user scrolls the thumb list?
+        stop_on_scroll: false
     },
     callbacks: {
       afterImageVisible: function() {
+
         var 
           current = this.images[this.current_index].thumb,
           url = $("img[src='" + current + "']").data("url");
@@ -60,8 +68,18 @@ jQuery(function($) {
         } else {
           $("div.ad-image img").css("cursor", "default").unbind("unclick", handleFullsizeClick);
         }
+      },
+
+      beforeImageVisible: function() {
+          // hook into a progress bar, since this gallery doesn't have the one we need
+          $('#progress-bar').anim_progressbar({
+              interval: 400
+          }, 7);
       }
     }
   });
-})
+
+  // initializes the progress bar, which we'll use by calling anim_progressbar
+  setupProgressBar();
+});
 </script>
