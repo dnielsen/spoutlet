@@ -3,14 +3,12 @@
 namespace Platformd\UserBundle\Entity;
 
 use Platformd\SpoutletBundle\Entity\Event;
-
 use FOS\UserBundle\Entity\User as BaseUser;
-
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\Common\Collections\ArrayCollection,
     Doctrine\Common\Collections\Collection;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
@@ -255,6 +253,22 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayKey", mappedBy="user")
      */
     protected $giveawayKeys;
+
+    /**
+     * @var datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="date")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
     /** 
      * @Assert\File(
@@ -869,5 +883,37 @@ class User extends BaseUser
         $length = 6;
 
         return substr($token, 0, $length);
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\datetime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \Platformd\UserBundle\Entity\datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\datetime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \Platformd\UserBundle\Entity\datetime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }
