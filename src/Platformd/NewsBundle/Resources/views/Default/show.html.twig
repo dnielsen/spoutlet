@@ -1,0 +1,19 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ news.title | trans }}{% endblock %}
+
+{% block content %}
+{# this whole thing was copied from the homepage template.... #}
+<div id="row-2" class="std_2col">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+    </div>
+    <div class="left">
+        <div class="widget-item featured-news">
+            <h1>{{ news.title }}</h1>
+
+            {{ news.body | raw }}
+        </div>
+    </div>
+</div>
+{% endblock %}

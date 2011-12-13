@@ -17,3 +17,7 @@ NewsBundle_admin_delete:
 news:
     pattern: /news
     defaults: { _controller: NewsBundle:Default:index }
+
+news_show:
+    pattern: /news/{slug}
+    defaults: { _controller: NewsBundle:Default:show }

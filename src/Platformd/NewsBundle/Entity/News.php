@@ -4,6 +4,7 @@ namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -38,6 +39,12 @@ class News
      */
     private $body;
 
+    /**
+     * @var string
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(name="slug", type="string", length=255, unique=true)
+     */
+    private $slug;
 
     /**
      * Get id
@@ -87,5 +94,21 @@ class News
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }

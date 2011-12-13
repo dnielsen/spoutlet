@@ -1,4 +1,6 @@
-<h3>{{ item.title }}</h3>
+<h3>
+    <a href="{{ path('news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
+</h3>
 <div>
     {{ item.body | raw }}
 </div>

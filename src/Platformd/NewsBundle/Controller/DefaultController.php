@@ -20,4 +20,15 @@ class DefaultController extends Controller
             'news' => $news,
         ));
     }
+
+    public function showAction($slug)
+    {
+        $news = $this->getNewsRepo()
+            ->findOneBy(array('slug' => $slug))
+        ;
+
+        return $this->render('NewsBundle:Default:show.html.twig', array(
+            'news' => $news,
+        ));
+    }
 }
