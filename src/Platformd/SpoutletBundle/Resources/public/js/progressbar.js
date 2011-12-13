@@ -1,7 +1,5 @@
 (function(){
 
-    console.log('yay!');
-
     var setupProgressBar = function(){
         jQuery.fn.anim_progressbar = function (aOptions, totalSeconds) {
             // def values
