@@ -26,3 +26,9 @@ services:
         arguments:
             - @platformd.s3
             - "%s3_bucket_name%"
+
+    twig.extension_text:
+        class: Twig_Extensions_Extension_Text
+        arguments: []
+        tags:
+            - { name: twig.extension }

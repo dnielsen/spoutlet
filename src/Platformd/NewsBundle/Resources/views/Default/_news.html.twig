@@ -2,5 +2,5 @@
     <a href="{{ path('news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
 </h3>
 <div>
-    {{ item.body | raw }}
+    {{ item.body | striptags | truncate(200) }}
 </div>
