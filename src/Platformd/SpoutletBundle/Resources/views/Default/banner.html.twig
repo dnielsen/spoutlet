@@ -30,6 +30,9 @@
  */
 jQuery(function($) {
 
+  // initializes the progress bar, which we'll use by calling anim_progressbar
+  setupProgressBar();
+
   var galleries = $('.ad-gallery').adGallery({
     width: 635,
     height: 183,
@@ -78,8 +81,5 @@ jQuery(function($) {
       }
     }
   });
-
-  // initializes the progress bar, which we'll use by calling anim_progressbar
-  setupProgressBar();
 });
 </script>
