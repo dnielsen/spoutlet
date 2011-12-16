@@ -16,8 +16,9 @@ class BannerPathResolver extends PathResolver
    */
   public function getPath($event, array $options)
   {
+    /** @var $event \Platformd\SpoutletBundle\Entity\AbstractEvent */
 
-    return parent::getPath($event->getBanner(), $options);
+    return parent::getPath($event->getBannerImage(), $options);
   }
 
   /**
