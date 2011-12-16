@@ -11,6 +11,10 @@ class GiveawayType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');
+        $builder->add('slug', 'text', array(
+            'required' => false,
+            'label'    => 'URL key(e.g. my-event)',
+        ));
     	$builder->add('content', 'textarea');
         $builder->add('bannerImageFile', 'file');
         $builder->add('redemptionInstructionsArray', 'collection', array(

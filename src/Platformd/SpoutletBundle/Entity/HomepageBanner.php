@@ -38,7 +38,6 @@ class HomepageBanner
 
     /**
      * @var Symfony\Component\HttpFoundation\File\File
-     * @Assert\NotBlank
      */
     public $thumb_file;
 
@@ -51,7 +50,6 @@ class HomepageBanner
 
     /**
      * @var Symfony\Component\HttpFoundation\File\File
-     * @Assert\NotBlank
      */
     public $banner_file;
 

@@ -16,6 +16,18 @@
     
     {{ form_row(form.name) }}
 
+    <div class="form_row">
+        {{ form_label(form.slug) }}
+        {{ form_errors(form.slug) }}
+        {{ form_widget(form.slug) }}
+    </div>
+
+    <div class="form-help">
+        This field will be generated automatically if left blank. It's format
+        should be lowercase letters and dashes, without any http (e.g. my-new-giveaway).
+        This becomes *part* of the URL for this item.
+    </div>
+
     {{ form_row(form.starts_at) }}
 
     {{ form_row(form.ends_at) }}
