@@ -7,7 +7,8 @@
                     <tr>
                         <td style="text-align:center; padding:20px 0;" colspan="5">
                             {# basically a hack, in one case I need another message, that has an HTML anchor tag in it #}
-                            <strong>{{ no_giveaways_message | trans }}</strong>
+                            {# the | default is a hack too - because I was missing this variable at one point (somewhere), and need to deploy now #}
+                            <strong>{{ no_giveaways_message | default('') | trans }}</strong>
                         </td>
                     </tr>
                     {% else %}
