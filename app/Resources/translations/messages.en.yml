@@ -77,6 +77,7 @@ platformd:
             keys_available: Keys Available
             ad_url: "/images/ads/aw-ms7-728x90-en.jpg"
             deals_add_url: "/images/ads/AA_300x250deals.jpg"
+            deals_ad_link_url: "http://alienware.com"
             landing_image_url: "/images/AWinvades-jp.jpg"
             landing_image_target: '/news'
 

@@ -77,6 +77,7 @@ platformd:
             keys_available: 有邀请码
             ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
             deals_add_url: "/images/ads/cn-deals.jpg"
+            deals_ad_link_url: "http://alienware.com.cn/"
             landing_image_url: "/images/AWinvades-cn.jpg"
             landing_image_target: '/news'
 
