@@ -26,6 +26,7 @@ class HomepageBanner
      * @var string $locale
      *
      * @ORM\Column(name="locale", type="string", length=5)
+     * @Assert\NotBlank
      */
     private $locale;
 

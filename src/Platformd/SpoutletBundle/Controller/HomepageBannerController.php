@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Form\HomepageBannerType;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
 /**
-* 
+* Admin controller for homepage banners
 */
 class HomepageBannerController extends Controller
 {
@@ -16,7 +16,7 @@ class HomepageBannerController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:HomepageBanner')
-            ->findForLocale($this->getLocale())
+            ->findAll()
         ;
 
         return $this->render('SpoutletBundle:HomepageBanner:index.html.twig', array(
@@ -29,7 +29,6 @@ class HomepageBannerController extends Controller
         $request = $this->getRequest();
 
         $banner = new HomepageBanner();
-        $banner->setLocale($this->getLocale());
 
         $form = $this->createForm(new HomepageBannerType(), $banner);
 
