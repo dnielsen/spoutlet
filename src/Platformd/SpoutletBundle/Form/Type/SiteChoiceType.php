@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Form\Type;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 /**
  * Special form type for a drop-down menu of all available "sites"
@@ -37,11 +38,9 @@ class SiteChoiceType extends ChoiceType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $options['choice_list'] = new ArrayChoiceList(array(
-            'en' => 'Demo',
-            'ja' => 'Japan',
-            'zh' => 'China',
-        ));
+        $options['choice_list'] = new ArrayChoiceList(
+            MultitenancyManager::getSiteChoices()
+        );
 
         parent::buildForm($builder, $options);
     }

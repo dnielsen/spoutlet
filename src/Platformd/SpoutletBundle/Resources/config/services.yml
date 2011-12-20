@@ -32,3 +32,8 @@ services:
         arguments: []
         tags:
             - { name: twig.extension }
+
+    platformd.multitenancy_extension:
+        class: Platformd\SpoutletBundle\Twig\MultitenancyExtension
+        tags:
+            - { name: twig.extension }
