@@ -68,6 +68,7 @@ class AbstractEvent
      * @var string $locale
      *
      * @ORM\Column(name="locale", type="string", length="2", nullable=false)
+     * @Assert\NotBlank
      */
     protected $locale;
 

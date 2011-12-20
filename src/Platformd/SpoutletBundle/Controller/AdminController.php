@@ -9,6 +9,9 @@ use Platformd\SpoutletBundle\Entity\Event,
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Admin controller for events
+ */
 class AdminController extends Controller
 {
     

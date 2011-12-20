@@ -47,6 +47,7 @@ giveaway_content: "Description"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"
 giveaway_redemptionInstructionsArray: Redemption Instructions
+giveaway_locale: "Site"
 giveway_pool_giveaway: Giveaway
 giveway_pool_description: Description
 giveway_pool_maxKeysPerIp: Max/IP

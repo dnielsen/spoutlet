@@ -13,7 +13,7 @@ class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
-        $giveaways = $this->getGiveawayRepo()->findAllForLocale($this->getLocale());
+        $giveaways = $this->getGiveawayRepo()->findAll();
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
             array('giveaways' => $giveaways));
@@ -96,7 +96,6 @@ class GiveawayAdminController extends Controller
     {
         // save to db
         $giveaway = $giveawayForm->getData();
-        $giveaway->setLocale($this->getLocale());
 
         $this
             ->get('platformd.events_manager')

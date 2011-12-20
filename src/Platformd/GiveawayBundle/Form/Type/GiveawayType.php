@@ -5,6 +5,7 @@ namespace Platformd\GiveawayBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 
 class GiveawayType extends AbstractType
 {
@@ -24,6 +25,7 @@ class GiveawayType extends AbstractType
             'choices' => Giveaway::getValidStatusesMap(),
             'empty_value' => 'platformd.giveaway.status.blank_value',
         ));
+        $builder->add('locale', new SiteChoiceType());
     }
 
     public function getName()

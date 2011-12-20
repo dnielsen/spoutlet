@@ -46,6 +46,7 @@ giveaway_content: "説明"
 giveaway_bannerImageFile: "バナー画像"
 giveaway_status: "ステータス"
 giveaway_redemptionInstructionsArray:  回復指示
+giveaway_locale: "Site"
 giveway_pool_giveaway: プレゼント
 giveway_pool_description:  説明
 giveway_pool_maxKeysPerIp:  最大IP

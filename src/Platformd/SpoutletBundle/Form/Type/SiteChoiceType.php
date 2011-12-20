@@ -30,6 +30,7 @@ class SiteChoiceType extends ChoiceType
     {
         return array(
             'label' => 'Site',
+            'empty_value' => 'Choose a site',
         );
     }
 

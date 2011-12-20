@@ -9,6 +9,9 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 
+/**
+ * Admin controller for users
+ */
 class AdminController extends Controller
 {
     

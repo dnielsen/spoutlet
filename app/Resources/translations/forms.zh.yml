@@ -42,6 +42,7 @@ giveaway_content: "说明"
 giveaway_bannerImageFile: "广告图片"
 giveaway_status: "状态"
 giveaway_redemptionInstructionsArray: 操作说明
+giveaway_locale: "Site"
 giveway_pool_giveaway: 邀请码
 giveway_pool_description: 说明
 giveway_pool_maxKeysPerIp: 最大/IP
