@@ -46,6 +46,17 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle();
         }
 
+        if ('test' === $this->getEnvironment()) {
+            // don't autoload Symfony2 classes, as they are
+            // already loaded by the Symfony2 itself
+            if (!defined('BEHAT_AUTOLOAD_SF2')) define('BEHAT_AUTOLOAD_SF2', false);
+            require_once 'behat/autoload.php';
+            require_once 'mink/autoload.php';
+
+            $bundles[] = new Behat\BehatBundle\BehatBundle();
+            $bundles[] = new Behat\MinkBundle\MinkBundle();
+        }
+
         return $bundles;
     }
 

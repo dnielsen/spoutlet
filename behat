@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# A little shortcut script for executing Behat inside a Symfony2 project
+#
+# Configure behat in Symfony2 per the following instructions and then place this in the root of your project
+# http://docs.behat.org/bundle/index.html
+#
+# Example Usage:
+# ./behat @BlogBundle
+
+./app/console -e=test behat "$@"

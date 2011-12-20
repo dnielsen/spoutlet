@@ -125,3 +125,11 @@
 [KnpMediaExposerBundle]
     git=http://github.com/KnpLabs/KnpMediaExposerBundle.git
     target=/bundles/Knp/Bundle/MediaExposerBundle
+
+[BehatBundle]
+    git=https://github.com/Behat/BehatBundle.git
+    target=/bundles/Behat/BehatBundle
+
+[MinkBundle]
+    git=https://github.com/Behat/MinkBundle.git
+    target=/bundles/Behat/MinkBundle

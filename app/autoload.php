@@ -26,7 +26,9 @@ $loader->registerNamespaces(array(
     'Pagerfanta'                    => __DIR__.'/../vendor/pagerfanta/src',
     'Knp\\Bundle'                   => __DIR__.'/../vendor/bundles',
     'Gaufrette'                     => __DIR__.'/../vendor/gaufrette/src',
-    'MediaExposer'                  => __DIR__.'/../vendor/media-exposer/src'
+    'MediaExposer'                  => __DIR__.'/../vendor/media-exposer/src',
+    'Behat\BehatBundle'             => __DIR__.'/../vendor/bundles',
+    'Behat\MinkBundle'              => __DIR__.'/../vendor/bundles',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
