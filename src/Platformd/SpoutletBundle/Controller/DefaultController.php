@@ -25,7 +25,8 @@ class DefaultController extends Controller
         
         $news = $em
             ->getRepository('NewsBundle:News')
-            ->findAll();
+            ->findAllForLocale($this->getLocale())
+        ;
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())

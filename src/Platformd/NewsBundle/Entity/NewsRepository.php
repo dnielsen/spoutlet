@@ -3,6 +3,7 @@
 namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * NewsRepository
@@ -14,7 +15,38 @@ class NewsRepository extends EntityRepository
 {
     public function getFindNewsQuery()
     {
-        
         return $this->createQueryBuilder('n')->getQuery();
+    }
+
+    /**
+     * @param $locale
+     * @return array
+     */
+    public function findAllForLocale($locale)
+    {
+        return $this->createBaseQueryBuilder($locale)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * Creates a base query builder that's locale-aware
+     *
+     * @param $locale
+     * @param \Doctrine\ORM\QueryBuilder|null $qb
+     * @return \Doctrine\ORM\QueryBuilder|null
+     */
+    protected function createBaseQueryBuilder($locale, QueryBuilder $qb = null)
+    {
+        if ($qb === null) {
+            $qb = $this->createQueryBuilder('n');
+        }
+
+        $qb->andWhere('n.locale = :locale')
+            ->setParameter('locale', $locale)
+        ;
+
+        return $qb;
     }
 }

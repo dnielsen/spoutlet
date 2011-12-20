@@ -47,6 +47,14 @@ class News
     private $slug;
 
     /**
+     * @var string $locale
+     *
+     * @Assert\NotBlank
+     * @ORM\Column(name="locale", type="string", length="2", nullable=false)
+     */
+    protected $locale;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -110,5 +118,21 @@ class News
     public function setSlug($slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

@@ -4,6 +4,7 @@ namespace Platformd\NewsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 
 class CreateNewsFormType extends AbstractType
 {
@@ -14,7 +15,9 @@ class CreateNewsFormType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('body');
+            ->add('body')
+            ->add('locale', new SiteChoiceType())
+        ;
     }
 
     /**

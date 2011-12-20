@@ -13,7 +13,7 @@ class DefaultController extends Controller
     public function indexAction()
     {
         $news = $this->getNewsRepo()
-            ->findAll()
+            ->findAllForLocale($this->getLocale())
         ;
 
         return $this->render('NewsBundle:Default:index.html.twig', array(

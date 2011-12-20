@@ -17,6 +17,7 @@ class LoadNews implements FixtureInterface
 EOF
         );
         $news->setTitle('News title #1');
+        $news->setLocale('en');
         $manager->persist($news);
 
         $news = new News();
@@ -25,6 +26,7 @@ EOF
 EOF
         );
         $news->setTitle('News title #2');
+        $news->setLocale('en');
         $manager->persist($news);
 
         $manager->flush();

@@ -1,6 +1,8 @@
 <form method="post" action="{{ route }}" class="form">
     {{ form_row(form.title) }}
 
+    {{ form_row(form.locale) }}
+
     <div class="form_row">
         {{ form_label(form.body) }}
         {{ form_errors(form.body) }}
