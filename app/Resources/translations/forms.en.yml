@@ -11,6 +11,7 @@ event_content: "Description"
 event_hosted_by: "Hosted by"
 event_game: "Game"
 event_bannerImageFile: "Banner Image"
+event_locale: "Site"
 
 platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
 platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner

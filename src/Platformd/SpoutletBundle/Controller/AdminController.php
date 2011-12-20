@@ -22,9 +22,7 @@ class AdminController extends Controller
 
     public function eventsAction() 
     {
-        $events = $this->getEventsRepo()->findBy(array(
-            'locale' => $this->get('session')->getLocale(),
-        ));
+        $events = $this->getEventsRepo()->findAll();
     	return $this->render('SpoutletBundle:Admin:events.html.twig', 
             array('events' => $events));
     }
@@ -119,7 +117,6 @@ class AdminController extends Controller
     {
         // save to db
         $event = $event_form->getData();
-        $event->setLocale($this->get('session')->getLocale());
 
         /*$event->updateBannerImage();
 
@@ -134,6 +131,9 @@ class AdminController extends Controller
         $this->setFlash('success', $this->get('translator')->trans('platformd.events.admin.saved'));
     }
 
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\EventRepository
+     */
     private function getEventsRepo()
     {
         return $this->getEventsManager()
