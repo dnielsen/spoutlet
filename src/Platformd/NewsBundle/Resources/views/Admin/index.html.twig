@@ -15,6 +15,7 @@
                 <thead>
                     <tr>
                         <th>{{ "platformd.admin.news.title" | trans }}</th>
+                        <th>{{ "tenant_site" | trans }}</th>
                         <th>{{ "platformd.help.actions" | trans }}</th>
                     </tr>
                 </thead>
@@ -23,6 +24,7 @@
                     {% for item in news %}
                     <tr>
                         <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
+                        <td>{{ item.locale | site_name }}</td>
                         <td>
                             <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ "platformd.admin.news.edit" | trans }}</a> - 
                             <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">{{ "platformd.admin.news.delete" | trans }}</a></td>

@@ -14,6 +14,7 @@
             <tbody>
                 <tr>
                     <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
+                    <th>{{ "tenant_site" | trans }}</th>
                     <th>{{ 'url' | trans }}</th>
                     <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
                     <th>{{ "platformd.help.actions" | trans }}</th>
@@ -21,6 +22,7 @@
                 {% for giveaway in giveaways %}
                 <tr class="eventListGroup_online">
                     <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
+                    <td>{{ giveaway.locale | site_name }}</td>
                     <td>
                         {% set giveawayUrl = path('giveaway_show', {'slug': giveaway.slug}) %}
                         <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>

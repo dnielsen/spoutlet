@@ -14,9 +14,9 @@
             <tbody>
                 <tr>
                     <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
+                    <th>{{ "tenant_site" | trans }}</th>
                     <th>{{ "platformd.events.event_listings.event" | trans }}</th>
                     <th>{{ "platformd.events.event_listings.games" | trans }}</th>
-                    <th>{{ "platformd.events.event_listings.hosted_by" | trans }}</th>
                     <th>{{ "platformd.events.event_listings.location" | trans }}</th>
                     <th>{{ "platformd.events.event_listings.published" | trans }}</th>
                     {% if app.user.isSuperAdmin %}
@@ -29,9 +29,9 @@
                     	{{ event.startsAt|date('M') }}
                     	<span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
                     </td>
+                    <td>{{ event.locale | site_name }}</td>
                     <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
                     <td>{{ event.game }}</td>
-                    <td>{{ event.hostedBy }}</td>
                     <td>{{ event.location }}</td>
                     <td>
                         <i>

@@ -1,6 +1,8 @@
 url:  URL
 edit: 編集
 
+tenant_site: Site
+
 platformd:
     create_account_or_login: Alienware Arenaアカウントを作成しログインします。
 
