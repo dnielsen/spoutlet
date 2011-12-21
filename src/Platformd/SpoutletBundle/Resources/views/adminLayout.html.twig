@@ -74,10 +74,38 @@
                 {% if is_granted('ROLE_ORGANIZER') %}
                     <h5>Content Management</h5>
                     <ul>
-                        <li><a href="{{ path('admin_giveaway_index') }}">Giveaways</a></li>
-                        <li><a href="{{ path('NewsBundle_admin_homepage') }}">News</a></li>
-                        <li><a href="{{ path('admin_homepage_banner_index') }}">Homepage Banner</a></li>
-                        <li><a href="{{ path('admin_events_index') }}">Events</a></li>
+                        <li>
+                            <a href="{{ path('admin_giveaway_index') }}">Giveaways</a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('admin_giveaway_new') }}">Add new</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ path('NewsBundle_admin_homepage') }}">News</a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('NewsBundle_admin_new') }}">Add new</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_homepage_banner_index') }}">Homepage Banner</a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('admin_homepage_banner_new') }}">Add new</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_events_index') }}">Events</a>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('admin_events_new') }}">Add new</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 {% endif %}
 
