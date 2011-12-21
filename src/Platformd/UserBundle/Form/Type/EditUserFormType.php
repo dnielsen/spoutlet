@@ -19,10 +19,10 @@ class EditUserFormType extends AbstractType
         if ($options['allow_promote']) {
             $builder->add('admin_level', 'choice', array(
                 'choices' => array(
-                    'ROLE_ORGANIZER' => 'Content Admin',
-                    'ROLE_SUPER_ADMIN' => 'Super admin',
+                    'ROLE_ORGANIZER' => 'Limited admin',
+                    'ROLE_SUPER_ADMIN' => 'Full admin',
                 ),
-                'empty_value' => 'Choose an admin level',
+                'empty_value' => 'No admin',
             ));
         }
     }

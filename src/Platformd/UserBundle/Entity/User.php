@@ -832,11 +832,11 @@ class User extends BaseUser
     public function getAdminLevelString()
     {
         if ($this->hasRole('ROLE_ORGANIZER')) {
-            return 'Content Admin';
+            return 'Limited admin';
         } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
-            return 'Super Admin';
+            return 'Full Admin';
         } else {
-            return '-';
+            return 'no admin';
         }
     }
 
