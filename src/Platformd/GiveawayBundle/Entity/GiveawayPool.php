@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayPool
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayPoolRepository")
  * @ORM\Table(name="giveaway_pool")
  */
 class GiveawayPool

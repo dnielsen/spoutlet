@@ -4,6 +4,7 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Form\Type\GiveawayType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,6 +75,28 @@ class GiveawayAdminController extends Controller
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
     		array('form' => $form->createView(), 'giveaway' => $giveaway));
+    }
+
+    /**
+     * Shows key giveaway metrics
+     * @Template()
+     * @return array
+     */
+    public function metricsAction()
+    {
+        $giveaways = $this->getGiveawayRepo()->findAll();
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Giveaways');
+
+        $giveawayMetrics = array();
+        $metricManager = $this->container->get('giveaway.metric_manager');
+        foreach($giveaways as $giveaway) {
+            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway);
+        }
+
+        return array(
+            'metrics' => $giveawayMetrics,
+        );
     }
 
     protected function retrieveGiveaway($id)

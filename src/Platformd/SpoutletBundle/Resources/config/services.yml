@@ -1,5 +1,9 @@
 parameters:
-#    spoutlet.example.class: Platformd\SpoutletBundle\Example
+    # this is repeated in the multitenancy manager - should not be
+    platformd_sites:
+        en: Demo
+        ja: Japan
+        zh: China
 
 services:
     platformd.s3: 

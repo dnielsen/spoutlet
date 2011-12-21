@@ -1,0 +1,36 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
+
+{% block content %}
+
+<h1>Key Giveaways</h1>
+
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>Giveaway</th>
+            <th>Total Keys</th>
+            <th>Total Assigned</th>
+            <th>Keys Left</th>
+            <th>Demo</th>
+            <th>China</th>
+            <th>Japan</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics %}
+        <tr>
+            <td>{{ metric.name }}</td>
+            <td>{{ metric.total }}</td>
+            <td>{{ metric.assigned }}</td>
+            <td>{{ metric.remaining }}</td>
+            <td>{{ metric.sites.demo }}</td>
+            <td>{{ metric.sites.china }}</td>
+            <td>{{ metric.sites.japan }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

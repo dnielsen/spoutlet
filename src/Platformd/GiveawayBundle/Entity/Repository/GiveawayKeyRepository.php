@@ -116,6 +116,39 @@ class GiveawayKeyRepository extends EntityRepository
     }
 
     /**
+     * Returns the total number for keys for all pools across a giveaway
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return integer
+     */
+    public function getTotalForGiveaway(Giveaway $giveaway)
+    {
+        return (int)$this
+            ->createForGiveawayQueryBuilder($giveaway)
+            ->select('COUNT(k.id)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * Returns the total number of assigned keys across all pools of a giveaway
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return integer
+     */
+    public function getAssignedForGiveaway(Giveaway $giveaway)
+    {
+        return (int)$this
+            ->createForGiveawayQueryBuilder($giveaway)
+            ->select('COUNT(k.id)')
+            ->andWhere('k.user IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
      * @param $id
      * @param \Platformd\UserBundle\Entity\User $user
      * @return \Platformd\GiveawayBundle\Entity\GiveawayKey
@@ -229,5 +262,18 @@ class GiveawayKeyRepository extends EntityRepository
         }
 
         return true;
+    }
+
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createForGiveawayQueryBuilder(Giveaway $giveaway)
+    {
+        return $this->createQueryBuilder('k')
+            ->leftJoin('k.pool','gkp')
+            ->andWhere('gkp.giveaway = :giveaway')
+            ->setParameter('giveaway', $giveaway)
+        ;
     }
 }

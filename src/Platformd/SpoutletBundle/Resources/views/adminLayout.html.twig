@@ -112,7 +112,7 @@
                 {% if is_granted('ROLE_STATS_ADMIN') %}
                     <h5>Stats</h5>
                     <ul>
-                        <li><a href="#">Giveaway</a></li>
+                        <li><a href="{{ path('admin_giveaway_metrics') }}">Giveaway</a></li>
                         <li><a href="#">Members</a></li>
                     </ul>
                 {% endif %}

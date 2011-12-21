@@ -1,0 +1,7 @@
+services:
+    giveaway.metric_manager:
+        class: Platformd\GiveawayBundle\Metric\GiveawayMetricManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            # this should NOT be hardcoded
+            - %platformd_sites%
