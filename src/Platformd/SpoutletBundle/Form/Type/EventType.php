@@ -5,18 +5,28 @@ namespace Platformd\SpoutletBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
+use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class EventType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');
-        $builder->add('slug', 'text', array(
-            'required' => false,
-            'label'    => 'URL key(e.g. my-event)',
+        $builder->add('slug', new SlugType());
+    	$builder->add('starts_at', 'date', array(
+            'widget' => 'single_text',
+            'format' => 'MM/dd/YYYY',
+            'attr'   => array(
+                'class' => 'date-picker',
+            )
         ));
-    	$builder->add('starts_at', 'datetime');
-    	$builder->add('ends_at', 'datetime');
+    	$builder->add('ends_at', 'date', array(
+            'widget' => 'single_text',
+            'format' => 'MM/dd/YYYY',
+            'attr'   => array(
+                'class' => 'date-picker',
+            )
+        ));
     	$builder->add('city', 'text');
     	$builder->add('country', 'text');
     	$builder->add('content', 'textarea');

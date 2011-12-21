@@ -2,66 +2,54 @@
 {% block title %}{{ "platformd.events.admin.title" | trans }}{% endblock %}
 
 {% block content %}
-<div id="admin-events">
-    <div class="widget-100">
-    <div class="widget-header">
-        <div class="widget-title">
-            {{ "platformd.events.event_listings.current_events" | trans }}
-        </div>
-    </div>
-    <div class="widget-content">
-        <table width="100%">
-            <tbody>
-                <tr>
-                    <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
-                    <th>{{ "tenant_site" | trans }}</th>
-                    <th>{{ "platformd.events.event_listings.event" | trans }}</th>
-                    <th>{{ "platformd.events.event_listings.games" | trans }}</th>
-                    <th>{{ "platformd.events.event_listings.location" | trans }}</th>
-                    <th>{{ "platformd.events.event_listings.published" | trans }}</th>
-                    {% if app.user.isSuperAdmin %}
-                        <th>{{ "platformd.help.actions" | trans }}</th>
-                    {% endif %}
-                </tr>
-                {% for event in events %}
-                <tr class="eventListGroup_online">
-                    <td title="{{ event.startsAt|date }}">
-                    	{{ event.startsAt|date('M') }}
-                    	<span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
-                    </td>
-                    <td>{{ event.locale | site_name }}</td>
-                    <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
-                    <td>{{ event.game }}</td>
-                    <td>{{ event.location }}</td>
-                    <td>
-                        <i>
-                        {% if event.published%}
-                            published
-                        {% else %}
-                            unpublished
-                        {% endif %}
-                        </i>
-                    </td>
-                    {% if app.user.isSuperAdmin %}
-                    <td>
-                        {% if not event.published %}
-                            <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
-                        {% else %}
-                            <a href="{{ path('admin_event_unpublish', { "id" : event.id }) }}">{{ "platformd.events.admin.unpublish" | trans }}</a>
-                        {% endif %}
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
-    <div class="widget-footer">
-        <a class="aw-link" href="events/new" style="margin-right:10px;">{{ "platformd.events.admin.create" | trans }}</a>
-        <div class="clear"></div>
-    </div>
-</div>
-</div>
-<div style="width:100%;text-align:right;padding-top:20px;"></div>
+<h1>{{ "platformd.events.event_listings.current_events" | trans }}</h1>
+
+<table class="zebra-striped bordered-table tablesorter">
+    <tbody>
+        <tr>
+            <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
+            <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ "platformd.events.event_listings.event" | trans }}</th>
+            <th>{{ "platformd.events.event_listings.games" | trans }}</th>
+            <th>{{ "platformd.events.event_listings.location" | trans }}</th>
+            <th>{{ "platformd.events.event_listings.published" | trans }}</th>
+            {% if app.user.isSuperAdmin %}
+                <th>{{ "platformd.help.actions" | trans }}</th>
+            {% endif %}
+        </tr>
+        {% for event in events %}
+        <tr class="eventListGroup_online">
+            <td title="{{ event.startsAt|date }}">
+                {{ event.startsAt|date('M') }}
+                <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
+            </td>
+            <td>{{ event.locale | site_name }}</td>
+            <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
+            <td>{{ event.game }}</td>
+            <td>{{ event.location }}</td>
+            <td>
+                <i>
+                {% if event.published%}
+                    published
+                {% else %}
+                    unpublished
+                {% endif %}
+                </i>
+            </td>
+            {% if app.user.isSuperAdmin %}
+            <td>
+                {% if not event.published %}
+                    <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
+                {% else %}
+                    <a href="{{ path('admin_event_unpublish', { "id" : event.id }) }}">{{ "platformd.events.admin.unpublish" | trans }}</a>
+                {% endif %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn primary" href="{{ path('admin_events_new') }}" >{{ "platformd.events.admin.create" | trans }}</a>
 {% endblock %}

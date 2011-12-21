@@ -1,4 +1,5 @@
 jQuery(document).ready(function() {
-   jQuery('table.tablesorter').tablesorter();
-    console.log(jQuery('table.tablesorter'));
+    jQuery('table.tablesorter').tablesorter();
+
+    jQuery('input.date-picker').datepicker();
 });

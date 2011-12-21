@@ -15,6 +15,7 @@
         {% block stylesheets %}
 		    {% stylesheets
 		        'bundles/spoutlet/admin/css/bootstrap.css'
+		        'bundles/spoutlet/css/custom-theme/jquery-ui-1.8.16.custom.css'
 		        'bundles/spoutlet/admin/css/admin.css'
 		        filter='cssrewrite'
 		        output='css/packed/admin.css'
@@ -100,7 +101,7 @@
         <div class="content">
 
             {% if app.session.hasFlash('success') %}
-                <div class="flash success">
+                <div class="alert-message success">
                     {{ app.session.getflash('success') }}
                 </div>
             {% endif %}
