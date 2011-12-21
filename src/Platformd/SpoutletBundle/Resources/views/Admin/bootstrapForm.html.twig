@@ -1,0 +1,35 @@
+{% extends 'SpoutletBundle::forms.html.twig' %}
+
+{# give a form_row class to all form row divs #}
+{% block field_row %}
+{% spaceless %}
+    <div class="clearfix{{ (errors|length > 0) ? ' error' : '' }}">
+        {{ form_label(form, label|default(null)) }}
+
+        <div class="input">
+            {{ form_widget(form) }}
+
+            {{ form_errors(form) }}
+
+            {% if help is defined %}
+                <span class="help-block">
+                    {{ help | trans }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock field_row %}
+
+{# adds a class to the errors #}
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <span class="help-inline">
+        {% for error in errors %}
+            {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
+        {% endfor %}
+    </span>
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}

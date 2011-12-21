@@ -6,16 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
+use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class GiveawayType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');
-        $builder->add('slug', 'text', array(
-            'required' => false,
-            'label'    => 'URL key(e.g. my-event)',
-        ));
+        $builder->add('slug', new SlugType());
     	$builder->add('content', 'textarea');
         $builder->add('bannerImageFile', 'file');
         $builder->add('redemptionInstructionsArray', 'collection', array(
@@ -27,6 +27,7 @@ class GiveawayType extends AbstractType
         ));
         $builder->add('locale', new SiteChoiceType());
     }
+
 
     public function getName()
     {

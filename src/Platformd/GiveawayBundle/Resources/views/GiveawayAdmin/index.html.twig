@@ -2,50 +2,42 @@
 {% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
 
 {% block content %}
-<div id="admin-events">
-    <div class="widget-100">
-    <div class="widget-header">
-        <div class="widget-title">
-            {{ "platformd.giveaway.admin.title" | trans }}
-        </div>
-    </div>
-    <div class="widget-content">
-        <table width="100%">
-            <tbody>
-                <tr>
-                    <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
-                    <th>{{ "tenant_site" | trans }}</th>
-                    <th>{{ 'url' | trans }}</th>
-                    <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
-                    <th>{{ "platformd.help.actions" | trans }}</th>
-                </tr>
-                {% for giveaway in giveaways %}
-                <tr class="eventListGroup_online">
-                    <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
-                    <td>{{ giveaway.locale | site_name }}</td>
-                    <td>
-                        {% set giveawayUrl = path('giveaway_show', {'slug': giveaway.slug}) %}
-                        <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>
-                    </td>
-                    <td>
-                        {{ giveaway.statusText | trans }}
-                    </td>
-                    <td>
-                        <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
-                        |
-                        <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
-    <div class="widget-footer">
-        <a class="aw-link" href="{{ path('admin_giveaway_new') }}" style="margin-right:10px;">{{ "platformd.giveaway.admin.create" | trans }}</a>
-        <div class="clear"></div>
-    </div>
-</div>
-</div>
-<div style="width:100%;text-align:right;padding-top:20px;"></div>
+<h1>{{ "platformd.giveaway.admin.title" | trans }}</h1>
+
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
+            <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ 'url' | trans }}</th>
+            <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
+            <th>{{ "platformd.help.actions" | trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for giveaway in giveaways %}
+        <tr>
+            <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
+            <td>{{ giveaway.locale | site_name }}</td>
+            <td>
+                {% set giveawayUrl = path('giveaway_show', {'slug': giveaway.slug}) %}
+                <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>
+            </td>
+            <td>
+                {{ giveaway.statusText | trans }}
+            </td>
+            <td>
+                <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
+                |
+                <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn primary" href="{{ path('admin_giveaway_new') }}" style="margin-right:10px;">{{ "platformd.giveaway.admin.create" | trans }}</a>
+
 {% endblock %}

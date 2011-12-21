@@ -1,3 +1,5 @@
+{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
+
 <h1>
     {{ 'platformd.giveaway.admin.create' | trans }}
 </h1>
@@ -8,28 +10,17 @@
     
     {{ form_row(form.name) }}
 
-    <div class="form_row">
-        {{ form_label(form.slug) }}
-        {{ form_errors(form.slug) }}
-        {{ form_widget(form.slug) }}
-    </div>
-
-    <div class="form-help">
-        This field will be generated automatically if left blank. It's format
-        should be lowercase letters and dashes, without any http (e.g. my-new-giveaway).
-        This becomes *part* of the URL for this item.
-    </div>
+    {{ form_row(form.slug) }}
 
     {{ form_row(form.locale) }}
 
-
     {{ form_row(form.status) }}
 
-    <div class="form_row redemption-instructions-inputs">
+    <div>
         {{ form_label(form.redemptionInstructionsArray) }}
         {{ form_errors(form.redemptionInstructionsArray) }}
 
-        <ol class="normal-margin">
+        <ol class="input">
             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
             {% for redemptionForm in form.redemptionInstructionsArray %}
                 <li>
@@ -37,13 +28,12 @@
                 </li>
             {% endfor %}
         </ol>
+
+        <div class="help-block input">{{ 'platformd.giveaway.admin.redemption_instructions_note' | trans }}</div>
         {{ form_widget(form.redemptionInstructionsArray) }}
     </div>
 
-    <div class="form-help">{{ 'platformd.giveaway.admin.redemption_instructions_note' | trans }}</div>
-
-    {{ form_row(form.bannerImageFile) }}
-    <div class="form-help">{{ 'platformd.events.admin.banner_note' | trans }}</div>
+    {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
 
     <div class="form_row">
         {{ form_label(form.content) }}
@@ -53,5 +43,5 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="button" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
+    <input type="submit" class="btn primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
 </form>

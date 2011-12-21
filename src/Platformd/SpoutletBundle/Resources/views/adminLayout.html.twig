@@ -14,8 +14,8 @@
 
         {% block stylesheets %}
 		    {% stylesheets
-		        'bundles/spoutlet/css/admin/bootstrap.css'
-		        'bundles/spoutlet/css/admin/admin.css'
+		        'bundles/spoutlet/admin/css/bootstrap.css'
+		        'bundles/spoutlet/admin/css/admin.css'
 		        filter='cssrewrite'
 		        output='css/packed/admin.css'
 		    %}
@@ -28,6 +28,8 @@
 		    {% javascripts
 		        'bundles/spoutlet/js/jquery-1.6.2.min.js'
 		        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
+		        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
+		        'bundles/spoutlet/admin/js/admin.js'
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.js'
 		        'ckeditor/lang/en.js'
