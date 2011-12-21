@@ -2,7 +2,7 @@
 
 namespace Platformd\UserBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -17,6 +17,7 @@ class AdminController extends Controller
     
     public function indexAction() 
     {
+        $this->addUserBreadcrumb();
         $manager = $this->get('fos_user.user_manager');
         $query = $manager->getFindUserQuery();
         
@@ -30,6 +31,7 @@ class AdminController extends Controller
 
     public function editAction($id)
     {
+        $this->addUserBreadcrumb()->addChild('Edit');
         $manager = $this->get('fos_user.user_manager');
         $translator = $this->get('translator');
 
@@ -102,5 +104,17 @@ class AdminController extends Controller
         $manager->updateUser($user);
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addUserBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Users', array(
+            'route' => 'Platformd_UserBundle_admin_index'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }
