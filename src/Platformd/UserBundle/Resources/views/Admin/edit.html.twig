@@ -1,8 +1,11 @@
+{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block title %}{{ "fos_user_admin_user_edit_title" | trans({ "%username%" : user.username }, "FOSUserBundle") }}{% endblock %}
 
 {% block content %}
+    <h1>Edit User</h1>
+
     <form method="post" action="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id}) }}" class="form">
         {{ form_errors(form) }}
         
@@ -10,10 +13,8 @@
         {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}
         {{ form_row(form.email) }}
-        
-        <div>
-            {{ form_rest(form) }}
-            <input type="submit" value="{{ 'fos_user_admin_user_edit'|trans({}, 'FOSUserBundle') }}" class="button" formnovalidate />
-        </div>
+
+        {{ form_rest(form) }}
+        <input type="submit" value="{{ 'fos_user_admin_user_edit'|trans({}, 'FOSUserBundle') }}" class="btn primary" formnovalidate />
     </form>
 {% endblock %}

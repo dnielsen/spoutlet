@@ -3,8 +3,10 @@
 {% block title %}{{ "platformd.users.user_listings.title" | trans }}{% endblock %}
 
 {% block content %}
+    <h1>Users</h1>
+
     {% if pager.nbResults > 0 %}
-        <table class="list" width="100%">
+        <table class="zebra-striped bordered-table tablesorter">
             <thead>
                 <tr>
                     <th></th>
