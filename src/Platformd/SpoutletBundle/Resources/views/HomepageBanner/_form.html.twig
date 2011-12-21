@@ -1,27 +1,20 @@
-        {{ form_errors(form) }}
+{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
 
-        {{ form_row(form.locale) }}
+{{ form_errors(form) }}
 
-        <div class="form_row">
-            {{ form_label(form.thumb_file) }}
-            {{ form_errors(form.thumb_file) }}
-            {{ form_widget(form.thumb_file) }}
+{{ form_row(form.locale) }}
 
-            <div class="help-block">{{ 'platformd.homepage_banner.admin.thumb_note' | trans }}</div>
-        </div>
+{{ form_row(form.thumb_file, {
+    'help': 'platformd.homepage_banner.admin.thumb_note'
+}) }}
 
-        <div class="form_row">
-            {{ form_label(form.banner_file) }}
-            {{ form_errors(form.banner_file) }}
-            {{ form_widget(form.banner_file) }}
+{{ form_row(form.banner_file, {
+    'help': 'platformd.homepage_banner.admin.banner_note'
+}) }}
 
-            <div class="help-block">{{ 'platformd.homepage_banner.admin.banner_note' | trans }}</div>
-        </div>
+{{ form_row(form.position) }}
 
-        {{ form_row(form.position) }}
+{{ form_row(form.url) }}
 
-        {{ form_row(form.url) }}
-
-        <input type="submit" value="Submit" class="button" />
-        {{ form_rest(form) }}
-    
+<input type="submit" value="Save" class="btn primary" formnovalidate />
+{{ form_rest(form) }}

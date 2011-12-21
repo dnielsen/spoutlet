@@ -1,47 +1,38 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block content %}
-<div id="admin-events">
-    <div class="widget-100">
-        <div class="widget-header">
-            <div class="widget-title">
-                {{ "platformd.homepage_banner.banners.title" | trans }}
-            </div>
-        </div>
-        <div class="widget-content">
-            <table width="100%">
-                <thead>
-                    <tr>
-                        <th>{{ "tenant_site" | trans }}</th>
-                        <th>{{ "platformd.homepage_banner.banners.thumb" | trans }}</th>
-                        <th>{{ "platformd.homepage_banner.banners.full" | trans }}</th>
-                        <th>{{ "platformd.homepage_banner.banners.url" | trans }}</th>
-                        <th>{{ "platformd_spoutletbundle_homepagebannertype_position"| trans({}, 'forms') }}</th>
-                        <th>{{ "platformd.help.actions" | trans }}</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                {% for banner in banners %}
-                    <tr>
-                        <td>{{ banner.locale | site_name }}</td>
-                        <td><a href="{{ media_path(banner, { "size": 'thumb' }) }}"><img src="{{ media_path(banner, {"size": 'thumb'}) }}" alt="Banner icon" width="50" /></a></td>
-                        <td>
-                            <a href="{{ media_path(banner, { "size": 'banner' }) }}"><img src="{{ media_path(banner, {'size': 'banner'}) }}" alt="Banner image" width="50" /></a>
-                        </td>
-                        <td>{{ banner.url }}</td>
-                        <td>{{ banner.position }}</td>
-                        <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.edit" | trans }}</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.delete" | trans }}</a></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            </div>
 
-        <div class="widget-footer">
-            <a class="aw-link" href="{{ path('admin_homepage_banner_new') }}" style="margin-right:10px;">{{ "platformd.homepage_banner.admin.create" | trans }}</a>
-            <div class="clear"></div>
-        </div>
-    </div>
-</div>
+
+<h1>{{ "platformd.homepage_banner.banners.title" | trans }}</h1>
+
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ "platformd.homepage_banner.banners.thumb" | trans }}</th>
+            <th>{{ "platformd.homepage_banner.banners.full" | trans }}</th>
+            <th>{{ "platformd.homepage_banner.banners.url" | trans }}</th>
+            <th>{{ "platformd_spoutletbundle_homepagebannertype_position"| trans({}, 'forms') }}</th>
+            <th>{{ "platformd.help.actions" | trans }}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for banner in banners %}
+        <tr>
+            <td>{{ banner.locale | site_name }}</td>
+            <td><a href="{{ media_path(banner, { "size": 'thumb' }) }}"><img src="{{ media_path(banner, {"size": 'thumb'}) }}" alt="Banner icon" width="50" /></a></td>
+            <td>
+                <a href="{{ media_path(banner, { "size": 'banner' }) }}"><img src="{{ media_path(banner, {'size': 'banner'}) }}" alt="Banner image" width="50" /></a>
+            </td>
+            <td>{{ banner.url }}</td>
+            <td>{{ banner.position }}</td>
+            <td><a href="{{ path('admin_homepage_banner_edit', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.edit" | trans }}</a> | <a href="{{ path('admin_homepage_banner_delete', { "id" : banner.id }) }}">{{ "platformd.homepage_banner.admin.delete" | trans }}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn primary" href="{{ path('admin_homepage_banner_new') }}" style="margin-right:10px;">{{ "platformd.homepage_banner.admin.create" | trans }}</a>
 {% endblock %}
