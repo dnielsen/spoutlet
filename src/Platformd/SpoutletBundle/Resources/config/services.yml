@@ -37,3 +37,24 @@ services:
         class: Platformd\SpoutletBundle\Twig\MultitenancyExtension
         tags:
             - { name: twig.extension }
+
+    platformd.breadcrumbs_renderer:
+        class: Platformd\SpoutletBundle\Menu\BreadcrumbsRenderer
+        tags:
+            - { name: knp_menu.renderer, alias: breadcrumbs }
+
+    platformd.menu_builder:
+        class: Platformd\SpoutletBundle\Menu\MenuBuilder
+        arguments:
+            - "@knp_menu.factory"
+            - "@router"
+
+    platformd.breadcrumbs_menu:
+        class: Knp\Menu\MenuItem
+        scope: request
+        factory_service: "platformd.menu_builder"
+        factory_method: createBreadcrumbs
+        arguments:
+            - "@request"
+        tags:
+            - { name: knp_menu.menu, alias: breadcrumbs }

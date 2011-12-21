@@ -65,4 +65,12 @@ class Controller extends BaseController
             throw new AccessDeniedException();
         }
     }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    protected function getBreadcrumbs()
+    {
+        return $this->get('platformd.breadcrumbs_menu');
+    }
 }

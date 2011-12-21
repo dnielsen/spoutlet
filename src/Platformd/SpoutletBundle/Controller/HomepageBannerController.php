@@ -12,6 +12,8 @@ class HomepageBannerController extends Controller
     
     public function indexAction()
     {
+        $this->addBannersBreadcrumb();
+
         $banners = $this
             ->getDoctrine()
             ->getEntityManager()
@@ -25,7 +27,8 @@ class HomepageBannerController extends Controller
     }
 
     public function newAction()
-    {   
+    {
+        $this->addBannersBreadcrumb()->addChild('New');
         $request = $this->getRequest();
 
         $banner = new HomepageBanner();
@@ -51,6 +54,7 @@ class HomepageBannerController extends Controller
 
     public function editAction($id)
     {
+        $this->addBannersBreadcrumb()->addChild('Edit');
         $request = $this->getRequest();
 
         $banner = $this
@@ -112,7 +116,18 @@ class HomepageBannerController extends Controller
 
     private function getManager()
     {
-        
         return $this->get('platformd.homepage_banner.manager');
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addBannersBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Homepage Banners', array(
+            'route' => 'admin_homepage_banner_index'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }

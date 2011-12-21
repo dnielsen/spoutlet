@@ -14,7 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminController extends Controller
 {
-    
+    /**
+     * Admin homepage
+     *
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     */
     public function indexAction()
     {
         return $this->render('SpoutletBundle:Admin:index.html.twig');
@@ -22,6 +26,8 @@ class AdminController extends Controller
 
     public function eventsAction() 
     {
+        $this->addEventsBreadcrumb();
+
         $events = $this->getEventsRepo()->findAll();
     	return $this->render('SpoutletBundle:Admin:events.html.twig', 
             array('events' => $events));
@@ -29,6 +35,7 @@ class AdminController extends Controller
 
     public function newEventAction(Request $request) 
     {
+        $this->addEventsBreadcrumb()->addChild('New');
     	$event = new Event();
 
     	$form = $this->createForm(new EventType(), $event);
@@ -49,6 +56,7 @@ class AdminController extends Controller
 
     public function editEventAction(Request $request, $id)
     {
+        $this->addEventsBreadcrumb()->addChild('Edit');
         $event = $this->getEventsRepo()->findOneById($id);
 
         if (!$event) {
@@ -144,5 +152,17 @@ class AdminController extends Controller
     {
         return $this->getDoctrine()
             ->getEntityManager();
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addEventsBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Events', array(
+            'route' => 'admin_events_index'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }

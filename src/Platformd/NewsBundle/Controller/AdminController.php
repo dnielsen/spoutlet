@@ -2,7 +2,7 @@
 
 namespace Platformd\NewsBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Controller\Controller;
 
 use Platformd\NewsBundle\Entity\News;
 use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
@@ -15,6 +15,8 @@ class AdminController extends Controller
     
     public function indexAction()
     {
+        $this->addNewsBreadcrumb();
+
         $manager = $this
             ->getDoctrine()
             ->getEntityManager()
@@ -31,6 +33,7 @@ class AdminController extends Controller
 
     public function newAction()
     {
+        $this->addNewsBreadcrumb()->addChild('New');
         $news = new News();
 
         $form = $this->createForm(new CreateNewsFormType(), $news);
@@ -59,6 +62,7 @@ class AdminController extends Controller
 
     public function editAction($id)
     {
+        $this->addNewsBreadcrumb()->addChild('Edit');
         $em = $this->getDoctrine()->getEntityManager();
         $news = $em
             ->getRepository('NewsBundle:News')
@@ -115,5 +119,17 @@ class AdminController extends Controller
             ->setFlash('notice', $this->get('translator')->trans('platformd.admin.news.deleted'));
                 
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addNewsBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('News', array(
+            'route' => 'NewsBundle_admin_homepage'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }

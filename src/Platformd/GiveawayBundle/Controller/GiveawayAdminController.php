@@ -13,6 +13,7 @@ class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
+        $this->addGiveawayBreadcrumb();
         $giveaways = $this->getGiveawayRepo()->findAll();
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
@@ -21,6 +22,7 @@ class GiveawayAdminController extends Controller
 
     public function newAction(Request $request)
     {
+        $this->addGiveawayBreadcrumb()->addChild('New');
     	$giveaway = new Giveaway();
 
         // guarantee we have at least 5 open giveaway boxes
@@ -49,6 +51,7 @@ class GiveawayAdminController extends Controller
 
     public function editAction(Request $request, $id)
     {
+        $this->addGiveawayBreadcrumb()->addChild('Edit');
         $giveaway = $this->getGiveawayRepo()->findOneById($id);
         $this->setupEmptyRedemptionInstructions($giveaway);
 
@@ -108,5 +111,17 @@ class GiveawayAdminController extends Controller
     {
         return $this->getDoctrine()
             ->getEntityManager();
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addGiveawayBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Giveaways', array(
+            'route' => 'admin_giveaway_index'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }
