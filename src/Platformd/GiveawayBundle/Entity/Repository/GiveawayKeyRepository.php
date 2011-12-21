@@ -7,6 +7,7 @@ use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * GiveawayKey  Repository
@@ -139,10 +140,34 @@ class GiveawayKeyRepository extends EntityRepository
      */
     public function getAssignedForGiveaway(Giveaway $giveaway)
     {
-        return (int)$this
-            ->createForGiveawayQueryBuilder($giveaway)
+        $qb  = $this->createForGiveawayQueryBuilder($giveaway);
+        $this->addAssignedQueryBuilder($qb);
+
+        return (int) $qb
             ->select('COUNT(k.id)')
-            ->andWhere('k.user IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * Returns the total number of assigned keys for the given giveaway
+     * and site combination
+     *
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @param $site
+     * @return integer
+     */
+    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site)
+    {
+        $qb  = $this->createForGiveawayQueryBuilder($giveaway);
+        $this->addAssignedQueryBuilder($qb);
+
+        return (int) $qb
+            ->select('COUNT(k.id)')
+            ->andWhere('k.assignedSite = :site')
+            ->setParameter('site', $site)
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -275,5 +300,14 @@ class GiveawayKeyRepository extends EntityRepository
             ->andWhere('gkp.giveaway = :giveaway')
             ->setParameter('giveaway', $giveaway)
         ;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addAssignedQueryBuilder(QueryBuilder $qb)
+    {
+        return $qb->andWhere('k.user IS NOT NULL');
     }
 }

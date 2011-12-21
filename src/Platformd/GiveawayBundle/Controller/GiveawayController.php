@@ -46,6 +46,13 @@ class GiveawayController extends Controller
         ));
     }
 
+    /**
+     * The action that actually assigns a key to a user
+     *
+     * @param $slug
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\RedirectResponse
+     */
     public function keyAction($slug, Request $request)
     {
         // force a valid user
@@ -87,7 +94,7 @@ class GiveawayController extends Controller
         }
 
         // assign this key to this user - record ip address
-        $key->assign($this->getUser(), $request->getClientIp());
+        $key->assign($this->getUser(), $request->getClientIp(), $this->getLocale());
         $this->getDoctrine()->getEntityManager()->flush();
 
         return $this->redirect($this->generateUrl('giveaway_show', array(

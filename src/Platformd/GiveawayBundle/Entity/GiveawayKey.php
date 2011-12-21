@@ -50,6 +50,13 @@ class GiveawayKey
     protected $assignedAt;
 
     /**
+     * Holds the site/locale that this key was assigned under
+     *
+     * @ORM\Column(name="assigned_site", type="string", nullable=true, length="10")
+     */
+    protected $assignedSite;
+
+    /**
      * @ORM\Column(name="ip_address", type="string", nullable=true, length=100)
      */
     protected $ipAddress;
@@ -106,11 +113,12 @@ class GiveawayKey
         return $this->pool;
     }
 
-    public function assign(User $user, $ipAddress)
+    public function assign(User $user, $ipAddress, $site)
     {
         $this->user = $user;
         $this->assignedAt = new \DateTime();
         $this->ipAddress = $ipAddress;
+        $this->setAssignedSite($site);
     }
 
     public function getIpAddress()
@@ -121,5 +129,15 @@ class GiveawayKey
     public function getAssignedAt()
     {
         return $this->assignedAt;
+    }
+
+    public function getAssignedSite()
+    {
+        return $this->assignedSite;
+    }
+
+    public function setAssignedSite($assignedSite)
+    {
+        $this->assignedSite = $assignedSite;
     }
 }

@@ -57,9 +57,9 @@ class GiveawayMetricManager
             'assigned' => $assigned,
             'remaining' => $remaining,
             'sites' => array(
-                'demo' => '## todo',
-                'japan' => '## todo',
-                'china' => '## todo',
+                'en' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'en'),
+                'ja' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'ja'),
+                'zh' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'zh'),
             ),
         );
     }
