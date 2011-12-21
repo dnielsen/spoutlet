@@ -7,7 +7,7 @@ use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
 * 
@@ -24,14 +24,8 @@ class GiveawayPoolAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $giveaway = $manager
-            ->getRepository('GiveawayBundle:Giveaway')
-            ->findOneBy(array('id' => $giveaway));
-
-        if (!$giveaway) {
-            
-            throw $this->createNotFoundException();    
-        }
+        $giveaway = $this->retrieveGiveawayById($giveaway);
+        $this->addGiveawayBreadcrumb($giveaway);
 
         $pools = $manager
             ->getRepository('GiveawayBundle:GiveawayPool')
@@ -46,11 +40,8 @@ class GiveawayPoolAdminController extends Controller
 
     public function newAction($giveaway)
     {
-        $manager = $this
-            ->getDoctrine()
-            ->getEntityManager();      
-
         $giveaway = $this->retrieveGiveawayById($giveaway);
+        $this->addGiveawayBreadcrumb($giveaway)->addChild('New Pool');
 
         $pool = new GiveawayPool();
         $pool->setGiveaway($giveaway);
@@ -69,6 +60,8 @@ class GiveawayPoolAdminController extends Controller
                     'giveaway' => $giveaway->getId()
                 )));
             }
+
+            var_dump($form->createView()->get('errors'));die;
         }
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
@@ -89,6 +82,8 @@ class GiveawayPoolAdminController extends Controller
         if (!$pool) {
             throw $this->createNotFoundException();
         }
+
+        $this->addGiveawayBreadcrumb($pool->getGiveaway())->addChild('Edit Pool');
 
         $request = $this->getRequest();
 
@@ -185,5 +180,27 @@ class GiveawayPoolAdminController extends Controller
         return $this->getDoctrine()
             ->getRepository('GiveawayBundle:GiveawayKey')
         ;
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addGiveawayBreadcrumb(Giveaway $giveaway)
+    {
+        $this->getBreadcrumbs()->addChild('Giveaways', array(
+            'route' => 'admin_giveaway_index'
+        ));
+
+        $this->getBreadcrumbs()->addChild($giveaway->getName(), array(
+            'route' => 'admin_giveaway_edit',
+            'routeParameters' => array('id' => $giveaway->getId())
+        ));
+
+        $this->getBreadcrumbs()->addChild('Key Pools', array(
+            'route' => 'admin_giveaway_pool_index',
+            'routeParameters' => array('giveaway' => $giveaway->getId())
+        ));
+
+        return $this->getBreadcrumbs();
     }
 }
