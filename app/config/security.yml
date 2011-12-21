@@ -30,4 +30,4 @@ security:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page
         ROLE_ADMIN:       [ROLE_USER]
         ROLE_ORGANIZER:   [ROLE_ADMIN]
-        ROLE_SUPER_ADMIN: [ROLE_ORGANIZER]
+        ROLE_SUPER_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_USER_ADMIN]

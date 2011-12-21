@@ -1,8 +1,115 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
+<!DOCTYPE HTML>
+<html>
+	<head>
+        <meta charset="utf-8">
 
-{% block title %}{{ "platformd.layout.default_admin_title" | trans }}{% endblock %}
+        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-{# overridden to add the admin navigation above the content #}
-{% block pre_content_nav %}
-    {% include 'SpoutletBundle::Admin/adminNavigation.html.twig' %}
-{% endblock %}
+		<script type="text/javascript">
+			var CKEDITOR_BASEPATH = '/ckeditor/';
+		</script>
+
+        {% block stylesheets %}
+		    {% stylesheets
+		        'bundles/spoutlet/css/admin/bootstrap.css'
+		        'bundles/spoutlet/css/admin/admin.css'
+		        filter='cssrewrite'
+		        output='css/packed/admin.css'
+		    %}
+		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+		    {% endstylesheets %}
+        {% endblock %}
+
+
+        {% block javascripts %}
+		    {% javascripts
+		        'bundles/spoutlet/js/jquery-1.6.2.min.js'
+		        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
+		        'ckeditor/ckeditor.js'
+		        'ckeditor/config.js'
+		        'ckeditor/lang/en.js'
+		        output='js/packed/admin.js'
+		    %}
+		    <script type="text/javascript" src="{{ asset_url }}"></script>
+		    {% endjavascripts %}
+        {% endblock %}
+
+        <title>
+            {%- if block('title') -%}
+                {{ block('title') }} | Admin
+            {%- else -%}
+            AlienwareArena Admin
+            {%- endif -%}
+        </title>
+
+        {% include 'SpoutletBundle::_analytics.html.twig' %}
+	</head>
+	<body>
+
+    <div class="topbar">
+        <div class="topbar-inner">
+            <div class="container-fluid">
+                <a class="brand" href="{{ path('admin_index') }}">Alienware Arena Admin</a>
+                <ul class="nav">
+                    <li><a href="{{ path('admin_index') }}">Home</a></li>
+                </ul>
+                <p class="pull-right">
+                    Logged in as {{ app.user.username }}
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="{{ path('_fos_user_security_logout') }}">logout</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="sidebar">
+            <div class="well">
+                {% if is_granted('ROLE_ORGANIZER') %}
+                    <h5>Content Management</h5>
+                    <ul>
+                        <li><a href="{{ path('admin_giveaway_index') }}">Giveaways</a></li>
+                        <li><a href="{{ path('NewsBundle_admin_homepage') }}">News</a></li>
+                        <li><a href="{{ path('admin_homepage_banner_index') }}">Homepage Banner</a></li>
+                        <li><a href="{{ path('admin_events_index') }}">Events</a></li>
+                    </ul>
+                {% endif %}
+
+                {% if is_granted('ROLE_STATS_ADMIN') %}
+                    <h5>Stats</h5>
+                    <ul>
+                        <li><a href="#">Giveaway</a></li>
+                        <li><a href="#">Members</a></li>
+                    </ul>
+                {% endif %}
+
+                {% if is_granted('ROLE_USER_ADMIN') %}
+                    <h5>Members</h5>
+                    <ul>
+                        <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
+                        <li><a href="#">Mass Unsubscribe</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="content">
+
+            {% if app.session.hasFlash('success') %}
+                <div class="flash success">
+                    {{ app.session.getflash('success') }}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+
+            <footer>
+                <p>&copy; Alienware Arena {{ '' | date('Y') }}</p>
+            </footer>
+        </div>
+    </div>
+
+	</body>
+</html>
