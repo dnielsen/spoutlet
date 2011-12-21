@@ -11,17 +11,4 @@ use Doctrine\ORM\QueryBuilder;
  */
 class GiveawayPoolRepository extends EntityRepository
 {
-    /**
-     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
-     * @return \Platformd\GiveawayBundle\Entity\GiveawayPool[]
-     */
-    public function findPoolsForGiveaway(Giveaway $giveaway)
-    {
-        return $this->createQueryBuilder('gp')
-            ->andWhere('gp.giveaway = :giveaway')
-            ->setParameter('giveaway', $giveaway)
-            ->getQuery()
-            ->execute()
-        ;
-    }
 }

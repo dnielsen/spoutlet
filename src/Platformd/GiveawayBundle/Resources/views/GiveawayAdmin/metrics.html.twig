@@ -13,9 +13,9 @@
             <th>Total Keys</th>
             <th>Total Assigned</th>
             <th>Keys Left</th>
-            <th>Demo</th>
-            <th>China</th>
-            <th>Japan</th>
+            {% for site in sites %}
+                <th>{{ site }}</th>
+            {% endfor %}
         </tr>
     </thead>
     <tbody>

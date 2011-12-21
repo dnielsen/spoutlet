@@ -96,6 +96,7 @@ class GiveawayAdminController extends Controller
 
         return array(
             'metrics' => $giveawayMetrics,
+            'sites'   => $metricManager->getSites(),
         );
     }
 

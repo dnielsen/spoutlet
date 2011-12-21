@@ -31,6 +31,16 @@ class GiveawayMetricManager
     }
 
     /**
+     * Returns an array of the sites that are reported on
+     *
+     * @return array
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    /**
      * Creates an array report about this giveaway with the following fields:
      *
      *   * name
@@ -45,22 +55,23 @@ class GiveawayMetricManager
      */
     public function createGiveawaysReport(Giveaway $giveaway)
     {
-        $pools = $this->giveawayPoolRepository->findPoolsForGiveaway($giveaway);
-
         $total = $this->giveawayKeyRepository->getTotalForGiveaway($giveaway);
         $assigned = $this->giveawayKeyRepository->getAssignedForGiveaway($giveaway);
         $remaining = $total - $assigned;
 
-        return array(
+        $data = array(
             'name'  => $giveaway->getName(),
             'total' => $total,
             'assigned' => $assigned,
             'remaining' => $remaining,
-            'sites' => array(
-                'en' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'en'),
-                'ja' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'ja'),
-                'zh' => $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, 'zh'),
-            ),
+            'sites' => array(),
         );
+
+        // go through all the sites and populate their data
+        foreach($this->sites as $key => $name) {
+            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key);
+        }
+
+        return $data;
     }
 }
