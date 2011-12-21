@@ -27,6 +27,8 @@ twig:
     form:
         resources:
             - 'SpoutletBundle::forms.html.twig'
+    globals:
+        base_host:    %base_host%
 
 # Assetic Configuration
 assetic:
