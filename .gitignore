@@ -8,3 +8,5 @@
 .rsync_cache
 /web/css/packed
 /web/js/packed
+/web/css/*
+/web/js/*
