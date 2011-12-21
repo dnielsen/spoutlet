@@ -1,3 +1,5 @@
+{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
+
 <form method="post" action="{{ route }}" class="form">
     {{ form_row(form.title) }}
 
@@ -11,5 +13,5 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="button" value="{{ "platformd.admin.news.save_news" | trans }}" formnovalidate />
+    <input type="submit" class="btn primary" value="{{ "platformd.admin.news.save_news" | trans }}" formnovalidate />
 </form>

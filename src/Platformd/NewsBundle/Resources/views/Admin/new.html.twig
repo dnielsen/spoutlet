@@ -2,6 +2,8 @@
 {% block title %}{{ "platformd.admin.news.create_title" | trans }}{% endblock %}
 
 {% block content %}
+<h1>New News Entry</h1>
+
 {% include 'NewsBundle:Admin:newsForm.html.twig' with {
     'form': form,
     'route': path('NewsBundle_admin_new')
