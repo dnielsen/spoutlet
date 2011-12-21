@@ -41,6 +41,7 @@ fos_user_profile_form_user_lastname: "姓:"
 fos_user_profile_form_user_email: "メールアドレス:"
 fos_user_profile_form_user_is_organizer: "主催者:"
 fos_user_profile_form_user_is_super_admin: "スーパーアドミン:"
+fos_user_profile_form_user_admin_level: Admin Level
 
 giveaway_name: "名前"
 giveaway_content: "説明"

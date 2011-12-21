@@ -37,6 +37,7 @@ fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_email: "邮箱"
 fos_user_profile_form_user_is_organizer: "组织人："
 fos_user_profile_form_user_is_super_admin: "高级管理"
+fos_user_profile_form_user_admin_level: Admin Level
 
 giveaway_name: "名称"
 giveaway_content: "说明"

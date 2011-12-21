@@ -13,8 +13,9 @@
         {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}
         {{ form_row(form.email) }}
+        {{ form_row(form.admin_level) }}
 
         {{ form_rest(form) }}
-        <input type="submit" value="{{ 'fos_user_admin_user_edit'|trans({}, 'FOSUserBundle') }}" class="btn primary" formnovalidate />
+        <input type="submit" value="{{ 'save'|trans({}, 'FOSUserBundle') }}" class="btn primary" formnovalidate />
     </form>
 {% endblock %}

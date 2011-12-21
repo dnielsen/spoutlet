@@ -17,9 +17,13 @@ class EditUserFormType extends AbstractType
             ->add('email');
         
         if ($options['allow_promote']) {
-            $builder
-                ->add('is_organizer', 'checkbox')
-                ->add('is_super_admin', 'checkbox');
+            $builder->add('admin_level', 'choice', array(
+                'choices' => array(
+                    'ROLE_ORGANIZER' => 'Content Admin',
+                    'ROLE_SUPER_ADMIN' => 'Super admin',
+                ),
+                'empty_value' => 'Choose an admin level',
+            ));
         }
     }
 

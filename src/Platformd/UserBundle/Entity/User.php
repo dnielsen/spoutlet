@@ -792,6 +792,54 @@ class User extends BaseUser
         $this->switchRole('ROLE_SUPER_ADMIN', $is_super_admin);
     }
 
+    /**
+     * Used on the user admin form to choose one role
+     *
+     * @param string $role either ROLE_ORGANIZER or ROLE_SUPER_ADMIN
+     * @throws \InvalidArgumentException
+     */
+    public function setAdminLevel($role)
+    {
+        if ($role == 'ROLE_ORGANIZER') {
+            $this->setIsOrganizer(true);
+            $this->setIsSuperAdmin(false);
+        } elseif ($role == 'ROLE_SUPER_ADMIN') {
+            $this->setIsOrganizer(false);
+            $this->setIsSuperAdmin(true);
+        } else {
+            $this->setIsSuperAdmin(false);
+            $this->setIsSuperAdmin(false);
+        }
+    }
+
+    /**
+     * Used on the user edit from - where you are an organizer or a super admin
+     */
+    public function getAdminLevel()
+    {
+        if ($this->hasRole('ROLE_ORGANIZER')) {
+            return 'ROLE_ORGANIZER';
+        } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
+            return 'ROLE_SUPER_ADMIN';
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdminLevelString()
+    {
+        if ($this->hasRole('ROLE_ORGANIZER')) {
+            return 'Content Admin';
+        } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
+            return 'Super Admin';
+        } else {
+            return '-';
+        }
+    }
+
     private function switchRole($role, $bool)
     {
         if ($bool) {

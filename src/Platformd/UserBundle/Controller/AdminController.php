@@ -35,7 +35,7 @@ class AdminController extends Controller
         $manager = $this->get('fos_user.user_manager');
         $translator = $this->get('translator');
 
-        if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
+        if (!$user = $manager->findUserBy(array('id' => $id))) {
             
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }

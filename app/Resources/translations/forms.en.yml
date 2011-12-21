@@ -39,8 +39,9 @@ fos_user_profile_form_user_username: "Username"
 fos_user_profile_form_user_firstname: "First name"
 fos_user_profile_form_user_lastname: "Last name"
 fos_user_profile_form_user_email: "Email"
-fos_user_profile_form_user_is_organizer: "Organizer"
+fos_user_profile_form_user_is_organizer: "Content Admin"
 fos_user_profile_form_user_is_super_admin: "Super-admin"
+fos_user_profile_form_user_admin_level: Admin Level
 
 giveaway_name: "Name"
 giveaway_slug: "URL string"
