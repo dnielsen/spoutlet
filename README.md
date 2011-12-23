@@ -3,7 +3,7 @@ INSTALLATION
 
 * Clone the repository
 
-    git clone git@github.com:knplabs/Platformd.git
+    git clone git@github.com:KnpLabs/Platformd.git
 
 * Move into the directory and then update the vendors (this will take several
     minutes the first time you do it)
