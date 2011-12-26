@@ -89,6 +89,7 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
+        // create a select field for range
         $select = $this->get('form.factory')
             ->createNamedBuilder('choice', 'results_range', 7, array(
             'choices' => array(
@@ -97,7 +98,11 @@ class GiveawayAdminController extends Controller
                 ''   => 'All time',
             ),
         ))->getForm();
-        $select->bindRequest($request);
+
+        // bind only if we have that query parameter
+        if (null !== $request->query->get($select->getName())) {
+            $select->bindRequest($request);
+        }
         $since = ($range = $select->getData()) ? new DateTime(sprintf('%s days ago', $range)) : null;
 
         $giveawayMetrics = array();
