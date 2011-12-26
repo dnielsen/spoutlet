@@ -132,7 +132,7 @@
 
             {% if app.session.hasFlash('success') %}
                 <div class="alert-message success">
-                    {{ app.session.getflash('success') }}
+                    {{ app.session.getflash('success') | trans }}
                 </div>
             {% endif %}
 
