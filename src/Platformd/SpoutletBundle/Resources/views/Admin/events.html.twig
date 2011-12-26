@@ -8,11 +8,11 @@
 <table class="zebra-striped bordered-table tablesorter">
     <tbody>
         <tr>
-            <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
-            <th>{{ "tenant_site" | trans }}</th>
             <th>{{ "platformd.events.event_listings.event" | trans }}</th>
+            <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ 'url' | trans }}</th>
+            <th>{{ "platformd.events.event_listings.start_date" | trans }}</th>
             <th>{{ "platformd.events.event_listings.games" | trans }}</th>
-            <th>{{ "platformd.events.event_listings.location" | trans }}</th>
             <th>{{ "platformd.events.event_listings.published" | trans }}</th>
             {% if app.user.isSuperAdmin %}
                 <th>{{ "platformd.help.actions" | trans }}</th>
@@ -20,14 +20,17 @@
         </tr>
         {% for event in events %}
         <tr class="eventListGroup_online">
+            <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
+            <td>{{ event.locale | site_name }}</td>
+            <td>
+                {% set eventUrl = url('events_detail', {'slug': event.slug, '_locale': event.locale }) %}
+                <a href="{{ eventUrl }}">{{ eventUrl }}</a>
+            </td>
             <td title="{{ event.startsAt|date }}">
                 {{ event.startsAt|date('M') }}
                 <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
             </td>
-            <td>{{ event.locale | site_name }}</td>
-            <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
             <td>{{ event.game }}</td>
-            <td>{{ event.location }}</td>
             <td>
                 <i>
                 {% if event.published%}
