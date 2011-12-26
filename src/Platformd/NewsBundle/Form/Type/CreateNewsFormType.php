@@ -17,6 +17,9 @@ class CreateNewsFormType extends AbstractType
             ->add('title')
             ->add('body')
             ->add('locale', new SiteChoiceType())
+            ->add('published', 'choice', array(
+                'choices' => array(0 => 'Unpublished', 1 => 'Published')
+            ));
         ;
     }
 

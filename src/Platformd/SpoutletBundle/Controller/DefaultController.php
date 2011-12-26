@@ -23,10 +23,7 @@ class DefaultController extends Controller
     		->getRepository('SpoutletBundle:Event')
     		->findPublished($this->get('session')->getLocale());
         
-        $news = $em
-            ->getRepository('NewsBundle:News')
-            ->findAllForLocale($this->getLocale())
-        ;
+        $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())

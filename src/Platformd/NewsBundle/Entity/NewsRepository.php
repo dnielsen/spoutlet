@@ -13,6 +13,11 @@ use Doctrine\ORM\QueryBuilder;
  */
 class NewsRepository extends EntityRepository
 {
+    /**
+     * Used in the admin
+     *
+     * @return \Doctrine\ORM\Query
+     */
     public function getFindNewsQuery()
     {
         return $this->createQueryBuilder('n')->getQuery();
@@ -31,7 +36,8 @@ class NewsRepository extends EntityRepository
     }
 
     /**
-     * Creates a base query builder that's locale-aware
+     * Creates a base query builder that's locale-aware and only returns
+     * published entries
      *
      * @param $locale
      * @param \Doctrine\ORM\QueryBuilder|null $qb
@@ -45,6 +51,7 @@ class NewsRepository extends EntityRepository
 
         $qb->andWhere('n.locale = :locale')
             ->setParameter('locale', $locale)
+            ->andWhere('n.published = 1')
         ;
 
         return $qb;

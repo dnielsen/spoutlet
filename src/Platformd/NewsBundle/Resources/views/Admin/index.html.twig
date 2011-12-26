@@ -10,6 +10,8 @@
         <tr>
             <th>{{ "platformd.admin.news.title" | trans }}</th>
             <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ 'url' | trans }}</th>
+            <th>{{ "platformd.events.event_listings.published" | trans }}</th>
             <th>{{ "platformd.help.actions" | trans }}</th>
         </tr>
     </thead>
@@ -19,8 +21,22 @@
             <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
             <td>{{ item.locale | site_name }}</td>
             <td>
+                {% set newsUrl = url('news_show', {'slug': item.slug, '_locale': item.locale }) %}
+                <a href="{{ newsUrl }}">{{ newsUrl }}</a>
+            </td>
+            <td>
+                <i>
+                {% if item.published%}
+                    published
+                {% else %}
+                    unpublished
+                {% endif %}
+                </i>
+            </td>
+            <td>
                 <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ "platformd.admin.news.edit" | trans }}</a> -
-                <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">{{ "platformd.admin.news.delete" | trans }}</a></td>
+                <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">{{ "platformd.admin.news.delete" | trans }}</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

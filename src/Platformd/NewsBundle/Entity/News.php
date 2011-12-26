@@ -55,6 +55,13 @@ class News
     protected $locale;
 
     /**
+     * @var boolean $published
+     *
+     * @ORM\Column(name="published", type="boolean")
+     */
+    protected $published = false;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -134,5 +141,21 @@ class News
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param boolean $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
     }
 }
