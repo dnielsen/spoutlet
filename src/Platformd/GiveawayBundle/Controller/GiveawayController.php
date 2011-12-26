@@ -116,10 +116,14 @@ class GiveawayController extends Controller
             throw $this->createNotFoundException();
         }
 
-        // not technically needed - findOneBySlug checks this... but this reads better, feels safer
+        /*
+         * Commented out, because the new functionality calls for this UrL
+         * to be "public" so that demo links can be sent out
+         *
         if ($giveaway->isDisabled()) {
             throw $this->createNotFoundException('Giveaway is disabled');
         }
+        */
 
         return $giveaway;
     }

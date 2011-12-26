@@ -51,7 +51,7 @@ class GiveawayRepository extends AbstractEventRepository
         try {
 
             return $this
-                ->createActiveQueryBuilder($locale)
+                ->createBaseQueryBuilder($locale)
                 ->andWhere('g.slug = :slug')
                 ->setParameter('slug', $slug)
                 ->getQuery()
