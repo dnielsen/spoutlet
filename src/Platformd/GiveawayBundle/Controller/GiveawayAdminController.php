@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use DateTime;
 
 class GiveawayAdminController extends Controller
 {
@@ -82,21 +83,33 @@ class GiveawayAdminController extends Controller
      * @Template()
      * @return array
      */
-    public function metricsAction()
+    public function metricsAction(Request $request)
     {
-        $giveaways = $this->getGiveawayRepo()->findAll();
+        $giveaways = $this->getGiveawayRepo()->findAllOrderedByNewest();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
+
+        $select = $this->get('form.factory')
+            ->createNamedBuilder('choice', 'results_range', 7, array(
+            'choices' => array(
+                '7'  => 'Last 7 days',
+                '30' => 'Last 30 days',
+                ''   => 'All time',
+            ),
+        ))->getForm();
+        $select->bindRequest($request);
+        $since = ($range = $select->getData()) ? new DateTime(sprintf('%s days ago', $range)) : null;
 
         $giveawayMetrics = array();
         $metricManager = $this->container->get('platformd.metric_manager');
         foreach($giveaways as $giveaway) {
-            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway);
+            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $since);
         }
 
         return array(
             'metrics' => $giveawayMetrics,
             'sites'   => $metricManager->getSites(),
+            'select'  => $select->createView()
         );
     }
 

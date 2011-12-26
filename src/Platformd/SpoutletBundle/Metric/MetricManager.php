@@ -58,10 +58,12 @@ class MetricManager
      *      site_key => # assigned
      *
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @param \DateTime $since
      * @return array
      */
-    public function createGiveawaysReport(Giveaway $giveaway)
+    public function createGiveawaysReport(Giveaway $giveaway, DateTime $since = null)
     {
+        // the total numbers are not affected by the "since" - they are full totals
         $total = $this->giveawayKeyRepository->getTotalForGiveaway($giveaway);
         $assigned = $this->giveawayKeyRepository->getAssignedForGiveaway($giveaway);
         $remaining = $total - $assigned;
@@ -76,7 +78,7 @@ class MetricManager
 
         // go through all the sites and populate their data
         foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key);
+            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $since);
         }
 
         return $data;

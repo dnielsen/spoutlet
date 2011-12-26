@@ -8,6 +8,7 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Doctrine\ORM\QueryBuilder;
+use DateTime;
 
 /**
  * GiveawayKey  Repository
@@ -157,17 +158,26 @@ class GiveawayKeyRepository extends EntityRepository
      *
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      * @param $site
+     * @param \DateTime $since
      * @return integer
      */
-    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site)
+    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, DateTime $since = null)
     {
         $qb  = $this->createForGiveawayQueryBuilder($giveaway);
         $this->addAssignedQueryBuilder($qb);
 
-        return (int) $qb
-            ->select('COUNT(k.id)')
+        $qb->select('COUNT(k.id)')
             ->andWhere('k.assignedSite = :site')
             ->setParameter('site', $site)
+        ;
+
+        if ($since) {
+            $qb->andWhere('k.assignedAt >= :since')
+                ->setParameter('since', $since)
+            ;
+        }
+
+        return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;

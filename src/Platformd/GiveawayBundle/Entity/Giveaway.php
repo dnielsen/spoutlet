@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -48,6 +49,22 @@ class Giveaway extends AbstractEvent
      * @ORM\Column(type="string", length=15)
      */
     protected $status = 'disabled';
+
+    /**
+     * @var datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
     /**
      * Key of valid status to a text translation key for that status
@@ -219,5 +236,37 @@ class Giveaway extends AbstractEvent
     public function trimRedemptionInstructions()
     {
         $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\datetime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\datetime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\datetime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\datetime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }

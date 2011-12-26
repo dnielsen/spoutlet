@@ -63,6 +63,20 @@ class GiveawayRepository extends AbstractEventRepository
     }
 
     /**
+     * Returns ALL giveaways, from newest to oldest
+     *
+     * @return mixed
+     */
+    public function findAllOrderedByNewest()
+    {
+        return $this->createQueryBuilder('g')
+            ->orderBy('g.created', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
      * Creates a base query builder that's locale-aware
      *
      * @param $locale

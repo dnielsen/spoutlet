@@ -5,6 +5,9 @@
 
 <h1>Key Giveaways</h1>
 
+<div class="pull-right">
+    {{ form_widget(select) }}
+</div>
 
 <table class="zebra-striped bordered-table tablesorter">
     <thead>
@@ -32,5 +35,13 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery('#results_range').change(function() {
+            window.location = '{{ path('admin_giveaway_metrics') }}?results_range='+$(this).val();
+        });
+    });
+</script>
 
 {% endblock %}
