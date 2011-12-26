@@ -22,7 +22,7 @@
             <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
             <td>{{ giveaway.locale | site_name }}</td>
             <td>
-                {% set giveawayUrl = path('giveaway_show', {'slug': giveaway.slug}) %}
+                {% set giveawayUrl = url('giveaway_show', {'slug': giveaway.slug, '_locale': giveaway.locale }) %}
                 <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>
             </td>
             <td>
