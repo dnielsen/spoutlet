@@ -9,6 +9,7 @@ use Gaufrette\Filesystem;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Doctrine\ORM\AbstractQuery;
 
 class UserManager extends BaseUserManager
 {

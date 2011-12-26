@@ -62,3 +62,11 @@ services:
             - "@request"
         tags:
             - { name: knp_menu.menu, alias: breadcrumbs }
+
+    # our metric manager service
+    platformd.metric_manager:
+        class: Platformd\SpoutletBundle\Metric\MetricManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            # this should NOT be hardcoded
+            - %platformd_sites%

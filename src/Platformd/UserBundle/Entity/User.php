@@ -258,7 +258,7 @@ class User extends BaseUser
      * @var datetime $created
      *
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     protected $created;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\GiveawayBundle\Features\Context;
+namespace Platformd\SpoutletBundle\Features\Context;
 
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Behat\Context\ClosuredContextInterface,
@@ -10,13 +10,6 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 use Behat\Behat\Context\Step\When;
-
-//
-// Require 3rd-party libraries here:
-//
-//   require_once 'PHPUnit/Autoload.php';
-//   require_once 'PHPUnit/Framework/Assert/Functions.php';
-//
 
 /**
  * Feature context.

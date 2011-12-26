@@ -1,10 +1,11 @@
 <?php
 
-namespace Platformd\GiveawayBundle\Metric;
+namespace Platformd\SpoutletBundle\Metric;
 use Doctrine\ORM\EntityManager;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use DateTime;
 
-class GiveawayMetricManager
+class MetricManager
 {
     /**
      * @var \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
@@ -17,6 +18,11 @@ class GiveawayMetricManager
     private $giveawayPoolRepository;
 
     /**
+     * @var \Platformd\UserBundle\Entity\UserRepository
+     */
+    private $userRepo;
+
+    /**
      * An array of all available site keys and their names
      *
      * @var array
@@ -27,6 +33,7 @@ class GiveawayMetricManager
     {
         $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
         $this->giveawayPoolRepository = $em->getRepository('GiveawayBundle:GiveawayPool');
+        $this->userRepo = $em->getRepository('UserBundle:User');
         $this->sites = $sites;
     }
 
@@ -70,6 +77,44 @@ class GiveawayMetricManager
         // go through all the sites and populate their data
         foreach($this->sites as $key => $name) {
             $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Returns an array of metric data (each as an array) for each site
+     * in the system. The key to the array is the site key, and each array
+     * contains several fields (see below).
+     */
+    public function createMembershipByCountryReport()
+    {
+        $data = array();
+        foreach ($this->sites as $key => $name) {
+
+            $totalUsers = $this->userRepo->getTotalUsersForSite($key);
+
+            $arenaOptIn = $this->userRepo->getArenaOptInForSite($key);
+            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
+
+            $dellOptIn = $this->userRepo->getDellOptInForSite($key);
+            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+
+            $dayDt = new DateTime('24 hours ago');
+            $pastDay = $this->userRepo->countNewRegistrants($dayDt, $key);
+
+            $weekDt = new DateTime('7 days ago');
+            $pastWeek = $this->userRepo->countNewRegistrants($weekDt, $key);
+
+            $data[$key] = array(
+                'count'         => $totalUsers,
+                'arenaOptIn'    => $arenaOptIn,
+                'arenaOptInPercentage' => $arenaPercentage,
+                'dellOptIn'     => $dellOptIn,
+                'dellOptInPercentage' => $dellPercentage,
+                'pastDay'       => $pastDay,
+                'pastWeek'      => $pastWeek,
+            );
         }
 
         return $data;

@@ -89,7 +89,7 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Giveaways');
 
         $giveawayMetrics = array();
-        $metricManager = $this->container->get('giveaway.metric_manager');
+        $metricManager = $this->container->get('platformd.metric_manager');
         foreach($giveaways as $giveaway) {
             $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway);
         }

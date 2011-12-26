@@ -1,0 +1,38 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}Members by Country{% endblock %}
+
+{% block content %}
+
+<h1>Members by Country</h1>
+
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Count</th>
+            <th>Arena Opted In</th>
+            <th>%</th>
+            <th>Dell Opted in</th>
+            <th>%</th>
+            <th>Past day</th>
+            <th>Past week</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for siteKey, siteData in sitesData %}
+        <tr>
+            <td>{{ siteKey | site_name }}</td>
+            <td>{{ siteData.count }}</td>
+            <td>{{ siteData.arenaOptIn }}</td>
+            <td>{{ siteData.arenaOptInPercentage }}%</td>
+            <td>{{ siteData.dellOptIn }}</td>
+            <td>{{ siteData.dellOptInPercentage }}%</td>
+            <td>{{ siteData.pastDay }}</td>
+            <td>{{ siteData.pastWeek }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

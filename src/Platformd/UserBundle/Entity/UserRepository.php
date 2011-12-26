@@ -3,6 +3,9 @@
 namespace Platformd\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
+use DateTime;
 
 /**
  * UserRepository
@@ -12,4 +15,91 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    public function getTotalUsersForSite($site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getArenaOptInForSite($site)
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        return $this->addArenaOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getDellOptInForSite($site)
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        return $this->addDellOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    /**
+     * Returns the number of new users since the given DateTime
+     *
+     * @param \DateTime $since
+     * @return integer
+     */
+    public function countNewRegistrants(DateTime $since, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->select('COUNT(u.id)')
+            ->andWhere('u.created >= :since')
+            ->setParameter('since', $since)
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    /**
+     * @param $site
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createSiteQueryBuilder($site)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.locale = :locale')
+            ->setParameter('locale', $site)
+        ;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param $optIn
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addArenaOptQuery(QueryBuilder $qb, $optIn)
+    {
+        return $qb->andWhere('u.subscribedAlienwareEvents = :optIn')
+            ->setParameter('optIn', $optIn)
+        ;
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param $optIn
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addDellOptQuery(QueryBuilder $qb, $optIn)
+    {
+        return $qb->andWhere('u.subscribedGamingNews = :optIn')
+            ->setParameter('optIn', $optIn)
+        ;
+    }
 }
