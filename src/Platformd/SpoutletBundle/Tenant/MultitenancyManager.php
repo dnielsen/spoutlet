@@ -7,6 +7,11 @@ namespace Platformd\SpoutletBundle\Tenant;
  */
 class MultitenancyManager
 {
+    /**
+     * @todo - sites is repeated as DIC parameters
+     *
+     * @var array
+     */
     static private $sites = array(
         'en' => 'Demo',
         'ja' => 'Japan',
