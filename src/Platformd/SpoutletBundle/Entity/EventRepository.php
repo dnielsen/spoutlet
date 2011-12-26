@@ -48,22 +48,6 @@ class EventRepository extends AbstractEventRepository
     }
     
     /**
-     * Return a query builder instance that should be used for frontend request
-     * basically, it only adds a criteria to retrieve only published events
-     * 
-     * @param String $alias
-     * @return Doctrine\ORM\QueryBuilder
-     */
-    public function getBaseQueryBuilder($locale, $alias = 'e')
-    {
-        
-        return $this->createQueryBuilder($alias)
-            ->where($alias.'.published = 1')
-            ->andWhere($alias.'.locale = :locale')
-            ->setParameter('locale', $locale);
-    }
-    
-    /**
      * Retrieve published events
      *
      * @return array
@@ -75,6 +59,22 @@ class EventRepository extends AbstractEventRepository
             'locale'    => $locale,
             'published' => true
         ));
+    }
+
+    /**
+     * Return a query builder instance that should be used for frontend request
+     * basically, it only adds a criteria to retrieve only published events
+     *
+     * @param String $alias
+     * @return Doctrine\ORM\QueryBuilder
+     */
+    private function getBaseQueryBuilder($locale, $alias = 'e')
+    {
+
+        return $this->createQueryBuilder($alias)
+            ->where($alias.'.published = 1')
+            ->andWhere($alias.'.locale = :locale')
+            ->setParameter('locale', $locale);
     }
 
     private function addQueryLimit(Query $query, $limit)
