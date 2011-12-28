@@ -40,7 +40,6 @@
                 {% endif %}
                 </i>
             </td>
-            {% if app.user.isSuperAdmin %}
             <td>
                 {% if not event.published %}
                     <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
@@ -48,7 +47,6 @@
                     <a href="{{ path('admin_event_unpublish', { "id" : event.id }) }}">{{ "platformd.events.admin.unpublish" | trans }}</a>
                 {% endif %}
             </td>
-            {% endif %}
         </tr>
         {% endfor %}
     </tbody>
