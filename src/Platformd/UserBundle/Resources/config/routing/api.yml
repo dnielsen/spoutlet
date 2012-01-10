@@ -2,5 +2,16 @@
 
 # expects a POST'ed "users" key that is CSV
 user_api_get_users_details:
-    pattern:  /details
+    pattern:  /details.{_format}
     defaults: { _controller: UserBundle:Api:usersDetails }
+    requirements:
+        _format: json
+        # notice this is *totally* wrong, but the video API required POSt
+        # and in the action, we actually look for POSt parameters
+        _method: POST
+
+user_api_authenticated_user_details:
+    pattern:  /current/details.{_format}
+    defaults: { _controller: UserBundle:Api:authenticatedUserDetails }
+    requirements:
+        _format: json

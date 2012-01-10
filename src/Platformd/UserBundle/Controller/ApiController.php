@@ -40,6 +40,28 @@ class ApiController extends Controller
     }
 
     /**
+     * Returns details for *just* the authenticated user
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     */
+    public function authenticatedUserDetailsAction(Request $request)
+    {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $data = array(
+                'error' => true,
+                'message' => 'No user is currently authenticated',
+            );
+
+            return new Response(json_encode($data));
+        }
+
+        $userData = $this->userToArray($this->getUser());
+
+        return new Response(json_encode($userData));
+    }
+
+    /**
      * Very cheap, and probably temporary method to serialize users to an array
      *
      * @param \Platformd\UserBundle\Entity\User $user

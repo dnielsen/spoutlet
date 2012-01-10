@@ -59,7 +59,7 @@ class Controller extends BaseController
      * @param array $roles
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    protected function basicSecurityCheck(array $roles)
+    protected function basicSecurityCheck($roles)
     {
         if (!$this->container->get('security.context')->isGranted($roles)) {
             throw new AccessDeniedException();
@@ -80,5 +80,14 @@ class Controller extends BaseController
     protected function getUserManager()
     {
         return $this->get('fos_user.user_manager');
+    }
+
+    /**
+     * @param $roles
+     * @return bool
+     */
+    protected function isGranted($roles)
+    {
+        return $this->container->get('security.context')->isGranted($roles);
     }
 }
