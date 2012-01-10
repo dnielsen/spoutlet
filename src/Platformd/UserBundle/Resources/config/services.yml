@@ -37,3 +37,10 @@ services:
     platformd_user.mailer:
         class: Platformd\UserBundle\Mailer\Mailer
         parent: fos_user.mailer.default
+
+    paltformd_user.awa_video_login_redirect_listener:
+        class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener
+        arguments:
+            - "@security.context"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
