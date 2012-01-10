@@ -1,0 +1,30 @@
+_user_bundle_controller_import:
+    resource: "@UserBundle/Controller"
+    type:     annotation
+PlatformDUserBundle:
+    resource: "@UserBundle/Resources/config/routing/admin.yml"
+    prefix:   /admin/users
+PlatformDUserBundle_registration:
+    resource: "@UserBundle/Resources/config/routing/registration.yml"
+    prefix:   /
+
+_user_bundle_api:
+    resource: "@UserBundle/Resources/config/routing/api.yml"
+    prefix:   /api/users
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+# no prefix - most of the routes in the file have been prefixed (overridden in UserBundle)
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /
+
+# no prefix - most of the routes in the file have been prefixed (overridden in UserBundle)
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /account

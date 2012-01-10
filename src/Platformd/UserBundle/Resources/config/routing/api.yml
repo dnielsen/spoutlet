@@ -1,0 +1,6 @@
+# prefix: /api/users
+
+# expects a POST'ed "users" key that is CSV
+user_api_get_users_details:
+    pattern:  /details
+    defaults: { _controller: UserBundle:Api:usersDetails }
