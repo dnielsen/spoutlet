@@ -58,7 +58,9 @@ class ApiController extends Controller
 
         $userData = $this->userToArray($this->getUser());
 
-        return new Response(json_encode($userData));
+        return new Response(json_encode(array(
+            'user' => $userData
+        )));
     }
 
     /**
@@ -80,6 +82,7 @@ class ApiController extends Controller
         //asset(user.avatar and user.isAvatarApproved ? media_path(user) : "/images/profile-default.png");
 
         return array(
+            'id'       => $user->getId(),
             'username' => $user->getUsername(),
             'handle'   => $user->getUsername(),
             'country'  => $user->getCountry(),
