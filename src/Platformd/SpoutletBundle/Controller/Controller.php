@@ -73,4 +73,12 @@ class Controller extends BaseController
     {
         return $this->get('platformd.breadcrumbs_menu');
     }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\UserManager
+     */
+    protected function getUserManager()
+    {
+        return $this->get('fos_user.user_manager');
+    }
 }

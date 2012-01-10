@@ -616,6 +616,23 @@ class User extends BaseUser
         return $this->avatar;
     }
 
+    /**
+     * Returns the avatar path, with respect to it being approved or not.
+     *
+     * If the avatar is not approved, false is returned.
+     * This logic here is repeated elsewhere, but should use this.
+     *
+     * @return string
+     */
+    public function getApprovedAvatar()
+    {
+        if (!$this->isAvatarApproved()) {
+            return false;
+        }
+
+        return $this->getAvatar();
+    }
+
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
