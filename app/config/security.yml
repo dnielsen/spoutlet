@@ -13,6 +13,7 @@ security:
             logout:
                 path:     /logout
                 target:   default_index
+                success_handler: platformd_user.security_logout_handler
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)

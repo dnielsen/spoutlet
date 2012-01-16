@@ -12,6 +12,10 @@ class RegistrationController extends BaseRegistrationController
 {
     public function registerAction()
     {
+        // this *would* cause the user to be redirected to the video site
+        // assuming that the confirmation email were not part of the process
+        $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+
         $response = parent::registerAction();
 
         $request = $this->container->get('request');
@@ -48,5 +52,23 @@ class RegistrationController extends BaseRegistrationController
             ->get('templating')
             ->renderResponse('UserBundle:Registration:tooYoung.html.twig')
         ;
+    }
+
+    /**
+     * The Alienware video site expects to send us a ?return=, and we'll go
+     * back to that URL afterwards.
+     *
+     * We use this to store it on the session.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
+    private function processAlienwareVideoReturnUrlParameter(Request $request)
+    {
+        if ($returnUrl = $request->query->get('return')) {
+            $request->getSession()->set(
+                AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
+                $returnUrl
+            );
+        }
     }
 }
