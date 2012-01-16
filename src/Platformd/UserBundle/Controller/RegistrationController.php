@@ -4,6 +4,8 @@ namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
 
 /**
  * Overridden registration controller
