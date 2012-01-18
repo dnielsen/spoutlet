@@ -22,7 +22,7 @@ set  :use_sudo,      false
 set :update_vendors, true
 
 # keep the vendor files shared, for faster deployment
-set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data"]
+set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video"]
 
 # share our database configuration
 set :shared_files,      ["app/config/parameters.ini"]
