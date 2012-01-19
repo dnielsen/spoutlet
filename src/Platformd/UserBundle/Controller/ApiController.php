@@ -27,7 +27,7 @@ class ApiController extends Controller
 
         $data = array();
         foreach ($users as $user) {
-            $userObj = $this->getUserManager()->findUserByUsernameOrEmail(trim($user));
+            $userObj = $this->getUserManager()->findUserBy(array('id' => trim($user)));
 
             $data[$userObj->getId()] = $this->userToArray($userObj);
 
