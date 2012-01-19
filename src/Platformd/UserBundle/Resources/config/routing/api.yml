@@ -8,7 +8,8 @@ user_api_get_users_details:
         _format: json
         # notice this is *totally* wrong, but the video API required POSt
         # and in the action, we actually look for POSt parameters
-        _method: POST
+        # actually, for some reason, making this POST only doesn't work...
+        # _method: POST
 
 user_api_authenticated_user_details:
     pattern:  /current/details.{_format}
