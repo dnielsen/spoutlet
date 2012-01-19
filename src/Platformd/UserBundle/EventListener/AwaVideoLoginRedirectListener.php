@@ -18,7 +18,15 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 class AwaVideoLoginRedirectListener
 {
+    /**
+     * The session parameter for the return URL is stored on this
+     */
     const RETURN_SESSION_PARAMETER_NAME = 'awa_video_return_url';
+
+    /**
+     * We store the session id in a cookie with this name
+     */
+    const SESSION_ID_COOKIE_NAME = 'aw_session';
 
     private $securityContext;
 
@@ -46,11 +54,6 @@ class AwaVideoLoginRedirectListener
 
             // set the redirect response
             $response = new RedirectResponse($returnUrl);
-
-            // set the needed aw_session cookie used on the other end
-            $cookie = new Cookie('aw_session', $session->getId());
-            $response->headers->setCookie($cookie);
-
             $event->setResponse($response);
         }
     }

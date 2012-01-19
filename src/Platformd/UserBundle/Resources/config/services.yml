@@ -45,6 +45,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    platformd_user.awa_video_session_id_cookie_listener:
+        class: Platformd\UserBundle\EventListener\AwaVideoSessionIdCookieListener
+        arguments:
+            - "@security.context"
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+
     platformd_user.security_logout_handler:
         class: Platformd\UserBundle\Security\Logout\SuccessHandler
         arguments:

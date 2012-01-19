@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpFoundation\Cookie;
+use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
 
 /**
  * Custom logout success handler so we can redirect to the video site if needed
@@ -23,13 +24,7 @@ class SuccessHandler implements LogoutSuccessHandlerInterface
     public function onLogoutSuccess(Request $request)
     {
         if ($return = $request->query->get('return')) {
-            $response = new RedirectResponse($return);
-
-            // remove cookie so that video site doesn't keep API'ing to us to try to auth
-            $cookie = new Cookie('aw_session', '');
-            $response->headers->setCookie($cookie);
-
-            return $response;
+            return new RedirectResponse($return);
         }
 
         return $this->httpUtils->createRedirectResponse($request, '/');
