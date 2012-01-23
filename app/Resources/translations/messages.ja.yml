@@ -65,6 +65,7 @@ platformd:
             alienware: Alienware
             alienware_url: http://www.alienware.jp/
             events: イベント
+            video: ビデオ
             news: ニュース
             microsoft: マイクロソフト
     

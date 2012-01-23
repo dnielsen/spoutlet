@@ -65,6 +65,7 @@ platformd:
             alienware: Alienware
             alienware_url: http://alienware.com/
             events: Events
+            video: Video
             news: News
             microsoft: Microsoft
     
