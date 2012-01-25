@@ -9,6 +9,7 @@ use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
 
 /**
  * Overridden registration controller
+ * 
  */
 class RegistrationController extends BaseRegistrationController
 {
@@ -18,31 +19,28 @@ class RegistrationController extends BaseRegistrationController
         // assuming that the confirmation email were not part of the process
         $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
 
-        $response = parent::registerAction();
-
-        $request = $this->container->get('request');
-
-        /*
-         * Intercept failed validations
-         *
-         * This is because we have normal validation to not let users 13 and
-         * under register. But instead of throwing a validation error, we
-         * need to redirect them to a whole other page
-         */
-        if ($request->getMethod() == 'POST' && !($response instanceof RedirectResponse)) {
-            $form = $this->container->get('fos_user.registration.form');
-
-            if ($form->getData()->isAMinor()) {
-                $url = $this->container
-                    ->get('router')
-                    ->generate('user_registration_too_young')
-                ;
-
-                return new RedirectResponse($url);
-            }
+        $base_url = 'alienwarearena.com'; // for production
+        //$base_url = 'platformd'; // for development
+        
+        $locale = '';
+        $dropoff = 'demo.' . $base_url;
+        
+        // Couldn't get swtich to work dynamically
+        if ($_SERVER["HTTP_HOST"] == "japan.${base_url}") {
+            $locale = 'japan';
+            $dropoff = $locale . "." . $base_url;
+        }
+        
+        if ($_SERVER["HTTP_HOST"] == "china.${base_url}") {
+            $locale = 'china';
+            $dropoff = $locale . "." . $base_url;
         }
 
-        return $response;
+
+        $url = "http://alienwarearena.com/${locale}/account/register/?return=http://${dropoff}";
+        
+        return new RedirectResponse($url);
+        
     }
 
     /**
