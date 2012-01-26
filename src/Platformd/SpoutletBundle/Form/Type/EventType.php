@@ -28,9 +28,6 @@ class EventType extends AbstractType
             )
         ));
     	
-    	$options['required'] = false;
-    	
-    	
     	$builder->add('city', 'text');
     	$builder->add('country', 'text');
     	$builder->add('content', 'textarea');
