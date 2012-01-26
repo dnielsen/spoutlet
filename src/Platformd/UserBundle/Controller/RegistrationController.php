@@ -6,6 +6,7 @@ use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationControll
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
+use Platformd\CEVOBundle\CEVOAuthManager;
 
 /**
  * Overridden registration controller
@@ -13,31 +14,23 @@ use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
  */
 class RegistrationController extends BaseRegistrationController
 {
+    /**
+     * Simply redirects to the CEVO site with the correct URL
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function registerAction()
     {
-        // this *would* cause the user to be redirected to the video site
-        // assuming that the confirmation email were not part of the process
-        $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+        // store the return URL that's on the request in the session, return it
+        $returnUrl = $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
 
-        $base_url = 'alienwarearena.com'; // for production
-        //$base_url = 'platformd'; // for development
-        
-        $locale = '';
-        $dropoff = 'demo.' . $base_url;
-        
-        // Couldn't get swtich to work dynamically
-        if ($_SERVER["HTTP_HOST"] == "japan.${base_url}") {
-            $locale = 'japan';
-            $dropoff = $locale . "." . $base_url;
-        }
-        
-        if ($_SERVER["HTTP_HOST"] == "china.${base_url}") {
-            $locale = 'china';
-            $dropoff = $locale . "." . $base_url;
-        }
+        // if there is no return URL, we'll ultimately send back to the homepage
+        $returnUrl = $returnUrl ? $returnUrl : '/';
 
-
-        $url = "http://alienwarearena.com/${locale}/account/register/?return=http://${dropoff}";
+        $url = $this->getCevoAuthManager()->generateCevoUrl(
+            CEVOAuthManager::REGISTER_PATH,
+            $returnUrl
+        );
         
         return new RedirectResponse($url);
         
@@ -61,6 +54,7 @@ class RegistrationController extends BaseRegistrationController
      * We use this to store it on the session.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return string The URL that we've stored that should be returned to
      */
     private function processAlienwareVideoReturnUrlParameter(Request $request)
     {
@@ -69,6 +63,16 @@ class RegistrationController extends BaseRegistrationController
                 AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
                 $returnUrl
             );
+
+            return $returnUrl;
         }
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\CEVOAuthManager
+     */
+    private function getCevoAuthManager()
+    {
+        return $this->container->get('pd.cevo.cevo_auth_manager');
     }
 }
