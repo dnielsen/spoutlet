@@ -27,11 +27,16 @@ class EventType extends AbstractType
                 'class' => 'date-picker',
             )
         ));
+    	
+    	$options['required'] = false;
+    	
+    	
     	$builder->add('city', 'text');
     	$builder->add('country', 'text');
     	$builder->add('content', 'textarea');
         $builder->add('hosted_by', 'text');
         $builder->add('game', 'text');
+        $builder->add('url_redirect', 'text',array( 'required' => false,));
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');
         $builder->add('locale', new SiteChoiceType());

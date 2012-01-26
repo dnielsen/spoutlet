@@ -77,6 +77,13 @@ class Event extends AbstractEvent
      * @ORM\Column(name="game", type="string", length=255, nullable=true)
      */
     protected $game;
+    
+    /**
+    * @var string url_redirect
+    *
+    * @ORM\Column(name="url_redirect", type="string", length=255, nullable=true)
+    */
+    protected $url_redirect;
 
     public function __construct()
     {
@@ -252,7 +259,27 @@ class Event extends AbstractEvent
     {
         $this->game = $game;
     }
-
+    
+    /**
+    * Get url_redirect
+    *
+    * @param string $url_redirect
+    */
+    public function getUrlRedirect()
+    {
+        return $this->url_redirect;
+    }
+    
+    /**
+    * Set url_redirect
+    *
+    * @param string $url_redirect
+    */
+    public function setUrlRedirect($url_redirect)
+    {
+        $this->url_redirect = $url_redirect;
+    }    
+    
     /**
      * @return string
      */

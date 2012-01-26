@@ -10,6 +10,7 @@ event_country: "Country"
 event_content: "Description"
 event_hosted_by: "Hosted by"
 event_game: "Game"
+event_url_redirect: "URL Redirect"
 event_bannerImageFile: "Banner Image"
 event_locale: "Site"
 

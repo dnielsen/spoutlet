@@ -26,7 +26,13 @@
                             {{ event.startsAt|date('M') }}
                             <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
                         </td>
-                        <td><a href="{{ path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a></td>
+                        <td><a href="
+                        {%- if event.urlRedirect not in [''] -%}
+                            {{  event.urlRedirect }}
+                        {%- else -%}
+                            {{-  path('events_detail', { 'slug' : event.slug }) -}}
+                        {%- endif -%}
+                        ">{{ event.name }}</a></td>
                         <td>{{ event.game }}</td>
                         <td>{{ event.hostedBy }}</td>
                         <td>{{ event.location }}</td>
