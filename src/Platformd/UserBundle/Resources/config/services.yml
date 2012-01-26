@@ -58,4 +58,4 @@ services:
     platformd_user.security_logout_handler:
         class: Platformd\UserBundle\Security\Logout\SuccessHandler
         arguments:
-            - "@security.http_utils"
+            - "@pd.cevo.cevo_auth_manager"
