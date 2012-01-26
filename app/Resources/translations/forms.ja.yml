@@ -1,4 +1,5 @@
 event_name: "名前"
+event_slug: "URL string"
 event_ready: "準備OK?"
 event_published: "公開済み?"
 event_starts_at: "開始日"
@@ -9,6 +10,7 @@ event_country: "国"
 event_content: "説明"
 event_hosted_by: "主催者"
 event_game: "ゲーム"
+event_url_redirect: "URL Redirect"
 event_bannerImageFile: "バナー画像"
 event_locale: "Site"
 
