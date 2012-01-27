@@ -89,14 +89,16 @@ class StubApiController extends Controller
         }
 
         $data = array(
-            'user_id'       => self::FAKE_USER_ID,
-            'username'      => 'user',
-            'handle'        => 'user',
-            'avatar_url'    => 'http://avatar.com',
-            'country'       => 'japan',
-            'profile_url'   => 'http://profile.com',
-            // this field is not in their API yet, but we need it to be
-            //'email'         => 'user@user.com',
+            'user' => array(
+                'user_id'       => self::FAKE_USER_ID,
+                'username'      => 'user',
+                'handle'        => 'user',
+                'avatar_url'    => 'http://avatar.com',
+                'country'       => 'japan',
+                'profile_url'   => 'http://profile.com',
+                // this field is not in their API yet, but we need it to be
+                //'email'         => 'user@user.com',
+            )
         );
 
         return new Response(json_encode($data));
