@@ -58,7 +58,9 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
             throw new BadCredentialsException('API error '.$userDetails['error']);
         }
 
-        $user = $this->findOrCreateUser($userDetails['id'], $userDetails['email'], $userDetails);
+        // CEVO may send back email, they don't as of right now
+        $email = isset($userDetails['email']) ? $userDetails['email'] : null;
+        $user = $this->findOrCreateUser($userDetails['id'], $email, $userDetails);
 
         $authenticatedToken = new CEVOToken($token->getSessionId(), $user->getRoles());
         $authenticatedToken->setUser($user);
@@ -83,16 +85,35 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
             return $existingUser;
         }
 
-        if ($existingUser = $this->userManager->findUserByEmail($email)) {
+        if ($email && $existingUser = $this->userManager->findUserByEmail($email)) {
             $existingUser->setCevoUserId($cevoId);
             $this->userManager->updateUser($existingUser);
 
             return $existingUser;
         }
 
+        // temporary hack - without email, we can't identify users already in our system
+        // we don't want to create another account, so we lookup by username
+        if (!$email) {
+            $existingUser = $this->userManager->findUserBy(array(
+                'cevoUserId' => null,
+                'username'   => $allUserData['username']
+            ));
+
+            if ($existingUser) {
+                $existingUser->setCevoUserId($cevoId);
+                $this->userManager->updateUser($existingUser);
+
+                return $existingUser;
+            }
+        }
+
+        // CEVO is not sending us an email right now, so use username :/
+        $usableEmail = $email ? $email : $allUserData['username'];
+
         // right now, this defaults to setting them into whatever the current locale is
         $newUser = $this->userManager->createUser();
-        $newUser->setEmail($email);
+        $newUser->setEmail($usableEmail);
         $newUser->setCevoUserId($cevoId);
         $newUser->setUsername($allUserData['username']);
         $newUser->setPassword(self::FAKE_PASSWORD);
