@@ -7,7 +7,7 @@ use Platformd\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\BrowserKit\Client;
 
-class DemoControllerTest extends WebTestCase
+class ApiControllerTest extends WebTestCase
 {
     public function testUsersDetails()
     {

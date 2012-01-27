@@ -5,29 +5,38 @@ namespace Platformd\UserBundle\Security\Logout;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\HttpFoundation\Cookie;
-use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
+use Platformd\CEVOBundle\CEVOAuthManager;
+
 
 /**
- * Custom logout success handler so we can redirect to the video site if needed
+ * Custom logout success handler to handle our special log:
+ *
+ * * When the user logs out, we will actually redirect to CEVO's log out
+ *      page with a ?return= at the end back to our site
+ *
+ * * If we already have a ?return query parameter, then we need to use it,
+ *      but we need to transform it to be absolute if not already
  */
 class SuccessHandler implements LogoutSuccessHandlerInterface
 {
-    private $httpUtils;
+    private $cevoAuthManager;
 
-    public function __construct(HttpUtils $httpUtils)
+    public function __construct(CEVOAuthManager $cevoAuthManager)
     {
-        $this->httpUtils = $httpUtils;
+        $this->cevoAuthManager = $cevoAuthManager;
     }
 
     public function onLogoutSuccess(Request $request)
     {
-        if ($return = $request->query->get('return')) {
-            return new RedirectResponse($return);
-        }
+        $returnUrl = $request->query->get('return', '/');
 
-        return $this->httpUtils->createRedirectResponse($request, '/');
+        // the httpUtils takes care to make it an absolute URL
+        $redirectUrl =  $this->cevoAuthManager->generateCevoUrl(
+            CEVOAuthManager::LOGOUT_PATH,
+            $returnUrl
+        );
+
+        return new RedirectResponse($redirectUrl);
     }
 
 }

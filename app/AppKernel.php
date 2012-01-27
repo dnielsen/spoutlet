@@ -38,6 +38,7 @@ class AppKernel extends Kernel
             new Platformd\CommentBundle\CommentBundle(),
             new Platformd\GiveawayBundle\GiveawayBundle(),
             new Platformd\NewsBundle\NewsBundle(),
+            new Platformd\CEVOBundle\CEVOBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

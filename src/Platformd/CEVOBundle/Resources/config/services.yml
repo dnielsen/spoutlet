@@ -1,0 +1,10 @@
+parameters:
+    # can be changed just in development environment in config_dev.yml
+    cevo_base_url: http://alienwarearena.com
+
+services:
+    pd.cevo.cevo_auth_manager:
+        class: Platformd\CEVOBundle\CEVOAuthManager
+        arguments:
+            - %cevo_base_url%
+            - "@service_container"
