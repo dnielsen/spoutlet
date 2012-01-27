@@ -65,11 +65,11 @@ class ApiManager
         $result = $this->makeRequest(self::METHOD_AUTH_USER_DETAILS);
 
         // sanity check
-        if (!isset($result['user_id'])) {
-            throw new ApiException('GetAuthenticatedUser returns JSON, but without an id field');
+        if (!isset($result['user'])) {
+            throw new ApiException('GetAuthenticatedUser returns JSON, but without a user field');
         }
 
-        return $result;
+        return $result['user'];
     }
 
     /**
