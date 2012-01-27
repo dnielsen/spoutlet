@@ -41,6 +41,11 @@ class AccountController extends Controller
         return $this->render('SpoutletBundle:Account:events.html.twig');
     }
 
+    public function videosAction()
+    {
+        return $this->redirect('/video/edit');
+    }
+    
     public function giveawaysAction()
     {
         $this->checkSecurity();

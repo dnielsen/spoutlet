@@ -89,9 +89,10 @@ class MetricManager
      * in the system. The key to the array is the site key, and each array
      * contains several fields (see below).
      */
-    public function createMembershipByCountryReport()
+    public function createMembershipByCountryReport(DateTime $since = null)
     {
         $data = array();
+
         foreach ($this->sites as $key => $name) {
 
             $totalUsers = $this->userRepo->getTotalUsersForSite($key);
@@ -102,20 +103,15 @@ class MetricManager
             $dellOptIn = $this->userRepo->getDellOptInForSite($key);
             $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
 
-            $dayDt = new DateTime('24 hours ago');
-            $pastDay = $this->userRepo->countNewRegistrants($dayDt, $key);
-
-            $weekDt = new DateTime('7 days ago');
-            $pastWeek = $this->userRepo->countNewRegistrants($weekDt, $key);
+            $newUsers = $this->userRepo->countNewRegistrants($since, $key);
 
             $data[$key] = array(
-                'count'         => $totalUsers,
-                'arenaOptIn'    => $arenaOptIn,
+                'count'                => $totalUsers,
+                'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,
-                'dellOptIn'     => $dellOptIn,
-                'dellOptInPercentage' => $dellPercentage,
-                'pastDay'       => $pastDay,
-                'pastWeek'      => $pastWeek,
+                'dellOptIn'            => $dellOptIn,
+                'dellOptInPercentage'  => $dellPercentage,
+                'newUsers'             => $newUsers
             );
         }
 

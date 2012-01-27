@@ -13,6 +13,10 @@ accounts_events:
 accounts_giveaways:
     pattern: /profile/giveaways
     defaults: { _controller: SpoutletBundle:Account:giveaways }
+    
+videos_edit:
+    pattern: /profile/videos
+    defaults: { _controller: SpoutletBundle:Account:videos }
 
 # profile page - null username means *this* user
 accounts_profile:

@@ -235,6 +235,7 @@ platformd:
             # checked up until here
             registered_events: Registered Events
             my_giveaways: My Giveaways
+            my_videos: My Videos
             help: Help
 
     giveaway:
