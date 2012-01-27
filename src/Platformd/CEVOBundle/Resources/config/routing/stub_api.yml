@@ -11,6 +11,6 @@ cevo_stub_api_logout:
     pattern:  /cmd/account/logout
     defaults: { _controller: CEVOBundle:StubApi:stubEndpoint, action: logout }
 
-cevo_stub_api_current_user_details:
-    pattern: /api/users/current/details.json
+cevo_stub_api:
+    pattern: /api.php
     defaults: { _controller: CEVOBundle:StubApi:getAuthenticatedUsersDetails }

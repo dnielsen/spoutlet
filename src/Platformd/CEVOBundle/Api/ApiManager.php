@@ -13,7 +13,9 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
  */
 class ApiManager
 {
-    const ENDPOINT_AUTH_USER_DETAILS = '/api/users/current/details.json';
+    const API_ENDPOINT = '/api.php';
+
+    const METHOD_AUTH_USER_DETAILS = 'GetAuthenticatedUser';
 
     private $container;
 
@@ -52,7 +54,7 @@ class ApiManager
      */
     public function getAuthenticatedUserDetails()
     {
-        return $this->makeRequest(self::ENDPOINT_AUTH_USER_DETAILS);
+        return $this->makeRequest(self::METHOD_AUTH_USER_DETAILS);
     }
 
     /**
@@ -101,14 +103,16 @@ class ApiManager
     /**
      * Makes an API request and returns the array response
      *
-     * @param $endpoint
+     * @param $action
      * @param array $params
      * @return mixed
      * @throws \LogicException
      */
-    private function makeRequest($endpoint, array $params = array())
+    private function makeRequest($action, array $params = array())
     {
-        $url = $this->authManager->generateCevoUrl($endpoint);
+        $params['_method'] = $action;
+
+        $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -135,7 +139,7 @@ class ApiManager
                 ));
             }
         } else {
-            $this->logError(sprintf('Error making CURL request to CEVO at URL: '.$endpoint));
+            $this->logError(sprintf('Error making CURL request to CEVO at URL: '.$action));
         }
 
         curl_close($ch);
