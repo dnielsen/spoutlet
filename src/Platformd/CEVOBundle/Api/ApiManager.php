@@ -41,6 +41,13 @@ class ApiManager
      */
     private $sessionId;
 
+    /**
+     * The current user id
+     *
+     * @var integer
+     */
+    private $userId;
+
     public function __construct(ContainerInterface $container, CEVOAuthManager $authManager , $debug = false)
     {
         $this->container = $container;
@@ -79,6 +86,14 @@ class ApiManager
     }
 
     /**
+     * @param int $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
      * Optional logger dependency
      *
      * @param null|\Symfony\Component\HttpKernel\Log\LoggerInterface $logger
@@ -109,6 +124,26 @@ class ApiManager
     }
 
     /**
+     * Returns the CEVO user id to be used for authentication
+     *
+     * This can be set manually, or we will try to get it from the token
+     *
+     * @return int
+     */
+    public function getUserId()
+    {
+        if ($this->userId === null) {
+            $token = $this->getSecurityContext()->getToken();
+
+            if ($token && $token instanceof CEVOToken) {
+                $this->userId = $token->getCEVOUserId();
+            }
+        }
+
+        return $this->userId;
+    }
+
+    /**
      * Makes an API request and returns the array response
      *
      * @param $action
@@ -119,6 +154,7 @@ class ApiManager
     private function makeRequest($action, array $params = array())
     {
         $params['_method'] = $action;
+        $params['_user_id'] = $this->getUserId();
 
         $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT);
 

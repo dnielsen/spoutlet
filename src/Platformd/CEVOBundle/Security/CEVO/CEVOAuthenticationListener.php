@@ -49,10 +49,10 @@ class CEVOAuthenticationListener implements ListenerInterface
     {
         $request = $event->getRequest();
 
-        $sessionId = $request->cookies->get(self::COOKIE_NAME);
+        $sessionString = $request->cookies->get(self::COOKIE_NAME);
 
         // an actual "logout" listener - listens to see if we're logged in, but the cookie is gone
-        if ($this->forceLogout($request, $sessionId)) {
+        if ($this->forceLogout($request, $sessionString)) {
             // actually log them out
             $request->getSession()->invalidate();
             $this->securityContext->setToken(null);
@@ -60,7 +60,7 @@ class CEVOAuthenticationListener implements ListenerInterface
             $event->setResponse(new RedirectResponse($request->getUri()));
         }
 
-        if (!$sessionId) {
+        if (!$sessionString) {
             return;
         }
 
@@ -69,9 +69,10 @@ class CEVOAuthenticationListener implements ListenerInterface
             return;
         }
 
-        $token = new CEVOToken($sessionId);
-
         try {
+            list($userId, $sessionId) = self::splitSessionString($sessionString);
+            $token = new CEVOToken($sessionId, $userId);
+
             $returnValue = $this->authenticationManager->authenticate($token);
 
             if ($returnValue instanceof TokenInterface) {
@@ -87,7 +88,11 @@ class CEVOAuthenticationListener implements ListenerInterface
         } catch (ApiException $e) {
             // this is what happens if CEVO chokes on the API
             if ($this->debug) {
-                throw $e;
+                //throw $e;
+
+                $response = $this->getResponseForAuthError($request, 'Authentication error with CEVO. Message: '.$e->getMessage());
+
+                return $response;
             }
 
             $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you (API error). Please contact the administrator');
@@ -130,5 +135,26 @@ class CEVOAuthenticationListener implements ListenerInterface
         $response->headers->clearCookie(self::COOKIE_NAME, '/', $this->baseHost);
 
         return $response;
+    }
+
+    /**
+     * The cookie value is a concatenation of the userid and session
+     *
+     * This splits those
+     *
+     * @static
+     * @param $sessionString
+     * @return array
+     * @throws \Platformd\CEVOBundle\Api\ApiException
+     */
+    private static function splitSessionString($sessionString)
+    {
+        $pieces = explode('%', $sessionString);
+
+        if (count($pieces) !=2) {
+            throw new ApiException('Invalid session name set on cookie: '.$sessionString);
+        }
+
+        return $pieces;
     }
 }

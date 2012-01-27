@@ -52,6 +52,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
     {
         // setup the api manager to use the new session id
         $this->apiManager->setSessionId($token->getSessionId());
+        $this->apiManager->setUserId($token->getUserId());
 
         $userDetails = $this->apiManager->getAuthenticatedUserDetails();
 
@@ -63,7 +64,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $user->setLastLogin(new DateTime());
         $this->userManager->updateUser($user);
 
-        $authenticatedToken = new CEVOToken($token->getSessionId(), $user->getRoles());
+        $authenticatedToken = new CEVOToken($token->getSessionId(), $token->getUserId(), $user->getRoles());
         $authenticatedToken->setUser($user);
         $authenticatedToken->setAttributes($token->getAttributes());
 

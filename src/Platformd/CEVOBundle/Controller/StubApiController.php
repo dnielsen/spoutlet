@@ -9,12 +9,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Platformd\UserBundle\Entity\User;
+use Platformd\CEVOBundle\Api\ApiManager;
 
 /**
  * A controller that "fakes" the CEVO API in development only
  */
 class StubApiController extends Controller
 {
+    const FAKE_USER_ID = 55;
+
     /**
      * Fakes the login, logout, and register pages of CEVO's API
      *
@@ -29,6 +32,8 @@ class StubApiController extends Controller
         $session = $request->getSession();
 
         $cookieName = CEVOAuthenticationListener::COOKIE_NAME;
+        // CEVO uses this strange concatenation of user id and session
+        $cookieValue = self::FAKE_USER_ID.'%'.$session->getId();
 
         $response = new Response();
 
@@ -42,8 +47,8 @@ class StubApiController extends Controller
             case 'login':
             case 'register':
                 // getting inconsistent results, using both methods to set cookie
-                setcookie($cookieName, $session->getId(), null, '/', $host);
-                $cookie = new Cookie($cookieName, $session->getId(), 0, '/', $host, false, false);
+                setcookie($cookieName, $cookieValue, null, '/', $host);
+                $cookie = new Cookie($cookieName, $cookieValue, 0, '/', $host, false, false);
                 $response->headers->setCookie($cookie);
                 $message = 'You are now authenticated';
                 break;
@@ -73,10 +78,18 @@ class StubApiController extends Controller
     /**
      * Fakes the CEVO api for getting details about the current user
      */
-    public function getAuthenticatedUsersDetailsAction()
+    public function getAuthenticatedUsersDetailsAction(Request $request)
     {
+        if ($request->request->get('_user_id') != self::FAKE_USER_ID) {
+            throw new \Exception('The _user_id param was not sent or is wrong!');
+        }
+
+        if ($request->request->get('_method') != ApiManager::METHOD_AUTH_USER_DETAILS) {
+            throw new \Exception('The _method is not set or incorrect!');
+        }
+
         $data = array(
-            'id' => 55,
+            'id' => self::FAKE_USER_ID,
             'username'      => 'user',
             'handle'        => 'user',
             'avatar_url'    => 'http://avatar.com',

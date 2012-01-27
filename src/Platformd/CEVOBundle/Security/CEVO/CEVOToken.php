@@ -15,11 +15,14 @@ class CEVOToken extends AbstractToken
 {
     private $sessionId;
 
-    public function __construct($sessionId, array $roles = array())
+    private $userId;
+
+    public function __construct($sessionId, $userId, array $roles = array())
     {
         parent::__construct($roles);
 
         $this->sessionId = $sessionId;
+        $this->userId = $userId;
 
         parent::setAuthenticated(count($roles) > 0);
     }
@@ -30,6 +33,11 @@ class CEVOToken extends AbstractToken
     public function getSessionId()
     {
         return $this->sessionId;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
     }
 
     /**
