@@ -74,25 +74,15 @@ class StubApiController extends Controller
      */
     public function getAuthenticatedUsersDetailsAction()
     {
-        $user = $this->getUserManager()->findUserByEmail('user@user.com');
-
-        if (!$user) {
-            $user = $this->getUserManager()->createUser();
-            $user->setUsername('user');
-            $user->setPassword('stub');
-            $user->setEmail('user@user.com');
-            $this->getUserManager()->updateUser($user);
-        }
-
         $data = array(
-            'id' => $user->getId(),
-            'username'      => $user->getUsername(),
-            'handle'        => $user->getUsername(),
+            'id' => 55,
+            'username'      => 'user',
+            'handle'        => 'user',
             'avatar_url'    => 'http://avatar.com',
             'country'       => 'japan',
             'profile_url'   => 'http://profile.com',
             // this field is not in their API yet, but we need it to be
-            'email'         => $user->getEmail(),
+            //'email'         => 'user@user.com',
         );
 
         return new Response(json_encode($data));
