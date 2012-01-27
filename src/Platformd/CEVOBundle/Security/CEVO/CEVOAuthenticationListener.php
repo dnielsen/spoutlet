@@ -149,7 +149,7 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     private static function splitSessionString($sessionString)
     {
-        $pieces = explode('%', $sessionString);
+        $pieces = explode('$', $sessionString);
 
         if (count($pieces) !=2) {
             throw new ApiException('Invalid session name set on cookie: '.$sessionString);

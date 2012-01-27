@@ -33,7 +33,7 @@ class StubApiController extends Controller
 
         $cookieName = CEVOAuthenticationListener::COOKIE_NAME;
         // CEVO uses this strange concatenation of user id and session
-        $cookieValue = self::FAKE_USER_ID.'%'.$session->getId();
+        $cookieValue = self::FAKE_USER_ID.'$'.$session->getId();
 
         $response = new Response();
 
