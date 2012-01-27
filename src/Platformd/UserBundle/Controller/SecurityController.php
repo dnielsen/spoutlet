@@ -5,6 +5,8 @@ namespace Platformd\UserBundle\Controller;
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\CEVOBundle\CEVOAuthManager;
 
 /**
  * Overrides controller for login actions
@@ -14,6 +16,11 @@ class SecurityController extends BaseController
     public function loginAction()
     {
         $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+
+        /*
+         * The real functionality of this method has been removed - login is at CEVO
+         */
+        return $this->redirectToCevoLogin();
 
         return parent::loginAction();
     }
@@ -34,5 +41,24 @@ class SecurityController extends BaseController
                 $returnUrl
             );
         }
+    }
+
+    /**
+     * Redirects to CEVO's login page
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function redirectToCevoLogin()
+    {
+        $return = $this->container->get('request')
+            ->getUriForPath('/')
+        ;
+
+        $cevoManager = $this->container->get('pd.cevo.cevo_auth_manager');
+
+        return new RedirectResponse($cevoManager->generateCevoUrl(
+            CEVOAuthManager::LOGIN_PATH,
+            $return
+        ));
     }
 }

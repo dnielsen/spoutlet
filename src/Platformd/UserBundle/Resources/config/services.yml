@@ -42,6 +42,7 @@ services:
         class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener
         arguments:
             - "@security.context"
+            - %cevo_fake_api_url%
 # put in place for debugging, removed for now
 #        calls:
 #            - [ setLogger, [ @logger ] ]

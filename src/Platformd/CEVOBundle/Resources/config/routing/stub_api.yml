@@ -1,0 +1,16 @@
+# fakes the CEVO API for
+cevo_stub_api_register:
+    pattern:  /account/register
+    defaults: { _controller: CEVOBundle:StubApi:stubEndpoint, action: register }
+
+cevo_stub_api_login:
+    pattern:  /account/login
+    defaults: { _controller: CEVOBundle:StubApi:stubEndpoint, action: login }
+
+cevo_stub_api_logout:
+    pattern:  /cmd/account/logout
+    defaults: { _controller: CEVOBundle:StubApi:stubEndpoint, action: logout }
+
+cevo_stub_api_current_user_details:
+    pattern: /api/users/current/details.json
+    defaults: { _controller: CEVOBundle:StubApi:getAuthenticatedUsersDetails }

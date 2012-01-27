@@ -32,13 +32,21 @@ class AwaVideoLoginRedirectListener
     private $securityContext;
 
     /**
+     * We *don't* want to do anything when we're at the CEVO fake API
+     *
+     * @var string
+     */
+    private $cevoFakeApiUri;
+
+    /**
      * @var \Symfony\Component\HttpKernel\Log\LoggerInterface
      */
     private $logger;
 
-    public function __construct(SecurityContextInterface $context)
+    public function __construct(SecurityContextInterface $context, $cevoFakeApiUri)
     {
         $this->securityContext = $context;
+        $this->cevoFakeApiUri = $cevoFakeApiUri;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -50,6 +58,12 @@ class AwaVideoLoginRedirectListener
         // dont waste our requests on this stuff
         $route = $request->attributes->get('_route');
         $isInternal = (strpos($route, '_') === 0);
+
+        // if we're at our CEVO fake page, don't do anything
+        // @todo - this is a hack,just hardcoded here like this
+        if (strpos($request->getPathInfo(), $this->cevoFakeApiUri) !== false) {
+            return;
+        }
 
         if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY')
             && $session->get(self::RETURN_SESSION_PARAMETER_NAME)

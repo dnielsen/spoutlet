@@ -1,14 +1,21 @@
 security:
+    # import our CEVO security system
+    factories:
+        - "%kernel.root_dir%/../src/Platformd/CEVOBundle/Resources/config/security_factory.yml"
+
     providers:
         fos_userbundle:
             id: fos_user.user_manager
 
     firewalls:
+        # turn security off entirely for the fake cevo site
+        cevo_fake_site:
+            pattern: ^%cevo_fake_api_url%
+            security: false
+
         main:
             pattern: ^/
-            form_login:
-                provider: fos_userbundle
-                login_path: fos_user_security_login
+            cevo-auth: true
             anonymous:    true
             logout:
                 path:     /logout

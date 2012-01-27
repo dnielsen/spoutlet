@@ -64,7 +64,7 @@ class CEVOAuthManager
             $returnUrl = $this->getRequest()->getUriForPath($returnUrl);
         }
 
-        $url = sprintf('%s%s%s', $this->cevoSiteUrl, $prefix, $path);
+        $url = sprintf('%s%s%s', $this->getCevoBaseUrl(), $prefix, $path);
 
         if ($returnUrl) {
             $url .= '?return='.urlencode($returnUrl);
@@ -84,6 +84,23 @@ class CEVOAuthManager
         $locale = $this->getSession()->getLocale();
 
         return isset(self::$localePathMap[$locale]) ? self::$localePathMap[$locale] : null;
+    }
+
+    /**
+     * Returns the CEVO site URL, normalized
+     *
+     * @return string
+     */
+    private function getCevoBaseUrl()
+    {
+        // allows us to not specificy a host, and it default to the current host
+        if (strpos($this->cevoSiteUrl, 'http://') !== 0) {
+            $request = $this->getRequest();
+
+            $this->cevoSiteUrl = $request->getScheme().'://'.$request->getHttpHost().$request->getBaseUrl().$this->cevoSiteUrl;
+        }
+
+        return $this->cevoSiteUrl;
     }
 
     /**

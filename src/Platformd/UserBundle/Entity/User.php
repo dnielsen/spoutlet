@@ -285,6 +285,14 @@ class User extends BaseUser
      */
     protected $avatarChanged = false;
 
+    /**
+     * The id for this user in CEVO's database
+     *
+     * @var string
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $cevoUserId;
+
     public function __construct() 
     {
         parent::__construct();
@@ -980,5 +988,21 @@ class User extends BaseUser
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCevoUserId()
+    {
+        return $this->cevoUserId;
+    }
+
+    /**
+     * @param string $cevoUserId
+     */
+    public function setCevoUserId($cevoUserId)
+    {
+        $this->cevoUserId = $cevoUserId;
     }
 }

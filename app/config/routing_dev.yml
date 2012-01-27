@@ -10,5 +10,10 @@ _configurator:
     resource: "@SensioDistributionBundle/Resources/config/routing/webconfigurator.xml"
     prefix:   /_configurator
 
+_cevo_stub_api:
+    resource: "@CEVOBundle/Resources/config/routing/stub_api.yml"
+    # this prefix is repeated in config.yml parameters
+    prefix:   /cevo/api/stub
+
 _main:
     resource: routing.yml

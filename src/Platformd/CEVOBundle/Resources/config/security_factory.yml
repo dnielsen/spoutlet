@@ -1,0 +1,6 @@
+# Holds a service file imported directly in security.yml, introduces our whole system
+services:
+    security.authentication.factory.wsse:
+        class:  Platformd\CEVOBundle\Security\CEVO\CEVOSecurityFactory
+        tags:
+            - { name: security.listener.factory }

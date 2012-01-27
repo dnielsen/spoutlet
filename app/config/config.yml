@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
     - { resource: "@CEVOBundle/Resources/config/services.yml" }
+    - { resource: "@CEVOBundle/Resources/config/security.yml" }
 
 framework:
     #esi:             ~
@@ -102,6 +103,8 @@ parameters:
         friends: Friends or Family
         blog: Blog
         other: Other
+    # this is repeated in routing_dev.yml
+    cevo_fake_api_url: /cevo/api/stub
 
     pdo.session_db_options:
         db_table:    session

@@ -8,3 +8,12 @@ services:
         arguments:
             - %cevo_base_url%
             - "@service_container"
+
+    pd.cevo.api.api_manager:
+        class: Platformd\CEVOBundle\Api\ApiManager
+        arguments:
+            - "@service_container"
+            - "@pd.cevo.cevo_auth_manager"
+            - "%kernel.debug%"
+        calls:
+            - [ setLogger, [ @logger] ]
