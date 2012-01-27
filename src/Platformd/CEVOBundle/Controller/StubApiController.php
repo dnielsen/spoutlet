@@ -89,7 +89,7 @@ class StubApiController extends Controller
         }
 
         $data = array(
-            'id' => self::FAKE_USER_ID,
+            'user_id'       => self::FAKE_USER_ID,
             'username'      => 'user',
             'handle'        => 'user',
             'avatar_url'    => 'http://avatar.com',

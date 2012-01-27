@@ -58,7 +58,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
 
         // CEVO may send back email, they don't as of right now
         $email = isset($userDetails['email']) ? $userDetails['email'] : null;
-        $user = $this->findOrCreateUser($userDetails['id'], $email, $userDetails);
+        $user = $this->findOrCreateUser($userDetails['user_id'], $email, $userDetails);
 
         // set the last login time
         $user->setLastLogin(new DateTime());

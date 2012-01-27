@@ -65,7 +65,7 @@ class ApiManager
         $result = $this->makeRequest(self::METHOD_AUTH_USER_DETAILS);
 
         // sanity check
-        if (!isset($result['id'])) {
+        if (!isset($result['user_id'])) {
             throw new ApiException('GetAuthenticatedUser returns JSON, but without an id field');
         }
 
@@ -192,8 +192,12 @@ class ApiManager
             throw new ApiException('Problem with CEVO API Response. Content: '.$output);
         }
 
-        if (isset($jsonArr['error'])) {
+        if (isset($jsonArr['error']) && $jsonArr['error']) {
             throw new ApiException('API error. Valid response, but with error: '.$jsonArr['error']);
+        }
+
+        if (isset($jsonArr['api_err_msg']) && $jsonArr['api_err_msg']) {
+            throw new ApiException('API error. Valid response, but with error: '.$jsonArr['api_err_msg']);
         }
 
         return $jsonArr;
