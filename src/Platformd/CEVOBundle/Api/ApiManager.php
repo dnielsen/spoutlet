@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\CEVOBundle\Security\CEVO\CEVOToken;
 use Platformd\CEVOBundle\CEVOAuthManager;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Platformd\CEVOBundle\Api\ApiException;
 
 /**
  * Handles all API interactions with CEVO
@@ -54,7 +55,14 @@ class ApiManager
      */
     public function getAuthenticatedUserDetails()
     {
-        return $this->makeRequest(self::METHOD_AUTH_USER_DETAILS);
+        $result = $this->makeRequest(self::METHOD_AUTH_USER_DETAILS);
+
+        // sanity check
+        if (!isset($result['id'])) {
+            throw new ApiException('GetAuthenticatedUser returns JSON, but without an id field');
+        }
+
+        return $result;
     }
 
     /**
@@ -127,19 +135,17 @@ class ApiManager
 
         $output = curl_exec($ch);
 
-        // do some error reporting of we're in debug mode
-        if ($this->debug) {
-            $info = curl_getinfo($ch);
-            if ($output === false || $info['http_code'] != 200) {
-                throw new \LogicException(sprintf(
-                    'Error with CEVO API. Status code: %s. Message: %s. URL: %s',
-                    $info['http_code'],
-                    curl_error($ch),
-                    $url
-                ));
-            }
-        } else {
+        // check for errors
+        $info = curl_getinfo($ch);
+        if (!$output || $info['http_code'] != 200) {
             $this->logError(sprintf('Error making CURL request to CEVO at URL: '.$action));
+
+            throw new ApiException(sprintf(
+                'Error with CEVO API. Status code: %s. Message: %s. URL: %s',
+                $info['http_code'],
+                curl_error($ch),
+                $url
+            ));
         }
 
         curl_close($ch);
@@ -147,7 +153,11 @@ class ApiManager
         $jsonArr = json_decode($output, true);
 
         if ($jsonArr === false) {
-            throw new \LogicException('Problem with CEVO API Response. Content: '.$output);
+            throw new ApiException('Problem with CEVO API Response. Content: '.$output);
+        }
+
+        if (isset($jsonArr['error'])) {
+            throw new ApiException('API error. Valid response, but with error: '.$jsonArr['error']);
         }
 
         return $jsonArr;

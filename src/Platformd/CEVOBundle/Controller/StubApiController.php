@@ -62,6 +62,7 @@ class StubApiController extends Controller
             'return' => $return,
         ));
 
+        // for some reason setting cookies is iffy, so totally hacking this
         echo $html;die;
 
         $response->setContent($html);

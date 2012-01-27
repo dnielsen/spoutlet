@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\CEVOBundle\Api\ApiException;
 
 /**
  * Security Listener "watches" for the CEVO cookie
@@ -71,16 +72,16 @@ class CEVOAuthenticationListener implements ListenerInterface
             }
         } catch (AuthenticationException $e) {
             // this might mean that the provider couldn't find a good token/user for me
+            $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you. Please contact the administrator');
 
-            // extreme debugging
+            $event->setResponse($response);
+        } catch (ApiException $e) {
+            // this is what happens if CEVO chokes on the API
             if ($this->debug) {
-                die('CEVOAuthenticationListener: Error authenticating using CEVO. This could mean there was an error communicating to their API');
+                //throw $e;
             }
 
-            // to prevent things from totally freaking out, getting in a loop on this failure
-            // we need to return a response that removes the cookie
-            $response = new RedirectResponse($request->getUriForPath('/'));
-            $response->headers->clearCookie(AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME, '/');
+            $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you (API error). Please contact the administrator');
 
             $event->setResponse($response);
         }
@@ -103,4 +104,22 @@ class CEVOAuthenticationListener implements ListenerInterface
         return ($currentToken && $currentToken instanceof CEVOToken && !$sessionId);
     }
 
+    /**
+     * When authentication fails, this resets everything, returns a redirect response
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $msg
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function getResponseForAuthError(Request $request, $msg)
+    {
+        $request->getSession()->setFlash('error', $msg);
+
+        // to prevent things from totally freaking out, getting in a loop on this failure
+        // we need to return a response that removes the cookie
+        $response = new RedirectResponse($request->getUriForPath('/'));
+        $response->headers->clearCookie(AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME, '/');
+
+        return $response;
+    }
 }

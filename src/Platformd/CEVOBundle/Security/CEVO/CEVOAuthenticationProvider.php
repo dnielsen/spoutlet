@@ -8,6 +8,8 @@ use Platformd\CEVOBundle\Security\CEVO\CEVOToken;
 use Platformd\CEVOBundle\Api\ApiManager;
 use Platformd\UserBundle\Entity\UserManager;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Platformd\CEVOBundle\Api\ApiException;
+use DateTime;
 
 /**
  * This is notified after a CEVO Token has been set
@@ -52,15 +54,14 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $this->apiManager->setSessionId($token->getSessionId());
 
         $userDetails = $this->apiManager->getAuthenticatedUserDetails();
-        if (null == $userDetails || isset($userDetails['error']) && $userDetails['error']) {
-            // for now we return, this can cause problems as it's seen as an "invalid username/password"
-            return;
-            throw new BadCredentialsException('API error '.$userDetails['error']);
-        }
 
         // CEVO may send back email, they don't as of right now
         $email = isset($userDetails['email']) ? $userDetails['email'] : null;
         $user = $this->findOrCreateUser($userDetails['id'], $email, $userDetails);
+
+        // set the last login time
+        $user->setLastLogin(new DateTime());
+        $this->userManager->updateUser($user);
 
         $authenticatedToken = new CEVOToken($token->getSessionId(), $user->getRoles());
         $authenticatedToken->setUser($user);
