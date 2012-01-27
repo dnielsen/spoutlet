@@ -5,6 +5,9 @@
 
 <h1>Members by Country</h1>
 
+<div class="pull-right">
+    {{ form_widget(select) }}
+</div>
 
 <table class="zebra-striped bordered-table tablesorter">
     <thead>
@@ -15,8 +18,7 @@
             <th>%</th>
             <th>Dell Opted in</th>
             <th>%</th>
-            <th>Past day</th>
-            <th>Past week</th>
+            <th>New Users ({{ range }})</th>
         </tr>
     </thead>
     <tbody>
@@ -28,11 +30,18 @@
             <td>{{ siteData.arenaOptInPercentage }}%</td>
             <td>{{ siteData.dellOptIn }}</td>
             <td>{{ siteData.dellOptInPercentage }}%</td>
-            <td>{{ siteData.pastDay }}</td>
-            <td>{{ siteData.pastWeek }}</td>
+            <td>{{ siteData.newUsers }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery('#results_range').change(function() {
+            window.location = '{{ path('user_metric_by_country') }}?results_range='+$(this).val();
+        });
+    });
+</script>
 
 {% endblock %}

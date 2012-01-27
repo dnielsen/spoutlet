@@ -55,16 +55,30 @@ class UserRepository extends EntityRepository
      * @param \DateTime $since
      * @return integer
      */
-    public function countNewRegistrants(DateTime $since, $site)
+    public function countNewRegistrants(DateTime $since = null, $site)
     {
-        return $this->createSiteQueryBuilder($site)
+        $qb = $this->createSiteQueryBuilder($site);
+     
+        return $this->addSinceQuery($qb, $since)
             ->select('COUNT(u.id)')
-            ->andWhere('u.created >= :since')
-            ->setParameter('since', $since)
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
         ;
+    }
+    
+    /**
+    * @param \Doctrine\ORM\QueryBuilder $qb
+    * @param $since
+    * @return \Doctrine\ORM\QueryBuilder
+    */
+    private function addSinceQuery(QueryBuilder $qb, $since)
+    {
+        if ($since != null) {
+            $qb->andWhere('u.created >= :since')
+            ->setParameter('since', $since);
+        }
+        return $qb;  
     }
 
     /**
