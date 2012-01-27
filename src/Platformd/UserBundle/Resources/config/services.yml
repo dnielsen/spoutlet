@@ -61,3 +61,4 @@ services:
         class: Platformd\UserBundle\Security\Logout\SuccessHandler
         arguments:
             - "@pd.cevo.cevo_auth_manager"
+            - %base_host%

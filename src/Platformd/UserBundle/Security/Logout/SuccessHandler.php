@@ -6,7 +6,8 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\CEVOBundle\CEVOAuthManager;
-
+use Symfony\Component\HttpFoundation\Response;
+use Platformd\CEVOBundle\Security\CEVO\CEVOAuthenticationListener;
 
 /**
  * Custom logout success handler to handle our special log:
@@ -21,9 +22,12 @@ class SuccessHandler implements LogoutSuccessHandlerInterface
 {
     private $cevoAuthManager;
 
-    public function __construct(CEVOAuthManager $cevoAuthManager)
+    private $baseHost;
+
+    public function __construct(CEVOAuthManager $cevoAuthManager, $baseHost)
     {
         $this->cevoAuthManager = $cevoAuthManager;
+        $this->baseHost = $baseHost;
     }
 
     public function onLogoutSuccess(Request $request)
@@ -36,7 +40,25 @@ class SuccessHandler implements LogoutSuccessHandlerInterface
             $returnUrl
         );
 
-        return new RedirectResponse($redirectUrl);
+        $response = new RedirectResponse($redirectUrl);
+
+        $this->applyCookieRemovalHack($response);
+
+        return $response;
     }
 
+    /**
+     * Contrary to what CEVO said, they do not destroy the cookie on logout.
+     * After logout, we're still also able to API to them and get back information.
+     *
+     * So, we have to remove the cookie ourselves
+     *
+     * @param \Symfony\Component\HttpFoundation\Response $response
+     */
+    private function applyCookieRemovalHack(Response $response)
+    {
+        $cookieName = CEVOAuthenticationListener::COOKIE_NAME;
+
+        $response->headers->clearCookie($cookieName, '/', $this->baseHost);
+    }
 }
