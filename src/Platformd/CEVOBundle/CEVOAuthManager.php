@@ -54,11 +54,12 @@ class CEVOAuthManager
      *
      * @param string $path The path (e.g. /account/register)
      * @param string $returnUrl Optional return url = used for ?return=
+     * @param bool $withPrefix whether to add the language prefix or not
      * @return mixed
      */
-    public function generateCevoUrl($path, $returnUrl = null)
+    public function generateCevoUrl($path, $returnUrl = null, $withPrefix = true)
     {
-        $prefix = $this->getLocalePrefix();
+        $prefix = $withPrefix ? $this->getLocalePrefix() : '';
 
         if ($returnUrl && strpos($returnUrl, 'http') !== 0) {
             $returnUrl = $this->getRequest()->getUriForPath($returnUrl);

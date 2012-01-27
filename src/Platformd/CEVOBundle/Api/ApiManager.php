@@ -156,7 +156,7 @@ class ApiManager
         $params['_method'] = $action;
         $params['_user_id'] = $this->getUserId();
 
-        $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT);
+        $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT, null, false);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
