@@ -113,6 +113,14 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     private function forceLogout(Request $request, $sessionId)
     {
+        // don't force logout a non-HTML request
+        // this is important because it applies to the use API
+        // The user API comes in with the session, but not with the cookies
+        // we need to leave it alone in this case, let the session role
+        if ($request->getRequestFormat() != 'html') {
+            return;
+        }
+
         $currentToken = $this->securityContext->getToken();
 
         return ($currentToken && $currentToken instanceof CEVOToken && !$sessionId);
