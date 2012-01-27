@@ -22,6 +22,11 @@ use Platformd\CEVOBundle\Api\ApiException;
  */
 class CEVOAuthenticationListener implements ListenerInterface
 {
+    /*
+     * Cookie name used by CEVO to store the session id
+     */
+    const COOKIE_NAME = 'aw_session';
+
     protected $securityContext;
     protected $authenticationManager;
     protected $baseHost;
@@ -44,11 +49,15 @@ class CEVOAuthenticationListener implements ListenerInterface
     {
         $request = $event->getRequest();
 
-        $sessionId = $request->cookies->get(AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME);
+        $sessionId = $request->cookies->get(self::COOKIE_NAME);
 
         // an actual "logout" listener - listens to see if we're logged in, but the cookie is gone
         if ($this->forceLogout($request, $sessionId)) {
-            return new RedirectResponse($request->getUri());
+            // actually log them out
+            $request->getSession()->invalidate();
+            $this->securityContext->setToken(null);
+
+            $event->setResponse(new RedirectResponse($request->getUri()));
         }
 
         if (!$sessionId) {
@@ -78,7 +87,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         } catch (ApiException $e) {
             // this is what happens if CEVO chokes on the API
             if ($this->debug) {
-                //throw $e;
+                throw $e;
             }
 
             $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you (API error). Please contact the administrator');
@@ -118,7 +127,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         // to prevent things from totally freaking out, getting in a loop on this failure
         // we need to return a response that removes the cookie
         $response = new RedirectResponse($request->getUriForPath('/'));
-        $response->headers->clearCookie(AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME, '/');
+        $response->headers->clearCookie(self::COOKIE_NAME, '/', $this->baseHost);
 
         return $response;
     }

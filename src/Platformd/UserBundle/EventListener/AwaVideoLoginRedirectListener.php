@@ -27,7 +27,7 @@ class AwaVideoLoginRedirectListener
     /**
      * We store the session id in a cookie with this name
      */
-    const SESSION_ID_COOKIE_NAME = 'aw_session';
+    const SESSION_ID_COOKIE_NAME = 'pd_session';
 
     private $securityContext;
 

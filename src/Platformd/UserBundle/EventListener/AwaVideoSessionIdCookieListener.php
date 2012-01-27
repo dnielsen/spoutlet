@@ -22,9 +22,12 @@ class AwaVideoSessionIdCookieListener
 {
     private $securityContext;
 
-    public function __construct(SecurityContextInterface $context)
+    private $baseHost;
+
+    public function __construct(SecurityContextInterface $context, $baseHost)
     {
         $this->securityContext = $context;
+        $this->baseHost = $baseHost;
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -50,7 +53,13 @@ class AwaVideoSessionIdCookieListener
             $cookieVal = '';
         }
 
-        $cookie = new Cookie(AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME, $cookieVal);
+        $cookie = new Cookie(
+            AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME,
+            $cookieVal,
+            0,
+            '/',
+            $this->baseHost
+        );
         $response->headers->setCookie($cookie);
     }
 }

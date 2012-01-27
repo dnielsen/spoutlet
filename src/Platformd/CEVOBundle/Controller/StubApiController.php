@@ -4,7 +4,7 @@ namespace Platformd\CEVOBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
+use Platformd\CEVOBundle\Security\CEVO\CEVOAuthenticationListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -28,7 +28,7 @@ class StubApiController extends Controller
         $return = $request->query->get('return');
         $session = $request->getSession();
 
-        $cookieName = AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME;
+        $cookieName = CEVOAuthenticationListener::COOKIE_NAME;
 
         $response = new Response();
 
@@ -42,15 +42,15 @@ class StubApiController extends Controller
             case 'login':
             case 'register':
                 // getting inconsistent results, using both methods to set cookie
-                setcookie($cookieName, $session->getId(), null, '/');
-                $cookie = new Cookie($cookieName, $session->getId(), 0, '/', null, false, false);
+                setcookie($cookieName, $session->getId(), null, '/', $host);
+                $cookie = new Cookie($cookieName, $session->getId(), 0, '/', $host, false, false);
                 $response->headers->setCookie($cookie);
                 $message = 'You are now authenticated';
                 break;
             case 'logout':
                 // getting inconsistent results, using both methods to set cookie
-                setcookie($cookieName, '', null, '/');
-                $response->headers->clearCookie($cookieName, '/');
+                setcookie($cookieName, '', null, '/', $host);
+                $response->headers->clearCookie($cookieName, '/', $host);
                 $message = 'You are now logged out';
                 break;
             default:

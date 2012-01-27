@@ -53,6 +53,7 @@ services:
         class: Platformd\UserBundle\EventListener\AwaVideoSessionIdCookieListener
         arguments:
             - "@security.context"
+            - %base_host%
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
