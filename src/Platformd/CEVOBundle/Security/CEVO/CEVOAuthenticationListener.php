@@ -117,7 +117,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         // this is important because it applies to the use API
         // The user API comes in with the session, but not with the cookies
         // we need to leave it alone in this case, let the session role
-        if ($request->getRequestFormat() != 'html') {
+        if (strpos($request->getPathInfo(), '/api/users') === 0) {
             return;
         }
 
