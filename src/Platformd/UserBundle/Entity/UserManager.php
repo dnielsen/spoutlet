@@ -36,10 +36,15 @@ class UserManager extends BaseUserManager
             throw new UsernameNotFoundException(sprintf('No user with name or email "%s" was found.', $username));
         }
 
+        /*
+         * Removing this for now. With the big multi-level authentication
+         * system with CEVO, we just need to allow everyone to login anywhere
+         * 
         // don't let a user login if their locale doesn't match the current locale
         if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
             throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
         }
+        */
 
         return $user; 
     }
