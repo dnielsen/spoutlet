@@ -15,14 +15,14 @@ class EventType extends AbstractType
         $builder->add('slug', new SlugType());
     	$builder->add('starts_at', 'date', array(
             'widget' => 'single_text',
-            'format' => 'MM/dd/YYYY',
+            'format' => 'MM/dd/yyyy',
             'attr'   => array(
                 'class' => 'date-picker',
             )
         ));
     	$builder->add('ends_at', 'date', array(
             'widget' => 'single_text',
-            'format' => 'MM/dd/YYYY',
+            'format' => 'MM/dd/yyyy',
             'attr'   => array(
                 'class' => 'date-picker',
             )
