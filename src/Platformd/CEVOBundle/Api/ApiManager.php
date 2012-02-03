@@ -136,7 +136,7 @@ class ApiManager
             $token = $this->getSecurityContext()->getToken();
 
             if ($token && $token instanceof CEVOToken) {
-                $this->userId = $token->getCEVOUserId();
+                $this->userId = $token->getUserId();
             }
         }
 
