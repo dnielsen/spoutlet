@@ -88,7 +88,7 @@ registration.email: |
     <h3>%username%， 你好！</h3>
 
     <p>
-        请登录<a href="%confirmationUrl%">%confirmationUrl%</a>完成账号验证。
+        请登录 <a href="%confirmationUrl%">%confirmationUrl%</a> 完成账号验证。
     </p>
 
     <p>
@@ -111,7 +111,7 @@ resetting.email: |
     <h3>你好%username%！</h3>
 
     <p>
-        要重置密码，请访问<a href="%confirmationUrl%">%confirmationUrl%</a>
+        要重置密码，请访问 <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
     <p>
