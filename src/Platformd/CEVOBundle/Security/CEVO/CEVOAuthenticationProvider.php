@@ -10,6 +10,7 @@ use Platformd\UserBundle\Entity\UserManager;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Platformd\CEVOBundle\Api\ApiException;
 use DateTime;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * This is notified after a CEVO Token has been set
@@ -50,6 +51,13 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
      */
     public function authenticate(TokenInterface $token)
     {
+        // this should not happen, but I've seen it while testing
+        // this would be where we get a token in our session, but somehow
+        // that token is missing the information from the cookie
+        if (!$token->getUserId()) {
+            throw new UsernameNotFoundException('Problem getting user information.');
+        }
+
         // setup the api manager to use the new session id
         $this->apiManager->setSessionId($token->getSessionId());
         $this->apiManager->setUserId($token->getUserId());
