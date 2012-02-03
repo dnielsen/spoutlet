@@ -1210,7 +1210,7 @@ table .span16 {
   width: 620px;
 }
 .zebra-striped tbody tr:nth-child(odd) td, .zebra-striped tbody tr:nth-child(odd) th {
-  background-color: #CCFFFF;
+  background-color: #eee;
 }
 .zebra-striped tbody tr:hover td, .zebra-striped tbody tr:hover th {
   background-color: #f5f5f5;
