@@ -279,9 +279,6 @@ span.required {
 #homepage-gallery .ad-thumbs li a.ad-active img {
     border-color: #68bcd8;
 }
-#homepage-gallery .ad-nav {
-    background: #252525;
-}
 #homepage-gallery .ad-controls {
     display: none;
 }
@@ -290,11 +287,22 @@ span.required {
     margin-left: 110px;
     width: 400px;
     color: #dcdcdc;
+    background: #252525;
 }
 
 /* custom progress bar for the gallery */
+#rotator .ad-gallery .ad-image-wrapper {
+    margin-bottom: 3px;
+}
 #rotator {
     position: relative;
+    background: #252525;
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 #progress-bar {
     position: absolute;

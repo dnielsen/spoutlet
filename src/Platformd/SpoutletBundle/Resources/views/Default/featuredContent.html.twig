@@ -6,7 +6,8 @@
         {% endif %}
 		<div style="clear: left;"></div>
 	</div>
-    <div class="widget-content">
+    {# explicit height is to force the left and right sides of homepage to have the same height. Not a good long-term solution, but it's an unnatural thing to force... #}
+    <div class="widget-content" style="height: 260px;">
 
         <div id="featured-content-featured-news" class="featured-content-category active">
             {% include 'SpoutletBundle:News:launch.html.twig' %}
@@ -24,6 +25,8 @@
     </div>
     <div class="widget-footer">
         <a href="{{ path('news') }}" class="aw-link" id="featured-footer-featured-news">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        {# here just for spacing #}
+        <a href="#" id="featured-footer-featured-giveaways">&nbsp;</a>
         <div class="clear"></div>
     </div>
 </div>

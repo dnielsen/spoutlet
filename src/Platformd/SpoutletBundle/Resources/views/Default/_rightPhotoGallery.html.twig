@@ -6,7 +6,8 @@
             </div>
             <div class="widget-icon"><img src="/bundles/spoutlet/images/photo-icon.png" /></div>
         </div>
-        <div class="widget-content">
+        {# height is a hack for positioning  - see featuredContent.html.twig #}
+        <div class="widget-content" style="height: 257px;">
             <img src="{{ asset('/images/gallery/gallery.'~app.session.locale~'.jpg') }}" width="290" />
         </div>
         <div class="widget-footer">
