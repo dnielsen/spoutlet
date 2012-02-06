@@ -1,23 +1,23 @@
 <div id="homepage-gallery" class="ad-gallery">
-  <div class="ad-image-wrapper">
-  </div>
-  
-  <div class="ad-controls">
-  </div>
-  
-  <div class="ad-nav">
-    <div class="ad-thumbs">
-      <ul class="ad-thumb-list">
-        {% for index, banner in banners %}
-        <li>
-          <a href="{{ media_path(banner, { "size" : "banner" }) }}">
-            <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}">
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
+    <div class="ad-image-wrapper">
     </div>
-  </div>
+
+    <div class="ad-controls">
+    </div>
+  
+    <div class="ad-nav">
+        <div class="ad-thumbs">
+            <ul class="ad-thumb-list">
+            {% for index, banner in banners %}
+                <li>
+                    <a href="{{ media_path(banner, { "size" : "banner" }) }}">
+                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" />
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div id="progress-bar">
