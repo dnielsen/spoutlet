@@ -304,6 +304,12 @@ span.required {
     -webkit-border-bottom-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+#rotator .top-background {
+    height: 50px;
+    background: #000;
+    width: 635px;
+    position: absolute;
+}
 #progress-bar {
     position: absolute;
     bottom: 85px;

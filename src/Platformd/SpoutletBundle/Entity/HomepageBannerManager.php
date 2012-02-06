@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Entity\HomepageBanner;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\EntityManager;
 use Gaufrette\Filesystem;
+use Platformd\SpoutletBundle\Util\Image;
 
 /**
 * 
@@ -48,15 +49,65 @@ class HomepageBannerManager
             throw new \InvalidArgumentException(sprintf('Invalid size "%s"', $size));
         }
 
+        // round the image
+        $roundedPath = $this->createRoundedImage($file, $size);
+
         $filename = $this->generateFilename($size, $file);
-        $this->filesystem->write($filename, file_get_contents($file->getPathname()));
+        $this->filesystem->write($filename, file_get_contents($roundedPath));
+
+        // remove the founded path
+        unlink($roundedPath);
 
         return $filename;
     }
 
     protected function generateFilename($size, File $file)
     {
-
         return sprintf('%s-%s.%s', $size, sha1(uniqid()), $file->guessExtension());
+    }
+
+    /**
+     * Takes in a File object, rounds its corners based on size, and saves it to a file
+     *
+     * @param \Symfony\Component\HttpFoundation\File\File $file
+     * @param string $size Either banner or thumb
+     * @return string $tmpFilename The path where the rounded file was saved
+     */
+    private function createRoundedImage(File $file, $size)
+    {
+        $resource = $this->getImageResourceFromFile($file->getPathname());
+        $radius = ($size == 'banner') ? 20 : 10;
+
+        // create a fully-transparent rounded-corners file
+        $roundedResource = Image::roundCorners($resource, $radius, 'ffffff', 127);
+
+        // save the rounded file to a temporary location
+        $tmpFilename = tempnam('/tmp', 'aa_banner');
+        imagepng($roundedResource, $tmpFilename);
+
+        return $tmpFilename;
+    }
+
+    /**
+     * Returns an image resource for the given file
+     *
+     * @param $filename
+     * @return resource
+     */
+    private function getImageResourceFromFile($filename)
+    {
+        list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($filename);
+
+        switch ($sourceType)
+        {
+          case IMAGETYPE_GIF:
+            return imagecreatefromgif($filename);
+          case IMAGETYPE_JPEG:
+            return imagecreatefromjpeg($filename);
+          case IMAGETYPE_PNG:
+            return imagecreatefrompng($filename);
+        }
+
+        throw new \InvalidArgumentException(sprintf('Unknown image format "%s"', $sourceType));
     }
 }
