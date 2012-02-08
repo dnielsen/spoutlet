@@ -123,6 +123,7 @@ platformd:
             online: Online
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
+            no_active_giveaways: There are no active giveaways at this moment.
             published: Published?
         event_create:
             create_new_event: Create new event

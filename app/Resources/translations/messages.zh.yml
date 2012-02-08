@@ -123,6 +123,7 @@ platformd:
             online: 在线
             no_past_events: 无以往活动
             no_current_events: 无当前活动
+            no_active_giveaways: There are no active giveaways at this moment.
             published: Published?
         event_create:
             create_new_event: 创建活动

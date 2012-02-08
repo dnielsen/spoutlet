@@ -123,6 +123,7 @@ platformd:
             online: オンライン
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
+            no_active_giveaways: There are no active giveaways at this moment.
             published: Published?
         event_create:
             create_new_event: 新しいイベントの作成
