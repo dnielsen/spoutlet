@@ -11,25 +11,25 @@ services:
         arguments:
             - %s3.access_key%
             - %s3.secret_key%
-    
+
+    # adapters for Gaufrette filesystems
+    platformd.avatar.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_bucket_name%"
+    platformd.event.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_bucket_name%"
+
     platformd.path_resolver:
         class:  'Platformd\SpoutletBundle\PathResolver'
         public: false
         abstract: true
         calls:
             - [ setBucket, [ "%s3_bucket_name%" ]]
-
-    platformd.avatar.s3.adapter:
-        class: Gaufrette\Adapter\AmazonS3
-        arguments:
-            - @platformd.s3
-            - "%s3_bucket_name%"
-
-    platformd.event.s3.adapter:
-        class: Gaufrette\Adapter\AmazonS3
-        arguments:
-            - @platformd.s3
-            - "%s3_bucket_name%"
 
     twig.extension_text:
         class: Twig_Extensions_Extension_Text

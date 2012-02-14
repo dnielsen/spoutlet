@@ -1,7 +1,7 @@
 {% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
 
 <h1>
-    {% if (form.get('value').id) %}
+    {% if (not form.get('value').id) %}
         {% set title = 'platformd.events.admin.new_title' %}
     {% elseif (form.get('value').published) %}
         {% set title = 'platformd.events.admin.published_title' %}

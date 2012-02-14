@@ -7,8 +7,11 @@ use Gaufrette\Adapter\AmazonS3;
 use Gaufrette\Filesystem;
 
 /**
-* 
-*/
+ * Our generic Path resolver that gets things from Gaufrette
+ *
+ * The only thing that may be unique between resolvers is the exact
+ * path being loaded and a potential "prefix" on the filename.
+ */
 abstract class PathResolver implements BasePathResolver
 {
   /**
@@ -30,7 +33,7 @@ abstract class PathResolver implements BasePathResolver
   /**
    * @param Gaufrette\Filesystem $filesystem
    */
-  public function __construct(Filesystem $filesystem, $prefix)
+  public function __construct(Filesystem $filesystem, $prefix = '')
   {
     $this->filesystem = $filesystem; 
     $this->prefix = $prefix;
@@ -52,7 +55,7 @@ abstract class PathResolver implements BasePathResolver
 
     if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 
-        return sprintf('http://s3.amazonaws.com/%s/%s/%s', $this->bucketName, $this->prefix, $path);
+        return sprintf('http://s3.amazonaws.com/%s/%s%s', $this->bucketName, $this->prefix, $path);
     }
 
     return '/uploads/'.$this->prefix.'/'.$path;

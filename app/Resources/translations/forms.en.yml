@@ -13,6 +13,7 @@ event_game: "Game"
 event_url_redirect: "URL Redirect"
 event_bannerImageFile: "Banner Image"
 event_locale: "Site"
+event_generalImageFile: General Image
 
 platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
 platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner

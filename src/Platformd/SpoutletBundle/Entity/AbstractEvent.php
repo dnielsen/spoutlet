@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection,
 
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
+use Symfony\Component\HttpFoundation\File\File;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -26,6 +27,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class AbstractEvent
 {
+    const PREFIX_PATH_BANNER = 'banner/';
+    const PREFIX_PATH_GENERAL = 'general/';
+
     /**
      * @var integer $id
      *
@@ -123,6 +127,21 @@ class AbstractEvent
      * @ORM\Column(name="ends_at", type="datetime")
      */
     protected $ends_at;
+
+    /*
+     * A general-purpose image for the event
+     *
+     * @ORM\Column(name="generalImage", type="string", length=255, nullable=true)
+     */
+    protected $generalImage;
+
+    /**
+     * @Assert\File(
+        maxSize="6000000",
+        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     * )
+     */
+    protected $generalImageFile;
 
     /**
      * Get id
@@ -258,33 +277,6 @@ class AbstractEvent
         $this->bannerImageFile = $bannerImageFile;
     }
 
-    protected function getUploadRootDir()
-    {
-
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
-    }
-
-    protected function getUploadDir()
-    {
-
-        return '/uploads/events';
-    }
-
-    public function getAbsolutePath()
-    {
-        if (!$this->bannerImage) {
-
-            return null;
-        }
-
-        return $this->getUploadRootDir().'/'.$this->bannerImage;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->bannerImage ? null : $this->getUploadDir().'/'.$this->bannerImage;
-    }
-
     /**
      * @return \DateTime
      */
@@ -375,5 +367,31 @@ class AbstractEvent
     public function getPublished()
     {
         return $this->published;
+    }
+
+    public function getGeneralImage()
+    {
+        return $this->generalImage;
+    }
+
+    public function setGeneralImage($generalImage)
+    {
+        $this->generalImage = $generalImage;
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\File\File
+     */
+    public function getGeneralImageFile()
+    {
+        return $this->generalImageFile;
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\File\File $generalImageFile
+     */
+    public function setGeneralImageFile(File $generalImageFile)
+    {
+        $this->generalImageFile = $generalImageFile;
     }
 }
