@@ -1,0 +1,14 @@
+<li>
+    <span class="item">
+        <a href="{{ path('fos_user_registration_register') }}">
+            {{ 'platformd.create_account_or_login' | trans }}
+        </a>
+    </span>
+</li>
+<li>
+    <span class="item">
+        <a href="{{ path('giveaway_get_key', { "slug" : sweepstakes.slug }) }}">
+            {{ 'platformd.giveaway.get_key' | trans }}
+        </a>
+    </span>
+</li>

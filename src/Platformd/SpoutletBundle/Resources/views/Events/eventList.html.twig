@@ -26,6 +26,7 @@
                             {{ event.startsAt|date('M') }}
                             <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
                         </td>
+                        {# todo - refactor this next line somewhere else #}
                         <td><a href="
                         {%- if event.urlRedirect not in [''] -%}
                             {{  event.urlRedirect }}

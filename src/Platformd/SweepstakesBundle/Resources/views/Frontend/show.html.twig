@@ -1,0 +1,75 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
+{% endblock %}
+
+{% block title sweepstakes.name %}
+
+{# only use the flash if we have an assigned key #}
+{% block flash_type %}{{ assignedEntry ? 'success' : false }}{% endblock %}
+
+{# only really need to populate this if we have an assigned key #}
+{% block flash %}
+    {% if assignedEntry %}
+        <p>
+            {{ 'platformd.sweepstakes.assigned.message' | trans }}
+            <br/><br/>
+            {{ 'platformd.sweepstakes.assigned.may_require_activation' | trans }}
+        </p>
+
+        <p class="notice-data">
+            {# assignedEntry.value #}
+            {{ 'platformd.sweepstakes.assigned.key' | trans }}: {{ assignedEntry.value }}
+        </p>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <div class="std_1col">
+
+            {% if sweepstakes.bannerImage %}
+                <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
+            {% endif %}
+        </div><!-- std_1col -->
+
+        <div class="std_2col">
+            <div class="right">
+                <div id="giveaway-getkey" class="widget-33">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ 'platformd.sweepstakes.enter' | trans }}</div>
+                    </div>
+                    <div class="widget-content">
+                        <ol>
+                            {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
+                        </ol>
+                    </div>
+                </div>
+
+            </div><!-- right -->
+            
+            <div class="left">
+                <div id="giveaway-info" class="widget-66">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ sweepstakes.name }}</div>
+                    </div><!-- widget-header -->
+
+                    <div class="widget-content" id="giveaway-details">
+                        {{ sweepstakes.content | raw }}
+
+                    </div><!-- giveaway-details -->
+                    
+
+                </div><!-- giveaway-info -->
+                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": sweepstakes.slug } %}
+            </div><!-- left -->
+            
+            <div class="clear">
+            
+            </div><!-- clear -->
+        </div><!-- std_2col -->
+    </div>
+{% endblock %}

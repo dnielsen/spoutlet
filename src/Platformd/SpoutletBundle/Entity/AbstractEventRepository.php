@@ -58,6 +58,15 @@ class AbstractEventRepository extends EntityRepository
         ));
     }
 
+    public function findOnePublishedBySlug($slug, $locale)
+    {
+        return $this->findOneBy(array(
+            'locale' => $locale,
+            'slug'   => $slug,
+            'published' => true,
+        ));
+    }
+
     /**
      * Return a query builder instance that should be used for frontend request
      * basically, it only adds a criteria to retrieve only published events
