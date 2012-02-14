@@ -58,6 +58,24 @@ class ApiManager
     /**
      * Returns response from the authenticated user details API calls
      *
+     * The raw, deserialized response looks like this:
+     *
+     * array(3) {
+     *      ["api_err_num"]=> int(0)
+     *      ["api_err_msg"]=> string(0) ""
+     *      ["user"]=> array(9) {
+     *          ["user_id"]=> string(7) "1197118"
+     *          ["username"]=> string(10) "weaverryan"
+     *          ["handle"]=> string(10) "weaverryan"
+     *          ["country"]=> string(2) "US"
+     *          ["avatar_url"]=> string(52) "http://alienwarearena.com/images/profile-default.png"
+     *          ["profile_url"]=> string(41) "http://alienwarearena.com/member/1197118/"
+     *          ["email"]=> string(20) "weaverryan@gmail.com"
+     *          ["background_link_url"]=> NULL
+     *          ["background_image_url"]=> string(26) "/aw-cdn/background-images/"
+     *     }
+     * }
+     *
      * @return array
      */
     public function getAuthenticatedUserDetails()

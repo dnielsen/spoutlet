@@ -121,12 +121,15 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         // CEVO is not sending us an email right now, so use username :/
         $usableEmail = $email ? $email : $allUserData['username'];
 
+        $country = isset($allUserData['country']) ? $allUserData['country'] : null;
+
         // right now, this defaults to setting them into whatever the current locale is
         $newUser = $this->userManager->createUser();
         $newUser->setEmail($usableEmail);
         $newUser->setCevoUserId($cevoId);
         $newUser->setUsername($allUserData['username']);
         $newUser->setPassword(self::FAKE_PASSWORD);
+        $newUser->setCountry($country);
         $this->userManager->updateUser($newUser);
 
         // todo - use country to set locale instead of automatic?

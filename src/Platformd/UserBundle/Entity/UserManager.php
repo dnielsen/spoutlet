@@ -83,7 +83,7 @@ class UserManager extends BaseUserManager
     /**
      * Returns an empty user instance
      *
-     * @return UserInterface
+     * @return \Platformd\UserBundle\Entity\User
      */
     public function createUser()
     {
