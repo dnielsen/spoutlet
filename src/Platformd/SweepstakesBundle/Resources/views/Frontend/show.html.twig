@@ -58,24 +58,28 @@
                                 </ol>
     
                                 <div class="form-msg-error" id="_sweeps_error"></div>
-    
-                                <div class="agree-row">
-                                    <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
-                                    <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
-                                        '%a_start%': '<a href="#" class="sweeps-terms-modal">',
-                                        '%a_end%': '</a>'
-                                    }) | raw }}</label>
-                                </div>
-    
-                                <div class="agree-row">
-                                    <input type="checkbox" name="_release" id="_sweepstakes_release" />
-                                    <label for="_sweepstakes_release">{{ 'agree_sweeps_eligibility' | trans({
-                                        '%a_start%': '<a href="#" class="sweeps-release-modal">',
-                                        '%a_end%': '</a>'
-                                    }) | raw }}</label>
-                                </div>
-    
-                                <input type="submit" value="{{ 'enter' | trans }}" class="button" style="float: right;" />
+
+                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+                                    <div class="agree-row">
+                                        <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
+                                        <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
+                                            '%a_start%': '<a href="#" class="sweeps-terms-modal">',
+                                            '%a_end%': '</a>'
+                                        }) | raw }}</label>
+                                    </div>
+
+                                    <div class="agree-row">
+                                        <input type="checkbox" name="_release" id="_sweepstakes_release" />
+                                        <label for="_sweepstakes_release">{{ 'agree_sweeps_eligibility' | trans({
+                                            '%a_start%': '<a href="#" class="sweeps-release-modal">',
+                                            '%a_end%': '</a>'
+                                        }) | raw }}</label>
+                                    </div>
+
+                                    <input type="submit" value="{{ 'enter' | trans }}" class="button" style="float: right;" />
+
+                                {% endif %}
     
                                 <div class="clear"></div>
                             {% endif %}
