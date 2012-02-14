@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -84,6 +85,22 @@ class AbstractEvent
      * )
      */
     protected $bannerImageFile;
+
+    /**
+     * @var datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
     /**
      * Get id
@@ -244,5 +261,37 @@ class AbstractEvent
     public function getWebPath()
     {
         return null === $this->bannerImage ? null : $this->getUploadDir().'/'.$this->bannerImage;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(DateTime $created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     */
+    public function setUpdated(DateTime $updated)
+    {
+        $this->updated = $updated;
     }
 }
