@@ -30,20 +30,6 @@ class Event extends AbstractEvent
     protected $published = false;
 
     /**
-     * @var datetime $starts_at
-     *
-     * @ORM\Column(name="starts_at", type="datetime")
-     */
-    protected $starts_at;
-
-    /**
-     * @var datetime $ends_at
-     *
-     * @ORM\Column(name="ends_at", type="datetime")
-     */
-    protected $ends_at;
-
-    /**
      * @var string $city
      *
      * @ORM\Column(name="city", type="string", length=255, nullable=true)
@@ -138,46 +124,6 @@ class Event extends AbstractEvent
     public function getPublished()
     {
         return $this->published;
-    }
-
-    /**
-     * Set starts_at
-     *
-     * @param datetime $startsAt
-     */
-    public function setStartsAt($startsAt)
-    {
-        $this->starts_at = $startsAt;
-    }
-
-    /**
-     * Get starts_at
-     *
-     * @return datetime 
-     */
-    public function getStartsAt()
-    {
-        return $this->starts_at;
-    }
-
-    /**
-     * Set ends_at
-     *
-     * @param datetime $endsAt
-     */
-    public function setEndsAt($endsAt)
-    {
-        $this->ends_at = $endsAt;
-    }
-
-    /**
-     * Get ends_at
-     *
-     * @return datetime 
-     */
-    public function getEndsAt()
-    {
-        return $this->ends_at;
     }
 
     /**
