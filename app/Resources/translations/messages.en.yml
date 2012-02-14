@@ -314,3 +314,7 @@ avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be ap
 Bannerimagefile: Banner Image
 Disallowedcountries: Disallowed Countries
 save: Save
+
+platformd.sweepstakes.enter: How to Participate
+agree_to_terms_sweepstakes_step: Agree to the terms and conditions
+click_register_sweepstakes_step: Click "Register" to enter for a chance to win.
