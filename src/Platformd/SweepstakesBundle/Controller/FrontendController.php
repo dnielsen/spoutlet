@@ -60,6 +60,7 @@ class FrontendController extends Controller
             return $this->redirectToShow($sweepstakes);
         }
 
+        // only let someone register once
         $existing = $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
         if ($existing) {
             $this->setFlash('error', 'already_entered_sweepstakes');
@@ -67,12 +68,25 @@ class FrontendController extends Controller
             return $this->redirectToShow($sweepstakes);
         }
 
+        // check that they're old enough
         if (!$sweepstakes->isUserOldEnough($this->getUser()->getBirthdate())) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
+
+            return $this->redirectToShow($sweepstakes);
         }
 
-        if ($sweepstakes->isCountryAllowed($this->getUser()->getCountry())) {
+        // check that they're from an approved country
+        if (!$sweepstakes->isCountryAllowed($this->getUser()->getCountry())) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
+
+            return $this->redirectToShow($sweepstakes);
+        }
+
+        // make sure that the sweepstakes is active right now
+        if (!$sweepstakes->isCurrentlyOpen()) {
+            $this->setFlash('error', 'not_eligible_sweepstakes');
+
+            return $this->redirectToShow($sweepstakes);
         }
 
         $entry = $this->getSweepstakesRepo()->createNewEntry(

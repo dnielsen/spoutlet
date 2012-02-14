@@ -77,6 +77,27 @@ class Sweepstakes extends AbstractEvent
     }
 
     /**
+     * Are we between the start and end date when we accept entries
+     */
+    public function isCurrentlyOpen()
+    {
+        $now = time();
+
+        if (!$this->getStartsAt() || !$this->getEndsAt()) {
+            return true;
+        }
+
+        $start = $this->getStartsAt()->format('U');
+        $end = $this->getEndsAt()->format('U');
+
+        if ($now < $start || $now > $end) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return array
      */
     public function getDisallowedCountries()

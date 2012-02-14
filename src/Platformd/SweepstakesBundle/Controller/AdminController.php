@@ -157,7 +157,7 @@ class AdminController extends Controller
             ->get('platformd.events_manager')
             ->save($sweepstakes);
             
-        $this->setFlash('success', 'platformd.sweepstakes.admin.saved');
+        $this->setFlash('success', 'Sweepstakes Saved');
     }
 
     private function getEntityManager()

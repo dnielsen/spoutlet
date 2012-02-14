@@ -41,4 +41,23 @@ class SweepstakesTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($sweepstakes->isCountryAllowed('GB'));
         $this->assertFalse($sweepstakes->isCountryAllowed('gb'));
     }
+
+    public function testIsCurrentlyOpen()
+    {
+        $sweepstakes = new Sweepstakes();
+
+        $start = new DateTime('yesterday');
+        $end = new DateTime('tomorrow');
+        $sweepstakes->setStartsAt($start);
+        $sweepstakes->setEndsAt($end);
+
+        $this->assertTrue($sweepstakes->isCurrentlyOpen());
+
+        $sweepstakes->setEndsAt(new DateTime('yesterday'));
+        $this->assertFalse($sweepstakes->isCurrentlyOpen());
+
+        $sweepstakes->setStartsAt(new DateTime('tomorrow'));
+        $sweepstakes->setEndsAt(new DateTime('tomorrow'));
+        $this->assertFalse($sweepstakes->isCurrentlyOpen());
+    }
 }
