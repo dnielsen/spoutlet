@@ -105,38 +105,43 @@ class AdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
-        die('todo');
-        $sweepstakess = $this->getSweepstakesRepo()->findAllOrderedByNewest();
-        $this->getBreadcrumbs()->addChild('Metrics');
-        $this->getBreadcrumbs()->addChild('Sweepstakes');
-
-        // create a select field for range
-        $select = $this->get('form.factory')
-            ->createNamedBuilder('choice', 'results_range', 7, array(
-            'choices' => array(
-                '7'  => 'Last 7 days',
-                '30' => 'Last 30 days',
-                ''   => 'All time',
-            ),
-        ))->getForm();
-
-        // bind only if we have that query parameter
-        if (null !== $request->query->get($select->getName())) {
-            $select->bindRequest($request);
-        }
-        $since = ($range = $select->getData()) ? new DateTime(sprintf('%s days ago', $range)) : null;
-
-        $sweepstakesMetrics = array();
-        $metricManager = $this->container->get('platformd.metric_manager');
-        foreach($sweepstakess as $sweepstakes) {
-            $sweepstakesMetrics[] = $metricManager->createSweepstakessReport($sweepstakes, $since);
-        }
+        $sweepstakes = $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+        $this->addMetricsBreadcrumbs();
 
         return array(
-            'metrics' => $sweepstakesMetrics,
-            'sites'   => $metricManager->getSites(),
-            'select'  => $select->createView()
+            'sweeps' => $sweepstakes,
         );
+    }
+
+    /**
+     * @Template()
+     */
+    public function showMetricsAction($id)
+    {
+        $sweepstakes = $this->getSweepstakesRepo()->find($id);
+        if (!$sweepstakes) {
+            throw $this->createNotFoundException('No sweeps for id '.$id);
+        }
+
+        $this->addMetricsBreadcrumbs();
+        $this->getBreadcrumbs()->addChild($sweepstakes->getName());
+
+        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+
+        return array(
+            'sweep' => $sweepstakes,
+            'entries' => $entries,
+        );
+    }
+
+    private function addMetricsBreadcrumbs()
+    {
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Sweepstakes', array(
+            'route' => 'admin_sweepstakes_metrics',
+        ));
+
+        return $this->getBreadcrumbs();
     }
 
     protected function retrieveSweepstakes($id)
@@ -176,5 +181,16 @@ class AdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\SweepstakesBundle\Entity\EntryRepository
+     */
+    private function getEntryRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SweepstakesBundle:Entry')
+        ;
     }
 }

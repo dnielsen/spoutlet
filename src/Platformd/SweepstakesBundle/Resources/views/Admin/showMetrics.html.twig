@@ -1,0 +1,49 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
+
+{% block content %}
+
+<h1>Users for {{ sweep.name }}</h1>
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Id</th>
+            <th>Email</th>
+            <td>Acct Created</td>
+            <td>Last Logged In</td>
+            <td>First Name</td>
+            <td>Last Name</td>
+            <td>Age</td>
+            <td>Country</td>
+            <td>State/Province</td>
+            <td>Ip Address</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+        <tr>
+            <td>{{ entry.user.username }}</td>
+            <td>{{ entry.user.id }}</td>
+            <td>{{ entry.user.email }}</td>
+            <td>{{ entry.user.created | date('Y-m-d') }}</td>
+            <td>{{ entry.user.lastLogin | date('Y-m-d') }}</td>
+            <td>{{ entry.user.firstName }}</td>
+            <td>{{ entry.user.lastName }}</td>
+            <td>{{ entry.user.age }}</td>
+            <td>{{ entry.user.country }}</td>
+            <td>{{ entry.user.state }}</td>
+            <td>{{ entry.ipAddress }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="11" style="text-align:center">
+                No entries for this sweepstakes yet
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -67,6 +67,15 @@ class AbstractEventRepository extends EntityRepository
         ));
     }
 
+    public function findAllWithoutLocaleOrderedByNewest()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.created', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
     /**
      * Return a query builder instance that should be used for frontend request
      * basically, it only adds a criteria to retrieve only published events

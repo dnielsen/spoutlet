@@ -21,3 +21,7 @@ admin_sweepstakes_unpublish:
 admin_sweepstakes_metrics:
     pattern: /metrics
     defaults: { _controller: SweepstakesBundle:Admin:metrics }
+
+admin_sweepstakes_metrics_show:
+    pattern: /metrics/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:showMetrics }

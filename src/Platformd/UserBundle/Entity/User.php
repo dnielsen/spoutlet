@@ -930,11 +930,18 @@ class User extends BaseUser
             return false;
         }
 
-        $age = $this->getBirthdate()
-             ->diff(new \DateTime('now'))
-             ->y;
+        return ($this->getAge() < 13);
+    }
 
-        return ($age < 13);
+    /**
+     * @return int
+     */
+    public function getAge()
+    {
+        return $this->getBirthdate()
+            ->diff(new \DateTime('now'))
+            ->y
+        ;
     }
 
     /**

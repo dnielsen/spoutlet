@@ -49,4 +49,18 @@ class EntryRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return mixed
+     */
+    public function findAllOrderedByNewest(Sweepstakes $sweepstakes)
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.created', 'DESC')
+            ->where('e.sweepstakes = :sweepstakes')
+            ->setParameter('sweepstakes', $sweepstakes)
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }

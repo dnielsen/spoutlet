@@ -5,6 +5,7 @@ namespace Platformd\SweepstakesBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Entry
@@ -42,6 +43,21 @@ class Entry
      */
     private $ipAddress;
 
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
     /**
      * Get id
@@ -103,5 +119,37 @@ class Entry
     public function setSweepstakes(Sweepstakes $sweepstakes)
     {
         $this->sweepstakes = $sweepstakes;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }
