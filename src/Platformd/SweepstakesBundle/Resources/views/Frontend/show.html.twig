@@ -102,12 +102,12 @@
 
     <div id="sweeps-terms-modal-content" class="modal-content" style="display: none">
         <h3>{{ 'official_sweepstakes_rules' | trans }}</h3>
-        {{ sweepstakes.officialRules }}
+        {{ sweepstakes.officialRules | raw }}
     </div>
 
     <div id="sweeps-release-modal-content" class="modal-content" style="display: none">
         <h3>{{ 'official_sweepstakes_release' | trans }}</h3>
-        {{ sweepstakes.officialRules }}
+        {{ sweepstakes.officialRules | raw }}
     </div>
 
     <script type="text/javascript">
