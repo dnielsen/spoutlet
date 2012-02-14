@@ -10,6 +10,14 @@ admin_sweepstakes_edit:
     pattern: /edit/{id}
     defaults: { _controller: SweepstakesBundle:Admin:edit }
 
+admin_sweepstakes_approve:
+    pattern: /admin/events/approve/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:approve }
+
+admin_sweepstakes_unpublish:
+    pattern: /admin/events/unpublish/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:unpublish }
+
 admin_sweepstakes_metrics:
     pattern: /metrics
     defaults: { _controller: SweepstakesBundle:Admin:metrics }

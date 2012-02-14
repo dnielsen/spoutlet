@@ -23,13 +23,6 @@ class Event extends AbstractEvent
     protected $users;
 
     /**
-     * @var boolean $published
-     *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    protected $published = false;
-
-    /**
      * @var string $city
      *
      * @ORM\Column(name="city", type="string", length=255, nullable=true)
@@ -104,26 +97,6 @@ class Event extends AbstractEvent
     public function addUser(User $user)
     {
         $this->users->add($user);
-    }
-
-    /**
-     * Set published
-     *
-     * @param boolean $published
-     */
-    public function setPublished($published)
-    {
-        $this->published = $published;
-    }
-
-    /**
-     * Get published
-     *
-     * @return boolean 
-     */
-    public function getPublished()
-    {
-        return $this->published;
     }
 
     /**

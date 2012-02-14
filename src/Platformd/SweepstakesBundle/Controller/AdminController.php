@@ -75,6 +75,29 @@ class AdminController extends Controller
     		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes));
     }
 
+    public function approveAction($id)
+    {
+        $sweeps = $this->retrieveSweepstakes($id);
+        $sweeps->setPublished(true);
+        $this->getEntityManager()->flush();
+
+        $this->setFlash('success', 'The sweepstakes has been published');
+
+        return $this->redirect($this->generateUrl('admin_sweepstakes_index'));
+    }
+
+    public function unpublishAction($id)
+    {
+        $sweeps = $this->retrieveSweepstakes($id);
+        $sweeps->setPublished(false);
+
+        $this->getEntityManager()->flush();
+
+        $this->setFlash('success', 'The sweepstakes has been unpublished');
+
+        return $this->redirect($this->generateUrl('admin_sweepstakes_index'));
+    }
+
     /**
      * Shows key sweepstakes metrics
      * @Template()

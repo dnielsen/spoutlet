@@ -26,6 +26,11 @@
             </td>
             <td>
                 <a href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}">{{ "edit" | trans  }}</a>
+                {% if not sweepstakes.published %}
+                    <a href="{{ path('admin_sweepstakes_approve', { "id" : sweepstakes.id })  }}">{{ "approve" | trans }}</a>
+                {% else %}
+                    <a href="{{ path('admin_sweepstakes_unpublish', { "id" : sweepstakes.id }) }}">{{ "unpublish" | trans }}</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

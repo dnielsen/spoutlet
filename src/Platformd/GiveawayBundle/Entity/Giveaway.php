@@ -64,6 +64,8 @@ class Giveaway extends AbstractEvent
 
     public function __construct()
     {
+        // auto-publish, this uses the "status" field instead
+        $this->published = true;
         $this->giveawayPools = new ArrayCollection();
     }
 

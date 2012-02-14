@@ -60,6 +60,13 @@ class AbstractEvent
     protected $ready = true;
 
     /**
+     * @var boolean $published
+     *
+     * @ORM\Column(name="published", type="boolean")
+     */
+    protected $published = false;
+
+    /**
      * @var text $content
      *
      * @ORM\Column(name="content", type="text", nullable=true)
@@ -348,5 +355,25 @@ class AbstractEvent
     public function getEndsAt()
     {
         return $this->ends_at;
+    }
+
+    /**
+     * Set published
+     *
+     * @param boolean $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * Get published
+     *
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return $this->published;
     }
 }
