@@ -1,0 +1,37 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "sweepstakes" | trans }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ "sweepstakes" | trans }}</h1>
+
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>{{ "sweepstakes" | trans }}</th>
+            <th>{{ "tenant_site" | trans }}</th>
+            <th>{{ 'url' | trans }}</th>
+            <th>{{ "platformd.help.actions" | trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sweepstakes in sweepstakess %}
+        <tr>
+            <td><a href="{{ path('admin_sweepstakes_edit', { 'id' : sweepstakes.id }) }}">{{ sweepstakes.name }}</a></td>
+            <td>{{ sweepstakes.locale | site_name }}</td>
+            <td>
+                {% set sweepstakesUrl = url('sweepstakes_show', {'slug': sweepstakes.slug, '_locale': sweepstakes.locale }) %}
+                <a href="{{ sweepstakesUrl }}">{{ sweepstakesUrl }}</a>
+            </td>
+            <td>
+                <a href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}">{{ "edit" | trans  }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn primary" href="{{ path('admin_sweepstakes_new') }}" style="margin-right:10px;">{{ "create" | trans }}</a>
+
+{% endblock %}

@@ -29,6 +29,16 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Platformd\SweepstakesBundle\Entity\SweepstakesRepository
+     */
+    protected function getSweepstakesRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SweepstakesBundle:Sweepstakes');
+    }
+
+    /**
      * @return \Platformd\NewsBundle\Entity\NewsRepository
      */
     protected function getNewsRepo()

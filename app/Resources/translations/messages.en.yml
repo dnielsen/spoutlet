@@ -310,3 +310,7 @@ platformd:
 source_alienware: Alienware
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
+
+Bannerimagefile: Banner Image
+Disallowedcountries: Disallowed Countries
+save: Save

@@ -1,0 +1,7 @@
+_sweeps_admin:
+    resource: "routing/admin.yml"
+    prefix:   "/admin/sweepstakes"
+
+sweepstakes_show:
+    pattern: /sweepstakes/{slug}
+    defaults: { _controller: SweepstakesBundle:Frontend:show }

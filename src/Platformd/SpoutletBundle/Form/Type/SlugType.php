@@ -18,7 +18,7 @@ class SlugType extends TextType
         $options = parent::getDefaultOptions($options);
 
         $options['required'] = false;
-        $options['label']    = 'URL key(e.g. my-event)';
+        $options['label']    = 'URL key';
 
         return $options;
     }

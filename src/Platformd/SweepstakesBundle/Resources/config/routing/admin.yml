@@ -1,0 +1,15 @@
+admin_sweepstakes_index:
+    pattern: /
+    defaults: { _controller: SweepstakesBundle:Admin:index }
+
+admin_sweepstakes_new:
+    pattern: /new
+    defaults: { _controller: SweepstakesBundle:Admin:new }
+
+admin_sweepstakes_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:edit }
+
+admin_sweepstakes_metrics:
+    pattern: /metrics
+    defaults: { _controller: SweepstakesBundle:Admin:metrics }

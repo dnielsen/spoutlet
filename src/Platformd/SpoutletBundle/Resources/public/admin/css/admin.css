@@ -6,3 +6,8 @@ body {
     height: 100px;
     background: #ccc;
 }
+
+.form_row {
+    margin-bottom: 10px;
+    clear: both;
+}

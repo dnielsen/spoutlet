@@ -14,6 +14,10 @@ PlatformDGiveawayBundle:
     resource: "@GiveawayBundle/Resources/config/routing.yml"
     prefix:   /
 
+PlatformDSweepstakesBundle:
+    resource: "@SweepstakesBundle/Resources/config/routing.yml"
+    prefix:   /
+
 # user bundle stuff
 _user_bundle_generic_import:
     resource: "@UserBundle/Resources/config/routing.yml"

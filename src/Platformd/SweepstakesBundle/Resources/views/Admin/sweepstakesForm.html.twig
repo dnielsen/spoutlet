@@ -1,0 +1,47 @@
+{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+
+<h1>
+    Edit/Create Sweepstakes
+</h1>
+
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form sweepstakesForm">
+
+    {{ form_errors(form) }}
+    
+    {{ form_row(form.name) }}
+
+    {{ form_row(form.slug) }}
+
+    {{ form_row(form.locale) }}
+
+    {{ form_row(form.starts_at) }}
+    {{ form_row(form.ends_at) }}
+
+    {{ form_row(form.disallowedCountries) }}
+    {{ form_row(form.minimumAgeRequirement) }}
+
+    {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
+
+    <div class="form_row">
+        {{ form_label(form.officialRules) }}
+        {{ form_errors(form.officialRules) }}
+        {{ form_widget(form.officialRules, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
+
+    <div class="form_row">
+        {{ form_label(form.liabilityRelease) }}
+        {{ form_errors(form.liabilityRelease) }}
+        {{ form_widget(form.liabilityRelease, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
+
+    <div class="form_row">
+        {{ form_label(form.content) }}
+        {{ form_errors(form.content) }}
+        {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
+    </div>
+
+    {{ form_rest(form) }}
+
+    <input type="submit" class="btn primary" value="{{ "save" | trans }}" formnovalidate />
+</form>

@@ -1,0 +1,10 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}Create Sweepstakes{% endblock %}
+
+{% block content %}
+{% include 'SweepstakesBundle:Admin:sweepstakesForm.html.twig' with {
+    'form': form,
+    'route': path('admin_sweepstakes_new'),
+    'sweepstakes': sweepstakes
+} %}
+{% endblock %}

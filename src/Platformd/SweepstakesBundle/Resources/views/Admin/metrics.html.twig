@@ -1,0 +1,47 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
+
+{% block content %}
+
+<h1>Key Giveaways</h1>
+
+<div class="pull-right">
+    {{ form_widget(select) }}
+</div>
+
+<table class="zebra-striped bordered-table tablesorter">
+    <thead>
+        <tr>
+            <th>Giveaway</th>
+            <th>Total Keys</th>
+            <th>Total Assigned</th>
+            <th>Keys Left</th>
+            {% for site in sites %}
+                <th>{{ site }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics %}
+        <tr>
+            <td>{{ metric.name }}</td>
+            <td>{{ metric.total }}</td>
+            <td>{{ metric.assigned }}</td>
+            <td>{{ metric.remaining }}</td>
+            <td>{{ metric.sites.en }}</td>
+            <td>{{ metric.sites.zh }}</td>
+            <td>{{ metric.sites.ja }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery('#results_range').change(function() {
+            window.location = '{{ path('admin_giveaway_metrics') }}?results_range='+$(this).val();
+        });
+    });
+</script>
+
+{% endblock %}
