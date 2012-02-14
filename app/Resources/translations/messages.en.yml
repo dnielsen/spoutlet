@@ -314,6 +314,8 @@ avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be ap
 Bannerimagefile: Banner Image
 Disallowedcountries: Disallowed Countries
 save: Save
+Liabilityrelease: Liability Release
+Officialrules: Official Rules
 
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the terms and conditions
@@ -326,6 +328,7 @@ official_sweepstakes_rules: Official Sweepstakes Rules
 official_sweepstakes_release: Sweepstakes Eligibility and Liability Release
 agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of eligibility and liability release%a_end%
 sweeps_check_both_boxes: Please agree to both boxes before entering the sweepstakes.
+overview: Overview
 
 platformd.sweepstakes.entered.message: Congratualations! You're now entered for this sweepstakes.
 platformd.sweepstakes.entered.message_more: If you're the winner, we'll contact you to let you know!

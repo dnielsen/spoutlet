@@ -29,6 +29,16 @@
             {% if sweepstakes.bannerImage %}
                 <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
             {% endif %}
+
+            <div class="page-header">
+                <h1>{{ sweepstakes.name }}</h1>
+
+                {% if sweepstakes.generalImage %}
+                    <img src="{{ asset(media_path(sweepstakes, {
+                        'type': 'general'
+                    })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
+                {% endif %}
+            </div><!-- widget-header -->
         </div><!-- std_1col -->
 
         <div class="std_2col">
@@ -81,7 +91,7 @@
             <div class="left">
                 <div id="giveaway-info" class="widget-66">
                     <div class="widget-header">
-                        <div class="widget-title">{{ sweepstakes.name }}</div>
+                        <div class="widget-title">{{ 'overview' | trans }}</div>
                     </div><!-- widget-header -->
 
                     <div class="widget-content" id="giveaway-details">

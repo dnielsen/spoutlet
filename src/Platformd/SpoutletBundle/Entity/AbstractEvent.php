@@ -128,9 +128,7 @@ class AbstractEvent
      */
     protected $ends_at;
 
-    /*
-     * A general-purpose image for the event
-     *
+    /**
      * @ORM\Column(name="generalImage", type="string", length=255, nullable=true)
      */
     protected $generalImage;

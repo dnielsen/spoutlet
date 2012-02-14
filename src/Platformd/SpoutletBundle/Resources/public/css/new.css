@@ -362,6 +362,10 @@ span.required {
     padding: 5px;
 }
 
+.page-header {
+    text-align: center;
+}
+
 /* SimpleModal Styles */
 #simplemodal-overlay {background-color:#000; cursor:wait;}
 a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-18px; cursor:pointer;}
