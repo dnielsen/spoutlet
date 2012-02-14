@@ -116,6 +116,10 @@ class FrontendController extends Controller
             throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
         }
 
+        if (!$sweepstakes->getPublished()) {
+            throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
+        }
+
         return $sweepstakes;
     }
 
