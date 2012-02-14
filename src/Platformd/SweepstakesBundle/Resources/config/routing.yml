@@ -2,6 +2,10 @@ _sweeps_admin:
     resource: "routing/admin.yml"
     prefix:   "/admin/sweepstakes"
 
+sweepstakes_enter:
+    pattern: /sweepstakes/{slug}/enter
+    defaults: { _controller: SweepstakesBundle:Frontend:enter }
+
 sweepstakes_show:
-    pattern: /sweepstakes/{slug}
-    defaults: { _controller: SweepstakesBundle:Frontend:show }
+    pattern: /sweepstakes/{slug}/{entryId}
+    defaults: { _controller: SweepstakesBundle:Frontend:show, entryId: null }

@@ -100,4 +100,11 @@ class Controller extends BaseController
     {
         return $this->container->get('security.context')->isGranted($roles);
     }
+
+    protected function enforceUserSecurity()
+    {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            throw new AccessDeniedException('Not logged in!');
+        }
+    }
 }

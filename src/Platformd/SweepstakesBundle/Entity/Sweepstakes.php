@@ -11,6 +11,7 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use DateTime;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
@@ -44,6 +45,36 @@ class Sweepstakes extends AbstractEvent
      * @ORM\Column(type="text", nullable=true)
      */
     protected $liabilityRelease;
+
+    /**
+     * @param \Datetime $birthday
+     */
+    public function isUserOldEnough(Datetime $birthday = null)
+    {
+        if ($birthday === null) {
+            return false;
+        }
+
+        $now = $this->getStartsAt();
+        $age = $birthday->diff($now)->format('%y');
+
+        if ($this->getMinimumAgeRequirement() && $age < $this->getMinimumAgeRequirement()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Is this country allowed?
+     *
+     * @param $country
+     * @return bool
+     */
+    public function isCountryAllowed($country)
+    {
+        return !in_array(strtoupper($country), $this->getDisallowedCountries());
+    }
 
     /**
      * @return array

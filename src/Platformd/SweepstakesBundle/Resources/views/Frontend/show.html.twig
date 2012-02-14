@@ -15,14 +15,9 @@
 {% block flash %}
     {% if assignedEntry %}
         <p>
-            {{ 'platformd.sweepstakes.assigned.message' | trans }}
+            {{ 'platformd.sweepstakes.entered.message' | trans }}
             <br/><br/>
-            {{ 'platformd.sweepstakes.assigned.may_require_activation' | trans }}
-        </p>
-
-        <p class="notice-data">
-            {# assignedEntry.value #}
-            {{ 'platformd.sweepstakes.assigned.key' | trans }}: {{ assignedEntry.value }}
+            {{ 'platformd.sweepstakes.entered.message_more' | trans }}
         </p>
     {% endif %}
 {% endblock %}
@@ -42,11 +37,43 @@
                     <div class="widget-header">
                         <div class="widget-title">{{ 'platformd.sweepstakes.enter' | trans }}</div>
                     </div>
-                    <div class="widget-content">
-                        <ol>
-                            {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
-                        </ol>
-                    </div>
+
+                    <form action="{{ path('sweepstakes_enter', {'slug': sweepstakes.slug}) }}" method="GET" id="sweeps-form-enter">
+
+                        <div class="widget-content">
+                            {% if isEntered %}
+                                <p>{{ 'already_entered_sweepstakes' | trans }}</p>
+                            
+                            {% else %}
+                                <ol>
+                                    {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
+                                </ol>
+    
+                                <div class="form-msg-error" id="_sweeps_error"></div>
+    
+                                <div class="agree-row">
+                                    <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
+                                    <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
+                                        '%a_start%': '<a href="#" class="sweeps-terms-modal">',
+                                        '%a_end%': '</a>'
+                                    }) | raw }}</label>
+                                </div>
+    
+                                <div class="agree-row">
+                                    <input type="checkbox" name="_release" id="_sweepstakes_release" />
+                                    <label for="_sweepstakes_release">{{ 'agree_sweeps_eligibility' | trans({
+                                        '%a_start%': '<a href="#" class="sweeps-release-modal">',
+                                        '%a_end%': '</a>'
+                                    }) | raw }}</label>
+                                </div>
+    
+                                <input type="submit" value="{{ 'enter' | trans }}" class="button" style="float: right;" />
+    
+                                <div class="clear"></div>
+                            {% endif %}
+
+                        </div>
+                    </form>
                 </div>
 
             </div><!-- right -->
@@ -72,4 +99,52 @@
             </div><!-- clear -->
         </div><!-- std_2col -->
     </div>
+
+    <div id="sweeps-terms-modal-content" class="modal-content" style="display: none">
+        <h3>{{ 'official_sweepstakes_rules' | trans }}</h3>
+        {{ sweepstakes.officialRules }}
+    </div>
+
+    <div id="sweeps-release-modal-content" class="modal-content" style="display: none">
+        <h3>{{ 'official_sweepstakes_release' | trans }}</h3>
+        {{ sweepstakes.officialRules }}
+    </div>
+
+    <script type="text/javascript">
+        window.Sweeps = {
+            renderError: function(msg) {
+
+                $('#_sweeps_error').html(msg).show();
+            }
+        };
+
+        jQuery(document).ready(function() {
+            $('.sweeps-terms-modal').click(function() {
+                $.modal($('#sweeps-terms-modal-content'), {
+                    overlayClose: true
+                });
+
+                return false;
+            });
+
+            $('.sweeps-release-modal').click(function() {
+                $.modal($('#sweeps-release-modal-content'));
+
+                return false;
+            });
+
+            $('#sweeps-form-enter').submit(function() {
+                if (
+                    !$('#_sweepstakes_terms').is(':checked')
+                    || !$('#_sweepstakes_release').is(':checked')
+                    ) {
+                    Sweeps.renderError('{{ 'sweeps_check_both_boxes' | trans }}');
+
+                    return false;
+                }
+
+                return true;
+            });
+        });
+    </script>
 {% endblock %}

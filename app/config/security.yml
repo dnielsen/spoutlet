@@ -30,6 +30,7 @@ security:
         - { path: ^/([\w]+\/)?admin/giveaways, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/news, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/homepage-banners, role: ROLE_ORGANIZER }
+        - { path: ^/([\w]+\/)?admin/sweepstakes, role: ROLE_ORGANIZER }
 
         - { path: ^/([\w]+\/)?admin/users, role: ROLE_SUPER_ADMIN }
         # admin is the lowest admin role - catch all for admin routes
