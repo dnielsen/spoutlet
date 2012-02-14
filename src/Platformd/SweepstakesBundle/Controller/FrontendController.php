@@ -34,7 +34,11 @@ class FrontendController extends Controller
             $assignedEntry = null;
         }
 
-        $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $isEntered = false;
+        } else {
+            $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
+        }
 
         return array(
             'sweepstakes' => $sweepstakes,

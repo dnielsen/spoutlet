@@ -320,8 +320,8 @@ Officialrules: Official Rules
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the terms and conditions
 click_register_sweepstakes_step: Click "Register" to enter for a chance to win.
-already_entered_sweepstakes: You're already entered into this sweepstakes!
-not_eligible_sweepstakes: Sorry! But you're not elgibile for this sweepstakes.
+already_entered_sweepstakes: You already entered this sweepstakes.
+not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
 enter: Enter
 read_and_agreed_to_rules: I have read and agree to the %a_start%official rules%a_end%
 official_sweepstakes_rules: Official Sweepstakes Rules
@@ -330,5 +330,4 @@ agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of elig
 sweeps_check_both_boxes: Please agree to both boxes before entering the sweepstakes.
 overview: Overview
 
-platformd.sweepstakes.entered.message: Congratualations! You're now entered for this sweepstakes.
-platformd.sweepstakes.entered.message_more: If you're the winner, we'll contact you to let you know!
+platformd.sweepstakes.entered.message: Thanks for your participation!

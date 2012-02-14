@@ -24,6 +24,12 @@ class RegistrationController extends BaseRegistrationController
         // store the return URL that's on the request in the session, return it
         $returnUrl = $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
 
+        // see if we have a return URL stored in the session, from hitting a denied page
+        if (!$returnUrl) {
+            $returnUrl = $this->container->get('session')->get('_security.target_path');
+            $this->container->get('session')->remove('_security.target_path');
+        }
+
         // if there is no return URL, we'll ultimately send back to the homepage
         $returnUrl = $returnUrl ? $returnUrl : '/';
 
