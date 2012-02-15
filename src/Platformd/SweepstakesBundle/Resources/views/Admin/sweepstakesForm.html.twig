@@ -15,6 +15,9 @@
 
     {{ form_row(form.locale) }}
 
+    <div style="margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; width: 340px;">
+        The current time of the server is <b>{{ '' | date('Y-m-d H:i') }}</b>
+    </div>
     {{ form_row(form.starts_at) }}
     {{ form_row(form.ends_at) }}
 

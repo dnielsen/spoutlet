@@ -35,22 +35,20 @@ class EventType extends AbstractType
 
     protected function createStartsAtField(FormBuilder $builder)
     {
-        return $builder->add('starts_at', 'date', array(
-           'widget' => 'single_text',
-           'format' => 'MM/dd/yyyy',
-           'attr'   => array(
-               'class' => 'date-picker',
-           )
-       ));
+        return $builder->add('starts_at', 'datetime', array(
+            'widget' => 'single_text',
+            'attr'   => array(
+                'class' => 'datetime-picker',
+            )
+        ));
     }
 
     protected function createEndsAtField(FormBuilder $builder)
     {
-        return $builder->add('ends_at', 'date', array(
+        return $builder->add('ends_at', 'datetime', array(
             'widget' => 'single_text',
-            'format' => 'MM/dd/yyyy',
             'attr'   => array(
-                'class' => 'date-picker',
+                'class' => 'datetime-picker',
             )
         ));
     }
