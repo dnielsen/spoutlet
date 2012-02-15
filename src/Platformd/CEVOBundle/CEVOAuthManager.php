@@ -14,6 +14,7 @@ class CEVOAuthManager
     const REGISTER_PATH = '/account/register';
     const LOGIN_PATH    = '/account/login';
     const LOGOUT_PATH   = '/cmd/account/logout';
+    const CHANGE_PASSWORD_PATH = '/account/password';
 
     /**
      * Map of how different locales should be prefixed when sent to CEVO

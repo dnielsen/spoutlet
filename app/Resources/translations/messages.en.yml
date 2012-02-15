@@ -311,6 +311,7 @@ source_alienware: Alienware
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
 
+# these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
 Disallowedcountries: Disallowed Countries
 save: Save
@@ -336,5 +337,5 @@ location_eligibility: Location Eligibility:
 open_to_legal_residents: Open to legal residents in
 age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
-
+platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: Thanks for your participation!

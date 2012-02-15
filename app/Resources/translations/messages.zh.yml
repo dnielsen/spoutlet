@@ -313,3 +313,32 @@ CEVO: CEVO
 "Other": Other
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
+
+# these are (at least mostly) in the admin
+Bannerimagefile: Banner Image
+Disallowedcountries: Disallowed Countries
+save: Save
+Liabilityrelease: Liability Release
+Officialrules: Official Rules
+
+platformd.sweepstakes.enter: How to Participate
+agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
+click_register_sweepstakes_step: Click "Enter" to participate.
+already_entered_sweepstakes: You already entered this sweepstakes.
+not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
+enter: Enter
+read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
+official_sweepstakes_rules: Official Sweepstakes Rules
+official_sweepstakes_release: Sweepstakes Eligibility and Liability Release
+agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of Eligibility and Liability Release%a_end%
+sweeps_check_both_boxes: Please agree to both boxes before entering the sweepstakes.
+overview: Overview
+
+registration_opens: Registration Opens
+registration_closes: Registration Closes
+location_eligibility: Location Eligibility:
+open_to_legal_residents: Open to legal residents in
+age_eligibility: Age Eligibility:
+age_or_older_as_of_date: %age% years or older as of %as_of_date%
+platformd.create_account_or_login_sweepstakes: Create an account or login
+platformd.sweepstakes.entered.message: Thanks for your participation!
