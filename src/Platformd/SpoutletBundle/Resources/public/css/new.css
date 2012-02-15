@@ -365,6 +365,9 @@ span.required {
 .page-header {
     text-align: center;
 }
+.page-header h1 {
+    margin: 10px 0;
+}
 
 /* SimpleModal Styles */
 #simplemodal-overlay {background-color:#000; cursor:wait;}
