@@ -12,6 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
+use Symfony\Component\Locale\Locale;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
@@ -74,6 +75,22 @@ class Sweepstakes extends AbstractEvent
     public function isCountryAllowed($country)
     {
         return !in_array(strtoupper($country), $this->getDisallowedCountries());
+    }
+
+    /**
+     * Returns the list of eligible countries
+     *
+     * This is here because the item in the admin was made to be "disallowed countries",
+     * but what they really wanted on the frontend was "eligible" countries
+     * @return array
+     */
+    public function eligibleCountries()
+    {
+        $allCountryChoices = Locale::getDisplayCountries(\Locale::getDefault());
+
+        $disallowedCountries = array_flip($this->getDisallowedCountries());
+
+        return array_diff_key($allCountryChoices, $disallowedCountries);
     }
 
     /**

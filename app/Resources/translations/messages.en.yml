@@ -330,4 +330,11 @@ agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of elig
 sweeps_check_both_boxes: Please agree to both boxes before entering the sweepstakes.
 overview: Overview
 
+registration_opens: Registration Opens
+registration_closes: Registration Closes
+location_eligibility: Location Eligibility:
+open_to_legal_residents: Open to legal residents in
+age_eligibility: Age Eligibility:
+age_or_older_as_of_date: %age% years or older as of %as_of_date%
+
 platformd.sweepstakes.entered.message: Thanks for your participation!

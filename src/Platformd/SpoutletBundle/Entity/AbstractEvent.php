@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection,
 
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
+use DateTimezone;
 use Symfony\Component\HttpFoundation\File\File;
 
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -27,6 +28,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class AbstractEvent
 {
+    /**
+     * A map of UTC offsets and common timezone names
+     *
+     * This is because all we have are things like "Tokyo", but we may want
+     * to actually say JST
+     *
+     * @var array
+     */
+    static private $timzoneCommonNames = array(
+        32400 => 'JST',
+    );
+
     const PREFIX_PATH_BANNER = 'banner/';
     const PREFIX_PATH_GENERAL = 'general/';
 
@@ -140,6 +153,14 @@ class AbstractEvent
      * )
      */
     protected $generalImageFile;
+
+    /**
+     * The timezone this event is taking place in
+     *
+     * @ORM\Column(type="string", length=255, nullable=false)
+     * @var string
+     */
+    protected $timezone = 'UTC';
 
     /**
      * Get id
@@ -328,6 +349,26 @@ class AbstractEvent
     }
 
     /**
+     * Returns the start datetime converted into the timezone of the user
+     *
+     * @return \DateTime
+     */
+    public function getStartsAtInTimezone()
+    {
+        return $this->convertDatetimeToTimezone($this->getStartsAt());
+    }
+
+    /**
+     * Returns the end datetime converted into the timezone of the user
+     *
+     * @return \DateTime
+     */
+    public function getEndsAtInTimezone()
+    {
+        return $this->convertDatetimeToTimezone($this->getEndsAt());
+    }
+
+    /**
      * Set ends_at
      *
      * @param datetime $endsAt
@@ -391,5 +432,45 @@ class AbstractEvent
     public function setGeneralImageFile(File $generalImageFile)
     {
         $this->generalImageFile = $generalImageFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->timezone ? $this->timezone : 'UTC';
+    }
+
+    /**
+     * Tries to get a friendly name for the event's timezone
+     *
+     * @return string
+     */
+    public function getTimezoneString()
+    {
+        $dtz = new \DateTimeZone($this->getTimezone());
+
+        $offset = $dtz->getOffset(new DateTime());
+
+        return isset(self::$timzoneCommonNames[$offset]) ? self::$timzoneCommonNames[$offset] : $dtz->getName();
+    }
+
+    /**
+     * @param string $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
+    private function convertDatetimeToTimezone(DateTime $dt)
+    {
+        $userTimezone = new DateTimeZone($this->getTimezone());
+        $offset = $userTimezone->getOffset($dt);
+
+        $timestamp = $dt->format('U') + $offset;
+
+        return DateTime::createFromFormat('U', $timestamp, $userTimezone);
     }
 }

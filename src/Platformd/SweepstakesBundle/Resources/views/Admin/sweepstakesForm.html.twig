@@ -17,9 +17,13 @@
 
     <div style="margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; width: 340px;">
         The current time of the server is <b>{{ '' | date('Y-m-d H:i') }}</b>
+        <br/>
+        Enter the below times in the timezone of the server. Then choose
+        the timezone that you'd like these times to be displayed in to the user.
     </div>
     {{ form_row(form.starts_at) }}
     {{ form_row(form.ends_at) }}
+    {{ form_row(form.timezone) }}
 
     {{ form_row(form.disallowedCountries) }}
     {{ form_row(form.minimumAgeRequirement) }}

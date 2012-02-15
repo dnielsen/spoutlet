@@ -21,6 +21,7 @@ class SweepstakesAdminType extends EventType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
+        $builder->add('timezone', 'timezone');
 
         $builder->add('bannerImageFile', 'file');
         $builder->add('generalImageFile', 'file', array(

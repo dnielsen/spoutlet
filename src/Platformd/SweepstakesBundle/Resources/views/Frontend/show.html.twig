@@ -97,6 +97,31 @@
                     </div><!-- widget-header -->
 
                     <div class="widget-content" id="giveaway-details">
+                        <ul class="sweepstakes-details">
+                            <li class="tight">
+                                <label>{{ 'registration_opens' | trans }}</label>
+                                {{ sweepstakes.startsAtInTimezone | date ('Y-m-d H:i') }}
+                                {{ sweepstakes.timezoneString }}
+                            </li>
+                            <li>
+                                <label>{{ 'registration_closes' | trans }}</label>
+                                {{ sweepstakes.EndsAtInTimezone | date ('Y-m-d H:i') }}
+                                {{ sweepstakes.timezoneString }}
+                            </li>
+                            <li>
+                                <label>{{ 'location_eligibility' | trans }}</label>
+                                {{ 'open_to_legal_residents' | trans }}
+                                {{ sweepstakes.eligibleCountries | join(', ') }}
+                            </li>
+                            <li>
+                                <label>{{ 'age_eligibility' | trans }}</label>
+                                {{ 'age_or_older_as_of_date' | trans({
+                                    '%age%': sweepstakes.minimumAgeRequirement,
+                                    '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
+                                })}}
+                            </li>
+                        </ul>
+
                         {{ sweepstakes.content | raw }}
 
                     </div><!-- giveaway-details -->
@@ -130,6 +155,7 @@
         };
 
         jQuery(document).ready(function() {
+            // make the terms content display in a modal
             $('.sweeps-terms-modal').click(function() {
                 $.modal($('#sweeps-terms-modal-content'), {
                     overlayClose: true
@@ -138,12 +164,14 @@
                 return false;
             });
 
+            // make the release content display in a modal
             $('.sweeps-release-modal').click(function() {
                 $.modal($('#sweeps-release-modal-content'));
 
                 return false;
             });
 
+            // on submit of the form, make sure that both of the checkboxes are checked
             $('#sweeps-form-enter').submit(function() {
                 if (
                     !$('#_sweepstakes_terms').is(':checked')
