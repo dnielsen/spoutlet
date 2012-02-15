@@ -100,12 +100,14 @@ class Sweepstakes extends AbstractEvent
     {
         $now = time();
 
-        if (!$this->getStartsAt() || !$this->getEndsAt()) {
-            return true;
+        if (!$this->getStartsAt()) {
+            return false;
         }
 
         $start = $this->getStartsAt()->format('U');
-        $end = $this->getEndsAt()->format('U');
+        // either use the end date, or fake it way into the future
+        // if ends date is blank, the fun never ends!
+        $end = $this->getEndsAt() ? $this->getEndsAt()->format('U') : time() + 1000000000;
 
         if ($now < $start || $now > $end) {
             return false;

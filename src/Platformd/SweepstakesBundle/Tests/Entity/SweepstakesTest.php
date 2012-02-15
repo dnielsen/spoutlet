@@ -59,5 +59,10 @@ class SweepstakesTest extends PHPUnit_Framework_TestCase
         $sweepstakes->setStartsAt(new DateTime('tomorrow'));
         $sweepstakes->setEndsAt(new DateTime('tomorrow'));
         $this->assertFalse($sweepstakes->isCurrentlyOpen());
+
+        // ends at does not need to be set
+        $sweepstakes->setStartsAt(new DateTime('yesterday'));
+        $sweepstakes->setEndsAt(null);
+        $this->assertTrue($sweepstakes->isCurrentlyOpen());
     }
 }

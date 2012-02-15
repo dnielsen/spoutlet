@@ -331,9 +331,9 @@ class AbstractEvent
     /**
      * Set starts_at
      *
-     * @param datetime $startsAt
+     * @param \DateTime $startsAt
      */
-    public function setStartsAt($startsAt)
+    public function setStartsAt(DateTime $startsAt = null)
     {
         $this->starts_at = $startsAt;
     }
@@ -371,9 +371,9 @@ class AbstractEvent
     /**
      * Set ends_at
      *
-     * @param datetime $endsAt
+     * @param \DateTime $endsAt
      */
-    public function setEndsAt($endsAt)
+    public function setEndsAt(DateTime $endsAt = null)
     {
         $this->ends_at = $endsAt;
     }
