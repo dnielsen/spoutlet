@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityFactoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Creates services for API token authentication
@@ -24,6 +25,10 @@ class CEVOSecurityFactory implements SecurityFactoryInterface
         $container
             ->setDefinition($listener, new DefinitionDecorator('cevo.authentication.listener.cevo'))
         ;
+
+        if ($defaultEntryPoint === null) {
+            $defaultEntryPoint = $this->createEntryPoint($container, $id, $config, $defaultEntryPoint);
+        }
 
         return array($provider, $listener, $defaultEntryPoint);
     }
@@ -55,7 +60,7 @@ class CEVOSecurityFactory implements SecurityFactoryInterface
      * @param $defaultEntryPoint
      * @return string
      */
-    protected function createEntryPoint($container, $id, $config, $defaultEntryPoint)
+    protected function createEntryPoint(ContainerInterface $container, $id, $config, $defaultEntryPoint)
     {
         $entryPointId = 'cevo.authentication.entry_point.cevo.'.$id;
         $container
