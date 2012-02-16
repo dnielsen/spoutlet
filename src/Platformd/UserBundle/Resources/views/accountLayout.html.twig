@@ -6,7 +6,9 @@
     <div id="accountHeader">
         <ul class="links">
             <li><a href="{{ path('accounts_index') }}">{{ "platformd.user.account.account_home" | trans }}</a></li>
-            <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
+            {# Commenting out for now, until we figure out how this work with CEVO
+                <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
+            #}
             <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | trans }}</a></li>
             <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
             <li><a href="{{ path('accounts_events') }}">{{ "platformd.user.account.registered_events" | trans }}</a></li>
