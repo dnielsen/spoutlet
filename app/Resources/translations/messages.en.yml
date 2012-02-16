@@ -340,3 +340,4 @@ age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: Thanks for your participation!
 na: N/A
+instructions: Instructions
