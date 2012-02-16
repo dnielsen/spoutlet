@@ -123,6 +123,8 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
 
         $country = isset($allUserData['country']) ? $allUserData['country'] : null;
 
+        $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
+
         // right now, this defaults to setting them into whatever the current locale is
         $newUser = $this->userManager->createUser();
         $newUser->setEmail($usableEmail);
@@ -130,6 +132,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $newUser->setUsername($allUserData['username']);
         $newUser->setPassword(self::FAKE_PASSWORD);
         $newUser->setCountry($country);
+        $newUser->setBirthdate($birthday);
         $this->userManager->updateUser($newUser);
 
         // todo - use country to set locale instead of automatic?

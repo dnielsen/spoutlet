@@ -71,6 +71,7 @@ class ApiManager
      *          ["avatar_url"]=> string(52) "http://alienwarearena.com/images/profile-default.png"
      *          ["profile_url"]=> string(41) "http://alienwarearena.com/member/1197118/"
      *          ["email"]=> string(20) "weaverryan@gmail.com"
+     *          ["dob"]=> string(10) "1984-06-05"
      *          ["background_link_url"]=> NULL
      *          ["background_image_url"]=> string(26) "/aw-cdn/background-images/"
      *     }

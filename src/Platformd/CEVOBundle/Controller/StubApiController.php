@@ -96,6 +96,7 @@ class StubApiController extends Controller
                 'avatar_url'    => 'http://avatar.com',
                 'country'       => 'japan',
                 'profile_url'   => 'http://profile.com',
+                'dob'           => '1984-06-05',
                 // this field is not in their API yet, but we need it to be
                 //'email'         => 'user@user.com',
             )
