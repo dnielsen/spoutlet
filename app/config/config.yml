@@ -30,7 +30,6 @@ twig:
             - 'SpoutletBundle::forms.html.twig'
     globals:
         base_host:    %base_host%
-        showVideo:    false
 
 # Assetic Configuration
 assetic:
