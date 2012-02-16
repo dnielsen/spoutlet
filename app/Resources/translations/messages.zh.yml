@@ -236,6 +236,7 @@ platformd:
             profile:      Profile
             registered_events: Registered Events
             my_giveaways: My Giveaways
+            my_videos: My Videos
             help: 帮助？
 
     giveaway:

@@ -242,6 +242,7 @@ platformd:
             profile:      プロファイル
             registered_events: 参加済みイベント
             my_giveaways: 参加済みキャンペーン
+            my_videos: マイビデオ
             help: お問い合わせ
 
     giveaway:
