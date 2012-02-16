@@ -130,14 +130,14 @@ class AbstractEvent
     /**
      * @var datetime $starts_at
      *
-     * @ORM\Column(name="starts_at", type="datetime")
+     * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $starts_at;
 
     /**
      * @var datetime $ends_at
      *
-     * @ORM\Column(name="ends_at", type="datetime")
+     * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $ends_at;
 

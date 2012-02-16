@@ -105,13 +105,17 @@
                                 {{ sweepstakes.startsAtInTimezone | date ('Y-m-d H:i') }}
                                 {{ sweepstakes.timezoneString }}
                             </li>
-                            {% if sweepstakes.endsAt %}
                             <li>
-                                <label>{{ 'registration_closes' | trans }}</label>
-                                {{ sweepstakes.endsAtInTimezone | date ('Y-m-d H:i') }}
-                                {{ sweepstakes.timezoneString }}
+                                {% if sweepstakes.endsAt %}
+
+                                    <label>{{ 'registration_closes' | trans }}</label>
+                                    {{ sweepstakes.endsAtInTimezone | date ('Y-m-d H:i') }}
+                                    {{ sweepstakes.timezoneString }}
+                                {% else %}
+                                    <label>{{ 'registration_closes' | trans }}</label>
+                                    {{ 'na' | trans }}
+                                {% endif %}
                             </li>
-                            {% endif %}
                             <li>
                                 <label>{{ 'location_eligibility' | trans }}</label>
                                 {{ 'open_to_legal_residents' | trans }}
