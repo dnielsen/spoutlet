@@ -102,14 +102,25 @@
                         <ul class="sweepstakes-details">
                             <li class="tight">
                                 <label>{{ 'registration_opens' | trans }}</label>
-                                {{ sweepstakes.startsAtInTimezone | date ('Y-m-d H:i') }}
+
+                                {{ 'sweepstakes_date_format' | trans({
+                                    '%year%': sweepstakes.startsAtInTimezone | date('Y'),
+                                    '%month%': sweepstakes.startsAtInTimezone | date('m'),
+                                    '%day%': sweepstakes.startsAtInTimezone | date('d'),
+                                    '%time%': sweepstakes.startsAtInTimezone | date('H:i'),
+                                }) }}
                                 {{ sweepstakes.timezoneString }}
                             </li>
                             <li>
                                 {% if sweepstakes.endsAt %}
 
                                     <label>{{ 'registration_closes' | trans }}</label>
-                                    {{ sweepstakes.endsAtInTimezone | date ('Y-m-d H:i') }}
+                                    {{ 'sweepstakes_date_format' | trans({
+                                        '%year%': sweepstakes.endsAtInTimezone | date('Y'),
+                                        '%month%': sweepstakes.endsAtInTimezone | date('m'),
+                                        '%day%': sweepstakes.endsAtInTimezone | date('d'),
+                                        '%time%': sweepstakes.endsAtInTimezone | date('H:i'),
+                                    }) }}
                                     {{ sweepstakes.timezoneString }}
                                 {% else %}
                                     <label>{{ 'registration_closes' | trans }}</label>
@@ -117,16 +128,16 @@
                                 {% endif %}
                             </li>
                             <li>
-                                <label>{{ 'location_eligibility' | trans }}</label>
-                                {{ 'open_to_legal_residents' | trans }}
-                                {{ sweepstakes.eligibleCountries | join(', ') }}
-                            </li>
-                            <li>
-                                <label>{{ 'age_eligibility' | trans }}</label>
-                                {{ 'age_or_older_as_of_date' | trans({
-                                    '%age%': sweepstakes.minimumAgeRequirement,
-                                    '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
-                                })}}
+                                <label>{{ 'eligibility' | trans }}</label>
+                                <ol class="eligibility-list">
+                                    <li>{{ sweepstakes.eligibleCountries | join(', ') }}</li>
+                                    <li>
+                                        {{ 'age_or_older_as_of_date' | trans({
+                                            '%age%': sweepstakes.minimumAgeRequirement,
+                                            '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
+                                        })}}
+                                    </li>
+                                </ol>
                             </li>
                         </ul>
 

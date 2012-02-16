@@ -355,3 +355,5 @@ platformd.create_account_or_login_sweepstakes: ALIENWARE ARENA アカウント�
 platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
+sweepstakes_date_format: %year%年%month%月%day%日 %time%
+eligibility: 応募資格

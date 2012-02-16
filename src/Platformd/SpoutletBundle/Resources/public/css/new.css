@@ -380,3 +380,10 @@ a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:2
 .sweepstakes-details li.tight {
     margin-bottom: 0;
 }
+.sweepstakes-details ol.eligibility-list {
+    list-style-type: decimal;
+    margin-left: 40px;
+}
+.sweepstakes-details ol.eligibility-list li {
+    margin-bottom: 0;
+}
