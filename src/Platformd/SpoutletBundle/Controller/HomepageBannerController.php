@@ -14,12 +14,7 @@ class HomepageBannerController extends Controller
     {
         $this->addBannersBreadcrumb();
 
-        $banners = $this
-            ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('SpoutletBundle:HomepageBanner')
-            ->findAll()
-        ;
+        $banners = $this->getBannerRepo()->findAll();
 
         return $this->render('SpoutletBundle:HomepageBanner:index.html.twig', array(
             'banners' => $banners
@@ -57,14 +52,7 @@ class HomepageBannerController extends Controller
         $this->addBannersBreadcrumb()->addChild('Edit');
         $request = $this->getRequest();
 
-        $banner = $this
-            ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('SpoutletBundle:HomepageBanner')
-            ->findOneBy(array(
-                'id'        => $id,
-                'locale'    => $this->getLocale()
-            ));
+        $banner = $this->getBannerRepo()->find($id);
         
         if (!$banner) {
 
@@ -96,10 +84,8 @@ class HomepageBannerController extends Controller
         $manager = $this
             ->getDoctrine()
             ->getEntityManager();
-        
-        $banner = $manager
-            ->getRepository('SpoutletBundle:HomepageBanner')
-            ->findOneBy(array('id' => $id));
+
+        $banner = $this->getBannerRepo()->find($id);
         
         if (!$banner) {
 
@@ -129,5 +115,16 @@ class HomepageBannerController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\HomepageBannerRepository
+     */
+    private function getBannerRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:HomepageBanner')
+        ;
     }
 }
