@@ -351,6 +351,8 @@ age_eligibility: 年齢制限：
 age_or_older_as_of_date: %age% 歳以上 %as_of_date% 日時点で、
 prize: 景品:
 instructions: 詳細：
+sweepstakes_datetime_format: %year%年%month%月%day%日 %time%
+sweepstakes_date_format: %year%年%month%月%day%日
 platformd.create_account_or_login_sweepstakes: ALIENWARE ARENA アカウントの作成及びログイン
 platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
