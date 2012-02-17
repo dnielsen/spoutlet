@@ -87,6 +87,7 @@ class CEVOAuthenticationListener implements ListenerInterface
             $event->setResponse($response);
         } catch (ApiException $e) {
             // this is what happens if CEVO chokes on the API
+            $this->debug = true;
             if ($this->debug) {
                 //throw $e;
 
