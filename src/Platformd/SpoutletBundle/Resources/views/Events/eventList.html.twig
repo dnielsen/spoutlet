@@ -23,7 +23,7 @@
                     {% for event in events %}
                     <tr class="eventListGroup_online">
                         <td>
-                            {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
+                            {{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}
                         </td>
                         {# todo - refactor this next line somewhere else #}
                         <td><a href="
