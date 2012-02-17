@@ -26,7 +26,7 @@ class FrontendController extends Controller
      */
     public function showAction($slug, $entryId = null)
     {
-        $sweepstakes = $this->findSweepstakes($slug);
+        $sweepstakes = $this->findSweepstakes($slug, false);
 
         if ($entryId) {
             $assignedEntry = $this->getEntryRepo()->findOneByIdAndUser($entryId, $this->getUser());
@@ -109,19 +109,20 @@ class FrontendController extends Controller
 
     /**
      * @param $slug
+     * @param integer $restrictUnpublished
      * @return \Platformd\SweepstakesBundle\Entity\Sweepstakes
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function findSweepstakes($slug)
+    private function findSweepstakes($slug, $restrictUnpublished = true)
     {
-        $sweepstakes = $this->getSweepstakesRepo()->findOnePublishedBySlug($slug, $this->getLocale());
+        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlug($slug, $this->getLocale());
 
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
         }
 
-        if (!$sweepstakes->getPublished()) {
-            throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
+        if ($restrictUnpublished && !$sweepstakes->getPublished()) {
+            throw $this->createNotFoundException('But this sweepstakes is not published! '.$slug);
         }
 
         return $sweepstakes;

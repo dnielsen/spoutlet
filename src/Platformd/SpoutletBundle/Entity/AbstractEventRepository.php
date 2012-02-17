@@ -67,6 +67,14 @@ class AbstractEventRepository extends EntityRepository
         ));
     }
 
+    public function findOneBySlug($slug, $locale)
+    {
+        return $this->findOneBy(array(
+            'locale' => $locale,
+            'slug'   => $slug,
+        ));
+    }
+
     public function findAllWithoutLocaleOrderedByNewest()
     {
         return $this->createQueryBuilder('e')
