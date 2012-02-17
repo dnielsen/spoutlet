@@ -55,11 +55,11 @@ class FrontendController extends Controller
     public function enterAction($slug, Request $request)
     {
         $this->enforceUserSecurity();
-        $sweepstakes = $this->findSweepstakes($slug, true);
+        $sweepstakes = $this->findSweepstakes($slug, false);
 
         // if we're not even published yet, definitely don't let them!
         if (!$sweepstakes->getPublished()) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
+            $this->setFlash('error', 'sweeps_not_open');
 
             return $this->redirectToShow($sweepstakes);
         }
@@ -95,7 +95,7 @@ class FrontendController extends Controller
 
         // make sure that the sweepstakes is active right now
         if (!$sweepstakes->isCurrentlyOpen()) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
+            $this->setFlash('error', 'sweeps_not_open');
 
             return $this->redirectToShow($sweepstakes);
         }
