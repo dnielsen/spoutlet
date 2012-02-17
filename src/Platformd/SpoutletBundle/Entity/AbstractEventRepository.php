@@ -21,7 +21,7 @@ class AbstractEventRepository extends EntityRepository
         $query = $this->getBaseQueryBuilder($locale)
             ->andWhere('e.ends_at > :cut_off')
             ->setParameter('cut_off', new \DateTime())
-            ->orderBy('e.starts_at', 'ASC')
+            ->orderBy('e.starts_at', 'DESC')
             ->getQuery();
 
         return $this->addQueryLimit($query, $limit)->getResult();
