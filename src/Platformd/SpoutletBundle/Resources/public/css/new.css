@@ -369,6 +369,9 @@ span.required {
 .page-header h1 {
     margin: 10px 0;
 }
+.pate-header img {
+    display: inline;
+}
 
 /* SimpleModal Styles */
 #simplemodal-overlay {background-color:#000; cursor:wait;}
