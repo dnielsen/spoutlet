@@ -23,13 +23,11 @@
         {% for sweepstakes in sweepstakess %}
         <tr class="eventListGroup_online">
             <td>
-                {{ sweepstakes.startsAt|date('M') }}
-                <span class="dateEmphasis"><strong>{{ sweepstakes.startsAt|date('d') }}</strong></span>
+                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
             </td>
 
             <td>
-                {{ sweepstakes.endsAt|date('M') }}
-                <span class="dateEmphasis"><strong>{{ sweepstakes.endsAt|date('d') }}</strong></span>
+                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
             </td>
 
             <td><a href="{{  path('sweepstakes_show', { 'slug' : sweepstakes.slug }) }}">{{ sweepstakes.name }}</a></td>

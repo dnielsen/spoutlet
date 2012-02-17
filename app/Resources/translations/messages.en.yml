@@ -341,5 +341,6 @@ platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: Thanks for your participation!
 na: N/A
 instructions: Instructions
-sweepstakes_date_format: %year%-%month%-%day% %time%
+sweepstakes_datetime_format: %year%-%month%-%day% %time%
+sweepstakes_date_format: %year%-%month%-%day%
 eligibility: Eligibility

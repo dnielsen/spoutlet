@@ -44,9 +44,13 @@
                 <div id="giveaway-details" class="widget-content">
                     <div>
                         <label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>
-                        <div id="starts_at">{{ event.startsAt|date }}</div>
+                        <div id="starts_at">
+                            {{ 'sweepstakes_date_format' | trans(event.startsAtInTimezoneTranslationArray) }}
+                        </div>
                         <label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>
-                        <div id="ends_at">{{ event.endsAt|date }}</div>
+                        <div id="ends_at">
+                            {{ 'sweepstakes_date_format' | trans(event.endsAtInTimezoneTranslationArray) }}
+                        </div>
                         <label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>
                         <div id="location">{{ event.city }}, {{ event.location }}, {{ event.country }}</div>
                         <label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>

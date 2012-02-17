@@ -369,6 +369,36 @@ class AbstractEvent
     }
 
     /**
+     * Returns an array that can be used in a template and passed to a translation string
+     *
+     * @return array
+     */
+    public function getStartsAtInTimezoneTranslationArray()
+    {
+        return self::convertDateTimeIntoTranslationArray($this->getStartsAtInTimezone());
+    }
+
+    /**
+     * Returns an array that can be used in a template and passed to a translation string
+     *
+     * @return array
+     */
+    public function getEndsAtInTimezoneTranslationArray()
+    {
+        return self::convertDateTimeIntoTranslationArray($this->getEndsAtInTimezone());
+    }
+
+    static private function convertDateTimeIntoTranslationArray(DateTime $dt)
+    {
+        return array(
+            '%year%' => $dt->format('Y'),
+            '%month%' => $dt->format('m'),
+            '%day%' => $dt->format('d'),
+            '%time%' => $dt->format('H:i'),
+        );
+    }
+
+    /**
      * Set ends_at
      *
      * @param \DateTime $endsAt

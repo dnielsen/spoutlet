@@ -103,24 +103,14 @@
                             <li class="tight">
                                 <label>{{ 'registration_opens' | trans }}</label>
 
-                                {{ 'sweepstakes_date_format' | trans({
-                                    '%year%': sweepstakes.startsAtInTimezone | date('Y'),
-                                    '%month%': sweepstakes.startsAtInTimezone | date('m'),
-                                    '%day%': sweepstakes.startsAtInTimezone | date('d'),
-                                    '%time%': sweepstakes.startsAtInTimezone | date('H:i'),
-                                }) }}
+                                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
                                 {{ sweepstakes.timezoneString }}
                             </li>
                             <li>
                                 {% if sweepstakes.endsAt %}
 
                                     <label>{{ 'registration_closes' | trans }}</label>
-                                    {{ 'sweepstakes_date_format' | trans({
-                                        '%year%': sweepstakes.endsAtInTimezone | date('Y'),
-                                        '%month%': sweepstakes.endsAtInTimezone | date('m'),
-                                        '%day%': sweepstakes.endsAtInTimezone | date('d'),
-                                        '%time%': sweepstakes.endsAtInTimezone | date('H:i'),
-                                    }) }}
+                                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
                                     {{ sweepstakes.timezoneString }}
                                 {% else %}
                                     <label>{{ 'registration_closes' | trans }}</label>
