@@ -21,6 +21,7 @@ class EventType extends AbstractType
         'url_redirect',
         'bannerImageFile',
         'description',
+        'timezone',
     );
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -30,6 +31,7 @@ class EventType extends AbstractType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
+        $builder->add('timezone', 'timezone');
     	
     	$builder->add('city', 'text');
     	$builder->add('country', 'text');
