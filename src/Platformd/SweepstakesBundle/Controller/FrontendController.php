@@ -55,7 +55,14 @@ class FrontendController extends Controller
     public function enterAction($slug, Request $request)
     {
         $this->enforceUserSecurity();
-        $sweepstakes = $this->findSweepstakes($slug);
+        $sweepstakes = $this->findSweepstakes($slug, true);
+
+        // if we're not even published yet, definitely don't let them!
+        if (!$sweepstakes->getPublished()) {
+            $this->setFlash('error', 'not_eligible_sweepstakes');
+
+            return $this->redirectToShow($sweepstakes);
+        }
 
         // todo, check terms checkboxes
         if (!$request->get('_terms') || !$request->get('_release')) {
