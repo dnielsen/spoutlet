@@ -61,7 +61,7 @@
 
                         {% if event.cityCountryLocationString %}
                             <label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>
-                            <div id="location">{{ event.city }}, {{ event.location }}, {{ event.country }}</div>
+                            <div id="location">{{ event.cityCountryLocationString }}</div>
                         {% endif %}
 
                         {% if event.hostedBy %}
