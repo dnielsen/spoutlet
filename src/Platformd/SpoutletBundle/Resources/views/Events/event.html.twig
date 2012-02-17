@@ -43,20 +43,34 @@
                 </div>
                 <div id="giveaway-details" class="widget-content">
                     <div>
-                        <label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>
-                        <div id="starts_at">
-                            {{ 'sweepstakes_date_format' | trans(event.startsAtInTimezoneTranslationArray) }}
-                        </div>
-                        <label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>
-                        <div id="ends_at">
-                            {{ 'sweepstakes_date_format' | trans(event.endsAtInTimezoneTranslationArray) }}
-                        </div>
-                        <label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>
-                        <div id="location">{{ event.city }}, {{ event.location }}, {{ event.country }}</div>
-                        <label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>
-                        <div id="hostedBy">{{ event.hostedBy }}</div>
-                        <label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>
-                        <div id="contentDetails">{{ event.content | raw }}</div>
+                        {% if event.startsAt %}
+                            <label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>
+                            <div id="starts_at">
+                                {{ 'sweepstakes_date_format' | trans(event.startsAtInTimezoneTranslationArray) }}
+                            </div>
+                        {% endif %}
+
+                        {% if event.endsAt %}
+                            <label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>
+                            <div id="ends_at">
+                                {{ 'sweepstakes_date_format' | trans(event.endsAtInTimezoneTranslationArray) }}
+                            </div>
+                        {% endif %}
+
+                        {% if event.cityCountryLocationString %}
+                            <label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>
+                            <div id="location">{{ event.city }}, {{ event.location }}, {{ event.country }}</div>
+                        {% endif %}
+
+                        {% if event.hostedBy %}
+                            <label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>
+                            <div id="hostedBy">{{ event.hostedBy }}</div>
+                        {% endif %}
+
+                        {% if event.content %}
+                            <label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>
+                            <div id="contentDetails">{{ event.content | raw }}</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -214,4 +214,23 @@ class Event extends AbstractEvent
     {
         $this->location = $location;
     }
+
+    public function getCityCountryLocationString()
+    {
+        $parts = array();
+
+        if ($this->getCity()) {
+            $parts[] = $this->getCity();
+        }
+
+        if ($this->getLocation()) {
+            $parts[] = $this->getLocation();
+        }
+
+        if ($this->getCountry()) {
+            $parts[] = $this->getCountry();
+        }
+
+        return implode(', ', $parts);
+    }
 }

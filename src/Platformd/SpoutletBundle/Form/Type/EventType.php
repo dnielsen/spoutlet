@@ -9,6 +9,20 @@ use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class EventType extends AbstractType
 {
+    protected $nonRequiredFields = array(
+        'slug',
+        'starts_at',
+        'ends_at',
+        'location',
+        'city',
+        'country',
+        'hosted_by',
+        'game',
+        'url_redirect',
+        'bannerImageFile',
+        'description',
+    );
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'text');
@@ -22,10 +36,26 @@ class EventType extends AbstractType
     	$builder->add('content', 'textarea');
         $builder->add('hosted_by', 'text');
         $builder->add('game', 'text');
-        $builder->add('url_redirect', 'text',array( 'required' => false,));
+        $builder->add('url_redirect', 'text');
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');
         $builder->add('locale', new SiteChoiceType());
+
+        $this->unrequireFields($builder);
+    }
+
+    /**
+     * Utility function to properly mark fields as required/not-required
+     *
+     * @param \Symfony\Component\Form\FormBuilder $builder
+     */
+    protected function unrequireFields(FormBuilder $builder)
+    {
+        foreach ($this->nonRequiredFields as $name) {
+            if ($builder->has($name)) {
+                $builder->get($name)->setRequired(false);
+            }
+        }
     }
 
     public function getName()
