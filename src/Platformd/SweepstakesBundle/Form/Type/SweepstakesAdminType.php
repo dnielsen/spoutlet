@@ -36,7 +36,6 @@ class SweepstakesAdminType extends EventType
         ));
 
         $builder->add('officialRules', 'textarea');
-        $builder->add('liabilityRelease', 'textarea');
 
     	$builder->add('content', 'textarea');
     }

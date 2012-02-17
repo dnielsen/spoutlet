@@ -72,8 +72,8 @@
                                     <div class="agree-row">
                                         <input type="checkbox" name="_release" id="_sweepstakes_release" />
                                         <label for="_sweepstakes_release">{{ 'agree_sweeps_eligibility' | trans({
-                                            '%a_start%': '<a href="#" class="sweeps-release-modal">',
-                                            '%a_end%': '</a>'
+                                            '%a_start%': '',
+                                            '%a_end%': ''
                                         }) | raw }}</label>
                                     </div>
 
@@ -152,11 +152,6 @@
         {{ sweepstakes.officialRules | raw }}
     </div>
 
-    <div id="sweeps-release-modal-content" class="modal-content" style="display: none">
-        <h3>{{ 'official_sweepstakes_release' | trans }}</h3>
-        {{ sweepstakes.liabilityRelease | raw }}
-    </div>
-
     <script type="text/javascript">
         window.Sweeps = {
             renderError: function(msg) {
@@ -171,13 +166,6 @@
                 $.modal($('#sweeps-terms-modal-content'), {
                     overlayClose: true
                 });
-
-                return false;
-            });
-
-            // make the release content display in a modal
-            $('.sweeps-release-modal').click(function() {
-                $.modal($('#sweeps-release-modal-content'));
 
                 return false;
             });

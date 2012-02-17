@@ -42,12 +42,6 @@ class Sweepstakes extends AbstractEvent
     protected $officialRules;
 
     /**
-     * @var string
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $liabilityRelease;
-
-    /**
      * @param \Datetime $birthday
      */
     public function isUserOldEnough(Datetime $birthday = null)
@@ -162,21 +156,5 @@ class Sweepstakes extends AbstractEvent
     public function setOfficialRules($officialRules)
     {
         $this->officialRules = $officialRules;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLiabilityRelease()
-    {
-        return $this->liabilityRelease;
-    }
-
-    /**
-     * @param string $liabilityRelease
-     */
-    public function setLiabilityRelease($liabilityRelease)
-    {
-        $this->liabilityRelease = $liabilityRelease;
     }
 }
