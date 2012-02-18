@@ -5,6 +5,9 @@ use FOS\CommentBundle\Controller\CommentController as BaseCommentController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Entity\Event;
+use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 
 /**
  * @author Ryan Weaver <ryan@knplabs.com>
@@ -50,8 +53,17 @@ class CommentController extends BaseCommentController
         $threadSlug = $form->getData()->getThread()->getId();
 
         // Did we post a comment on a giveway or an event ?
-       
-        $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
+
+        $event = $this->findGiveawayBySlug($threadSlug);
+        if ($event instanceof Event) {
+            $route = 'events_detail';
+        } elseif ($event instanceof Giveaway) {
+            $route = 'giveaway_show';
+        } elseif ($event instanceof Sweepstakes) {
+            $route = 'sweepstakes_show';
+        } else {
+            $route = 'homepage';
+        }
 
         $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
 
@@ -71,7 +83,7 @@ class CommentController extends BaseCommentController
     {
 
         return $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('GiveawayBundle:Giveaway')
+            ->getRepository('SpoutletBundle:AbstractEvent')
             ->findOneBy(array('slug' => $slug));
     }
 }
