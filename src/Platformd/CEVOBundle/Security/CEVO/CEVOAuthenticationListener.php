@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\CEVOBundle\Api\ApiException;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 /**
  * Security Listener "watches" for the CEVO cookie
@@ -31,6 +32,11 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $authenticationManager;
     protected $baseHost;
     protected $debug;
+
+    /**
+     * @var \Symfony\Component\HttpKernel\Log\LoggerInterface
+     */
+    protected $logger;
 
     public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, $debug = false)
     {
@@ -69,9 +75,51 @@ class CEVOAuthenticationListener implements ListenerInterface
             return;
         }
 
+        list($userId, $sessionId) = self::splitSessionString($sessionString);
+        $token = new CEVOToken($sessionId, $userId);
+
+        // start logging errors (just for verbosity) of we failed on the previous attempt
+        if ($request->getSession()->getFlash('cevo_auth_error')) {
+            $this->logError('About to try authentication after failing on the previous request');
+        }
+
+        // attempt authentication
+        $response = $this->tryAuthentication($token, $request);
+
+        // a true response means success
+        if ($response === true) {
+            return;
+        }
+        $this->logError('CEVO Authentication FAILED on attempt #1');
+
+        // if we got a non-true response, let's try one more time
+        $response = $this->tryAuthentication($token, $request);
+        if ($response === true) {
+            $this->logError('CEVO Authentication PASSED on attempt #2');
+
+            return;
+        }
+
+        // we failed twice, so let's bail
+        $this->logError('CEVO Authentication FAILED on attempt #2');
+        $event->setResponse($response);
+    }
+
+    /**
+     * Attempts to authenticate the user. This either:
+     *
+     * 1) Authenticates the user, setting the token on the security context
+     * OR
+     * 2) Returns a Response that's capable of handling the error
+     *
+     * @param CEVOToken $token
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|true
+     * @throws \Symfony\Component\Security\Core\Exception\AuthenticationException
+     */
+    private function tryAuthentication(CEVOToken $token, Request $request)
+    {
         try {
-            list($userId, $sessionId) = self::splitSessionString($sessionString);
-            $token = new CEVOToken($sessionId, $userId);
 
             $returnValue = $this->authenticationManager->authenticate($token);
 
@@ -80,25 +128,29 @@ class CEVOAuthenticationListener implements ListenerInterface
             } else {
                 throw new AuthenticationException('Expected token, got back '.gettype($returnValue));
             }
+
+            return true;
         } catch (AuthenticationException $e) {
             // this might mean that the provider couldn't find a good token/user for me
             $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you. Please contact the administrator');
 
-            $event->setResponse($response);
+            return $response;
         } catch (ApiException $e) {
             // this is what happens if CEVO chokes on the API
-            $this->debug = true;
-            if ($this->debug) {
-                //throw $e;
 
+            // log the error
+            $msg = 'Authentication error with CEVO. Message: '.$e->getMessage();
+            $this->logError($msg);
+
+            // if we're on debug, actually show the error
+            if ($this->debug) {
                 $response = $this->getResponseForAuthError($request, 'Authentication error with CEVO. Message: '.$e->getMessage());
 
                 return $response;
             }
 
-            $response = $this->getResponseForAuthError($request, 'There was a problem authenticating you (API error). Please contact the administrator');
-
-            $event->setResponse($response);
+            // swallow the error in production
+            return $this->getResponseForAuthError($request, false);
         }
     }
 
@@ -136,11 +188,16 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     private function getResponseForAuthError(Request $request, $msg)
     {
-        $request->getSession()->setFlash('error', $msg);
+        if ($msg) {
+            $request->getSession()->setFlash('error', $msg);
+        }
+
+        // set a flag that says that this authentication failed
+        $request->getSession()->setFlash('cevo_auth_error', true);
 
         // to prevent things from totally freaking out, getting in a loop on this failure
         // we need to return a response that removes the cookie
-        $response = new RedirectResponse($request->getUriForPath('/'));
+        $response = new RedirectResponse($request->getUri());
         $response->headers->clearCookie(self::COOKIE_NAME, '/', $this->baseHost);
 
         return $response;
@@ -165,5 +222,22 @@ class CEVOAuthenticationListener implements ListenerInterface
         }
 
         return $pieces;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Logs errors
+     *
+     * @param $msg
+     */
+    private function logError($msg)
+    {
+        if ($this->logger) {
+            $this->logger->err($msg);
+        }
     }
 }

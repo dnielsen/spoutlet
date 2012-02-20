@@ -13,6 +13,8 @@ services:
         - "@security.authentication.manager"
         - "%base_host%"
         - "%kernel.debug%"
+    calls:
+        - [ setLogger, [ @?logger ] ]
 
   cevo.authentication.entry_point.cevo:
     class:  Platformd\CEVOBundle\Security\CEVO\CEVOAuthenticationEntryPoint
