@@ -69,14 +69,6 @@
                                         }) | raw }}</label>
                                     </div>
 
-                                    <div class="agree-row">
-                                        <input type="checkbox" name="_release" id="_sweepstakes_release" />
-                                        <label for="_sweepstakes_release">{{ 'agree_sweeps_eligibility' | trans({
-                                            '%a_start%': '',
-                                            '%a_end%': ''
-                                        }) | raw }}</label>
-                                    </div>
-
                                     <div style="text-align: center;">
                                         <input type="submit" value="{{ 'enter' | trans }}" class="button" />
                                     </div>
@@ -172,10 +164,7 @@
 
             // on submit of the form, make sure that both of the checkboxes are checked
             $('#sweeps-form-enter').submit(function() {
-                if (
-                    !$('#_sweepstakes_terms').is(':checked')
-                    || !$('#_sweepstakes_release').is(':checked')
-                    ) {
+                if (!$('#_sweepstakes_terms').is(':checked')) {
                     Sweeps.renderError('{{ 'sweeps_check_both_boxes' | trans }}');
 
                     return false;

@@ -65,7 +65,7 @@ class FrontendController extends Controller
         }
 
         // todo, check terms checkboxes
-        if (!$request->get('_terms') || !$request->get('_release')) {
+        if (!$request->get('_terms')) {
             $this->setFlash('error', 'sweeps_check_both_boxes');
 
             return $this->redirectToShow($sweepstakes);
