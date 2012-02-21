@@ -1,6 +1,6 @@
 <li>
     <span class="item">
-        <a href="{{ path('fos_user_security_login') }}">
+        <a href="{{ path('fos_user_security_login') }}?return={{ path('giveaway_show', {'slug': giveaway.slug}) | e }}">
             {{ 'platformd.create_account_or_login' | trans }}
         </a>
     </span>
