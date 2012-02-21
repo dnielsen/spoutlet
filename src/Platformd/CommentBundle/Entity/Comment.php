@@ -9,10 +9,18 @@ use FOS\CommentBundle\Model\SignedCommentInterface;
 use FOS\CommentBundle\Model\VotableCommentInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use Doctrine\Common\Collections\Collection,
+    Doctrine\Common\Collections\ArrayCollection;
+
+use DateTime;
+use DateTimezone;
+
 /**
  * @ORM\Table(name="comment")
  * @ORM\Entity
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ * @ORM\Entity(repositoryClass="Platformd\CommentBundle\Entity\CommentRepository")
+ * 
  */
 class Comment extends BaseComment implements SignedCommentInterface
 {
@@ -93,4 +101,47 @@ class Comment extends BaseComment implements SignedCommentInterface
         $ancestors = explode('/', $this->ancestors);
         return (int)array_pop($ancestors);
     }
+    
+    
+    /**
+    * Returns the end datetime converted into the timezone of the user
+     *
+    * @return \DateTime
+    */
+    public function getCreatedAtInTimezone()
+    {
+    return $this->convertDatetimeToTimezone($this->getCreatedAt());
+    }
+    
+    /**
+     * Returns an array that can be used in a template and passed to a translation string
+     *
+     * @return array
+     */
+    public function createdAtInTimezoneTranslationArray()
+    {
+        return self::convertDateTimeIntoTranslationArray($this->getCreatedAtInTimezone());
+    }
+
+    static private function convertDateTimeIntoTranslationArray(DateTime $dt)
+    {
+        return array(
+            '%year%' => $dt->format('Y'),
+            '%month%' => $dt->format('m'),
+            '%day%' => $dt->format('d'),
+            '%time%' => $dt->format('H:i'),
+        );
+    }
+
+    private function convertDatetimeToTimezone(DateTime $dt)
+    {
+        $userTimezone = new DateTimeZone('UTC');
+        $offset = $userTimezone->getOffset($dt);
+
+        $timestamp = $dt->format('U') + $offset;
+
+        return DateTime::createFromFormat('U', $timestamp, $userTimezone);
+    }
+
+
 }

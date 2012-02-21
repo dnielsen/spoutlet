@@ -202,6 +202,7 @@ platformd:
     comment:
         login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
         comments: コメント
+        date_format: %year%年%month%月%day%日
 
     user:
         login_header: ログイン情報の入力
