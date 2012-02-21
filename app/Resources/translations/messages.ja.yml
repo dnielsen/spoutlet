@@ -340,14 +340,14 @@ read_and_agreed_to_rules: 本キャンペーンに関する%a_start%諸条%a_end
 official_sweepstakes_rules: 公式懸賞規定
 official_sweepstakes_release: 懸賞参加資格と免責事項
 agree_sweeps_eligibility: %a_start%利用制限と責任%a_end%に関する規定を読んだ上で同意します。
-sweeps_check_both_boxes: 懸賞に参加する前に2つのボックスに同意してください。
+sweeps_check_both_boxes: 公式ルールに同意してスイープステークにご参加ください。
 overview: 概要
 
 registration_opens: 開始日：
 registration_closes: 終了日：
 location_eligibility: 参加資格：
-open_to_legal_residents: における法的住民に開放
-age_eligibility: 年齢制限：
+open_to_legal_residents: 日本に居住する人
+age_eligibility: 歳以上：
 age_or_older_as_of_date: %age% 歳以上 %as_of_date% 日時点で、
 prize: 景品:
 instructions: 詳細：
@@ -359,3 +359,4 @@ instructions: 説明書
 sweepstakes_date_format: %year%年%month%月%day%日 %time%
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
+comments_date_format: %year%年%month%月%day%日
