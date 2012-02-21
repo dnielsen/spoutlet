@@ -64,6 +64,8 @@ class SecurityController extends BaseController
         // create new path
         $return = rtrim($returnUri, '/')  . $returnPath;
         
+        $cevoManager = $this->container->get('pd.cevo.cevo_auth_manager');
+        
         return new RedirectResponse($cevoManager->generateCevoUrl(
             CEVOAuthManager::LOGIN_PATH,
             $return
