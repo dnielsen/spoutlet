@@ -5,6 +5,7 @@ namespace Platformd\GiveawayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayKey
@@ -129,6 +130,11 @@ class GiveawayKey
     public function getAssignedAt()
     {
         return $this->assignedAt;
+    }
+
+    public function getAssignedAtTranslationArray()
+    {
+        return AbstractEvent::convertDateTimeIntoTranslationArray($this->getAssignedAt());
     }
 
     public function getAssignedSite()
