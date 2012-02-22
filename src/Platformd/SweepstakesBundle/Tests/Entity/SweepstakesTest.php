@@ -34,7 +34,7 @@ class SweepstakesTest extends PHPUnit_Framework_TestCase
     public function testIsCountryAllowed()
     {
         $sweepstakes = new Sweepstakes();
-        $sweepstakes->setDisallowedCountries(array('GB'));
+        $sweepstakes->setAllowedCountries(array('US'));
 
         $this->assertTrue($sweepstakes->isCountryAllowed('US'));
         $this->assertTrue($sweepstakes->isCountryAllowed('us'));

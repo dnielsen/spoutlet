@@ -313,7 +313,7 @@ avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be ap
 
 # these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
-Disallowedcountries: Disallowed Countries
+Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
@@ -334,7 +334,7 @@ overview: Overview
 registration_opens: Registration Opens
 registration_closes: Registration Closes
 location_eligibility: Location Eligibility:
-open_to_legal_residents: Open to legal residents in
+open_to_legal_residents: Open to legal residents in %countries%
 age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login

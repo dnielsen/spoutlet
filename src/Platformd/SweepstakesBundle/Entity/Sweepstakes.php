@@ -22,12 +22,12 @@ use Symfony\Component\Locale\Locale;
 class Sweepstakes extends AbstractEvent
 {
     /**
-     * A list of countries that are *not* eligible for this sweeps
+     * A list of countries that *are* eligible for this sweeps
      *
      * @var array
      * @ORM\Column(type="array")
      */
-    protected $disallowedCountries = array();
+    protected $allowedCountries = array();
 
     /**
      * @var int
@@ -68,23 +68,7 @@ class Sweepstakes extends AbstractEvent
      */
     public function isCountryAllowed($country)
     {
-        return !in_array(strtoupper($country), $this->getDisallowedCountries());
-    }
-
-    /**
-     * Returns the list of eligible countries
-     *
-     * This is here because the item in the admin was made to be "disallowed countries",
-     * but what they really wanted on the frontend was "eligible" countries
-     * @return array
-     */
-    public function eligibleCountries()
-    {
-        $allCountryChoices = Locale::getDisplayCountries(\Locale::getDefault());
-
-        $disallowedCountries = array_flip($this->getDisallowedCountries());
-
-        return array_diff_key($allCountryChoices, $disallowedCountries);
+        return in_array(strtoupper($country), $this->getAllowedCountries());
     }
 
     /**
@@ -113,17 +97,37 @@ class Sweepstakes extends AbstractEvent
     /**
      * @return array
      */
-    public function getDisallowedCountries()
+    public function getAllowedCountries()
     {
-        return $this->disallowedCountries;
+        return $this->allowedCountries;
     }
 
     /**
-     * @param array $disallowedCountries
+     * Attempts to translate the country codes into an array of country names
+     *
+     * In a more perfect world, this logic is moved elsewhere
+     *
+     * @return array
      */
-    public function setDisallowedCountries($disallowedCountries)
+    public function getAllowedCountryNames()
     {
-        $this->disallowedCountries = $disallowedCountries;
+        $names = array();
+        $allCountryChoices = Locale::getDisplayCountries(\Locale::getDefault());
+        foreach ($this->getAllowedCountries() as $countryCode) {
+            $name = isset($allCountryChoices[$countryCode]) ? $allCountryChoices[$countryCode] : $countryCode;
+
+            $names[] = $name;
+        }
+
+        return $names;
+    }
+
+    /**
+     * @param array $allowedCountries
+     */
+    public function setAllowedCountries($allowedCountries)
+    {
+        $this->allowedCountries = $allowedCountries;
     }
 
     /**

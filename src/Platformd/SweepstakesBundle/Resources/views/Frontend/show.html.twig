@@ -112,19 +112,15 @@
                             <li>
                                 <label>{{ 'eligibility' | trans }}</label>
                                 <ol class="eligibility-list">
-                                    {% if app.session.locale == 'ja' %}
-                                        {# this was a production hack for the one sweepstakes - this needs to be fixed!!! #}
-                                        <li>日本に居住する人</li>
-                                        <li>2012年2月18日時点で、13歳以上</li>
-                                    {% else %}
-                                        <li>{{ sweepstakes.eligibleCountries | join(', ') }}</li>
-                                        <li>
-                                            {{ 'age_or_older_as_of_date' | trans({
-                                                '%age%': sweepstakes.minimumAgeRequirement,
-                                                '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
-                                            })}}
-                                        </li>
-                                    {% endif %}
+                                    <li>{{ 'open_to_legal_residents' | trans({
+                                        '%countries%': sweepstakes.allowedCountryNames | join(', ')
+                                    }) }}</li>
+                                    <li>
+                                        {{ 'age_or_older_as_of_date' | trans({
+                                            '%age%': sweepstakes.minimumAgeRequirement,
+                                            '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
+                                        })}}
+                                    </li>
                                 </ol>
                             </li>
                         </ul>
