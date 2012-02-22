@@ -388,7 +388,13 @@ class AbstractEvent
         return self::convertDateTimeIntoTranslationArray($this->getEndsAtInTimezone());
     }
 
-    static private function convertDateTimeIntoTranslationArray(DateTime $dt)
+    /**
+     * @todo - refactor this somewhere more public
+     * @static
+     * @param \DateTime $dt
+     * @return array
+     */
+    static public function convertDateTimeIntoTranslationArray(DateTime $dt)
     {
         return array(
             '%year%' => $dt->format('Y'),

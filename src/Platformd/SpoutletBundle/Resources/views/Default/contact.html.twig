@@ -4,7 +4,7 @@
 
 {% block content %}
 <div id="content" class="contact">
-    <h1>{{ 'platformd.layout.top_menu.contact' | trans }}</h1>
+    <h1 class="margin-bottom">{{ 'platformd.layout.top_menu.contact' | trans }}</h1>
 
     {% include ['SpoutletBundle:Default:contact/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:contact/en.html.twig'] %}
 </div>

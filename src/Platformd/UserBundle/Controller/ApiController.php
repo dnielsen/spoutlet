@@ -29,11 +29,11 @@ class ApiController extends Controller
         foreach ($users as $user) {
             $userObj = $this->getUserManager()->findUserBy(array('id' => trim($user)));
 
-            $data[$userObj->getId()] = $this->userToArray($userObj);
-
             if (!$userObj) {
                 continue;
             }
+
+            $data[$userObj->getId()] = $this->userToArray($userObj);
         }
 
         return new Response(json_encode($data));

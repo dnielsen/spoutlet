@@ -326,7 +326,7 @@ avatar_awaiting_approval: あなたのアバターが正常にアップロード
 
 # these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
-Disallowedcountries: Disallowed Countries
+Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
@@ -347,7 +347,7 @@ overview: 概要
 registration_opens: 開始日：
 registration_closes: 終了日：
 location_eligibility: 参加資格：
-open_to_legal_residents: 日本に居住する人
+open_to_legal_residents: %countries% に居住する人
 age_eligibility: 歳以上：
 age_or_older_as_of_date: %age% 歳以上 %as_of_date% 日時点で、
 prize: 景品:

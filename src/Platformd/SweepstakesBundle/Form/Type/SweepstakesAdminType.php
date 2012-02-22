@@ -27,7 +27,7 @@ class SweepstakesAdminType extends EventType
         $builder->add('generalImageFile', 'file', array(
             'label' => 'General image'
         ));
-        $builder->add('disallowedCountries', 'country', array(
+        $builder->add('allowedCountries', 'country', array(
             'multiple' => true,
             'expanded' => false,
         ));
