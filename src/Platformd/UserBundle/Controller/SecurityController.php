@@ -50,20 +50,12 @@ class SecurityController extends BaseController
      */
     private function redirectToCevoLogin()
     {
-        $returnUri  = $this->container->get('request')->getUriForPath('/');
-        $returnPath = $this->container->get('request')->query->get('return');
-        $baseURL    = $this->container->get('request')->getBaseUrl();
-        
-        // remove baseURL from beginning of returnPath if exits
-        // removes /app_dev.php from the return path section
-        $pos = strpos($returnPath, $baseURL); 
-        if ($pos !== false) {
-           $returnPath =  substr_replace($returnPath, '',  $pos,   strlen($baseURL));
-        }
+        $return = $this->container->get('request')
+            ->getUriForPath('/')
+        ;
 
-        // create new path
-        $return = rtrim($returnUri, '/')  . $returnPath;
-        
+        $cevoManager = $this->container->get('pd.cevo.cevo_auth_manager');
+
         return new RedirectResponse($cevoManager->generateCevoUrl(
             CEVOAuthManager::LOGIN_PATH,
             $return
