@@ -216,7 +216,7 @@ fos_comment:
             thread: Platformd\CommentBundle\Entity\Thread
     service:
         sorting:
-            default: date_asc
+            default: date_desc
         blamer:
             comment: fos_comment.blamer.comment.security
 
