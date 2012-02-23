@@ -29,7 +29,7 @@
             {% endif %}
 
             <div class="page-header">
-                <h1>{{ sweepstakes.name }}</h1>
+                <h1>{{ sweepstakes.name | nl2br }}</h1>
 
                 {% if sweepstakes.generalImage %}
                     <img src="{{ asset(media_path(sweepstakes, {
