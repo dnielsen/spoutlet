@@ -65,6 +65,12 @@ class AwaVideoLoginRedirectListener
             return;
         }
 
+        if (!$this->securityContext->getToken()) {
+            $this->log('No security context yet');
+
+            return;
+        }
+
         if ($this->securityContext->isGranted('IS_AUTHENTICATED_FULLY')
             && $session->get(self::RETURN_SESSION_PARAMETER_NAME)
             && $request->isMethodSafe()
