@@ -8,8 +8,16 @@
             <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
             <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
             {% endif %}
-            {% if app.session.locale == 'ja' %}
-            <li><a href="http://www.twitter.com/Alienware_JP" target="_blank"><img src="http://twitter-badges.s3.amazonaws.com/twitter-b.png" alt="Follow Alienware on Twitter" height="20"/></a></li>
+
+            {% if 'alienware.social.facebook_url' | trans or 'alienware.social.twitter_url' | trans %}
+                <li style="border-right: none; padding-top: 3px;">
+                    {% if 'alienware.social.facebook_url' | trans %}
+                        <a href="{{ 'alienware.social.facebook_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-fb-14.png') }}" alt="{{ 'alienware.social.follow_on_facebook' }}" /></a>
+                    {% endif %}
+                    {% if 'alienware.social.twitter_url' | trans %}
+                        <a href="{{ 'alienware.social.twitter_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-tw-14.png') }}" alt="{{ 'alienware.social.follow_on_twitter' }}" /></a>
+                    {% endif %}
+                </li>
             {% endif %}
         </ul>
         <div class="right">
