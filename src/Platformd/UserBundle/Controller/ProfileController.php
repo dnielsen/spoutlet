@@ -14,7 +14,8 @@ class ProfileController extends BaseProfileController
     public function editAction()
     {
         // temporarily disable this page until we figure out how it relates to CEVO
-        return $this->redirect($this->generateUrl('default_index'));
+        $url = $this->container->get('router')->generate('default_index');
+        return new RedirectResponse($url);
         $response = parent::editAction();
 
         // if we're redirecting (i.e. success and the user's avatar is marked as changed,
