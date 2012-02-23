@@ -1,4 +1,4 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
+{% extends (isCurrentUser|default(false) ? 'UserBundle::accountLayout.html.twig' : 'SpoutletBundle::layout.html.twig') %}
 
 {% block title %}{{ "profile.show.title" | trans({ 
                 "%username%": user.username,
