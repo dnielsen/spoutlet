@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  */
-class AbstractEvent
+abstract class AbstractEvent
 {
     /**
      * A map of UTC offsets and common timezone names
@@ -211,6 +211,13 @@ class AbstractEvent
     {
         return $this->slug;
     }
+
+    /**
+     * Returns the route name to this item's show page
+     *
+     * @return string
+     */
+    abstract public function getShowRouteName();
 
     /**
      * Set ready

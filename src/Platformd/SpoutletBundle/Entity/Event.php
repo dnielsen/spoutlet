@@ -233,4 +233,14 @@ class Event extends AbstractEvent
 
         return implode(', ', $parts);
     }
+
+    /**
+     * Returns the route name to this item's show page
+     *
+     * @return string
+     */
+    public function getShowRouteName()
+    {
+        return 'events_detail';
+    }
 }

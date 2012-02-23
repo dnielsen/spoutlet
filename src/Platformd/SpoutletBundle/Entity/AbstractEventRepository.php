@@ -4,6 +4,9 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
+use DateTime;
+use Doctrine\ORM\QueryBuilder;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
  * Repository for the base, abstract "events"
@@ -18,14 +21,23 @@ class AbstractEventRepository extends EntityRepository
      */
     public function getCurrentEvents($locale, $limit = null)
     {
-        $query = $this->getBaseQueryBuilder($locale)
-            ->andWhere('e.starts_at < :cut_off')
-            ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
-            ->setParameter('cut_off', new \DateTime())
+        $qb = $this->getBaseQueryBuilder($locale);
+        $query = $this->addActiveQuery($qb)
             ->orderBy('e.starts_at', 'DESC')
-            ->getQuery();
+            ->getQuery()
+        ;
 
-        return $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->addQueryLimit($query, $limit)->getResult();
+
+        // our hack since Giveaways are special :/
+        foreach ($items as $key => $item) {
+            // todo - remove this hack - see #18
+            if ($item instanceof Giveaway && $item->isDisabled()) {
+                unset($items[$key]);
+            }
+        }
+
+        return $items;
     }
 
     /**
@@ -83,6 +95,25 @@ class AbstractEventRepository extends EntityRepository
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * Adds the "is active" part of the query by date
+     *
+     * This allows the starts_at or ends_at to be null, and for that to be "active"
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addActiveQuery(QueryBuilder $qb)
+    {
+        $qb
+            ->andWhere('e.starts_at < :cut_off OR e.starts_at IS NULL')
+            ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
+            ->setParameter('cut_off', new \DateTime())
+        ;
+
+        return $qb;
     }
 
     /**

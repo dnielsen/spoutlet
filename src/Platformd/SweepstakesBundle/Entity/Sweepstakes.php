@@ -161,4 +161,14 @@ class Sweepstakes extends AbstractEvent
     {
         $this->officialRules = $officialRules;
     }
+
+    /**
+     * Returns the route name to this item's show page
+     *
+     * @return string
+     */
+    public function getShowRouteName()
+    {
+        return 'sweepstakes_show';
+    }
 }

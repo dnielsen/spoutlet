@@ -18,13 +18,19 @@ class DefaultController extends Controller
     {
         $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
 
-        $allGiveaways = $this->getGiveawayRepo()
-            ->findActives($this->getLocale())
-        ;
+        if ($onlyNews) {
+            $abstractEvents = false;
+        } else {
+            $abstractEvents = $this->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('SpoutletBundle:AbstractEvent')
+                ->getCurrentEvents($this->getLocale())
+            ;
+        }
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'news'          => $news,
-            'all_giveaways' => $allGiveaways,
+            'abstractEvents' => $abstractEvents,
             'onlyNews'      => $onlyNews,
         ));
     }
