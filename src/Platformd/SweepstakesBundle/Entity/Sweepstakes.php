@@ -42,6 +42,17 @@ class Sweepstakes extends AbstractEvent
     protected $officialRules;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\Entry", mappedBy="sweepstakes")
+     */
+    protected $entries;
+
+    public function __construct()
+    {
+        $this->entries = new ArrayCollection();
+    }
+
+    /**
      * @param \Datetime $birthday
      */
     public function isUserOldEnough(Datetime $birthday = null)
@@ -170,5 +181,13 @@ class Sweepstakes extends AbstractEvent
     public function getShowRouteName()
     {
         return 'sweepstakes_show';
+    }
+
+    /**
+     * @return int
+     */
+    public function getEntriesCount()
+    {
+        return count($this->entries);
     }
 }
