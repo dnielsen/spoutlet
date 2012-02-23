@@ -362,3 +362,13 @@ eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
 generic_firstname: ユーザー
+
+follow_us: ''
+
+# alienware-specific things
+alienware:
+    social:
+        twitter_url: http://www.twitter.com/alienware
+        facebook_url: http://www.facebook.com/alienware
+        follow_on_facebook: ''
+        follow_on_twitter: ''
