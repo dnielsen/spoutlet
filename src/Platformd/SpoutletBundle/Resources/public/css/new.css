@@ -403,3 +403,7 @@ a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:2
 ul.list-normal {
     margin-left: 20px;
 }
+
+.nowrap {
+    white-space: nowrap;
+}
