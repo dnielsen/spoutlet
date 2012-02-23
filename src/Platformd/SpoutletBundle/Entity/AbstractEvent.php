@@ -63,7 +63,7 @@ abstract class AbstractEvent
     /**
      * @var string $slug
      *
-     * @Gedmo\Slug(fields={"name"})
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(name="slug", type="string", length=255)
      */
     protected $slug;
