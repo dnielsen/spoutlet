@@ -28,6 +28,8 @@ class StubApiController extends Controller
      */
     public function stubEndpointAction($action, Request $request)
     {
+        $cheatCookies = $this->container->getParameter('kernel.environment') != 'test';
+
         $return = $request->query->get('return');
         $session = $request->getSession();
 
@@ -47,14 +49,18 @@ class StubApiController extends Controller
             case 'login':
             case 'register':
                 // getting inconsistent results, using both methods to set cookie
-                setcookie($cookieName, $cookieValue, null, '/', $host);
+                if ($cheatCookies) {
+                    setcookie($cookieName, $cookieValue, null, '/', $host);
+                }
                 $cookie = new Cookie($cookieName, $cookieValue, 0, '/', $host, false, false);
                 $response->headers->setCookie($cookie);
                 $message = 'You are now authenticated';
                 break;
             case 'logout':
                 // getting inconsistent results, using both methods to set cookie
-                setcookie($cookieName, '', null, '/', $host);
+                if ($cheatCookies) {
+                    setcookie($cookieName, '', null, '/', $host);
+                }
                 $response->headers->clearCookie($cookieName, '/', $host);
                 $message = 'You are now logged out';
                 break;
@@ -67,8 +73,10 @@ class StubApiController extends Controller
             'return' => $return,
         ));
 
-        // for some reason setting cookies is iffy, so totally hacking this
-        echo $html;die;
+        if ($cheatCookies) {
+            // for some reason setting cookies is iffy, so totally hacking this
+            echo $html;die;
+        }
 
         $response->setContent($html);
 
