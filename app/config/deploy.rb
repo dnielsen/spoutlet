@@ -8,7 +8,7 @@ ssh_options[:port] = "22"
 set :app1,        "ec2-184-73-162-139.compute-1.amazonaws.com"
 set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
 
-set :repository,  "file:///Users/ryan/Sites/clients/Platformd"
+set :repository,  "file:///var/www/spoutlet"
 set :scm,         :git
 set :deploy_via,  :rsync_with_remote_cache
 set :user,        "ubuntu"
