@@ -16,7 +16,7 @@
             
             <p>
                 {{ 'platformd.account_page.account.hello_user' | trans({
-                    '%firstname%': (app.user.firstName|default('user' | trans)),
+                    '%firstname%': (app.user.firstName|default(app.user.username)),
                     '%username%': app.user.username
                 }) }}
                 <a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a>

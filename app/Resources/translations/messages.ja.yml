@@ -159,7 +159,7 @@ platformd:
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
-            hello_user: "Hello [%firstname%]! あなたはというユーザー名でログインされました [%username%]."
+            hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
             ready_to_game: |
                 このAlienware Arena管理画面はArenaに参加する際の主要ツールが準備されています。 現在、イベントサインア
                 ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもArenaサポートチームへコンタ
@@ -362,7 +362,6 @@ sweepstakes_date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
-generic_firstname: ユーザー
 
 follow_us: ''
 
