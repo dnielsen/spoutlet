@@ -118,7 +118,7 @@
                                     <li>
                                         {{ 'age_or_older_as_of_date' | trans({
                                             '%age%': sweepstakes.minimumAgeRequirement,
-                                            '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
+                                            '%as_of_date%': ('sweepstakes_date_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray))
                                         })}}
                                     </li>
                                 </ol>
