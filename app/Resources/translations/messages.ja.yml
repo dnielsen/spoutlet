@@ -368,7 +368,7 @@ follow_us: ''
 # alienware-specific things
 alienware:
     social:
-        twitter_url: http://www.twitter.com/alienware
-        facebook_url: http://www.facebook.com/alienware
+        twitter_url: "http://twitter.com/#!/Alienware_JP"
+        facebook_url: http://www.facebook.com/DellJapan
         follow_on_facebook: ''
         follow_on_twitter: ''
