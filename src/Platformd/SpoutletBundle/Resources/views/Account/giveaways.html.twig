@@ -29,7 +29,7 @@
                                 <td>{{ giveawayKey.pool.giveaway.name }}</td>
                                 <td class="nowrap">{{ giveawayKey.value }}</td>
                                 <td>
-                                    {{ 'sweepstakes_datetime_format' | trans(giveawayKey.assignedAtTranslationArray) }}
+                                    {{ 'sweepstakes_date_format' | trans(giveawayKey.assignedAtTranslationArray) }}
                                 </td>
                                 <td class="nowrap">
                                     <a href="{{ path('giveaway_show', {'slug': giveawayKey.pool.giveaway.slug} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
