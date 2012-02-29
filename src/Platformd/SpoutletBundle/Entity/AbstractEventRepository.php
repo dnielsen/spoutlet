@@ -28,14 +28,7 @@ class AbstractEventRepository extends EntityRepository
         ;
 
         $items = $this->addQueryLimit($query, $limit)->getResult();
-
-        // our hack since Giveaways are special :/
-        foreach ($items as $key => $item) {
-            // todo - remove this hack - see #18
-            if ($item instanceof Giveaway && $item->isDisabled()) {
-                unset($items[$key]);
-            }
-        }
+        $items = $this->removeDisabledGiveaways($items);
 
         return $items;
     }
@@ -64,11 +57,14 @@ class AbstractEventRepository extends EntityRepository
      */
     public function findPublished($locale)
     {
-
-        return $this->findBy(array(
+        $items = $this->findBy(array(
             'locale'    => $locale,
             'published' => true
         ));
+
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
     }
 
     public function findOnePublishedBySlug($slug, $locale)
@@ -139,5 +135,23 @@ class AbstractEventRepository extends EntityRepository
         }
 
         return $query->setMaxResults($limit);
+    }
+
+    /**
+     * A hack - see #18
+     *
+     * @param $abstractEvents
+     * @return mixed
+     */
+    private function removeDisabledGiveaways($abstractEvents)
+    {
+        foreach ($abstractEvents as $key => $item) {
+            // todo - remove this hack - see #18
+            if ($item instanceof Giveaway && $item->isDisabled()) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 }
