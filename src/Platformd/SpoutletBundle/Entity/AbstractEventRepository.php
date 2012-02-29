@@ -57,10 +57,17 @@ class AbstractEventRepository extends EntityRepository
      */
     public function findPublished($locale)
     {
-        $items = $this->findBy(array(
-            'locale'    => $locale,
-            'published' => true
-        ));
+        $items = $this->createQueryBuilder('e')
+            ->andWhere('e.locale = :locale')
+            ->andWhere('e.published = :published')
+            ->setParameters(array(
+                'locale'    => $locale,
+                'published' => true,
+            ))
+            ->orderBy('e.starts_at', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
 
         $items = $this->removeDisabledGiveaways($items);
 
