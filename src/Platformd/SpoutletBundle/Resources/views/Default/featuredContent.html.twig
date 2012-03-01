@@ -17,7 +17,8 @@
         <div id="featured-content-featured-giveaways" class="featured-content-category">
         	{% for abstractEvent in abstractEvents %}
             <div class="widget-item">
-                <a class="widget-link" href="{{ path(abstractEvent.showRouteName, { 'slug' : abstractEvent.slug }) }}">{{ abstractEvent.name }}</a>
+                {% set useTargetBlank = (abstractEvent.urlRedirect is not empty) %}
+                <a class="widget-link" {{ useTargetBlank ? 'target="_blank"' : '' }} href="{{ path(abstractEvent.showRouteName, { 'slug' : abstractEvent.slug }) }}">{{ abstractEvent.name }}</a>
             </div>
             {% endfor %}
         </div>

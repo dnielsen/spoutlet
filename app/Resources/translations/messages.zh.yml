@@ -349,7 +349,6 @@ instructions: Instructions
 sweepstakes_date_format: %year%-%month%-%day% %time%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
-generic_firstname: user
 
 follow_us: Follow Us
 

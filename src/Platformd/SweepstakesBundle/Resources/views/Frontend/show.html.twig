@@ -32,9 +32,11 @@
                 <h1>{{ sweepstakes.name | nl2br }}</h1>
 
                 {% if sweepstakes.generalImage %}
-                    <img src="{{ asset(media_path(sweepstakes, {
-                        'type': 'general'
-                    })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
+                    <div style="text-align: center;">
+                        <img src="{{ asset(media_path(sweepstakes, {
+                            'type': 'general'
+                        })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
+                    </div>
                 {% endif %}
             </div><!-- widget-header -->
         </div><!-- std_1col -->
@@ -118,7 +120,7 @@
                                     <li>
                                         {{ 'age_or_older_as_of_date' | trans({
                                             '%age%': sweepstakes.minimumAgeRequirement,
-                                            '%as_of_date%': sweepstakes.startsAtInTimezone | date ('Y-m-d')
+                                            '%as_of_date%': ('sweepstakes_date_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray))
                                         })}}
                                     </li>
                                 </ol>

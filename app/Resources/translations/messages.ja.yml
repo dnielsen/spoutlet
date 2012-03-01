@@ -159,7 +159,7 @@ platformd:
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
-            hello_user: "Hello [%firstname%]! あなたはというユーザー名でログインされました [%username%]."
+            hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
             ready_to_game: |
                 このAlienware Arena管理画面はArenaに参加する際の主要ツールが準備されています。 現在、イベントサインア
                 ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもArenaサポートチームへコンタ
@@ -350,7 +350,7 @@ registration_closes: 終了日：
 location_eligibility: 参加資格：
 open_to_legal_residents: %countries% に居住する人
 age_eligibility: 歳以上：
-age_or_older_as_of_date: %age% 歳以上 %as_of_date% 日時点で、
+age_or_older_as_of_date: %as_of_date%時点で、%age%歳以上
 prize: 景品:
 instructions: 詳細：
 sweepstakes_datetime_format: %year%年%month%月%day%日 %time%
@@ -358,18 +358,17 @@ platformd.create_account_or_login_sweepstakes: ALIENWARE ARENA アカウント�
 platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
-sweepstakes_date_format: %year%年%month%月%day%日 %time%
+sweepstakes_date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
-generic_firstname: ユーザー
 
 follow_us: ''
 
 # alienware-specific things
 alienware:
     social:
-        twitter_url: http://www.twitter.com/alienware
-        facebook_url: http://www.facebook.com/alienware
+        twitter_url: "http://twitter.com/#!/Alienware_JP"
+        facebook_url: http://www.facebook.com/DellJapan
         follow_on_facebook: ''
         follow_on_twitter: ''

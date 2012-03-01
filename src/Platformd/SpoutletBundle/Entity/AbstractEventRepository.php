@@ -14,7 +14,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 class AbstractEventRepository extends EntityRepository
 {
     /**
-     * Return current events
+     * Return current AND upcoming events
      *
      * @param integer $limit
      * @return array
@@ -28,14 +28,7 @@ class AbstractEventRepository extends EntityRepository
         ;
 
         $items = $this->addQueryLimit($query, $limit)->getResult();
-
-        // our hack since Giveaways are special :/
-        foreach ($items as $key => $item) {
-            // todo - remove this hack - see #18
-            if ($item instanceof Giveaway && $item->isDisabled()) {
-                unset($items[$key]);
-            }
-        }
+        $items = $this->removeDisabledGiveaways($items);
 
         return $items;
     }
@@ -64,11 +57,21 @@ class AbstractEventRepository extends EntityRepository
      */
     public function findPublished($locale)
     {
+        $items = $this->createQueryBuilder('e')
+            ->andWhere('e.locale = :locale')
+            ->andWhere('e.published = :published')
+            ->setParameters(array(
+                'locale'    => $locale,
+                'published' => true,
+            ))
+            ->orderBy('e.starts_at', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
 
-        return $this->findBy(array(
-            'locale'    => $locale,
-            'published' => true
-        ));
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
     }
 
     public function findOnePublishedBySlug($slug, $locale)
@@ -98,7 +101,7 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
-     * Adds the "is active" part of the query by date
+     * Adds the "is active" OR upcoming part of the query by date
      *
      * This allows the starts_at or ends_at to be null, and for that to be "active"
      *
@@ -108,7 +111,6 @@ class AbstractEventRepository extends EntityRepository
     private function addActiveQuery(QueryBuilder $qb)
     {
         $qb
-            ->andWhere('e.starts_at < :cut_off OR e.starts_at IS NULL')
             ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
             ->setParameter('cut_off', new \DateTime())
         ;
@@ -139,5 +141,23 @@ class AbstractEventRepository extends EntityRepository
         }
 
         return $query->setMaxResults($limit);
+    }
+
+    /**
+     * A hack - see #18
+     *
+     * @param $abstractEvents
+     * @return mixed
+     */
+    private function removeDisabledGiveaways($abstractEvents)
+    {
+        foreach ($abstractEvents as $key => $item) {
+            // todo - remove this hack - see #18
+            if ($item instanceof Giveaway && $item->isDisabled()) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 }

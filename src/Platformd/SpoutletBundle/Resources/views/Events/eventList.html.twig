@@ -26,13 +26,15 @@
                             {{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}
                         </td>
                         {# todo - refactor this next line somewhere else #}
-                        <td><a href="
-                        {%- if event.urlRedirect not in [''] -%}
-                            {{  event.urlRedirect }}
-                        {%- else -%}
-                            {{-  path('events_detail', { 'slug' : event.slug }) -}}
-                        {%- endif -%}
-                        ">{{ event.name }}</a></td>
+                        <td>
+                            {# this is just here for the target=_blank, since the controller will redirect #}
+                            {# we need to find a way to centralize this #}
+                            {% if event.urlRedirect is not empty %}
+                                <a href="{{  event.urlRedirect }}" target="_blank">{{ event.name }}</a>
+                            {% else %}
+                                <a href="{{  path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a>
+                            {% endif %}
+                        </td>
                         <td>{{ event.game ? event.game : ('na'|trans) }}</td>
                         <td>{{ event.hostedBy }}</td>
                         <td>{{ event.location ? event.location : ('na'|trans) }}</td>

@@ -16,9 +16,9 @@ platformd:
         success_title: Success!
 
     layout:
-        # title used by default (if not overriden)
+        # title used by default (if not overridden)
         default_title: Alienware Arena - Gamers Wanted
-        # title user by default in Admin area (if not overriden)
+        # title user by default in Admin area (if not overridden)
         default_admin_title: Admin
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
@@ -347,7 +347,6 @@ sweepstakes_datetime_format: %year%-%month%-%day% %time%
 sweepstakes_date_format: %year%-%month%-%day%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
-generic_firstname: user
 
 follow_us: Follow Us
 

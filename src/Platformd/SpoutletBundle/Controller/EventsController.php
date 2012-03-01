@@ -4,13 +4,14 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Event,
     Platformd\SpoutletBundle\Entity\EventRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EventsController extends Controller
 {
     public function indexAction()
     {
-        $current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 5);
-        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 5);
+        $current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 50);
+        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 50);
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())
@@ -58,6 +59,11 @@ class EventsController extends Controller
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+        }
+
+        // if we have a url redirect, then we should never get to this page
+        if ($event->getUrlRedirect()) {
+            return new RedirectResponse($event->getUrlRedirect());
         }
 
         return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
