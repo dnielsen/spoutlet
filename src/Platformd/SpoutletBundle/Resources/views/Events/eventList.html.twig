@@ -32,12 +32,30 @@
                             {% if event.urlRedirect is not empty %}
                                 <a href="{{  event.urlRedirect }}" target="_blank">{{ event.name }}</a>
                             {% else %}
-                                <a href="{{  path('events_detail', { 'slug' : event.slug }) }}">{{ event.name }}</a>
+                                <a href="{{  path(event.showRouteName, { 'slug' : event.slug }) }}">{{ event.name }}</a>
                             {% endif %}
                         </td>
-                        <td>{{ event.game ? event.game : ('na'|trans) }}</td>
-                        <td>{{ event.hostedBy }}</td>
-                        <td>{{ event.location ? event.location : ('na'|trans) }}</td>
+                        <td>
+                            {% if event.game is defined %}
+                                {{ event.game ? event.game : ('na'|trans) }}
+                            {% else %}
+                                {{ 'na'|trans }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.hostedBy is defined %}
+                                {{ event.hostedBy }}
+                            {% else %}
+                                {{ 'na'|trans }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.location is defined %}
+                                {{ event.location ? event.location : ('na'|trans) }}
+                            {% else %}
+                                {{ 'na'|trans }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                     {% endif %}
