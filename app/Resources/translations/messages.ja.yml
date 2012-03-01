@@ -68,7 +68,7 @@ platformd:
             events: イベント
             video: ビデオ
             news: ニュース
-            microsoft: マイクロソフト
+            microsoft: Microsoft
     
         page_content:
             featured: トピックス
