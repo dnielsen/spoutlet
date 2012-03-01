@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityRepository;
 class AbstractEventRepository extends EntityRepository
 {
     /**
-     * Return current events
+     * Return current AND upcoming events
      *
      * @param integer $limit
      * @return array
@@ -19,7 +19,6 @@ class AbstractEventRepository extends EntityRepository
     public function getCurrentEvents($locale, $limit = null)
     {
         $query = $this->getBaseQueryBuilder($locale)
-            ->andWhere('e.starts_at < :cut_off')
             ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.starts_at', 'DESC')

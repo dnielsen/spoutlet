@@ -9,8 +9,8 @@ class EventsController extends Controller
 {
     public function indexAction()
     {
-        $current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 5);
-        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 5);
+        $current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 50);
+        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 50);
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())
