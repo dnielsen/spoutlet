@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Event,
     Platformd\SpoutletBundle\Entity\EventRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class EventsController extends Controller
 {
