@@ -44,6 +44,7 @@
 		        'bundles/spoutlet/js/superfish.js'
 		        'bundles/spoutlet/js/supersubs.js'
 		        'bundles/spoutlet/js/custom.js'
+		        'bundles/spoutlet/js/google-dfp.js'
 
 		        'bundles/spoutlet/alt_js/*'
 		        'bundles/comment/js/comments.js'
@@ -95,7 +96,7 @@
 				});
 			});
 		</script>
-
+        {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 	</head>
 	<body class="site-{{ app.session.locale }}">
@@ -167,11 +168,7 @@
 
 	                    	{% block content %}{% endblock %}
 	                    </div>
-	                    <div class="ad_728x90 ad">
-                            <a href="{{ path('microsoft') }}">
-	                            <img src="{{ 'platformd.layout.page_content.ad_url' | trans }}" />
-                            </a>
-	                    </div>
+	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}                    
 	                    {% include 'SpoutletBundle::footer.html.twig' %}
 	                </div>
 	            </div>
