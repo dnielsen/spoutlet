@@ -60,6 +60,11 @@ class EventsController extends Controller
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
         }
 
+        // if we have a url redirect, then we should never get to this page
+        if ($event->getUrlRedirect()) {
+            return new RedirectResponse($event->getUrlRedirect());
+        }
+
         return $this->render('SpoutletBundle:Events:event.html.twig', array('event' => $event));
     }
 

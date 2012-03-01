@@ -173,6 +173,16 @@ abstract class AbstractEvent
     }
 
     /**
+     * A total hack - so I can safely check for a url redirect on any abstract event in a template
+     *
+     * @param bool
+     */
+    public function getUrlRedirect()
+    {
+        return false;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
