@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 
 /**
  * Repository for the base, abstract "events"
@@ -31,6 +32,27 @@ class AbstractEventRepository extends EntityRepository
         $items = $this->removeDisabledGiveaways($items);
 
         return $items;
+    }
+
+    /**
+     * A funky little function that only return Events and Sweepstakes
+     *
+     * @param string $locale
+     * @param integer $limit
+     * @return array
+     */
+    public function getCurrentEventsAndSweepstakes($locale, $limit = null)
+    {
+        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+
+        foreach ($abstractEvents as $key => $value) {
+            // unset if it's not an event or sweepstakes
+            if (!($value instanceof Event) && !($value instanceof Sweepstakes)) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 
     /**
