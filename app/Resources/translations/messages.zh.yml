@@ -2,6 +2,7 @@ url:  URL
 edit: 编辑
 
 tenant_site: Site
+total_registered: Total Registered
 
 platformd:
     create_account_or_login: Create or login to an Alienware Arena account.
@@ -317,7 +318,7 @@ avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be ap
 
 # these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
-Disallowedcountries: Disallowed Countries
+Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
@@ -338,7 +339,7 @@ overview: Overview
 registration_opens: Registration Opens
 registration_closes: Registration Closes
 location_eligibility: Location Eligibility:
-open_to_legal_residents: Open to legal residents in
+open_to_legal_residents: Open to legal residents in %countries%
 age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
@@ -348,3 +349,13 @@ instructions: Instructions
 sweepstakes_date_format: %year%-%month%-%day% %time%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
+
+follow_us: Follow Us
+
+# alienware-specific things
+alienware:
+    social:
+        twitter_url: ''
+        facebook_url: ''
+        follow_on_facebook: ''
+        follow_on_twitter: ''

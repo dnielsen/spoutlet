@@ -4,6 +4,9 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityRepository;
+use DateTime;
+use Doctrine\ORM\QueryBuilder;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
  * Repository for the base, abstract "events"
@@ -18,13 +21,16 @@ class AbstractEventRepository extends EntityRepository
      */
     public function getCurrentEvents($locale, $limit = null)
     {
-        $query = $this->getBaseQueryBuilder($locale)
-            ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
-            ->setParameter('cut_off', new \DateTime())
+        $qb = $this->getBaseQueryBuilder($locale);
+        $query = $this->addActiveQuery($qb)
             ->orderBy('e.starts_at', 'DESC')
-            ->getQuery();
+            ->getQuery()
+        ;
 
-        return $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
     }
 
     /**
@@ -51,11 +57,21 @@ class AbstractEventRepository extends EntityRepository
      */
     public function findPublished($locale)
     {
+        $items = $this->createQueryBuilder('e')
+            ->andWhere('e.locale = :locale')
+            ->andWhere('e.published = :published')
+            ->setParameters(array(
+                'locale'    => $locale,
+                'published' => true,
+            ))
+            ->orderBy('e.starts_at', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
 
-        return $this->findBy(array(
-            'locale'    => $locale,
-            'published' => true
-        ));
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
     }
 
     public function findOnePublishedBySlug($slug, $locale)
@@ -85,6 +101,24 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
+     * Adds the "is active" OR upcoming part of the query by date
+     *
+     * This allows the starts_at or ends_at to be null, and for that to be "active"
+     *
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addActiveQuery(QueryBuilder $qb)
+    {
+        $qb
+            ->andWhere('e.ends_at > :cut_off OR e.ends_at IS NULL')
+            ->setParameter('cut_off', new \DateTime())
+        ;
+
+        return $qb;
+    }
+
+    /**
      * Return a query builder instance that should be used for frontend request
      * basically, it only adds a criteria to retrieve only published events
      *
@@ -107,5 +141,23 @@ class AbstractEventRepository extends EntityRepository
         }
 
         return $query->setMaxResults($limit);
+    }
+
+    /**
+     * A hack - see #18
+     *
+     * @param $abstractEvents
+     * @return mixed
+     */
+    private function removeDisabledGiveaways($abstractEvents)
+    {
+        foreach ($abstractEvents as $key => $item) {
+            // todo - remove this hack - see #18
+            if ($item instanceof Giveaway && $item->isDisabled()) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 }

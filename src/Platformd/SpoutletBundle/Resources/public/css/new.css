@@ -364,7 +364,7 @@ span.required {
 }
 
 .page-header {
-    text-align: center;
+    text-align: left;
 }
 .page-header h1 {
     margin: 10px 0;
@@ -389,4 +389,21 @@ a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:2
 }
 .sweepstakes-details ol.eligibility-list li {
     margin-bottom: 0;
+}
+
+.margin-none {
+    margin: 0;
+}
+.margin-top {
+    margin-top: 20px;
+}
+.margin-bottom {
+    margin-bottom: 20px;
+}
+ul.list-normal {
+    margin-left: 20px;
+}
+
+.nowrap {
+    white-space: nowrap;
 }

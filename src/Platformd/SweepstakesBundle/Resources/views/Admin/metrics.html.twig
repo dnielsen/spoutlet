@@ -9,6 +9,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>{{ 'total_registered' | trans }}</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -16,6 +17,9 @@
         {% for sweep in sweeps %}
         <tr>
             <td>{{ sweep.name }}</td>
+            <td>
+                {{ sweep.entriesCount }}
+            </td>
             <td>
                 <a href="{{ path('admin_sweepstakes_metrics_show', {'id': sweep.id}) }}">view</a>
             </td>

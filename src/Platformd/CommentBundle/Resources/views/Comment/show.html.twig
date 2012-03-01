@@ -28,7 +28,8 @@
             </div>
             <div class="forumInfo">
                 {{ 'platformd.comment.posted_date_label' | trans({}, "FOSCommentBundle") }}
-                {{ comment.createdAt|date('l, F jS, Y') }}
+
+                {{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}
 
                 {% if is_granted('ROLE_SUPER_ADMIN') %}
                     - <a href="{{ path('FOSCommentBundle_delete', { 'id' : comment.id }) }}">{{ "fos_comment_delete" | trans({}, "FOSCommentBundle") }}</a>

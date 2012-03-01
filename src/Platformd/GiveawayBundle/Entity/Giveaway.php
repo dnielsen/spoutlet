@@ -57,8 +57,11 @@ class Giveaway extends AbstractEvent
      * @var array
      */
     static protected $validStatuses = array(
+        // totally disabled
         'disabled' => 'platformd.giveaway.status.disabled',
+        // active but with zero keys
         'inactive' => 'platformd.giveaway.status.inactive',
+        // totally awesome actice
         'active' => 'platformd.giveaway.status.active',
     );
 
@@ -223,5 +226,15 @@ class Giveaway extends AbstractEvent
     public function trimRedemptionInstructions()
     {
         $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
+    }
+
+    /**
+     * Returns the route name to this item's show page
+     *
+     * @return string
+     */
+    public function getShowRouteName()
+    {
+        return 'giveaway_show';
     }
 }

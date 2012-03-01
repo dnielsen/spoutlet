@@ -32,7 +32,7 @@ class Entry
 
     /**
      * @var \Platformd\SweepstakesBundle\Entity\Sweepstakes
-     * @ORM\ManyToOne(targetEntity="Platformd\SweepstakesBundle\Entity\Sweepstakes")
+     * @ORM\ManyToOne(targetEntity="Platformd\SweepstakesBundle\Entity\Sweepstakes", inversedBy="entries")
      */
     protected $sweepstakes;
 

@@ -13,11 +13,11 @@
             {% include 'SpoutletBundle:News:launch.html.twig' %}
         </div>
 
-        {% if not onlyNews %}
+        {% if abstractEvents %}
         <div id="featured-content-featured-giveaways" class="featured-content-category">
-        	{% for giveaway in all_giveaways %}
+        	{% for abstractEvent in abstractEvents %}
             <div class="widget-item">
-                <a class="widget-link" href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a>
+                <a class="widget-link" href="{{ path(abstractEvent.showRouteName, { 'slug' : abstractEvent.slug }) }}">{{ abstractEvent.name }}</a>
             </div>
             {% endfor %}
         </div>

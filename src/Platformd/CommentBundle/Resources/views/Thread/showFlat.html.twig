@@ -24,7 +24,8 @@
             {% endtranschoice %}
         </h3>
         <div class="fos_comment_thread_comments" id="commentList">
-            {% render "FOSCommentBundle:Comment:flat" with {"thread": thread, "sorter": sorter} %}
+            {# show the flat comments, but default the sorting to be newest first #}
+            {% render "FOSCommentBundle:Comment:flat" with {"thread": thread, "sorter": sorter|default('date_desc')} %}
         </div>
     {% endif %}
 

@@ -2,6 +2,7 @@ url:  URL
 edit: 編集
 
 tenant_site: Site
+total_registered: Total Registered
 
 platformd:
     create_account_or_login: Alienware Arenaアカウントを作成しログインします。
@@ -158,11 +159,11 @@ platformd:
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
-            hello_user: "こんにちは%firstname%さん。ユーザーネーム%username%でログイン中です。"
+            hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
             ready_to_game: |
-                ゲームの準備はできていますか？このAlienware Arena管理画面はArenaに参加する際の主要ツールが準備されています。
-                現在、イベントサインアップをしコメントを残すことができます。様々な情報が毎月更新されますので是非チェックしてください。
-                もし何か問題が起こった場 合は、いつでもArenaサポートチームへコンタクトしてください。
+                このAlienware Arena管理画面はArenaに参加する際の主要ツールが準備されています。 現在、イベントサインア
+                ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもArenaサポートチームへコンタ
+                クトしてください。
             warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。Alienware Arenaはその責任を負うことができません。
             under_construction: "注：Alienware Arenaは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
             edit_your_account: アカウント情報の編集
@@ -202,6 +203,7 @@ platformd:
     comment:
         login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
         comments: コメント
+        date_format: %year%年%month%月%day%日
 
     user:
         login_header: ログイン情報の入力
@@ -325,7 +327,7 @@ avatar_awaiting_approval: あなたのアバターが正常にアップロード
 
 # these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
-Disallowedcountries: Disallowed Countries
+Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
@@ -346,9 +348,9 @@ overview: 概要
 registration_opens: 開始日：
 registration_closes: 終了日：
 location_eligibility: 参加資格：
-open_to_legal_residents: 日本に居住する人
+open_to_legal_residents: %countries% に居住する人
 age_eligibility: 歳以上：
-age_or_older_as_of_date: %age% 歳以上 %as_of_date% 日時点で、
+age_or_older_as_of_date: %as_of_date%時点で、%age%歳以上
 prize: 景品:
 instructions: 詳細：
 sweepstakes_datetime_format: %year%年%month%月%day%日 %time%
@@ -356,7 +358,17 @@ platformd.create_account_or_login_sweepstakes: ALIENWARE ARENA アカウント�
 platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
-sweepstakes_date_format: %year%年%month%月%day%日 %time%
+sweepstakes_date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
+
+follow_us: ''
+
+# alienware-specific things
+alienware:
+    social:
+        twitter_url: "http://twitter.com/#!/Alienware_JP"
+        facebook_url: http://www.facebook.com/DellJapan
+        follow_on_facebook: ''
+        follow_on_twitter: ''

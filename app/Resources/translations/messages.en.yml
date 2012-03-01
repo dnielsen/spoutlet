@@ -2,6 +2,7 @@ url:  URL
 edit: Edit
 
 tenant_site: Site
+total_registered: Total Registered
 
 platformd:
     create_account_or_login: Create or login to an Alienware Arena account.
@@ -15,9 +16,9 @@ platformd:
         success_title: Success!
 
     layout:
-        # title used by default (if not overriden)
+        # title used by default (if not overridden)
         default_title: Alienware Arena - Gamers Wanted
-        # title user by default in Admin area (if not overriden)
+        # title user by default in Admin area (if not overridden)
         default_admin_title: Admin
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
@@ -195,6 +196,7 @@ platformd:
     comment:
         login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
         comments: Comments
+        date_format: %year%-%month%-%day%
 
     user:
         login_header: Enter Login Information
@@ -313,7 +315,7 @@ avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be ap
 
 # these are (at least mostly) in the admin
 Bannerimagefile: Banner Image
-Disallowedcountries: Disallowed Countries
+Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
@@ -334,7 +336,7 @@ overview: Overview
 registration_opens: Registration Opens
 registration_closes: Registration Closes
 location_eligibility: Location Eligibility:
-open_to_legal_residents: Open to legal residents in
+open_to_legal_residents: Open to legal residents in %countries%
 age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
@@ -345,3 +347,13 @@ sweepstakes_datetime_format: %year%-%month%-%day% %time%
 sweepstakes_date_format: %year%-%month%-%day%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
+
+follow_us: Follow Us
+
+# alienware-specific things
+alienware:
+    social:
+        twitter_url: ''
+        facebook_url: ''
+        follow_on_facebook: Follow Aliewnare on Facebook
+        follow_on_twitter: Follow Alieneware on Twitter

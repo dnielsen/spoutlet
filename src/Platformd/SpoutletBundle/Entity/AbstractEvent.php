@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  */
-class AbstractEvent
+abstract class AbstractEvent
 {
     /**
      * A map of UTC offsets and common timezone names
@@ -63,7 +63,7 @@ class AbstractEvent
     /**
      * @var string $slug
      *
-     * @Gedmo\Slug(fields={"name"})
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(name="slug", type="string", length=255)
      */
     protected $slug;
@@ -211,6 +211,13 @@ class AbstractEvent
     {
         return $this->slug;
     }
+
+    /**
+     * Returns the route name to this item's show page
+     *
+     * @return string
+     */
+    abstract public function getShowRouteName();
 
     /**
      * Set ready
@@ -388,7 +395,13 @@ class AbstractEvent
         return self::convertDateTimeIntoTranslationArray($this->getEndsAtInTimezone());
     }
 
-    static private function convertDateTimeIntoTranslationArray(DateTime $dt)
+    /**
+     * @todo - refactor this somewhere more public
+     * @static
+     * @param \DateTime $dt
+     * @return array
+     */
+    static public function convertDateTimeIntoTranslationArray(DateTime $dt)
     {
         return array(
             '%year%' => $dt->format('Y'),

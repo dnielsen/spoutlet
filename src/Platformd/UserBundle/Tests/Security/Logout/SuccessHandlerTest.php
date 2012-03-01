@@ -20,7 +20,7 @@ class SuccessHandlerTest extends WebTestCase
 
         // test a normal logout
         $returnUrl = $client->getRequest()->getUriForPath('/');
-        $targetUrl = 'http://alienwarearena.com/cmd/account/logout?return='.urlencode($returnUrl);
+        $targetUrl = 'http://localhost/cevo/api/stub/cmd/account/logout?return='.urlencode($returnUrl);
         $this->assertEquals($targetUrl, $response->headers->get('Location'));
 
         // test a logout that already has a ?return=
@@ -31,7 +31,7 @@ class SuccessHandlerTest extends WebTestCase
 
         // test a normal logout
         $returnUrl = $client->getRequest()->getUriForPath('/video/foo');
-        $targetUrl = 'http://alienwarearena.com/cmd/account/logout?return='.urlencode($returnUrl);
+        $targetUrl = 'http://localhost/cevo/api/stub/cmd/account/logout?return='.urlencode($returnUrl);
         $this->assertEquals($targetUrl, $response->headers->get('Location'));
     }
 }

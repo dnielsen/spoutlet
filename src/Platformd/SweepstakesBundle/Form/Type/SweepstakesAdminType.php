@@ -15,7 +15,7 @@ class SweepstakesAdminType extends EventType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'text');
+        $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType());
         $builder->add('locale', new SiteChoiceType());
 
@@ -27,7 +27,7 @@ class SweepstakesAdminType extends EventType
         $builder->add('generalImageFile', 'file', array(
             'label' => 'General image'
         ));
-        $builder->add('disallowedCountries', 'country', array(
+        $builder->add('allowedCountries', 'country', array(
             'multiple' => true,
             'expanded' => false,
         ));

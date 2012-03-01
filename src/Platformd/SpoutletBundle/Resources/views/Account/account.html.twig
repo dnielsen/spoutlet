@@ -13,6 +13,22 @@
             <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | trans({
                 "%username%" : app.user.username
             }) }}</h2>
+            
+            <p>
+                {{ 'platformd.account_page.account.hello_user' | trans({
+                    '%firstname%': (app.user.firstName|default(app.user.username)),
+                    '%username%': app.user.username
+                }) }}
+                <a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a>
+            </p>
+
+            {# little temporary message for japan only #}
+            {% if showSweepstakesMessage %}
+            <p style="color: #ff0000;">
+                「ALIENWARE M14x ホワイト・リミテッド・エディション」プレゼントキャンペーンに応募するためには <a href="http://japan.alienwarearena.com/sweepstakes/alienware-m14x-sweepstakes">こちら</a>
+                にお進みください。
+            </p>
+            {% endif %}
 
             <p>{{ "platformd.account_page.account.ready_to_game" | trans }}</p> 
             
