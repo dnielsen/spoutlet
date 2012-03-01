@@ -66,10 +66,31 @@ class AbstractEventRepository extends EntityRepository
         $query = $this->getBaseQueryBuilder($locale)
             ->andWhere('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
-            ->orderBy('e.starts_at', 'ASC')
+            ->orderBy('e.ends_at', 'DESC')
             ->getQuery();
 
         return $this->addQueryLimit($query, $limit)->getResult();
+    }
+
+    /**
+     * A funky little function that only return Events and Sweepstakes
+     *
+     * @param string $locale
+     * @param integer $limit
+     * @return array
+     */
+    public function getPastEventsAndSweepstakes($locale, $limit = null)
+    {
+        $abstractEvents = $this->getPastEvents($locale, $limit);
+
+        foreach ($abstractEvents as $key => $value) {
+            // unset if it's not an event or sweepstakes
+            if (!($value instanceof Event) && !($value instanceof Sweepstakes)) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 
     /**

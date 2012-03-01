@@ -12,7 +12,8 @@ class EventsController extends Controller
     {
         $current_events = $this->getAbstractEventsRepo()
             ->getCurrentEventsAndSweepstakes($this->getLocale(), 50);
-        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 50);
+        $past_events    = $this->getAbstractEventsRepo()
+            ->getPastEventsAndSweepstakes($this->getLocale(), 50);
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())
