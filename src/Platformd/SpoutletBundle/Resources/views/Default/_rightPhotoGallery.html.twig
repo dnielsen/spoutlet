@@ -8,10 +8,10 @@
             <div class="clear"></div>
         </div>
         {# height is a hack for positioning  - see featuredContent.html.twig #}
-        <div class="widget-content" style="height: 252px;">
+        <div class="widget-content normalized" style="height: 252px;">
             {% if app.session.locale == 'ja' %}
                 {% set caption = 'ALIENWARE ARENA in アイ・カフェ AKIBA PLACE' %}
-                <div id="photoArray" style="padding: 0 3px; margin: 0 -2px 0 auto; width: 280px; height: 210px;">
+                <div id="photoArray">
                     <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage1-thumb.jpg') }}" alt="{{ caption }}" />
                     <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage2-thumb.jpg') }}" alt="{{ caption }}" />
                     <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage3-thumb.jpg') }}" alt="{{ caption }}" />
@@ -20,7 +20,7 @@
                     <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage6-thumb.jpg') }}" alt="{{ caption }}" />
                     <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage7-thumb.jpg') }}" alt="{{ caption }}" />
                 </div>
-                <h4 class="caption" style="text-align: center; margin-top: 10px;">ALIENWARE ARENA in アイ・カフェ <br/> AKIBA PLACE</h4>
+                <h4 class="caption" style="text-align: center; margin-top: 10px;">ALIENWARE ARENA <br/> in アイ・カフェ AKIBA PLACE</h4>
                 <script type="text/javascript">
                     $(document).ready(function(){
                         $('#photoArray').cycle({

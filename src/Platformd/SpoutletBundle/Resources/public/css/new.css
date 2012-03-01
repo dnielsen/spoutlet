@@ -407,3 +407,16 @@ ul.list-normal {
 .nowrap {
     white-space: nowrap;
 }
+
+.widget-content.normalized {
+    overflow: visible;
+    width: auto;
+    position: relative;
+}
+#photoArray {
+    margin: 0;
+    width: auto;
+    padding: 0 3px;
+    height: 210px;
+    margin-left: 5px;
+}
