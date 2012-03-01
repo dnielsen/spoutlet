@@ -3,6 +3,7 @@
 namespace Platformd\NewsBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
 * 
@@ -10,11 +11,14 @@ use Platformd\SpoutletBundle\Controller\Controller;
 class DefaultController extends Controller
 {
     
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
 
-        return $this->render('NewsBundle:Default:index.html.twig', array(
+        // allows us to preview how this feature would really work
+        $template = $request->query->get('preview') ? 'realNews.html.twig' : 'index.html.twig';
+
+        return $this->render('NewsBundle:Default:'.$template, array(
             'news' => $news,
         ));
     }

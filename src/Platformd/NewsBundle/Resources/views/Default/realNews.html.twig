@@ -1,0 +1,27 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'platformd.layout.main_menu.news' | trans }}{% endblock %}
+
+{% block content %}
+{# this whole thing was copied from the homepage template.... #}
+<div id="row-2" class="std_2col">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+    </div>
+    <div class="left">
+        <div class="widget-item featured-news">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'platformd.layout.main_menu.news' | trans }}<br />
+                </div>
+                <div class="widget-icon"><img src="/bundles/spoutlet/images/photo-icon.png" /></div>
+            </div>
+            {% for newsItem in news %}
+                {% include 'NewsBundle:Default:_news.html.twig' with {
+                    'item' : newsItem
+                }%}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
