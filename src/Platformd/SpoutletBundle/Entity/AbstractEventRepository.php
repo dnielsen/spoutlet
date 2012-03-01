@@ -14,7 +14,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 class AbstractEventRepository extends EntityRepository
 {
     /**
-     * Return current AND upcoming events
+     * Return current AND upcoming events (that are published of course)
      *
      * @param integer $limit
      * @return array
