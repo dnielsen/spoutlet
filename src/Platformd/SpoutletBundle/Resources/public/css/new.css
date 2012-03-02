@@ -420,3 +420,7 @@ ul.list-normal {
     height: 210px;
     margin-left: 5px;
 }
+#photoArray img {
+    width: 280px;
+    height: 210px;
+}
