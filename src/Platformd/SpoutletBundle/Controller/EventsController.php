@@ -10,8 +10,10 @@ class EventsController extends Controller
 {
     public function indexAction()
     {
-        $current_events = $this->getEventsRepo()->getCurrentEvents($this->getLocale(), 50);
-        $past_events    = $this->getEventsRepo()->getPastEvents($this->getLocale(), 50);
+        $current_events = $this->getAbstractEventsRepo()
+            ->getCurrentEventsAndSweepstakes($this->getLocale(), 50);
+        $past_events    = $this->getAbstractEventsRepo()
+            ->getPastEventsAndSweepstakes($this->getLocale(), 50);
 
         $allGiveaways = $this->getGiveawayRepo()
             ->findActives($this->getLocale())
@@ -123,11 +125,20 @@ class EventsController extends Controller
     }
     
     /**
-     * @return Plateformd\SproutletBundle\Entity\EventRepository
+     * @return \Platformd\SpoutletBundle\Entity\EventRepository
      */
     private function getEventsRepo()
     {
         $em = $this->getDoctrine()->getEntityManager();
         return $em->getRepository('SpoutletBundle:Event');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\AbstractEventRepository
+     */
+    private function getAbstractEventsRepo()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        return $em->getRepository('SpoutletBundle:AbstractEvent');
     }
 }

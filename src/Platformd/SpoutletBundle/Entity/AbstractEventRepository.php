@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 
 /**
  * Repository for the base, abstract "events"
@@ -14,7 +15,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 class AbstractEventRepository extends EntityRepository
 {
     /**
-     * Return current AND upcoming events
+     * Return current AND upcoming events (that are published of course)
      *
      * @param integer $limit
      * @return array
@@ -34,6 +35,27 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
+     * A funky little function that only return Events and Sweepstakes
+     *
+     * @param string $locale
+     * @param integer $limit
+     * @return array
+     */
+    public function getCurrentEventsAndSweepstakes($locale, $limit = null)
+    {
+        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+
+        foreach ($abstractEvents as $key => $value) {
+            // unset if it's not an event or sweepstakes
+            if (!($value instanceof Event) && !($value instanceof Sweepstakes)) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
+    }
+
+    /**
      * Return past events
      *
      * @param integer $limit
@@ -44,10 +66,31 @@ class AbstractEventRepository extends EntityRepository
         $query = $this->getBaseQueryBuilder($locale)
             ->andWhere('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
-            ->orderBy('e.starts_at', 'ASC')
+            ->orderBy('e.ends_at', 'DESC')
             ->getQuery();
 
         return $this->addQueryLimit($query, $limit)->getResult();
+    }
+
+    /**
+     * A funky little function that only return Events and Sweepstakes
+     *
+     * @param string $locale
+     * @param integer $limit
+     * @return array
+     */
+    public function getPastEventsAndSweepstakes($locale, $limit = null)
+    {
+        $abstractEvents = $this->getPastEvents($locale, $limit);
+
+        foreach ($abstractEvents as $key => $value) {
+            // unset if it's not an event or sweepstakes
+            if (!($value instanceof Event) && !($value instanceof Sweepstakes)) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
     }
 
     /**
