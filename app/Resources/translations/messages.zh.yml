@@ -1,8 +1,4 @@
-url:  URL
 edit: 编辑
-
-tenant_site: Site
-total_registered: Total Registered
 
 platformd:
     create_account_or_login: Create or login to an Alienware Arena account.
@@ -53,6 +49,7 @@ platformd:
             search: 搜索
             logged_in_as: 已登陆<strong><a href="%route%">%username%</a></strong>
 
+        # used only in the admin area
         admin_menu:
             admin_home: 管理首页
             manage_events: 管理活动
@@ -125,15 +122,14 @@ platformd:
             no_past_events: 无以往活动
             no_current_events: 无当前活动
             no_active_giveaways: There are no active giveaways at this moment.
-            published: Published?
         event_create:
             create_new_event: 创建活动
         event_show:
             register_event: 注册活动
             unregister_event: Unregister for event
-            registered_event: You are Registered
             create_or_login: 创建或登陆Alienware Arena账户
             register:       注册
+        # used only in the admin area
         admin:
             title: 活动管理
             edit_event: 编辑活动%event_title%
@@ -163,8 +159,9 @@ platformd:
             edit_your_account: 编辑账户信息
             change_your_password: 修改密码
         giveaway:
-            your_giveaway_keys: My Giveaway Keys
+            your_giveaway_keys: 我的赠品码
 
+    # used only in the admin area
     homepage_banner:
         banners:
             title: Homepage banners
@@ -191,6 +188,7 @@ platformd:
     general:
         alienware_link_url: http://alienware.com.cn/
 
+    # used only in the admin area
     navigation:
         back: Go Back
 
@@ -231,12 +229,12 @@ platformd:
             spam_message: 重要提示：请检查你的垃圾邮件！- 我们在努力，但是有时垃圾邮件过滤器会误将我们的邮件当做垃圾邮件。密码重置大概需要30分钟完成。其实往往只需要几秒钟的时间，但有时候邮件会延迟到达你的邮箱。
 
         account:
-            account_home: Account Home
+            account_home: 账户首页
             edit_account: Edit Account
-            change_password: Change Password
-            profile:      Profile
-            registered_events: Registered Events
-            my_giveaways: My Giveaways
+            change_password: 修改密码
+            profile:       个人形象
+            registered_events:     我的活动
+            my_giveaways:     获取赠品
             my_videos: My Videos
             help: 帮助？
 
@@ -273,7 +271,7 @@ platformd:
             may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
             key: 激活码
             assigned_at: 已分配
-            view_giveaway: View Giveaway
+            view_giveaway: 查看赠品
     giveaway_pool:
         pool: 邀请码库
         admin:
@@ -284,6 +282,7 @@ platformd:
             saved: 邀请码库已保存
         first_active_used: 注：第一个“激活库”将是站点目前正在使用的。
 
+    # used only in the admin area
     admin:
         news:
             heading: Manage news
@@ -316,12 +315,6 @@ CEVO: CEVO
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
 
-# these are (at least mostly) in the admin
-Bannerimagefile: Banner Image
-Allowedcountries: Eligible Countries
-save: Save
-Liabilityrelease: Liability Release
-Officialrules: Official Rules
 
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
@@ -331,16 +324,12 @@ not_eligible_sweepstakes: Sorry, you are not eligible to participate in this swe
 enter: Enter
 read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
 official_sweepstakes_rules: Official Sweepstakes Rules
-official_sweepstakes_release: Sweepstakes Eligibility and Liability Release
-agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of Eligibility and Liability Release%a_end%
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
 overview: Overview
 
 registration_opens: Registration Opens
 registration_closes: Registration Closes
-location_eligibility: Location Eligibility:
 open_to_legal_residents: Open to legal residents in %countries%
-age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: Thanks for your participation!
@@ -359,3 +348,12 @@ alienware:
         facebook_url: ''
         follow_on_facebook: ''
         follow_on_twitter: ''
+
+# admin-only translations - we don't need these
+url:  URL
+total_registered: Total Registered
+Bannerimagefile: Banner Image
+Allowedcountries: Eligible Countries
+save: Save
+Liabilityrelease: Liability Release
+Officialrules: Official Rules

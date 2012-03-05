@@ -1,8 +1,4 @@
-url:  URL
 edit: 編集
-
-tenant_site: Site
-total_registered: Total Registered
 
 platformd:
     create_account_or_login: Alienware Arenaアカウントを作成しログインします。
@@ -53,6 +49,7 @@ platformd:
             search: 検索
             logged_in_as: <strong><a href="%route%">%username%</a></strong>としてログイン済み
 
+        # used only in the admin area
         admin_menu:
             admin_home: 管理者ホーム
             manage_events: イベント管理
@@ -125,15 +122,14 @@ platformd:
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
             no_active_giveaways: There are no active giveaways at this moment.
-            published: Published?
         event_create:
             create_new_event: 新しいイベントの作成
         event_show:
             register_event: イベントに登録
             unregister_event: Unregister for event
-            registered_event: You are Registered
             create_or_login: Alientware Arenaアカウントを作成するか、ログインしてください。
             register:       登録
+        # used only in the admin area
         admin:
             title: イベント管理者
             edit_event: イベントの編集 | %event_title%
@@ -171,6 +167,7 @@ platformd:
         giveaway:
             your_giveaway_keys: 取得済みキー
 
+    # used only in the admin area
     homepage_banner:
         banners:
             title: Homepage banners
@@ -197,6 +194,7 @@ platformd:
     general:
         alienware_link_url: http://www.alienware.jp/
 
+    # used only in the admin area
     navigation:
         back: Go Back
 
@@ -292,6 +290,7 @@ platformd:
             saved:  ギブアウェイプールは保存されました
         first_active_used:  注意：最初の”有効”プールはこのサイトで使用されているものです。
 
+    # used only in the admin area
     admin:
         news:
             heading: Manage news
@@ -325,12 +324,6 @@ CEVO: "ゲーム系ニュースサイト"
 
 avatar_awaiting_approval: あなたのアバターが正常にアップロードされましたが、それが表示される前に承認する必要があります
 
-# these are (at least mostly) in the admin
-Bannerimagefile: Banner Image
-Allowedcountries: Eligible Countries
-save: Save
-Liabilityrelease: Liability Release
-Officialrules: Official Rules
 
 platformd.sweepstakes.enter: 参加方法
 agree_to_terms_sweepstakes_step: 利用規約に同意
@@ -340,16 +333,12 @@ not_eligible_sweepstakes: 申し訳ありませんがこの懸賞に参加でき
 enter: 参加
 read_and_agreed_to_rules: 本キャンペーンに関する%a_start%諸条%a_end%件を読んだ上、同意します。
 official_sweepstakes_rules: 公式懸賞規定
-official_sweepstakes_release: 懸賞参加資格と免責事項
-agree_sweeps_eligibility: %a_start%利用制限と責任%a_end%に関する規定を読んだ上で同意します。
 sweeps_check_both_boxes: 公式ルールに同意してスイープステークにご参加ください。
 overview: 概要
 
 registration_opens: 開始日：
 registration_closes: 終了日：
-location_eligibility: 参加資格：
 open_to_legal_residents: %countries% に居住する人
-age_eligibility: 歳以上：
 age_or_older_as_of_date: %as_of_date%時点で、%age%歳以上
 prize: 景品:
 instructions: 詳細：
@@ -372,3 +361,12 @@ alienware:
         facebook_url: http://www.facebook.com/DellJapan
         follow_on_facebook: ''
         follow_on_twitter: ''
+
+# admin-only translations - we don't need these
+url:  URL
+total_registered: Total Registered
+Bannerimagefile: Banner Image
+Allowedcountries: Eligible Countries
+save: Save
+Liabilityrelease: Liability Release
+Officialrules: Official Rules

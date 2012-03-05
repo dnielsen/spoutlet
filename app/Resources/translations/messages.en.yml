@@ -1,8 +1,4 @@
-url:  URL
 edit: Edit
-
-tenant_site: Site
-total_registered: Total Registered
 
 platformd:
     create_account_or_login: Create or login to an Alienware Arena account.
@@ -52,7 +48,8 @@ platformd:
             contact: Contact
             search: Search
             logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
-        
+
+        # used only in the admin area
         admin_menu:
             admin_home: Admin Home
             manage_events: Manage Events
@@ -125,15 +122,14 @@ platformd:
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
             no_active_giveaways: There are no active giveaways at this moment.
-            published: Published?
         event_create:
             create_new_event: Create new event
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
-            registered_event: You are Registered
             create_or_login: Create or login to an Alienware Arena account.
             register:       Register
+        # used only in the admin area
         admin:
             title: Event admin
             edit_event: Edit Event | %event_title%
@@ -164,6 +160,8 @@ platformd:
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
+
+    # used only in the admin area
     homepage_banner:
         banners:
             title: Homepage banners
@@ -190,6 +188,7 @@ platformd:
     general:
         alienware_link_url: http://alienware.com
 
+    # used only in the admin area
     navigation:
         back: Go Back
 
@@ -288,6 +287,7 @@ platformd:
             saved: Giveaway pool has been saved.
         first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
 
+    # used only in the admin area
     admin:
         news:
             heading: Manage news
@@ -313,12 +313,6 @@ source_alienware: Alienware
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
 
-# these are (at least mostly) in the admin
-Bannerimagefile: Banner Image
-Allowedcountries: Eligible Countries
-save: Save
-Liabilityrelease: Liability Release
-Officialrules: Official Rules
 
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
@@ -328,16 +322,12 @@ not_eligible_sweepstakes: Sorry, you are not eligible to participate in this swe
 enter: Enter
 read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
 official_sweepstakes_rules: Official Sweepstakes Rules
-official_sweepstakes_release: Sweepstakes Eligibility and Liability Release
-agree_sweeps_eligibility: I agree to the terms of the %a_start%Affidavit of Eligibility and Liability Release%a_end%
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
 overview: Overview
 
 registration_opens: Registration Opens
 registration_closes: Registration Closes
-location_eligibility: Location Eligibility:
 open_to_legal_residents: Open to legal residents in %countries%
-age_eligibility: Age Eligibility:
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: Thanks for your participation!
@@ -357,3 +347,12 @@ alienware:
         facebook_url: ''
         follow_on_facebook: Follow Aliewnare on Facebook
         follow_on_twitter: Follow Alieneware on Twitter
+
+# admin-only translations - we don't need these
+url:  URL
+total_registered: Total Registered
+Bannerimagefile: Banner Image
+Allowedcountries: Eligible Countries
+save: Save
+Liabilityrelease: Liability Release
+Officialrules: Official Rules
