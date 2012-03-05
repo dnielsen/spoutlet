@@ -57,6 +57,10 @@
 body.site-ja #accountHeader {
     background:url(../images/account/header-bg.ja.jpg) top left no-repeat;
 }
+/* locale-specific overrides */
+body.site-zh #accountHeader {
+    background:url(../images/account/header-bg.zh.jpg) top left no-repeat;
+}
 
 #accountHeader ul {
     list-style: none outside none;
