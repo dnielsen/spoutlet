@@ -223,8 +223,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     background-repeat:no-repeat;
     margin: 2px 0 0 0;
     padding: 0 7px;
-    display: -moz-inline-box;
-    display: inline-block;
+    display: inline;
 }
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
@@ -233,7 +232,16 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul li.last { background: url('/bundles/spoutlet/images/nav_divider.png') right no-repeat; }
 #mainNav ul li li { background: none; }
 #omni #page #mainNav ul li li a { background-image:none; }
-#mainNav ul li a { display:block; margin: 0; height: 12px; padding: 8px 12px; font: 11px Arial, Helvetica, sans-serif; text-transform: uppercase; color: #BFCACE; }
+#mainNav ul li a {
+    display:-moz-inline-box;
+    display: inline-block;
+    margin: 0;
+    height: 12px;
+    padding: 8px 12px;
+    font: 11px Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: #BFCACE;
+}
 #mainNav ul#nav li a:hover { color: #BFCACE; }
 #mainNav ul#sub-nav li a:hover { color: #ffffff; background-color: #003048; }
 #mainNav ul li a.blue { color: #BFCACE; font-weight: bold; }
