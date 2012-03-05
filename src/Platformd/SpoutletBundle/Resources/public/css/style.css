@@ -217,9 +217,15 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav-wrapper { height: 30px; background: url('/bundles/spoutlet/images/nav_bg.png') repeat-x; }
 #mainNav { }
 #mainNav ul { display: block; list-style:none; width: 100%; }
-#mainNav ul#nav { width: 664px; margin: 0 auto; }
-#mainNav ul#sub-nav { width: 664px; margin: 0 auto; }
-#mainNav ul li { float:left; background-repeat:no-repeat; margin: 2px 0 0 0; padding: 0 7px; }
+#mainNav ul#nav { margin: 0 auto; text-align: center }
+#mainNav ul li {
+    float:none;
+    background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 7px;
+    display: -moz-inline-box;
+    display: inline-block;
+}
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
 #mainNav ul li.more:hover > a{ background: url('/bundles/spoutlet/images/nav-arrow-2.png') right center no-repeat; cursor: pointer; }
@@ -236,7 +242,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #omni #page #mainNav ul li li a { background-color:#525252; padding:5px 0 4px 10px;  }
 #omni #page #mainNav ul li li a:hover { background:#333333; }
 
-#nav-wrapper { width: 570px; margin: 0 auto; }
+#nav-wrapper { }
 #sub-nav-wrapper { width: 237px; margin: 0 auto; }
 
 .nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
