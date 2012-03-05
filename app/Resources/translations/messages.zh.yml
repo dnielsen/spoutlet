@@ -231,12 +231,12 @@ platformd:
             spam_message: 重要提示：请检查你的垃圾邮件！- 我们在努力，但是有时垃圾邮件过滤器会误将我们的邮件当做垃圾邮件。密码重置大概需要30分钟完成。其实往往只需要几秒钟的时间，但有时候邮件会延迟到达你的邮箱。
 
         account:
-            account_home: Account Home
+            account_home: 账户首页
             edit_account: Edit Account
-            change_password: Change Password
-            profile:      Profile
-            registered_events: Registered Events
-            my_giveaways: My Giveaways
+            change_password: 修改密码
+            profile:       个人形象
+            registered_events:     我的活动
+            my_giveaways:     获取赠品
             my_videos: My Videos
             help: 帮助？
 
@@ -273,7 +273,7 @@ platformd:
             may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
             key: 激活码
             assigned_at: 已分配
-            view_giveaway: View Giveaway
+            view_giveaway: 查看赠品
     giveaway_pool:
         pool: 邀请码库
         admin:
