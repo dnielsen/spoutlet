@@ -224,6 +224,8 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     margin: 2px 0 0 0;
     padding: 0 7px;
     display: inline;
+    padding-top: 5px;
+    padding-bottom: 4px;
 }
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
@@ -236,8 +238,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     display:-moz-inline-box;
     display: inline-block;
     margin: 0;
-    height: 12px;
-    padding: 8px 12px;
+    padding: 10px 12px 8px 12px;
     font: 11px Arial, Helvetica, sans-serif;
     text-transform: uppercase;
     color: #BFCACE;
