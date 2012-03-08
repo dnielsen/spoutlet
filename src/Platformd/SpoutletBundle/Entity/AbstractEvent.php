@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 use DateTimezone;
 use Symfony\Component\HttpFoundation\File\File;
-
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * @ORM\Table(name="event")
@@ -63,7 +63,8 @@ abstract class AbstractEvent
     /**
      * @var string $slug
      *
-     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * Only partially automatically set, through setName()
+     *
      * @ORM\Column(name="slug", type="string", length=255)
      * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
      *      Only allow numbers, digits and dashes
@@ -192,6 +193,15 @@ abstract class AbstractEvent
     public function setName($name)
     {
         $this->name = $name;
+
+        // sets the, but only if it's blank
+        // this is not meant to be smart enough to guarantee correct uniqueness
+        // that will happen with validation
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($name);
+
+            $this->setSlug($slug);
+        }
     }
 
     /**
