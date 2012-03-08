@@ -65,7 +65,7 @@ platformd:
             events: 活动
             video: 视频
             news: 新闻
-            microsoft: 微软
+            microsoft: Microsoft
     
         page_content:
             featured: 专栏
@@ -183,7 +183,7 @@ platformd:
                 a totally black background.
 
     about:
-        title: 关于Alienware ArenaTM
+        title: 关于Alienware Arena
 
     general:
         alienware_link_url: http://alienware.com.cn/
