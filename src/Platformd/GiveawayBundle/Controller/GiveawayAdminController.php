@@ -55,11 +55,12 @@ class GiveawayAdminController extends Controller
     {
         $this->addGiveawayBreadcrumb()->addChild('Edit');
         $giveaway = $this->getGiveawayRepo()->findOneById($id);
-        $this->setupEmptyRedemptionInstructions($giveaway);
 
         if (!$giveaway) {
             throw $this->createNotFoundException('No giveaway for that id');
         }
+
+        $this->setupEmptyRedemptionInstructions($giveaway);
 
         $form = $this->createForm(new GiveawayType(), $giveaway);
 
