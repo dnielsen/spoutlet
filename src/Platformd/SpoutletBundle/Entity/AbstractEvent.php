@@ -14,6 +14,7 @@ use DateTimezone;
 use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
+use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -34,6 +35,9 @@ use Gedmo\Sluggable\Util\Urlizer;
  *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
+ *
+ * Special validation on our slug field
+ * @AssertUniqueSlug()
  */
 abstract class AbstractEvent
 {
@@ -77,6 +81,8 @@ abstract class AbstractEvent
      * @ORM\Column(name="slug", type="string", length=255)
      * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
      *      Only allow numbers, digits and dashes
+     * This should not happen, since it should generate based on name
+     * @Assert\NotBlank(message="Please enter a URL string value")
      */
     protected $slug;
 

@@ -70,3 +70,11 @@ services:
             - "@doctrine.orm.entity_manager"
             # this should NOT be hardcoded
             - %platformd_sites%
+
+    # the custom slug constraint for AbstractEvent
+    platformd.validation.abstract_event_unique_slug_validator:
+        class: Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlugValidator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: abstract_event.unique_slug }
