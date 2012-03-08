@@ -121,7 +121,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     background-image: url('../images/header-jp.png');
 }
 .site-zh #header {
-    background-image: url('../images/header.png');
+    background-image: url('../images/header-cn.png');
 }
 #headerPad { height: 139px; /*padding-top:68px;*/ }
 #topHeader { padding: 5px 0; height: 14px; background: #000; }
