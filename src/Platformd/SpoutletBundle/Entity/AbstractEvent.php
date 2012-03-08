@@ -65,6 +65,8 @@ abstract class AbstractEvent
      *
      * @Gedmo\Slug(fields={"name"}, updatable=false)
      * @ORM\Column(name="slug", type="string", length=255)
+     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
+     *      Only allow numbers, digits and dashes
      */
     protected $slug;
 
