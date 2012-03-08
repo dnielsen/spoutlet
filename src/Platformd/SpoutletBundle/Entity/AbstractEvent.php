@@ -82,7 +82,6 @@ abstract class AbstractEvent
      * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
      *      Only allow numbers, digits and dashes
      * This should not happen, since it should generate based on name
-     * @Assert\NotBlank(message="Please enter a URL string value")
      */
     protected $slug;
 
@@ -236,6 +235,14 @@ abstract class AbstractEvent
      */
     public function setSlug($slug)
     {
+        // don't let the slug be blanked out
+        // this allows the user to not enter a slug in the form. The slug
+        // will be generated from the name, but not overridden by that blank
+        // slug value
+        if (!$slug) {
+            return;
+        }
+
         $this->slug = $slug;
     }
 
