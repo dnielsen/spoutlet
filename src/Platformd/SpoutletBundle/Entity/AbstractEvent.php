@@ -16,7 +16,16 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 
 /**
- * @ORM\Table(name="event")
+ * We create a unique index on the slug-discr-site combination
+ * @ORM\Table(
+ *      name="event",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *              name="slug_unique",
+ *              columns={"slug", "discr", "locale"}
+ *          )
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\AbstractEventRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
