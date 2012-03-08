@@ -15,10 +15,13 @@ class SlugType extends TextType
 
     public function getDefaultOptions(array $options)
     {
-        $options = parent::getDefaultOptions($options);
-
         $options['required'] = false;
-        $options['label']    = 'URL key';
+
+        if (isset($options['url_prefix'])) {
+            $options['label']    = 'URL string - '.$options['url_prefix'];
+        } else {
+            $options['label']    = 'URL string';
+        }
 
         return $options;
     }
