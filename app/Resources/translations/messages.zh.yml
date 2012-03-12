@@ -65,7 +65,7 @@ platformd:
             events: 活动
             video: 视频
             news: 新闻
-            microsoft: Microsoft
+            microsoft: 微软
     
         page_content:
             featured: 专栏
