@@ -368,6 +368,7 @@ span.required {
 }
 .page-header h1 {
     margin: 10px 0;
+    text-align: center;
 }
 .pate-header img {
     display: inline;
