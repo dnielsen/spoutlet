@@ -23,6 +23,7 @@ class GiveawayRepository extends AbstractEventRepository
         
         return $this
             ->createActiveQueryBuilder($locale)
+            ->orderBy('g.created', 'DESC')
             ->getQuery()
             ->getResult();
     }
