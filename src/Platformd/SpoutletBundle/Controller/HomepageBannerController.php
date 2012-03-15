@@ -14,7 +14,7 @@ class HomepageBannerController extends Controller
     {
         $this->addBannersBreadcrumb();
 
-        $banners = $this->getBannerRepo()->findAll();
+        $banners = $this->getBannerRepo()->findAllWithoutLocaleOrderedByNewest();
 
         return $this->render('SpoutletBundle:HomepageBanner:index.html.twig', array(
             'banners' => $banners

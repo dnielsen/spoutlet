@@ -20,7 +20,9 @@ class NewsRepository extends EntityRepository
      */
     public function getFindNewsQuery()
     {
-        return $this->createQueryBuilder('n')->getQuery();
+        return $this->createQueryBuilder('n')
+            ->orderBy('n.created', 'DESC')
+            ->getQuery();
     }
 
     /**

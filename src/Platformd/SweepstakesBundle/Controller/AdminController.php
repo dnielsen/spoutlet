@@ -16,7 +16,7 @@ class AdminController extends Controller
     public function indexAction()
     {
         $this->addSweepstakesBreadcrumb();
-        $sweepstakess = $this->getSweepstakesRepo()->findAll();
+        $sweepstakess = $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
 
     	return $this->render('SweepstakesBundle:Admin:index.html.twig',
             array('sweepstakess' => $sweepstakess));

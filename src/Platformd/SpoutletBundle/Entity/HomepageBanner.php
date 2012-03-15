@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\SpoutletBundle\Entity\HomepageBanner
@@ -38,7 +39,7 @@ class HomepageBanner
     private $thumb;
 
     /**
-     * @var Symfony\Component\HttpFoundation\File\File
+     * @var \Symfony\Component\HttpFoundation\File\File
      */
     public $thumb_file;
 
@@ -50,7 +51,7 @@ class HomepageBanner
     private $banner;
 
     /**
-     * @var Symfony\Component\HttpFoundation\File\File
+     * @var \Symfony\Component\HttpFoundation\File\File
      */
     public $banner_file;
 
@@ -68,6 +69,22 @@ class HomepageBanner
      * @Assert\NotBlank
      */
     private $url;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
 
     /**
@@ -178,5 +195,37 @@ class HomepageBanner
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }

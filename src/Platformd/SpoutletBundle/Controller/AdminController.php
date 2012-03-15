@@ -28,7 +28,7 @@ class AdminController extends Controller
     {
         $this->addEventsBreadcrumb();
 
-        $events = $this->getEventsRepo()->findAll();
+        $events = $this->getEventsRepo()->findAllWithoutLocaleOrderedByNewest();
     	return $this->render('SpoutletBundle:Admin:events.html.twig', 
             array('events' => $events));
     }
