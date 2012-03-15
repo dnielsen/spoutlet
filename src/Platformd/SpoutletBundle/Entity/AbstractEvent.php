@@ -12,11 +12,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 use DateTimezone;
 use Symfony\Component\HttpFoundation\File\File;
-
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util\Urlizer;
+use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
 
 /**
- * @ORM\Table(name="event")
+ * We create a unique index on the slug-discr-site combination
+ * @ORM\Table(
+ *      name="event",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *              name="slug_unique",
+ *              columns={"slug", "discr", "locale"}
+ *          )
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\AbstractEventRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -25,6 +35,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
+ *
+ * Special validation on our slug field
+ * @AssertUniqueSlug()
  */
 abstract class AbstractEvent
 {
@@ -63,8 +76,12 @@ abstract class AbstractEvent
     /**
      * @var string $slug
      *
-     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     * Only partially automatically set, through setName()
+     *
      * @ORM\Column(name="slug", type="string", length=255)
+     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
+     *      Only allow numbers, digits and dashes
+     * This should not happen, since it should generate based on name
      */
     protected $slug;
 
@@ -190,6 +207,15 @@ abstract class AbstractEvent
     public function setName($name)
     {
         $this->name = $name;
+
+        // sets the, but only if it's blank
+        // this is not meant to be smart enough to guarantee correct uniqueness
+        // that will happen with validation
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($name);
+
+            $this->setSlug($slug);
+        }
     }
 
     /**
@@ -209,6 +235,14 @@ abstract class AbstractEvent
      */
     public function setSlug($slug)
     {
+        // don't let the slug be blanked out
+        // this allows the user to not enter a slug in the form. The slug
+        // will be generated from the name, but not overridden by that blank
+        // slug value
+        if (!$slug) {
+            return;
+        }
+
         $this->slug = $slug;
     }
 

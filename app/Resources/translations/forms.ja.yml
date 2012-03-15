@@ -1,5 +1,5 @@
 event_name: "名前"
-event_slug: "URL string"
+event_slug: "URL string - /events/"
 event_ready: "準備OK?"
 event_published: "公開済み?"
 event_starts_at: "開始日"

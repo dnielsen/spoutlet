@@ -16,7 +16,9 @@ class SweepstakesAdminType extends EventType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'textarea');
-        $builder->add('slug', new SlugType());
+        $builder->add('slug', new SlugType(), array(
+            'url_prefix' => '/sweepstakes/'
+        ));
         $builder->add('locale', new SiteChoiceType());
 
         $this->createStartsAtField($builder);

@@ -1,5 +1,5 @@
 event_name: "Name"
-event_slug: "URL string"
+event_slug: "URL string - /events/"
 event_ready: "Ready?"
 event_published: "Published?"
 event_starts_at: "Starts at"
@@ -47,7 +47,7 @@ fos_user_profile_form_user_is_super_admin: "Super-admin"
 fos_user_profile_form_user_admin_level: Admin Level
 
 giveaway_name: "Name"
-giveaway_slug: "URL string"
+giveaway_slug: "URL string - /giveaways/"
 giveaway_content: "Description"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"

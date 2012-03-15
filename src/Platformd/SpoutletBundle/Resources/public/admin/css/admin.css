@@ -21,3 +21,13 @@ body {
     margin-bottom: 10px;
     clear: both;
 }
+
+/* width increased from bootstrap */
+label {
+    width: 170px;
+    margin-right: 5px;
+}
+/* due to the above change */
+form .input {
+    margin-left: 195px;
+}

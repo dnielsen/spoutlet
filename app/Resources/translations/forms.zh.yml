@@ -1,5 +1,5 @@
 event_name: "名称"
-event_slug: "URL string"
+event_slug: "URL string - /events/"
 event_ready: "回复？"
 event_published: "发表？"
 event_starts_at: "开始时间"
