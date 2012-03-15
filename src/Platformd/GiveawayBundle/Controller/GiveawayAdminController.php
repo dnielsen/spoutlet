@@ -90,32 +90,57 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
-        // create a select field for range
-        $select = $this->get('form.factory')
-            ->createNamedBuilder('choice', 'results_range', 7, array(
-            'choices' => array(
-                '7'  => 'Last 7 days',
-                '30' => 'Last 30 days',
-                ''   => 'All time',
-            ),
-        ))->getForm();
+        $filterForm = $this->createFormBuilder(array(), array('csrf_protection' => false))
+            ->add('results_range', 'choice', array(
+                'choices' => array(
+                    '7'  => 'Last 7 days',
+                    '30' => 'Last 30 days',
+                    ''   => 'All time',
+                ))
+            )
+            ->add('status', 'choice', array(
+                'choices' => array(
+                    1 => 'Totally Enabled Giveaways',
+                    0 => 'Disabled Giveaways',
+                )
+            ))
+            ->getForm()
+        ;
 
-        // bind only if we have that query parameter
-        if (null !== $request->query->get($select->getName())) {
-            $select->bindRequest($request);
+        // default filtering stuff
+        $since = null;
+        $onlyEnabled = true;
+
+        $requestData = $request->query->get($filterForm->getName());
+        if (!empty($requestData)) {
+            $filterForm->bindRequest($request);
+            if ($filterForm->isValid()) {
+                $data = $filterForm->getData();
+                $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
+
+                $onlyEnabled = ($data['status'] == 1);
+            }
         }
-        $since = ($range = $select->getData()) ? new DateTime(sprintf('%s days ago', $range)) : null;
 
         $giveawayMetrics = array();
         $metricManager = $this->container->get('platformd.metric_manager');
         foreach($giveaways as $giveaway) {
+            /*
+             * Filter results: Skip giveway if
+             *     a) We only want enabled giveaways and this giveaway is *not* active/enabled
+             *     b) We only want disabled giveaways and this giveaway *is* active/enabled
+             */
+            if (($onlyEnabled && !$giveaway->isActive()) || (!$onlyEnabled && $giveaway->isActive())) {
+                continue;
+            }
+
             $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $since);
         }
 
         return array(
             'metrics' => $giveawayMetrics,
             'sites'   => $metricManager->getSites(),
-            'select'  => $select->createView()
+            'form'    => $filterForm->createView()
         );
     }
 
