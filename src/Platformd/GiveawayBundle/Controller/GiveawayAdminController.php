@@ -111,12 +111,15 @@ class GiveawayAdminController extends Controller
         $since = null;
         $onlyEnabled = true;
 
-        $filterForm->bindRequest($request);
-        if ($filterForm->isValid()) {
-            $data = $filterForm->getData();
-            $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
+        $requestData = $request->query->get($filterForm->getName());
+        if (!empty($requestData)) {
+            $filterForm->bindRequest($request);
+            if ($filterForm->isValid()) {
+                $data = $filterForm->getData();
+                $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
 
-            $onlyEnabled = ($data['status'] == 1);
+                $onlyEnabled = ($data['status'] == 1);
+            }
         }
 
         $giveawayMetrics = array();
