@@ -100,7 +100,7 @@ class GiveawayAdminController extends Controller
             )
             ->add('status', 'choice', array(
                 'choices' => array(
-                    1 => 'Totall Enabled Giveaways',
+                    1 => 'Totally Enabled Giveaways',
                     0 => 'Disabled Giveaways',
                 )
             ))
