@@ -28,9 +28,11 @@
             <td>{{ metric.total }}</td>
             <td>{{ metric.assigned }}</td>
             <td>{{ metric.remaining }}</td>
-            <td>{{ metric.sites.en }}</td>
-            <td>{{ metric.sites.zh }}</td>
-            <td>{{ metric.sites.ja }}</td>
+            {% for key, site in sites %}
+                <td>
+                    {{ metric.sites[key] }}
+                </td>
+            {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
