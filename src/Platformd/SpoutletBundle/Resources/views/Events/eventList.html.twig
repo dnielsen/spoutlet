@@ -32,7 +32,7 @@
                             {% if event.urlRedirect is not empty %}
                                 <a href="{{  event.urlRedirect }}" target="_blank">{{ event.name }}</a>
                             {% else %}
-                                <a href="{{  path(event.showRouteName, { 'slug' : event.slug }) }}">{{ event.name }}</a>
+                                <a href="{{  path(event.showRouteName, { 'slug' : event.slug, '_locale': event.locale }) }}">{{ event.name }}</a>
                             {% endif %}
                         </td>
                         <td>
