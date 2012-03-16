@@ -5,8 +5,11 @@
 
 <h1>Key Giveaways</h1>
 
-<div class="pull-right">
-    {{ form_widget(select) }}
+<div class="pull-right filter-form-wrapper">
+    <form action="{{ path('admin_giveaway_metrics') }}" method="GET">
+        {{ form_widget(form.results_range) }}
+        {{ form_widget(form.status) }}
+    </form>
 </div>
 
 <table class="zebra-striped bordered-table tablesorter">
@@ -28,9 +31,17 @@
             <td>{{ metric.total }}</td>
             <td>{{ metric.assigned }}</td>
             <td>{{ metric.remaining }}</td>
-            <td>{{ metric.sites.en }}</td>
-            <td>{{ metric.sites.zh }}</td>
-            <td>{{ metric.sites.ja }}</td>
+            {% for key, site in sites %}
+                <td>
+                    {{ metric.sites[key] }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="{{ 4 + (sites | length) }}">
+                There are no giveaways matching this criteria.
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -38,8 +49,8 @@
 
 <script>
     jQuery(document).ready(function() {
-        jQuery('#results_range').change(function() {
-            window.location = '{{ path('admin_giveaway_metrics') }}?results_range='+$(this).val();
+        jQuery('.filter-form-wrapper select').change(function() {
+            $(this).closest('form').submit();
         });
     });
 </script>
