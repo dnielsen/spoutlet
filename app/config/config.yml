@@ -13,7 +13,9 @@ framework:
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
-    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    templating:
+        engines: ['twig']
+        assets_version: %app.version%
     session:
         default_locale: %locale%
         auto_start:     true
@@ -92,6 +94,10 @@ fos_user:
         mailer:       platformd_user.mailer
 
 parameters:
+    # used for cache busting
+    # todo - put this into the build system, so we don't have to auto-increment
+    app.version:   v2
+
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
         alienware: source_alienware
