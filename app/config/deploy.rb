@@ -1,3 +1,5 @@
+require 'capistrano-helpers/version'   # Record the version number after deploying
+
 set :stages, %w(production beta)
 set :stage_dir, "app/config/deploy"
 require 'capistrano/ext/multistage'

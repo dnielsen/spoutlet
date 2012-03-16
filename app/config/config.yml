@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@CEVOBundle/Resources/config/services.yml" }
     - { resource: "@CEVOBundle/Resources/config/security.yml" }
+    - { resource: version.php }
 
 framework:
     #esi:             ~
@@ -94,10 +95,6 @@ fos_user:
         mailer:       platformd_user.mailer
 
 parameters:
-    # used for cache busting
-    # todo - put this into the build system, so we don't have to auto-increment
-    app.version:   v2
-
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
         alienware: source_alienware
