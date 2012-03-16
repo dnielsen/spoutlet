@@ -24,7 +24,7 @@ class DefaultController extends Controller
             $abstractEvents = $this->getDoctrine()
                 ->getEntityManager()
                 ->getRepository('SpoutletBundle:AbstractEvent')
-                ->getCurrentEvents($this->getLocale())
+                ->getCurrentEventsOrderedByCreated($this->getLocale())
             ;
         }
 
