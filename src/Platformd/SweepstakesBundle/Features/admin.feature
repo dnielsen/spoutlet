@@ -20,3 +20,11 @@ Feature: Admin
     Then I should see "Your sweepstakes was saved"
      And I should see a "table.zebra-striped tbody tr" element
 
+  Scenario: I can export sweepstakes results
+    Given I am authenticated as "admin"
+     And there is a sweepstakes
+     And some people are entered into the sweepstakes
+    When I go to "/admin/sweepstakes/metrics"
+     And I follow "view"
+     And I follow "Download a CSV"
+    Then the response status code should be 200
