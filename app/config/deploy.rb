@@ -1,5 +1,3 @@
-require 'capistrano-helpers/version'   # Record the version number after deploying
-
 set :stages, %w(production beta)
 set :stage_dir, "app/config/deploy"
 require 'capistrano/ext/multistage'
@@ -23,9 +21,27 @@ role :db,         app1, :primary => true       # This is where Rails migrations 
 set  :keep_releases,  3
 set  :use_sudo,      false
 set :update_vendors, true
+set :vendors_mode,   "install"
 
 # keep the vendor files shared, for faster deployment
 set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video"]
 
 # share our database configuration
 set :shared_files,      ["app/config/parameters.ini"]
+
+# Custom recipes
+namespace :deploy do
+  desc "Write the date to a VERSION file"
+  task :write_version_file do
+    # Nice interactive thing, but not really necessary
+    #set(:dump_date) do
+    #  Capistrano::CLI.ui.ask("Enter date for version: ") {|q| q.default = "#{Time.new.year}#{Time.new.month}#{Time.new.day}#{Time.new.hour}#{Time.new.min}#{Time.new.sec}" }
+    #end
+
+    # instead of the interactive
+    set :dump_date, "#{Time.new.year}#{Time.new.month}#{Time.new.day}#{Time.new.hour}#{Time.new.min}#{Time.new.sec}"
+    run "echo -n \"#{dump_date}\" > #{release_path}/VERSION"
+  end
+end
+
+before "deploy:finalize_update", "deploy:write_version_file"

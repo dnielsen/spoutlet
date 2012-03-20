@@ -140,6 +140,3 @@
 [KnpMenuBundle]
     git=https://github.com/KnpLabs/KnpMenuBundle.git
     target=bundles/Knp/Bundle/MenuBundle
-
-[capistrano-helpers]
-    git=git://github.com/westarete/capistrano-helpers.git
