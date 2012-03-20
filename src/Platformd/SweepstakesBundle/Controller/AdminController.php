@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
+use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 
 class AdminController extends Controller
 {
@@ -116,11 +117,16 @@ class AdminController extends Controller
     /**
      * @Template()
      */
-    public function showMetricsAction($id)
+    public function showMetricsAction($id, Request $request)
     {
         $sweepstakes = $this->getSweepstakesRepo()->find($id);
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweeps for id '.$id);
+        }
+
+        // we support CSV!
+        if ($request->getRequestFormat() == 'csv') {
+            return $this->generateMetricsCsvResponse($sweepstakes);
         }
 
         $this->addMetricsBreadcrumbs();
@@ -132,6 +138,36 @@ class AdminController extends Controller
             'sweep' => $sweepstakes,
             'entries' => $entries,
         );
+    }
+
+    /**
+     * Downloads a CSV of the entries for a particular sweepstakes
+     */
+    private function generateMetricsCsvResponse(Sweepstakes $sweepstakes)
+    {
+        // generate CSV content from the rows of data
+        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+        $factory = new CsvResponseFactory();
+
+        foreach ($entries as $entry) {
+            $factory->addRow(array(
+                $entry->getUser()->getUsername(),
+                $entry->getUser()->getId(),
+                $entry->getUser()->getEmail(),
+                $entry->getUser()->getCreated()->format('Y-m-d'),
+                $entry->getUser()->getLastLogin()->format('Y-m-d'),
+                $entry->getUser()->getFirstName(),
+                $entry->getUser()->getLastName(),
+                $entry->getUser()->getAge(),
+                $entry->getUser()->getCountry(),
+                $entry->getUser()->getState(),
+                $entry->getIpAddress(),
+            ));
+        }
+
+        $filename = sprintf('%s-%s.csv', $sweepstakes->getSlug(), date('Y-m-d'));
+        return $factory->createResponse($filename);
+
     }
 
     private function addMetricsBreadcrumbs()
