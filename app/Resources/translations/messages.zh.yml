@@ -1,7 +1,7 @@
 edit: 编辑
 
 platformd:
-    create_account_or_login: 创建或使用已有Alienware Arena账号登陆
+    create_account_or_login: 创建或登陆Alienware Arena账户
 
     not_found:
         title: 页面未找到
@@ -77,7 +77,7 @@ platformd:
             photo_gallery: 照片库
             view_all: 查看所有
             redeem: 兑换
-            keys_available: 有邀请码
+            keys_available: 可用的激活码
             ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
             deals_add_url: "/8969129/300x250_CN"
             deals_ad_link_url: "http://alienware.com.cn/"
@@ -92,7 +92,7 @@ platformd:
             xfire_community: Xfire社区
             link: "需要一个牛逼的装备? 请看看 ALienware"
             link_url: "http://alienware.com.cn/"
-            copyright_2012: "©2012版权所有，Alienware公司"
+            copyright_2012: "&copy;2012版权所有，Alienware公司"
 
     help:
         actions: 操作
@@ -121,7 +121,7 @@ platformd:
             online: 在线
             no_past_events: 无以往活动
             no_current_events: 无当前活动
-            no_active_giveaways: There are no active giveaways at this moment.
+            no_active_giveaways: 目前没有活动赠品。
         event_create:
             create_new_event: 创建活动
         event_show:
@@ -316,27 +316,27 @@ CEVO: CEVO
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
 
 
-platformd.sweepstakes.enter: How to Participate
+platformd.sweepstakes.enter: 参加方法
 agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
 click_register_sweepstakes_step: Click "Enter" to participate.
-already_entered_sweepstakes: You already entered this sweepstakes.
-not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
-enter: Enter
-read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
-official_sweepstakes_rules: Official Sweepstakes Rules
+already_entered_sweepstakes: 您已参与此轮奖金独得比赛
+not_eligible_sweepstakes: 抱歉，您不符合参与奖金独得比赛的资格
+enter: 参加
+read_and_agreed_to_rules: 我已阅读并同意%a_start%官方规则%a_end%
+official_sweepstakes_rules: 奖金独得比赛官方规则
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
-overview: Overview
+overview: 概览
 
-registration_opens: Registration Opens
-registration_closes: Registration Closes
-open_to_legal_residents: Open to legal residents in %countries%
+registration_opens: 注册开放日
+registration_closes: 注册终止日
+open_to_legal_residents: 向合法居民开放%countries%
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
 platformd.create_account_or_login_sweepstakes: Create an account or login
-platformd.sweepstakes.entered.message: Thanks for your participation!
+platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
-instructions: Instructions
+instructions: 说明
 sweepstakes_date_format: %year%-%month%-%day% %time%
-eligibility: Eligibility
+eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
 follow_us: Follow Us
@@ -352,7 +352,7 @@ alienware:
 # admin-only translations - we don't need these
 url:  URL
 total_registered: Total Registered
-Bannerimagefile: Banner Image
+Bannerimagefile: 广告图片
 Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
