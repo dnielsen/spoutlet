@@ -8,7 +8,6 @@ ssh_options[:port] = "22"
 set :app1,        "ec2-184-73-162-139.compute-1.amazonaws.com"
 set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
 
-#set :repository,  "file:///var/www/spoutlet"
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
 set :scm,         :git

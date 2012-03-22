@@ -272,7 +272,7 @@ platformd:
         show:
             availaible_keys: キー残数: %%count%%
         giveaways_listings:
-            giveaways: ギブアウェイ
+            giveaways: キャンペーン
         assigned:
             message: |
                 キーが割り当てられました。Alienware Arenaコントロールパネルの取得済みキーでいつでもキーを確認できます。

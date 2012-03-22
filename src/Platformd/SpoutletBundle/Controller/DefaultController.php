@@ -2,6 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\Entity\Event;
+
 class DefaultController extends Controller
 {
     
@@ -28,9 +30,19 @@ class DefaultController extends Controller
             ;
         }
 
+        // see #64 - we're no longer showing events here
+        // we could move this into the query above, but this changes so often, I'm hesitant
+        $finalEvents = array();
+        foreach ($abstractEvents as $event) {
+            // filter out proper Event objects
+            if (!$event instanceof Event) {
+                $finalEvents[] = $event;
+            }
+        }
+
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'news'          => $news,
-            'abstractEvents' => $abstractEvents,
+            'abstractEvents' => $finalEvents,
             'onlyNews'      => $onlyNews,
         ));
     }
