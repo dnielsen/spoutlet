@@ -50,15 +50,23 @@ class SecurityController extends BaseController
      */
     private function redirectToCevoLogin()
     {
-        $return = $this->container->get('request')
-            ->getUriForPath('/')
-        ;
+        $request = $this->container->get('request');
+
+        // todo - duplicated in entry point and registration controller (this type of idea) - centralize this
+        $targetPath = $request->getSession()->get(
+            AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
+            $return = $request->getUriForPath('/')
+        );
+        // I don't know if this happens in practice (http seems to be there), but just in case
+        if (strpos($targetPath, 'http') !== 0) {
+            $targetPath = $request->getUriForPath($targetPath);
+        }
 
         $cevoManager = $this->container->get('pd.cevo.cevo_auth_manager');
 
         return new RedirectResponse($cevoManager->generateCevoUrl(
             CEVOAuthManager::LOGIN_PATH,
-            $return
+            $targetPath
         ));
     }
 }
