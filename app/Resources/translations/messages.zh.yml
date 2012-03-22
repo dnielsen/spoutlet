@@ -1,15 +1,15 @@
 edit: 编辑
 
 platformd:
-    create_account_or_login: Create or login to an Alienware Arena account.
+    create_account_or_login: 创建或使用已有Alienware Arena账号登陆
 
     not_found:
         title: 页面未找到
         body: 抱歉-您所需页面未找到
 
     flash:
-        error_title: Error!
-        success_title: Success!
+        error_title: 错误！
+        success_title: 成功！
 
     layout:
         # title used by default (if not overriden)
@@ -53,7 +53,7 @@ platformd:
         admin_menu:
             admin_home: 管理首页
             manage_events: 管理活动
-            manage_giveaways: Manage Giveaways
+            manage_giveaways: 管理邀请码
             manage_users: 管理用户
             manage_news: Manage News
             manage_homepage_banners: Manage Homepage Banners
@@ -132,7 +132,7 @@ platformd:
         # used only in the admin area
         admin:
             title: 活动管理
-            edit_event: 编辑活动%event_title%
+            edit_event: 创建新事件
             create: 创建新活动
             approve: 批准
             unpublish: Unpublish
@@ -190,7 +190,7 @@ platformd:
 
     # used only in the admin area
     navigation:
-        back: Go Back
+        back: 创建新事件
 
     comment:
         login_to_comment: 你没有登录。留言请先登录。
