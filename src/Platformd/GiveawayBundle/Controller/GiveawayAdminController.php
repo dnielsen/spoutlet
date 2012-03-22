@@ -16,7 +16,7 @@ class GiveawayAdminController extends Controller
     public function indexAction()
     {
         $this->addGiveawayBreadcrumb();
-        $giveaways = $this->getGiveawayRepo()->findAll();
+        $giveaways = $this->getGiveawayRepo()->findAllWithoutLocaleOrderedByNewest();
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
             array('giveaways' => $giveaways));

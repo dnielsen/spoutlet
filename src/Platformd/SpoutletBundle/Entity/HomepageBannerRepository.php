@@ -12,6 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class HomepageBannerRepository extends EntityRepository
 {
+    public function findAllWithoutLocaleOrderedByNewest()
+    {
+        return $this->createQueryBuilder('h')
+            ->orderBy('h.created', 'DESC')
+            ->getQuery()
+            ->execute()
+            ;
+    }
+
     /**
      *
      */

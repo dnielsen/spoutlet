@@ -129,7 +129,7 @@ abstract class AbstractEvent
     protected $bannerImageFile;
 
     /**
-     * @var datetime $created
+     * @var \DateTime $created
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
@@ -137,7 +137,7 @@ abstract class AbstractEvent
     protected $created;
 
     /**
-     * @var datetime $updated
+     * @var \DateTime $updated
      *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
