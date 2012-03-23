@@ -1,7 +1,6 @@
 <div class="newsBlurb">
     <h2>
-        <a href="{{ path('news_show', {'slug': item.slug}) }}"></a>
-        <a href="{{ item | pd_link }}">{{ item.title }}</a>
+        <a href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
     </h2>
     <h6>
         {{ 'announced_date' | trans({

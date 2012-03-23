@@ -6,6 +6,7 @@ use Twig_Extension;
 use Twig_Filter_Method;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Twig_Test_Method;
 
 /**
  * Generic Twig extension for the project
@@ -27,6 +28,13 @@ class SpoutletExtension extends Twig_Extension
         );
     }
 
+    public function getTests()
+    {
+        return array(
+            'external' => new Twig_Test_Method($this, 'testExternal')
+        );
+    }
+
     /**
      * @param $obj
      * @return string
@@ -38,6 +46,31 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $this->getLinkableManager()->link($obj);
+    }
+
+    /**
+     * Tests whether a URL string (or Linkable object) is an external URL
+     *
+     * @param $url
+     * @return bool
+     */
+    public function testExternal($url)
+    {
+        if ($url instanceof LinkableInterface) {
+            $url = $this->linkToObject($url);
+        }
+
+        if (strpos($url, 'http') === false) {
+            return false;
+        }
+
+        $currentHost = $this->container->get('request')->getHost();
+        if (strpos($url, $currentHost) === false) {
+            return true;
+        }
+
+        // it has http, but it matches the current host
+        return false;
     }
 
     public function getName()
