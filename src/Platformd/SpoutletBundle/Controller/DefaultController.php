@@ -20,15 +20,11 @@ class DefaultController extends Controller
     {
         $singleNews = $this->getNewsRepo()->findOneFeaturedForLocale($this->getLocale());
 
-        if ($onlyNews) {
-            $abstractEvents = false;
-        } else {
-            $abstractEvents = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('SpoutletBundle:AbstractEvent')
-                ->getCurrentEvents($this->getLocale())
-            ;
-        }
+        $abstractEvents = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:AbstractEvent')
+            ->getCurrentEventsOrderedByCreated($this->getLocale())
+        ;
 
         // see #64 - we're no longer showing events here
         // we could move this into the query above, but this changes so often, I'm hesitant
@@ -43,7 +39,6 @@ class DefaultController extends Controller
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'singleNews'     => $singleNews,
             'abstractEvents' => $finalEvents,
-            'onlyNews'      => $onlyNews,
         ));
     }
 

@@ -373,3 +373,7 @@ Officialrules: Official Rules
 
 # More frontend things
 no_news_currently: There is currently no featured news - check back later!
+news_and_announcements: Alienware Arena News & Announcements
+announced_date: Announced %posted_date%
+read_more: Read More
+

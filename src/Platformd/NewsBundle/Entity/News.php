@@ -5,6 +5,8 @@ namespace Platformd\NewsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Entity\AbstractEvent;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -12,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="sp_news")
  * @ORM\Entity(repositoryClass="Platformd\NewsBundle\Entity\NewsRepository")
  */
-class News
+class News implements LinkableInterface
 {
     /**
      * @var integer $id
@@ -249,6 +251,11 @@ class News
         $this->postedAt = $postedAt;
     }
 
+    public function getPostedAtArray()
+    {
+        return AbstractEvent::convertDateTimeIntoTranslationArray($this->getPostedAt());
+    }
+
     /**
      * @return string
      */
@@ -280,4 +287,38 @@ class News
     {
         $this->blurb = $blurb;
     }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getOverrideUrl();
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'news_show';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+        );
+    }
+
+
 }

@@ -78,3 +78,18 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: validator.constraint_validator, alias: abstract_event.unique_slug }
+
+    # the linkable manager
+    platformd.link.linkable_manager:
+        class: Platformd\SpoutletBundle\Link\LinkableManager
+        arguments:
+            - "@router"
+
+    # our generic twig extension
+    platformd.twig.spoutlet_extension:
+        class: Platformd\SpoutletBundle\Twig\SpoutletExtension
+        arguments:
+            - "@service_container"
+        public: false
+        tags:
+            - { name: twig.extension }
