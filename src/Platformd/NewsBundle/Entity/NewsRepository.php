@@ -21,7 +21,7 @@ class NewsRepository extends EntityRepository
     public function getFindNewsQuery()
     {
         return $this->createQueryBuilder('n')
-            ->orderBy('n.created', 'DESC')
+            ->orderBy('n.postedAt', 'DESC')
             ->getQuery();
     }
 
@@ -32,6 +32,7 @@ class NewsRepository extends EntityRepository
     public function findAllForLocale($locale)
     {
         return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
             ->getResult()
         ;

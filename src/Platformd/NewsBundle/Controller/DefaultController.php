@@ -16,7 +16,7 @@ class DefaultController extends Controller
         $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
 
         // allows us to preview how this feature would really work
-        $template = $request->query->get('preview') ? 'realNews.html.twig' : 'index.html.twig';
+        $template = 'index.html.twig';
 
         return $this->render('NewsBundle:Default:'.$template, array(
             'news' => $news,
