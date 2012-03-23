@@ -8,5 +8,10 @@
         })}}
     </h6>
     <p>{{ item.blurb }}</p>
-    <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
+
+    {% if item is external %}
+        <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
+    {% else %}
+        <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
+    {% endif %}
 </div>
