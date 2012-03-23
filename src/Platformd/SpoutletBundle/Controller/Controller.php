@@ -4,6 +4,9 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\SpoutletBundle\Util\HttpUtil;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Our custom base controller
@@ -106,5 +109,41 @@ class Controller extends BaseController
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw new AccessDeniedException('Not logged in!');
         }
+    }
+
+    /**
+     * Checks whether a Linkable object is actually a link to another site
+     *
+     * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     * @return bool
+     */
+    protected function isExternalLink(LinkableInterface $linkableObj)
+    {
+        return HttpUtil::isUrlExternal($this->getLinkableUrl($linkableObj), $this->getRequest()->getHost());
+    }
+
+    /**
+     * Creates a redirect response to the URL of a Linkable object
+     *
+     * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    protected function createLinkableResponse(LinkableInterface $linkableObj)
+    {
+        $url = $this->getLinkableUrl($linkableObj);
+
+        return new RedirectResponse($url);
+    }
+
+    /**
+     * Returns the URL for a Linkable object
+     *
+     * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     * @return string
+     */
+    protected function getLinkableUrl(LinkableInterface $linkableObj)
+    {
+        return $this->container->get('platformd.link.linkable_manager')
+            ->link($linkableObj);
     }
 }

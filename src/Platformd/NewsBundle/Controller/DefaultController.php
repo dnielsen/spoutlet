@@ -31,6 +31,14 @@ class DefaultController extends Controller
          */
         $news = $this->getNewsRepo()->findOneBy(array('slug' => $slug));
 
+        if (!$news) {
+            $this->createNotFoundException('No news for slug '.$slug);
+        }
+
+        if ($this->isExternalLink($news)) {
+            return $this->createLinkableResponse($news);
+        }
+
         return $this->render('NewsBundle:Default:show.html.twig', array(
             'news' => $news,
         ));

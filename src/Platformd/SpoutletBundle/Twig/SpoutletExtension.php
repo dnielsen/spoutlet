@@ -7,6 +7,7 @@ use Twig_Filter_Method;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig_Test_Method;
+use Platformd\SpoutletBundle\Util\HttpUtil;
 
 /**
  * Generic Twig extension for the project
@@ -60,17 +61,9 @@ class SpoutletExtension extends Twig_Extension
             $url = $this->linkToObject($url);
         }
 
-        if (strpos($url, 'http') === false) {
-            return false;
-        }
-
         $currentHost = $this->container->get('request')->getHost();
-        if (strpos($url, $currentHost) === false) {
-            return true;
-        }
 
-        // it has http, but it matches the current host
-        return false;
+        return HttpUtil::isUrlExternal($url, $currentHost);
     }
 
     public function getName()
