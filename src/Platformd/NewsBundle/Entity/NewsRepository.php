@@ -45,7 +45,9 @@ class NewsRepository extends EntityRepository
     {
         // todo - this will need to do something smarter - see #68
         return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult()
         ;
     }
