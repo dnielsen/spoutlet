@@ -38,6 +38,19 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * @param $locale
+     * @return \Platformd\NewsBundle\Entity\News;
+     */
+    public function findOneFeaturedForLocale($locale)
+    {
+        // todo - this will need to do something smarter - see #68
+        return $this->createBaseQueryBuilder($locale)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
      * Creates a base query builder that's locale-aware and only returns
      * published entries
      *

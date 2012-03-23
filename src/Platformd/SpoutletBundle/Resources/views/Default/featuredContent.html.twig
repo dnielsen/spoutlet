@@ -10,7 +10,14 @@
     <div class="widget-content" style="height: 260px;">
 
         <div id="featured-content-featured-news" class="featured-content-category active">
-            {% include 'SpoutletBundle:News:launch.html.twig' %}
+            {% if singleNews %}
+                {% include 'SpoutletBundle:News:featuredNews.html.twig' with {
+                    'news': singleNews
+                }%}
+            {% else %}
+                {{ 'no_news_currently' | trans }}
+            {% endif %}
+
         </div>
 
         {% if abstractEvents %}

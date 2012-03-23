@@ -359,3 +359,6 @@ Officialrules: Official Rules
 posted_at: Post Date
 override_url: Override URL
 published_status: Status
+
+# More frontend things
+no_news_currently: There is currently no featured news - check back later!

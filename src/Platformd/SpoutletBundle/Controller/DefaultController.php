@@ -18,7 +18,7 @@ class DefaultController extends Controller
      */
     public function featuredContentAction($onlyNews = false)
     {
-        $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
+        $singleNews = $this->getNewsRepo()->findOneFeaturedForLocale($this->getLocale());
 
         if ($onlyNews) {
             $abstractEvents = false;
@@ -41,7 +41,7 @@ class DefaultController extends Controller
         }
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'news'          => $news,
+            'singleNews'     => $singleNews,
             'abstractEvents' => $finalEvents,
             'onlyNews'      => $onlyNews,
         ));

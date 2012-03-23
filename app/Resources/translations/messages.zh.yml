@@ -357,3 +357,6 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+# More frontend things
+no_news_currently: There is currently no featured news - check back later!
