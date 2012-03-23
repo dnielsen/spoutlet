@@ -148,6 +148,20 @@ class AdminController extends Controller
         // generate CSV content from the rows of data
         $factory = new CsvResponseFactory();
 
+        $factory->addRow(array(
+            'Username',
+            'Id',
+            'Email',
+            'Acct Created',
+            'Last Logged In',
+            'First Name',
+            'Last Name',
+            'Age',
+            'Country',
+            'State/Province',
+            'Ip Address',
+        ));
+
         foreach ($entries as $entry) {
             $factory->addRow(array(
                 $entry->getUser()->getUsername(),
