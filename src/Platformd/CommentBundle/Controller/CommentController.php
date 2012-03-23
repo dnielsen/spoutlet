@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use FOS\CommentBundle\Entity\Thread;
 
 /**
  * @author Ryan Weaver <ryan@knplabs.com>
@@ -50,22 +52,27 @@ class CommentController extends BaseCommentController
      */
     protected function onCreateSuccess(Form $form)
     {
-        $threadSlug = $form->getData()->getThread()->getId();
+        $threadId = $form->getData()->getThread()->getId();
 
-        // Did we post a comment on a giveway or an event ?
+        // Did we post a comment on a giveway or an event, news maybe ?
+        $obj = $this->getObjectFromThread($form->getData()->getThread());
 
-        $event = $this->findGiveawayBySlug($threadSlug);
-        if ($event instanceof Event) {
-            $route = 'events_detail';
-        } elseif ($event instanceof Giveaway) {
-            $route = 'giveaway_show';
-        } elseif ($event instanceof Sweepstakes) {
-            $route = 'sweepstakes_show';
+        if ($obj instanceof LinkableInterface) {
+            $url = $this->getLinkableUrl($obj);
         } else {
-            $route = 'homepage';
-        }
+            // todo - refactor everything to be a LinkableInterface
+            if ($obj instanceof Event) {
+                $route = 'events_detail';
+            } elseif ($obj instanceof Giveaway) {
+                $route = 'giveaway_show';
+            } elseif ($obj instanceof Sweepstakes) {
+                $route = 'sweepstakes_show';
+            } else {
+                throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
+            }
 
-        $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
+            $url = $this->container->get('router')->generate($route, array('slug' => $threadId));
+        }
 
         // append the dom ID to the comment, for auto-scroll
         $url .= '#comment-message-'.$form->getData()->getId();
@@ -85,5 +92,59 @@ class CommentController extends BaseCommentController
         return $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('SpoutletBundle:AbstractEvent')
             ->findOneBy(array('slug' => $slug));
+    }
+
+    /**
+     * Attempts to look at the Thread and find the right object
+     *
+     * todo - this will eventually need to be more elegant
+     *
+     * @param \FOS\CommentBundle\Entity\Thread $thread
+     */
+    private function getObjectFromThread(Thread $thread)
+    {
+        $id = $thread->getId();
+
+        // case news
+        if (strpos($id, 'news-') === 0) {
+            // this is a news item (news-zh-15)
+            $pieces = explode('-', $id);
+            if (count($pieces) != 3) {
+                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
+            }
+
+            $newsId = $pieces[2];
+            $news = $this->container->get('doctrine.orm.entity_manager')
+                ->getRepository('NewsBundle:News')
+                ->find($newsId)
+            ;
+
+            if (!$news) {
+                throw new NotFoundHttpException(sprintf('Cannot find News from thread id "%s"', $id));
+            }
+
+            return $news;
+        }
+
+        // everything else is an abstract event and stores *just* the slug as the id
+        $event = $this->findGiveawayBySlug($id);
+
+        if (!$event) {
+            throw new NotFoundHttpException(sprintf('Cannot find abstract event form thread id "%s"', $id));
+        }
+
+        return $event;
+    }
+
+    /**
+     * Returns the URL for a Linkable object
+     *
+     * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     * @return string
+     */
+    protected function getLinkableUrl(LinkableInterface $linkableObj)
+    {
+        return $this->container->get('platformd.link.linkable_manager')
+            ->link($linkableObj);
     }
 }

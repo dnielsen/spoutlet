@@ -320,5 +320,14 @@ class News implements LinkableInterface
         );
     }
 
+    /**
+     * The comment id that will be used to render and identify comments
+     *
+     * @return string
+     */
+    public function getCommentThreadId()
+    {
+        return sprintf('news-%s-%s', $this->getLocale(), $this->getId());
+    }
 
 }
