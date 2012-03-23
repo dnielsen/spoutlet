@@ -31,3 +31,9 @@ label {
 form .input {
     margin-left: 195px;
 }
+
+textarea {
+    width: 500px;
+    height: 100px;
+
+}

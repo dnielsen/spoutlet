@@ -43,6 +43,10 @@ class News
      * @var string
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(name="slug", type="string", length=255, unique=true)
+     *
+     * The following is duplicated in AbstractEvent
+     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
+     *      Only allow numbers, digits and dashes
      */
     private $slug;
 
@@ -60,6 +64,28 @@ class News
      * @ORM\Column(name="published", type="boolean")
      */
     protected $published = false;
+
+    /**
+     * @var \DateTime $postedAt
+     *
+     * @Assert\NotBlank
+     * @ORM\Column(type="date")
+     */
+    protected $postedAt;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url
+     */
+    protected $overrideUrl;
+
+    /**
+     * @var string
+     * @Assert\NotBlank
+     * @ORM\Column(type="text")
+     */
+    protected $blurb;
 
     /**
      * @var \DateTime $created
@@ -205,5 +231,53 @@ class News
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPostedAt()
+    {
+        return $this->postedAt;
+    }
+
+    /**
+     * @param \DateTime $postedAt
+     */
+    public function setPostedAt($postedAt)
+    {
+        $this->postedAt = $postedAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOverrideUrl()
+    {
+        return $this->overrideUrl;
+    }
+
+    /**
+     * @param string $overrideUrl
+     */
+    public function setOverrideUrl($overrideUrl)
+    {
+        $this->overrideUrl = $overrideUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlurb()
+    {
+        return $this->blurb;
+    }
+
+    /**
+     * @param string $blurb
+     */
+    public function setBlurb($blurb)
+    {
+        $this->blurb = $blurb;
     }
 }

@@ -64,8 +64,3 @@ giveway_pool_keysfile: Keys file
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/U Display
 giveway_pool_assigned_total: Assigned/Total
-
-news_title: Title
-news_body: Body
-news_locale: Site
-news_published: Published

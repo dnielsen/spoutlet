@@ -356,3 +356,6 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+posted_at: Post Date
+override_url: Override URL
+published_status: Status
