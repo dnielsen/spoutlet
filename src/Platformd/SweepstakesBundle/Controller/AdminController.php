@@ -124,15 +124,15 @@ class AdminController extends Controller
             throw $this->createNotFoundException('No sweeps for id '.$id);
         }
 
+        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+
         // we support CSV!
         if ($request->getRequestFormat() == 'csv') {
-            return $this->generateMetricsCsvResponse($sweepstakes);
+            return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug());
         }
 
         $this->addMetricsBreadcrumbs();
         $this->getBreadcrumbs()->addChild($sweepstakes->getName());
-
-        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
 
         return array(
             'sweep' => $sweepstakes,
@@ -143,10 +143,9 @@ class AdminController extends Controller
     /**
      * Downloads a CSV of the entries for a particular sweepstakes
      */
-    private function generateMetricsCsvResponse(Sweepstakes $sweepstakes)
+    private function generateMetricsCsvResponse($entries, $sweepstakesSlug)
     {
         // generate CSV content from the rows of data
-        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
         $factory = new CsvResponseFactory();
 
         foreach ($entries as $entry) {
@@ -155,7 +154,7 @@ class AdminController extends Controller
                 $entry->getUser()->getId(),
                 $entry->getUser()->getEmail(),
                 $entry->getUser()->getCreated()->format('Y-m-d'),
-                $entry->getUser()->getLastLogin()->format('Y-m-d'),
+                ($entry->getUser()->getLastLogin()) ? $entry->getUser()->getLastLogin()->format('Y-m-d') : '',
                 $entry->getUser()->getFirstName(),
                 $entry->getUser()->getLastName(),
                 $entry->getUser()->getAge(),
@@ -165,7 +164,7 @@ class AdminController extends Controller
             ));
         }
 
-        $filename = sprintf('%s-%s.csv', $sweepstakes->getSlug(), date('Y-m-d'));
+        $filename = sprintf('%s-%s.csv', $sweepstakesSlug, date('Y-m-d'));
         return $factory->createResponse($filename);
 
     }

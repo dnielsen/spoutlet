@@ -31,7 +31,7 @@ class CsvResponseFactory
     {
         $data = $this->generateCsv();
 
-        $response = new Response();
+        $response = new Response($data);
         $response->headers->set('Cache-Control', 'public');
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', "attachment; filename*=UTF-8''" . $filename);
@@ -54,16 +54,19 @@ class CsvResponseFactory
         // generate the CSV into a file first
         $h = tmpfile();
 
+        $filename = tempnam('/tmp', 'csv_response');
+        $h = fopen($filename, 'w');
+
         $bytes = 0;
         foreach ($this->rows as $row) {
             $bytes += fputcsv($h, $row, $this->delimiter, $this->enclosure);
         }
-
-        $contents = fread($h, $bytes);
-        var_dump($contents);die;
-
-        // close the handle, will automatically remove the file
+        // close the handle
         fclose($h);
+
+        $contents = file_get_contents($filename);
+
+        unlink($filename);
 
         return $contents;
     }
