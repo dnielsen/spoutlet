@@ -211,7 +211,7 @@ platformd:
             terms_label: 服务条款
             dell_privacy_label: 隐私条款
             country_label: 选择国家
-            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+            underage_message: 抱歉，您不符合最低年龄要求。我们暂时不能为您完成注册。
 
         login:
             title: 登陆您的账户
@@ -244,7 +244,7 @@ platformd:
         get_key:  获取邀请码
         no_keys_left: 该邀请码没有可用的激活码
         max_ip_limit: 你的IP地址
-        already_assigned: You were already assigned a key for this giveaway
+        already_assigned: 您已经为该赠送品指定了一个账号
         view_giveaway_site: 查看邀请码站点
         admin:
             title: 管理邀请码
@@ -271,7 +271,7 @@ platformd:
             may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
             key: 激活码
             assigned_at: 已分配
-            view_giveaway: 查看赠品
+            view_giveaway: 查看赠送品
     giveaway_pool:
         pool: 邀请码库
         admin:
@@ -300,20 +300,20 @@ platformd:
 
 "Bad credentials": "Invalid username or password"
 "The presented password is invalid.": "Invalid username or password"
-"The presented password cannot be empty.": "Please enter a password"
-"User account is disabled.": Your account is disabled - check your email for an activation link
+"The presented password cannot be empty.": "请输入密码"
+"User account is disabled.": 您的账号不可用，请检查您的邮件然后点击激活链接
 
 # registration drop-down choices
-"Select one": "Select one"
+"Select one": "选择一个"
 source_alienware: Alienware
 CEVO: CEVO
-"Tech News Site": Tech News Site
+"Tech News Site": 技术新闻页面
 "Email": 邮箱
 "Friends or Family": Friends or Family
 "Blog": Blog
 "Other": Other
 
-avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
+avatar_awaiting_approval: "您的头像已经成功上传，但在展示前必须经过审核。"
 
 
 platformd.sweepstakes.enter: 参加方法
