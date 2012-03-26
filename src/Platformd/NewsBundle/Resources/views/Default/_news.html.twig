@@ -7,7 +7,7 @@
             '%posted_date%': ('sweepstakes_date_format' | trans(item.postedAtArray))
         })}}
     </h6>
-    <p>{{ item.blurb }}</p>
+    <p>{{ item.blurb | nl2br }}</p>
 
     {% if item is external %}
         <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
