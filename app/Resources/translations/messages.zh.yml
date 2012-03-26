@@ -243,7 +243,7 @@ platformd:
         redeem:   操作说明
         get_key:  获取邀请码
         no_keys_left: 该邀请码没有可用的激活码
-        max_ip_limit: 你的IP地址
+        max_ip_limit: 您的IP地址已不能领取更多的激活码，如果你认为这是一个错误，请联系 china@alienwarearena.com。
         already_assigned: 您已经为该赠送品指定了一个账号
         view_giveaway_site: 查看邀请码站点
         admin:
