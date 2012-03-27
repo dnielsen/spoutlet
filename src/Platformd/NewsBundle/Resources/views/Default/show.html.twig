@@ -6,8 +6,13 @@
 {# this whole thing was copied from the homepage template.... #}
 <div id="row-2" class="std_2col">
     <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
+
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        </div>
     </div>
     <div class="left">
         <div class="newsPost">
