@@ -2,7 +2,7 @@ jQuery(document).ready(function() {
     jQuery('table.tablesorter').tablesorter();
 
     jQuery('input.date-picker').datepicker({
-        dateFormat: 'yy/mm/dd'
+        dateFormat: 'yy-mm-dd'
     });
 
     jQuery('input.datetime-picker').datetimepicker({

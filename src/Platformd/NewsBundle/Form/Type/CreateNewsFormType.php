@@ -25,6 +25,7 @@ class CreateNewsFormType extends AbstractType
                     'class' => 'date-picker',
                 ),
                 'label' => 'posted_at',
+                'format' => 'yyyy-MM-dd',
             ))
             ->add('overrideUrl', 'url', array(
                 'label' => 'override_url',
