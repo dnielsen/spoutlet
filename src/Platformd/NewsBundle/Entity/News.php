@@ -84,8 +84,7 @@ class News implements LinkableInterface
 
     /**
      * @var string
-     * @Assert\NotBlank
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $blurb;
 
