@@ -425,3 +425,8 @@ ul.list-normal {
     width: 280px;
     height: 210px;
 }
+
+/* for use when stacking things on the left and right - gives you the same padding as if you were putting them in std_2col */
+.std-item {
+    padding-bottom: 15px;
+}
