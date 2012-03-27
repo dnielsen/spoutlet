@@ -3,6 +3,7 @@
 namespace Platformd\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Represents a single translatable token
@@ -20,11 +21,31 @@ class TranslationToken
      */
     protected $id;
 
-    /** @ORM\Column(type="string", length=200) */
+    /**
+     * @ORM\Column(type="string", length=200)
+     */
     protected $domain;
 
-    /** @ORM\column(type="string", length=200, unique=true) */
+    /**
+     * @ORM\column(type="string", length=200, unique=true)
+     */
     protected $token;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updated;
 
     public function getId()
     {
@@ -49,5 +70,37 @@ class TranslationToken
     public function setToken($token)
     {
         $this->token = $token;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     */
+    public function setUpdated(\DateTime $updated)
+    {
+        $this->updated = $updated;
     }
 }
