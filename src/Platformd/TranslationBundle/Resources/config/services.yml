@@ -1,0 +1,7 @@
+services:
+    pd_translation.translation.loader.entity_loader:
+        class: Platformd\TranslationBundle\Translation\Loader\EntityLoader
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: translation.loader, alias: entity}
