@@ -274,3 +274,12 @@ knp_gaufrette:
 
 knp_media_exposer:
     base_url: http://%base_host%
+
+jms_translation:
+    configs:
+        entity_extract:
+            dirs: [%kernel.root_dir%, %kernel.root_dir%/../src]
+            output_dir: %kernel.root_dir%/Resources/translations
+            ignored_domains: [routes]
+            excluded_names: [*TestCase.php, *Test.php]
+            excluded_dirs: [cache, data, logs, Features]

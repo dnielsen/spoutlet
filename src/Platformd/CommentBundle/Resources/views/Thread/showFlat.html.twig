@@ -19,9 +19,7 @@
 
     {% if thread.numComments > 0 %}
         <h3>
-            {% transchoice thread.numComments with {'%num%': thread.numComments} from "FOSCommentBundle" %}
-                Showing %num% comment|Showing %num% comments
-            {% endtranschoice %}
+            {% transchoice thread.numComments with {'%num%': thread.numComments} from "FOSCommentBundle" %}Showing %num% comment|Showing %num% comments{% endtranschoice %}
         </h3>
         <div class="fos_comment_thread_comments" id="commentList">
             {# show the flat comments, but default the sorting to be newest first #}

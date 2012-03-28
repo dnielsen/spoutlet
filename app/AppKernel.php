@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
+            new JMS\TranslationBundle\JMSTranslationBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
