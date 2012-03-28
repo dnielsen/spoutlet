@@ -36,8 +36,7 @@ class News implements LinkableInterface
     /**
      * @var text $body
      *
-     * @Assert\NotBlank
-     * @ORM\Column(name="body", type="text")
+     * @ORM\Column(name="body", type="text", nullable=true)
      */
     private $body;
 
