@@ -115,6 +115,11 @@
                                 </li>
                             </ul>
                         </li>
+                        {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
+                            <li>
+                                <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 {% endif %}
 

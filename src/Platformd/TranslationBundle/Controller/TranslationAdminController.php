@@ -15,6 +15,8 @@ class TranslationAdminController extends Controller
      */
     public function listLocalesAction()
     {
+        $this->basicSecurityCheck('ROLE_ADMIN_TRANSLATIONS');
+
         $this->addTranslationAdminBreadcrumbs();
 
         $localesReport = $this->getTokenRepository()->getLocalesStatusArray($this->getAvailableLocales());
@@ -35,6 +37,8 @@ class TranslationAdminController extends Controller
      */
     public function editLocaleAction($locale)
     {
+        $this->basicSecurityCheck('ROLE_ADMIN_TRANSLATIONS');
+
         if (!in_array($locale, $this->getAvailableLocales())) {
             throw $this->createNotFoundException(sprintf('Locale "%s" is not a valid locale', $locale));
         }
