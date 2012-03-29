@@ -31,7 +31,13 @@ class EntityLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages')
     {
-        $translations = $this->translationRepository->getTranslationsForLanguageAndDomain($locale, $domain);
+        try {
+            $translations = $this->translationRepository->getTranslationsForLanguageAndDomain($locale, $domain);
+        } catch (\PDOException $e) {
+            // we're extra careful here since this is during the cache warmup process
+            // without this, we can really deploy new db changes to the translations without
+            // everything exploding
+        }
 
         $catalogue = new MessageCatalogue($locale);
 

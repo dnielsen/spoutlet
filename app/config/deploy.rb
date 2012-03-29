@@ -31,6 +31,6 @@ set :shared_files,      ["app/config/parameters.ini"]
 # After finalizing update - here to update translations
 after "deploy:finalize_update" do
 
-  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract"
 
 end
