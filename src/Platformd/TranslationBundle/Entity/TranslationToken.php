@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * A token consists of the actual source string (e.g. home_page) and the domain
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\TranslationBundle\Entity\Repository\TranslationTokenRepository")
  * @ORM\Table(name="pd_translation_token")
  */
 class TranslationToken
@@ -46,6 +46,15 @@ class TranslationToken
      * @Gedmo\Timestampable(on="update")
      */
     protected $updated;
+
+    /**
+     * Whether or not this token was included in the last extraction
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $isFromExtraction = false;
 
     public function getId()
     {
@@ -102,5 +111,21 @@ class TranslationToken
     public function setUpdated(\DateTime $updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsFromExtraction()
+    {
+        return $this->isFromExtraction;
+    }
+
+    /**
+     * @param boolean $isFromExtraction
+     */
+    public function setIsFromExtraction($isFromExtraction)
+    {
+        $this->isFromExtraction = $isFromExtraction;
     }
 }

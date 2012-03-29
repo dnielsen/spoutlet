@@ -46,14 +46,21 @@ class ExtractTranslationToEntitycommand extends ContainerAwareCommand
         $output->writeln(sprintf('Custom Extractors: <info>%s</info>', $config->getEnabledExtractors() ? implode(', ', array_keys($config->getEnabledExtractors())) : '# none #'));
         $output->writeln('============================================================');
 
+        /** @var $updater \Platformd\TranslationBundle\Translation\Updater */
         $updater = $this->getContainer()->get('pd_translation.translation.updater');
 
-        $logger = new OutputLogger($output)
+        $logger = new OutputLogger($output);
+        $updater->setLogger($logger);
+
         if (!$input->getOption('verbose')) {
             $logger->setLevel(OutputLogger::ALL ^ OutputLogger::DEBUG);
         }
 
-        $changeSet = $updater->getChangeSet($config);
+        $updater->setConfig($config);
+        $scannedCatalogue = $updater->getScannedCatalogue();
+
+
+        $updater->updateTranslationTokens();
 
         $output->writeln('done!');
     }

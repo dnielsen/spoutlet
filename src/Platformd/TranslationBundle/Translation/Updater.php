@@ -5,6 +5,11 @@ namespace Platformd\TranslationBundle\Translation;
 use JMS\TranslationBundle\Translation\Config;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use JMS\TranslationBundle\Model\MessageCatalogue;
+use JMS\TranslationBundle\Translation\LoaderManager;
+use JMS\TranslationBundle\Translation\ExtractorManager;
+use Doctrine\ORM\EntityManager;
+use JMS\TranslationBundle\Model\MessageCollection;
+use Platformd\TranslationBundle\Entity\TranslationToken;
 
 /**
  * Responsible for collecting the "scanned" catalog and then making changes to our TranslationToken database
@@ -13,6 +18,9 @@ use JMS\TranslationBundle\Model\MessageCatalogue;
  */
 class Updater
 {
+    /**
+     * @var \JMS\TranslationBundle\Translation\Config
+     */
     private $config;
 
     /**
@@ -20,16 +28,112 @@ class Updater
      */
     private $logger;
 
+    /**
+     * @var \JMS\TranslationBundle\Translation\ExtractorManager
+     */
+    private $extractor;
+
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    private $em;
+
+    /**
+     * @var \JMS\TranslationBundle\Translation\LoaderManager
+     */
+    private $loader;
+
+    /**
+     * @var \JMS\TranslationBundle\Model\MessageCatalogue
+     */
     private $existingCatalogue;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * @var \JMS\TranslationBundle\Model\MessageCatalogue
+     */
+    private $scannedCatalogue;
+
+    public function __construct(LoaderManager $loader, ExtractorManager $extractor, EntityManager $em, LoggerInterface $logger)
     {
+        $this->loader = $loader;
+        $this->extractor = $extractor;
+        $this->em = $em;
         $this->logger = $logger;
     }
 
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    public function updateTranslationTokens()
+    {
+        if (!$this->scannedCatalogue) {
+            throw new \LogicException('You must call setConfig before calling updateTranslationTokens');
+        }
+
+        foreach ($this->scannedCatalogue->getDomains() as $domain => $messageCollection) {
+            $this->updateTranslationsTokensForDomain($domain, $messageCollection);
+        }
+    }
+
+    /**
+     * Updates a specific domain of TranslationToken
+     *
+     * @param $domain
+     * @param \JMS\TranslationBundle\Model\MessageCollection $messageCollection
+     */
+    private function updateTranslationsTokensForDomain($domain, MessageCollection $messageCollection)
+    {
+        $existingTokens = $this->getTranslationTokenRepo()->getTokensForDomainKeyedArray($domain);
+
+        foreach ($messageCollection->all() as $message)
+        {
+            if (!isset($existingTokens[$message->getId()])) {
+                $newToken = new TranslationToken();
+                $newToken->setDomain($domain);
+                $newToken->setToken($message->getId());
+                $newToken->setIsFromExtraction(true);
+
+                $this->em->persist($newToken);
+
+                $this->logger->info(sprintf('Adding new token: "%s" into domain "%s"', $message->getId(), $domain));
+            } else {
+                // existing token
+                $existingToken = $existingTokens[$message->getId()];
+                unset($existingTokens[$message->getId()]);
+
+                $existingToken->setIsFromExtraction(true);
+
+                $this->em->persist($existingToken);
+            }
+        }
+
+        // iterate through the existing tokens that were not found, mark them as such
+        foreach ($existingTokens as $existingToken) {
+            $existingToken->setIsFromExtraction(false);
+
+            $this->em->persist($existingToken);
+            $this->logger->info(sprintf('Marking existing token "%s" as unused', $existingToken->getToken()));
+        }
+
+        //$this->em->flush();
+    }
+
+    /**
+     * @return \Platformd\TranslationBundle\Entity\Repository\TranslationTokenRepository
+     */
+    private function getTranslationTokenRepo()
+    {
+        return $this->em->getRepository('TranslationBundle:TranslationToken');
+    }
+
+    /**
+     * @return \JMS\TranslationBundle\Model\MessageCatalogue
+     */
+    public function getScannedCatalogue()
+    {
+        return $this->scannedCatalogue;
     }
 
     /**
