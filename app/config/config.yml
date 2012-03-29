@@ -93,6 +93,10 @@ fos_user:
 
 parameters:
     available_locales: [en, ja, zh]
+    locale_translations:
+        en: English
+        ja: Japanese
+        zh: Chinese
 
     # important to setup the translation DB loader to load things for these domains
     available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]

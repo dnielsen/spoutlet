@@ -356,3 +356,5 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+translations_admin: Translations Admin
+edit_locale_title: Edit %locale% Translations

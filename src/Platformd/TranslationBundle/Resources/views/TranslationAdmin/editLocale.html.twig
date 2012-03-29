@@ -1,0 +1,29 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title %}{{ 'edit_locale_title' | trans({'%locale%': localeName}) }}{% endblock %}
+
+{% block content %}
+    <h1>{{ 'edit_locale_title' | trans({'%locale%': localeName}) }}</h1>
+
+    <table class="list zebra-striped">
+        <thead>
+            <tr>
+                <th>English</th>
+                <th>{{ localeName }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for token in tokens %}
+                <tr>
+                    <td>
+                        {{ token.token | trans({}, token.domain, 'en') }}
+                    </td>
+                    <td data-token-id="{{ token.id }}">
+                        {{ token.token | trans({}, token.domain, locale) }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

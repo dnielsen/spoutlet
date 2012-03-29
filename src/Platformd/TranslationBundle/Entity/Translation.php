@@ -20,7 +20,7 @@ class Translation
     /**
      * The source translation token being translated
      *
-     * @ORM\ManyToOne(targetEntity="TranslationToken", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="TranslationToken", fetch="EAGER", inversedBy="translations")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $translationToken;

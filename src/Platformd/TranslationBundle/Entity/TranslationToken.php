@@ -4,6 +4,7 @@ namespace Platformd\TranslationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Represents a single translatable token
@@ -58,6 +59,17 @@ class TranslationToken
      * @ORM\Column(type="boolean")
      */
     protected $isInMessagesFile = false;
+
+    /**
+     * @var Translation
+     * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationToken")
+     */
+    protected $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
 
     public function getId()
     {

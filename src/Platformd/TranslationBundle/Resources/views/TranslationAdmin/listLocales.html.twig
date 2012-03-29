@@ -1,0 +1,32 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title %}{{ 'translations_admin' | trans }}{% endblock %}
+
+{% block content %}
+    <h1>{{ 'translations_admin' | trans }}</h1>
+
+    <table class="list zebra-striped">
+        <thead>
+            <tr>
+                <th>Language</th>
+                {# <th>Status</th> #}
+            </tr>
+        </thead>
+        <tbody>
+            {% for locale, localeReport in localesReport %}
+                <tr>
+                    <td>
+                        <a href="{{ path('pd_translation_admin_edit_locale', {'locale': locale}) }}">{{ localeReport['name'] }}</a>
+                    </td>
+                    {#
+                        This is not quite right yet, so commented out
+                    <td>
+                        {{ localeReport['complete'] }} / {{ localeReport['total'] }}
+                    </td>
+                    #}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
