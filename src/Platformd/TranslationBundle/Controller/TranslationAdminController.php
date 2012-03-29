@@ -132,9 +132,9 @@ class TranslationAdminController extends Controller
             $transB = $translator->trans($b->getToken(), array(), $b->getDomain(), 'en');
 
             $tmpArr = array($transA, $transB);
-            asort($tmpArr);
+            sort($tmpArr);
 
-            return ($tmpArr[0] == $transA) ? 1 : -1;
+            return ($tmpArr[0] == $transA) ? -1 : 1;
         });
 
         return $tokens;
