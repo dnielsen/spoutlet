@@ -70,19 +70,10 @@ platformd:
         page_content:
             featured: Featured
             giveaways: Giveaways
-            competitions: Competitions
-            on_tour: On Tour
             all: All
             see_more: See More
             photo_gallery: Photo Gallery
             view_all: View All
-            redeem: Redeem
-            keys_available: Keys Available
-            ad_url: "/images/ads/aw-ms7-728x90-en.jpg"
-            deals_add_url: "/8969129/300x250_EN"
-            deals_ad_link_url: "http://alienware.com"
-            landing_image_url: "/images/AWinvades-jp.jpg"
-            landing_image_target: '/news'
 
         bottom_menu:
             contact_us: Contact Us

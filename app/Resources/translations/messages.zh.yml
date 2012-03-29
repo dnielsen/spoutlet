@@ -70,19 +70,10 @@ platformd:
         page_content:
             featured: 专栏
             giveaways: 邀请码
-            competitions: 比赛
-            on_tour: 巡回赛
             all: 所有
             see_more: 更多
             photo_gallery: 照片库
             view_all: 查看所有
-            redeem: 兑换
-            keys_available: 有邀请码
-            ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
-            deals_add_url: "/8969129/300x250_CN"
-            deals_ad_link_url: "http://alienware.com.cn/"
-            landing_image_url: "/images/AWinvades-cn.jpg"
-            landing_image_target: '/news'
 
         bottom_menu:
             contact_us: 联系我们
