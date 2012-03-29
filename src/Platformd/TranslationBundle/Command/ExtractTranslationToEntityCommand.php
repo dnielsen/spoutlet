@@ -56,10 +56,6 @@ class ExtractTranslationToEntitycommand extends ContainerAwareCommand
             $logger->setLevel(OutputLogger::ALL ^ OutputLogger::DEBUG);
         }
 
-        $updater->setConfig($config);
-        $scannedCatalogue = $updater->getScannedCatalogue();
-
-
         $updater->updateTranslationTokens();
 
         $output->writeln('done!');

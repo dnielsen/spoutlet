@@ -9,7 +9,7 @@ services:
     pd_translation.translation.updater:
         class: Platformd\TranslationBundle\Translation\Updater
         arguments:
-            - "@jms_translation.loader_manager"
-            - "@jms_translation.extractor_manager"
+            - "@translator"
             - "@doctrine.orm.entity_manager"
+            - "%kernel.cache_dir%/translations"
             - "@logger"

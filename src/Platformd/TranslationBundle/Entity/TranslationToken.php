@@ -11,7 +11,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * A token consists of the actual source string (e.g. home_page) and the domain
  *
  * @ORM\Entity(repositoryClass="Platformd\TranslationBundle\Entity\Repository\TranslationTokenRepository")
- * @ORM\Table(name="pd_translation_token")
+ * @ORM\Table(
+ *      name="pd_translation_token",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="token_domain_idx", columns={"token", "domain"})}
+ * )
  */
 class TranslationToken
 {
@@ -27,7 +30,7 @@ class TranslationToken
     protected $domain;
 
     /**
-     * @ORM\column(type="string", length=200, unique=true)
+     * @ORM\column(type="string", length=200, unique=false)
      */
     protected $token;
 
@@ -48,13 +51,13 @@ class TranslationToken
     protected $updated;
 
     /**
-     * Whether or not this token was included in the last extraction
+     * Whether or not this token is found in the message files
      *
      * @var bool
      *
      * @ORM\Column(type="boolean")
      */
-    protected $isFromExtraction = false;
+    protected $isInMessagesFile = false;
 
     public function getId()
     {
@@ -116,16 +119,16 @@ class TranslationToken
     /**
      * @return boolean
      */
-    public function getIsFromExtraction()
+    public function getIsInMessagesFile()
     {
-        return $this->isFromExtraction;
+        return $this->isInMessagesFile;
     }
 
     /**
-     * @param boolean $isFromExtraction
+     * @param boolean $isInMessagesFile
      */
-    public function setIsFromExtraction($isFromExtraction)
+    public function setIsInMessagesFile($isInMessagesFile)
     {
-        $this->isFromExtraction = $isFromExtraction;
+        $this->isInMessagesFile = $isInMessagesFile;
     }
 }
