@@ -4,6 +4,8 @@ namespace Platformd\TranslationBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class TranslationAdminController extends Controller
 {
@@ -54,6 +56,42 @@ class TranslationAdminController extends Controller
         return array('tokens' => $tokens, 'localeName' => $localeName, 'locale' => $locale);
     }
 
+    /**
+     * AJAX endpoint to actually update a translation
+     *
+     * @param $tokenId
+     * @param $locale
+     */
+    public function updateTranslationAction($tokenId, $locale, Request $request)
+    {
+        $token = $this->getTokenRepository()->find($tokenId);
+        if (!$token) {
+            throw $this->createNotFoundException('No translation token for id '.$tokenId);
+        }
+
+        if (!in_array($locale, $this->getAvailableLocales())) {
+            throw $this->createNotFoundException(sprintf('Locale "%s" is not a valid locale', $locale));
+        }
+
+        $translation = $this->getTranslationRepository()->getOrCreateTranslation($token, $locale);
+        $newString = $request->request->get('translation');
+        $translation->setTranslation($newString);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($translation);
+        $em->flush();
+
+        $data = array(
+            'status' => 1,
+            'translation' => $newString,
+        );
+
+        $response =  new Response(json_encode($data));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     private function getAvailableLocales()
     {
         return $this->container->getParameter('available_locales');
@@ -67,6 +105,16 @@ class TranslationAdminController extends Controller
         return $this->getDoctrine()
             ->getRepository('TranslationBundle:TranslationToken')
         ;
+    }
+
+    /**
+     * @return \Platformd\TranslationBundle\Entity\Repository\TranslationRepository
+     */
+    private function getTranslationRepository()
+    {
+        return $this->getDoctrine()
+            ->getRepository('TranslationBundle:Translation')
+            ;
     }
 
     /**

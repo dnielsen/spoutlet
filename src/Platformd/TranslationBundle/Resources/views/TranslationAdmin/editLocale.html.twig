@@ -5,7 +5,7 @@
 {% block content %}
     <h1>{{ 'edit_locale_title' | trans({'%locale%': localeName}) }}</h1>
 
-    <table class="list zebra-striped">
+    <table class="list zebra-striped admin-translations-table">
         <thead>
             <tr>
                 <th>English</th>
@@ -18,12 +18,77 @@
                     <td>
                         {{ token.token | trans({}, token.domain, 'en') }}
                     </td>
-                    <td data-token-id="{{ token.id }}">
-                        {{ token.token | trans({}, token.domain, locale) }}
+                    <td class="translation-wrapper">
+                        <div class="display-form">
+                            <a class="translation-edit" href="#" data-token-id="{{ token.id }}">{{ 'edit' | trans }}</a>
+                            <span class="translation-value">
+                                {{ token.token | trans({}, token.domain, locale) }}
+                            </span>
+                        </div>
+
+                        <div class="edit-form">
+                            <form action="{{ path('pd_translation_admin_update_translation', {
+                                'locale': locale,
+                                'tokenId' : token.id
+                            }) }}" method="POST">
+                                <input type="text" name="translation" value="{{ token.token | trans({}, token.domain, locale) }}" />
+
+                                <input type="submit" value="{{ 'save' | trans }}" class="btn save-btn" data-original-value="{{ 'save' | trans }}" />
+                            </form>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/alt_js/jquery.form.js') }}"></script>
+
+    <script type="text/javascript">
+
+        jQuery(document).ready(function() {
+            $('.edit-form form').ajaxForm({
+                beforeSubmit: function(arr, $form) {
+
+                    // make the save button be "saving"
+                    $form.find('.save-btn').val('{{ 'saving' | trans }}')
+                },
+
+                success: function(response, statusText, xhr, $form) {
+                    console.log(response);
+                    var $wrapper = $form.closest('.translation-wrapper');
+
+                    // fill in the new translation value for display
+                    $wrapper.find('.translation-value').html(response.translation);
+
+                    // show the normal display, hide the edit form
+                    $wrapper.find('.display-form').show();
+                    $wrapper.find('.edit-form').hide();
+
+                    // put the save button back together
+                    var $saveBtn = $wrapper.find('.save-btn');
+                    $saveBtn.val($saveBtn.data('original-value'))
+                },
+
+                error: function() {
+                    alert('There was an error - the translation was not saved');
+                }
+            });
+
+            $('.translation-edit').on('click', function(e) {
+                e.preventDefault();
+
+                var $wrapper = $(this).closest('.translation-wrapper');
+
+                // show the form, hide the normal display
+                $wrapper.find('.display-form').hide();
+                $wrapper.find('.edit-form').show();
+            });
+        });
+    </script>
 {% endblock %}

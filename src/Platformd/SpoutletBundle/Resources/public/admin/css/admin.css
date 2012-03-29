@@ -31,3 +31,7 @@ label {
 form .input {
     margin-left: 195px;
 }
+
+.admin-translations-table .edit-form {
+    display: none;
+}

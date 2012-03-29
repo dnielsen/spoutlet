@@ -5,3 +5,9 @@ pd_translation_admin_list_locales:
 pd_translation_admin_edit_locale:
     pattern: /admin/translations/{locale}
     defaults: { _controller: TranslationBundle:TranslationAdmin:editLocale }
+
+pd_translation_admin_update_translation:
+    pattern: /admin/translations/{locale}/{tokenId}
+    defaults: { _controller: TranslationBundle:TranslationAdmin:updateTranslation }
+    requirements:
+        _method: PUT|POST
