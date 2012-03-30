@@ -17,24 +17,80 @@ use Behat\Behat\Context\Step\When;
 class FeatureContext extends MinkContext
 {
     /**
-     * @Given /^I am authenticated as "([^"]*)"$/
+     * @var \Platformd\UserBundle\Entity\User
      */
-    public function iAmAuthenticatedAs($username)
-    {
-        /** @var $user \Platformd\UserBundle\Entity\User */
-        $user = $this->getEntityManager()
-            ->getRepository('UserBundle:User')
-            ->findOneBy(array('username' => $username))
-        ;
+    protected $currentUser;
 
-        if (!$user) {
-            throw new \Exception('Cannot find user with username '.$username);
-        }
+    /**
+     * @Given /^I am authenticated$/
+     */
+    public function iAmAuthenticated()
+    {
+        $user = $this->getCurrentUser();
 
         return array(
-            new When(sprintf('I am on "/?username=%s"', $user->getId())),
-            new When('print last response'),
+            new When(sprintf('I am on "/?username=%s"', $user->getCevoUserId())),
         );
+    }
+
+    /**
+     * @Given /^I have an account/
+     */
+    public function IHaveAnAccount()
+    {
+        $um = $this->getUserManager();
+
+        $this->getEntityManager()
+            ->createQuery('DELETE FROM UserBundle:User')
+            ->execute()
+        ;
+
+        $user = $um->createUser();
+        $user->setUsername('user');
+        $user->setPlainPassword('user');
+        $user->setEmail('user@user.com');
+        $user->setCevoUserId(55);
+
+        $um->updateUser($user);
+
+        $this->currentUser = $user;
+    }
+
+    /**
+     * @Given /^I have the "([^"]*)" permissions$/
+     */
+    public function iHaveThePermissions($roles)
+    {
+        $roles = explode(',', $roles);
+
+        $user = $this->getCurrentUser();
+
+        foreach ($roles as $role) {
+            $user->addRole(trim($role));
+        }
+
+        $this->getUserManager()->updateUser($user);
+    }
+
+    /**
+     * @return \FOS\UserBundle\Model\UserManagerInterface
+     */
+    protected function getUserManager()
+    {
+        return $this->getContainer()->get('fos_user.user_manager');
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\User
+     * @throws \Exception
+     */
+    protected function getCurrentUser()
+    {
+        if (!$this->currentUser) {
+            throw new \Exception('Please call "I have an account" first');
+        }
+
+        return $this->currentUser;
     }
 
     /**

@@ -4,10 +4,12 @@ Feature: Metrics
   I need to view statistics about different ghings
 
   Scenario: I can access the giveaways metrics page
-    Given I am authenticated as "admin"
-    When I go to "/admin/giveaways/metrics"
-     Then the "h1" element should contain "Key Giveaways"
-      And I should see a "table.zebra-striped" element
+    Given I have an account
+    And I have the "ROLE_ADMIN, ROLE_STATS_ADMIN" permissions
+     And I am authenticated
+    When I go to "/admin/metrics/giveaways"
+    Then the "h1" element should contain "Key Giveaways"
+     And I should see a "table.zebra-striped" element
 
   Scenario: I can access the members metrics page
     Given I am authenticated as "admin"

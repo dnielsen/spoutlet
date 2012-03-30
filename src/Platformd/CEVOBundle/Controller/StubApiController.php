@@ -103,6 +103,14 @@ class StubApiController extends Controller
             throw new \Exception('You can only fake the one user in the test environment - sent '.$userId);
         }
 
+        $user = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('UserBundle:User')
+            ->findOneBy(array('cevoUserId' => $userId))
+        ;
+        // default to our fake admin user
+        $username = $user ? $user->getUsername() : 'admin';
+
         if ($request->request->get('_method') != ApiManager::METHOD_AUTH_USER_DETAILS) {
             throw new \Exception('The _method is not set or incorrect!');
         }
@@ -110,8 +118,8 @@ class StubApiController extends Controller
         $data = array(
             'user' => array(
                 'user_id'       => $userId,
-                'username'      => 'admin',
-                'handle'        => 'admin',
+                'username'      => $username,
+                'handle'        => $username,
                 'avatar_url'    => 'http://avatar.com',
                 'country'       => 'japan',
                 'profile_url'   => 'http://profile.com',
