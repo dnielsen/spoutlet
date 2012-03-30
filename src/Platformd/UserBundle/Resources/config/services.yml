@@ -54,6 +54,7 @@ services:
         arguments:
             - "@security.context"
             - %base_host%
+            - "%allow_faked_auth%"
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
 
