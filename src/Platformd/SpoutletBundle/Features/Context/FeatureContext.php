@@ -19,13 +19,32 @@ class FeatureContext extends MinkContext
     /**
      * @Given /^I am authenticated as "([^"]*)"$/
      */
-    public function iAmAuthenticatedAs($user)
+    public function iAmAuthenticatedAs($username)
     {
+        /** @var $user \Platformd\UserBundle\Entity\User */
+        $user = $this->getEntityManager()
+            ->getRepository('UserBundle:User')
+            ->findOneBy(array('username' => $username))
+        ;
+
+        if (!$user) {
+            throw new \Exception('Cannot find user with username '.$username);
+        }
+
         return array(
-            new When('I am on "/login"'),
-            new When(sprintf('I fill in "Email:" with "%s"', $user)),
-            new When(sprintf('I fill in "Password:" with "%s"', $user)),
-            new When('I press "Login"'),
+            new When(sprintf('I am on "/?username=%s"', $user->getId())),
+            new When('print last response'),
         );
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->getContainer()
+            ->get('doctrine')
+            ->getEntityManager()
+        ;
     }
 }

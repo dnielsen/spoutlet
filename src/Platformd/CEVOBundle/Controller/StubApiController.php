@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use Platformd\UserBundle\Entity\User;
 use Platformd\CEVOBundle\Api\ApiManager;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * A controller that "fakes" the CEVO API in development only
@@ -28,9 +30,15 @@ class StubApiController extends Controller
      */
     public function stubEndpointAction($action, Request $request)
     {
-        $cheatCookies = $this->container->getParameter('kernel.environment') != 'test';
+        $isTestEnv = $this->container->getParameter('kernel.environment') == 'test';
 
         $return = $request->query->get('return');
+
+        // in the test environment, we redirect back with this, which actually triggers the auth
+        if ($isTestEnv) {
+            $return .= '?username='.self::FAKE_USER_ID;
+        }
+
         $session = $request->getSession();
 
         $cookieName = CEVOAuthenticationListener::COOKIE_NAME;
@@ -40,16 +48,12 @@ class StubApiController extends Controller
         $response = new Response();
 
         $host = $this->container->getParameter('base_host');
-        // sanity check
-        if (strpos($request->getHttpHost(), $host) === false) {
-            throw new \InvalidArgumentException('Base host is not valid for the current host: '. $request->getHttpHost());
-        }
 
         switch ($action) {
             case 'login':
             case 'register':
                 // getting inconsistent results, using both methods to set cookie
-                if ($cheatCookies) {
+                if (!$isTestEnv) {
                     setcookie($cookieName, $cookieValue, null, '/', $host);
                 }
                 $cookie = new Cookie($cookieName, $cookieValue, 0, '/', $host, false, false);
@@ -58,7 +62,7 @@ class StubApiController extends Controller
                 break;
             case 'logout':
                 // getting inconsistent results, using both methods to set cookie
-                if ($cheatCookies) {
+                if (!$isTestEnv) {
                     setcookie($cookieName, '', null, '/', $host);
                 }
                 $response->headers->clearCookie($cookieName, '/', $host);
@@ -73,7 +77,7 @@ class StubApiController extends Controller
             'return' => $return,
         ));
 
-        if ($cheatCookies) {
+        if (!$isTestEnv) {
             // for some reason setting cookies is iffy, so totally hacking this
             echo $html;die;
         }
@@ -88,8 +92,15 @@ class StubApiController extends Controller
      */
     public function getAuthenticatedUsersDetailsAction(Request $request)
     {
-        if ($request->request->get('_user_id') != self::FAKE_USER_ID) {
-            throw new \Exception('The _user_id param was not sent or is wrong!');
+        $userId = $request->request->get('_user_id');
+
+        if (!$userId) {
+            throw new \Exception('The _user_id param was not sent!');
+        }
+
+        $isTestEnv = $this->container->getParameter('kernel.environment') == 'test';
+        if (!$isTestEnv && $userId != self::FAKE_USER_ID) {
+            throw new \Exception('You can only fake the one user in the test environment - sent '.$userId);
         }
 
         if ($request->request->get('_method') != ApiManager::METHOD_AUTH_USER_DETAILS) {
@@ -98,7 +109,7 @@ class StubApiController extends Controller
 
         $data = array(
             'user' => array(
-                'user_id'       => self::FAKE_USER_ID,
+                'user_id'       => $userId,
                 'username'      => 'admin',
                 'handle'        => 'admin',
                 'avatar_url'    => 'http://avatar.com',
