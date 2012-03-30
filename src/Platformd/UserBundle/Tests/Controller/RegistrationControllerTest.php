@@ -19,7 +19,7 @@ class RegistrationControllerTest extends WebTestCase
         
         $this->assertTrue($response->isRedirect());
         $returnUrl = $client->getRequest()->getUriForPath('/video/foo');
-        $targetUrl = 'http://localhost/cevo/api/stub/account/register?return='.urlencode($returnUrl);
+        $targetUrl = 'http://demo.pd.l/app_test.php/cevo/api/stub/account/register?return='.urlencode($returnUrl);
         $this->assertEquals($targetUrl, $response->headers->get('Location'));
     }
 }

@@ -40,10 +40,7 @@ class FeatureContext extends MinkContext
     {
         $um = $this->getUserManager();
 
-        $this->getEntityManager()
-            ->createQuery('DELETE FROM UserBundle:User')
-            ->execute()
-        ;
+        $this->iHaveNoInTheDatabase('UserBundle:User');
 
         $user = $um->createUser();
         $user->setUsername('user');
@@ -101,6 +98,17 @@ class FeatureContext extends MinkContext
         return $this->getContainer()
             ->get('doctrine')
             ->getEntityManager()
+        ;
+    }
+
+    /**
+     * @Given /^I have no "([^"]*)" in the database$/
+     */
+    public function iHaveNoInTheDatabase($model)
+    {
+        $this->getEntityManager()
+            ->createQuery(sprintf('DELETE FROM %s', $model))
+            ->execute()
         ;
     }
 }
