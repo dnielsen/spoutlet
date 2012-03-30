@@ -37,6 +37,8 @@ class EntityLoader implements LoaderInterface
             // we're extra careful here since this is during the cache warmup process
             // without this, we can really deploy new db changes to the translations without
             // everything exploding
+
+            return new MessageCatalogue($locale);
         }
 
         $catalogue = new MessageCatalogue($locale);
