@@ -13,6 +13,7 @@ framework:
     test: ~
     session:
         storage_id: session.storage.filesystem
+        domain:         ~
 
 web_profiler:
     toolbar: false
