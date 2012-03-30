@@ -77,7 +77,8 @@ class CEVOAuthenticationListener implements ListenerInterface
         }
 
         // an actual "logout" listener - listens to see if we're logged in, but the cookie is gone
-        if ($this->forceLogout($request, $sessionString)) {
+        // don't do this in "Faked" auth land, where we don't really use cookies
+        if (!$this->allowFakedAuth && $this->forceLogout($request, $sessionString)) {
             // actually log them out
             $request->getSession()->invalidate();
             $this->securityContext->setToken(null);
