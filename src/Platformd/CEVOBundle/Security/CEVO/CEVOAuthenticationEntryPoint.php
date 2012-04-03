@@ -37,9 +37,14 @@ class CEVOAuthenticationEntryPoint implements AuthenticationEntryPointInterface
         // make the "return" the URL that was previously requested, or homepage
         $returnPath = $request->getSession()->get('_security.target_path', '/');
 
+        // I don't know if this happens in practice (http seems to be there), but just in case
+        if (strpos($returnPath, 'http') !== 0) {
+            $returnPath = $request->getUriForPath($returnPath);
+        }
+
         $url = $this->cevoAuthManager->generateCevoUrl(
             CEVOAuthManager::LOGIN_PATH,
-            $request->getUriForPath($returnPath)
+            $returnPath
         );
 
         return new RedirectResponse($url);

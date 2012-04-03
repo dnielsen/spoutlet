@@ -52,8 +52,13 @@
 
                         <div class="widget-content">
                             {% if isEntered %}
+
                                 <p>{{ 'already_entered_sweepstakes' | trans }}</p>
-                            
+
+                            {% elseif not sweepstakes.isCurrentlyOpen %}
+
+                                <p>{{ 'sweeps_not_open' | trans }}</p>
+
                             {% else %}
                                 <ol>
                                     {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}

@@ -35,6 +35,27 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
+     * The same as getCurrentEvents(), but ordered by created
+     *
+     * @param $locale
+     * @param null $limit
+     * @return array|mixed
+     */
+    public function getCurrentEventsOrderedByCreated($locale, $limit = null)
+    {
+        $qb = $this->getBaseQueryBuilder($locale);
+        $query = $this->addActiveQuery($qb)
+            ->orderBy('e.created', 'DESC')
+            ->getQuery()
+        ;
+
+        $items = $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
+    }
+
+    /**
      * A funky little function that only return Events and Sweepstakes
      *
      * @param string $locale
