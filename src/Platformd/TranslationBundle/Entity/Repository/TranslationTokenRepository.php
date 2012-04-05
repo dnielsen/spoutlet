@@ -9,6 +9,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class TranslationTokenRepository extends EntityRepository
 {
+    /**
+     * Used in Updater to return all of the tokens for a domain, where the array key is the token
+     *
+     * @param string $domain
+     * @return array
+     */
     public function getTokensForDomainKeyedArray($domain)
     {
         $results = $this->createQueryBuilder('tt')
@@ -65,5 +71,19 @@ class TranslationTokenRepository extends EntityRepository
         }
 
         return $localesArr;
+    }
+
+    /**
+     * Returns all of the "editable" translation tokens - those without a parent
+     *
+     * @return \Platformd\TranslationBundle\Entity\TranslationToken[]
+     */
+    public function findAllNonChildrenTokens()
+    {
+        return $this->createQueryBuilder('tt')
+            ->andWhere('tt.parent IS NULL')
+            ->getQuery()
+            ->execute()
+        ;
     }
 }

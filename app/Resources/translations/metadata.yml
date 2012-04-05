@@ -9,3 +9,7 @@ alienware.social.twitter_url:
     description: The URL to your Twitter account. If left blank, no twitter icon will be displayed
 alienware.social.facebook_url:
     description: The URL to your Facebook page. If left blank, no twitter icon will be displayed
+
+# "Duplicates" that are hidden by having a parent
+giveway_pool_isActive:
+    parent: platformd.giveaway.status.active

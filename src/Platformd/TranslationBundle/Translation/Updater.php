@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManager;
 use JMS\TranslationBundle\Model\MessageCollection;
 use Platformd\TranslationBundle\Entity\TranslationToken;
 use Symfony\Component\Yaml\Yaml;
+use Platformd\TranslationBundle\Translation\TranslationMetadata;
 
 /**
  * Responsible for collecting the "scanned" catalog and then making changes to our TranslationToken database
@@ -34,6 +35,11 @@ class Updater
 
     private $metadataData;
 
+    /**
+     * @var \Platformd\TranslationBundle\Translation\TranslationMetadata[]
+     */
+    private $metadatas = array();
+
     public function __construct(TranslatorInterface $translator, EntityManager $em, $translationsCacheDir, $kernelRootDir, LoggerInterface $logger)
     {
         $this->translator = $translator;
@@ -50,6 +56,10 @@ class Updater
         $this->logger = $logger;
     }
 
+    /**
+     * Used by our Symfony Command - this adds/updates any TranslationToken
+     * objects in the database based on the currently compiled english catalog.
+     */
     public function updateTranslationTokens()
     {
         // prime the cache
@@ -66,12 +76,38 @@ class Updater
     }
 
     /**
+     * Actually updates a translation
+     *
+     * @param \Platformd\TranslationBundle\Entity\TranslationToken $token
+     * @param string $locale The locale being updated
+     * @param string $updatedTranslationString The actual raw translation
+     * @param bool $withFlush
+     */
+    public function updateTranslation(TranslationToken $token, $locale, $updatedTranslationString, $withFlush = true)
+    {
+        $translation = $this->getTranslationRepository()->getOrCreateTranslation($token, $locale);
+        $translation->setTranslation($updatedTranslationString);
+
+        $this->em->persist($translation);
+
+        // recursively update the children, but not with a flush
+        foreach ($token->getChildren() as $childToken) {
+            $this->updateTranslation($childToken, $locale, $updatedTranslationString, false);
+        }
+
+        if ($withFlush) {
+            $this->em->flush();
+        }
+    }
+
+    /**
      * Updates a specific domain of TranslationToken
      *
      * @param $domain
-     * @param \JMS\TranslationBundle\Model\MessageCollection $messages
+     * @param array $messages
+     * @throws \InvalidArgumentException
      */
-    private function updateTranslationsTokensForDomain($domain, $messages)
+    private function updateTranslationsTokensForDomain($domain, array $messages)
     {
         $existingTokens = $this->getTranslationTokenRepo()->getTokensForDomainKeyedArray($domain);
 
@@ -97,9 +133,20 @@ class Updater
             }
 
             $metadata = $this->getMetadataForKey($messageKey);
-            if (isset($metadata['description']) && $metadata['description'] && !$token->getDescription()) {
+            if ($metadata->getDescription() && !$token->getDescription()) {
                 $this->logger->info(sprintf('Description for token : "%s"', $messageKey));
-                $token->setDescription($metadata['description']);
+                $token->setDescription($metadata->getDescription());
+            }
+
+            if ($metadata->getParentTranslationKey() && $metadata->getParentTranslationKey() != $token->getParentToken()) {
+                $this->logger->info(sprintf('Parent: setting "%s" to have "%s" as a parent', $messageKey, $metadata->getParentTranslationKey()));
+
+                $parent = $this->findTokenEntity($metadata->getParentTranslationKey());
+                if (!$parent) {
+                    throw new \InvalidArgumentException(sprintf('Cannot find parent with token "%s"', $metadata->getParentTranslationKey()));
+                }
+
+                $token->setParent($parent);
             }
         }
 
@@ -115,8 +162,19 @@ class Updater
     }
 
     /**
+     * @param string $token
+     * @return \Platformd\TranslationBundle\Entity\TranslationToken
+     */
+    private function findTokenEntity($token)
+    {
+        return $this->em->getRepository('TranslationBundle:TranslationToken')
+            ->findOneBy(array('token' => $token))
+        ;
+    }
+
+    /**
      * @param string $key The translation key
-     * @return array
+     * @return TranslationMetadata
      */
     private function getMetadataForKey($key)
     {
@@ -124,7 +182,24 @@ class Updater
             $this->loadMetadata();
         }
 
-        return isset($this->metadataData[$key]) ? $this->metadataData[$key] : array('description' => '');
+        if (!isset($this->metadatas[$key])) {
+            // create the new TranslationMetadata from the array information
+            $data = isset($this->metadataData[$key]) ? $this->metadataData[$key] : array();
+
+            $metadata = new TranslationMetadata($key);
+
+            if (isset($data['description'])) {
+                $metadata->setDescription($data['description']);
+            }
+
+            if (isset($data['parent'])) {
+                $metadata->setParentTranslationKey($data['parent']);
+            }
+
+            $this->metadatas[$key] = $metadata;
+        }
+
+        return $this->metadatas[$key];
     }
 
     /**
@@ -149,5 +224,13 @@ class Updater
     private function getTranslationTokenRepo()
     {
         return $this->em->getRepository('TranslationBundle:TranslationToken');
+    }
+
+    /**
+     * @return \Platformd\TranslationBundle\Entity\Repository\TranslationRepository
+     */
+    private function getTranslationRepository()
+    {
+        return $this->em->getRepository('TranslationBundle:Translation');
     }
 }

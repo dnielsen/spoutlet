@@ -72,9 +72,32 @@ class TranslationToken
      */
     protected $translations;
 
+    /**
+     * An optional "parent" translation token.
+     *
+     * Only the parent will be editable, and the save will cascade onto
+     * all of the children.
+     *
+     * This is used for translations that are duplicates, but we don't want
+     * to expose the duplicates in the admin.
+     *
+     * @var TranslationToken
+     *
+     * @ORM\ManyToOne(targetEntity="TranslationToken", inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $parent;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="TranslationToken", mappedBy="parent")
+     */
+    protected $children;
+
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId()
@@ -164,5 +187,39 @@ class TranslationToken
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * @return \Platformd\TranslationBundle\Entity\TranslationToken
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param \Platformd\TranslationBundle\Entity\TranslationToken $parent
+     */
+    public function setParent(TranslationToken $parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * Helper to get the parent translation token
+     *
+     * @return string|null
+     */
+    public function getParentToken()
+    {
+        return $this->getParent() ? $this->getParent()->getToken() : null;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

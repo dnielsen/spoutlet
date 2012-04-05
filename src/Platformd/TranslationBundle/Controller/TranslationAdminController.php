@@ -50,7 +50,7 @@ class TranslationAdminController extends Controller
             ->addChild($localeName)
         ;
 
-        $tokens = $this->getTokenRepository()->findAll();
+        $tokens = $this->getTokenRepository()->findAllNonChildrenTokens();
         $tokens = $this->sortTokens($tokens);
 
         return array('tokens' => $tokens, 'localeName' => $localeName, 'locale' => $locale);
@@ -73,13 +73,10 @@ class TranslationAdminController extends Controller
             throw $this->createNotFoundException(sprintf('Locale "%s" is not a valid locale', $locale));
         }
 
-        $translation = $this->getTranslationRepository()->getOrCreateTranslation($token, $locale);
         $newString = $request->request->get('translation');
-        $translation->setTranslation($newString);
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($translation);
-        $em->flush();
+        // actually does the updating (with recursive to children)
+        $this->getTranslationUpdater()->updateTranslation($token, $locale, $newString);
 
         $data = array(
             'status' => 1,
@@ -108,13 +105,11 @@ class TranslationAdminController extends Controller
     }
 
     /**
-     * @return \Platformd\TranslationBundle\Entity\Repository\TranslationRepository
+     * @return \Platformd\TranslationBundle\Translation\Updater
      */
-    private function getTranslationRepository()
+    private function getTranslationUpdater()
     {
-        return $this->getDoctrine()
-            ->getRepository('TranslationBundle:Translation')
-            ;
+        return $this->container->get('pd_translation.translation.updater');
     }
 
     /**
