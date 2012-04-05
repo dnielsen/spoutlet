@@ -1,0 +1,11 @@
+# A place to be able to add some extra metadata about translations when necessary
+# This will help define the translations in the admin area
+
+# This file is "domain-less". The idea is that if we have two translation
+# keys in 2 different domains, then it's probably ok that they share metadata
+# Basically, I'm not planning for this edge case
+
+alienware.social.twitter_url:
+    description: The URL to your Twitter account. If left blank, no twitter icon will be displayed
+alienware.social.facebook_url:
+    description: The URL to your Facebook page. If left blank, no twitter icon will be displayed

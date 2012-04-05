@@ -31,9 +31,15 @@ class TranslationToken
     protected $domain;
 
     /**
-     * @ORM\column(type="string", length=200, unique=false)
+     * @ORM\Column(type="string", length=200, unique=false)
      */
     protected $token;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
 
     /**
      * @var \DateTime $created
@@ -142,5 +148,21 @@ class TranslationToken
     public function setIsInMessagesFile($isInMessagesFile)
     {
         $this->isInMessagesFile = $isInMessagesFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 }

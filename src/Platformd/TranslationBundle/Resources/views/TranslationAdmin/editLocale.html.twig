@@ -8,15 +8,21 @@
     <table class="list zebra-striped admin-translations-table">
         <thead>
             <tr>
-                <th>English</th>
+                <th>{{ 'english' | trans({}, 'admin') }}</th>
                 <th>{{ localeName }}</th>
+                <th>{{ 'notes' | trans({}, 'admin') }}</th>
             </tr>
         </thead>
         <tbody>
             {% for token in tokens %}
                 <tr>
                     <td>
-                        {{ token.token | trans({}, token.domain, 'en') }}
+                        {% set translation = token.token | trans({}, token.domain, 'en') %}
+                        {% if translation %}
+                            {{ translation }}
+                        {% else %}
+                            <em>{{ 'no_translation_provided' | trans({}, 'admin') }}</em>
+                        {% endif %}
                     </td>
                     <td class="translation-wrapper">
                         <div class="display-form">
@@ -36,6 +42,9 @@
                                 <input type="submit" value="{{ 'save' | trans }}" class="btn save-btn" data-original-value="{{ 'save' | trans }}" />
                             </form>
                         </div>
+                    </td>
+                    <td>
+                        {{ token.description }}
                     </td>
                 </tr>
             {% endfor %}

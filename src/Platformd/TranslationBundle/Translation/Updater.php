@@ -9,6 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\TranslationBundle\Model\MessageCollection;
 use Platformd\TranslationBundle\Entity\TranslationToken;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Responsible for collecting the "scanned" catalog and then making changes to our TranslationToken database
@@ -29,16 +30,16 @@ class Updater
 
     private $translationsCacheDir;
 
-    /**
-     * @var \JMS\TranslationBundle\Translation\LoaderManager
-     */
-    private $loader;
+    private $kernelRootDir;
 
-    public function __construct(TranslatorInterface $translator, EntityManager $em, $translationsCacheDir, LoggerInterface $logger)
+    private $metadataData;
+
+    public function __construct(TranslatorInterface $translator, EntityManager $em, $translationsCacheDir, $kernelRootDir, LoggerInterface $logger)
     {
         $this->translator = $translator;
         $this->em = $em;
         $this->translationsCacheDir = $translationsCacheDir;
+        $this->kernelRootDir = $kernelRootDir;
         $this->logger = $logger;
 
         //'%kernel.cache_dir%/translations';
@@ -77,22 +78,28 @@ class Updater
         foreach ($messages as $messageKey => $message)
         {
             if (!isset($existingTokens[$messageKey])) {
-                $newToken = new TranslationToken();
-                $newToken->setDomain($domain);
-                $newToken->setToken($messageKey);
-                $newToken->setIsInMessagesFile(true);
+                $token = new TranslationToken();
+                $token->setDomain($domain);
+                $token->setToken($messageKey);
+                $token->setIsInMessagesFile(true);
 
-                $this->em->persist($newToken);
+                $this->em->persist($token);
 
                 $this->logger->info(sprintf('Adding new token: "%s" into domain "%s"', $messageKey, $domain));
             } else {
                 // existing token
-                $existingToken = $existingTokens[$messageKey];
+                $token = $existingTokens[$messageKey];
                 unset($existingTokens[$messageKey]);
 
-                $existingToken->setIsInMessagesFile(true);
+                $token->setIsInMessagesFile(true);
 
-                $this->em->persist($existingToken);
+                $this->em->persist($token);
+            }
+
+            $metadata = $this->getMetadataForKey($messageKey);
+            if (isset($metadata['description']) && $metadata['description'] && !$token->getDescription()) {
+                $this->logger->info(sprintf('Description for token : "%s"', $messageKey));
+                $token->setDescription($metadata['description']);
             }
         }
 
@@ -105,6 +112,35 @@ class Updater
         }
 
         $this->em->flush();
+    }
+
+    /**
+     * @param string $key The translation key
+     * @return array
+     */
+    private function getMetadataForKey($key)
+    {
+        if ($this->metadataData === null) {
+            $this->loadMetadata();
+        }
+
+        return isset($this->metadataData[$key]) ? $this->metadataData[$key] : array('description' => '');
+    }
+
+    /**
+     * Parses the metadata.yml file and loads it into our metadata array
+     *
+     * @throws \Exception
+     */
+    private function loadMetadata()
+    {
+        $metadataFile = $this->kernelRootDir.'/Resources/translations/metadata.yml';
+
+        if (!file_exists($metadataFile)) {
+            throw new \Exception('Cannot find translation metadata file at '.$metadataFile);
+        }
+
+        $this->metadataData = Yaml::parse(file_get_contents($metadataFile));
     }
 
     /**

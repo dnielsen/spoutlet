@@ -15,6 +15,7 @@ services:
             - "@translator"
             - "@doctrine.orm.entity_manager"
             - "%kernel.cache_dir%/%translations_cache_dir_name%"
+            - "%kernel.root_dir%"
             - "@logger"
 
     pd_translation.doctrine.translation_listener:
