@@ -33,6 +33,15 @@ class EntityLoader implements LoaderInterface
     {
         try {
             $translations = $this->translationRepository->getTranslationsForLanguageAndDomain($locale, $domain);
+
+            $catalogue = new MessageCatalogue($locale);
+
+            /** @var $translation \Platformd\TranslationBundle\Entity\Translation */
+            foreach($translations as $translation){
+                $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
+            }
+
+            return $catalogue;
         } catch (\PDOException $e) {
             // we're extra careful here since this is during the cache warmup process
             // without this, we can really deploy new db changes to the translations without
@@ -40,14 +49,5 @@ class EntityLoader implements LoaderInterface
 
             return new MessageCatalogue($locale);
         }
-
-        $catalogue = new MessageCatalogue($locale);
-
-        /** @var $translation \Platformd\TranslationBundle\Entity\Translation */
-        foreach($translations as $translation){
-            $catalogue->set($translation->getTranslationToken()->getToken(), $translation->getTranslation(), $domain);
-        }
-
-        return $catalogue;
     }
 }
