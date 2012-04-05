@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: "@CEVOBundle/Resources/config/services.yml" }
     - { resource: "@CEVOBundle/Resources/config/security.yml" }
+    - { resource: version.php }
 
 framework:
     #esi:             ~
@@ -13,7 +14,9 @@ framework:
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
-    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    templating:
+        engines: ['twig']
+        assets_version: %app.version%
     session:
         default_locale: %locale%
         auto_start:     true

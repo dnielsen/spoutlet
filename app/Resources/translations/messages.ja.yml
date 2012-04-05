@@ -231,7 +231,7 @@ platformd:
         redeem:   引き換え
         get_key:  キー入手
         no_keys_left: このギブアウェイでキーはありません
-        max_ip_limit: あなたのIPアドレスではこれ以上のキーは取得できません
+        max_ip_limit: このＩＰアドレスからはキーを取得できません。エラーが原因だと思われる場合、japan@alienwarearena.comまでご連絡ください。
         already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
         admin:
