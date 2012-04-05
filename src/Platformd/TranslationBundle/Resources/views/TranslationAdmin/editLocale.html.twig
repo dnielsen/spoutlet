@@ -10,7 +10,7 @@
             <tr>
                 <th>{{ 'num' | trans({}, 'admin')}}</th>
                 <th>{{ 'english' | trans({}, 'admin') }}</th>
-                <th>{{ localeName }}</th>
+                <th>{{ localeName }}  ({{ 'click_to_edit' | trans }})</th>
                 <th>{{ 'notes' | trans({}, 'admin') }}</th>
             </tr>
         </thead>
@@ -27,11 +27,15 @@
                         {% endif %}
                     </td>
                     <td class="translation-wrapper">
+                        {% set translation = token.token | trans({}, token.domain, locale) %}
                         <div class="display-form">
-                            <a class="translation-edit" href="#" data-token-id="{{ token.id }}">{{ 'edit' | trans }}</a>
-                            <span class="translation-value">
-                                {{ token.token | trans({}, token.domain, locale) }}
-                            </span>
+                            <a href="#"  class="translation-value">
+                                {% if translation %}
+                                    {{ translation }}
+                                {% else %}
+                                    {{ 'edit' | trans }}
+                                {% endif %}
+                            </a>
                         </div>
 
                         <div class="edit-form">
@@ -39,7 +43,7 @@
                                 'locale': locale,
                                 'tokenId' : token.id
                             }) }}" method="POST">
-                                <input type="text" name="translation" value="{{ token.token | trans({}, token.domain, locale) }}" />
+                                <input type="text" name="translation" value="{{ translation }}" />
 
                                 <input type="submit" value="{{ 'save' | trans }}" class="btn save-btn" data-original-value="{{ 'save' | trans }}" />
                             </form>
@@ -71,11 +75,11 @@
                 },
 
                 success: function(response, statusText, xhr, $form) {
-                    console.log(response);
                     var $wrapper = $form.closest('.translation-wrapper');
 
                     // fill in the new translation value for display
-                    $wrapper.find('.translation-value').html(response.translation);
+                    var displayValue = response.translation ? response.translation : '{{ 'edit' | trans }}';
+                    $wrapper.find('.translation-value').html(displayValue);
 
                     // show the normal display, hide the edit form
                     $wrapper.find('.display-form').show();
@@ -91,7 +95,7 @@
                 }
             });
 
-            $('.translation-edit').on('click', function(e) {
+            $('.translation-value').on('click', function(e) {
                 e.preventDefault();
 
                 var $wrapper = $(this).closest('.translation-wrapper');
