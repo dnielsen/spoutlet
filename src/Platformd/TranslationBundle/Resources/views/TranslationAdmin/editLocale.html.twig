@@ -8,6 +8,7 @@
     <table class="list zebra-striped admin-translations-table">
         <thead>
             <tr>
+                <th>{{ 'num' | trans({}, 'admin')}}</th>
                 <th>{{ 'english' | trans({}, 'admin') }}</th>
                 <th>{{ localeName }}</th>
                 <th>{{ 'notes' | trans({}, 'admin') }}</th>
@@ -16,6 +17,7 @@
         <tbody>
             {% for token in tokens %}
                 <tr>
+                    <td>{{ token.id }}</td>
                     <td>
                         {% set translation = token.token | trans({}, token.domain, 'en') %}
                         {% if translation %}

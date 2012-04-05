@@ -2,3 +2,7 @@ tenant_site: Site
 english: English
 notes: Notes
 no_translation_provided: no translation provided
+num: Num
+delete: Delete
+description: Description
+email: Email

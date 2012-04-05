@@ -78,10 +78,11 @@ class TranslationTokenRepository extends EntityRepository
      *
      * @return \Platformd\TranslationBundle\Entity\TranslationToken[]
      */
-    public function findAllNonChildrenTokens()
+    public function findAllActiveNonChildrenTokens()
     {
         return $this->createQueryBuilder('tt')
             ->andWhere('tt.parent IS NULL')
+            ->andWhere('tt.isInMessagesFile = true')
             ->getQuery()
             ->execute()
         ;

@@ -9,7 +9,197 @@ alienware.social.twitter_url:
     description: The URL to your Twitter account. If left blank, no twitter icon will be displayed
 alienware.social.facebook_url:
     description: The URL to your Facebook page. If left blank, no twitter icon will be displayed
+platformd.layout.region.change:
+    description: Used in the upper left to change your language
+profile.show.title:
+    description: How a username is rendered on the profile page
 
 # "Duplicates" that are hidden by having a parent
 giveway_pool_isActive:
     parent: platformd.giveaway.status.active
+
+sweepstakes_date_format:
+    parent: platformd.comment.date_format
+    description: Format used when rendering a date
+
+source_alienware:
+    parent: platformd.layout.main_menu.alienware
+
+giveaway_bannerImageFile:
+    parent: Bannerimagefile
+event_bannerImageFile:
+    parent: Bannerimagefile
+
+fos_user_profile_form_user_cpu:
+    parent: profile.show.cpu
+
+platformd.user.account.change_password:
+    description: Used in several areas, as links to change password, as a page title
+resetting.reset.submit:
+    parent: platformd.user.account.change_password
+change_password.submit:
+    parent: platformd.user.account.change_password
+
+platformd.user.change_password_header:
+    description: Used in several areas, as links to change password, as a page title
+platformd.account_page.account.change_your_password:
+    parent: platformd.user.change_password_header
+
+fos_user_change_password_form_new_second:
+    parent: fos_user_registration_form_plainPassword_second
+fos_user_resetting_form_new_second:
+    parent: fos_user_registration_form_plainPassword_second
+
+event_country:
+    parent: fos_user_registration_form_country
+
+fos_user_change_password_form_current:
+    parent: fos_user_profile_form_current
+
+platformd.homepage_banner.admin.delete:
+    parent: delete
+fos_user_admin_delete:
+    parent: delete
+platformd.admin.news.delete:
+    parent: delete
+
+giveway_pool_description:
+    parent: description
+event_content:
+    parent: description
+giveaway_content:
+    parent: description
+
+fos_user_admin_edit:
+    parent: edit
+platformd.homepage_banner.admin.edit:
+    parent: edit
+fos_user_admin_user_edit:
+    parent: edit
+platformd.admin.news.edit:
+    parent: edit
+profile.show.edit:
+    parent: edit
+
+fos_user_registration_form_email:
+    parent: fos_user_profile_form_user_email
+resetting.request.username:
+    parent: fos_user_profile_form_user_email
+security.login.username_or_email:
+    parent: fos_user_profile_form_user_email
+
+event_ends_at:
+    parent: platformd.events.event_listings.end_date
+
+platformd.layout.region.english:
+    parent: english
+
+fos_user_admin_index_firstname:
+    parent: profile.show.firstname
+fos_user_profile_form_user_firstname:
+    parent: profile.show.firstname
+
+platformd.user.request_reset.title:
+    parent: platformd.user.reset.title
+
+giveway_pool_giveaway:
+    parent: platformd.giveaway.giveaway
+
+platformd.giveaway.giveaways_listings.giveaways:
+    parent: platformd.layout.page_content.giveaways
+
+platformd.events.event_listings.hosted_by:
+    parent: event_hosted_by
+
+"Bad credentials":
+    parent: "The presented password is invalid."
+
+fos_user_admin_index_lastname:
+    parent: profile.show.lastname
+fos_user_profile_form_user_lastname:
+    parent: profile.show.lastname
+
+platformd.events.event_listings.location:
+    parent: event_location
+
+platformd.layout.admin_menu.manage_users:
+    parent: platformd.users.user_listings.title
+
+giveaway_name:
+    parent: event_name
+
+fos_user_resetting_form_new_first:
+    parent: fos_user_change_password_form_new_first
+
+fos_user_registration_form_plainPassword_first:
+    parent: security.login.password
+
+"The presented password cannot be empty.":
+    parent: "Please enter a password"
+
+news_published:
+    parent: event_published
+
+registration.submit:
+    parent: layout.register
+platformd.events.event_show.register:
+    parent: layout.register
+platformd.layout.region.register:
+    parent: layout.register
+
+platformd.layout.top_menu.sign_in:
+    parent: layout.login
+
+giveaway_locale:
+    parent: tenant_site
+event_locale:
+    parent: tenant_site
+news_locale:
+    parent: tenant_site
+platformd_spoutletbundle_homepagebannertype_locale:
+    parent: tenant_site
+
+platformd.layout.bottom_menu.terms_and_conditions:
+    parent: platformd.user.register.terms_label
+
+platformd.homepage_banner.banners.thumb:
+    description: Used to describe banner thumbnails in the admin
+platformd_spoutletbundle_homepagebannertype_thumb_file:
+    parent: platformd.homepage_banner.banners.thumb
+
+platformd.admin.news.title:
+    parent: news_title
+
+platformd.homepage_banner.banners.url:
+    parent: url
+platformd_spoutletbundle_homepagebannertype_url:
+    parent: url
+
+profile.edit.submit:
+    parent: profile.show.update
+
+fos_user_profile_form_user_username:
+    parent: security.login.username
+fos_user_registration_form_username:
+    parent: security.login.username
+
+
+# unused translations that we're inheriting from a bundle
+profile.show.email:
+    disabled: true
+
+group.show.name:
+    disabled: true
+group.new.submit:
+    disabled: true
+group.flash.created:
+    disabled: true
+group.flash.deleted:
+    disabled: true
+group.flash.updated:
+    disabled: true
+group.edit.submit:
+    disabled: true
+
+profile.show.username:
+    disabled: true

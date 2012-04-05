@@ -61,7 +61,6 @@ platformd:
         main_menu:
             home: ホーム
             alienware: Alienware
-            alienware_url: http://www.alienware.jp/
             events: イベント
             video: ビデオ
             news: ニュース
@@ -82,7 +81,6 @@ platformd:
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
             link: "Alienware.jpへ移動する"
-            link_url: "http://alienware.jp/"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -113,12 +111,9 @@ platformd:
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
             no_active_giveaways: There are no active giveaways at this moment.
-        event_create:
-            create_new_event: 新しいイベントの作成
         event_show:
             register_event: イベントに登録
             unregister_event: Unregister for event
-            create_or_login: Alientware Arenaアカウントを作成するか、ログインしてください。
             register:       登録
         # used only in the admin area
         admin:
@@ -133,7 +128,6 @@ platformd:
             unknown: 不明なイベント \#%event_id% !
             save_event: イベントの保存
             unpublished_title: 未公開イベントの編集
-            new_title: 新規イベントの作成
             published_title: 公開済みイベントの編集
             banner_note: 推奨サイズ 950x120
 
@@ -153,7 +147,6 @@ platformd:
                 クトしてください。
             warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。Alienware Arenaはその責任を負うことができません。
             under_construction: "注：Alienware Arenaは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
-            edit_your_account: アカウント情報の編集
             change_your_password: パスワードの変更
         giveaway:
             your_giveaway_keys: 取得済みキー
@@ -181,9 +174,6 @@ platformd:
 
     about:
         title: Alienware Arenaについて
-
-    general:
-        alienware_link_url: http://www.alienware.jp/
 
     # used only in the admin area
     navigation:
@@ -353,6 +343,8 @@ alienware:
         follow_on_facebook: ''
         follow_on_twitter: ''
 
+    alienware_link_url: http://alienware.jp/
+
 # admin-only translations - we don't need these
 url:  URL
 total_registered: Total Registered
@@ -361,3 +353,5 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+username: ユーザー名

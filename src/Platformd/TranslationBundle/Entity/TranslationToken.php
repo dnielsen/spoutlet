@@ -200,7 +200,7 @@ class TranslationToken
     /**
      * @param \Platformd\TranslationBundle\Entity\TranslationToken $parent
      */
-    public function setParent(TranslationToken $parent)
+    public function setParent(TranslationToken $parent = null)
     {
         $this->parent = $parent;
     }

@@ -113,7 +113,14 @@ class Updater
 
         foreach ($messages as $messageKey => $message)
         {
+            $metadata = $this->getMetadataForKey($messageKey);
+
             if (!isset($existingTokens[$messageKey])) {
+                if (!$metadata->getIsEnabled()) {
+                    $this->logger->info(sprintf('Skipping disabled token "%s"', $messageKey));
+                    continue;
+                }
+
                 $token = new TranslationToken();
                 $token->setDomain($domain);
                 $token->setToken($messageKey);
@@ -132,26 +139,46 @@ class Updater
                 $this->em->persist($token);
             }
 
-            $metadata = $this->getMetadataForKey($messageKey);
+            // set the description
             if ($metadata->getDescription() && !$token->getDescription()) {
                 $this->logger->info(sprintf('Description for token : "%s"', $messageKey));
                 $token->setDescription($metadata->getDescription());
             }
 
+            // set or clear the parent
             if ($metadata->getParentTranslationKey() && $metadata->getParentTranslationKey() != $token->getParentToken()) {
                 $this->logger->info(sprintf('Parent: setting "%s" to have "%s" as a parent', $messageKey, $metadata->getParentTranslationKey()));
 
                 $parent = $this->findTokenEntity($metadata->getParentTranslationKey());
                 if (!$parent) {
-                    throw new \InvalidArgumentException(sprintf('Cannot find parent with token "%s"', $metadata->getParentTranslationKey()));
+                    // this could be a legit, if the parent is also a new key, and the new key hasn't been inserted yet
+                    $this->logger->err(sprintf(
+                        'Cannot find parent with token "%s". This may be an issue of "ordering", try re-running the task to see if things are corrected',
+                        $metadata->getParentTranslationKey()
+                    ));
                 }
 
                 $token->setParent($parent);
+            } elseif (!$metadata->getParentTranslationKey() && $token->getParentToken()) {
+                $this->logger->info(sprintf('Parent: removing parent from "%s"', $messageKey));
+
+                $token->setParent(null);
+            }
+
+            // mark as disabled if necessary
+            if (!$metadata->getIsEnabled()) {
+                $this->logger->info(sprintf('Deleting: removing "%s" because it is disabled', $messageKey));
+                $this->em->remove($token);
             }
         }
 
         // iterate through the existing tokens that were not found, mark them as such
         foreach ($existingTokens as $existingToken) {
+            // check to see if it's already set as not in the messages file
+            if (!$existingToken->getIsInMessagesFile()) {
+                continue;
+            }
+
             $existingToken->setIsInMessagesFile(false);
 
             $this->em->persist($existingToken);
@@ -194,6 +221,10 @@ class Updater
 
             if (isset($data['parent'])) {
                 $metadata->setParentTranslationKey($data['parent']);
+            }
+
+            if (isset($data['disabled'])) {
+                $metadata->setIsEnabled(false);
             }
 
             $this->metadatas[$key] = $metadata;

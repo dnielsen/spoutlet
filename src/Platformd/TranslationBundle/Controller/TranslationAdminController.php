@@ -50,7 +50,7 @@ class TranslationAdminController extends Controller
             ->addChild($localeName)
         ;
 
-        $tokens = $this->getTokenRepository()->findAllNonChildrenTokens();
+        $tokens = $this->getTokenRepository()->findAllActiveNonChildrenTokens();
         $tokens = $this->sortTokens($tokens);
 
         return array('tokens' => $tokens, 'localeName' => $localeName, 'locale' => $locale);

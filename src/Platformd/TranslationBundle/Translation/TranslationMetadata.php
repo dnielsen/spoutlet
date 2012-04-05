@@ -33,6 +33,14 @@ class TranslationMetadata
      */
     private $parentTranslationKey;
 
+    /**
+     * Some translation files are marked as disabled. We don't actually
+     * use them, but we might be inheriting them from a bundle
+     *
+     * @var bool
+     */
+    private $isEnabled = true;
+
     public function __construct($translationKey)
     {
         $this->translationKey = $translationKey;
@@ -61,5 +69,21 @@ class TranslationMetadata
     public function setParentTranslationKey($parentTranslationKey)
     {
         $this->parentTranslationKey = $parentTranslationKey;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsEnabled()
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param boolean $isEnabled
+     */
+    public function setIsEnabled($isEnabled)
+    {
+        $this->isEnabled = $isEnabled;
     }
 }
