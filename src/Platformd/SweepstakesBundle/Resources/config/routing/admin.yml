@@ -23,5 +23,5 @@ admin_sweepstakes_metrics:
     defaults: { _controller: SweepstakesBundle:Admin:metrics }
 
 admin_sweepstakes_metrics_show:
-    pattern: /metrics/{id}
-    defaults: { _controller: SweepstakesBundle:Admin:showMetrics }
+    pattern: /metrics/{id}.{_format}
+    defaults: { _controller: SweepstakesBundle:Admin:showMetrics, _format: html }

@@ -42,7 +42,7 @@ class StubApiController extends Controller
         $host = $this->container->getParameter('base_host');
         // sanity check
         if (strpos($request->getHttpHost(), $host) === false) {
-            throw new \InvalidArgumentException('Base host is not valid for the current host: '. $request->getHttpHost());
+            throw new \InvalidArgumentException(sprintf('Base host %s is not valid for the current host: %s', $host, $request->getHttpHost()));
         }
 
         switch ($action) {
