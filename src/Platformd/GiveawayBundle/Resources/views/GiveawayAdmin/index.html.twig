@@ -23,7 +23,7 @@
             <td>{{ giveaway.locale | site_name }}</td>
             <td>
                 {% set giveawayUrl = url('giveaway_show', {'slug': giveaway.slug, '_locale': giveaway.locale }) %}
-                <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>
+                <a href="{{ giveawayUrl }}" target="_blank">{{ giveawayUrl }}</a>
             </td>
             <td>
                 {{ giveaway.statusText | trans }}
