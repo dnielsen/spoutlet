@@ -100,6 +100,7 @@ platformd:
         user_listings:
             title: 管理用户
             super_admin_cant_be_modified: 超级管理员用户无法修改
+            search: 搜索
 
     events:
         event_listings:

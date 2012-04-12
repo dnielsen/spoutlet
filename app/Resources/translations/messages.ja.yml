@@ -100,6 +100,7 @@ platformd:
         user_listings:
             title: ユーザー管理
             super_admin_cant_be_modified: スーパー管理者ユーザーは変更できません
+            search: 検索
 
     events:
         event_listings:

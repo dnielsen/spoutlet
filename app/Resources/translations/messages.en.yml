@@ -100,6 +100,7 @@ platformd:
         user_listings:
             title: Manage Users
             super_admin_cant_be_modified: Super admin users can't be modified
+            search: Search
 
     events:
         event_listings:
