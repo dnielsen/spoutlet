@@ -52,11 +52,13 @@
 
                         <ol>
                             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
+                            {% if  (redemptionSteps)  %}
                             {% for redemptionStep in redemptionSteps %}
                             <li>
-                                <span class="item">{{ redemptionStep | raw }}</span>
+                                <span class="item" id="me">{{ redemptionStep | raw }}</span>
                             </li>
                             {% endfor %}
+                            {% endif %}
                         </ol>
                     </div>
                 </div>

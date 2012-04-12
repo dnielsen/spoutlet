@@ -156,7 +156,7 @@ class GiveawayAdminController extends Controller
     private function setupEmptyRedemptionInstructions(Giveaway $giveaway)
     {
         $instructions = $giveaway->getRedemptionInstructionsArray();
-        while (count($instructions) < 5) {
+        while (count($instructions) < 6) {
             $instructions[] = '';
         }
 

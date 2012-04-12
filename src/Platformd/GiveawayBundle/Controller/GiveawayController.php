@@ -38,9 +38,12 @@ class GiveawayController extends Controller
             $assignedKey = null;
         }
 
+        $instructions = $giveaway->getRedemptionInstructionsArray() ;
+        $instruction = ($instructions[0] == '')  ? false : $instructions ;
+       
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
-            'redemptionSteps'   => $giveaway->getRedemptionInstructionsArray(),
+            'redemptionSteps'   => $instruction,
             'available_keys'    => $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool),
             'assignedKey'       => $assignedKey,
         ));
