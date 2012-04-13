@@ -17,6 +17,9 @@ class GiveawayType extends AbstractType
         $builder->add('name', 'text');
         $builder->add('slug', new SlugType());
     	$builder->add('content', 'textarea');
+    	$builder->add('showKeys', 'checkbox', array(
+    			'value' => 1,
+    	));
         $builder->add('bannerImageFile', 'file');
         $builder->add('redemptionInstructionsArray', 'collection', array(
             'type' => 'text',

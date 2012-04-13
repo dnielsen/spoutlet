@@ -114,6 +114,14 @@ abstract class AbstractEvent
      * @Assert\NotBlank
      */
     protected $locale;
+    
+    /**
+     * @var string $showKeys
+     *
+     * @ORM\Column(name="showKeys", type="boolean", nullable=true)
+     * 
+     */
+    protected $showKeys = true;
 
     /**
      * @ORM\Column(name="bannerImage", type="string", length=255, nullable=true)
@@ -321,6 +329,23 @@ abstract class AbstractEvent
         $this->locale = $locale;
     }
 
+    
+    /**
+     * @return string
+     */
+    public function getShowKeys()
+    {
+    	return $this->showKeys;
+    }
+    
+    /**
+     * @param string $showKeys
+     */
+    public function setShowKeys($showKeys)
+    {
+    	$this->showKeys = $showKeys;
+    }
+    
     public function getBannerImage()
     {
         return $this->bannerImage;

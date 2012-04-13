@@ -51,6 +51,7 @@ giveaway_slug: "URL string - /giveaways/"
 giveaway_content: "Description"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"
+giveaway_showKeys: "Show Keys" 
 giveaway_redemptionInstructionsArray: Redemption Instructions
 giveaway_locale: "Site"
 giveway_pool_giveaway: Giveaway
