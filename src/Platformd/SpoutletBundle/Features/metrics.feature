@@ -1,7 +1,7 @@
 Feature: Metrics
   In order to track the success of different areas of the site
   As an admin
-  I need to view statistics about different ghings
+  I need to view statistics about different things
 
   Scenario: I can access the giveaways metrics page
     Given I am authenticated as "admin"

@@ -33,6 +33,7 @@ class GiveawayPool
      *
      * @var Giveaway
      * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="giveawayPools")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $giveaway;
 

@@ -358,3 +358,8 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+giveaway:
+    type:
+        key_giveaway: Traditional Key Giveaway
+        machine_code_submit: Machine Code Submit Key Giveaway

@@ -51,7 +51,6 @@ giveaway_slug: "URL string - /giveaways/"
 giveaway_content: "Description"
 giveaway_bannerImageFile: "Banner Image"
 giveaway_status: "Status"
-giveaway_showKeys: "Show Keys" 
 giveaway_redemptionInstructionsArray: Redemption Instructions
 giveaway_locale: "Site"
 giveway_pool_giveaway: Giveaway
@@ -61,6 +60,7 @@ giveway_pool_upperLimit: Upper limit
 giveway_pool_lowerLimit: Lower limit
 giveway_pool_isActive: Active
 giveway_pool_keysfile: Keys file
+giveaway_giveawayType: Giveaway Type
 
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/U Display

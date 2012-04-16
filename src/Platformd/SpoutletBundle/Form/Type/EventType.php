@@ -32,7 +32,7 @@ class EventType extends AbstractType
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
         $builder->add('timezone', 'timezone');
-    	
+
     	$builder->add('city', 'text');
     	$builder->add('country', 'text');
     	$builder->add('content', 'textarea');

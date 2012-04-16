@@ -21,6 +21,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Giveaway extends AbstractEvent
 {
+    // the traditional key giveaway type
+    const TYPE_KEY_GIVEAWAY = 'key_giveaway';
+
+    // the machine-submit giveaway type
+    const TYPE_MACHINE_CODE_SUBMIT = 'machine_code_submit';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -50,6 +56,11 @@ class Giveaway extends AbstractEvent
      */
     protected $status = 'disabled';
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=30)
+     */
+    protected $giveawayType = self::TYPE_KEY_GIVEAWAY;
 
     /**
      * Key of valid status to a text translation key for that status
@@ -236,5 +247,42 @@ class Giveaway extends AbstractEvent
     public function getShowRouteName()
     {
         return 'giveaway_show';
+    }
+
+    /**
+     * @return string
+     */
+    public function getGiveawayType()
+    {
+        return $this->giveawayType;
+    }
+
+    /**
+     * @param string $giveawayType
+     */
+    public function setGiveawayType($giveawayType)
+    {
+        if ($giveawayType != self::TYPE_KEY_GIVEAWAY && $giveawayType != self::TYPE_MACHINE_CODE_SUBMIT) {
+            throw new \InvalidArgumentException(sprintf('Invalid giveaway type "%s" given', $giveawayType));
+        }
+
+        $this->giveawayType = $giveawayType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowKeys()
+    {
+        // show the keys if its a traditional key giveaway
+        return $this->getGiveawayType() == self::TYPE_KEY_GIVEAWAY;
+    }
+
+    static public function getTypeChoices()
+    {
+        return array(
+            self::TYPE_KEY_GIVEAWAY => 'giveaway.type.'.self::TYPE_KEY_GIVEAWAY,
+            self::TYPE_MACHINE_CODE_SUBMIT => 'giveaway.type'.self::TYPE_MACHINE_CODE_SUBMIT,
+        );
     }
 }
