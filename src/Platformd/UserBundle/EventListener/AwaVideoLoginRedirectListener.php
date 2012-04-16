@@ -55,7 +55,7 @@ class AwaVideoLoginRedirectListener
         $session = $request->getSession();
 
         // check for "internal" routes, like the web debug toolbar
-        // dont waste our requests on this stuff
+        // don't waste our requests on this stuff
         $route = $request->attributes->get('_route');
         $isInternal = (strpos($route, '_') === 0);
 
