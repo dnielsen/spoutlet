@@ -24,10 +24,21 @@ class AwaVideoSessionIdCookieListener
 
     private $baseHost;
 
-    public function __construct(SecurityContextInterface $context, $baseHost)
+    /**
+     * This will be true in the test environment
+     *
+     * This allows there to be no cookie, but instead look for a ?username=
+     * query parameter and use it.
+     *
+     * @var bool
+     */
+    private $allowFakedAuth;
+
+    public function __construct(SecurityContextInterface $context, $baseHost, $allowFakedAuth = false)
     {
         $this->securityContext = $context;
         $this->baseHost = $baseHost;
+        $this->allowFakedAuth = $allowFakedAuth;
     }
 
     public function onKernelResponse(FilterResponseEvent $event)
@@ -51,6 +62,12 @@ class AwaVideoSessionIdCookieListener
         } else {
             // make sure the cookie is cleared out
             $cookieVal = '';
+        }
+
+        // for some reason the cookie-setting below kills our faked authentication
+        // that is accomplished in CEVOAuthenticationListener
+        if ($this->allowFakedAuth) {
+            return;
         }
 
         $cookie = new Cookie(

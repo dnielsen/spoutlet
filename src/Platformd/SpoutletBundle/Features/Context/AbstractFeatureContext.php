@@ -18,9 +18,12 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
  */
 class AbstractFeatureContext extends MinkContext
 {
+    /**
+     * @var \Platformd\UserBundle\Entity\User
+     */
     protected $currentUser;
 
-    protected $currentSite = 'en';
+    protected $currentSite;
 
     /**
      * @BeforeScenario
@@ -32,49 +35,21 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^I am authenticated as "([^"]*)"$/
+     * @Given /^I am authenticated$/
      */
-    public function iAmAuthenticatedAs($user)
+    public function iAmAuthenticated()
     {
-        /*
-         * Outdated, since we don't really have a login now
-         *
+        $user = $this->getCurrentUser();
+
         return array(
-            new When('I am on "/login"'),
-            new When(sprintf('I fill in "Email:" with "%s"', $user)),
-            new When(sprintf('I fill in "Password:" with "%s"', $user)),
-            new When('I press "Login"'),
+            new When(sprintf('I am on "/?username=%s"', $user->getCevoUserId())),
         );
-        */
 
         // we go to /login, the stub API logs us in, we click Continue, done.
         return array(
             new When('I am on "/login"'),
             new When(sprintf('I follow "Continue"')),
         );
-    }
-
-    /**
-     * @Given /^I am authenticated$/
-     */
-    public function iAmAuthenticated()
-    {
-        $steps = $this->iAmAuthenticatedAs('foo');
-
-        $steps[] = function() {
-            $user = $this->getEntityManager()
-                ->getRepository('UserBundle:User')
-                ->findOneBy(array('username' => 'admin'))
-            ;
-
-            if (!$user) {
-                throw new \Exception('Cannot find admin user');
-            }
-
-            $this->currentUser = $user;
-        };
-
-        return $steps;
     }
 
     /**
@@ -85,6 +60,81 @@ class AbstractFeatureContext extends MinkContext
         if ($scenarioEvent->getResult() != 0) {
             $this->printLastResponse();
         }
+    }
+
+    /**
+     * Overridden so that PHPdoc is properly recognized
+     *
+     * @return \Behat\Mink\Element\DocumentElement
+     */
+    protected function getPage()
+    {
+        return $this->getSession()->getPage();
+    }
+
+    /**
+     * @return \Behat\Mink\Mink
+     */
+    public function getMink()
+    {
+        return parent::getMink();
+    }
+
+    /**
+     * @Given /^I have an account/
+     */
+    public function IHaveAnAccount()
+    {
+        $um = $this->getUserManager();
+
+        $this->iHaveNoInTheDatabase('UserBundle:User');
+
+        $user = $um->createUser();
+        $user->setUsername('user');
+        $user->setPlainPassword('user');
+        $user->setEmail('user@user.com');
+        $user->setCevoUserId(55);
+
+        $um->updateUser($user);
+
+        $this->currentUser = $user;
+    }
+
+    /**
+     * @Given /^I have the "([^"]*)" permissions$/
+     */
+    public function iHaveThePermissions($roles)
+    {
+        $roles = explode(',', $roles);
+
+        $user = $this->getCurrentUser();
+
+        foreach ($roles as $role) {
+            $user->addRole(trim($role));
+        }
+
+        $this->getUserManager()->updateUser($user);
+    }
+
+    /**
+     * @return \FOS\UserBundle\Model\UserManagerInterface
+     */
+    protected function getUserManager()
+    {
+        return $this->getContainer()->get('fos_user.user_manager');
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Entity\User
+     * @throws \Exception
+     */
+    protected function getCurrentUser()
+    {
+        if (!$this->currentUser) {
+            throw new \Exception('Please call "I have an account" first');
+        }
+
+        return $this->currentUser;
     }
 
     /**
@@ -104,20 +154,13 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * Overridden so that PHPdoc is properly recognized
-     *
-     * @return \Behat\Mink\Element\DocumentElement
+     * @Given /^I have no "([^"]*)" in the database$/
      */
-    protected function getPage()
+    public function iHaveNoInTheDatabase($model)
     {
-        return $this->getSession()->getPage();
-    }
-
-    /**
-     * @return \Behat\Mink\Mink
-     */
-    public function getMink()
-    {
-        return parent::getMink();
+        $this->getEntityManager()
+            ->createQuery(sprintf('DELETE FROM %s', $model))
+            ->execute()
+        ;
     }
 }

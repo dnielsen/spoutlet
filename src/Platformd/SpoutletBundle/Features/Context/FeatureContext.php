@@ -16,4 +16,5 @@ use Behat\Behat\Context\Step\When;
  */
 class FeatureContext extends AbstractFeatureContext
 {
+
 }

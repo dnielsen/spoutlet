@@ -10,4 +10,4 @@ if (file_exists($file)) {
     $version = str_replace("\n", '', $version);
 }
 
-$container->setParameter('app.version', 'v'.$version);
+$container->setParameter('app.version', $version);

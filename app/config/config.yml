@@ -17,6 +17,7 @@ framework:
     templating:
         engines: ['twig']
         assets_version: %app.version%
+        assets_version_format: %%s?v=%%s
     session:
         default_locale: %locale%
         auto_start:     true
@@ -95,6 +96,9 @@ fos_user:
         mailer:       platformd_user.mailer
 
 parameters:
+    # a setting used in the test environment with CEVOAuthenticationListener
+    allow_faked_auth:   false
+
     sender_email_address: "noreply@%base_host%"
     platformd.news_source:
         alienware: source_alienware
