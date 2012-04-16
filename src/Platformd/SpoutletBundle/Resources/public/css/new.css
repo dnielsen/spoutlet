@@ -425,3 +425,9 @@ ul.list-normal {
     width: 280px;
     height: 210px;
 }
+
+.machine-code-form input.txt {
+    border: 1px solid #ccc;
+    padding: 4px 4px;
+    font-size: 13px;
+}
