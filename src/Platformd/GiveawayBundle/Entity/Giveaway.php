@@ -285,6 +285,16 @@ class Giveaway extends AbstractEvent
         return $this->getGiveawayType() == self::TYPE_KEY_GIVEAWAY;
     }
 
+    /**
+     * Whether or not a user is able to freely register for giveaway keys for this giveaway
+     *
+     * @return bool
+     */
+    public function allowKeyFetch()
+    {
+        return self::TYPE_KEY_GIVEAWAY == $this->getGiveawayType();
+    }
+
     static public function getTypeChoices()
     {
         return array(

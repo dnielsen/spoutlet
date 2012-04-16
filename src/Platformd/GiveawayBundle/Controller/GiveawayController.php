@@ -4,6 +4,7 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
 * 
@@ -54,7 +55,8 @@ class GiveawayController extends Controller
      *
      * @param $slug
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function keyAction($slug, Request $request)
     {
@@ -62,6 +64,11 @@ class GiveawayController extends Controller
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $giveaway = $this->findGiveaway($slug);
+
+        // make sure this is the type of giveaway that actually allows this
+        if (!$giveaway->allowKeyFetch()) {
+            throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
+        }
 
         $pool = $giveaway->getActivePool();
 
