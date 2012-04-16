@@ -25,10 +25,9 @@ Feature: Admin
 
 
   Scenario: I can export sweepstakes results
-    Given I am authenticated as "admin"
-     And there is a sweepstakes
+    Given there is a sweepstakes
      And some people are entered into the sweepstakes
     When I go to "/admin/sweepstakes/metrics"
      And I follow "view"
-     And I follow "Download a CSV"
+     And I follow "Download CSV"
     Then the response status code should be 200
