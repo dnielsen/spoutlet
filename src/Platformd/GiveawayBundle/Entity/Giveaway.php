@@ -27,6 +27,8 @@ class Giveaway extends AbstractEvent
     // the machine-submit giveaway type
     const TYPE_MACHINE_CODE_SUBMIT = 'machine_code_submit';
 
+    const TYPE_TEXT_PREFIX = 'giveaway.type.';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -72,7 +74,7 @@ class Giveaway extends AbstractEvent
         'disabled' => 'platformd.giveaway.status.disabled',
         // active but with zero keys
         'inactive' => 'platformd.giveaway.status.inactive',
-        // totally awesome actice
+        // totally awesome active
         'active' => 'platformd.giveaway.status.active',
     );
 
@@ -257,6 +259,11 @@ class Giveaway extends AbstractEvent
         return $this->giveawayType;
     }
 
+    public function giveawayTypeText()
+    {
+        return self::TYPE_TEXT_PREFIX.$this->getGiveawayType();
+    }
+
     /**
      * @param string $giveawayType
      */
@@ -281,8 +288,8 @@ class Giveaway extends AbstractEvent
     static public function getTypeChoices()
     {
         return array(
-            self::TYPE_KEY_GIVEAWAY => 'giveaway.type.'.self::TYPE_KEY_GIVEAWAY,
-            self::TYPE_MACHINE_CODE_SUBMIT => 'giveaway.type'.self::TYPE_MACHINE_CODE_SUBMIT,
+            self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX.self::TYPE_KEY_GIVEAWAY,
+            self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX.self::TYPE_MACHINE_CODE_SUBMIT,
         );
     }
 }

@@ -363,3 +363,4 @@ giveaway:
     type:
         key_giveaway: Traditional Key Giveaway
         machine_code_submit: Machine Code Submit Key Giveaway
+        type: Giveaway Type

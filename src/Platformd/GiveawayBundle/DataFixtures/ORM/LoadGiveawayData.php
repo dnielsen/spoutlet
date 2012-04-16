@@ -14,6 +14,7 @@ class LoadGiveawayData extends AbstractFixture implements OrderedFixtureInterfac
         $machineGiveaway = new Giveaway();
         $machineGiveaway->setLocale('en');
         $machineGiveaway->setName('My machine giveaway');
+        $machineGiveaway->setStatus('active');
 
         $manager->persist($machineGiveaway);
         $manager->flush();
