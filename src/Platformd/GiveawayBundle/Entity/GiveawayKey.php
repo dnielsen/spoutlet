@@ -98,7 +98,7 @@ class GiveawayKey
     }
 
     /**
-     * @param Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      */
     public function setPool(GiveawayPool $pool)
     {
@@ -106,7 +106,7 @@ class GiveawayKey
     }
 
     /**
-     * @return Platformd\GiveawayBundle\Entity\GiveawayPool
+     * @return \Platformd\GiveawayBundle\Entity\GiveawayPool
      */
     public function getPool()
     {

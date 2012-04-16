@@ -57,8 +57,6 @@ class AbstractFeatureContext extends MinkContext
      */
     public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
     {
-        return;
-
         if ($scenarioEvent->getResult() != 0) {
             $this->printLastResponse();
         }
@@ -148,6 +146,17 @@ class AbstractFeatureContext extends MinkContext
             ->get('doctrine')
             ->getEntityManager()
             ;
+    }
+
+    /**
+     * @param $repo
+     * @return \Doctrine\ORM\EntityRepository
+     */
+    protected function getRepository($repo)
+    {
+        return $this->getEntityManager()
+            ->getRepository($repo)
+        ;
     }
 
     protected function getCurrentSite()

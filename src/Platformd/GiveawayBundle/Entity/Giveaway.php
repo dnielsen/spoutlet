@@ -178,6 +178,11 @@ class Giveaway extends AbstractEvent
         return $this->getStatus() == 'active';
     }
 
+    public function setAsActive()
+    {
+        $this->setStatus('active');
+    }
+
     /**
      * @return string
      */
@@ -293,6 +298,16 @@ class Giveaway extends AbstractEvent
     public function allowKeyFetch()
     {
         return self::TYPE_KEY_GIVEAWAY == $this->getGiveawayType();
+    }
+
+    /**
+     * Whether or not the user can submit a machine code for this giveaway
+     *
+     * @return bool
+     */
+    public function allowMachineCodeSubmit()
+    {
+        return self::TYPE_MACHINE_CODE_SUBMIT == $this->getGiveawayType();
     }
 
     static public function getTypeChoices()

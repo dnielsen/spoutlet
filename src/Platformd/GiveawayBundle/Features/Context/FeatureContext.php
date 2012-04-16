@@ -31,6 +31,7 @@ class FeatureContext extends AbstractFeatureContext
         foreach ($table->getHash() as $data) {
             $giveaway = new Giveaway();
             $giveaway->setLocale($this->getCurrentSite());
+            $giveaway->setAsActive();
 
             if (isset($data['name'])) {
                 $giveaway->setName($data['name']);
@@ -65,9 +66,19 @@ class FeatureContext extends AbstractFeatureContext
     /**
      * @Given /^there should be a "([^"]*)" machine code entry in the database$/
      */
-    public function thereShouldBeAMachineCodeEntryInTheDatabase($machineCode)
+    public function thereShouldBeAMachineCodeEntryInTheDatabase($status)
     {
-        throw new PendingException('Have not implemented machine code stuff yet');
+        $codes = $this->getRepository('GiveawayBundle:MachineCodeEntry')
+            ->findBy(array('status' => $status))
+        ;
+
+        if (empty($codes)) {
+            throw new \Exception('No MachineCode found for status '.$status);
+        }
+
+        if (count($codes) > 1) {
+            throw new \Exception('More than 1 machine code found for status '.$status);
+        }
     }
 
     /**

@@ -15,11 +15,11 @@ Feature: Machine Code Giveaway
         Given I am on "/giveaways/machine-giveaway"
         When I fill in "Code" with "abcd1234"
             And I press "Submit Code"
-        Then I should see "Your code has been submitted"
+        Then I should see "Your code was saved"
             And there should be a "pending" machine code entry in the database
         When I go to "/account/profile/giveaways"
             Then I should see "Machine Giveaway"
-                And I should see "pending"
+                And I should see "Pending"
 
   Scenario: I can see my giveaway key after being approved
     Given I am authenticated

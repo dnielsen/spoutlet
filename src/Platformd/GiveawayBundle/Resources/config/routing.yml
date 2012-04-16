@@ -19,3 +19,7 @@ giveaway_show:
 giveaway_get_key:
     pattern: /giveaways/{slug}/key
     defaults: { _controller: GiveawayBundle:Giveaway:key }
+
+giveaway_submit_machine_code:
+    pattern: /giveaways/{slug}/machineCode
+    defaults: { _controller: GiveawayBundle:Giveaway:machineCode }

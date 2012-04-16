@@ -107,4 +107,15 @@ class Controller extends BaseController
             throw new AccessDeniedException('Not logged in!');
         }
     }
+
+    /**
+     * @param $key
+     * @param array $params
+     * @param string $domain
+     * @return mixed
+     */
+    protected function trans($key, $params = array(), $domain = 'messages')
+    {
+        return $this->container->get('translator')->trans($key, $params, $domain);
+    }
 }

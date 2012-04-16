@@ -1,0 +1,5 @@
+services:
+    pd_giveaway.giveaway_manager:
+        class: Platformd\GiveawayBundle\Model\GiveawayManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
