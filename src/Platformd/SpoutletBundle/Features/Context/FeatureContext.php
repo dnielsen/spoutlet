@@ -9,6 +9,7 @@ use Behat\Behat\Context\ClosuredContextInterface,
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
+use Behat\Behat\Event\ScenarioEvent;
 use Behat\Behat\Context\Step\When;
 
 /**
@@ -31,6 +32,40 @@ class FeatureContext extends MinkContext
         return array(
             new When(sprintf('I am on "/?username=%s"', $user->getCevoUserId())),
         );
+
+        // we go to /login, the stub API logs us in, we click Continue, done.
+        return array(
+            new When('I am on "/login"'),
+            new When(sprintf('I follow "Continue"')),
+        );
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
+    {
+        if ($scenarioEvent->getResult() != 0) {
+            $this->printLastResponse();
+        }
+    }
+
+    /**
+     * Overridden so that PHPdoc is properly recognized
+     *
+     * @return \Behat\Mink\Element\DocumentElement
+     */
+    protected function getPage()
+    {
+        return $this->getSession()->getPage();
+    }
+
+    /**
+     * @return \Behat\Mink\Mink
+     */
+    public function getMink()
+    {
+        return parent::getMink();
     }
 
     /**
