@@ -30,7 +30,7 @@ class ApiControllerTest extends WebTestCase
             'username' => 'user',
             'handle'   => 'user',
             'country'  => null,
-            'avatar_url' => '/images/profile-default.png',
+            'avatar_url' => '/images/profile-default.png?v=develop',
             'profile_url' => '/account/profile/user',
             'id'       => $user->getId(),
         );
