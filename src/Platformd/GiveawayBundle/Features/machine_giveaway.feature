@@ -8,16 +8,18 @@ Feature: Machine Code Giveaway
             | name             | type                | keys   |
             | Machine Giveaway | machine_code_submit | 123456 |
 
-  Scenario: I can submit my machine code
-    Given I am authenticated
-    When I go to "/giveaways/machine-giveaway"
-     And I fill in "Code" with "abcd1234"
-     And I press "Submit Code"
-    Then I should see "Your code has been submitted"
-     And there should be a "pending" machine code entry in the database
-     When I go to "/account/profile/giveaways"
-     Then I should see "Machine Giveaway"
-      And I should see "pending"
+        Given I have an account
+            And I am authenticated
+
+    Scenario: I can submit my machine code
+        Given I am on "/giveaways/machine-giveaway"
+        When I fill in "Code" with "abcd1234"
+            And I press "Submit Code"
+        Then I should see "Your code has been submitted"
+            And there should be a "pending" machine code entry in the database
+        When I go to "/account/profile/giveaways"
+            Then I should see "Machine Giveaway"
+                And I should see "pending"
 
   Scenario: I can see my giveaway key after being approved
     Given I am authenticated

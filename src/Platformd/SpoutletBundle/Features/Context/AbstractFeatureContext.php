@@ -23,7 +23,7 @@ class AbstractFeatureContext extends MinkContext
      */
     protected $currentUser;
 
-    protected $currentSite;
+    protected $currentSite = 'en';
 
     /**
      * @BeforeScenario
@@ -57,6 +57,8 @@ class AbstractFeatureContext extends MinkContext
      */
     public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
     {
+        return;
+
         if ($scenarioEvent->getResult() != 0) {
             $this->printLastResponse();
         }

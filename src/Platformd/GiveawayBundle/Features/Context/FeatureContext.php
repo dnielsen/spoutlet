@@ -61,4 +61,28 @@ class FeatureContext extends AbstractFeatureContext
 
         $em->flush();
     }
+
+    /**
+     * @Given /^there should be a "([^"]*)" machine code entry in the database$/
+     */
+    public function thereShouldBeAMachineCodeEntryInTheDatabase($machineCode)
+    {
+        throw new PendingException('Have not implemented machine code stuff yet');
+    }
+
+    /**
+     * @Given /^I have a "([^"]*)" machine code entry in the database$/
+     */
+    public function iHaveAMachineCodeEntryInTheDatabase($machineCode)
+    {
+        throw new PendingException('Have not implemented machine code stuff yet');
+    }
+
+    /**
+     * @Given /^my machine code entry is approved$/
+     */
+    public function myMachineCodeEntryIsApproved()
+    {
+        throw new PendingException('Have not implemented machine code stuff yet');
+    }
 }
