@@ -28,3 +28,4 @@ Feature: Machine Code Giveaway
     When I go to "/account/profile/giveaways"
      Then I should see "Machine Giveaway"
      And I should see "123456"
+     And I should not see "Pending"
