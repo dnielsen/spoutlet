@@ -101,6 +101,34 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I have the "([^"]*)" role$/
+     */
+    public function iHaveTheRole($role)
+    {
+        $this->currentUser->addRole($role);
+
+        $this->getEntityManager()->persist($this->currentUser);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @Given /^I have the following users:$/
+     */
+    public function iHaveTheFollowingUsers(TableNode $table)
+    {
+        foreach ($table->getHash() as $data) {
+            $user = $this->getUserManager()->createUser();
+
+            $user->setUsername($data['username']);
+            $user->setEmail($data['email']);
+
+            $user->setPassword('foo');
+
+            $this->getUserManager()->updateUser($user);
+        }
+    }
+
+    /**
      * @Given /^I have the "([^"]*)" permissions$/
      */
     public function iHaveThePermissions($roles)

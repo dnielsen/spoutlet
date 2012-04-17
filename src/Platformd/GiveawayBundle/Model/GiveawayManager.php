@@ -48,6 +48,11 @@ class GiveawayManager
      */
     public function approveMachineCode(MachineCodeEntry $machineCode)
     {
+        // see if it's already assigned to a key
+        if ($machineCode->getKey()) {
+            return;
+        }
+
         $pool = $machineCode->getGiveaway()->getActivePool();
 
         $key = $this->getGiveawayKeyRepository()->getUnassignedKey($pool);

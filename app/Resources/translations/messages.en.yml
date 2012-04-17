@@ -373,3 +373,4 @@ machine_code: Code
 pending: Pending
 approved: Approved
 denied: Denied
+approve_machine_codes: Approve Codes

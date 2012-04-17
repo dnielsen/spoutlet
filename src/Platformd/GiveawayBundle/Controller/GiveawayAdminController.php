@@ -10,6 +10,8 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
+use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
+use Symfony\Component\Form\FormError;
 
 class GiveawayAdminController extends Controller
 {
@@ -77,6 +79,84 @@ class GiveawayAdminController extends Controller
 
     	return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
     		array('form' => $form->createView(), 'giveaway' => $giveaway));
+    }
+
+    /**
+     * Allows the user to approve machine codes
+     *
+     * @Template()
+     *
+     * @param $id
+     * @return array
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function codesAction($id, Request $request)
+    {
+        $giveaway = $this->getGiveawayRepo()->find($id);
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway for that id');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('emails', 'textarea', array('attr' => array('class' => 'input-xlarge')))
+            ->getForm()
+        ;
+
+        $successEmails = array();
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $emails = explode(',', $data['emails']);
+
+                // iterate through the emails and activate their machine codes
+                foreach ($emails as $email) {
+                    $user = $this->getUserManager()->findUserByEmail(trim($email));
+                    if (!$user) {
+                        $form->addError(new FormError('No user with email %email% found', array('%email%' => $email)));
+
+                        continue;
+                    }
+                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKey($user);
+
+                    if (count($machineCodes) == 0) {
+                        $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
+
+                        continue;
+                    }
+
+                    // pop up the first one, ideally there's only one
+                    $machineCode = $machineCodes[0];
+
+                    try {
+                        $this->getGiveawayManager()->approveMachineCode($machineCode);
+
+                        $successEmails[] = $email;
+                    } catch (MissingKeyException $e) {
+                        $form->addError(new FormError(
+                            'There are no more unassigned giveaway keys for this giveaway. The following email was not assigned a key: %email%',
+                            array('%email%' => $email)
+                        ));
+                    }
+                }
+
+                $this->setFlash('success', sprintf('%s codes were approved', count($successEmails)));
+
+                // if the form is *still* valid, redirect
+                if ($form->isValid()) {
+                    return $this->redirect(
+                        $this->generateUrl('admin_giveaway_machine_codes', array('id' => $giveaway->getId()))
+                    );
+                }
+            }
+        }
+
+        return array(
+            'giveaway' => $giveaway,
+            'form'     => $form->createView(),
+            'successEmails' => $successEmails,
+        );
     }
 
     /**
@@ -175,6 +255,9 @@ class GiveawayAdminController extends Controller
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
 
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
     private function getEntityManager()
     {
         return $this->getDoctrine()
@@ -191,5 +274,21 @@ class GiveawayAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Model\GiveawayManager
+     */
+    private function getGiveawayManager()
+    {
+        return $this->container->get('pd_giveaway.giveaway_manager');
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntryRepository
+     */
+    private function getMachineCodeRepository()
+    {
+        return $this->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
     }
 }

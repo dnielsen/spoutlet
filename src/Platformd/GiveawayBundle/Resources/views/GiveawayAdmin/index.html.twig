@@ -36,6 +36,10 @@
                 <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
                 |
                 <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
+                {% if giveaway.allowMachineCodeSubmit %}
+                |
+                <a href="{{ path('admin_giveaway_machine_codes', {'id' : giveaway.id}) }}">{{ "approve_machine_codes" | trans  }}</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

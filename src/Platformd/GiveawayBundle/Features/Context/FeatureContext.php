@@ -80,20 +80,16 @@ class FeatureContext extends AbstractFeatureContext
     }
 
     /**
-     * @Given /^there should be a "([^"]*)" machine code entry in the database$/
+     * @Given /^there should be "([^"]*)" "([^"]*)" machine code entry in the database$/
      */
-    public function thereShouldBeAMachineCodeEntryInTheDatabase($status)
+    public function thereShouldBeAMachineCodeEntryInTheDatabase($num, $status)
     {
         $codes = $this->getRepository('GiveawayBundle:MachineCodeEntry')
             ->findBy(array('status' => $status))
         ;
 
-        if (empty($codes)) {
-            throw new \Exception('No MachineCode found for status '.$status);
-        }
-
-        if (count($codes) > 1) {
-            throw new \Exception('More than 1 machine code found for status '.$status);
+        if (count($codes) != $num) {
+            throw new \Exception(sprintf('Expected %s machine codes to be found, instead found %s', $num, count($codes)));
         }
     }
 
@@ -109,6 +105,22 @@ class FeatureContext extends AbstractFeatureContext
         $this->getEntityManager()->flush();
 
         $this->currentMachineCode = $machineCode;
+    }
+
+    /**
+     * @Given /^the following machine code entries:$/
+     */
+    public function theFollowingMachineCodeEntries(TableNode $table)
+    {
+        foreach ($table->getHash() as $data) {
+            $machineCodeEntry = new MachineCodeEntry($this->currentGiveaway, $data['machineCode']);
+
+            $user = $this->getUserManager()->findUserByUsername($data['username']);
+            $machineCodeEntry->attachToUser($user, '127.0.0.1');
+
+            $this->getEntityManager()->persist($machineCodeEntry);
+            $this->getEntityManager()->flush();
+        }
     }
 
     /**

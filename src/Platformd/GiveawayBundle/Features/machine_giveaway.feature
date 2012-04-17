@@ -16,7 +16,7 @@ Feature: Machine Code Giveaway
         When I fill in "Code" with "abcd1234"
             And I press "Submit Code"
         Then I should see "Your code was saved"
-            And there should be a "pending" machine code entry in the database
+            And there should be "1" "pending" machine code entry in the database
         When I go to "/account/profile/giveaways"
             Then I should see "Machine Giveaway"
                 And I should see "Pending"
