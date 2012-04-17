@@ -4,6 +4,7 @@ namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Platformd\UserBundle\Entity\User;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
  * MachineCodeEntryRepository
@@ -25,6 +26,22 @@ class MachineCodeEntryRepository extends EntityRepository
             ->andWhere('mce.user = :user')
             ->andWhere('mce.key IS NULL')
             ->setParameter('user', $user)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntry[]
+     */
+    public function findPendingForGiveaway(Giveaway $giveaway)
+    {
+        return $this->createQueryBuilder('mce')
+            ->andWhere('mce.giveaway = :giveaway')
+            ->andWhere('mce.status = :status')
+            ->setParameter('giveaway', $giveaway)
+            ->setParameter('status', MachineCodeEntry::STATUS_PENDING)
             ->getQuery()
             ->execute()
         ;

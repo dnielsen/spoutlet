@@ -53,59 +53,57 @@ class GiveawayAdminController extends Controller
             'giveaway' => $giveaway,
         ));
     }
-    
+
     /**
-     * Export CSV file of user signed up for specified giveaway
-     * 
-     * @param int $giveaway
+     * Export CSV file of pending machine code entries for this giveaway
+     *
+     * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportAction($giveaway)
-    { 	
-    	// get the giveaway pool data
-    	$ga = $this->getDoctrine()->getRepository('GiveawayBundle:GiveawayPool')->findOneBy(array('giveaway' => $giveaway));
-       
-    	$userRepository = $this->getDoctrine()->getRepository('UserBundle:User');
+    public function exportAction($id)
+    {
+        /** @var $giveaway \Platformd\GiveawayBundle\Entity\Giveaway */
+        $giveaway = $this->getGiveawayRepo()->find($id);
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway found for id '.$id);
+        }
 
-    	// get uses that signed up for specified giveaway
-    	$userlist = $userRepository->findAssignedToUser($ga->getID(), $this->getLocale());
+        $machineCodes = $this->getMachineCodeRepository()->findPendingForGiveaway($giveaway);
 
-    	return $this->generateGiveawayCsvResponse($userlist, 'giveaway');
+        return $this->generateMachineCodeCsvResponse($machineCodes, $giveaway->getSlug());
     }
-    
+
     /**
-     * Downloads a CSV of the entries for a particular giveaway
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry[] $machineCodes
+     * @param $baseFilename
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function generateGiveawayCsvResponse($giveaways, $giveawaySlug)
+    private function generateMachineCodeCsvResponse(array $machineCodes, $baseFilename)
     {
     	// generate CSV content from the rows of data
     	$factory = new CsvResponseFactory();
-    
+
     	$factory->addRow(array(
-    			'ID',
-    			'First Name',
-    			'Last Name',
+                'Id',
     			'Email',
-    			'IP Address',
-    			'Assigned Date',
+    			'Machine Code',
+    			'Submitted Date',
     	));
-    
-    	foreach ($giveaways as $entry) {
+
+    	foreach ($machineCodes as $entry) {
     		$factory->addRow(array(
-    				$entry['id'],
-    				$entry['firstname'],
-    				$entry['lastname'],
-    				$entry['email'],
-    			    $entry['ipAddress'],
-    				$entry['assignedAt'],		
-    		));    		
+    				$entry->getId(),
+    				$entry->getUser()->getEmail(),
+                    $entry->getMachineCode(),
+    				$entry->getCreated()->format('Y-m-d H:i:s'),
+    		));
     	}
 
-    	$filename = sprintf('%s-%s.csv', $giveawaySlug, date('Y-m-d'));
+    	$filename = sprintf('%s-%s.csv', $baseFilename, date('Y-m-d'));
+
     	return $factory->createResponse($filename);
-    
     }
-    
+
     public function editAction(Request $request, $id)
     {
         $this->addGiveawayBreadcrumb()->addChild('Edit');
@@ -145,6 +143,8 @@ class GiveawayAdminController extends Controller
      */
     public function codesAction($id, Request $request)
     {
+        $this->addGiveawayBreadcrumb()->addChild('Approve machine codes');
+
         $giveaway = $this->getGiveawayRepo()->find($id);
         if (!$giveaway) {
             throw $this->createNotFoundException('No giveaway for that id');

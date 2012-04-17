@@ -136,6 +136,9 @@ class MachineCodeEntry
         return $this->machineCode;
     }
 
+    /**
+     * @return \Platformd\UserBundle\Entity\User
+     */
     public function getUser()
     {
         return $this->user;
@@ -165,5 +168,13 @@ class MachineCodeEntry
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

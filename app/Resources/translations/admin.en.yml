@@ -1,2 +1,3 @@
 tenant_site: Site
 approve_codes: Approve Codes
+export_pending_machine_codes: Export pending machine codes

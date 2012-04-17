@@ -265,7 +265,6 @@ platformd:
                 それぞれのボックスは回復ステップにあります。必要ではないボックスはブランクにしてください。
                 HTMLを使用することもできます　例　(e.g. <a href="/events">Link to events</a>).
             manage_pools:  プールを管理
-            export_users: Export users
         status:
             disabled:  すべて不可
             inactive:  有効ですがキーがありません
