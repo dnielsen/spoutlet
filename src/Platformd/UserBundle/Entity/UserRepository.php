@@ -15,7 +15,32 @@ use DateTime;
  */
 class UserRepository extends EntityRepository
 {
-    public function getTotalUsersForSite($site)
+
+	/**
+	 * get users that signed for a specificed giveaway key
+	 * 
+	 * @param $giveaway_pool = giveaway_key.pool
+	 * @param $site = 'en' 
+	 */
+	public function findAssignedToUser($giveaway_pool, $site)
+	{
+      $qb =  $this->createSiteQueryBuilder($site)
+       // ->select('u.id, u.firstname, u.lastname, u.email, u.system_tag, k.ipAddress, k.assignedAt')
+        ->select('u.id, u.firstname, u.lastname, u.email, k.ipAddress, k.assignedAt')
+    	->leftJoin('u.giveawayKeys', 'k')
+    	->andWhere('u.id = k.user')
+    	->andWhere('k.pool = :pool_id')
+    	->setParameters(array(
+    			'pool_id'  => $giveaway_pool,
+    	))
+    	->getQuery()
+    	->getResult();
+      
+      return  $qb ;
+	}
+	
+	
+	public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)
             ->select('COUNT(u.id)')

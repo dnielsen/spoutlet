@@ -256,6 +256,7 @@ platformd:
             redemption_instructions_note: |
                 每一栏都是一个步骤-如果不需要，请留空。你也可以使用HTML (e.g. <a href="/events">Link to events</a>)。
             manage_pools: Manage pools
+            export_users: Export users
         status:
             disabled: 完全不可用
             inactive: 已激活但无剩余激活码

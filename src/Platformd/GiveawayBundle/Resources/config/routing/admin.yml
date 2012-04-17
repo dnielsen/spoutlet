@@ -6,6 +6,10 @@ admin_giveaway_new:
     pattern: /new
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:new }
 
+admin_giveaway_export:
+    pattern: /{giveaway}/export
+    defaults: { _controller: GiveawayBundle:GiveawayAdmin:export }
+
 admin_giveaway_edit:
     pattern: /edit/{id}
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:edit }

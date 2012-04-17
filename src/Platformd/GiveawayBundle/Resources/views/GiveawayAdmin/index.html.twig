@@ -32,6 +32,8 @@
                 <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
                 |
                 <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
+                |
+                <a href="{{ path('admin_giveaway_export', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.export_users" | trans  }}</a>
             </td>
         </tr>
         {% endfor %}
