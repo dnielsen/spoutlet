@@ -21,34 +21,34 @@ class GiveawayAdminController extends Controller
         $this->addGiveawayBreadcrumb();
         $giveaways = $this->getGiveawayRepo()->findAllWithoutLocaleOrderedByNewest();
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
+        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
             array('giveaways' => $giveaways));
     }
 
     public function newAction(Request $request)
     {
         $this->addGiveawayBreadcrumb()->addChild('New');
-    	$giveaway = new Giveaway();
+        $giveaway = new Giveaway();
 
         // guarantee we have at least 5 open giveaway boxes
         $this->setupEmptyRedemptionInstructions($giveaway);
 
-    	$form = $this->createForm(new GiveawayType(), $giveaway);
+        $form = $this->createForm(new GiveawayType(), $giveaway);
 
-    	if($request->getMethod() == 'POST')
-    	{
-    		$form->bindRequest($request);
+        if($request->getMethod() == 'POST')
+        {
+            $form->bindRequest($request);
 
-    		if($form->isValid())
-    		{
-    			$this->saveGiveaway($form);
+            if($form->isValid())
+            {
+                $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
-    			return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
-    		}
-    	}
+                return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
+            }
+        }
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
+        return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
             'form' => $form->createView(),
             'giveaway' => $giveaway,
         ));
@@ -80,28 +80,28 @@ class GiveawayAdminController extends Controller
      */
     private function generateMachineCodeCsvResponse(array $machineCodes, $baseFilename)
     {
-    	// generate CSV content from the rows of data
-    	$factory = new CsvResponseFactory();
+        // generate CSV content from the rows of data
+        $factory = new CsvResponseFactory();
 
-    	$factory->addRow(array(
+        $factory->addRow(array(
                 'Id',
-    			'Email',
-    			'Machine Code',
-    			'Submitted Date',
-    	));
+                'Email',
+                'Machine Code',
+                'Submitted Date',
+        ));
 
-    	foreach ($machineCodes as $entry) {
-    		$factory->addRow(array(
-    				$entry->getId(),
-    				$entry->getUser()->getEmail(),
+        foreach ($machineCodes as $entry) {
+            $factory->addRow(array(
+                    $entry->getId(),
+                    $entry->getUser()->getEmail(),
                     $entry->getMachineCode(),
-    				$entry->getCreated()->format('Y-m-d H:i:s'),
-    		));
-    	}
+                    $entry->getCreated()->format('Y-m-d H:i:s'),
+            ));
+        }
 
-    	$filename = sprintf('%s-%s.csv', $baseFilename, date('Y-m-d'));
+        $filename = sprintf('%s-%s.csv', $baseFilename, date('Y-m-d'));
 
-    	return $factory->createResponse($filename);
+        return $factory->createResponse($filename);
     }
 
     public function editAction(Request $request, $id)
@@ -119,17 +119,17 @@ class GiveawayAdminController extends Controller
 
         if($request->getMethod() == 'POST')
         {
-        	$form->bindRequest($request);
+            $form->bindRequest($request);
 
-        	if($form->isValid())
-        	{
-        		$this->saveGiveaway($form);
-        		return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
-        	}
+            if($form->isValid())
+            {
+                $this->saveGiveaway($form);
+                return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
+            }
         }
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
-    		array('form' => $form->createView(), 'giveaway' => $giveaway));
+        return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
+            array('form' => $form->createView(), 'giveaway' => $giveaway));
     }
 
     /**
