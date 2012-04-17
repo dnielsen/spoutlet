@@ -21,11 +21,11 @@ Feature: Machine Code Giveaway
             Then I should see "Machine Giveaway"
                 And I should see "Pending"
 
-  Scenario: I can see my giveaway key after being approved
-    Given I am authenticated
-     And I have a "pending" machine code entry in the database
-     And my machine code entry is approved
-    When I go to "/account/profile/giveaways"
-     Then I should see "Machine Giveaway"
-     And I should see "123456"
-     And I should not see "Pending"
+    Scenario: I can see my giveaway key after being approved
+        Given I am authenticated
+            And I have a "pending" machine code entry in the database
+            And my machine code entry is approved
+        When I go to "/account/profile/giveaways"
+        Then I should see "Machine Giveaway"
+            And I should see "123456"
+            And I should not see "Pending"
