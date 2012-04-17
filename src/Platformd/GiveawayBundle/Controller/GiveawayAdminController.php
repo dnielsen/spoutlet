@@ -12,6 +12,7 @@ use Symfony\Component\Form\Form;
 use DateTime;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Symfony\Component\Form\FormError;
+use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 
 class GiveawayAdminController extends Controller
 {
@@ -52,7 +53,59 @@ class GiveawayAdminController extends Controller
             'giveaway' => $giveaway,
         ));
     }
+    
+    /**
+     * Export CSV file of user signed up for specified giveaway
+     * 
+     * @param int $giveaway
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAction($giveaway)
+    { 	
+    	// get the giveaway pool data
+    	$ga = $this->getDoctrine()->getRepository('GiveawayBundle:GiveawayPool')->findOneBy(array('giveaway' => $giveaway));
+       
+    	$users = $this->getDoctrine()->getRepository('UserBundle:User');
 
+    	// get uses that signed up for specified giveaway
+    	$userlist = $users->findAssignedToUser($ga->getID(), $this->getLocale());
+
+    	return $this->generateGiveawayCsvResponse($userlist, 'giveaway');
+    }
+    
+    /**
+     * Downloads a CSV of the entries for a particular giveaway
+     */
+    private function generateGiveawayCsvResponse($giveaways, $giveawaySlug)
+    {
+    	// generate CSV content from the rows of data
+    	$factory = new CsvResponseFactory();
+    
+    	$factory->addRow(array(
+    			'ID',
+    			'First Name',
+    			'Last Name',
+    			'Email',
+    			'IP Address',
+    			'Assigned Date',
+    	));
+    
+    	foreach ($giveaways as $entry) {
+    		$factory->addRow(array(
+    				$entry['id'],
+    				$entry['firstname'],
+    				$entry['lastname'],
+    				$entry['email'],
+    			    $entry['ipAddress'],
+    				$entry['assignedAt'],		
+    		));    		
+    	}
+
+    	$filename = sprintf('%s-%s.csv', $giveawaySlug, date('Y-m-d'));
+    	return $factory->createResponse($filename);
+    
+    }
+    
     public function editAction(Request $request, $id)
     {
         $this->addGiveawayBreadcrumb()->addChild('Edit');
