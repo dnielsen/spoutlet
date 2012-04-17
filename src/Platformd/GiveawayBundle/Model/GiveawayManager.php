@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Model\GiveawayKeyRequest;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
+use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 
 /**
  * Service class for dealing with the giveaway system
@@ -38,6 +39,29 @@ class GiveawayManager
             $requests = $this->convertKeysToRequests($keys),
             $this->convertMachineCodesToRequests($machineCodes)
         );
+    }
+
+    /**
+     * Approves the machine code entry and associates it with a GiveawayKey
+     *
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
+     */
+    public function approveMachineCode(MachineCodeEntry $machineCode)
+    {
+        $pool = $machineCode->getGiveaway()->getActivePool();
+
+        $key = $this->getGiveawayKeyRepository()->getUnassignedKey($pool);
+        if (!$key) {
+            throw new MissingKeyException();
+        }
+
+        // attach the key, then attach it to the machine code
+        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $machineCode->getGiveaway()->getLocale());
+        $machineCode->attachToKey($key);
+
+        $this->em->persist($key);
+        $this->em->persist($machineCode);
+        $this->em->flush();
     }
 
     /**

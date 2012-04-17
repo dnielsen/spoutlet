@@ -13,6 +13,7 @@ use Behat\Gherkin\Node\PyStringNode,
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Entity\GiveawayKey;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
+use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 
 use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
 
@@ -21,6 +22,13 @@ use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
  */
 class FeatureContext extends AbstractFeatureContext
 {
+    protected $currentGiveaway;
+
+    /**
+     * @var \Platformd\GiveawayBundle\Entity\MachineCodeEntry
+     */
+    protected $currentMachineCode;
+
     /**
      * @Given /^the following giveaway:$/
      */
@@ -47,6 +55,9 @@ class FeatureContext extends AbstractFeatureContext
                 $pool->setGiveaway($giveaway);
                 $pool->setIsActive(true);
 
+                // make sure to set the inverse side of the relationship...
+                $giveaway->getGiveawayPools()->add($pool);
+
                 foreach ($keys as $key) {
                     $gKey = new GiveawayKey($key);
                     $gKey->setPool($pool);
@@ -58,6 +69,11 @@ class FeatureContext extends AbstractFeatureContext
             }
 
             $em->persist($giveaway);
+        }
+
+        // if we have 1 giveaway, make it the current one
+        if (count($table->getHash() == 1)) {
+            $this->currentGiveaway = $giveaway;
         }
 
         $em->flush();
@@ -86,7 +102,13 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function iHaveAMachineCodeEntryInTheDatabase($machineCode)
     {
-        throw new PendingException('Have not implemented machine code stuff yet');
+        $machineCode = new MachineCodeEntry($this->currentGiveaway, $machineCode);
+        $machineCode->attachToUser($this->currentUser, '127.0.0.1');
+
+        $this->getEntityManager()->persist($machineCode);
+        $this->getEntityManager()->flush();
+
+        $this->currentMachineCode = $machineCode;
     }
 
     /**
@@ -94,6 +116,14 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        throw new PendingException('Have not implemented machine code stuff yet');
+        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode);
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Model\GiveawayManager
+     */
+    private function getGiveawayManager()
+    {
+        return $this->getContainer()->get('pd_giveaway.giveaway_manager');
     }
 }

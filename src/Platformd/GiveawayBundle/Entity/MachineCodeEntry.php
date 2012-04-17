@@ -123,6 +123,7 @@ class MachineCodeEntry
     public function attachToKey(GiveawayKey $key)
     {
         $this->key = $key;
+        $this->status = self::STATUS_APPROVED;
     }
 
     /**
