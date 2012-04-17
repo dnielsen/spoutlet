@@ -54,16 +54,18 @@
                         {% endif %}
 
                         {% if giveaway.allowMachineCodeSubmit and giveaway.isActive %}
-                            {% if is_granted('ROLE_USER') %}
-                                <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">
-                                    <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
-                                    <input type="text" name="machine_code" id="machine_code_input" class="txt" />
+                            <div style="margin-bottom: 10px;">
+                                {% if is_granted('ROLE_USER') %}
+                                    <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">
+                                        <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
+                                        <input type="text" name="machine_code" id="machine_code_input" class="txt" />
 
-                                    <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
-                                </form>
-                            {% else %}
-                                <em>{{ 'login_to_submit_machine_code' | trans }}</em>
-                            {% endif %}
+                                        <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
+                                    </form>
+                                {% else %}
+                                    <em>{{ 'login_to_submit_machine_code' | trans }}</em>
+                                {% endif %}
+                            </div>
                         {% endif %}
 
                         <ol>
