@@ -65,10 +65,10 @@ class GiveawayAdminController extends Controller
     	// get the giveaway pool data
     	$ga = $this->getDoctrine()->getRepository('GiveawayBundle:GiveawayPool')->findOneBy(array('giveaway' => $giveaway));
        
-    	$users = $this->getDoctrine()->getRepository('UserBundle:User');
+    	$userRepository = $this->getDoctrine()->getRepository('UserBundle:User');
 
     	// get uses that signed up for specified giveaway
-    	$userlist = $users->findAssignedToUser($ga->getID(), $this->getLocale());
+    	$userlist = $userRepository->findAssignedToUser($ga->getID(), $this->getLocale());
 
     	return $this->generateGiveawayCsvResponse($userlist, 'giveaway');
     }
