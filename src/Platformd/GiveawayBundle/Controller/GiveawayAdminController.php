@@ -84,18 +84,20 @@ class GiveawayAdminController extends Controller
         $factory = new CsvResponseFactory();
 
         $factory->addRow(array(
-                'Id',
+                'First Name',
+                'Last Name',
                 'Email',
-                'Machine Code',
                 'Submitted Date',
+                'Machine Code',
         ));
 
         foreach ($machineCodes as $entry) {
             $factory->addRow(array(
-                    $entry->getId(),
+                    $entry->getUser()->getFirstname(),
+                    $entry->getUser()->getLastname(),
                     $entry->getUser()->getEmail(),
-                    $entry->getMachineCode(),
                     $entry->getCreated()->format('Y-m-d H:i:s'),
+                    $entry->getMachineCode(),
             ));
         }
 
