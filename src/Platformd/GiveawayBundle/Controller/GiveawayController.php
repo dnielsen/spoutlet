@@ -146,6 +146,7 @@ class GiveawayController extends Controller
         $em->flush();
 
         $this->setFlash('success', $this->trans('platformd.sweepstakes.entered.message'));
+        $this->setFlash('machine_code_submitted', true);
 
         return $this->redirect($this->generateUrl('giveaway_show', array(
             'slug' => $slug,
