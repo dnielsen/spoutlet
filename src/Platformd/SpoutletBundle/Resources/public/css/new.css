@@ -431,3 +431,12 @@ ul.list-normal {
     padding: 4px 4px;
     font-size: 13px;
 }
+.machine-code-form .form-error {
+    display: none;
+}
+.machine-code-form.with-error .form-error {
+    display: block;
+}
+.machine-code-form.with-error input.txt {
+    background-color: #fcb3b3;
+}

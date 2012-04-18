@@ -365,12 +365,14 @@ giveaway:
         machine_code_submit: System Tag Submit Key Giveaway
         type: Giveaway Type
 
-submit_machine_code: Submit Tag
-machine_code_saved_message: Your tag was saved! Please allow for 10 business days for your tag to be verified and your giveaway key to be given to you.
+submit_machine_code: Apply
 machine_code: System Tag
+no_machine_code_submitted: Please enter your system tag number.
 
-pending: Pending
-approved: Approved
+pending: In Process
 denied: Denied
+# probably not shown on the frontend (for machine code giveaways, key is shown)
+approved: Approved
+
 approve_machine_codes: Approve System Tags
 eve_online_key_giveaway_account_message: If you have registered for an EVE Online key giveaway, please allow at least 10 days for it to be posted into your account. If after 10 days it has not been posted, please email japan@alienwarearena.com.
