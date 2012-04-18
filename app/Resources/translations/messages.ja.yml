@@ -379,7 +379,6 @@ giveaway:
         type: Giveaway Type
 
 submit_machine_code: Submit Code
-login_to_submit_machine_code: Login to submit your machine code
 machine_code_saved_message: Your code was saved! Please allow for 10 business days for your code to be verified and your giveaway key to be given to you.
 machine_code: Code
 
