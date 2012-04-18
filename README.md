@@ -1,15 +1,31 @@
 INSTALLATION
 ============
 
+* NOTE: Read the last section if you face challenges with the installation.
+
+
+* Prerequisite: 
+    You'll need Apache and PHP. At this time, Symphony2 depends on PHP5.3.3+. 
+    Mac: You can download and install Apache and PHP5.3.*. Installing PHP on 
+      a leopard (10.5.*) m/c can be a challenge.  You might want to use macport 
+      to install it.
+		Link: https://trac.macports.org/wiki/howto/MAMP
+      It may take a couple of hours to install PHP, Apache, and dependencies.
+
+
 * Clone the repository
 
     git clone git@github.com:KnpLabs/Platformd.git
+
 
 * Move into the directory and then update the vendors (this will take several
     minutes the first time you do it)
 
     cd Platformd
     php bin/vendors install
+
+    - If this command fails, see the last section
+
 
 * Copy the template parameters file to parameters.ini
 
@@ -99,3 +115,25 @@ UPDATING
 * Head to the site (in dev mode)!
 
    http://demo.platformd.l/app_dev.php
+
+
+
+
+INSTALLATION CHALLENGES
+-----------------------
+
+* php bin/vendors install : fails 
+    The following error is because of certificate verification:
+
+      error: SSL certificate problem, verify that the CA cert is OK. Details:
+      error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed while accessing https://github.com/Behat/BehatBundle.git/info/refs
+
+    Replace https:// with git:// in <deps> file. Here is a quick fix: 
+
+       $ cd spoutlet
+       $ vi deps
+
+	  Execute vi command
+	  :.,$s@https://@git://@
+
+
