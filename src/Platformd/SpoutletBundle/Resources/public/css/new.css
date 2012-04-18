@@ -430,6 +430,7 @@ ul.list-normal {
     border: 1px solid #ccc;
     padding: 4px 4px;
     font-size: 13px;
+    width: 120px;
 }
 .machine-code-form .form-error {
     display: none;
