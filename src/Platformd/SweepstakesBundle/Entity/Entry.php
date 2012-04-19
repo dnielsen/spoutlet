@@ -34,6 +34,7 @@ class Entry
     /**
      * @var \Platformd\SweepstakesBundle\Entity\Sweepstakes
      * @ORM\ManyToOne(targetEntity="Platformd\SweepstakesBundle\Entity\Sweepstakes", inversedBy="entries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $sweepstakes;
 
