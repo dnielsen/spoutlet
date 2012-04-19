@@ -39,6 +39,8 @@ services:
 
     platformd.spoutlet_extension:
         class: Platformd\SpoutletBundle\Twig\SpoutletExtension
+        arguments:
+            - "@service_container"
         tags:
             - { name: twig.extension }
 

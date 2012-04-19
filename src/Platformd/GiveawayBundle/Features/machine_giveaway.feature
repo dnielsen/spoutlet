@@ -17,7 +17,7 @@ Feature: Machine Code Giveaway
             And I press "Apply"
         Then I should see "Thanks for your participation"
             And there should be "1" "pending" machine code entry in the database
-            And I should not see a ".machine-code-form" element
+            And I should not see "System Tag"
             # try refreshing the page, still not there
             When I reload the page
             Then I should not see "System Tag"

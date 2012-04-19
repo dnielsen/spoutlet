@@ -56,7 +56,7 @@
                         {% if giveaway.allowMachineCodeSubmit and giveaway.isActive %}
                             <div style="margin-bottom: 10px;">
                                 {% if is_granted('ROLE_USER') %}
-                                    {% if app.session.getFlash('machine_code_submitted') %}
+                                    {% if has_user_applied_to_giveaway(giveaway) %}
                                         {{ 'platformd.sweepstakes.entered.message' | trans }}
                                     {% else %}
                                         <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">

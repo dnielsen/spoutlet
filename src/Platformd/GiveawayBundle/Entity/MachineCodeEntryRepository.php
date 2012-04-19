@@ -5,6 +5,7 @@ namespace Platformd\GiveawayBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * MachineCodeEntryRepository
@@ -22,13 +23,32 @@ class MachineCodeEntryRepository extends EntityRepository
      */
     public function findAssignedToUserWithoutGiveawayKey(User $user)
     {
-        return $this->createQueryBuilder('mce')
-            ->andWhere('mce.user = :user')
+        $qb = $this->createQueryBuilder('mce');
+        $this->addUserQueryBuilder($user, $qb);
+
+        return $qb
             ->andWhere('mce.key IS NULL')
-            ->setParameter('user', $user)
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * Returns all the entries this user has for this giveaway.
+     *
+     * Should be 0 or 1, but technically could be many
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param Giveaway $giveaway
+     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntry[]
+     */
+    public function findAssignedToUserForGiveaway(User $user, Giveaway $giveaway)
+    {
+        $qb = $this->createQueryBuilder('mce');
+        $this->addUserQueryBuilder($user, $qb);
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        return $qb->getQuery()->execute();
     }
 
     /**
@@ -37,13 +57,38 @@ class MachineCodeEntryRepository extends EntityRepository
      */
     public function findPendingForGiveaway(Giveaway $giveaway)
     {
-        return $this->createQueryBuilder('mce')
-            ->andWhere('mce.giveaway = :giveaway')
+        $qb = $this->createQueryBuilder('mce');
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        return $qb
             ->andWhere('mce.status = :status')
-            ->setParameter('giveaway', $giveaway)
             ->setParameter('status', MachineCodeEntry::STATUS_PENDING)
             ->getQuery()
             ->execute()
+        ;
+    }
+
+    /**
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addUserQueryBuilder(User $user, QueryBuilder $qb)
+    {
+        return $qb->andWhere('mce.user = :user')
+            ->setParameter('user', $user)
+        ;
+    }
+
+    /**
+     * @param Giveaway $giveaway
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addGiveawayQueryBuilder(Giveaway $giveaway, QueryBuilder $qb)
+    {
+        return $qb->andWhere('mce.giveaway = :giveaway')
+            ->setParameter('giveaway', $giveaway)
         ;
     }
 }

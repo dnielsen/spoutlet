@@ -7,6 +7,7 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Model\GiveawayKeyRequest;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
  * Service class for dealing with the giveaway system
@@ -67,6 +68,20 @@ class GiveawayManager
         $this->em->persist($key);
         $this->em->persist($machineCode);
         $this->em->flush();
+    }
+
+    /**
+     * Has the user applied to this giveaway yet?
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     * @return bool
+     */
+    public function hasUserAppliedToGiveaway(User $user, Giveaway $giveaway)
+    {
+        $entries = $this->getMachineCodeEntryRepository()->findAssignedToUserForGiveaway($user, $giveaway);
+
+        return (count($entries) > 0);
     }
 
     /**
