@@ -7,9 +7,9 @@ use Twig_Filter_Method;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 /**
- * Twig extension for tenancy-related items
+ * Twig extension for generic things
  */
-class MultitenancyExtension extends Twig_Extension
+class SpoutletExtension extends Twig_Extension
 {
     public function getFilters()
     {
@@ -36,7 +36,6 @@ class MultitenancyExtension extends Twig_Extension
      */
     public function getName()
     {
-        return 'spoutlet_multitenancy';
+        return 'spoutlet';
     }
-
 }

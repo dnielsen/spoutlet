@@ -37,8 +37,8 @@ services:
         tags:
             - { name: twig.extension }
 
-    platformd.multitenancy_extension:
-        class: Platformd\SpoutletBundle\Twig\MultitenancyExtension
+    platformd.spoutlet_extension:
+        class: Platformd\SpoutletBundle\Twig\SpoutletExtension
         tags:
             - { name: twig.extension }
 
