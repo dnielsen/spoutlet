@@ -20,6 +20,11 @@ a.button:hover {
   color: #ddd;
 }
 
+/* should be applied whenever we want text to respect spaces and line breaks */
+.controlled-spacing {
+    white-space: pre-wrap;
+}
+
 ul.normal-margin, ol.normal-margin {
     margin-left: 40px;
 }

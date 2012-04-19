@@ -26,7 +26,7 @@ class EventType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'text');
+        $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType());
 
         $this->createStartsAtField($builder);

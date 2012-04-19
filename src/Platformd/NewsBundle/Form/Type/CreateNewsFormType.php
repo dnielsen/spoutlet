@@ -14,7 +14,7 @@ class CreateNewsFormType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('title')
+            ->add('title', 'textarea')
             ->add('body')
             ->add('locale', new SiteChoiceType())
             ->add('published', 'choice', array(

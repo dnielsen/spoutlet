@@ -73,10 +73,10 @@
 
                         <ol>
                             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
-                            {% if  (redemptionSteps)  %}
+                            {% if  (redemptionSteps is not empty)  %}
                             {% for redemptionStep in redemptionSteps %}
                             <li>
-                                <span class="item" id="me">{{ redemptionStep | raw }}</span>
+                                <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
                             </li>
                             {% endfor %}
                             {% endif %}
@@ -89,7 +89,7 @@
             <div class="left">
                 <div id="giveaway-info" class="widget-66">
                     <div class="widget-header">
-                        <div class="widget-title">{{ giveaway.name }}</div>
+                        <div class="widget-title controlled-spacing">{{ giveaway.name }}</div>
                     </div><!-- widget-header -->
 
                     <div class="widget-content" id="giveaway-details">

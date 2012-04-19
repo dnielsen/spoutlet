@@ -29,6 +29,8 @@ class Giveaway extends AbstractEvent
 
     const TYPE_TEXT_PREFIX = 'giveaway.type.';
 
+    const REDEMPTION_LINE_PREFIX = '* ';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -44,7 +46,6 @@ class Giveaway extends AbstractEvent
      * instructions on the giveaway.
      *
      * @ORM\Column(type="text")
-     * @Assert\NotBlank
      *
      * @var string
      */
@@ -110,7 +111,7 @@ class Giveaway extends AbstractEvent
     /**
      * Add an user
      *
-     * @param \Platformd\UserBundle\Entity\GiveawayPool $pool
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      */
     public function addUser(GiveawayPool $pool)
     {
@@ -194,19 +195,44 @@ class Giveaway extends AbstractEvent
     /**
      * @param string $redemptionInstructions
      */
-    public function setRedemptionInstructions($redemptionInstructions)
+    private function setRedemptionInstructions($redemptionInstructions)
     {
         $this->redemptionInstructions = $redemptionInstructions;
     }
 
     /**
-     * Explodes the redemptionInstructions by new line into an array of instructions
+     * Explodes the redemptionInstructions text by new line and removing the prefix:
+     *
+     * The literal source text (with opening asterisks) looks like this:
+     *
+     *  * foo
+     *  * bar
      *
      * @return array
      */
     public function getRedemptionInstructionsArray()
     {
-        return explode("\n", $this->getRedemptionInstructions());
+        $arr = explode(self::REDEMPTION_LINE_PREFIX, $this->getRedemptionInstructions());
+
+        foreach ($arr as $lineNo => $line) {
+            // remove trailing whitespace
+            $arr[$lineNo] = trim($line);
+
+            // unset the whole dang entry if it's empty
+            if (empty($line)) {
+                unset($arr[$lineNo]);
+            }
+        }
+
+        // re-index the array
+        $arr = array_values($arr);
+
+        // make sure we have at least 6 entries
+        while (count($arr) < 6) {
+            $arr[] = '';
+        }
+
+        return $arr;
     }
 
     /**
@@ -217,7 +243,32 @@ class Giveaway extends AbstractEvent
      */
     public function setRedemptionInstructionsArray(array $instructions)
     {
-        $this->setRedemptionInstructions(implode("\n", $instructions));
+        $str = '';
+        foreach ($instructions as $line) {
+            // only store the line if it's non-blank
+            if ($line) {
+                $str .= self::REDEMPTION_LINE_PREFIX . $line."\n";
+            }
+        }
+
+        $this->setRedemptionInstructions(trim($str));
+    }
+
+    /**
+     * Returns the redemption instructions array, but without blank lines
+     *
+     * @return array
+     */
+    public function getCleanedRedemptionInstructionsArray()
+    {
+        $cleaned = array();
+        foreach ($this->getRedemptionInstructionsArray() as $item) {
+            if ($item) {
+                $cleaned[] = $item;
+            }
+        }
+
+        return $cleaned;
     }
 
     /**
