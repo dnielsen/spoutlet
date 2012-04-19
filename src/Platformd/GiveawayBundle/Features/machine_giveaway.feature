@@ -13,13 +13,17 @@ Feature: Machine Code Giveaway
 
     Scenario: I can submit my machine code
         Given I am on "/giveaways/machine-giveaway"
-        When I fill in "Code" with "abcd1234"
-            And I press "Submit Code"
-        Then I should see "Your code was saved"
+        When I fill in "System Tag" with "abcd1234"
+            And I press "Apply"
+        Then I should see "Thanks for your participation"
             And there should be "1" "pending" machine code entry in the database
+            And I should not see a ".machine-code-form" element
+            # try refreshing the page, still not there
+            When I reload the page
+            Then I should not see "System Tag"
         When I go to "/account/profile/giveaways"
             Then I should see "Machine Giveaway"
-                And I should see "Pending"
+                And I should see "In Process"
 
     Scenario: I can see my giveaway key after being approved
         Given I am authenticated
@@ -28,4 +32,4 @@ Feature: Machine Code Giveaway
         When I go to "/account/profile/giveaways"
         Then I should see "Machine Giveaway"
             And I should see "123456"
-            And I should not see "Pending"
+            And I should not see "In Process"

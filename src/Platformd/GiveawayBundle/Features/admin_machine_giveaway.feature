@@ -27,18 +27,18 @@ Feature: Machine Code Giveaway Admin
     Scenario: I can approve key giveaway requests
         Given I am on "/admin"
         When I follow "Giveaways"
-            And I follow "Approve Codes"
+            And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com"
-            And I press "Approve Codes"
+            And I press "Approve Tags"
         Then I should see "2 codes were approved"
             And there should be "2" "approved" machine code entry in the database
 
     Scenario: I will eventually run out of keys
         Given I am on "/admin"
         When I follow "Giveaways"
-            And I follow "Approve Codes"
+            And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com, china@zh.com"
-            And I press "Approve Codes"
+            And I press "Approve Tags"
         Then I should see "There are no more unassigned giveaway keys"
             # we should still have 2 approved machine code entries
             And there should be "2" "approved" machine code entry in the database
@@ -46,7 +46,7 @@ Feature: Machine Code Giveaway Admin
     Scenario: Hey! That's not a real user
         Given I am on "/admin"
         When I follow "Giveaways"
-            And I follow "Approve Codes"
+            And I follow "Approve System Tags"
             And I fill in "Emails" with "foo@foo.com"
-            And I press "Approve Codes"
+            And I press "Approve Tags"
         Then I should see "No user with email"
