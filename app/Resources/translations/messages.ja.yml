@@ -235,6 +235,7 @@ platformd:
         max_ip_limit: このＩＰアドレスからはキーを取得できません。エラーが原因だと思われる場合、japan@alienwarearena.comまでご連絡ください。
         already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
+        in_process: キーコード取得に登録された場合、あなたのステータスは「進行中」と表示されます。あなたのアカウントに反映されるまで１０日ほど時間がかかります。 この期間を過ぎても反映されない場合はjapan@alienwarearena.comまでメールにてお知らせください。
         admin:
             title: ギブアウェイ管理
             edit_giveaway: ギブアウェイを編集 | %giveaway_title%
