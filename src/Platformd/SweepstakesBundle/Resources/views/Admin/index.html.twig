@@ -22,7 +22,7 @@
             <td>{{ sweepstakes.locale | site_name }}</td>
             <td>
                 {% set sweepstakesUrl = url('sweepstakes_show', {'slug': sweepstakes.slug, '_locale': sweepstakes.locale }) %}
-                <a href="{{ sweepstakesUrl }}">{{ sweepstakesUrl }}</a>
+                <a href="{{ sweepstakesUrl }}" target="_blank">{{ sweepstakesUrl }}</a>
             </td>
             <td>
                 <a href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}">{{ "edit" | trans  }}</a>
