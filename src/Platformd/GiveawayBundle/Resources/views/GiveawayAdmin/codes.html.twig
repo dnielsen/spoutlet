@@ -1,0 +1,21 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+
+{% block title %}{{ "approve_codes" | trans({}, 'admin') }}{% endblock %}
+
+{% block content %}
+    <h1>{{ 'approve_codes' | trans({}, 'admin') }}</h1>
+
+    {% if successEmails is not empty %}
+        <div class="alert-message success">
+            The following emails were successfully: {{ successEmails | join(',') }}
+        </div>
+    {% endif %}
+
+    <form action="{{ path('admin_giveaway_machine_codes', {'id': giveaway.id}) }}" method="POST">
+        {{ form_widget(form) }}
+
+        <input type="submit" class="btn success" value="{{ 'approve_codes' | trans({}, 'admin') }}" />
+    </form>
+
+{% endblock %}

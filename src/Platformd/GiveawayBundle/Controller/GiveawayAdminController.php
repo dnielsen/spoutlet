@@ -10,6 +10,9 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
+use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
+use Symfony\Component\Form\FormError;
+use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 
 class GiveawayAdminController extends Controller
 {
@@ -18,37 +21,89 @@ class GiveawayAdminController extends Controller
         $this->addGiveawayBreadcrumb();
         $giveaways = $this->getGiveawayRepo()->findAllWithoutLocaleOrderedByNewest();
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
+        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
             array('giveaways' => $giveaways));
     }
 
     public function newAction(Request $request)
     {
         $this->addGiveawayBreadcrumb()->addChild('New');
-    	$giveaway = new Giveaway();
+        $giveaway = new Giveaway();
 
         // guarantee we have at least 5 open giveaway boxes
         $this->setupEmptyRedemptionInstructions($giveaway);
 
-    	$form = $this->createForm(new GiveawayType(), $giveaway);
+        $form = $this->createForm(new GiveawayType(), $giveaway);
 
-    	if($request->getMethod() == 'POST')
-    	{
-    		$form->bindRequest($request);
+        if($request->getMethod() == 'POST')
+        {
+            $form->bindRequest($request);
 
-    		if($form->isValid())
-    		{
-    			$this->saveGiveaway($form);
+            if($form->isValid())
+            {
+                $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
-    			return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
-    		}
-    	}
+                return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
+            }
+        }
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
+        return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
             'form' => $form->createView(),
             'giveaway' => $giveaway,
         ));
+    }
+
+    /**
+     * Export CSV file of pending machine code entries for this giveaway
+     *
+     * @param int $id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAction($id)
+    {
+        /** @var $giveaway \Platformd\GiveawayBundle\Entity\Giveaway */
+        $giveaway = $this->getGiveawayRepo()->find($id);
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway found for id '.$id);
+        }
+
+        $machineCodes = $this->getMachineCodeRepository()->findPendingForGiveaway($giveaway);
+
+        return $this->generateMachineCodeCsvResponse($machineCodes, $giveaway->getSlug());
+    }
+
+    /**
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry[] $machineCodes
+     * @param $baseFilename
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function generateMachineCodeCsvResponse(array $machineCodes, $baseFilename)
+    {
+        // generate CSV content from the rows of data
+        $factory = new CsvResponseFactory();
+
+        $factory->addRow(array(
+                'First Name',
+                'Last Name',
+                'Email',
+                'Submitted Date',
+                'Machine Code',
+        ));
+
+        foreach ($machineCodes as $entry) {
+            $factory->addRow(array(
+                    $entry->getUser()->getFirstname(),
+                    $entry->getUser()->getLastname(),
+                    $entry->getUser()->getEmail(),
+                    $entry->getCreated()->format('Y-m-d H:i:s'),
+                    $entry->getMachineCode(),
+            ));
+        }
+
+        $filename = sprintf('%s-%s.csv', $baseFilename, date('Y-m-d'));
+
+        return $factory->createResponse($filename);
     }
 
     public function editAction(Request $request, $id)
@@ -66,17 +121,97 @@ class GiveawayAdminController extends Controller
 
         if($request->getMethod() == 'POST')
         {
-        	$form->bindRequest($request);
+            $form->bindRequest($request);
 
-        	if($form->isValid())
-        	{
-        		$this->saveGiveaway($form);
-        		return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
-        	}
+            if($form->isValid())
+            {
+                $this->saveGiveaway($form);
+                return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
+            }
         }
 
-    	return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
-    		array('form' => $form->createView(), 'giveaway' => $giveaway));
+        return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
+            array('form' => $form->createView(), 'giveaway' => $giveaway));
+    }
+
+    /**
+     * Allows the user to approve machine codes
+     *
+     * @Template()
+     *
+     * @param $id
+     * @return array
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function codesAction($id, Request $request)
+    {
+        $this->addGiveawayBreadcrumb()->addChild('Approve machine codes');
+
+        $giveaway = $this->getGiveawayRepo()->find($id);
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway for that id');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('emails', 'textarea', array('attr' => array('class' => 'input-xlarge')))
+            ->getForm()
+        ;
+
+        $successEmails = array();
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $emails = explode(',', $data['emails']);
+
+                // iterate through the emails and activate their machine codes
+                foreach ($emails as $email) {
+                    $user = $this->getUserManager()->findUserByEmail(trim($email));
+                    if (!$user) {
+                        $form->addError(new FormError('No user with email %email% found', array('%email%' => $email)));
+
+                        continue;
+                    }
+                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKey($user);
+
+                    if (count($machineCodes) == 0) {
+                        $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
+
+                        continue;
+                    }
+
+                    // pop up the first one, ideally there's only one
+                    $machineCode = $machineCodes[0];
+
+                    try {
+                        $this->getGiveawayManager()->approveMachineCode($machineCode);
+
+                        $successEmails[] = $email;
+                    } catch (MissingKeyException $e) {
+                        $form->addError(new FormError(
+                            'There are no more unassigned giveaway keys for this giveaway. The following email was not assigned a key: %email%',
+                            array('%email%' => $email)
+                        ));
+                    }
+                }
+
+                $this->setFlash('success', sprintf('%s codes were approved', count($successEmails)));
+
+                // if the form is *still* valid, redirect
+                if ($form->isValid()) {
+                    return $this->redirect(
+                        $this->generateUrl('admin_giveaway_machine_codes', array('id' => $giveaway->getId()))
+                    );
+                }
+            }
+        }
+
+        return array(
+            'giveaway' => $giveaway,
+            'form'     => $form->createView(),
+            'successEmails' => $successEmails,
+        );
     }
 
     /**
@@ -156,7 +291,7 @@ class GiveawayAdminController extends Controller
     private function setupEmptyRedemptionInstructions(Giveaway $giveaway)
     {
         $instructions = $giveaway->getRedemptionInstructionsArray();
-        while (count($instructions) < 5) {
+        while (count($instructions) < 6) {
             $instructions[] = '';
         }
 
@@ -175,6 +310,9 @@ class GiveawayAdminController extends Controller
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
 
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
     private function getEntityManager()
     {
         return $this->getDoctrine()
@@ -191,5 +329,21 @@ class GiveawayAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Model\GiveawayManager
+     */
+    private function getGiveawayManager()
+    {
+        return $this->container->get('pd_giveaway.giveaway_manager');
+    }
+
+    /**
+     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntryRepository
+     */
+    private function getMachineCodeRepository()
+    {
+        return $this->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
     }
 }

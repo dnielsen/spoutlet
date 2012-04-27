@@ -4,6 +4,10 @@
 
 {% block content %}
     <h1>Users</h1>
+ 
+    <form action="{{  path('Platformd_UserBundle_admin_index') }}" method="get" name="search" >
+    <strong>{{ "platformd.users.user_listings.search" | trans }}:</strong> <input name="search" class="usersearch" type="text" title="{{ "platformd.users.user_listings.search" | trans }}" size="41"> 
+    </form>
 
     {% if pager.nbResults > 0 %}
         <table class="zebra-striped bordered-table tablesorter">

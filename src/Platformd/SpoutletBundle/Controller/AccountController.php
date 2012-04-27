@@ -53,13 +53,23 @@ class AccountController extends Controller
     {
         return $this->redirect('/video/edit');
     }
-    
+
+    /**
+     * Displays a list of giveaway keys that this user has earned
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function giveawaysAction()
     {
         $this->checkSecurity();
 
+        $keyRequests = $this->container
+            ->get('pd_giveaway.giveaway_manager')
+            ->getGiveawayKeyRequestsForUser($this->getUser())
+        ;
+
         return $this->render('SpoutletBundle:Account:giveaways.html.twig', array(
-            'giveawayKeys' => $this->getGiveawayKeyRepository()->findAssignedToUser($this->getUser())
+            'keyRequests' => $keyRequests,
         ));
     }
 

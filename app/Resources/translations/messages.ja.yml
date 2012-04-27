@@ -100,6 +100,7 @@ platformd:
         user_listings:
             title: ユーザー管理
             super_admin_cant_be_modified: スーパー管理者ユーザーは変更できません
+            search: 検索
 
     events:
         event_listings:
@@ -250,7 +251,7 @@ platformd:
         redeem:   引き換え
         get_key:  キー入手
         no_keys_left: このギブアウェイでキーはありません
-        max_ip_limit: あなたのIPアドレスではこれ以上のキーは取得できません
+        max_ip_limit: このＩＰアドレスからはキーを取得できません。エラーが原因だと思われる場合、japan@alienwarearena.comまでご連絡ください。
         already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
         admin:
@@ -377,3 +378,21 @@ news_and_announcements: Alienware Arena ニュース
 announced_date: 発表 %posted_date%
 read_more: 詳細
 go_to_website: サイトへ移動
+
+# admin stuff
+giveaway:
+    type:
+        key_giveaway: Traditional Key Giveaway
+        machine_code_submit: System Tag Submit Key Giveaway
+        type: Giveaway Type
+approve_machine_codes: Approve System Tags
+
+submit_machine_code: 応募する
+machine_code: システムタグ
+no_machine_code_submitted: サービスタグナンバーを入力して下さい。
+
+pending: 進行中
+denied: Denied
+# probably not shown on the frontend (for machine code giveaways, key is shown)
+approved: Approved
+

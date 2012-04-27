@@ -4,6 +4,8 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 
 /**
 * 
@@ -38,9 +40,11 @@ class GiveawayController extends Controller
             $assignedKey = null;
         }
 
+        $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
+       
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
-            'redemptionSteps'   => $giveaway->getRedemptionInstructionsArray(),
+            'redemptionSteps'   => $instruction,
             'available_keys'    => $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool),
             'assignedKey'       => $assignedKey,
         ));
@@ -51,7 +55,8 @@ class GiveawayController extends Controller
      *
      * @param $slug
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     public function keyAction($slug, Request $request)
     {
@@ -59,6 +64,11 @@ class GiveawayController extends Controller
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $giveaway = $this->findGiveaway($slug);
+
+        // make sure this is the type of giveaway that actually allows this
+        if (!$giveaway->allowKeyFetch()) {
+            throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
+        }
 
         $pool = $giveaway->getActivePool();
 
@@ -101,8 +111,44 @@ class GiveawayController extends Controller
             'slug' => $slug,
             'keyId' => $key->getId(),
         )));
+    }
 
+    /**
+     * Submits a machine code for a user
+     *
+     * @param $slug
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function machineCodeAction($slug, Request $request)
+    {
+        // force a valid user
+        $this->basicSecurityCheck(array('ROLE_USER'));
 
+        $giveaway = $this->findGiveaway($slug);
+
+        // make sure this is the type of giveaway that actually allows this
+        if (!$giveaway->allowMachineCodeSubmit()) {
+            throw new AccessDeniedException('This giveaway does not allow you to submit a machine code');
+        }
+
+        if (!$code = $request->request->get('machine_code')) {
+            $this->createNotFoundException('No machine code submitted');
+        }
+
+        $machineCode = new MachineCodeEntry($giveaway, $code);
+        $machineCode->attachToUser($this->getUser(), $request->getClientIp());
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($machineCode);
+        $em->flush();
+
+        $this->setFlash('success', $this->trans('platformd.sweepstakes.entered.message'));
+
+        return $this->redirect($this->generateUrl('giveaway_show', array(
+            'slug' => $slug,
+        )));
     }
 
     /**

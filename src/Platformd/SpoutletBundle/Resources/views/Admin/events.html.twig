@@ -26,7 +26,7 @@
             <td>{{ event.locale | site_name }}</td>
             <td>
                 {% set eventUrl = url('events_detail', {'slug': event.slug, '_locale': event.locale }) %}
-                <a href="{{ eventUrl }}">{{ eventUrl }}</a>
+                <a href="{{ eventUrl }}" target="_blank">{{ eventUrl }}</a>
             </td>
             <td title="{{ event.startsAt|date }}">
                 {{ event.startsAt|date('M') }}

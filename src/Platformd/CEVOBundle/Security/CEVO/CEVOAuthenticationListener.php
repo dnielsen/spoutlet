@@ -34,16 +34,27 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $debug;
 
     /**
+     * This will be true in the test environment
+     *
+     * This allows there to be no cookie, but instead look for a ?username=
+     * query parameter and use it.
+     *
+     * @var bool
+     */
+    protected $allowFakedAuth;
+
+    /**
      * @var \Symfony\Component\HttpKernel\Log\LoggerInterface
      */
     protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, $debug = false)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, $debug = false, $allowFakedAuth = false)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->baseHost = $baseHost;
         $this->debug = $debug;
+        $this->allowFakedAuth = $allowFakedAuth;
     }
 
     /**
@@ -57,8 +68,17 @@ class CEVOAuthenticationListener implements ListenerInterface
 
         $sessionString = $request->cookies->get(self::COOKIE_NAME);
 
+        // allows us to fake the cookie in in the test environment
+        if (!$sessionString && $this->allowFakedAuth) {
+            $username = $request->query->get('username');
+            if ($username) {
+                $sessionString = sprintf('%s$abcdefg', $username);
+            }
+        }
+
         // an actual "logout" listener - listens to see if we're logged in, but the cookie is gone
-        if ($this->forceLogout($request, $sessionString)) {
+        // don't do this in "Faked" auth land, where we don't really use cookies
+        if (!$this->allowFakedAuth && $this->forceLogout($request, $sessionString)) {
             // actually log them out
             $request->getSession()->invalidate();
             $this->securityContext->setToken(null);

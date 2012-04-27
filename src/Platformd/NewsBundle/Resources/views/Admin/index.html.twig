@@ -22,7 +22,7 @@
             <td>{{ item.locale | site_name }}</td>
             <td>
                 {% set newsUrl = url('news_show', {'slug': item.slug, '_locale': item.locale }) %}
-                <a href="{{ newsUrl }}">{{ newsUrl }}</a>
+                <a href="{{ newsUrl }}" target="_blank">{{ newsUrl }}</a>
             </td>
             <td>
                 <i>

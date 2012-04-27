@@ -112,6 +112,7 @@ class Controller extends BaseController
     }
 
     /**
+<<<<<<< HEAD
      * Checks whether a Linkable object is actually a link to another site
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
@@ -145,5 +146,16 @@ class Controller extends BaseController
     {
         return $this->container->get('platformd.link.linkable_manager')
             ->link($linkableObj);
+    }
+
+    /**
+     * @param $key
+     * @param array $params
+     * @param string $domain
+     * @return mixed
+     */
+    protected function trans($key, $params = array(), $domain = 'messages')
+    {
+        return $this->container->get('translator')->trans($key, $params, $domain);
     }
 }

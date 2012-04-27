@@ -938,6 +938,10 @@ class User extends BaseUser
      */
     public function getAge()
     {
+        if (!$this->getBirthdate()) {
+            return 0;
+        }
+
         return $this->getBirthdate()
             ->diff(new \DateTime('now'))
             ->y

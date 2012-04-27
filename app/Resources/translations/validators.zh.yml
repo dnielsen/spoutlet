@@ -1,7 +1,7 @@
-first_name_not_blank: Please enter your first name
-last_name_not_blank: Please enter your last name
-birthdate_not_blank: Please enter your birthdate
-state_not_blank: Please enter a state
+first_name_not_blank: 请输入您的名字
+last_name_not_blank: 请输入您的姓氏
+birthdate_not_blank: 请输入您的生日
+state_not_blank: 请输入省份
 
 "The username is already used": 用户名已被使用
 "The email is already used":  邮件地址已被使用
@@ -23,6 +23,6 @@ state_not_blank: Please enter a state
 "The name is too long":  名字过长
 "This value is not a valid captcha":  验证码无效
 
-"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
+"You must accept the terms and conditions and the privacy policy": 您必须同意使用条款和隐私政策
 
-"The entered password is invalid.": The entered password is invalid.
+"The entered password is invalid.": 所输入的密码无效

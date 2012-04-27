@@ -3,11 +3,17 @@ imports:
 
 parameters:
     base_host: localhost
+    allow_faked_auth:   true
+
+    # This says to use the current host, but prefix the URLs with this
+    # this allows us to fake CEVO's api right on our own site
+    cevo_base_url: %mink_base_url%/cevo/api/stub
 
 framework:
     test: ~
     session:
         storage_id: session.storage.filesystem
+        domain:         ~
 
 web_profiler:
     toolbar: false
@@ -18,3 +24,8 @@ swiftmailer:
 
 mink:
     base_url:   %mink_base_url%
+    sahi: ~
+
+doctrine:
+    dbal:
+        dbname:   %database_name%_test

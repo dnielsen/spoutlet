@@ -62,3 +62,4 @@ Swift::registerAutoload(__DIR__.'/../vendor/swiftmailer/lib/swift_init.php');
 
 // uncomment to see stack traces in PHPUnit
 // xdebug_enable();
+ini_set('xdebug.max_nesting_level', 110);

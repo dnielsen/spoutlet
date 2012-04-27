@@ -19,16 +19,22 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb();
         $manager = $this->get('fos_user.user_manager');
-        $query = $manager->getFindUserQuery();
+        
+        if ($this->getRequest()->get('search')) {
+        	// There is a search query
+            $query = $manager->getFindUserQuery('email', $this->getRequest()->get('search', ''));
+        } else {
+            $query = $manager->getFindUserQuery();
+        }
         
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
-        
+
     	return $this->render('UserBundle:Admin:index.html.twig', array(
             'pager' => $pager
         ));
     }
-
+    
     public function editAction($id)
     {
         $this->addUserBreadcrumb()->addChild('Edit');
