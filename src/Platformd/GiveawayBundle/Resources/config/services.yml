@@ -3,3 +3,7 @@ services:
         class: Platformd\GiveawayBundle\Model\GiveawayManager
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@mailer"
+            - "@translator"
+            - "@router"
+            - "%sender_email_address%"

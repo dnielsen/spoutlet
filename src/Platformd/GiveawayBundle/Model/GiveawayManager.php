@@ -8,6 +8,9 @@ use Platformd\GiveawayBundle\Model\GiveawayKeyRequest;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use \Swift_Mailer;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Service class for dealing with the giveaway system
@@ -16,9 +19,24 @@ class GiveawayManager
 {
     private $em;
 
-    public function __construct(ObjectManager $em)
+    private $mailer;
+
+    private $router;
+
+    /**
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    private $translator;
+
+    private $fromAddress;
+
+    public function __construct(ObjectManager $em, Swift_Mailer $mailer, TranslatorInterface $translator, RouterInterface $router, $fromAddress)
     {
         $this->em = $em;
+        $this->mailer = $mailer;
+        $this->translator = $translator;
+        $this->router = $router;
+        $this->fromAddress = $fromAddress;
     }
 
     /**
@@ -64,6 +82,8 @@ class GiveawayManager
         // attach the key, then attach it to the machine code
         $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $machineCode->getGiveaway()->getLocale());
         $machineCode->attachToKey($key);
+
+        $this->sendNotificationEmail($machineCode);
 
         $this->em->persist($key);
         $this->em->persist($machineCode);
@@ -138,5 +158,48 @@ class GiveawayManager
     private function getMachineCodeEntryRepository()
     {
         return $this->em->getRepository('GiveawayBundle:MachineCodeEntry');
+    }
+
+    /**
+     * Sends a notification to the user about being approved for a machine
+     * code entry.
+     *
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCodeEntry
+     * @return string
+     */
+    private function sendNotificationEmail(MachineCodeEntry $machineCodeEntry)
+    {
+        // don't send more than once
+        if ($machineCodeEntry->getNotificationEmailSentAt()) {
+            return;
+        }
+
+        $giveaway = $machineCodeEntry->getGiveaway();
+        $user = $machineCodeEntry->getUser();
+
+        $accountUrl = $this->router->generate('accounts_giveaways', array(
+            '_locale' => $user->getLocale()
+        ), true);
+
+        // translate the message into the user's locale
+        $message = $this->translator->trans('email.giveaway_machine_code_approve', array(
+            '%giveawayName%'  => $giveaway->getName(),
+            '%userFirstName%' => $user->getFirstname(),
+            '%userLastName%'  => $user->getLastname(),
+            '%accountUrl%'    => $accountUrl,
+        ), 'messages', $user->getLocale());
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($giveaway->getName())
+            ->setFrom($this->fromAddress)
+            ->setTo($user->getEmail())
+            ->setBody($message)
+        ;
+        $this->mailer->send($message);
+
+        // mark the notification email as sent
+        $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
+
+        return $message;
     }
 }
