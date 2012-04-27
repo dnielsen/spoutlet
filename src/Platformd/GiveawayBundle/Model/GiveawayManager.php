@@ -187,7 +187,7 @@ class GiveawayManager
             '%userFirstName%' => $user->getFirstname(),
             '%userLastName%'  => $user->getLastname(),
             '%accountUrl%'    => $accountUrl,
-        ), 'messages', $user->getLocale());
+        ), 'messages', $giveaway->getLocale());
 
         $message = \Swift_Message::newInstance()
             ->setSubject($giveaway->getName())
