@@ -237,7 +237,7 @@ platformd:
         view_giveaway_site: プレゼント
         in_process_1: キーコード取得に登録された場合、あなたのステータスは「進行中」と表示されます。
         in_process_2: あなたのアカウントに反映されるまで１０日ほど時間がかかります。
-        in_process_3: この期間を過ぎても反映されない場合はjapan@alienwarearena.comまでメールにてお知らせください。
+        in_process_3: この期間を過ぎても反映されない場合は<a href='mailto:japan@alienwarearena.com'>japan@alienwarearena.com</a>までメールにてお知らせください。
         admin:
             title: ギブアウェイ管理
             edit_giveaway: ギブアウェイを編集 | %giveaway_title%
