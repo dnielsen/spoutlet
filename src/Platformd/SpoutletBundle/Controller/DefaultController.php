@@ -21,7 +21,7 @@ class DefaultController extends Controller
         $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
 
         if ($onlyNews) {
-            $abstractEvents = false;
+            $abstractEvents = array();
         } else {
             $abstractEvents = $this->getDoctrine()
                 ->getEntityManager()
