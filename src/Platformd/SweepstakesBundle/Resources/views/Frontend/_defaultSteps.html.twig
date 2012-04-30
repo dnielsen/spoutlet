@@ -1,8 +1,12 @@
 <li>
     <span class="item">
-        <a href="{{ path('fos_user_security_login') }}?return={{ url('sweepstakes_show', {'slug': sweepstakes.slug}) | e }}">
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login_sweepstakes' | trans }}
-        </a>
+        {% else %}
+            <a href="{{ path('fos_user_security_login') }}?return={{ url('sweepstakes_show', {'slug': sweepstakes.slug}) | e }}">
+                {{ 'platformd.create_account_or_login_sweepstakes' | trans }}
+            </a>
+        {% endif %}
     </span>
 </li>
 <li>
