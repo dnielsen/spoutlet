@@ -1,0 +1,26 @@
+parameters:
+    translations_cache_dir_name: 'translations'
+
+services:
+    pd_translation.translation.loader.entity_loader:
+        class: Platformd\TranslationBundle\Translation\Loader\EntityLoader
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: translation.loader, alias: entity}
+
+    pd_translation.translation.updater:
+        class: Platformd\TranslationBundle\Translation\Updater
+        arguments:
+            - "@translator"
+            - "@doctrine.orm.entity_manager"
+            - "%kernel.cache_dir%/%translations_cache_dir_name%"
+            - "%kernel.root_dir%"
+            - "@logger"
+
+    pd_translation.doctrine.translation_listener:
+        class: Platformd\TranslationBundle\Doctrine\TranslationListener
+        arguments:
+            - "%kernel.cache_dir%"
+        tags:
+            - { name: doctrine.event_subscriber }
