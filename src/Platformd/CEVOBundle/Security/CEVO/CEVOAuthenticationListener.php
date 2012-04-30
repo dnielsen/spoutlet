@@ -84,6 +84,9 @@ class CEVOAuthenticationListener implements ListenerInterface
             $this->securityContext->setToken(null);
 
             $event->setResponse(new RedirectResponse($request->getUri()));
+
+            // return immediately the response is set
+            return;
         }
 
         if (!$sessionString) {
@@ -91,7 +94,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         }
 
         // don't do anything if we're already correctly authenticated
-        if ($this->securityContext->getToken() instanceof CEVOToken) {
+        if ($this->securityContext->getToken() instanceof CEVOToken && $this->securityContext->getToken()->isAuthenticated()) {
             return;
         }
 
