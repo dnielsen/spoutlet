@@ -433,6 +433,9 @@ ul.list-normal {
     font-size: 13px;
     width: 120px;
 }
+.machine-code-form input.button {
+    width: 72px;
+}
 .machine-code-form .form-error {
     display: none;
 }
