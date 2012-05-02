@@ -34,7 +34,7 @@ set :shared_files,      ["app/config/parameters.ini"]
 after "deploy:finalize_update" do
 
   # temporarily not doing this, until first deploy, so we can migrate first
-  #run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract"
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract"
 
 end
 
