@@ -344,6 +344,17 @@ save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
 
+posted_at: Post Date
+override_url: Override URL
+published_status: Status
+
+# More frontend things
+no_news_currently: There is currently no featured news - check back later!
+news_and_announcements: Alienware Arena News & Announcements
+announced_date: Announced %posted_date%
+read_more: Read More
+go_to_website: Go to Website
+
 create: Create
 
 # admin stuff
@@ -367,3 +378,4 @@ translations_admin: Translations Admin
 edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
+

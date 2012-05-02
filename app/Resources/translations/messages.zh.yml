@@ -345,6 +345,13 @@ save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
 
+# More frontend things
+no_news_currently: 没有找到新闻文章
+news_and_announcements: Alienware竞技场新闻及通告
+announced_date: 发表于 %posted_date%
+read_more: 了解更多
+go_to_website: 前往站点
+
 # admin stuff
 giveaway:
     type:

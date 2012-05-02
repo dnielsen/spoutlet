@@ -35,3 +35,10 @@ form .input {
 .admin-translations-table .edit-form {
     display: none;
 }
+
+textarea {
+    width: 500px;
+    height: 100px;
+
+}
+

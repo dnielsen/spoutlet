@@ -5,6 +5,8 @@ namespace Platformd\NewsBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Entity\AbstractEvent;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -12,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="sp_news")
  * @ORM\Entity(repositoryClass="Platformd\NewsBundle\Entity\NewsRepository")
  */
-class News
+class News implements LinkableInterface
 {
     /**
      * @var integer $id
@@ -34,8 +36,7 @@ class News
     /**
      * @var text $body
      *
-     * @Assert\NotBlank
-     * @ORM\Column(name="body", type="text")
+     * @ORM\Column(name="body", type="text", nullable=true)
      */
     private $body;
 
@@ -43,6 +44,10 @@ class News
      * @var string
      * @Gedmo\Slug(fields={"title"})
      * @ORM\Column(name="slug", type="string", length=255, unique=true)
+     *
+     * The following is duplicated in AbstractEvent
+     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
+     *      Only allow numbers, digits and dashes
      */
     private $slug;
 
@@ -60,6 +65,27 @@ class News
      * @ORM\Column(name="published", type="boolean")
      */
     protected $published = false;
+
+    /**
+     * @var \DateTime $postedAt
+     *
+     * @Assert\NotBlank
+     * @ORM\Column(type="date")
+     */
+    protected $postedAt;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Url
+     */
+    protected $overrideUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $blurb;
 
     /**
      * @var \DateTime $created
@@ -206,4 +232,100 @@ class News
     {
         $this->updated = $updated;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPostedAt()
+    {
+        return $this->postedAt;
+    }
+
+    /**
+     * @param \DateTime $postedAt
+     */
+    public function setPostedAt($postedAt)
+    {
+        $this->postedAt = $postedAt;
+    }
+
+    public function getPostedAtArray()
+    {
+        return AbstractEvent::convertDateTimeIntoTranslationArray($this->getPostedAt());
+    }
+
+    /**
+     * @return string
+     */
+    public function getOverrideUrl()
+    {
+        return $this->overrideUrl;
+    }
+
+    /**
+     * @param string $overrideUrl
+     */
+    public function setOverrideUrl($overrideUrl)
+    {
+        $this->overrideUrl = $overrideUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBlurb()
+    {
+        return $this->blurb;
+    }
+
+    /**
+     * @param string $blurb
+     */
+    public function setBlurb($blurb)
+    {
+        $this->blurb = $blurb;
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getOverrideUrl();
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'news_show';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+        );
+    }
+
+    /**
+     * The comment id that will be used to render and identify comments
+     *
+     * @return string
+     */
+    public function getCommentThreadId()
+    {
+        return sprintf('news-%s-%s', $this->getLocale(), $this->getId());
+    }
+
 }

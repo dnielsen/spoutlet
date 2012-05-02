@@ -4,11 +4,15 @@ namespace Platformd\SpoutletBundle\Twig;
 
 use Twig_Extension;
 use Twig_Filter_Method;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Twig_Test_Method;
+use Platformd\SpoutletBundle\Util\HttpUtil;
+
 use Twig_Function_Method;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\UserBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Twig extension for generic things
@@ -25,7 +29,15 @@ class SpoutletExtension extends Twig_Extension
     public function getFilters()
     {
         return array(
+            'pd_link' => new Twig_Filter_Method($this, 'linkToObject'),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName')
+        );
+    }
+
+    public function getTests()
+    {
+        return array(
+            'external' => new Twig_Test_Method($this, 'testExternal')
         );
     }
 
@@ -34,6 +46,36 @@ class SpoutletExtension extends Twig_Extension
         return array(
             'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway')
         );
+    }
+
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function linkToObject($obj)
+    {
+        if (!$obj instanceof LinkableInterface) {
+            throw new \InvalidArgumentException('You must pass an object that implements LinkableInterface to the pd_link filter.');
+        }
+
+        return $this->getLinkableManager()->link($obj);
+    }
+
+    /**
+     * Tests whether a URL string (or Linkable object) is an external URL
+     *
+     * @param $url
+     * @return bool
+     */
+    public function testExternal($url)
+    {
+        if ($url instanceof LinkableInterface) {
+            $url = $this->linkToObject($url);
+        }
+
+        $currentHost = $this->container->get('request')->getHost();
+
+        return HttpUtil::isUrlExternal($url, $currentHost);
     }
 
     /**
@@ -68,6 +110,14 @@ class SpoutletExtension extends Twig_Extension
     public function getName()
     {
         return 'spoutlet';
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Link\LinkableManager
+     */
+    private function getLinkableManager()
+    {
+        return $this->container->get('platformd.link.linkable_manager');
     }
 
     private function getCurrentUser()

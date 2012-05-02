@@ -6,13 +6,33 @@
 {# this whole thing was copied from the homepage template.... #}
 <div id="row-2" class="std_2col">
     <div class="right">
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
+
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        </div>
     </div>
     <div class="left">
-        <div class="widget-item featured-news">
+        <div class="newsPost">
             <h1 class="controlled-spacing">{{ news.title }}</h1>
 
-            {{ news.body | raw }}
+            <h6>
+                {{ 'announced_date' | trans({
+                    '%posted_date%': ('sweepstakes_date_format' | trans(news.postedAtArray))
+                })}}
+            </h6>
+
+            <div style="margin: 10px 0;">
+                {{ news.blurb | nl2br }}
+            </div>
+
+            <div style="margin: 10px 0;">
+                {{ news.body | raw }}
+            </div>
+
+            {% render "FOSCommentBundle:Thread:showFlat" with {"id": news.commentThreadId } %}
         </div>
     </div>
 </div>

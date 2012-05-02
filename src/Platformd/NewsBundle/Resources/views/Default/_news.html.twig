@@ -1,6 +1,17 @@
-<h3>
-    <a href="{{ path('news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
-</h3>
-<div>
-    {{ item.body | raw }}
+<div class="newsBlurb">
+    <h2>
+        <a href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
+    </h2>
+    <h6>
+        {{ 'announced_date' | trans({
+            '%posted_date%': ('sweepstakes_date_format' | trans(item.postedAtArray))
+        })}}
+    </h6>
+    <p>{{ item.blurb | nl2br }}</p>
+
+    {% if item is external %}
+        <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
+    {% else %}
+        <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
+    {% endif %}
 </div>

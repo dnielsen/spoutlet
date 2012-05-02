@@ -1,18 +1,27 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}{{ 'platformd.layout.main_menu.news' | trans }}{% endblock %}
+{% block title %}{{ 'news_and_announcements' | trans }}{% endblock %}
 
 {% block content %}
 {# this whole thing was copied from the homepage template.... #}
 <div id="row-2" class="std_2col">
     <div class="right">
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
+
+        <div class="std-item">
+            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        </div>
     </div>
     <div class="left">
-        <div class="widget-item featured-news">
-            {% render 'SpoutletBundle:Default:featuredContent' with {
-                'onlyNews': true
-            } %}
+        <h1>{{ 'news_and_announcements' | trans }}</h1>
+        <div>
+            {% for newsItem in news %}
+                {% include 'NewsBundle:Default:_news.html.twig' with {
+                        'item' : newsItem
+                }%}
+            {% endfor %}
         </div>
     </div>
 </div>

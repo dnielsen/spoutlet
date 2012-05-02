@@ -358,6 +358,13 @@ save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
 
+# More frontend things
+no_news_currently: 投稿がありません
+news_and_announcements: Alienware Arena ニュース
+announced_date: 発表 %posted_date%
+read_more: 詳細
+go_to_website: サイトへ移動
+
 # admin stuff
 giveaway:
     type:

@@ -430,6 +430,12 @@ ul.list-normal {
 .machine-code-form {
     white-space: nowrap;
 }
+
+/* for use when stacking things on the left and right - gives you the same padding as if you were putting them in std_2col */
+.std-item {
+    padding-bottom: 15px;
+}
+
 .machine-code-form input.txt {
     border: 1px solid #ccc;
     padding: 4px 4px;
