@@ -320,7 +320,7 @@ platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
 instructions: 说明
-sweepstakes_date_format: %year%-%month%-%day% %time%
+sweepstakes_date_format: %year%-%month%-%day%
 eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
