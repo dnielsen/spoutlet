@@ -189,8 +189,12 @@ class GiveawayManager
             '%accountUrl%'    => $accountUrl,
         ), 'messages', $giveaway->getLocale());
 
+        $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
+            '%giveawayName%'  => $giveaway->getName(),
+        ), 'messages', $giveaway->getLocale());
+
         $message = \Swift_Message::newInstance()
-            ->setSubject($giveaway->getName())
+            ->setSubject($subject)
             ->setFrom($this->fromAddress)
             ->setTo($user->getEmail())
             ->setBody($message)

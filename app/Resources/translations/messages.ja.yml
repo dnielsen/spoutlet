@@ -393,7 +393,7 @@ email:
     giveaway_machine_code_approve: |
         こんにちは%userLastName%様,
 
-        この度は %giveawayName%にご登録いただき誠にありがとうございます。
+        この度は 「%giveawayName%」にご登録いただき誠にありがとうございます。
         キーコードはAlienware Arenaのあなたのアカウントあてに届けております。
         以下のサイトから確認、ご使用ください。
         %accountUrl%
@@ -401,5 +401,8 @@ email:
         ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
         japan@alienwarearena.com.
 
-        -Alienware Arena
+        -ALIENWARE ARENA
 
+
+    subject:
+        giveaway_machine_code_approve:  %giveawayName% のお知らせ
