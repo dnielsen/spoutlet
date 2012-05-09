@@ -26,12 +26,14 @@ class DefaultController extends Controller
      */
     public function featuredContentAction()
     {
-        $singleNews = $this->getNewsRepo()->findOneFeaturedForLocale($this->getLocale());
-
         $abstractEvents = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
             ->getCurrentEventsOrderedByCreated($this->getLocale())
+        ;
+
+        $news = $this->getNewsRepo()
+            ->findMostRecentForLocale($this->getLocale(), 10)
         ;
 
         // see #64 - we're no longer showing events here
@@ -45,7 +47,7 @@ class DefaultController extends Controller
         }
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'singleNews'     => $singleNews,
+            'news'     => $news,
             'abstractEvents' => $finalEvents,
         ));
     }
