@@ -6,17 +6,25 @@ use Platformd\SpoutletBundle\Entity\Event;
 
 class DefaultController extends Controller
 {
-    
+    /**
+     * The homepage!
+     *
+     * Mostly just a wrapper for
+     *  * {% render "SpoutletBundle:Default:banner" %}
+     * and
+     *  * {% render 'SpoutletBundle:Default:featuredContent' %}
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction()
     {
         return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
     /**
-     * @param bool $onlyNews Whether to show *just* the news tab
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
-    public function featuredContentAction($onlyNews = false)
+    public function featuredContentAction()
     {
         $singleNews = $this->getNewsRepo()->findOneFeaturedForLocale($this->getLocale());
 
