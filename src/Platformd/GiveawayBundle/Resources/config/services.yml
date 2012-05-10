@@ -7,3 +7,4 @@ services:
             - "@translator"
             - "@router"
             - "%sender_email_address%"
+            - "%sender_email_name%"

@@ -30,13 +30,16 @@ class GiveawayManager
 
     private $fromAddress;
 
-    public function __construct(ObjectManager $em, Swift_Mailer $mailer, TranslatorInterface $translator, RouterInterface $router, $fromAddress)
+    private $fromName;
+
+    public function __construct(ObjectManager $em, Swift_Mailer $mailer, TranslatorInterface $translator, RouterInterface $router, $fromAddress, $fromName)
     {
         $this->em = $em;
         $this->mailer = $mailer;
         $this->translator = $translator;
         $this->router = $router;
         $this->fromAddress = $fromAddress;
+        $this->fromName = $fromName;
     }
 
     /**
@@ -195,7 +198,7 @@ class GiveawayManager
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($this->fromAddress)
+            ->setFrom($this->fromAddress, $this->fromName)
             ->setTo($user->getEmail())
             ->setBody($message)
         ;
