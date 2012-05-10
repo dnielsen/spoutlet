@@ -1,0 +1,22 @@
+parameters:
+    media_s3_directory: media
+
+services:
+    # gaufrette adapter - used to setup the pd_media_filesystem Gaufrette filesystem
+    platformd.media.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_bucket_name%"
+        calls:
+          - [ "setDirectory", [ %media_s3_directory%]]
+
+    # media exposer path resolver
+    platformd.media_path_resolver:
+        class: Platformd\MediaBundle\Exposer\MediaPathResolver
+        arguments:
+            - %s3_bucket_name%
+            - %media_s3_directory%
+        public: false
+        tags:
+            - { name: 'knp_media_exposer.resolver' }
