@@ -37,7 +37,7 @@ class HomepageBannerController extends Controller
 
                 $this->getManager()->save($banner);
 
-                $this->setFlash('notice', 'success');
+                $this->setFlash('success', 'success');
                 return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
             }
         }
@@ -68,7 +68,7 @@ class HomepageBannerController extends Controller
 
                 $this->getManager()->save($banner);
 
-                $this->setFlash('notice', 'success');
+                $this->setFlash('success', 'success');
                 return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
             }
         }
@@ -95,7 +95,7 @@ class HomepageBannerController extends Controller
         $manager->remove($banner);
         $manager->flush();
 
-        $this->setFlash('notice', 'success');
+        $this->setFlash('success', 'success');
         
         return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
     }

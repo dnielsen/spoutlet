@@ -49,7 +49,7 @@ class AdminController extends Controller
                 
                 $request
                     ->getSession()
-                    ->setFlash('notice', $this->get('translator')->trans('platformd.admin.news.created'));
+                    ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
                 
                 return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
             }
@@ -86,7 +86,7 @@ class AdminController extends Controller
                 
                 $request
                     ->getSession()
-                    ->setFlash('notice', $this->get('translator')->trans('platformd.admin.news.modified'));
+                    ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.modified'));
                 
                 return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
             }
@@ -116,7 +116,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('notice', $this->get('translator')->trans('platformd.admin.news.deleted'));
+            ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.deleted'));
                 
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
     }
