@@ -1,4 +1,6 @@
 parameters:
+    # I don't believe these are used
+    # I don't believe these are used
     media_bucket_name: knp_media_test
     media_subdirectory: media
 
