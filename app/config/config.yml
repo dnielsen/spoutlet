@@ -5,6 +5,8 @@ imports:
     - { resource: "@CEVOBundle/Resources/config/security.yml" }
     - { resource: version.php }
     - { resource: "@GiveawayBundle/Resources/config/services.yml" }
+    - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
+    - { resource: "@MediaBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -272,6 +274,10 @@ knp_gaufrette:
         platformd.homepage_banners:
             service:
                 id: platformd.homepage_banner.s3.adapter
+        # todo - ideally this would be the only one, and we'd use Media everywhere
+        platformd.media:
+            service:
+                id: platformd.media.s3.adapter
     filesystems:
         platformd.avatar:
             adapter: platformd.avatar
@@ -282,6 +288,9 @@ knp_gaufrette:
         platformd.homepage_banners:
             adapter: platformd.homepage_banners
             alias: homepage_banners_filesystem
+        platformd.media:
+            adapter: platformd.media
+            alias: pd_media_filesystem
 
 knp_media_exposer:
     base_url: http://%base_host%
@@ -294,3 +303,18 @@ jms_translation:
             ignored_domains: [routes]
             excluded_names: [*TestCase.php, *Test.php]
             excluded_dirs: [cache, data, logs, Features]
+
+liip_imagine:
+    data_loader:    s3
+    filter_sets:
+        # on a list of articles, for example
+        article_list:
+            quality: 100
+            filters:
+                # usually 200x113 - but we don't care much about the height
+                thumbnail: { size: [200, 150], mode: inset }
+        article_full:
+            quality: 100
+            filters:
+                # usually 634x400 - but we don't care much about the height
+                thumbnail: { size: [634, 500], mode: inset }

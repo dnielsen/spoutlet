@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Security Listener "watches" for the CEVO cookie
@@ -95,6 +96,11 @@ class CEVOAuthenticationListener implements ListenerInterface
 
         // don't do anything if we're already correctly authenticated
         if ($this->securityContext->getToken() instanceof CEVOToken && $this->securityContext->getToken()->isAuthenticated()) {
+            return;
+        }
+
+        // this effectively allows us to use switch user, but only in dev, just for safety of not messing up any other part of the process
+        if ($this->debug && $this->securityContext->getToken() instanceof UsernamePasswordToken && $this->securityContext->getToken()->isAuthenticated()) {
             return;
         }
 

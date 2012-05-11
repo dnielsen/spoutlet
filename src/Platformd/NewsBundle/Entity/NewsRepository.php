@@ -54,6 +54,22 @@ class NewsRepository extends EntityRepository
     }
 
     /**
+     * @param $locale
+     * @param $num
+     * @return \Platformd\NewsBundle\Entity\News[]
+     */
+    public function findMostRecentForLocale($locale, $num)
+    {
+        return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
+            ->getQuery()
+            ->setMaxResults($num)
+            ->execute()
+        ;
+    }
+
+
+    /**
      * Creates a base query builder that's locale-aware and only returns
      * published entries
      *

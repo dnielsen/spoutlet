@@ -287,6 +287,8 @@ platformd:
             modified: Your news item has been modified !
             deleted: Your news item has been deleted !
             edit_title: Edit a news item
+            upload_image: Upload an image
+            image_dimensions: (recommended size: 634x400)
 
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"

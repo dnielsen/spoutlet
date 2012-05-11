@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\MediaBundle\Entity\Media;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -50,6 +51,13 @@ class News implements LinkableInterface
      *      Only allow numbers, digits and dashes
      */
     private $slug;
+
+    /**
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $image;
 
     /**
      * @var string $locale
@@ -328,4 +336,19 @@ class News implements LinkableInterface
         return sprintf('news-%s-%s', $this->getLocale(), $this->getId());
     }
 
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $image
+     */
+    public function setImage(Media $image = null)
+    {
+        $this->image = $image;
+    }
 }

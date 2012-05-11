@@ -1,26 +1,15 @@
 <div class="widget-66" id="featured-content">
 	<div class="featured-content-header">
-        <a href="javascript:void(0);" class="active" id="featured-news">{{ 'platformd.layout.main_menu.news' | trans }}</a>
-        <a href="javascript:void(0);" id="featured-giveaways">{{ 'platformd.layout.page_content.giveaways' | trans }}</a>
+        <a href="javascript:void(0);" class="active" id="featured-giveaways">{{ 'platformd.layout.page_content.giveaways' | trans }}</a>
+        <a href="javascript:void(0);" id="featured-news">{{ 'platformd.layout.main_menu.news' | trans }}</a>
 		<div style="clear: left;"></div>
 	</div>
     {# explicit height is to force the left and right sides of homepage to have the same height. Not a good long-term solution, but it's an unnatural thing to force... #}
     <div class="widget-content" style="height: 260px;">
 
-        <div id="featured-content-featured-news" class="featured-content-category active">
-            {% if singleNews %}
-                {% include 'SpoutletBundle:News:featuredNews.html.twig' with {
-                    'news': singleNews
-                }%}
-            {% else %}
-                {{ 'no_news_currently' | trans }}
-            {% endif %}
-
-        </div>
-
         {% if abstractEvents %}
-        <div id="featured-content-featured-giveaways" class="featured-content-category">
-        	{% for abstractEvent in abstractEvents %}
+        <div id="featured-content-featured-giveaways" class="featured-content-category active">
+            {% for abstractEvent in abstractEvents %}
             <div class="widget-item">
                 {% set useTargetBlank = (abstractEvent.urlRedirect is not empty) %}
                 <a class="widget-link" {{ useTargetBlank ? 'target="_blank"' : '' }} href="{{ path(abstractEvent.showRouteName, { 'slug' : abstractEvent.slug }) }}">{{ abstractEvent.name }}</a>
@@ -28,11 +17,24 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        <div id="featured-content-featured-news" class="featured-content-category">
+            {% for newsItem in news %}
+                <div class="widget-item">
+                    {% set useTargetBlank = (newsItem is external) %}
+                    <a class="widget-link" {{ useTargetBlank ? 'target="_blank"' : '' }} href="{{ newsItem | pd_link }}">{{ newsItem.title }}</a>
+                </div>
+            {% else %}
+                {{ 'no_news_currently' | trans }}
+            {% endfor %}
+
+        </div>
     </div>
     <div class="widget-footer">
-        <a href="{{ path('news') }}" class="aw-link" id="featured-footer-featured-news">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         {# here just for spacing #}
         <a href="#" id="featured-footer-featured-giveaways">&nbsp;</a>
+
+        <a href="{{ path('news') }}" class="aw-link" id="featured-footer-featured-news">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         <div class="clear"></div>
     </div>
 </div>

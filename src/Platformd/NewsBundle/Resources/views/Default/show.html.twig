@@ -24,6 +24,12 @@
                 })}}
             </h6>
 
+            {% if news.image %}
+                <p class="article-image-large">
+                    <img src="{{ media_path(news.image, {'local': true}) | imagine_filter('article_full') }}" alt="{{ news.title }}" />
+                </p>
+            {% endif %}
+
             <div style="margin: 10px 0;">
                 {{ news.blurb | nl2br }}
             </div>

@@ -53,6 +53,26 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I am authenticated as an organizer$/
+     */
+    public function iAmAuthenticatedAsAnOrganizer()
+    {
+        // guarantee there is a user, because we wouldn't normally say it beforehand...
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
+        // enforce the right role
+        $this->currentUser->setRoles(array(
+            'ROLE_ORGANIZER',
+        ));
+        $this->getUserManager()->updateUser($this->currentUser);
+
+        return $this->iAmAuthenticated();
+    }
+
+
+    /**
      * @AfterScenario
      */
     public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
@@ -70,6 +90,14 @@ class AbstractFeatureContext extends MinkContext
     protected function getPage()
     {
         return $this->getSession()->getPage();
+    }
+
+    /**
+     * @return \Behat\Mink\Session
+     */
+    public function getSession($name = null)
+    {
+        return parent::getSession($name);
     }
 
     /**
@@ -142,6 +170,17 @@ class AbstractFeatureContext extends MinkContext
         }
 
         $this->getUserManager()->updateUser($user);
+    }
+
+    /**
+     * @When /^I click to add new "([^"]*)"$/
+     */
+    public function iClickToAddNew($section)
+    {
+        $sidebar = $this->getPage()->find('css', '.sidebar .well');
+        $section = $sidebar->findLink($section);
+
+        $section->getParent()->clickLink('Add new');
     }
 
     /**
