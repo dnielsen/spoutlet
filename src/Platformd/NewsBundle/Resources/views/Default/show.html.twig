@@ -26,7 +26,7 @@
 
             {% if news.image %}
                 <p class="article-image-large">
-                    <img src="{{ media_path(news.image) }}" alt="{{ news.title }}" />
+                    <img src="{{ media_path(news.image, {'local': true}) | imagine_filter('article_full') }}" alt="{{ news.title }}" />
                 </p>
             {% endif %}
 
