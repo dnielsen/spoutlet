@@ -274,6 +274,10 @@ knp_gaufrette:
         platformd.homepage_banners:
             service:
                 id: platformd.homepage_banner.s3.adapter
+        # todo - ideally this would be the only one, and we'd use Media everywhere
+        platformd.media:
+            service:
+                id: platformd.media.s3.adapter
     filesystems:
         platformd.avatar:
             adapter: platformd.avatar
@@ -284,6 +288,9 @@ knp_gaufrette:
         platformd.homepage_banners:
             adapter: platformd.homepage_banners
             alias: homepage_banners_filesystem
+        platformd.media:
+            adapter: platformd.media
+            alias: pd_media_filesystem
 
 knp_media_exposer:
     base_url: http://%base_host%

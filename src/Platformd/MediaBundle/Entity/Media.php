@@ -36,11 +36,11 @@ class Media extends BaseMedia implements MediaOwnerInterface
     protected $owner;
 
     /**
-     * @var \Platformd\SiteBundle\Entity\Site
-     * @ORM\ManyToOne(targetEntity="Platformd\SiteBundle\Entity\Site")
-     * @ORM\JoinColumn(onDelete="cascade", nullable=true)
+     * @var string $locale
+     *
+     * @ORM\Column(name="locale", type="string", length="2", nullable=false)
      */
-    protected $site;
+    protected $locale;
 
     /**
      * @return \Platformd\UserBundle\Entity\User
@@ -59,18 +59,18 @@ class Media extends BaseMedia implements MediaOwnerInterface
     }
 
     /**
-     * @return \Platformd\SiteBundle\Entity\Site
+     * @return string
      */
-    public function getSite()
+    public function getLocale()
     {
-        return $this->site;
+        return $this->locale;
     }
 
     /**
-     * @param \Platformd\SiteBundle\Entity\Site $site
+     * @param string $locale
      */
-    public function setSite(Site $site)
+    public function setLocale($locale)
     {
-        $this->site = $site;
+        $this->locale = $locale;
     }
 }
