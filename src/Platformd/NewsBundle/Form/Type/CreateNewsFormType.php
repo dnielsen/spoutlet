@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\MediaBundle\Form\Type\MediaType;
 
 class CreateNewsFormType extends AbstractType
 {
@@ -37,7 +38,11 @@ class CreateNewsFormType extends AbstractType
             ->add('published', 'choice', array(
                 'choices' => array(0 => 'Unpublished', 1 => 'Published'),
                 'label'   => 'published_status',
-            ));
+            ))
+            ->add('image', new MediaType(), array(
+                'image_label'   => 'platformd.admin.news.upload_image',
+                'image_help'    => 'platformd.admin.news.image_dimensions',
+            ))
         ;
     }
 

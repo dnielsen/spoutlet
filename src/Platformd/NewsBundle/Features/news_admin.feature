@@ -13,6 +13,6 @@ Feature: News Administration
                 | Post Date | 2012-05-18    |
                 | Blurb     | My cool blurb |
                 | Body      | Lorem ipsum   |
-            And I attach the file "foo.jpg" to "Image"
+            And I attach the file "foo.jpg" to "Upload an image"
             And I press "Save news"
         Then I should see "news item has been created"
