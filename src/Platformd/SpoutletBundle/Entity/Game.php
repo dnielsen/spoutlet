@@ -4,15 +4,27 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
+use Gedmo\Sluggable\Util\Urlizer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Platformd\SpoutletBundle\Entity\Game
  *
- * @ORM\Table(name="pd_game")
+ * @ORM\Table(
+ *      name="pd_game",
+ *      uniqueConstraints={
+ *          @ORM\UniqueConstraint(
+ *              name="slug_unique",
+ *              columns={"slug", "locale"}
+ *          )
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GameRepository")
  */
 class Game
 {
+    const GAME_CATEGORY_LABEL_PREFIX = 'platformd.admin.games.category.';
+
     static private $validCategories = array(
         'action',
         'rpg',
@@ -42,6 +54,7 @@ class Game
      * @var string $slug
      *
      * @ORM\Column(name="slug", type="string", length=255)
+     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")]
      */
     private $slug;
 
@@ -101,6 +114,15 @@ class Game
      */
     public function setName($name)
     {
+        // sets the, but only if it's blank
+        // this is not meant to be smart enough to guarantee correct uniqueness
+        // that will happen with validation
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($name);
+
+            $this->setSlug($slug);
+        }
+
         $this->name = $name;
     }
 
@@ -121,6 +143,14 @@ class Game
      */
     public function setSlug($slug)
     {
+        // don't let the slug be blanked out
+        // this allows the user to not enter a slug in the form. The slug
+        // will be generated from the name, but not overridden by that blank
+        // slug value
+        if (!$slug) {
+            return;
+        }
+
         $this->slug = $slug;
     }
 
@@ -194,7 +224,7 @@ class Game
     /**
      * @param \Platformd\MediaBundle\Entity\Media $logo
      */
-    public function setLogo(Media $logo)
+    public function setLogo(Media $logo = null)
     {
         $this->logo = $logo;
     }
@@ -210,7 +240,7 @@ class Game
     /**
      * @param \Platformd\MediaBundle\Entity\Media $publisherLogos
      */
-    public function setPublisherLogos(Media $publisherLogos)
+    public function setPublisherLogos(Media $publisherLogos = null)
     {
         $this->publisherLogos = $publisherLogos;
     }

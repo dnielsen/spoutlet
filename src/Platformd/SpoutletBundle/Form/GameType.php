@@ -54,7 +54,7 @@ class GameType extends AbstractType
         $values = Game::getValidCategories();
         $choices = array('' => 'Choose a Category');
         foreach ($values as $value) {
-            $choices[$value]  = 'platformd.admin.games.category.'.$value;
+            $choices[$value]  = Game::GAME_CATEGORY_LABEL_PREFIX.$value;
         }
 
         return $choices;

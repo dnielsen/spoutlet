@@ -4,7 +4,7 @@
 
 <h1>Game edit</h1>
 
-<form action="{{ path('admin_game_update', { 'id': game.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+<form action="{{ path('admin_game_update', { 'id': game.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {% include 'SpoutletBundle:GameAdmin:_form.html.twig' with {
         'form': edit_form
     } %}

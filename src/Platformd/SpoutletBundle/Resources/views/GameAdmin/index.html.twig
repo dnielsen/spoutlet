@@ -17,10 +17,16 @@
         <tr>
             <td><a href="{{ path('admin_game_edit', { 'id': game.id }) }}">{{ game.name }}</a></td>
             <td>
-                {% set url = url('default_index', {'slug': game.slug, '_locale': 'bar' }) %}
+                {% set url = url('default_index', {'slug': game.slug, '_locale': game.locale }) %}
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
-            <td>{{ game.category }}</td>
+            <td>
+                {% if game.category %}
+                    {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_CATEGORY_LABEL_PREFIX')~game.category) | trans }}
+                {% else %}
+                    <emph>none</emph>
+                {% endif %}
+            </td>
             <td>
                 <a href="{{ path('admin_game_edit', { 'id': game.id }) }}">edit</a>
             </td>

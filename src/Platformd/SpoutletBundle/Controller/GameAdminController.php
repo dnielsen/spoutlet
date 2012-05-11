@@ -121,8 +121,24 @@ class GameAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+                /** @var $game \Platformd\SpoutletBundle\Entity\Game */
                 $game = $form->getData();
                 $em->persist($game);
+
+                // either persist the logo, or unset it
+                if ($game->getLogo()->getFileObject()) {
+                    $em->persist($game->getLogo());
+                } else {
+                    $game->setLogo(null);
+                }
+
+                // either persist the logos, or unset it
+                if ($game->getPublisherLogos()->getFileObject()) {
+                    $em->persist($game->getPublisherLogos());
+                } else {
+                    $game->setPublisherLogos(null);
+                }
+
                 $em->flush();
 
                 return true;
