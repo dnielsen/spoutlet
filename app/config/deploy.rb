@@ -24,7 +24,7 @@ set :update_vendors, true
 set :vendors_mode,   "install"
 
 # keep the vendor files shared, for faster deployment
-set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video"]
+set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video", web_path + "/media"]
 
 # share our database configuration
 set :shared_files,      ["app/config/parameters.ini"]
