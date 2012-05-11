@@ -466,3 +466,6 @@ ul.list-normal {
 .article-actions a {
     float: right;
 }
+.article-image-large img {
+    width: 634px;
+}
