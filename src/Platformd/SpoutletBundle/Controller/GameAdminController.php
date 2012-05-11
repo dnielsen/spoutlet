@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Form\GameType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Game admin controller.
@@ -17,6 +18,7 @@ class GameAdminController extends Controller
      */
     public function indexAction()
     {
+        $this->addGamesBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
         $entities = $em->getRepository('SpoutletBundle:Game')->findAll();
@@ -27,61 +29,27 @@ class GameAdminController extends Controller
     }
 
     /**
-     * Finds and displays a Game game.
-     *
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $game = $em->getRepository('SpoutletBundle:Game')->find($id);
-
-        if (!$game) {
-            throw $this->createNotFoundException('Unable to find Game game.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SpoutletBundle:GameAdmin:show.html.twig', array(
-            'game'      => $game,
-            'delete_form' => $deleteForm->createView(),
-
-        ));
-    }
-
-    /**
-     * Displays a form to create a new Game game.
-     *
-     */
-    public function newAction()
-    {
-        $game = new Game();
-        $form   = $this->createForm(new GameType(), $game);
-
-        return $this->render('SpoutletBundle:GameAdmin:new.html.twig', array(
-            'game' => $game,
-            'form'   => $form->createView()
-        ));
-    }
-
-    /**
      * Creates a new Game game.
      *
      */
-    public function createAction()
+    public function newAction(Request $request)
     {
+        $this->addGamesBreadcrumb()->addChild('New Game');
+
         $game  = new Game();
-        $request = $this->getRequest();
         $form    = $this->createForm(new GameType(), $game);
-        $form->bindRequest($request);
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($game);
-            $em->flush();
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
 
-            return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
-            
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($game);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
+
+            }
         }
 
         return $this->render('SpoutletBundle:GameAdmin:new.html.twig', array(
@@ -91,35 +59,12 @@ class GameAdminController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Game game.
-     *
-     */
-    public function editAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $game = $em->getRepository('SpoutletBundle:Game')->find($id);
-
-        if (!$game) {
-            throw $this->createNotFoundException('Unable to find Game game.');
-        }
-
-        $editForm = $this->createForm(new GameType(), $game);
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('SpoutletBundle:GameAdmin:edit.html.twig', array(
-            'game'      => $game,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
      * Edits an existing Game game.
      *
      */
-    public function updateAction($id)
+    public function editAction($id, Request $request)
     {
+        $this->addGamesBreadcrumb()->addChild('Edit Game');
         $em = $this->getDoctrine()->getEntityManager();
 
         $game = $em->getRepository('SpoutletBundle:Game')->find($id);
@@ -131,15 +76,15 @@ class GameAdminController extends Controller
         $editForm   = $this->createForm(new GameType(), $game);
         $deleteForm = $this->createDeleteForm($id);
 
-        $request = $this->getRequest();
+        if ($request->getMethod() == 'POST') {
+            $editForm->bindRequest($request);
 
-        $editForm->bindRequest($request);
+            if ($editForm->isValid()) {
+                $em->persist($game);
+                $em->flush();
 
-        if ($editForm->isValid()) {
-            $em->persist($game);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
+                return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
+            }
         }
 
         return $this->render('SpoutletBundle:GameAdmin:edit.html.twig', array(
@@ -181,5 +126,17 @@ class GameAdminController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addGamesBreadcrumb()
+    {
+        $this->getAdminBreadcrumbs()->addChild('Games', array(
+            'route' => 'admin_game'
+        ));
+
+        return $this->getAdminBreadcrumbs();
     }
 }

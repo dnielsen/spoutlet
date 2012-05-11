@@ -65,6 +65,16 @@ services:
         tags:
             - { name: knp_menu.menu, alias: breadcrumbs }
 
+    platformd.breadcrumbs_admin_menu:
+        class: Knp\Menu\MenuItem
+        scope: request
+        factory_service: "platformd.menu_builder"
+        factory_method: createAdminBreadcrumbs
+        arguments:
+            - "@request"
+        tags:
+            - { name: knp_menu.menu, alias: admin_breadcrumbs }
+
     # our metric manager service
     platformd.metric_manager:
         class: Platformd\SpoutletBundle\Metric\MetricManager

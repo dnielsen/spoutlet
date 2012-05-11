@@ -88,6 +88,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    protected function getAdminBreadcrumbs()
+    {
+        return $this->get('platformd.breadcrumbs_admin_menu');
+    }
+
+    /**
      * @return \Platformd\UserBundle\Entity\UserManager
      */
     protected function getUserManager()
