@@ -84,14 +84,6 @@ class Controller extends BaseController
      */
     protected function getBreadcrumbs()
     {
-        return $this->get('platformd.breadcrumbs_menu');
-    }
-
-    /**
-     * @return \Knp\Menu\ItemInterface
-     */
-    protected function getAdminBreadcrumbs()
-    {
         return $this->get('platformd.breadcrumbs_admin_menu');
     }
 

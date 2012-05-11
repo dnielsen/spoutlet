@@ -55,16 +55,6 @@ services:
             - "@knp_menu.factory"
             - "@router"
 
-    platformd.breadcrumbs_menu:
-        class: Knp\Menu\MenuItem
-        scope: request
-        factory_service: "platformd.menu_builder"
-        factory_method: createBreadcrumbs
-        arguments:
-            - "@request"
-        tags:
-            - { name: knp_menu.menu, alias: breadcrumbs }
-
     platformd.breadcrumbs_admin_menu:
         class: Knp\Menu\MenuItem
         scope: request

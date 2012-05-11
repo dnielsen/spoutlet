@@ -5,7 +5,7 @@
 
 <h1>{{ "platformd.events.event_listings.current_events" | trans }}</h1>
 
-<table class="zebra-striped bordered-table tablesorter">
+<table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
             <th>{{ "platformd.events.event_listings.event" | trans }}</th>
@@ -54,5 +54,5 @@
     </tbody>
 </table>
 
-<a class="btn primary" href="{{ path('admin_events_new') }}" >{{ "platformd.events.admin.create" | trans }}</a>
+<a class="btn btn-primary" href="{{ path('admin_events_new') }}" >{{ "platformd.events.admin.create" | trans }}</a>
 {% endblock %}

@@ -133,10 +133,10 @@ class GameAdminController extends Controller
      */
     private function addGamesBreadcrumb()
     {
-        $this->getAdminBreadcrumbs()->addChild('Games', array(
+        $this->getBreadcrumbs()->addChild('Games', array(
             'route' => 'admin_game'
         ));
 
-        return $this->getAdminBreadcrumbs();
+        return $this->getBreadcrumbs();
     }
 }
