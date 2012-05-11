@@ -32,3 +32,7 @@ _spoutlet_events:
 _spoutlet_account:
     resource: routing/account.yml
     prefix:   /account
+
+SpoutletBundle_admin_game:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_game.yml"
+    prefix:   /admin/game

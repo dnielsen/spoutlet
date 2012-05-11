@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>Game creation</h1>
+
+<form action="{{ path('admin_game_create') }}" method="post" {{ form_enctype(form) }}>
+    {% include 'SpoutletBundle:GameAdmin:_form.html.twig' %}
+
+    <p>
+        <button type="submit">Add</button>
+    </p>
+</form>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('admin_game') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
