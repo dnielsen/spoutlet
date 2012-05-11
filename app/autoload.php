@@ -31,6 +31,8 @@ $loader->registerNamespaces(array(
     'Behat\MinkBundle'              => __DIR__.'/../vendor/bundles',
     'Knp\Bundle'                    => __DIR__.'/../vendor/bundles',
     'Knp\Menu'                      => __DIR__.'/../vendor/KnpMenu/src',
+    'Liip'                          => __DIR__.'/../vendor/bundles',
+    'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',

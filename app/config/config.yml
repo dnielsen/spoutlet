@@ -303,3 +303,13 @@ jms_translation:
             ignored_domains: [routes]
             excluded_names: [*TestCase.php, *Test.php]
             excluded_dirs: [cache, data, logs, Features]
+
+liip_imagine:
+    data_loader:    s3
+    filter_sets:
+        # on a list of articles, for example
+        article_list:
+            quality: 100
+            filters:
+                # usually 200x113 - but we don't care much about the height
+                thumbnail: { size: [200, 150], mode: inset }

@@ -149,3 +149,13 @@
 
 [php-parser]
     git=https://github.com/nikic/PHP-Parser.git
+
+; Image processing stuff
+[Imagine]
+    git=http://github.com/avalanche123/Imagine.git
+    target=imagine
+    version=v0.2.0
+
+[LiipImagineBundle]
+    git=http://github.com/liip/LiipImagineBundle.git
+    target=bundles/Liip/ImagineBundle

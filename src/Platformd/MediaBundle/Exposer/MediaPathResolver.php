@@ -36,6 +36,11 @@ class MediaPathResolver implements PathResolver
             return false;
         }
 
+        // used when you're going to pipe it into imagine
+        if (isset($options['local']) && $options['local']) {
+            return $media->getFilename();
+        }
+
         return sprintf(
             'http://s3.amazonaws.com/%s/%s/%s',
             $this->getBucketName(),

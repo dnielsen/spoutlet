@@ -1,3 +1,7 @@
+_imagine:
+    resource: .
+    type:     imagine
+
 NewsBundle:
     resource: "@NewsBundle/Resources/config/routing.yml"
     prefix:   /
@@ -35,3 +39,4 @@ fos_comment:
 fos_comment_extra:
     resource: "@CommentBundle/Resources/config/routing_extra.yml"
     prefix:   "/comments"
+

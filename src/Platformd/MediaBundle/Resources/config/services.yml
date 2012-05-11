@@ -28,3 +28,14 @@ services:
             - "@service_container"
         tags:
             - { name: doctrine.event_listener, event: prePersist }
+
+    # custom s3 loader
+    platformd.media.imagine.data.loader.s3_loader:
+        class: Platformd\MediaBundle\Imagine\Data\Loader\S3Loader
+        arguments:
+            - "@liip_imagine"
+            - "@pd_media_filesystem"
+            # temporarily inject filesystem loader, for backup purposes
+            - "@liip_imagine.data.loader.filesystem"
+        tags:
+            - { name: liip_imagine.data.loader, loader: s3 }
