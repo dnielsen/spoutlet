@@ -117,6 +117,14 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="{{ path('admin_game') }}">Games</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_game_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
                                     <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>

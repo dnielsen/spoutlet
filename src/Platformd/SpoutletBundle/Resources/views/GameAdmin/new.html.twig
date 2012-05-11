@@ -8,15 +8,11 @@
     {% include 'SpoutletBundle:GameAdmin:_form.html.twig' %}
 
     <p>
-        <button type="submit">Add</button>
+        <button type="submit" class="btn btn-primary">Add</button>
     </p>
 </form>
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_game') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+<a href="{{ path('admin_game') }}">
+    Back to the list
+</a>
 {% endblock %}

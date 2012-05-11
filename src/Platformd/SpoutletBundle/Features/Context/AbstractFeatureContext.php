@@ -12,6 +12,8 @@ use Behat\Gherkin\Node\PyStringNode,
 use Behat\Behat\Event\ScenarioEvent;
 use Behat\Behat\Context\Step\When;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Behat\Mink\Driver\GoutteDriver;
+use Platformd\SpoutletBundle\Entity\Game;
 
 /**
  * Base Feature context.
@@ -71,14 +73,36 @@ class AbstractFeatureContext extends MinkContext
         return $this->iAmAuthenticated();
     }
 
+    /**
+     * @Given /^I am authenticated as a Dell Contact$/
+     */
+    public function iAmAuthenticatedAsDellContact()
+    {
+        // guarantee there is a user, because we wouldn't normally say it beforehand...
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
+        // enforce the right role
+        $this->currentUser->setRoles(array(
+            'ROLE_ORGANIZER',
+        ));
+        $this->getUserManager()->updateUser($this->currentUser);
+
+        return $this->iAmAuthenticated();
+    }
 
     /**
      * @AfterScenario
      */
     public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
     {
-        if ($scenarioEvent->getResult() != 0) {
-            $this->printLastResponse();
+        if ($scenarioEvent->getResult()) {
+            if ($this->getSession()->getDriver() instanceof GoutteDriver
+                && $this->getSession()->getDriver()->getClient()->getRequest()) {
+
+                $this->printLastResponse();
+            }
         }
     }
 
@@ -178,9 +202,49 @@ class AbstractFeatureContext extends MinkContext
     public function iClickToAddNew($section)
     {
         $sidebar = $this->getPage()->find('css', '.sidebar .well');
-        $section = $sidebar->findLink($section);
+        if (!$sidebar) {
+            throw new \Exception('Cannot find the sidebar! Are you on the wrong page?');
+        }
+        $sectionEle = $sidebar->findLink($section);
 
-        $section->getParent()->clickLink('Add new');
+        if (!$sectionEle) {
+            throw new \Exception(sprintf('Could not found sidebar link called "%s"', $section));
+        }
+
+
+        $sectionEle->getParent()->clickLink('Add new');
+    }
+
+    /**
+     * @When /^I click (?:|on )"([^"]*)"$/
+     */
+    public function iClick($link)
+    {
+        return new When(sprintf('I follow "%s"', $link));
+    }
+
+    /**
+     * @Given /^there is a game called "([^"]*)"$/
+     */
+    public function thereIsAGameCalled($name)
+    {
+        $game = new Game();
+        $game->setName($name);
+
+        $this->getEntityManager()->persist($game);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * Used in the admin to count rows in a table
+     *
+     * @Then /^I should see (\d+) data rows$/
+     */
+    public function iShouldSeeDataRows($num)
+    {
+        $rows = $this->getPage()->find('css', 'table.table tbody tr');
+
+        assertCount($num, $rows);
     }
 
     /**

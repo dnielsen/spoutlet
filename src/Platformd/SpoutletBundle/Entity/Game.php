@@ -13,6 +13,15 @@ use Platformd\MediaBundle\Entity\Media;
  */
 class Game
 {
+    static private $validCategories = array(
+        'action',
+        'rpg',
+        'strategy',
+        'other',
+        'free-to-play',
+        'mmo',
+    );
+
     /**
      * @var integer $id
      *
@@ -37,6 +46,13 @@ class Game
     private $slug;
 
     /**
+     * @var string $locale
+     *
+     * @ORM\Column(name="locale", type="string", length=255)
+     */
+    private $locale;
+
+    /**
      * @var string $category
      *
      * @ORM\Column(name="category", type="string", length=50)
@@ -46,7 +62,7 @@ class Game
     /**
      * @var string $facebookFanpageUrl
      *
-     * @ORM\Column(name="facebookFanpageUrl", type="string", length=255)
+     * @ORM\Column(name="facebookFanpageUrl", type="string", length=255, nullable=true)
      */
     private $facebookFanpageUrl;
 
@@ -125,6 +141,10 @@ class Game
      */
     public function setCategory($category)
     {
+        if (!in_array($category, self::$validCategories)) {
+            throw new \InvalidArgumentException(sprintf('Invalid game category "%s" given', $category));
+        }
+
         $this->category = $category;
     }
 
@@ -136,6 +156,11 @@ class Game
     public function getCategory()
     {
         return $this->category;
+    }
+
+    public static function getValidCategories()
+    {
+        return self::$validCategories;
     }
 
     /**
@@ -188,5 +213,21 @@ class Game
     public function setPublisherLogos(Media $publisherLogos)
     {
         $this->publisherLogos = $publisherLogos;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

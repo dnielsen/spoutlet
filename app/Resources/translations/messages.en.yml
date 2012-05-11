@@ -289,6 +289,15 @@ platformd:
             edit_title: Edit a news item
             upload_image: Upload an image
             image_dimensions: (recommended size: 634x400)
+        games:
+            category:
+                action:     Action
+                rpg:        RPG
+                strategy:   Strategy
+                other:      Other
+                free_to_play: Free-to-play
+                mmo:        MMO
+        facebook_fanpage: Facebook Fan Page
 
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"

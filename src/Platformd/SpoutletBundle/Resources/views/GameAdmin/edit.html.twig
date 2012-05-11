@@ -9,21 +9,15 @@
         'form': edit_form
     } %}
     <p>
-        <button type="submit">Edit</button>
+        <button type="submit" class="btn btn-primary">Edit</button>
     </p>
 </form>
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('admin_game') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('admin_game_delete', { 'id': game.id }) }}" method="post">
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
-    </li>
-</ul>
+<a href="{{ path('admin_game') }}">
+    Back to the list
+</a>
+<form action="{{ path('admin_game_delete', { 'id': game.id }) }}" method="post">
+    {{ form_widget(delete_form) }}
+    <button type="submit">Delete</button>
+</form>
 {% endblock %}

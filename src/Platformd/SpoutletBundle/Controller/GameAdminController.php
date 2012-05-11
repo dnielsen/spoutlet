@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Form\GameType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Form;
 
 /**
  * Game admin controller.
@@ -39,17 +40,8 @@ class GameAdminController extends Controller
         $game  = new Game();
         $form    = $this->createForm(new GameType(), $game);
 
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($game);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
-
-            }
+        if ($this->processForm($form, $request)) {
+            return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
         }
 
         return $this->render('SpoutletBundle:GameAdmin:new.html.twig', array(
@@ -76,15 +68,8 @@ class GameAdminController extends Controller
         $editForm   = $this->createForm(new GameType(), $game);
         $deleteForm = $this->createDeleteForm($id);
 
-        if ($request->getMethod() == 'POST') {
-            $editForm->bindRequest($request);
-
-            if ($editForm->isValid()) {
-                $em->persist($game);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
-            }
+        if ($this->processForm($editForm, $request)) {
+            return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
         }
 
         return $this->render('SpoutletBundle:GameAdmin:edit.html.twig', array(
@@ -126,6 +111,25 @@ class GameAdminController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    private function processForm(Form $form, Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $game = $form->getData();
+                $em->persist($game);
+                $em->flush();
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
