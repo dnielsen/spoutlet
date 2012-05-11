@@ -9,6 +9,8 @@ use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
@@ -38,21 +40,14 @@ class AdminController extends Controller
 
         $form = $this->createForm(new CreateNewsFormType(), $news);
         $request = $this->getRequest();
-        $em = $this->getDoctrine()->getEntityManager();
 
-        if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                $em->persist($news);
-                $em->flush();
+        if ($this->processForm($form, $request)) {
                 
-                $request
-                    ->getSession()
-                    ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
-                
-                return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
-            }
+            $request
+                ->getSession()
+                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
+
+            return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
 
         return $this->render('NewsBundle:Admin:new.html.twig', array(
@@ -75,21 +70,13 @@ class AdminController extends Controller
 
         $form = $this->createForm(new CreateNewsFormType(), $news);
         $request = $this->getRequest();
-        $em = $this->getDoctrine()->getEntityManager();
 
-        if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
-            
-            if ($form->isValid()) {
-                $em->persist($news);
-                $em->flush();
-                
-                $request
-                    ->getSession()
-                    ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.modified'));
-                
-                return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
-            }
+        if ($this->processForm($form, $request)) {
+            $request
+                ->getSession()
+                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.modified'));
+
+            return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
         
         return $this->render('NewsBundle:Admin:edit.html.twig', array(
@@ -119,6 +106,34 @@ class AdminController extends Controller
             ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.deleted'));
                 
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+    }
+
+    private function processForm(Form $form, Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                // either persist the image, or remove it
+                /** @var $news \Platformd\NewsBundle\Entity\News */
+                $news = $form->getData();
+                if ($news->getImage()->getFileObject()) {
+                    $em->persist($news->getImage());
+                } else {
+                    $news->setImage(null);
+                }
+
+                $em->persist($news);
+                $em->flush();
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

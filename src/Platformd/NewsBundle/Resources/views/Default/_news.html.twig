@@ -2,16 +2,37 @@
     <h2>
         <a class="controlled-spacing" href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
     </h2>
-    <h6>
-        {{ 'announced_date' | trans({
-            '%posted_date%': ('sweepstakes_date_format' | trans(item.postedAtArray))
-        })}}
-    </h6>
-    <p>{{ item.blurb | nl2br }}</p>
 
-    {% if item is external %}
-        <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
-    {% else %}
-        <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
-    {% endif %}
+    <div class="article-content">
+        {% if item.image %}
+        <div class="article-image">
+            <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
+                <img src="{{ media_path(item.image) }}" alt="{{ item.title }}" />
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="article-blurb">
+            <h6>
+                {{ 'announced_date' | trans({
+                    '%posted_date%': ('sweepstakes_date_format' | trans(item.postedAtArray))
+                })}}
+            </h6>
+
+            <p class="article-blurb-text">
+                {{ item.blurb | nl2br }}
+            </p>
+        </div>
+
+        <div class="article-actions">
+            {% if item is external %}
+            <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
+            {% else %}
+            <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
+            {% endif %}
+            <div class="clear"></div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
 </div>

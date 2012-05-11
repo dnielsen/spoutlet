@@ -54,7 +54,7 @@ class News implements LinkableInterface
 
     /**
      * @var \Platformd\MediaBundle\Entity\Media
-     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $image;
