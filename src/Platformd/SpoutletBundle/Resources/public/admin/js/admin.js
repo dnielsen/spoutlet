@@ -47,4 +47,7 @@ jQuery(document).ready(function() {
 
         return false;
     });
+
+    // make the textareas autogrow
+    jQuery('textarea').autogrow();
 });
