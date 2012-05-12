@@ -331,6 +331,7 @@ na: N/A
 instructions: Instructions
 sweepstakes_datetime_format: %year%-%month%-%day% %time%
 sweepstakes_date_format: %year%-%month%-%day%
+date_format: %month% %day% %year%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
 
@@ -390,3 +391,10 @@ edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
 
+age_confirm:
+    headline: Please Confirm Your Date of Birth
+    message: The content is intended for mature audiences. Please confirm your age below
+confirm: Confirm
+
+error:
+    fill_in_birthday: Please fill in your birthday!

@@ -110,3 +110,17 @@ services:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener
         tags:
             - { name: doctrine.event_subscriber }
+
+    platformd.age.age_manager:
+        class: Platformd\SpoutletBundle\Age\AgeManager
+        arguments:
+            - "@security.context"
+            - "@session"
+        scope: request
+
+    platformd.age.insufficient_age_listener:
+        class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
+        arguments:
+            - "@router"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

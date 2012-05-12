@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\SpoutletBundle\Util\HttpUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 
 /**
  * Our custom base controller
@@ -157,5 +158,22 @@ class Controller extends BaseController
     protected function trans($key, $params = array(), $domain = 'messages')
     {
         return $this->container->get('translator')->trans($key, $params, $domain);
+    }
+
+    /**
+     * Enforces that the user is a certain age and throws the InsufficientAgeException
+     * if he/she is now.
+     *
+     * @param int $minimumAge
+     * @throws \Platformd\SpoutletBundle\Exception\InsufficientAgeException
+     */
+    protected function enforceAgeProtection($minimumAge = 13)
+    {
+        /** @var $ageManager \Platformd\SpoutletBundle\Age\AgeManager */
+        $ageManager = $this->container->get('platformd.age.age_manager');
+
+        if (!$ageManager->getUsersAge() >= $minimumAge) {
+            throw new InsufficientAgeException();
+        }
     }
 }

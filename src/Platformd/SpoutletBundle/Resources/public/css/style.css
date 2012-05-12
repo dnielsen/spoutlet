@@ -290,6 +290,15 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .blueButton { background:url(/bundles/spoutlet/images/btnBlue-right.png) top right no-repeat; }
 .blueButton a { display:block; background:url(/bundles/spoutlet/images/btnBlue-left.png) top left no-repeat; height:25px; padding-top:5px;  color:#ffffff; font-weight: bold; margin-right: 3px; padding-left: 3px; }
 .blueButton:hover { cursor: pointer; }
+
+.siteButton { background:url(../images/btnBlue-right.png) top right no-repeat; text-align: center; }
+.siteButton.inactive { background:url(../images/btnBlue-right-inactive.png) top right no-repeat; }
+.siteButton a { display:block; background:url(../images/btnBlue-left.png) top left no-repeat; height:25px; padding-top:5px;  color:#ffffff; font-weight: bold; margin-right: 3px; padding-left: 3px; }
+.siteButton.inactive a { background:url(../images/btnBlue-left-inactive.png) top left no-repeat; color: #b3b3b3; cursor: arrow; }
+.siteButton.waiting { width: 90px; }
+.siteButton:hover { cursor: pointer; }
+.siteButton.inactive:hover { cursor: auto; }
+
 .rightButton { float:right; }
 
 /** Main Page **/

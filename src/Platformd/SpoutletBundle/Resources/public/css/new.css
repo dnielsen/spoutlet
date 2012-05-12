@@ -469,3 +469,9 @@ ul.list-normal {
 .article-image-large img {
     width: 634px;
 }
+.age-wrapper {
+    text-align: center;
+}
+.age-wrapper select {
+    margin: 0 10px;
+}

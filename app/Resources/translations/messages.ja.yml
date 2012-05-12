@@ -333,6 +333,7 @@ platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
 sweepstakes_date_format: %year%年%month%月%day%日
+date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
@@ -383,3 +384,11 @@ denied: Denied
 approved: Approved
 
 username: ユーザー名
+
+age_confirm:
+    headline: Please Confirm Your Date of Birth
+    message: The content is intended for mature audiences. Please confirm your age below
+confirm: Confirm
+
+error:
+    fill_in_birthday: Please fill in your birthday!

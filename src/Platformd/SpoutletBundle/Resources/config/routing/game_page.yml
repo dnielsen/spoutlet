@@ -1,0 +1,3 @@
+game_page_list:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:GamePage:index" }

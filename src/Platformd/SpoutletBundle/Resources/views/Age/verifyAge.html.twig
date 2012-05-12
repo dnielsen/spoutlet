@@ -1,0 +1,35 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'age_confirm.headline' | trans }}</h1>
+
+    <p>
+        {{ 'age_confirm.message' | trans }}
+    </p>
+
+    <div class="age-wrapper">
+        <form action="{{ path('age_verification') }}" method="POST">
+
+            {% if form.get('errors') %}
+                <div class="form-msg-error" style="width: 200px; margin: auto; margin-bottom: 10px;">
+                    {% for error in form.get('errors') %}
+                        {{ error.messageTemplate | trans(error.messageParameters) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% set attr = { 'class': 'dark' } %}
+
+            {{ 'date_format' | trans({
+                '%year%':   form_widget(form.year, { 'attr': attr }),
+                '%month%':  form_widget(form.month, { 'attr': attr }),
+                '%day%':    form_widget(form.day, { 'attr': attr })
+            }) | raw }}
+
+            <div class="siteButton" style="width: 80px; display: -moz-inline-box; display: inline-block;">
+                <a href="#" onclick="$(this).closest('form').submit(); return false;">{{ 'confirm' | trans }}</a>
+                <input type="submit" style="position: absolute; visibility: hidden;" value="{{ 'confirm' | trans }}" />
+            </div>
+        </form>
+    </div>
+{% endblock %}
