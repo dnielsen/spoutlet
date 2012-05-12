@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(
  *              name="slug_unique",
- *              columns={"slug", "locale"}
+ *              columns={"slug"}
  *          )
  *      }
  * )
@@ -58,14 +58,6 @@ class Game
      * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")]
      */
     private $slug;
-
-    /**
-     * @var string $locale
-     *
-     * @ORM\Column(name="locale", type="string", length=255)
-     * @Assert\NotNull
-     */
-    private $locale;
 
     /**
      * @var string $category
@@ -246,21 +238,5 @@ class Game
     public function setPublisherLogos(Media $publisherLogos = null)
     {
         $this->publisherLogos = $publisherLogos;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
     }
 }

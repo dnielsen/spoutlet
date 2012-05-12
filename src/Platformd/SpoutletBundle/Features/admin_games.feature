@@ -11,7 +11,6 @@ Feature: Games Admin
         When I click to add new "Games"
             And I fill in "Game Name" with "Warcraft3"
             And I select "RPG" from "Genre"
-            And I select "en" from Site
             And I press "Create"
         Then I should see "game was created"
 
