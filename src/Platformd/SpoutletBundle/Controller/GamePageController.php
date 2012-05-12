@@ -17,7 +17,11 @@ class GamePageController extends Controller
         $this->enforceAgeProtection(self::AGE_LIMIT);
         // todo - add the age check
 
-        return array();
+        $categorizedGames = $this->getGamePageManager()
+            ->findActiveGamesInCategoriesForAge($this->getAgeManager()->getUsersAge())
+        ;
+
+        return array('categorizedGames' => $categorizedGames);
     }
 
     /**

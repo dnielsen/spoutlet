@@ -1,6 +1,35 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
-    <h1>Games and Trailers</h1>
-    GAMES!!!
+
+
+    <div class="games-list-page">
+        <div class="left">
+            <h1>{{ 'games_trailers.channel_header' | trans }}</h1>
+            <p>{{ 'games_trailers.intro_text' | trans }}</p>
+
+            {% for category,gamePages in categorizedGames %}
+                <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
+                <ul>
+                    {% for gamePage in gamePages %}
+                        {% set url = '#' %}
+                        <li>
+                            <a href="{{ url }}">
+                                {% if gamePage.game.logo %}
+                                    <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
+                                {% else %}
+                                    <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
+                                {% endif %}
+                            </a>
+
+                            <a href="{{ url }}">{{ gamePage.game.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+        <div class="right">
+
+        </div>
+    </div>
 {% endblock %}

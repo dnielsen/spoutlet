@@ -33,7 +33,7 @@ class AgeController extends Controller
         $form = $this->createForm('birthday', null, array(
             'csrf_protection' => false,
             'empty_value' => '--', 'required' => true,
-            'years' => range(1940, date('Y')),
+            'years' => range(date('Y'), 1940),
             'validation_constraint' => $constraint,
         ));
 
@@ -75,13 +75,5 @@ class AgeController extends Controller
         }
 
         return $this->redirect($targetPath);
-    }
-
-    /**
-     * @return \Platformd\SpoutletBundle\Age\AgeManager
-     */
-    private function getAgeManager()
-    {
-        return $this->container->get('platformd.age.age_manager');
     }
 }

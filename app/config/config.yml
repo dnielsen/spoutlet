@@ -318,3 +318,9 @@ liip_imagine:
             filters:
                 # usually 634x400 - but we don't care much about the height
                 thumbnail: { size: [634, 500], mode: inset }
+
+        game_list_logo:
+            quality: 100
+            filters:
+                # usually 634x400 - but we don't care much about the height
+                thumbnail: { size: [195, 80], mode: inset }

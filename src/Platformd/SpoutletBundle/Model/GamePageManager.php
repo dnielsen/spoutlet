@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Model;
 use Platformd\SpoutletBundle\Entity\GamePage;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
+use Symfony\Component\HttpFoundation\Session;
 
 /**
  * Manager for GamePage.
@@ -20,9 +21,12 @@ class GamePageManager
 {
     private $em;
 
-    public function __construct(EntityManager $em)
+    private $session;
+
+    public function __construct(EntityManager $em, Session $session)
     {
         $this->em = $em;
+        $this->session = $session;
     }
 
     /**
@@ -51,6 +55,34 @@ class GamePageManager
     public function findAllForSiteNewestFirst($site)
     {
         return $this->getRepository()->findAllForSiteNewestFirst($site);
+    }
+
+    /**
+     * Returns an array of arrays of active GamePage objects relevant for this user
+     *
+     * array(
+     *      'rpg'       => array($gamePage1, $gamePage3),
+     *      'action'    => array($gamePage3, $gamePage4)
+     * )
+     *
+     * @param integer $age
+     * @return array
+     */
+    public function findActiveGamesInCategoriesForAge($age)
+    {
+        $activeGames = $this->getRepository()->findActiveGamesForAge($age, $this->getDatabaseSiteKey());
+
+        $categorized = array();
+        foreach ($activeGames as $activeGame) {
+            $category = $activeGame->getGame()->getCategory();
+            if (!isset($categorized[$category])) {
+                $categorized[$category] = array();
+            }
+
+            $categorized[$category][] = $activeGame;
+        }
+
+        return $categorized;
     }
 
     /**
@@ -121,5 +153,10 @@ class GamePageManager
     private function getRepository()
     {
         return $this->em->getRepository('SpoutletBundle:GamePage');
+    }
+
+    private function getDatabaseSiteKey()
+    {
+        return $this->session->getLocale();
     }
 }

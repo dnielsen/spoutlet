@@ -176,4 +176,12 @@ class Controller extends BaseController
             throw new InsufficientAgeException();
         }
     }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Age\AgeManager
+     */
+    protected  function getAgeManager()
+    {
+        return $this->container->get('platformd.age.age_manager');
+    }
 }

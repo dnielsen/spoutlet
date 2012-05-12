@@ -399,3 +399,7 @@ confirm: Confirm
 error:
     fill_in_birthday: Please fill in your birthday!
     select_status: Please choose a status
+
+games_trailers:
+    channel_header: CHANNEL: GAMES AND TRAILERS
+    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!

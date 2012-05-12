@@ -3,6 +3,8 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Platformd\SpoutletBundle\Entity\GamePage;
 
 /**
  * GamePageRepository
@@ -26,6 +28,23 @@ class GamePageRepository extends EntityRepository
     }
 
     /**
+     * @param integer $age
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     */
+    public function findActiveGamesForAge($age, $site)
+    {
+        // we don't use the age yet
+
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addPublishedQueryBuilder($qb);
+
+        return $qb->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
      * @param $site
      * @return \Doctrine\ORM\QueryBuilder
      */
@@ -35,6 +54,13 @@ class GamePageRepository extends EntityRepository
             ->leftJoin('gp.gamePageLocales', 'gpl')
             ->andWhere('gpl.locale = :site')
             ->setParameter('site', $site)
+        ;
+    }
+
+    private function addPublishedQueryBuilder(QueryBuilder $qb)
+    {
+        return $qb->andWhere('gp.status = :status')
+            ->setParameter('status', GamePage::STATUS_PUBLISHED)
         ;
     }
 }
