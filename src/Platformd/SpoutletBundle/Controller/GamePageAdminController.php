@@ -47,9 +47,10 @@ class GamePageAdminController extends Controller
      * Creates a new GamePage gamePage.
      *
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, $site = null)
     {
-        $this->addGamePagesBreadcrumb()->addChild('New Game Page');
+        $this->addGamePagesBreadcrumb();
+        $this->addSiteBreadcrumbs($site)->addChild('New Game Page');
 
         $gamePage  = new GamePage();
         $form    = $this->createForm(new GamePageType(), $gamePage);
@@ -57,12 +58,16 @@ class GamePageAdminController extends Controller
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The game page was created!');
 
-            return $this->redirect($this->generateUrl('admin_game_page_edit', array('id' => $gamePage->getId())));
+            return $this->redirect($this->generateUrl('admin_game_page_edit', array(
+                'id' => $gamePage->getId(),
+                'site' => $site,
+            )));
         }
 
         return $this->render('SpoutletBundle:GamePageAdmin:new.html.twig', array(
             'entity' => $gamePage,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'site'   => $site,
         ));
     }
 
@@ -70,9 +75,10 @@ class GamePageAdminController extends Controller
      * Edits an existing GamePage gamePage.
      *
      */
-    public function editAction($id, Request $request)
+    public function editAction($id, Request $request, $site = null)
     {
-        $this->addGamePagesBreadcrumb()->addChild('Edit Game Page');
+        $this->addGamePagesBreadcrumb();
+        $this->addSiteBreadcrumbs($site)->addChild('Edit Game Page');
         $em = $this->getDoctrine()->getEntityManager();
 
         $gamePage = $em->getRepository('SpoutletBundle:GamePage')->find($id);
@@ -87,13 +93,17 @@ class GamePageAdminController extends Controller
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The game page was saved!');
 
-            return $this->redirect($this->generateUrl('admin_game_page_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('admin_game_page_edit', array(
+                'id' => $id,
+                'site' => $site,
+            )));
         }
 
         return $this->render('SpoutletBundle:GamePageAdmin:edit.html.twig', array(
             'gamePage'      => $gamePage,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'site'          => $site,
         ));
     }
 
@@ -137,10 +147,13 @@ class GamePageAdminController extends Controller
 
     private function addSiteBreadcrumbs($site)
     {
-        $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
-            'route' => 'admin_game_page_site',
-            'routeParameters' => array('site' => $site)
-        ));
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_game_page_site',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
 
         return $this->getBreadcrumbs();
     }

@@ -15,7 +15,7 @@
     <tbody>
     {% for gamePage in entities %}
         <tr>
-            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id }) }}">{{ gamePage.game.name }}</a></td>
+            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">{{ gamePage.game.name }}</a></td>
             <td>
                 {# todo - change to the real URL #}
                 {% set url = url('default_index', {'slug': gamePage.slug, '_locale': site }) %}
@@ -27,7 +27,7 @@
                 {% endfor %}
             </td>
             <td>
-                <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id }) }}">edit</a>
+                <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">edit</a>
             </td>
         </tr>
     {% else %}
@@ -40,7 +40,7 @@
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="{{ path('admin_game_page_new') }}">
+<a class="btn btn-primary" href="{{ path('admin_game_page_new', { 'site': site }) }}">
     Create a new game page
 </a>
 {% endblock %}

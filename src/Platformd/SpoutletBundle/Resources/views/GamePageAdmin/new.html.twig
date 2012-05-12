@@ -4,7 +4,7 @@
 
 <h1>New Game Page</h1>
 
-<form action="{{ path('admin_game_page_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form action="{{ path('admin_game_page_create', {'site': site}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:GamePageAdmin:_form.html.twig' %}
 
     <div class="form-actions">
@@ -12,7 +12,13 @@
     </div>
 </form>
 
-<a href="{{ path('admin_game_page') }}">
-    Back to the list
-</a>
+{% if site %}
+    <a href="{{ path('admin_game_page_site', { 'site': site }) }}">
+        Back to the list
+    </a>
+{% else %}
+    <a href="{{ path('admin_game_page') }}">
+        Back to the list
+    </a>
+{% endif %}
 {% endblock %}

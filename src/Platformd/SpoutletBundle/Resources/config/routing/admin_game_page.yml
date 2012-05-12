@@ -6,23 +6,23 @@ admin_game_page:
 # show the true "list" page for a site
 admin_game_page_site:
     pattern:  /list/{site}
-    defaults: { _controller: "SpoutletBundle:GamePageAdmin:list" }
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:list", site: ~ }
 
 admin_game_page_new:
-    pattern:  /new
-    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new" }
+    pattern:  /new/{site}
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new", site: ~ }
 
 admin_game_page_create:
-    pattern:  /create
-    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new" }
+    pattern:  /create/{site}
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new", site: ~ }
     requirements: { _method: post }
 
 admin_game_page_edit:
-    pattern:  /{id}/edit
-    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit" }
+    pattern:  /{id}/edit/{site}
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit", site: ~ }
 
 admin_game_page_update:
-    pattern:  /{id}/update
-    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit" }
+    pattern:  /{id}/update/{site}
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit", site: ~ }
     requirements: { _method: post }
 
