@@ -229,6 +229,11 @@ class AbstractFeatureContext extends MinkContext
      */
     public function thereIsAGameCalled($name)
     {
+        if ($game = $this->getEntityManager()->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $name))) {
+            $this->getEntityManager()->remove($game);
+            $this->getEntityManager()->flush();
+        }
+
         $game = new Game();
         $game->setName($name);
         $game->setCategory('rpg');
@@ -240,17 +245,19 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^there is a game page called "([^"]*)"$/
+     * @Given /^there is a game page for "([^"]*)"$/
      */
     public function thereIsAGamePageFor($gameName)
     {
         $game = $this->thereIsAGameCalled($gameName);
 
         $page = new GamePage();
-        $page->setGame($gameName);
+        $page->setGame($game);
+        $page->setLocales(array('en'));
 
-        $this->getEntityManager()->persist($game);
-        $this->getEntityManager()->flush();
+        $this->getContainer()->get('platformd.model.game_page_manager')
+            ->saveGamePage($page)
+        ;
     }
 
     /**
@@ -263,6 +270,30 @@ class AbstractFeatureContext extends MinkContext
         $rows = $this->getPage()->findAll('css', 'table.table tbody tr');
 
         assertEquals($num, count($rows));
+    }
+
+    /**
+     * Checks a checkbox in a "many" choice field.
+     *
+     * This is do, I believe, to some custom way we're rendering our labels
+     * for a group of collection boxes.
+     *
+     * @Given /^I check the "([^"]*)" option for "([^"]*)"$/
+     */
+    public function iCheckTheOptionFor($optionName, $fieldLabelName)
+    {
+        $label = $this->getPage()->find('css', sprintf('label:contains("%s")', $fieldLabelName));
+        if (!$label) {
+            throw new \Exception('Cannot find label with text '.$fieldLabelName);
+        }
+
+        /** @var $optionEle \Behat\Mink\Element\NodeElement */
+        $optionEle = $label->getParent()->findField($optionName);
+        if (!$optionEle) {
+            throw new \Exception(sprintf('Cannot find option named "%s" under "%s"', $optionName, $fieldLabelName));
+        }
+
+        $optionEle->check();
     }
 
     /**

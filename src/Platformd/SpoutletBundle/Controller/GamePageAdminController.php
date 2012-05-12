@@ -93,8 +93,6 @@ class GamePageAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
         /** @var $gamePage \Platformd\SpoutletBundle\Entity\GamePage */
         $gamePage = $form->getData();
 
@@ -116,7 +114,7 @@ class GamePageAdminController extends Controller
      */
     private function addGamePagesBreadcrumb()
     {
-        $this->getBreadcrumbs()->addChild('GamePages', array(
+        $this->getBreadcrumbs()->addChild('Game Pages', array(
             'route' => 'admin_game_page'
         ));
 

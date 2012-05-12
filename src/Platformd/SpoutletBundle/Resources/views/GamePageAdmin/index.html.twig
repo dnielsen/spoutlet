@@ -7,20 +7,18 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Category</th>
+            <th>Sites</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     {% for gamePage in entities %}
         <tr>
-            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id }) }}">{{ gamePage.name }}</a></td>
+            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id }) }}">{{ gamePage.game.name }}</a></td>
             <td>
-                {% if gamePage.category %}
-                    {{ (constant('Platformd\\SpoutletBundle\\Entity\\GamePage::GAME_CATEGORY_LABEL_PREFIX')~gamePage.category) | trans }}
-                {% else %}
-                    <emph>none</emph>
-                {% endif %}
+                {% for locale in gamePage.gamePageLocales %}
+                    {{ locale.locale | site_name }}
+                {% endfor %}
             </td>
             <td>
                 <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id }) }}">edit</a>

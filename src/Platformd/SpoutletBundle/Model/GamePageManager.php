@@ -36,6 +36,8 @@ class GamePageManager
 
         $this->handleLocales($gamePage);
         $this->handleMediaFields($gamePage);
+
+        $this->em->flush();
     }
 
     /**
@@ -72,8 +74,6 @@ class GamePageManager
             // set the inverse side
             $gamePage->getGamePageLocales()->add($newGamePageLocale);
         }
-
-        $this->em->flush();
     }
 
     /**
