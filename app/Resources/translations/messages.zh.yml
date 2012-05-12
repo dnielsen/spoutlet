@@ -346,6 +346,12 @@ save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
 
+status:
+    published: Published
+    unpublished: Unpublished
+    archived: Archived
+    choose_status: Status
+
 # More frontend things
 no_news_currently: 没有找到新闻文章
 news_and_announcements: Alienware竞技场新闻及通告
@@ -379,3 +385,4 @@ confirm: Confirm
 
 error:
     fill_in_birthday: Please fill in your birthday!
+    select_status: Please choose a status

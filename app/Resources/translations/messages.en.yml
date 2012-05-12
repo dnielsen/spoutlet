@@ -360,6 +360,12 @@ posted_at: Post Date
 override_url: Override URL
 published_status: Status
 
+status:
+    published: Published
+    unpublished: Unpublished
+    archived: Archived
+    choose_status: Status
+
 # More frontend things
 no_news_currently: There is currently no featured news - check back later!
 news_and_announcements: Alienware Arena News & Announcements
@@ -398,3 +404,4 @@ confirm: Confirm
 
 error:
     fill_in_birthday: Please fill in your birthday!
+    select_status: Please choose a status

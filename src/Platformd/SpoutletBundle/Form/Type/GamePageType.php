@@ -8,6 +8,7 @@ use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\SpoutletBundle\Entity\GamePage;
 
 class GamePageType extends AbstractType
 {
@@ -59,7 +60,23 @@ class GamePageType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ))
+            ->add('status', 'choice', array(
+                'choices' => $this->getStatusChoices(),
+            ))
         ;
+    }
+
+    public function getStatusChoices()
+    {
+        $choices = array(
+            '' => 'status.choose_status',
+        );
+
+        foreach (GamePage::getValidStatues() as $status) {
+            $choices[$status] = 'status.'.$status;
+        }
+
+        return $choices;
     }
 
     public function getName()

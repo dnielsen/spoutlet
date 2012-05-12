@@ -28,6 +28,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class GamePage
 {
+    const STATUS_PUBLISHED      = 'published';
+    const STATUS_UNPUBLISHED    = 'unpublished';
+    const STATUS_ARCHIVED       = 'archived';
+
+    private static $validStatues = array(
+        self::STATUS_PUBLISHED,
+        self::STATUS_UNPUBLISHED,
+        self::STATUS_ARCHIVED,
+    );
+
     /**
      * @var integer $id
      *
@@ -181,6 +191,15 @@ class GamePage
     private $gamePageLocales;
 
     private $locales;
+
+    /**
+     * The published/unpublished/archived field
+     *
+     * @var string
+     * @ORM\Column(name="status", type="string", length=50, nullable=false)
+     * @Assert\NotBlank(message="error.select_status")
+     */
+    private $status;
 
     public function __construct()
     {
@@ -542,5 +561,34 @@ class GamePage
     public function getGamePageLocales()
     {
         return $this->gamePageLocales;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        if (!in_array($status, self::$validStatues)) {
+            throw new \InvalidArgumentException(sprintf('Invalid status passed: "%s"', $status));
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * @static
+     * @return array
+     */
+    static public function getValidStatues()
+    {
+        return self::$validStatues;
     }
 }
