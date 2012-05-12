@@ -35,7 +35,7 @@ class GamePageAdminController extends Controller
      */
     public function newAction(Request $request)
     {
-        $this->addGamePagesBreadcrumb()->addChild('New GamePage');
+        $this->addGamePagesBreadcrumb()->addChild('New Game Page');
 
         $gamePage  = new GamePage();
         $form    = $this->createForm(new GamePageType(), $gamePage);
@@ -58,13 +58,13 @@ class GamePageAdminController extends Controller
      */
     public function editAction($id, Request $request)
     {
-        $this->addGamePagesBreadcrumb()->addChild('Edit GamePage');
+        $this->addGamePagesBreadcrumb()->addChild('Edit Game Page');
         $em = $this->getDoctrine()->getEntityManager();
 
         $gamePage = $em->getRepository('SpoutletBundle:GamePage')->find($id);
 
         if (!$gamePage) {
-            throw $this->createNotFoundException('Unable to find GamePage gamePage.');
+            throw $this->createNotFoundException('Unable to find GamePage.');
         }
 
         $editForm   = $this->createForm(new GamePageType(), $gamePage);
