@@ -46,7 +46,6 @@ class GamePage
      * @var string $locale
      *
      * @ORM\Column(name="locale", type="string", length=255)
-     * @Assert\NotNull
      */
     private $locale;
 

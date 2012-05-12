@@ -23,7 +23,7 @@ class GamePageType extends AbstractType
             ->add('buttonUrl1', null, array(
                 'label' => 'URL',
             ))
-            ->add('buttonImage1', new MediaType(), array(
+            ->add('buttonImage2', new MediaType(), array(
                 'image_label'   => 'Button Image 2',
                 'image_help'    => 'Recommended size: 204x45',
             ))

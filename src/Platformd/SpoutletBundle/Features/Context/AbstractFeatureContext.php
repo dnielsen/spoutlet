@@ -14,6 +14,7 @@ use Behat\Behat\Context\Step\When;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\SpoutletBundle\Entity\GamePage;
 
 /**
  * Base Feature context.
@@ -231,6 +232,22 @@ class AbstractFeatureContext extends MinkContext
         $game = new Game();
         $game->setName($name);
         $game->setCategory('rpg');
+
+        $this->getEntityManager()->persist($game);
+        $this->getEntityManager()->flush();
+
+        return $game;
+    }
+
+    /**
+     * @Given /^there is a game page called "([^"]*)"$/
+     */
+    public function thereIsAGamePageFor($gameName)
+    {
+        $game = $this->thereIsAGameCalled($gameName);
+
+        $page = new GamePage();
+        $page->setGame($gameName);
 
         $this->getEntityManager()->persist($game);
         $this->getEntityManager()->flush();

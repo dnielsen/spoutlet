@@ -41,9 +41,13 @@ class GamePageAdminController extends Controller
         $form    = $this->createForm(new GamePageType(), $gamePage);
 
         if ($this->processForm($form, $request)) {
-            $this->setFlash('success', 'The gamePage was created!');
+            $this->setFlash('success', 'The game page was created!');
 
             return $this->redirect($this->generateUrl('admin_game_page_edit', array('id' => $gamePage->getId())));
+        } else {
+            foreach ($form->getErrors() as $field => $val) {
+                var_dump($field, $val);
+            }
         }
 
         return $this->render('SpoutletBundle:GamePageAdmin:new.html.twig', array(
@@ -71,7 +75,7 @@ class GamePageAdminController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {
-            $this->setFlash('success', 'The gamePage was saved!');
+            $this->setFlash('success', 'The game page was saved!');
 
             return $this->redirect($this->generateUrl('admin_game_page_edit', array('id' => $id)));
         }

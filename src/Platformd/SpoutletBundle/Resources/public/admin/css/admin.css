@@ -44,9 +44,7 @@ form .input {
     display: none;
 }
 
-textarea {
-    width: 500px;
-    height: 100px;
 
+fieldset .row-fluid.first div[class*="span"] {
+    padding-top: 27px;
 }
-
