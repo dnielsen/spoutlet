@@ -44,10 +44,6 @@ class GamePageAdminController extends Controller
             $this->setFlash('success', 'The game page was created!');
 
             return $this->redirect($this->generateUrl('admin_game_page_edit', array('id' => $gamePage->getId())));
-        } else {
-            foreach ($form->getErrors() as $field => $val) {
-                var_dump($field, $val);
-            }
         }
 
         return $this->render('SpoutletBundle:GamePageAdmin:new.html.twig', array(
@@ -99,26 +95,55 @@ class GamePageAdminController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
+        /** @var $gamePage \Platformd\SpoutletBundle\Entity\GamePage */
+        $gamePage = $form->getData();
+
         if ($request->getMethod() == 'POST') {
+            // create an array of the current GamePageLocales
+            $originalLocales = array();
+            foreach ($$gamePage->getLocales() as $gamePageLocale) $originalLocales[] = $gamePageLocale;
+
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                /** @var $gamePage \Platformd\SpoutletBundle\Entity\GamePage */
-                $gamePage = $form->getData();
                 $em->persist($gamePage);
 
-                // either persist the logo, or unset it
-                if ($gamePage->getLogo()->getFileObject()) {
-                    $em->persist($gamePage->getLogo());
+                // take care of the media fields
+                if ($gamePage->getButtonImage1()->getFileObject()) {
+                    $em->persist($gamePage->getButtonImage1());
                 } else {
-                    $gamePage->setLogo(null);
+                    $gamePage->setButtonImage1(null);
                 }
 
-                // either persist the logos, or unset it
-                if ($gamePage->getPublisherLogos()->getFileObject()) {
-                    $em->persist($gamePage->getPublisherLogos());
+                if ($gamePage->getButtonImage2()->getFileObject()) {
+                    $em->persist($gamePage->getButtonImage2());
                 } else {
-                    $gamePage->setPublisherLogos(null);
+                    $gamePage->setButtonImage2(null);
+                }
+
+                if ($gamePage->getBackgroundImage()->getFileObject()) {
+                    $em->persist($gamePage->getBackgroundImage());
+                } else {
+                    $gamePage->setBackgroundImage(null);
+                }
+
+                // handle old locales
+                // filter $originalLocales to contain locales no longer present
+                foreach ($gamePage->getGamePageLocales() as $locale) {
+                    foreach ($originalLocales as $key => $toDel) {
+                        if ($toDel->getId() === $locale->getId()) {
+                            unset($originalLocales[$key]);
+                        }
+                    }
+                }
+
+                // remove the relationship between the tag and the Task
+                foreach ($originalLocales as $locale) {
+                    // remove the inverse side, not actually needed
+                    $gamePage->getGamePageLocales()->removeElement($locale);
+
+                    // delete the old GamePageLocale
+                    $em->remove($locale);
                 }
 
                 $em->flush();

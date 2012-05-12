@@ -55,6 +55,10 @@ class GamePageType extends AbstractType
                 'help'  => 'Paste Youtube ID',
             ))
             ->add('legalVerbiage')
+            ->add('locales', new SiteChoiceType(), array(
+                'multiple' => true,
+                'expanded' => true,
+            ))
         ;
     }
 

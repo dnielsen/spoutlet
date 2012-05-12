@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\SpoutletBundle\Entity\Game
@@ -91,6 +92,22 @@ class Game
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $publisherLogos;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updatedAt;
 
     /**
      * Get id

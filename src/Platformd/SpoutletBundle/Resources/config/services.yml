@@ -100,3 +100,8 @@ services:
         class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
         tags:
             - { name: form.type_extension, alias: field }
+
+    platformd.doctrine.many_locales_listener:
+        class: Platformd\SpoutletBundle\Doctrine\ManyLocalesListener
+        tags:
+            - { name: doctrine.event_subscriber }

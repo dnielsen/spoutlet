@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\SpoutletBundle\Entity\Game;
 use Gedmo\Sluggable\Util\Urlizer;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage
@@ -16,7 +18,7 @@ use Gedmo\Sluggable\Util\Urlizer;
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(
  *              name="slug_unique",
- *              columns={"slug", "locale"}
+ *              columns={"slug"}
  *          )
  *      }
  * )
@@ -41,13 +43,6 @@ class GamePage
      * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
-
-    /**
-     * @var string $locale
-     *
-     * @ORM\Column(name="locale", type="string", length=255)
-     */
-    private $locale;
 
     /**
      * @Assert\NotBlank
@@ -156,6 +151,39 @@ class GamePage
      */
     private $legalVerbiage;
 
+    /**
+     * @var \DateTime $created
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updatedAt;
+
+    /**
+     * Holds the "many" locales relationship
+     *
+     * Don't set this directly, instead set "locales" directly, and a listener
+     * will take care of properly creating the GamePageLocale relationship
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="GamePageLocale", orphanRemoval=true, mappedBy="gamePage")
+     */
+    private $gamePageLocales;
+
+    private $locales = array();
+
+    public function __construct()
+    {
+        $this->gamePageLocales = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -480,19 +508,24 @@ class GamePage
         $this->game = $game;
     }
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocales()
     {
-        return $this->locale;
+        return $this->locales;
+    }
+
+    public function setLocales($locales)
+    {
+        $this->locales = $locales;
+
+        // force Doctrine to see this as dirty
+        $this->updatedAt = new \DateTime();
     }
 
     /**
-     * @param string $locale
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function setLocale($locale)
+    public function getGamePageLocales()
     {
-        $this->locale = $locale;
+        return $this->gamePageLocales;
     }
 }
