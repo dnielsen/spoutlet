@@ -4,12 +4,12 @@
 
 <h1>Game creation</h1>
 
-<form action="{{ path('admin_game_create') }}" method="post" {{ form_enctype(form) }}>
+<form action="{{ path('admin_game_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:GameAdmin:_form.html.twig' %}
 
-    <p>
+    <div class="form-actions">
         <button type="submit" class="btn btn-primary">Add</button>
-    </p>
+    </div>
 </form>
 
 <a href="{{ path('admin_game') }}">

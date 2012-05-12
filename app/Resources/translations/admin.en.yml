@@ -6,6 +6,10 @@ notes: Notes
 no_translation_provided: no translation provided
 num: Num
 delete: Delete
+save: Save
 description: Description
 email: Email
 click_to_edit: click to edit
+
+prompt:
+    delete: Are your sure you want to delete this?

@@ -1,3 +1,5 @@
+{% use "form_div_layout.html.twig" with url_widget as base_url_widget %}
+
 {# give a form_row class to all form row divs #}
 {% block field_row %}
 {% spaceless %}
@@ -44,4 +46,13 @@
     {% set attr = attr|merge({'class': 'control-label'}) %}
     <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ label|trans }}</label>
 {% endspaceless %}
+{% endblock %}
+
+{% block url_widget %}
+    <div class="input-prepend">
+        <span class="add-on">
+            <i class="icon-share-alt"></i>
+        </span>
+    </div>
+    {{ block('base_url_widget') }}
 {% endblock %}

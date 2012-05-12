@@ -20,7 +20,3 @@ admin_game_update:
     defaults: { _controller: "SpoutletBundle:GameAdmin:edit" }
     requirements: { _method: post }
 
-admin_game_delete:
-    pattern:  /{id}/delete
-    defaults: { _controller: "SpoutletBundle:GameAdmin:delete" }
-    requirements: { _method: post }

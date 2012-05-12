@@ -1,4 +1,4 @@
-{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 
 <form method="post" action="{{ route }}" class="form" {{ form_enctype(form) }}>
     {{ form_row(form.title) }}

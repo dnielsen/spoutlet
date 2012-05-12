@@ -22,7 +22,7 @@ class GameType extends AbstractType
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices()
             ))
-            ->add('facebookFanpageUrl', null, array(
+            ->add('facebookFanpageUrl', 'url', array(
                 'label' => 'platformd.admin.facebook_fanpage'
             ))
             ->add('logo', new MediaType(), array(

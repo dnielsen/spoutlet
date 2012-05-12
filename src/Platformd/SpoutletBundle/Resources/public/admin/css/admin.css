@@ -2,6 +2,14 @@ body {
     padding-top: 60px;
 }
 
+h1 {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 27px;
+}
+h1 i {
+    margin-top: 10px;
+}
+
 #height {
     height: 100px;
     background: #ccc;

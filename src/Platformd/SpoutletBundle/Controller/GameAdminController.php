@@ -79,32 +79,6 @@ class GameAdminController extends Controller
         ));
     }
 
-    /**
-     * Deletes a Game game.
-     *
-     */
-    public function deleteAction($id)
-    {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->bindRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $game = $em->getRepository('SpoutletBundle:Game')->find($id);
-
-            if (!$game) {
-                throw $this->createNotFoundException('Unable to find Game game.');
-            }
-
-            $em->remove($game);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('admin_game'));
-    }
-
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
