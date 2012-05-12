@@ -30,7 +30,7 @@ class SiteChoiceType extends ChoiceType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'label' => 'Site',
+            'label' => $options['multiple'] ? 'Sites' : 'Site',
             'empty_value' => 'Choose a site',
         );
     }

@@ -10,7 +10,7 @@
         {{ form_errors(form) }}
 
         {% if form.get('help') %}
-        <p class="alert alert-info">
+        <p class="alert alert-info help">
             <i class="icon-info-sign"></i>
             {{ form.get('help') }}
         </p>
@@ -49,6 +49,7 @@
 {% endspaceless %}
 {% endblock %}
 
+{# adds our little icon to the front #}
 {% block url_widget %}
     <div class="input-prepend">
         <span class="add-on">
@@ -57,3 +58,33 @@
     </div>
     {{ block('base_url_widget') }}
 {% endblock %}
+
+{# the first part is overriden to give us checkboxes that look schweet in bootstrap#}
+{% block choice_widget %}
+{% spaceless %}
+    {% if expanded %}
+        {% for child in form %}
+            <label class="checkbox">
+                {{ form_widget(child) }}
+                {{ child.get('label') | trans }}
+            </label>
+        {% endfor %}
+    {% else %}
+        {# this side is untouched #}
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {% if empty_value is not none %}
+                <option value="">{{ empty_value|trans }}</option>
+            {% endif %}
+            {% if preferred_choices|length > 0 %}
+                {% set options = preferred_choices %}
+                {{ block('widget_choice_options') }}
+                {% if choices|length > 0 and separator is not none %}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% endif %}
+            {% endif %}
+            {% set options = choices %}
+            {{ block('widget_choice_options') }}
+        </select>
+    {% endif %}
+{% endspaceless %}
+{% endblock choice_widget %}

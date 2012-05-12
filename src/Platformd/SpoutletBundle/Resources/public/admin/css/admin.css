@@ -15,6 +15,10 @@ h1 i {
     background: #ccc;
 }
 
+.controls .help {
+    margin-top: 10px;
+}
+
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
