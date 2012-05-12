@@ -47,6 +47,7 @@ class Game
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotNull
      */
     private $name;
 
@@ -62,6 +63,7 @@ class Game
      * @var string $locale
      *
      * @ORM\Column(name="locale", type="string", length=255)
+     * @Assert\NotNull
      */
     private $locale;
 
@@ -69,6 +71,7 @@ class Game
      * @var string $category
      *
      * @ORM\Column(name="category", type="string", length=50)
+     * @Assert\NotNull
      */
     private $category;
 
