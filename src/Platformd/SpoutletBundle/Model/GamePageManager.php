@@ -83,6 +83,22 @@ class GamePageManager
      */
     private function handleMediaFields(GamePage $gamePage)
     {
-        // todo
+        if ($gamePage->getbuttonImage1() && $gamePage->getButtonImage1()->getFileObject()) {
+            $this->em->persist($gamePage->getButtonImage1());
+        } else {
+            $gamePage->setButtonImage1(null);
+        }
+
+        if ($gamePage->getButtonImage2() && $gamePage->getButtonImage2()->getFileObject()) {
+            $this->em->persist($gamePage->getButtonImage2());
+        } else {
+            $gamePage->setButtonImage2(null);
+        }
+
+        if ($gamePage->getBackgroundImage() && $gamePage->getBackgroundImage()->getFileObject()) {
+            $this->em->persist($gamePage->getBackgroundImage());
+        } else {
+            $gamePage->setBackgroundImage(null);
+        }
     }
 }

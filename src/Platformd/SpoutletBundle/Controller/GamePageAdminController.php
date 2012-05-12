@@ -99,54 +99,10 @@ class GamePageAdminController extends Controller
         $gamePage = $form->getData();
 
         if ($request->getMethod() == 'POST') {
-            // create an array of the current GamePageLocales
-            $originalLocales = array();
-            foreach ($$gamePage->getLocales() as $gamePageLocale) $originalLocales[] = $gamePageLocale;
-
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $em->persist($gamePage);
-
-                // take care of the media fields
-                if ($gamePage->getButtonImage1()->getFileObject()) {
-                    $em->persist($gamePage->getButtonImage1());
-                } else {
-                    $gamePage->setButtonImage1(null);
-                }
-
-                if ($gamePage->getButtonImage2()->getFileObject()) {
-                    $em->persist($gamePage->getButtonImage2());
-                } else {
-                    $gamePage->setButtonImage2(null);
-                }
-
-                if ($gamePage->getBackgroundImage()->getFileObject()) {
-                    $em->persist($gamePage->getBackgroundImage());
-                } else {
-                    $gamePage->setBackgroundImage(null);
-                }
-
-                // handle old locales
-                // filter $originalLocales to contain locales no longer present
-                foreach ($gamePage->getGamePageLocales() as $locale) {
-                    foreach ($originalLocales as $key => $toDel) {
-                        if ($toDel->getId() === $locale->getId()) {
-                            unset($originalLocales[$key]);
-                        }
-                    }
-                }
-
-                // remove the relationship between the tag and the Task
-                foreach ($originalLocales as $locale) {
-                    // remove the inverse side, not actually needed
-                    $gamePage->getGamePageLocales()->removeElement($locale);
-
-                    // delete the old GamePageLocale
-                    $em->remove($locale);
-                }
-
-                $em->flush();
+                $this->get('platformd.model.game_page_manager')->saveGamePage($gamePage);
 
                 return true;
             }
