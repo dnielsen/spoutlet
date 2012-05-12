@@ -41,6 +41,19 @@ class GamePageManager
     }
 
     /**
+     * Finds all the GamePage objects that are related to the given site.
+     *
+     * Orders them by newest first
+     *
+     * @param string $site The site/locale
+     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     */
+    public function findAllForSiteNewestFirst($site)
+    {
+        return $this->getRepository()->findAllForSiteNewestFirst($site);
+    }
+
+    /**
      * Handles the complex locales setup
      *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
@@ -100,5 +113,13 @@ class GamePageManager
         } else {
             $gamePage->setBackgroundImage(null);
         }
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\GamePageRepository
+     */
+    private function getRepository()
+    {
+        return $this->em->getRepository('SpoutletBundle:GamePage');
     }
 }

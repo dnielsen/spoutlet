@@ -12,4 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class GamePageRepository extends EntityRepository
 {
+    /**
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     */
+    public function findAllForSiteNewestFirst($site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->addOrderBy('gp.createdAt', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
+     * @param $site
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createSiteQueryBuilder($site)
+    {
+        return $this->createQueryBuilder('gp')
+            ->leftJoin('gp.gamePageLocales', 'gpl')
+            ->andWhere('gpl.locale = :site')
+            ->setParameter('site', $site)
+        ;
+    }
 }

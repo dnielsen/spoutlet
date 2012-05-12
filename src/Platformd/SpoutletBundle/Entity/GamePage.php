@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\Game;
 use Gedmo\Sluggable\Util\Urlizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage
@@ -23,6 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      }
  * )
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GamePageRepository")
+ * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
  */
 class GamePage
 {
@@ -178,7 +180,7 @@ class GamePage
      */
     private $gamePageLocales;
 
-    private $locales = array();
+    private $locales;
 
     public function __construct()
     {
@@ -510,7 +512,20 @@ class GamePage
 
     public function getLocales()
     {
-        return $this->locales;
+        return is_array($this->locales) ? $this->locales : array();
+    }
+
+    /**
+     * The locales are null until someone actually sets them
+     *
+     * This allows us to set them on load of the entity based on the relationship,
+     * but by checking this, we can be careful not to run over real values
+     *
+     * @return bool
+     */
+    public function areLocalesInitialized()
+    {
+        return is_array($this->locales);
     }
 
     public function setLocales($locales)

@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Form\Type\GamePageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 /**
  * GamePage admin controller.
@@ -14,18 +15,31 @@ use Symfony\Component\Form\Form;
 class GamePageAdminController extends Controller
 {
     /**
-     * Lists all GamePage entities.
-     *
+     * Lists all locales - a gateway to the "list" action
      */
     public function indexAction()
     {
         $this->addGamePagesBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entities = $em->getRepository('SpoutletBundle:GamePage')->findAll();
 
         return $this->render('SpoutletBundle:GamePageAdmin:index.html.twig', array(
-            'entities' => $entities
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    /**
+     * Lists all GamePage entities for a site
+     *
+     */
+    public function listAction($site)
+    {
+        $this->addGamePagesBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($site);
+
+        return $this->render('SpoutletBundle:GamePageAdmin:list.html.twig', array(
+            'entities' => $gamePages,
+            'site'     => $site,
         ));
     }
 
@@ -100,7 +114,7 @@ class GamePageAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->get('platformd.model.game_page_manager')->saveGamePage($gamePage);
+                $this->getGamePageManager()->saveGamePage($gamePage);
 
                 return true;
             }
@@ -119,5 +133,24 @@ class GamePageAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            'route' => 'admin_game_page_site',
+            'routeParameters' => array('site' => $site)
+        ));
+
+        return $this->getBreadcrumbs();
+    }
+
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     */
+    private function getGamePageManager()
+    {
+        return $this->get('platformd.model.game_page_manager');
     }
 }

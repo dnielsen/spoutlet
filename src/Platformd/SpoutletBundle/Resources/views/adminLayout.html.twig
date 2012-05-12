@@ -169,7 +169,8 @@
                 {{ knp_menu_render('admin_breadcrumbs', {}, "breadcrumbs") }}
 
                 {% if app.session.hasFlash('success') %}
-                    <div class="alert-message success">
+                    <div class="alert alert-success">
+                        <i class="icon-ok"></i>
                         {{ app.session.getflash('success') | trans }}
                     </div>
                 {% endif %}

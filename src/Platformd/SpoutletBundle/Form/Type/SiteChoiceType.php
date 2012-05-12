@@ -2,7 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
@@ -10,7 +10,7 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 /**
  * Special form type for a drop-down menu of all available "sites"
  */
-class SiteChoiceType extends ChoiceType
+class SiteChoiceType extends AbstractType
 {
     /**
      * Returns the name of this type.
@@ -32,18 +32,9 @@ class SiteChoiceType extends ChoiceType
         return array(
             'label' => $options['multiple'] ? 'Sites' : 'Site',
             'empty_value' => 'Choose a site',
+            'choice_list' => new ArrayChoiceList(
+                MultitenancyManager::getSiteChoices()
+            ),
         );
     }
-
-
-    public function buildForm(FormBuilder $builder, array $options)
-    {
-        $options['choice_list'] = new ArrayChoiceList(
-            MultitenancyManager::getSiteChoices()
-        );
-
-        parent::buildForm($builder, $options);
-    }
-
-
 }

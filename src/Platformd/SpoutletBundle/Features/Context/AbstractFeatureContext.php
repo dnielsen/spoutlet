@@ -245,15 +245,15 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^there is a game page for "([^"]*)"$/
+     * @Given /^there is a game page for "([^"]*)" in "([^"]*)"$/
      */
-    public function thereIsAGamePageFor($gameName)
+    public function thereIsAGamePageFor($gameName, $siteName)
     {
         $game = $this->thereIsAGameCalled($gameName);
 
         $page = new GamePage();
         $page->setGame($game);
-        $page->setLocales(array('en'));
+        $page->setLocales(array($siteName));
 
         $this->getContainer()->get('platformd.model.game_page_manager')
             ->saveGamePage($page)
@@ -294,6 +294,37 @@ class AbstractFeatureContext extends MinkContext
         }
 
         $optionEle->check();
+    }
+
+    /**
+     * Used to click on the frontend "show" URL when in an admin list section
+     *
+     * @Given /^I click on the URL for "([^"]*)"$/
+     */
+    public function iClickOnTheUrlFor($itemName)
+    {
+        $row = $this->getPage()->find('css', sprintf('table.table tbody tr:contains("%s")', $itemName));
+        if (!$row) {
+            throw new \Exception(sprintf('Could not find any data row matching an item "%s"', $itemName));
+        }
+
+        // now that we have the row, we need to find the public link
+        // which, is probably just a link that starts with "http://"
+        $aEle = $row->find('css', 'a[href*="http"]');
+        if (!$aEle) {
+            throw new \Exception('NOOOO');
+        }
+    }
+
+    /**
+     * Tries to match to the first h1
+     *
+     * @Then /^the headline should contain "([^"]*)"$/
+     */
+    public function theHeadlineShouldContain($headline)
+    {
+        $h1 = $this->getPage()->find('css', 'h1');
+        assertRegExp('/'.preg_quote($headline).'/', $h1->getText());
     }
 
     /**

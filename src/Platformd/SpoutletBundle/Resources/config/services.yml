@@ -105,3 +105,8 @@ services:
         class: Platformd\SpoutletBundle\Model\GamePageManager
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    platformd.doctrine.locales_relationship_listener:
+        class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener
+        tags:
+            - { name: doctrine.event_subscriber }

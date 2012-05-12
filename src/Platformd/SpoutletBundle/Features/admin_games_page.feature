@@ -17,19 +17,26 @@ Feature: Games Page Admin
         Then I should see "game page was created"
 
     Scenario: List existing game pages
-        Given there is a game page for "Starcraft"
-            And there is a game page for "Warcraft"
+        Given there is a game page for "Starcraft" in "en"
+            And there is a game page for "Warcraft" in "en"
+            And there is a game page for "Battlegrounds" in "zh"
         When I click on "Game Pages"
+            And I click on "Demo"
         Then I should see 2 data rows
             And I should see "Starcraft"
 
     Scenario: Edit existing game
-        Given there is a game page for "Starcraft"
+        Given there is a game page for "Starcraft" in "en"
         When I click on "Game Pages"
+            And I click on "Demo"
             And I click on "Starcraft"
             And I fill in "About the Game" with "It's old!"
             And I press "Save"
         Then I should see "game page was saved"
 
     Scenario: Preview the games page
-        # todo
+        Given there is a game page for "Starcraft" in "en"
+        When I click on "Game Pages"
+            And I click on "Demo"
+            And I click on the URL for "Starcraft"
+            Then the headline should contain "Starcraft"

@@ -1,6 +1,12 @@
+# shows a chooser for locales
 admin_game_page:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:GamePageAdmin:index" }
+
+# show the true "list" page for a site
+admin_game_page_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:list" }
 
 admin_game_page_new:
     pattern:  /new
