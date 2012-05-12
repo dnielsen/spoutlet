@@ -10,7 +10,8 @@
         {{ form_errors(form) }}
 
         {% if form.get('help') %}
-        <p class="help-block">
+        <p class="alert alert-info">
+            <i class="icon-info-sign"></i>
             {{ form.get('help') }}
         </p>
         {% endif %}

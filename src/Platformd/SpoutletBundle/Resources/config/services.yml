@@ -95,3 +95,8 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    platformd.form.extension.help_form_type_extension:
+        class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
+        tags:
+            - { name: form.type_extension, alias: field }
