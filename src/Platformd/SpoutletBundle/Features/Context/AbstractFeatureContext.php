@@ -230,6 +230,7 @@ class AbstractFeatureContext extends MinkContext
     {
         $game = new Game();
         $game->setName($name);
+        $game->setCategory('rpg');
 
         $this->getEntityManager()->persist($game);
         $this->getEntityManager()->flush();
@@ -242,9 +243,9 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldSeeDataRows($num)
     {
-        $rows = $this->getPage()->find('css', 'table.table tbody tr');
+        $rows = $this->getPage()->findAll('css', 'table.table tbody tr');
 
-        assertCount($num, $rows);
+        assertEquals($num, count($rows));
     }
 
     /**

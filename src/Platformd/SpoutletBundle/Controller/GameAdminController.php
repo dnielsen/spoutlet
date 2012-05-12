@@ -41,6 +41,8 @@ class GameAdminController extends Controller
         $form    = $this->createForm(new GameType(), $game);
 
         if ($this->processForm($form, $request)) {
+            $this->setFlash('success', 'The game was created!');
+
             return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
         }
 
@@ -69,6 +71,8 @@ class GameAdminController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {
+            $this->setFlash('success', 'The game was saved!');
+
             return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
         }
 

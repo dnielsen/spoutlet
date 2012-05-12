@@ -26,4 +26,5 @@ Feature: Games Admin
         When I click on "Games"
             And I click on "Starcraft"
             And I fill in "Game Name" with "Starcraft2"
+            And I press "Save"
         Then I should see "game was saved"

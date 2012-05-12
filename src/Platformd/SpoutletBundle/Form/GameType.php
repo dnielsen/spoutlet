@@ -19,7 +19,8 @@ class GameType extends AbstractType
             ))
             ->add('slug', new SlugType())
             ->add('category', 'choice', array(
-                'choices' => self::getCategoryChoices()
+                'choices' => self::getCategoryChoices(),
+                'label' => 'Genre',
             ))
             ->add('facebookFanpageUrl', 'url', array(
                 'label' => 'platformd.admin.facebook_fanpage'
