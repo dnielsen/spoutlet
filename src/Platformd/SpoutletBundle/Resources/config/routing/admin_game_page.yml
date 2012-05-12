@@ -1,0 +1,22 @@
+admin_game_page:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:index" }
+
+admin_game_page_new:
+    pattern:  /new
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new" }
+
+admin_game_page_create:
+    pattern:  /create
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:new" }
+    requirements: { _method: post }
+
+admin_game_page_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit" }
+
+admin_game_page_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SpoutletBundle:GamePageAdmin:edit" }
+    requirements: { _method: post }
+

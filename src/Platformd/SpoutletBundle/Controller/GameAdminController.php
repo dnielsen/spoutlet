@@ -3,7 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Game;
-use Platformd\SpoutletBundle\Form\GameType;
+use Platformd\SpoutletBundle\Form\Type\GameType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 

@@ -239,4 +239,9 @@ class Game
     {
         $this->publisherLogos = $publisherLogos;
     }
+
+    public function __toString()
+    {
+        return (string) $this->getName();
+    }
 }

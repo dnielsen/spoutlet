@@ -27,6 +27,7 @@ security:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
+        - { path: ^/([\w]+\/)?admin/game, role: ROLE_ADMIN_GAME }
         - { path: ^/([\w]+\/)?admin/events, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/giveaways, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/news, role: ROLE_ORGANIZER }
@@ -40,5 +41,5 @@ security:
     role_hierarchy:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page
         ROLE_ADMIN:       [ROLE_USER]
-        ROLE_ORGANIZER:   [ROLE_ADMIN]
+        ROLE_ORGANIZER:   [ROLE_ADMIN, ROLE_ADMIN_GAME]
         ROLE_SUPER_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_USER_ADMIN, ROLE_ADMIN_TRANSLATIONS, ROLE_ALLOWED_TO_SWITCH]
