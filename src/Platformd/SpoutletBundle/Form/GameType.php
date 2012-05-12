@@ -18,7 +18,6 @@ class GameType extends AbstractType
                 'label' => 'Game Name',
             ))
             ->add('slug', new SlugType())
-            ->add('locale', new SiteChoiceType())
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices()
             ))
