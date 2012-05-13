@@ -16,9 +16,9 @@
                 <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
                 <ul class="games">
                     {% for gamePage in gamePages %}
-                        {% set url = '#' %}
+                        {% set url = gamePage | pd_link %}
                         <li{{ loop.first ? ' class="first"' : ''}}>
-                            <a href="{{ url }}">
+                            <a href="{{ url }}"{{ target_blank(gamePage) }}>
                                 {% if gamePage.game.logo %}
                                     <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
                                 {% else %}
@@ -39,7 +39,7 @@
             <ul class="games">
                 {% for archive in archives %}
                     <li>
-                        <a href="#">{{ archive.game.name }}</a>
+                        <a href="{{ archive | pd_link }}"{{ target_blank(archive) }}>{{ archive.game.name }}</a>
                     </li>
                 {% endfor %}
             </ul>

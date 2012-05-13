@@ -44,7 +44,15 @@ class SpoutletExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway')
+            'has_user_applied_to_giveaway' => new Twig_Function_Method(
+                $this,
+                'hasUserAppliedToGiveaway'
+            ),
+            'target_blank'                 => new Twig_Function_Method(
+                $this,
+                'getTargetBlank',
+                array('is_safe' => array('html'))
+            ),
         );
     }
 
@@ -55,7 +63,7 @@ class SpoutletExtension extends Twig_Extension
     public function linkToObject($obj)
     {
         if (!$obj instanceof LinkableInterface) {
-            $type = is_object($obj) ? get_clas($obj) : gettype($obj);
+            $type = is_object($obj) ? get_class($obj) : gettype($obj);
 
             throw new \InvalidArgumentException(sprintf('You must pass an object that implements LinkableInterface to the pd_link filter. "%s" given', $type));
         }
@@ -78,6 +86,17 @@ class SpoutletExtension extends Twig_Extension
         $currentHost = $this->container->get('request')->getHost();
 
         return HttpUtil::isUrlExternal($url, $currentHost);
+    }
+
+    /**
+     * Pass either a URL or a LinkableInterface object - this prints the target="_blank" if necessary
+     *
+     * @param string|LinkableInterface $url
+     * @return string
+     */
+    public function getTargetBlank($url)
+    {
+        return $this->testExternal($url) ? ' target="_blank"' : '';
     }
 
     /**

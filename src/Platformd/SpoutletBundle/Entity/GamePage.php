@@ -10,6 +10,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage
@@ -26,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GamePageRepository")
  * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
  */
-class GamePage
+class GamePage implements LinkableInterface
 {
     const STATUS_PUBLISHED      = 'published';
     const STATUS_UNPUBLISHED    = 'unpublished';
@@ -601,4 +602,40 @@ class GamePage
     {
         return self::$validStatues;
     }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function  getLinkableOverrideUrl()
+    {
+        // todo - fill this in when we have an override URL - see #116
+        return '#';
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function  getLinkableRouteName()
+    {
+        // todo - fill this in when we have a show page
+        return 'default_index';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function  getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+        );
+    }
+
+
 }
