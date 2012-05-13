@@ -2,6 +2,10 @@
 
 {% block content %}
 
+    {% if firstGame %}
+        <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+    {% endif %}
+
 
     <div class="games-list-page">
         <div class="left">
@@ -32,4 +36,32 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# temporarily disabled because the auto-play is annoying #}
+    {% if firstGame and false %}
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                var par = {};
+                par.flashvars = "startMovie=5iuGhLQeaoE";
+                par.flashvars += "&startCue=none";
+                par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
+                par.flashvars += "&videoTitle=";
+                par.flashvars += "&displayWelcome=no";
+                par.flashvars += "&displayAlert=no";
+                par.flashvars += "&alertText=";
+                par.allowScriptAccess = "always";
+                par.wmode = "transparent";
+                var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"950", height:"393", id:"theater_screen", name:"theater_screen"};
+                var id = "theater_screen";
+                myytplayer = swfobject.createSWF(att, par, id);
+
+                var obj = swfobject.getObjectById('theater_screen');
+            });
+        </script>
+    {% endif %}
 {% endblock %}

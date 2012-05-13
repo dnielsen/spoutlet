@@ -21,7 +21,12 @@ class GamePageController extends Controller
             ->findActiveGamesInCategoriesForAge($this->getAgeManager()->getUsersAge())
         ;
 
-        return array('categorizedGames' => $categorizedGames);
+        $firstGame = (count($categorizedGames)) > 0 ? $categorizedGames : null;
+
+        return array(
+            'categorizedGames'  => $categorizedGames,
+            'firstGame'         => $firstGame,
+        );
     }
 
     /**
