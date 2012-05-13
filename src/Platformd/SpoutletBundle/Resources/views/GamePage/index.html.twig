@@ -33,7 +33,15 @@
             {% endfor %}
         </div>
         <div class="right">
-
+            <h2>{{ 'archives' | trans }}</h2>
+            <p>{{ 'past_partnerships' | trans }}</p>
+            <ul class="games">
+                {% for archive in archives %}
+                    <li>
+                        <a href="#">{{ archive.game.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 {% endblock %}
