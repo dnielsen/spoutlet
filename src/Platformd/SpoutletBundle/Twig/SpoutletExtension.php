@@ -44,14 +44,18 @@ class SpoutletExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'has_user_applied_to_giveaway' => new Twig_Function_Method(
+            'has_user_applied_to_giveaway'  => new Twig_Function_Method(
                 $this,
                 'hasUserAppliedToGiveaway'
             ),
-            'target_blank'                 => new Twig_Function_Method(
+            'target_blank'                  => new Twig_Function_Method(
                 $this,
                 'getTargetBlank',
                 array('is_safe' => array('html'))
+            ),
+            'is_admin_page'                 => new Twig_Function_Method(
+                $this,
+                'isAdminPage'
             ),
         );
     }
@@ -121,6 +125,18 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $this->getGiveawayManager()->hasUserAppliedToGiveaway($user, $giveaway);
+    }
+
+    /**
+     * Determines if we're on admin page, simply by looking for a "/admin*" URL
+     *
+     * @return bool
+     */
+    public function isAdminPage()
+    {
+        $pathInfo = $request = $this->container->get('request')->getPathInfo();
+
+        return (strpos($pathInfo, '/admin') === 0);
     }
 
     /**

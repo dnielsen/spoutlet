@@ -11,6 +11,16 @@ services:
             # todo - refactor this to be configurable - is hardcoded for us right now
             - @pd_media_filesystem
             - @service_container
+        calls:
+            - [ setLogger, ["@logger"]]
         tags:
             - { name: doctrine.event_subscriber }
 
+
+    knp_media.listener.unique_filename_generation_exception_listener:
+        class: Knp\MediaBundle\Listener\UniqueFilenameGenerationExceptionListener
+        arguments:
+            - "@templating"
+            - "%kernel.debug%"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
