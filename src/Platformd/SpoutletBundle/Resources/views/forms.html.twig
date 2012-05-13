@@ -71,5 +71,9 @@
 {% endblock field_row %}
 
 {% block knp_media_row %}
-    {{ form_row(form.fileObject) }}
+    <div class="file-upload">
+        {{ form_row(form.fileObject) }}
+
+        <img src="{{ media_path(form.get('value')) }}" />
+    </div>
 {% endblock %}

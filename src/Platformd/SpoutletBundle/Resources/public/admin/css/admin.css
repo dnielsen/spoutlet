@@ -52,3 +52,9 @@ form .input {
 fieldset .row-fluid.first div[class*="span"] {
     padding-top: 27px;
 }
+
+.file-upload img {
+    display: block;
+    margin: -20px 0 10px 160px;
+    width: 200px;
+}

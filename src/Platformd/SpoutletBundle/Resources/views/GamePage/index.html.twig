@@ -14,10 +14,10 @@
 
             {% for category,gamePages in categorizedGames %}
                 <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
-                <ul>
+                <ul class="games">
                     {% for gamePage in gamePages %}
                         {% set url = '#' %}
-                        <li>
+                        <li{{ loop.first ? ' class="first"' : ''}}>
                             <a href="{{ url }}">
                                 {% if gamePage.game.logo %}
                                     <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
