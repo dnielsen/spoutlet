@@ -545,3 +545,15 @@ ul.list-normal {
     display: -moz-inline-box;
     display: inline-block;
 }
+
+.game-show-page .media-gallery {
+    text-align: center;
+    padding: 10px 20px;
+    width: auto;
+}
+.game-show-page .media-gallery .ad-thumbs li a img, .game-show-page .media-gallery .ad-thumbs li a.ad-active img {
+    border: none;
+}
+.game-show-page .media-gallery .ad-info, .game-show-page .media-gallery .ad-slideshow-controls {
+
+}

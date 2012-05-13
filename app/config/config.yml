@@ -328,3 +328,8 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [440, 166], mode: inset }
+
+        image_thumb:
+            quality: 100
+            filters:
+                thumbnail: { size: [204, 114], mode: inset }
