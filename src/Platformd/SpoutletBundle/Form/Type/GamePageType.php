@@ -75,6 +75,7 @@ class GamePageType extends AbstractType
             ))
             ->add('mediaGalleryMedias', 'collection', array(
                 'allow_add' => true,
+                'allow_delete' => true,
                 'type'      => new MediaType(),
                 'options'   => array(
                     'image_label' => 'Media Image',

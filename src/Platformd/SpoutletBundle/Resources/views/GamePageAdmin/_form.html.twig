@@ -114,7 +114,7 @@
 
 {% block javascripts %}
     <script type="text/javascript">
-        function addTagForm(collectionHolder, $newLinkLi) {
+        function addMediaForm(collectionHolder, $newLinkLi) {
             // Get the data-prototype we explained earlier
             var prototype = collectionHolder.attr('data-prototype');
 
@@ -128,10 +128,27 @@
             $newLinkLi.before($newFormLi);
             $newFormLi.fadeIn();
 
+            addMediaFormDeleteLink($newFormLi);
+
             // a bit ugly, but we need a clear after each "row"
             if ((collectionHolder.find('.image-li').length % 2) == 0) {
                 $newLinkLi.before($('<li class="clear"></li>'));
             }
+        }
+
+        function addMediaFormDeleteLink($tagFormLi) {
+            var $removeFormA = $('<a href="#" class="close">&times;</a>');
+            $tagFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // remove the li for the tag form
+                $tagFormLi.fadeOut('normal', function() {
+                    $tagFormLi.remove();
+                });
+            });
         }
 
         jQuery(document).ready(function() {
@@ -142,6 +159,11 @@
             var $addTagLink = $('<div class="wrap"><a href="#" class="add_tag_link btn btn-primary"><i class="icon-plus icon-white"></i> Upload another</a></div>');
             var $newLinkLi = $('<li class="span5 new-link"></li>').append($addTagLink);
 
+            // add delete links to existing elements
+            collectionHolder.find('li.existing-element').each(function() {
+                addMediaFormDeleteLink($(this));
+            });
+
             jQuery(document).ready(function() {
                 // add the "add a tag" anchor and li to the tags ul
                 collectionHolder.append($newLinkLi);
@@ -151,7 +173,7 @@
                     e.preventDefault();
 
                     // add a new tag form (see next code block)
-                    addTagForm(collectionHolder, $newLinkLi);
+                    addMediaForm(collectionHolder, $newLinkLi);
                 });
             });
         });
