@@ -46,6 +46,20 @@ class GamePageRepository extends EntityRepository
 
     /**
      * @param $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     */
+    public function findArchivesForSite($site)
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addArchivedQueryBuilder($qb);
+
+        return $qb->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
+     * @param $site
      * @return \Doctrine\ORM\QueryBuilder
      */
     private function createSiteQueryBuilder($site)
@@ -62,5 +76,12 @@ class GamePageRepository extends EntityRepository
         return $qb->andWhere('gp.status = :status')
             ->setParameter('status', GamePage::STATUS_PUBLISHED)
         ;
+    }
+
+    private function addArchivedQueryBuilder(QueryBuilder $qb)
+    {
+        return $qb->andWhere('gp.status = :status')
+            ->setParameter('status', GamePage::STATUS_ARCHIVED)
+            ;
     }
 }

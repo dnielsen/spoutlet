@@ -26,6 +26,11 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $game2->setName('Warcraft3');
         $manager->persist($game2);
 
+        $game3 = new Game();
+        $game3->setCategory('rpg');
+        $game3->setName('Brawl Busters');
+        $manager->persist($game3);
+
         $manager->flush();
 
         $gamePage1 = new GamePage();
@@ -50,6 +55,17 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage2->setStatus(GamePage::STATUS_PUBLISHED);
         $gamePage2->setLocales(array('en', 'zh'));
         $this->getGamePageManager()->saveGamePage($gamePage2);
+
+        $gamePage3 = new GamePage();
+        $gamePage3->setGame($game3);
+        $gamePage3->setAboutGame('Lorem ipsum archived');
+        $gamePage3->setYoutubeIdTrailer1('vBODH8ElBak');
+        $gamePage3->setYoutubeIdTrailer2('Ggxgp99yvi0');
+        $gamePage3->setYoutubeIdTrailer3('y_CIzFVRvLU');
+        $gamePage3->setYoutubeIdTrailer4('2f96hKqkY_Y');
+        $gamePage3->setStatus(GamePage::STATUS_ARCHIVED);
+        $gamePage3->setLocales(array('en', 'ja'));
+        $this->getGamePageManager()->saveGamePage($gamePage3);
     }
 
     /**

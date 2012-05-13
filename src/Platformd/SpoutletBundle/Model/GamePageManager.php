@@ -89,6 +89,14 @@ class GamePageManager
     }
 
     /**
+     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     */
+    public function findArchives()
+    {
+        return $this->getRepository()->findArchivesForSite($this->getDatabaseSiteKey());
+    }
+
+    /**
      * Handles the complex locales setup
      *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage

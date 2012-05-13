@@ -24,11 +24,7 @@ class GamePageController extends Controller
         $firstGame = (count($categorizedGames)) > 0 ? $categorizedGames : null;
 
         // todo - make this the real query, this is easy while stubbing out the look of the page
-        $archives = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('SpoutletBundle:GamePage')
-            ->findAll()
-        ;
+        $archives = $this->getGamePageManager()->findArchives();
 
         return array(
             'categorizedGames'  => $categorizedGames,
