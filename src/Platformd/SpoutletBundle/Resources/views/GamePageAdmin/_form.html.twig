@@ -97,7 +97,7 @@
             {# see the CSS file this explanation #}
             <li class="dummy"></li>
             {% for mediaForm in form.mediaGalleryMedias %}
-                <li class="span5 image-li">{{ form_row(mediaForm) }}</li>
+                <li class="span5 image-li existing-element">{{ form_row(mediaForm) }}</li>
 
                 {% if loop.index is even %}
                     <li class="clear"></li>
