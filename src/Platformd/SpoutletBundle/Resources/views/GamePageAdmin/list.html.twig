@@ -9,6 +9,7 @@
             <th>Name</th>
             <th>URL</th>
             <th>Sites</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -23,8 +24,18 @@
             </td>
             <td>
                 {% for locale in gamePage.gamePageLocales %}
-                    {{ locale.locale | site_name }}
+                    {{ locale.locale | site_name -}}
+                    {{- loop.last ? '' : ',' }}
                 {% endfor %}
+            </td>
+            <td>
+                {% if gamePage.isPublished %}
+                    <span class="label label-success">Published</span>
+                {% elseif gamePage.isArchived %}
+                    <span class="label">Archived</span>
+                {% else %}
+                    <span class="label label-warning">Unpublished</span>
+                {% endif %}
             </td>
             <td>
                 <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">edit</a>

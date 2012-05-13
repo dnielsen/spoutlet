@@ -390,3 +390,10 @@ error:
 games_trailers:
     channel_header: CHANNEL: GAMES AND TRAILERS
     intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    categories:
+        action: Action
+        rpg: RPG
+        strategy: Strategy
+        other: Other
+        free-to-play: Free to Play
+        mmo:   MMO

@@ -475,3 +475,30 @@ ul.list-normal {
 .age-wrapper select {
     margin: 0 10px;
 }
+
+/* GAMES PAGES */
+.games-list-page {
+
+}
+.games-list-page .left {
+    width: 662px;
+    width: 614px;
+    padding: 4px 24px 4px 24px;
+    margin-right: 20px;
+    float: left;
+    background: url('../images/games-pages/background_content.jpg') top left repeat-x;
+}
+.games-list-page .right {
+    width: 265px;
+    float: left;
+}
+.games-list-page h1 {
+    font-size: 16px;
+}
+.games-list-page h3 {
+    color: #fff;
+    font-size: 16px;
+}
+.games-list-page p {
+    color: #b2b2b2;
+}

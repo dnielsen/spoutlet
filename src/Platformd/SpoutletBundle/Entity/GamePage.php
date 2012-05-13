@@ -571,6 +571,16 @@ class GamePage
         return $this->status;
     }
 
+    public function isPublished()
+    {
+        return $this->status == self::STATUS_PUBLISHED;
+    }
+
+    public function isArchived()
+    {
+        return $this->status = self::STATUS_ARCHIVED;
+    }
+
     /**
      * @param string $status
      */
