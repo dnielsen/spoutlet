@@ -17,6 +17,7 @@ class SiteChoiceType extends AbstractType
      *
      * @return string The name of this type
      */
+
     public function getName()
     {
         return 'site_choice';
@@ -29,8 +30,9 @@ class SiteChoiceType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
+        
         return array(
-            'label' => $options['multiple'] ? 'Sites' : 'Site',
+            'label' => (isset($options['multiple']) && $options['multiple']) ? 'Sites' : 'Site',
             'empty_value' => 'Choose a site',
             'choice_list' => new ArrayChoiceList(
                 MultitenancyManager::getSiteChoices()
