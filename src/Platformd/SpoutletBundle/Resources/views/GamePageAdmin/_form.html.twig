@@ -1,7 +1,7 @@
 {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-<div>
+<div class="game-page-form">
     {{ form_errors(form) }}
 
     <fieldset>
@@ -84,5 +84,65 @@
         </div>
     </fieldset>
 
+    <fieldset>
+        <legend>e) Media Gallery</legend>
+
+        <div class="row-fluid first">
+            <div class="span6">
+                <ul class="medias-list" data-prototype="{{ form_widget(form.mediaGalleryMedias.get('prototype')) | e }}">
+                    {% for mediaForm in form.mediaGalleryMedias %}
+                        <li>{{ form_row(mediaForm) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            {# this prints an empty div, but it's necessary, otherwise form_rest tries to print this, which prints a logo #}
+            {{ form_widget(form.mediaGalleryMedias) }}
+
+            <div class="span6">
+
+            </div>
+        </div>
+    </fieldset>
+
     {{ form_rest(form) }}
 </div>
+
+{% block javascripts %}
+    <script type="text/javascript">
+        function addTagForm(collectionHolder, $newLinkLi) {
+            // Get the data-prototype we explained earlier
+            var prototype = collectionHolder.attr('data-prototype');
+
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on the current collection's length.
+            var newForm = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+        }
+
+        jQuery(document).ready(function() {
+            // Get the div that holds the collection of tags
+            var collectionHolder = $('ul.medias-list');
+
+            // setup an "add a tag" link
+            var $addTagLink = $('<a href="#" class="add_tag_link btn btn-primary"><i class="icon-plus icon-white"></i> Upload another</a>');
+            var $newLinkLi = $('<li></li>').append($addTagLink);
+
+            jQuery(document).ready(function() {
+                // add the "add a tag" anchor and li to the tags ul
+                collectionHolder.append($newLinkLi);
+
+                $addTagLink.on('click', function(e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // add a new tag form (see next code block)
+                    addTagForm(collectionHolder, $newLinkLi);
+                });
+            });
+        });
+    </script>
+{% endblock %}

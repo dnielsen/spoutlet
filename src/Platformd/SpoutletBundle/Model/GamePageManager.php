@@ -32,6 +32,10 @@ class GamePageManager
     /**
      * Call this to save a GamePage
      *
+     * The originalGalleryMedias is an array of the Media objects that were
+     * part of the media *before* any changes were made to this entity.
+     *
+     *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
      */
     public function saveGamePage(GamePage $gamePage)
@@ -40,6 +44,7 @@ class GamePageManager
 
         $this->handleLocales($gamePage);
         $this->handleMediaFields($gamePage);
+        $this->handleMediaGallery($gamePage);
 
         $this->em->flush();
     }
@@ -155,6 +160,19 @@ class GamePageManager
             $this->em->persist($gamePage->getBackgroundImage());
         } else {
             $gamePage->setBackgroundImage(null);
+        }
+    }
+
+    /**
+     * Handles the gallery medias persistence
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
+     */
+    private function handleMediaGallery(GamePage $gamePage)
+    {
+        /** @var $media \Platformd\MediaBundle\Entity\Media */
+        foreach ($gamePage->getMediaGalleryMedias() as $media) {
+            $this->em->persist($media);
         }
     }
 

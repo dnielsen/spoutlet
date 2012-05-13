@@ -71,6 +71,14 @@ class GamePageType extends AbstractType
                 'help'   => 'Controls the order in which games are shown (newest first). You can leave this blank and it will be set automatically.',
                 'label'  => 'created_date',
             ))
+            ->add('mediaGalleryMedias', 'collection', array(
+                'allow_add' => true,
+                'type'      => new MediaType(),
+                'options'   => array(
+                    'image_label' => 'Media Image',
+                    'image_help'  => 'This can be any size, and will probably be quite large.',
+                )
+            ))
         ;
     }
 

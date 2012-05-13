@@ -202,9 +202,21 @@ class GamePage implements LinkableInterface
      */
     private $status;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\JoinTable(
+     *   name="pd_game_page_gallery_media",
+     *   joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
+     *   inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     * )
+     */
+    protected $mediaGalleryMedias;
+
     public function __construct()
     {
         $this->gamePageLocales = new ArrayCollection();
+        $this->mediaGalleryMedias = new ArrayCollection();
     }
 
     /**
@@ -653,5 +665,11 @@ class GamePage implements LinkableInterface
         $this->createdAt = $createdAt;
     }
 
-
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMediaGalleryMedias()
+    {
+        return $this->mediaGalleryMedias;
+    }
 }

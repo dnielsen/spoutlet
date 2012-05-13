@@ -58,3 +58,9 @@ fieldset .row-fluid.first div[class*="span"] {
     margin: -20px 0 10px 160px;
     width: 200px;
 }
+.game-page-form .medias-list {
+    margin-left: 0;
+}
+.game-page-form .medias-list li {
+    list-style-type: none;
+}
