@@ -50,7 +50,7 @@
         <div class="std_1col">
             <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
 
-            {% if (gamePage.mediaGalleryMedias | length) <= 4) %}
+            {% if (gamePage.mediaGalleryMedias | length) > 0 %}
             <div class="media-gallery ad-gallery">
                 <h3>{{ 'media_gallery' | trans }}</h3>
 

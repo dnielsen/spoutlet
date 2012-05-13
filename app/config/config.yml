@@ -114,6 +114,19 @@ parameters:
         - en_SG # singapore. Malaysia / Singapore
         - en_US # us. (USA!)
 
+    # used by the router
+    site_host_map:
+        # %host_suffix% might be something like "staging"
+        en:     demo%host_suffix%.%base_host%
+        ja:     japan%host_suffix%.%base_host%
+        zh:     china%host_suffix%.%base_host%
+        en_AU:  au%host_suffix%.%base_host%
+        en_GB:  europe%host_suffix%.%base_host%
+        en_IN:  india%host_suffix%.%base_host%
+        es:     latinam%host_suffix%.%base_host%
+        en_SG:  singapore%host_suffix%.%base_host%
+        en_US:  us%host_suffix%.%base_host%
+
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
         en: Demo
@@ -125,6 +138,11 @@ parameters:
         es:    Latin America
         en_SG: Singapore
         en_US: USA
+
+    # an array of "sites" where we host their main site
+    # used by the SiteProtectionListener to prevent, for example, Latin America users
+    # from accessing pages on our site, other than the few that we host of theirs
+    allowed_sites: [en, ja, zh]
 
     # Used for the translation admin
     locale_translations:
@@ -246,17 +264,7 @@ jms_i18n_routing:
     default_locale: %locale%
     locales: %available_locales%
     strategy: custom
-    hosts:
-        # %host_suffix% might be something like "staging"
-        en:     demo%host_suffix%.%base_host%
-        ja:     japan%host_suffix%.%base_host%
-        zh:     china%host_suffix%.%base_host%
-        en_AU:  au%host_suffix%.%base_host%
-        en_GB:  europe%host_suffix%.%base_host%
-        en_IN:  india%host_suffix%.%base_host%
-        es:     latinam%host_suffix%.%base_host%
-        en_SG:  singapore%host_suffix%.%base_host%
-        en_US:  us%host_suffix%.%base_host%
+    hosts: %site_host_map%
 
 fos_comment:
     db_driver: orm

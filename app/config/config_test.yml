@@ -2,7 +2,6 @@ imports:
     - { resource: config_dev.yml }
 
 parameters:
-    base_host: localhost
     allow_faked_auth:   true
 
     # This says to use the current host, but prefix the URLs with this

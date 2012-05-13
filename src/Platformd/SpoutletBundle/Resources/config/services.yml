@@ -118,3 +118,11 @@ services:
             - "@router"
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    platformd.tenant.site_protection_listener:
+        class: Platformd\SpoutletBundle\Tenant\SiteProtectionListener
+        arguments:
+            - "%allowed_sites%"
+            - "@pd.cevo.cevo_auth_manager"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }

@@ -22,3 +22,9 @@
     </a>
 {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'SpoutletBundle:GamePageAdmin:_formJavascript.html.twig' %}
+{% endblock %}

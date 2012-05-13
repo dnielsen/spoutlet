@@ -316,8 +316,10 @@ class AbstractFeatureContext extends MinkContext
         // which, is probably just a link that starts with "http://"
         $aEle = $row->find('css', 'a[href*="http"]');
         if (!$aEle) {
-            throw new \Exception('NOOOO');
+            throw new \Exception('Cannot find the link!!!');
         }
+
+        $aEle->click();
     }
 
     /**
@@ -410,6 +412,86 @@ class AbstractFeatureContext extends MinkContext
         $liEles = $this->getPage()->findAll('css', '.games-list-page .right ul.games li');
 
         assertEquals($count, count($liEles));
+    }
+
+    /**
+     * Changes the base URL to be a different site (is demo by default)
+     *
+     * @Given /^I am on the "([^"]*)" site$/
+     */
+    public function iAmOnTheACertainSite($siteName)
+    {
+        $this->currentSite = $this->getSiteKeyFromSiteName($siteName);
+    }
+
+    /**
+     * @Given /^I should still be on the "([^"]*)" site$/
+     */
+    public function iShouldStillBeOnTheSite($siteName)
+    {
+        $key = $this->getSiteKeyFromSiteName($siteName);
+        $baseUrl = $this->getBaseUrlFromSiteKey($key);
+
+        assertRegExp('/'.preg_quote($baseUrl).'/', $this->getSession()->getCurrentUrl());
+    }
+
+    /**
+     * Test that we're sent back to CEVO's site
+     *
+     * @Then /^I should be on the main site$/
+     */
+    public function iShouldBeOnTheMainSite()
+    {
+        $cevoUrl = $this->getContainer()->getParameter('cevo_base_url');
+        assertRegExp('#'.preg_quote($cevoUrl).'#', $this->getSession()->getCurrentUrl(), 'The URL does not contain our faked "CEVO" path - we are not on the main CEVO site.');
+    }
+
+    /**
+     * Overridden to handle the base URL for different sites
+     */
+    public function getParameter($name)
+    {
+        // if we're not on the "demo" site, then we need to modify the base URL
+        if ($name == 'base_url' && $this->currentSite != 'en') {
+            return 'http://'.$this->getBaseUrlFromSiteKey($this->currentSite);
+        }
+
+        return parent::getParameter($name);
+    }
+
+    /**
+     * Given "en", this returns "demo.yourbasehost.com"
+     *
+     * @param $siteKey
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getBaseUrlFromSiteKey($siteKey)
+    {
+        $urlMap = $this->getContainer()->getParameter('site_host_map');
+        if (!isset($urlMap[$siteKey])) {
+            throw new \Exception('Cannot find the proper base URL for site '.$siteKey);
+        }
+
+        return $urlMap[$siteKey];
+    }
+
+    /**
+     * Given "Europe", this returns "en_GB"
+     *
+     * @param $siteName
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getSiteKeyFromSiteName($siteName)
+    {
+        $sites = $this->getContainer()->getParameter('platformd_sites');
+        $key = array_search($siteName, $sites);
+        if ($key === false) {
+            throw new \Exception('Cannot find site '.$siteName.'. Available sites: '.explode(',', $sites));
+        }
+
+        return $key;
     }
 
     /**
