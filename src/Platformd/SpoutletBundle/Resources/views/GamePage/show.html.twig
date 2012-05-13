@@ -1,10 +1,59 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block title gamePage.game.name ~ ('games_and_trailers' | trans) %}
+
+{% macro _renderButtonImage(buttonImageMedia, buttonImageUrl) %}
+    <a href="{{ buttonImageUrl }}" target="_blank" class="game-button">
+        <img src="{{ media_path(buttonImageMedia) }}" {# todo - have some text we can use as an alt #} />
+    </a>
+{% endmacro %}
+
 {% block content %}
 
-    <h1>{{ gamePage.game.name }}</h1>
+    <div class="game-show-page">
 
-    <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+        <div class="std_2col">
+            <div class="right">
+            </div>
+
+            <div class="left">
+                <h1>{{ gamePage.game.name }}</h1>
+
+                {% if gamePage.logo %}
+                    <div class="logo">
+                        <img src="{{ media_path(gamePage.logo, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ gamePage.game.name }}" />
+                    </div>
+                {% endif %}
+
+                {% if gamePage.hasButtons %}
+                    <div class="game-buttons">
+                        {% if gamePage.buttonImage1 %}
+                            {{ _self._renderButtonImage(gamePage.buttonImage1, gamePage.buttonUrl1) }}
+                        {% endif %}
+
+                        {% if gamePage.buttonImage2 %}
+                            {{ _self._renderButtonImage(gamePage.buttonImage2, gamePage.buttonUrl2) }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div class="content">
+                    {{ gamePage.aboutGame | raw }}
+
+                    {{ gamePage.keyFeature1 | raw }}
+                    {{ gamePage.keyFeature2 | raw }}
+                    {{ gamePage.keyFeature3 | raw }}
+                </div>
+            </div>
+        </div>
+
+        <div class="std_1col">
+            <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+
+            <h3>MEDIA GALLERY</h3>
+        </div>
+
+    </div>
 
 {% endblock %}
 

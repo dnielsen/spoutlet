@@ -9,6 +9,8 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Entity\GamePage;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 
 class GamePageType extends AbstractType
 {
@@ -35,10 +37,22 @@ class GamePageType extends AbstractType
                 'image_label'   => 'Background Image',
                 'image_help'    => 'Recommended Size: Huge, but with a 980 pixel black gap',
             ))
-            ->add('aboutGame', null, array('label' => 'About the Game'))
-            ->add('keyFeature1', null, array('label' => 'Key Feature 1'))
-            ->add('keyFeature2', null, array('label' => 'Key Feature 2'))
-            ->add('keyFeature3', null, array('label' => 'Key Feature 3'))
+            ->add('aboutGame', null, array(
+                'label' => 'About the Game',
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('keyFeature1', null, array(
+                'label' => 'Key Feature 1',
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('keyFeature2', null, array(
+                'label' => 'Key Feature 2',
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('keyFeature3', null, array(
+                'label' => 'Key Feature 3',
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->add('youtubeIdTrailer1', null, array(
                 'label' => 'Feature Game Trailer Video',
                 'help'  => 'Paste Youtube ID (e.g. UN6ZT9lDIOk if the URL is something like http://www.youtube.com/watch?v=UN6ZT9lDIOk&feature=fvst',
@@ -57,6 +71,7 @@ class GamePageType extends AbstractType
             ))
             ->add('legalVerbiage', null, array(
                 'label' => 'Legal Verbiage',
+                'attr'  => array('class' => 'ckeditor')
             ))
             ->add('locales', new SiteChoiceType(), array(
                 'multiple' => true,

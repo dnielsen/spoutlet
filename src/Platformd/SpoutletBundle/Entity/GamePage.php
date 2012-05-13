@@ -454,6 +454,14 @@ class GamePage implements LinkableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasButtons()
+    {
+        return (bool) $this->buttonImage1 || $this->buttonImage2;
+    }
+
+    /**
      * @return string
      */
     public function getButtonUrl1()
@@ -671,5 +679,13 @@ class GamePage implements LinkableInterface
     public function getMediaGalleryMedias()
     {
         return $this->mediaGalleryMedias;
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getLogo()
+    {
+        return $this->getGame()->getLogo();
     }
 }

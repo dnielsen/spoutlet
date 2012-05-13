@@ -532,3 +532,16 @@ ul.list-normal {
     list-style-type: none;
     margin-bottom: 6px;
 }
+
+.game-show-page .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.game-show-page .game-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.game-show-page .game-buttons a.game-button {
+    display: -moz-inline-box;
+    display: inline-block;
+}

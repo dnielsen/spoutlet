@@ -12,7 +12,7 @@
         {% if form.get('help') %}
         <p class="alert alert-info help">
             <i class="icon-info-sign"></i>
-            {{ form.get('help') }}
+            {{ form.get('help') | trans }}
         </p>
         {% endif %}
     </div>

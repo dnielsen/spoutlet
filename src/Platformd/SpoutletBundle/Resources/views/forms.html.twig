@@ -63,7 +63,7 @@
         {{ form_widget(form) }}
         {% if form.get('help') %}
             <p class="help-block">
-                {{ form.get('help') }}
+                {{ form.get('help') | trans }}
             </p>
         {% endif %}
     </div>
