@@ -172,7 +172,7 @@ class Controller extends BaseController
         /** @var $ageManager \Platformd\SpoutletBundle\Age\AgeManager */
         $ageManager = $this->container->get('platformd.age.age_manager');
 
-        if (!$ageManager->getUsersAge() >= $minimumAge) {
+        if ($ageManager->getUsersAge() < $minimumAge) {
             throw new InsufficientAgeException();
         }
     }

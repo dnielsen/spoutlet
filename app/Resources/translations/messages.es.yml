@@ -1,0 +1,341 @@
+edit: Edit
+
+platformd:
+    create_account_or_login: Create or login to an Alienware Arena account.
+
+    not_found:
+        title: Page not found
+        body: We're sorry - but we can't find the page you're looking for
+
+    flash:
+        error_title: Error!
+        success_title: Success!
+
+    layout:
+        # title used by default (if not overridden)
+        default_title: Alienware Arena - Gamers Wanted
+        # suffixed after an overridden title (e.g. "My title | Title Suffix")
+        title_suffix: Alienware Arena
+
+        #translations that are not used yet
+        region:
+            region: Region
+            register: Register
+            china: China
+            change: (change)
+            change_region: Change your region
+            global: Global
+            usa_canada: "USA/Canada"
+            malasia_singapore: "Malasia/Singapore"
+            america_latina: América Latina
+            europe: Europe
+            japan: Japan
+            india: India
+            australia_new_zealand: "Australia/New Zealand"
+            change_language: Change preferred language
+            english: English
+            espanol: Español
+
+        top_menu:
+            admin: Admin
+            account: Account
+            sign_in: Sign in
+            sign_out: Sign out
+            join: Join
+            about: About
+            contact: Contacto
+            search: Buscar
+            logged_in_as: Logged in as <strong><a href="%route%">%username%</a></strong>
+
+        # used only in the admin area
+        admin_menu:
+            admin_home: Admin Home
+            manage_events: Manage Events
+            manage_giveaways: Manage Giveaways
+            manage_users: Manage Users
+            manage_news: Manage News
+            manage_homepage_banners: Manage Homepage Banners
+        
+        main_menu:
+            home: Home
+            alienware: Alienware
+            events: Acontecimientos
+            video: Video
+            news: Noticias
+            microsoft: Microsoft
+    
+        page_content:
+            featured: Featured
+            giveaways: Giveaways
+            all: All
+            see_more: See More
+            photo_gallery: Photo Gallery
+            view_all: View All
+
+        bottom_menu:
+            contact_us: Contact Us
+            privacy_policy: Privacy Policy
+            terms_and_conditions: "Terms & Conditions"
+            steam_community: Steam Community
+            xfire_community: Xfire Community
+            link: "Need a kick ass rig? Checkout Alienware"
+            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
+
+    help:
+        actions: Actions
+    users:
+        user_listings:
+            title: Manage Users
+            super_admin_cant_be_modified: Super admin users can't be modified
+            search: Search
+
+    events:
+        event_listings:
+            your_registered_events: My Events
+            current_events: Current Events
+            current_and_upcoming_events: Current and Upcoming Events
+            more_current_events: More Current Events
+            start_date: Start Date
+            end_date: End Date
+            details: Details
+            event: Event
+            games: Games
+            hosted_by: Hosted by
+            location: Location
+            upcoming_events: Upcoming Events
+            there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
+            past_events: Past Events
+            more_past_Events: More Past Events
+            online: Online
+            no_past_events: There are no past events at this moment.
+            no_current_events: There are no current events at this moment.
+            no_active_giveaways: There are no active giveaways at this moment.
+        event_show:
+            register_event: Register for event
+            unregister_event: Unregister for event
+            register:       Register
+        # used only in the admin area
+        admin:
+            title: Event admin
+            edit_event: Edit Event | %event_title%
+            create: Create New Event
+            approve: Approve
+            unpublish: Unpublish
+            approved: Event "%event_title%" has been approved and is now published. 
+            unpublished: Event "%event_title%" has been unpublished. 
+            saved: Event has been saved.
+            unknown: Unknown event \#%event_id% !
+            save_event: Save Event
+            unpublished_title: Edit your unpublished event
+            published_title: Edit your published event
+            banner_note: Image is best at 950x120
+
+    account_page:
+        events:
+            no_registered_events: You have not registered to any event yet.
+            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+        account:
+            welcome_to_control: Welcome to your Control Panel
+            hello_user: "Hello %firstname%! You are logged in with the username %username%."
+            ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
+            warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
+            under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
+            change_your_password: Change your password
+        giveaway:
+            your_giveaway_keys: My Giveaway Keys
+
+    about:
+        title: About Alienware Arena&trade;
+
+    # used only in the admin area
+    navigation:
+        back: Go Back
+
+    comment:
+        login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
+        comments: Comments
+        date_format: %year%-%month%-%day%
+
+    user:
+        login_header: Enter Login Information
+        change_password_header: Change Your Password
+        edit_account_header: Edit your account information
+
+        register_title: Create Arena Account
+
+        name_fields_order: %first_name% %last_name%
+
+        register:
+            requirements: Participation in the Alienware Arena requires an account.
+            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
+            terms_label: Terms & Conditions
+            dell_privacy_label: Dell Privacy Policy
+            country_label: Choose a country
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+
+        login:
+            title: Login to your account
+            forgot_password: Forgot Password?
+            need_help: Need Help?
+            not_a_member_join: Not a Member? Join for Free!
+            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used please contact support.
+
+        reset:
+            title:  Forgot Your Password?
+
+        request_reset:
+            title: Forgot Your Password?
+            help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
+            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+
+        account:
+            account_home: Account Home
+            edit_account: Edit Account
+            change_password: Change Password
+            profile:      Profile
+            # checked up until here
+            registered_events: Registered Events
+            my_giveaways: My Giveaways
+            my_videos: My Videos
+            help: Help
+
+    giveaway:
+        giveaway: Giveaway
+        redeem:   Redeem
+        get_key:  GET KEY
+        no_keys_left: There are no keys available for this giveaway
+        max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
+        already_assigned: You were already assigned a key for this giveaway
+        view_giveaway_site: View Giveaway Site
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
+        in_process_2: please allow at least 10 days for it to be posted into your account. 
+        in_process_3: If after 10 days it has not been posted, please email 
+        admin:
+            title: Giveaway admin
+            edit_giveaway: Edit Giveaway | %giveaway_title%
+            create: Create New Giveaway
+            saved: Giveaway has been saved.
+            save_giveaway: Save Giveaway
+            edit_title: Edit your Giveaway
+            redemption_instructions_note: |
+                Each box is a redemption step - leave blank any boxes you
+                don't need. You can also use HTML (e.g. <a href="/events">Link to events</a>).
+            manage_pools: Manage pools
+        status:
+            disabled: Totally disabled
+            inactive: Active but with zero keys
+            active:   Active
+            blank_value: Choose status
+        show:
+            availaible_keys: Availaible keys: %%count%%
+        giveaways_listings:
+            giveaways: Giveaways
+        assigned:
+            message: |
+                You have been assigned a key. You may review this key at any
+                time by visiting your giveaway key page from your Alienware
+                Arena user account panel.
+            may_require_activation: Your key may require activation! Check the giveaway page for details.
+            key: Key
+            assigned_at: Assigned
+            view_giveaway: View Giveaway
+    giveaway_pool:
+        pool: Giveaway pool
+        admin:
+            title: Giveaway pools for "%giveaway_name%"
+            create: Create a new pool
+            edit_pool: Edit pool
+            save_giveaway_pool: Save giveaway pool
+            saved: Giveaway pool has been saved.
+        first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
+
+"Bad credentials": "Invalid email or password"
+"The presented password is invalid.": "Invalid email or password"
+"The presented password cannot be empty.": "Please enter a password"
+"User account is disabled.": Your account is disabled - check your email for an activation link
+
+# for sources drop-down on registration
+source_alienware: Alienware
+
+avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
+
+
+platformd.sweepstakes.enter: How to Participate
+agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
+click_register_sweepstakes_step: Click "Enter" to participate.
+already_entered_sweepstakes: You already entered this sweepstakes.
+not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
+enter: Enter
+read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
+official_sweepstakes_rules: Official Sweepstakes Rules
+sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
+overview: Overview
+
+registration_opens: Registration Opens
+registration_closes: Registration Closes
+open_to_legal_residents: Open to legal residents in %countries%
+age_or_older_as_of_date: %age% years or older as of %as_of_date%
+platformd.create_account_or_login_sweepstakes: Create an account or login
+platformd.sweepstakes.entered.message: Thanks for your participation!
+na: N/A
+instructions: Instructions
+sweepstakes_datetime_format: %year%-%month%-%day% %time%
+sweepstakes_date_format: %year%-%month%-%day%
+date_format: %month% %day% %year%
+eligibility: Eligibility
+sweeps_not_open: This sweepstakes is not currently open
+
+follow_us: Follow Us
+
+# alienware-specific things
+alienware:
+    social:
+        twitter_url: ''
+        facebook_url: ''
+        follow_on_facebook: Follow Aliewnare on Facebook
+        follow_on_twitter: Follow Alieneware on Twitter
+
+    alienware_link_url: http://alienware.com
+
+# More frontend things
+no_news_currently: There is currently no featured news - check back later!
+news_and_announcements: Alienware Arena News & Announcements
+announced_date: Announced %posted_date%
+read_more: Read More
+go_to_website: Go to Website
+
+create: Create
+
+# probably not shown on the frontend (for machine code giveaways, key is shown)
+approved: Approved
+
+translations_admin: Translations Admin
+edit_locale_title: Edit %locale% Translations
+saving: saving...
+username: Username
+status: Status
+
+age_confirm:
+    headline: Please Confirm Your Date of Birth
+    message: The content is intended for mature audiences. Please confirm your age below
+confirm: Confirm
+
+error:
+    fill_in_birthday: Please fill in your birthday!
+
+games_trailers:
+    channel_header: CHANNEL: GAMES AND TRAILERS
+    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    categories:
+        action: Action
+        rpg: RPG
+        strategy: Strategy
+        other: Other
+        free-to-play: Free to Play
+        mmo:   MMO
+games_and_trailers: Games and Trailers
+
+archives: ARCHIVES
+past_partnerships: Past Partnerships
+created_date: Created Date
+media_gallery: Media Gallery

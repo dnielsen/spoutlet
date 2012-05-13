@@ -101,11 +101,37 @@ fos_user:
 parameters:
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false
-    available_locales: [en, ja, zh]
+    available_locales:
+        # we're abusing the locales to make our many "sites"
+        # this will change in the future
+        - en    # demo.
+        - ja    # japan.
+        - zh    # china.
+        - en_AU # au. (australia + new zealand)
+        - en_GB # europe.
+        - en_IN # india.
+        - es    # latinam. (Latin America)
+        - en_SG # singapore. Malaysia / Singapore
+        - en_US # us. (USA!)
+
+    # this is repeated in the multitenancy manager - should not be
+    platformd_sites:
+        en: Demo
+        ja: Japan
+        zh: China
+        en_AU: Australia / New Zealand
+        en_GB: Europe
+        en_IN: India
+        es:    Latin America
+        en_SG: Singapore
+        en_US: USA
+
+    # Used for the translation admin
     locale_translations:
         en: English
         ja: Japanese
         zh: Chinese
+        es: Spanish
 
     # important to setup the translation DB loader to load things for these domains
     available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
@@ -222,9 +248,15 @@ jms_i18n_routing:
     strategy: custom
     hosts:
         # %host_suffix% might be something like "staging"
-        en: demo%host_suffix%.%base_host%
-        ja: japan%host_suffix%.%base_host%
-        zh: china%host_suffix%.%base_host%
+        en:     demo%host_suffix%.%base_host%
+        ja:     japan%host_suffix%.%base_host%
+        zh:     china%host_suffix%.%base_host%
+        en_AU:  au%host_suffix%.%base_host%
+        en_GB:  europe%host_suffix%.%base_host%
+        en_IN:  india%host_suffix%.%base_host%
+        es:     latinam%host_suffix%.%base_host%
+        en_SG:  singapore%host_suffix%.%base_host%
+        en_US:  us%host_suffix%.%base_host%
 
 fos_comment:
     db_driver: orm
