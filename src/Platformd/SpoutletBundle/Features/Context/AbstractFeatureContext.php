@@ -10,7 +10,10 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 use Behat\Behat\Event\ScenarioEvent;
+use Behat\Behat\Context\Step\Given;
 use Behat\Behat\Context\Step\When;
+use Behat\Behat\Context\Step\Then;
+
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
@@ -329,6 +332,88 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I have the following games pages:$/
+     */
+    public function iHaveTheFollowingGamesPages(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+        $gamePageManager = $this->getGamePageManager();
+
+        foreach ($table->getHash() as $row) {
+            $game = $this->thereIsAGameCalled($row['name']);
+            $gamePage = new GamePage();
+            $gamePage->setGame($game);
+
+            $category = isset($row['category']) ? $row['category'] : 'rpg';
+            $status = isset($row['status']) ? $row['status'] : GamePage::STATUS_PUBLISHED;
+            $sites = isset($row['sites']) ? $row['sites'] : 'en';
+
+            $game->setCategory($category);
+            $gamePage->setStatus($status);
+            $gamePage->setLocales(explode(',', $sites));
+
+            $em->persist($game);
+            $em->flush();
+
+            $this->getGamePageManager()->saveGamePage($gamePage);
+        }
+    }
+
+    /**
+     * @Given /^I have verified my age$/
+     */
+    public function iHaveVerifiedMyAge()
+    {
+        return array(
+            new When('I go to "/age/verify"'),
+            new When('I select "1984" from "birthday[year]"'),
+            new When('I select "6" from "birthday[month]"'),
+            new When('I select "5" from "birthday[day]"'),
+            new When('I press "Confirm"'),
+            new When('I go to "/games"'),
+            new Then('the headline should contain "GAMES AND TRAILERS"')
+        );
+    }
+
+    /**
+     * Used when looking at the games page
+     *
+     * @Then /^I should see (\d+) game(?:|s) under the "([^"]*)" category$/
+     */
+    public function iShouldSeeGamesUnderTheCategory($count, $category)
+    {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if (!$h3Ele) {
+            throw new \Exception('Cannot find a category named '.$category);
+        }
+
+        $liElements = $h3Ele->getParent()->findAll('css', 'ul.games li');
+
+        assertEquals($count, count($liElements));
+    }
+
+    /**
+     * @Given /^I shouldn\'t see any games under the "([^"]*)" category$/
+     */
+    public function iShouldNotSeeAnyGamesUnderTheCategory($category)
+    {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if ($h3Ele) {
+            throw new \Exception(sprintf('Found category for "%s", but should not have', $category));
+        }
+    }
+
+    /**
+     * @Then /^I should see (\d+) game in the archived list$/
+     */
+    public function iShouldSeeGameInTheArchivedList($count)
+    {
+        $liEles = $this->getPage()->findAll('css', '.games-list-page .right ul.games li');
+
+        assertEquals($count, count($liEles));
+    }
+
+    /**
      * @return \FOS\UserBundle\Model\UserManagerInterface
      */
     protected function getUserManager()
@@ -374,6 +459,14 @@ class AbstractFeatureContext extends MinkContext
     protected function getCurrentSite()
     {
         return $this->currentSite;
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     */
+    protected function getGamePageManager()
+    {
+        return $this->getContainer()->get('platformd.model.game_page_manager');
     }
 
     /**

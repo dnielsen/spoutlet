@@ -13,24 +13,26 @@
             <p>{{ 'games_trailers.intro_text' | trans }}</p>
 
             {% for category,gamePages in categorizedGames %}
-                <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
-                <ul class="games">
-                    {% for gamePage in gamePages %}
-                        {% set url = gamePage | pd_link %}
-                        <li{{ loop.first ? ' class="first"' : ''}}>
-                            <a href="{{ url }}"{{ target_blank(gamePage) }}>
-                                {% if gamePage.game.logo %}
-                                    <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
-                                {% else %}
-                                    <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
-                                {% endif %}
-                            </a>
+                <div>
+                    <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
+                    <ul class="games">
+                        {% for gamePage in gamePages %}
+                            {% set url = gamePage | pd_link %}
+                            <li{{ loop.first ? ' class="first"' : ''}}>
+                                <a href="{{ url }}"{{ target_blank(gamePage) }}>
+                                    {% if gamePage.game.logo %}
+                                        <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
+                                    {% else %}
+                                        <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
+                                    {% endif %}
+                                </a>
 
-                            <a href="{{ url }}">{{ gamePage.game.name }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <div class="clear"></div>
+                                <a href="{{ url }}">{{ gamePage.game.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="clear"></div>
+                </div>
             {% endfor %}
         </div>
         <div class="right">
