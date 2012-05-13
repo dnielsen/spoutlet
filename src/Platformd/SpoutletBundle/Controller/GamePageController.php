@@ -34,6 +34,22 @@ class GamePageController extends Controller
     }
 
     /**
+     * @param string $slug
+     * @Template()
+     */
+    public function showAction($slug)
+    {
+        $gamePage = $this->getGamePageManager()->findOneBySlug($slug);
+        if (!$gamePage) {
+            throw $this->createNotFoundException('No game page found in this site for slug '.$slug);
+        }
+
+        return array(
+            'gamePage' => $gamePage,
+        );
+    }
+
+    /**
      * @return \Platformd\SpoutletBundle\Model\GamePageManager
      */
     private function getGamePageManager()

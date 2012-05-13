@@ -63,6 +63,22 @@ class GamePageRepository extends EntityRepository
     }
 
     /**
+     * @param string $slug
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     */
+    public function findOneBySlugForSite($slug, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('gp.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+
+    /**
      * @param $site
      * @return \Doctrine\ORM\QueryBuilder
      */

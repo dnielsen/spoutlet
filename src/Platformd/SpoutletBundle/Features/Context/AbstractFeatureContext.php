@@ -337,7 +337,6 @@ class AbstractFeatureContext extends MinkContext
     public function iHaveTheFollowingGamesPages(TableNode $table)
     {
         $em = $this->getEntityManager();
-        $gamePageManager = $this->getGamePageManager();
 
         foreach ($table->getHash() as $row) {
             $game = $this->thereIsAGameCalled($row['name']);

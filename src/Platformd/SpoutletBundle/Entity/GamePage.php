@@ -623,7 +623,7 @@ class GamePage implements LinkableInterface
     public function  getLinkableOverrideUrl()
     {
         // todo - fill this in when we have an override URL - see #116
-        return '#';
+        return false;
     }
 
     /**
@@ -634,7 +634,7 @@ class GamePage implements LinkableInterface
     public function  getLinkableRouteName()
     {
         // todo - fill this in when we have a show page
-        return 'default_index';
+        return 'game_page_show';
     }
 
     /**

@@ -42,3 +42,10 @@ Feature: Games Page
             And I have verified my age
         When I go to "/games"
         Then I should see 2 games under the "RPG" category
+
+    Scenario: See information about a specific game
+        Given there is a game page for "Awesome Game" in "en"
+            And I have verified my age
+            And I am on "/games"
+        When I click "Awesome Game"
+            Then the headline should contain "Awesome Game"

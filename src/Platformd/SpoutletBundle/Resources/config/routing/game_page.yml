@@ -1,3 +1,7 @@
 game_page_list:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:GamePage:index" }
+
+game_page_show:
+    pattern:  /{slug}
+    defaults: { _controller: "SpoutletBundle:GamePage:show" }

@@ -102,6 +102,15 @@ class GamePageManager
     }
 
     /**
+     * @param string $slug
+     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     */
+    public function findOneBySlug($slug)
+    {
+        return $this->getRepository()->findOneBySlugForSite($slug, $this->getDatabaseSiteKey());
+    }
+
+    /**
      * Handles the complex locales setup
      *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
