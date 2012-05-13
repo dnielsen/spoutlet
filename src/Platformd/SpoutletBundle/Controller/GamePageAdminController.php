@@ -53,6 +53,7 @@ class GamePageAdminController extends Controller
         $this->addSiteBreadcrumbs($site)->addChild('New Game Page');
 
         $gamePage  = new GamePage();
+        $gamePage->setCreatedAt(new \DateTime());
         $form    = $this->createForm(new GamePageType(), $gamePage);
 
         if ($this->processForm($form, $request)) {

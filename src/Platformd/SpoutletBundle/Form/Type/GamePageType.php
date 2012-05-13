@@ -63,6 +63,14 @@ class GamePageType extends AbstractType
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),
             ))
+            ->add('createdAt', 'datetime', array(
+                'widget' => 'single_text',
+                'attr'   => array(
+                    'class' => 'datetime-picker',
+                ),
+                'help'   => 'Controls the order in which games are shown (newest first). You can leave this blank and it will be set automatically.',
+                'label'  => 'created_date',
+            ))
         ;
     }
 

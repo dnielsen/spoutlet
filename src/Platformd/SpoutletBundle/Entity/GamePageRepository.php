@@ -39,7 +39,9 @@ class GamePageRepository extends EntityRepository
         $qb = $this->createSiteQueryBuilder($site);
         $this->addPublishedQueryBuilder($qb);
 
-        return $qb->getQuery()
+        return $qb
+            ->addOrderBy('gp.createdAt', 'DESC')
+            ->getQuery()
             ->execute()
         ;
     }
@@ -53,7 +55,9 @@ class GamePageRepository extends EntityRepository
         $qb = $this->createSiteQueryBuilder($site);
         $this->addArchivedQueryBuilder($qb);
 
-        return $qb->getQuery()
+        return $qb
+            ->addOrderBy('gp.createdAt', 'DESC')
+            ->getQuery()
             ->execute()
         ;
     }
