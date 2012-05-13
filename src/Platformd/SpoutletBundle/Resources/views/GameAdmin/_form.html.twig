@@ -17,11 +17,7 @@
             <legend>b) Social and Images</legend>
             {{ form_row(form.facebookFanpageUrl) }}
 
-            <div class="file-upload">
-                {{ form_row(form.logo) }}
-
-                <img src="{{ media_path(form.get('value').logo) }}" />
-            </div>
+            {{ form_row(form.logo) }}
             {{ form_row(form.publisherLogos) }}
         </fieldset>
     </div>

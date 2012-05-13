@@ -52,6 +52,10 @@ abstract class MediaType extends AbstractType
         if ($this->helpMessage) {
             $view['fileObject']->set('help', $this->helpMessage);
         }
+
+        if ($form->getData()) {
+            $view->set('mediaObject', $form->getData());
+        }
     }
 
 

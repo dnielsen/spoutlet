@@ -74,6 +74,8 @@
     <div class="file-upload">
         {{ form_row(form.fileObject) }}
 
-        <img src="{{ media_path(form.get('value')) }}" />
+        {% if form.get('mediaObject') %}
+            <img src="{{ media_path(form.get('mediaObject')) }}" />
+        {% endif %}
     </div>
 {% endblock %}

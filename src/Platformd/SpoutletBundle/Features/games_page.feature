@@ -1,11 +1,7 @@
-Feature Games Page
+Feature: Games Page
     In order to see lots of enticing information about a new game
     As a web user
     I need to be able to view the trailer, news, photos and other information about a game
-
-    Scenario: Answer the birthday question "correctly", see games page
-
-    Scenario: Answer the birthday question "incorrectly", see the message
 
     Scenario: Only require age question once per session
 
