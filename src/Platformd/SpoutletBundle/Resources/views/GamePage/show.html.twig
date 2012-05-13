@@ -63,12 +63,12 @@
                     </div>
                 #}
 
-                <div class="ad-nav">
+                <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
                     <div class="ad-thumbs">
                         <ul class="ad-thumb-list">
                             {% for media in gamePage.mediaGalleryMedias %}
-                            <li>
-                                {% set url = media_path(media, {'local': true}) | imagine_filter('image_thumb') %}
+                            <li{{ loop.last ? ' class="last"' : '' }}>
+                                {% set url = media_path(media) %}
                                 <a href="{{ url }}" target="_blank">
                                     <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
                                 </a>

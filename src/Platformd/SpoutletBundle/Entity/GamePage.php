@@ -678,17 +678,7 @@ class GamePage implements LinkableInterface
      */
     public function getMediaGalleryMedias()
     {
-
-        // temporarily getting us a nice big list
-        $medias = array_merge(
-            $this->mediaGalleryMedias->toArray(),
-            $this->mediaGalleryMedias->toArray(),
-            $this->mediaGalleryMedias->toArray(),
-            $this->mediaGalleryMedias->toArray()
-        );
-
-        return $medias;
-
+        return $this->mediaGalleryMedias;
     }
 
     /**

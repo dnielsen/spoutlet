@@ -548,12 +548,35 @@ ul.list-normal {
 
 .game-show-page .media-gallery {
     text-align: center;
-    padding: 10px 20px;
+    padding: 10px 35px;
     width: auto;
+    border: 3px solid #b0b0b0;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    -khtml-border-radius: 7px;
+    border-radius: 7px;
+}
+.game-show-page .media-gallery h3 {
+    margin-bottom: 10px;
+}
+.game-show-page .media-gallery .ad-thumbs {
+    /* causes the spacing (along to be right with respect to the scrollers */
+    width: 874px;
+}
+.game-show-page .media-gallery .ad-thumbs li {
+    margin-right: 10px;
+}
+.game-show-page .media-gallery .ad-thumbs li.last {
+    margin-right: 0;
 }
 .game-show-page .media-gallery .ad-thumbs li a img, .game-show-page .media-gallery .ad-thumbs li a.ad-active img {
     border: none;
 }
-.game-show-page .media-gallery .ad-info, .game-show-page .media-gallery .ad-slideshow-controls {
-
+.game-show-page .media-gallery .ad-back, .game-show-page .media-gallery .ad-forward {
+    background-position-y: 40px;
+    width: 20px;
+}
+/* if we only have 4 items or less, there's no scrolling */
+.game-show-page .media-gallery .no-scroll .ad-back, .game-show-page .media-gallery .no-scroll .ad-forward {
+    display: none;
 }
