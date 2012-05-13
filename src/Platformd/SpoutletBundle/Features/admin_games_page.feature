@@ -13,6 +13,7 @@ Feature: Games Page Admin
             And I select "Starcraft" from "Game"
             And I fill in "About the Game" with "It's fun!"
             And I check the "Demo" option for "Sites"
+            And I select "published" from "Status"
             And I press "Create"
         Then I should see "game page was created"
 

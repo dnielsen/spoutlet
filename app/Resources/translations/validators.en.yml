@@ -26,3 +26,6 @@ state_not_blank: Please enter a state
 "You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
 
 "The entered password is invalid.": The entered password is invalid.
+
+error:
+    select_status: Please choose a status

@@ -254,6 +254,7 @@ class AbstractFeatureContext extends MinkContext
         $page = new GamePage();
         $page->setGame($game);
         $page->setLocales(array($siteName));
+        $page->setStatus(GamePage::STATUS_PUBLISHED);
 
         $this->getContainer()->get('platformd.model.game_page_manager')
             ->saveGamePage($page)

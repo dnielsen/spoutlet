@@ -587,7 +587,7 @@ class GamePage implements LinkableInterface
      */
     public function setStatus($status)
     {
-        if (!in_array($status, self::$validStatues)) {
+        if ($status && !in_array($status, self::$validStatues)) {
             throw new \InvalidArgumentException(sprintf('Invalid status passed: "%s"', $status));
         }
 
