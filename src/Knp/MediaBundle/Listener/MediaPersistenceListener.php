@@ -169,7 +169,7 @@ class MediaPersistenceListener implements EventSubscriber
         while (true) {
             $basename = str_replace('.'.$file->guessExtension(), '', $cleanedName);
             $newFilename = sprintf('%s-%s.%s', $basename, ++$i, $file->guessExtension());
-            if (!$this->filesystem->has($cleanedName)) {
+            if (!$this->filesystem->has($newFilename)) {
                 return $newFilename;
             }
         }
