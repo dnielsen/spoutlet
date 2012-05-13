@@ -123,13 +123,24 @@ class MediaPersistenceListener implements EventSubscriber
             // get a unique filename and then write the contents
             $targetFilename = $this->generateFilename($file);
 
+            // create a metadata array to be sent to S3
+            $metadata = array();
+            if ($mimeType = $file->getMimeType()) {
+                $metadata['content-type'] = $file->getMimeType();
+                $media->setMimeType($mimeType);
+            }
+
             $this->log(sprintf('About to save uploaded filename "%s"', $targetFilename));
-            $size = $this->filesystem->write($targetFilename, file_get_contents($file->getPathname()));
+            $size = $this->filesystem->write(
+                $targetFilename,
+                file_get_contents($file->getPathname()),
+                false,
+                $metadata
+            );
             $this->log('Uploaded saving complete!');
 
             // set some metadata
             $media->setFilename($targetFilename);
-            $media->setMimeType($file->getMimeType());
             $media->setSize($size);
 
             return true;
