@@ -83,6 +83,9 @@ fieldset .row-fluid.first div[class*="span"] {
 .game-page-form .medias-list li.existing-element .control-group .controls{
     display: none;
 }
+.game-page-form .medias-list li.new-link {
+
+}
 .game-page-form .medias-list li.new-link div.wrap {
     display: block;
     margin-left: 160px;

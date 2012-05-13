@@ -124,7 +124,9 @@
 
             // Display the form in the page in an li, before the "Add a tag" link li
             var $newFormLi = $('<li class="span5 image-li"></li>').append(newForm);
+            $newFormLi.hide();
             $newLinkLi.before($newFormLi);
+            $newFormLi.fadeIn();
 
             // a bit ugly, but we need a clear after each "row"
             if ((collectionHolder.find('.image-li').length % 2) == 0) {
