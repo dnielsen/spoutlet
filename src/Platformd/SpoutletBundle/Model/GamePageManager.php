@@ -81,8 +81,8 @@ class GamePageManager
 
             $categorized[$category][] = $activeGame;
             // temporarily tripled for ease of testing
-            $categorized[$category][] = $activeGame;
-            $categorized[$category][] = $activeGame;
+            // $categorized[$category][] = $activeGame;
+            // $categorized[$category][] = $activeGame;
         }
 
         return $categorized;
