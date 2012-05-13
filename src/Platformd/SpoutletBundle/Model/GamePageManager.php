@@ -172,7 +172,12 @@ class GamePageManager
     {
         /** @var $media \Platformd\MediaBundle\Entity\Media */
         foreach ($gamePage->getMediaGalleryMedias() as $media) {
-            $this->em->persist($media);
+            // either persist it, or remove it from the collection
+            if ($media->getFileObject() || $media->getId()) {
+                $this->em->persist($media);
+            } else {
+                $gamePage->getMediaGalleryMedias()->removeElement($media);
+            }
         }
     }
 

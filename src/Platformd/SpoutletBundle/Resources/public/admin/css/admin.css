@@ -61,6 +61,32 @@ fieldset .row-fluid.first div[class*="span"] {
 .game-page-form .medias-list {
     margin-left: 0;
 }
+/* the first li - this is a dummy, just so that, to twitter bootstrap, none
+ * of the *real* items look like the first one. This is a hack, because I'm
+ * having each item span5 (5+5 = 10, but our width is 12). Because I'm "under-spanning",
+ * I don't need the first element to have 0 left margin. In fact, if the first
+ * item *does* have no left margin, it doesn't line up with the next row.
+ *
+ * So, doing this allows me to tile the li's - 2 per row, but without needing
+ * to actually surround each row in a row div
+ */
+.game-page-form .medias-list li.dummy {
+    display: none;
+}
 .game-page-form .medias-list li {
     list-style-type: none;
+}
+.game-page-form .medias-list li.new-link div.wrap {
+    display: block;
+    margin-left: 160px;
+    background: #eee;
+    padding: 50px 0;
+    text-align: center;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+.game-page-form .medias-list li.clear {
+    clear: both;
 }
