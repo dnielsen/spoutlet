@@ -382,4 +382,22 @@ denied: Denied
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
 
+email:
+    giveaway_machine_code_approve: |
+        こんにちは%userLastName%様,
+
+        この度は 「%giveawayName%」にご登録いただき誠にありがとうございます。
+        キーコードはALIENWARE ARENAのあなたのアカウントあてに届けております。
+        以下のサイトから確認、ご使用ください。
+        %accountUrl%
+
+        ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
+        japan@alienwarearena.com.
+
+        - ALIENWARE ARENA TEAM
+
+
+    subject:
+        giveaway_machine_code_approve:  %giveawayName%のお知らせ
+
 username: ユーザー名
