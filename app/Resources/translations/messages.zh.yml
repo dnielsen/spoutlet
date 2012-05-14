@@ -14,7 +14,7 @@ platformd:
     layout:
         # title used by default (if not overriden)
         default_title: Alienware Arena - 玩家所求
-        # title user by default in Admin area (if not overriden)
+        # title user by default in Admin area (if not overridden)
         default_admin_title: 管理员
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
@@ -61,7 +61,6 @@ platformd:
         main_menu:
             home: 首页
             alienware: 外星人顶级游戏电脑
-            alienware_url: http://www.alienware.com.cn
             events: 活动
             video: 视频
             news: 新闻
@@ -70,19 +69,10 @@ platformd:
         page_content:
             featured: 专栏
             giveaways: 邀请码
-            competitions: 比赛
-            on_tour: 巡回赛
             all: 所有
             see_more: 更多
             photo_gallery: 照片库
             view_all: 查看所有
-            redeem: 兑换
-            keys_available: 可用的激活码
-            ad_url: "/images/ads/aw-ms7-728x90-cn.jpg"
-            deals_add_url: "/8969129/300x250_CN"
-            deals_ad_link_url: "http://alienware.com.cn/"
-            landing_image_url: "/images/AWinvades-cn.jpg"
-            landing_image_target: '/news'
 
         bottom_menu:
             contact_us: 联系我们
@@ -91,7 +81,6 @@ platformd:
             steam_community: Steam社区
             xfire_community: Xfire社区
             link: "需要一个牛逼的装备? 请看看 ALienware"
-            link_url: "http://alienware.com.cn/"
             copyright_2012: "&copy;2012版权所有，Alienware公司"
 
     help:
@@ -123,12 +112,9 @@ platformd:
             no_past_events: 无以往活动
             no_current_events: 无当前活动
             no_active_giveaways: 目前没有活动赠品。
-        event_create:
-            create_new_event: 创建活动
         event_show:
             register_event: 注册活动
             unregister_event: Unregister for event
-            create_or_login: 创建或登陆Alienware Arena账户
             register:       注册
         # used only in the admin area
         admin:
@@ -143,7 +129,6 @@ platformd:
             unknown: 未知活动#%event_id% !
             save_event: 保存活动
             unpublished_title: "管理未发布活动"
-            new_title: "创建新事件"
             published_title: "管理已发布活动"
             banner_note: "图像尺寸950x120为最佳"
 
@@ -157,7 +142,6 @@ platformd:
             ready_to_game: 准备开始玩游戏吗？Alienware竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
             warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！Alienware 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
             under_construction: "注：Alienware Arena建设中，如某项功能无法启用，请稍后访问。"
-            edit_your_account: 编辑账户信息
             change_your_password: 修改密码
         giveaway:
             your_giveaway_keys: 我的赠品码
@@ -185,9 +169,6 @@ platformd:
 
     about:
         title: 关于Alienware Arena
-
-    general:
-        alienware_link_url: http://alienware.com.cn/
 
     # used only in the admin area
     navigation:
@@ -247,6 +228,9 @@ platformd:
         max_ip_limit: 您的IP地址已不能领取更多的激活码，如果你认为这是一个错误，请联系 china@alienwarearena.com。
         already_assigned: 您已经为该赠送品指定了一个账号
         view_giveaway_site: 查看邀请码站点
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
+        in_process_2: please allow at least 10 days for it to be posted into your account. 
+        in_process_3: If after 10 days it has not been posted, please email 
         admin:
             title: 管理邀请码
             edit_giveaway: 编辑邀请码 | %giveaway_title%
@@ -336,7 +320,7 @@ platformd.create_account_or_login_sweepstakes: Create an account or login
 platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
 instructions: 说明
-sweepstakes_date_format: %year%-%month%-%day% %time%
+sweepstakes_date_format: %year%年%month%月%day%日
 eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
@@ -350,6 +334,8 @@ alienware:
         follow_on_facebook: ''
         follow_on_twitter: ''
 
+    alienware_link_url: http://alienware.com.cn/
+
 # admin-only translations - we don't need these
 url:  URL
 total_registered: Total Registered
@@ -358,6 +344,13 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+# More frontend things
+no_news_currently: 没有找到新闻文章
+news_and_announcements: Alienware竞技场新闻及通告
+announced_date: 发表于 %posted_date%
+read_more: 了解更多
+go_to_website: 前往站点
 
 # admin stuff
 giveaway:
@@ -385,4 +378,6 @@ email:
         If you have any questions, please feel free to email us at japan@alienwarearena.com.
 
         -ALIENWARE ARENA
+
+username: 用户名
 

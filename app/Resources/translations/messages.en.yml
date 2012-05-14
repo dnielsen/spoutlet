@@ -15,7 +15,7 @@ platformd:
         # title used by default (if not overridden)
         default_title: Alienware Arena - Gamers Wanted
         # title user by default in Admin area (if not overridden)
-        default_admin_title: Admin
+        default_admin_title: Alienware Admin Area
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
         title_suffix: Alienware Arena
 
@@ -61,7 +61,6 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            alienware_url: http://alienware.com/
             events: Events
             video: Video
             news: News
@@ -70,19 +69,10 @@ platformd:
         page_content:
             featured: Featured
             giveaways: Giveaways
-            competitions: Competitions
-            on_tour: On Tour
             all: All
             see_more: See More
             photo_gallery: Photo Gallery
             view_all: View All
-            redeem: Redeem
-            keys_available: Keys Available
-            ad_url: "/images/ads/aw-ms7-728x90-en.jpg"
-            deals_add_url: "/8969129/300x250_EN"
-            deals_ad_link_url: "http://alienware.com"
-            landing_image_url: "/images/AWinvades-jp.jpg"
-            landing_image_target: '/news'
 
         bottom_menu:
             contact_us: Contact Us
@@ -91,7 +81,6 @@ platformd:
             steam_community: Steam Community
             xfire_community: Xfire Community
             link: "Need a kick ass rig? Checkout Alienware"
-            link_url: "http://alienware.com"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -123,12 +112,9 @@ platformd:
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
             no_active_giveaways: There are no active giveaways at this moment.
-        event_create:
-            create_new_event: Create new event
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
-            create_or_login: Create or login to an Alienware Arena account.
             register:       Register
         # used only in the admin area
         admin:
@@ -143,7 +129,6 @@ platformd:
             unknown: Unknown event \#%event_id% !
             save_event: Save Event
             unpublished_title: Edit your unpublished event
-            new_title: Create a new event
             published_title: Edit your published event
             banner_note: Image is best at 950x120
 
@@ -157,7 +142,6 @@ platformd:
             ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
             warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
             under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
-            edit_your_account: Edit your account information
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
@@ -185,9 +169,6 @@ platformd:
 
     about:
         title: About Alienware Arena&trade;
-
-    general:
-        alienware_link_url: http://alienware.com
 
     # used only in the admin area
     navigation:
@@ -249,6 +230,9 @@ platformd:
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
+        in_process_2: please allow at least 10 days for it to be posted into your account. 
+        in_process_3: If after 10 days it has not been posted, please email 
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -349,6 +333,8 @@ alienware:
         follow_on_facebook: Follow Aliewnare on Facebook
         follow_on_twitter: Follow Alieneware on Twitter
 
+    alienware_link_url: http://alienware.com
+
 # admin-only translations - we don't need these
 url:  URL
 total_registered: Total Registered
@@ -357,6 +343,18 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+posted_at: Post Date
+override_url: Override URL
+published_status: Status
+
+# More frontend things
+no_news_currently: There is currently no featured news - check back later!
+news_and_announcements: Alienware Arena News & Announcements
+announced_date: Announced %posted_date%
+read_more: Read More
+go_to_website: Go to Website
+
 create: Create
 
 # admin stuff
@@ -385,3 +383,8 @@ email:
         If you have any questions, please feel free to email us at japan@alienwarearena.com.
 
         -ALIENWARE ARENA
+
+translations_admin: Translations Admin
+edit_locale_title: Edit %locale% Translations
+saving: saving...
+username: Username

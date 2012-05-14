@@ -36,7 +36,7 @@
                                         </em>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="nowrap">
                                     {% if keyRequest.assignedAt %}
                                         {{ 'sweepstakes_date_format' | trans(keyRequest.assignedAtTranslationArray) }}
                                     {% endif %}
@@ -46,11 +46,12 @@
                                 </td>
                             </tr>
                             {% endfor %}
+                            
                         </tbody>
                     </table>
                 </div>
             </div>
-
+            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}</div>
             <div class="widget-footer">
                 &nbsp;
             </div>

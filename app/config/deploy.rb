@@ -4,6 +4,8 @@ require 'capistrano/ext/multistage'
 
 # set the primary server, then use it to - potentially, have an array of servers
 ssh_options[:port] = "22"
+ssh_options[:forward_agent] = true
+default_run_options[:pty] = true
 
 set :app1,        "ec2-184-73-162-139.compute-1.amazonaws.com"
 set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
@@ -11,8 +13,10 @@ set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
 set :scm,         :git
-set :deploy_via,  :rsync_with_remote_cache
+set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
+# branch can be overridden in any of the "stage" files (e.g. beta)
+set :branch,      "master"
 
 role :web,        app1, app2                         # Your HTTP server, Apache/etc
 role :app,        app1, app2                         # This may be the same as your `Web` server
@@ -28,6 +32,14 @@ set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", 
 
 # share our database configuration
 set :shared_files,      ["app/config/parameters.ini"]
+
+# After finalizing update - here to update translations
+after "deploy:finalize_update" do
+
+  # temporarily not doing this, until first deploy, so we can migrate first
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract"
+
+end
 
 # Custom recipes
 namespace :deploy do
@@ -45,3 +57,4 @@ namespace :deploy do
 end
 
 before "deploy:finalize_update", "deploy:write_version_file"
+

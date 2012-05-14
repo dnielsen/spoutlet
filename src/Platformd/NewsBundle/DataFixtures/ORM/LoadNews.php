@@ -18,6 +18,7 @@ EOF
         );
         $news->setTitle('News title #1');
         $news->setLocale('en');
+        $news->setPostedAt(new \DateTime('yesterday'));
         $manager->persist($news);
 
         $news = new News();
@@ -27,6 +28,7 @@ EOF
         );
         $news->setTitle('News title #2');
         $news->setLocale('en');
+        $news->setPostedAt(new \DateTime('last week'));
         $manager->persist($news);
 
         $manager->flush();

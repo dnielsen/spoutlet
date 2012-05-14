@@ -53,7 +53,7 @@
                             </div>
                         {% endif %}
 
-                        {% if giveaway.allowMachineCodeSubmit and giveaway.isActive %}
+                        {% if giveaway.allowMachineCodeSubmit %}
                             <div style="margin-bottom: 10px;">
                                 {% if is_granted('ROLE_USER') %}
                                     {% if has_user_applied_to_giveaway(giveaway) %}

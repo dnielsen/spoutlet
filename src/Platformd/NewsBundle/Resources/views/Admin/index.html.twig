@@ -11,7 +11,7 @@
             <th>{{ "platformd.admin.news.title" | trans }}</th>
             <th>{{ "tenant_site" | trans({}, 'admin') }}</th>
             <th>{{ 'url' | trans }}</th>
-            <th>{{ "platformd.events.event_listings.published" | trans }}</th>
+            <th>{{ "published_status" | trans }}</th>
             <th>{{ "platformd.help.actions" | trans }}</th>
         </tr>
     </thead>
@@ -45,7 +45,7 @@
 <a class="btn primary" href="{{ path('NewsBundle_admin_new') }}">{{ "platformd.admin.news.create" | trans }}</a>
 
 {% if news.haveToPaginate %}
-    {{ pagerfanta(news, 'default', {'routeName' : 'NewsBundle_admin_index'}) }}
+    {{ pagerfanta(news, 'default', {'routeName' : 'NewsBundle_admin_homepage'}) }}
 {% endif %}
 
 <script type="text/javascript">
