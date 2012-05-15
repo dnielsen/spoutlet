@@ -6,13 +6,17 @@ admin_giveaway_new:
     pattern: /new
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:new }
 
+admin_giveaway_export_machine_codes:
+    pattern: /{id}/export
+    defaults: { _controller: GiveawayBundle:GiveawayAdmin:export }
+
 admin_giveaway_edit:
     pattern: /edit/{id}
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:edit }
 
-admin_giveaway_metrics:
-    pattern: /metrics
-    defaults: { _controller: GiveawayBundle:GiveawayAdmin:metrics }
+admin_giveaway_machine_codes:
+    pattern: /codes/{id}
+    defaults: { _controller: GiveawayBundle:GiveawayAdmin:codes }
 
 admin_giveaway_pool_index:
     pattern: /{giveaway}/pools

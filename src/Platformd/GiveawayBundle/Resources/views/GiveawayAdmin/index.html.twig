@@ -13,6 +13,7 @@
             <th>{{ "tenant_site" | trans({}, 'admin') }}</th>
             <th>{{ 'url' | trans }}</th>
             <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
+            <th>{{ 'giveaway.type.type' | trans }}</th>
             <th>{{ "platformd.help.actions" | trans }}</th>
         </tr>
     </thead>
@@ -23,15 +24,24 @@
             <td>{{ giveaway.locale | site_name }}</td>
             <td>
                 {% set giveawayUrl = url('giveaway_show', {'slug': giveaway.slug, '_locale': giveaway.locale }) %}
-                <a href="{{ giveawayUrl }}">{{ giveawayUrl }}</a>
+                <a href="{{ giveawayUrl }}" target="_blank">{{ giveawayUrl }}</a>
             </td>
             <td>
                 {{ giveaway.statusText | trans }}
             </td>
             <td>
+                {{ (giveaway.giveawayTypeText) | trans }}
+            </td>
+            <td>
                 <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
                 |
                 <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
+                {% if giveaway.allowMachineCodeSubmit %}
+                    |
+                    <a href="{{ path('admin_giveaway_export_machine_codes', {'id' : giveaway.id}) }}">{{ 'export_pending_machine_codes' | trans({}, 'admin')  }}</a>
+                    |
+                    <a href="{{ path('admin_giveaway_machine_codes', {'id' : giveaway.id}) }}">{{ "approve_machine_codes" | trans  }}</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

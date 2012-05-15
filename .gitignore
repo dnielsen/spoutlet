@@ -5,11 +5,11 @@
 /vendor/
 /app/config/parameters.ini
 /web/uploads/*
-.rsync_cache
 /web/css/packed
 /web/js/packed
 /web/css/*
 /web/js/*
 /dev
 /web/video
+/web/media/*
 VERSION

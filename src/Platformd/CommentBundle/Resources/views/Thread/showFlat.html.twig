@@ -14,14 +14,14 @@
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         {% include "FOSCommentBundle:Comment:new.html.twig" with {"form": newCommentForm, "first": 0 == thread.numComments, "thread": thread} %}
     {% else %}
-        {{ 'platformd.comment.login_to_comment' | trans({'%login_url%': path('fos_user_security_login')}) | raw }}
+        {{ 'platformd.comment.login_to_comment' | trans({
+            '%login_url%': path('fos_user_security_login', { 'return': app.request.uri })
+        }) | raw }}
     {% endif %}
 
     {% if thread.numComments > 0 %}
         <h3>
-            {% transchoice thread.numComments with {'%num%': thread.numComments} from "FOSCommentBundle" %}
-                Showing %num% comment|Showing %num% comments
-            {% endtranschoice %}
+            {% transchoice thread.numComments with {'%num%': thread.numComments} from "FOSCommentBundle" %}Showing %num% comment|Showing %num% comments{% endtranschoice %}
         </h3>
         <div class="fos_comment_thread_comments" id="commentList">
             {# show the flat comments, but default the sorting to be newest first #}

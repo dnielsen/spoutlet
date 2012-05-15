@@ -6,29 +6,35 @@ use Platformd\SpoutletBundle\Entity\Event;
 
 class DefaultController extends Controller
 {
-    
+    /**
+     * The homepage!
+     *
+     * Mostly just a wrapper for
+     *  * {% render "SpoutletBundle:Default:banner" %}
+     * and
+     *  * {% render 'SpoutletBundle:Default:featuredContent' %}
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction()
     {
         return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
     /**
-     * @param bool $onlyNews Whether to show *just* the news tab
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
-    public function featuredContentAction($onlyNews = false)
+    public function featuredContentAction()
     {
-        $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
+        $abstractEvents = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:AbstractEvent')
+            ->getCurrentEventsOrderedByCreated($this->getLocale())
+        ;
 
-        if ($onlyNews) {
-            $abstractEvents = false;
-        } else {
-            $abstractEvents = $this->getDoctrine()
-                ->getEntityManager()
-                ->getRepository('SpoutletBundle:AbstractEvent')
-                ->getCurrentEventsOrderedByCreated($this->getLocale())
-            ;
-        }
+        $news = $this->getNewsRepo()
+            ->findMostRecentForLocale($this->getLocale(), 10)
+        ;
 
         // see #64 - we're no longer showing events here
         // we could move this into the query above, but this changes so often, I'm hesitant
@@ -41,9 +47,8 @@ class DefaultController extends Controller
         }
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'news'          => $news,
+            'news'     => $news,
             'abstractEvents' => $finalEvents,
-            'onlyNews'      => $onlyNews,
         ));
     }
 

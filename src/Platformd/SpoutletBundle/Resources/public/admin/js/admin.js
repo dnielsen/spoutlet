@@ -1,7 +1,9 @@
 jQuery(document).ready(function() {
     jQuery('table.tablesorter').tablesorter();
 
-    jQuery('input.date-picker').datepicker();
+    jQuery('input.date-picker').datepicker({
+        dateFormat: 'yy-mm-dd'
+    });
 
     jQuery('input.datetime-picker').datetimepicker({
         dateFormat: 'yy-mm-dd',

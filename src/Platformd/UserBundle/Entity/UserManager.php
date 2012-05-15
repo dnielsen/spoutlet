@@ -61,7 +61,7 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
-    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD)
+    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD, $search = null)
     {
 
         $qb = $this
@@ -70,12 +70,22 @@ class UserManager extends BaseUserManager
             ->orderBy('u.'.$sort_by)
         ;
 
+        if ($search) {
+        	$qb
+        	  ->andWhere('u.username like :user OR   u.email LIKE  :user OR u.firstname LIKE :user OR u.lastname LIKE  :user  ' )
+        	  ->setParameter('user', "%${search}%")
+        	;
+        }
+        
         if ($this->getLocale()) {
             $qb
                 ->andWhere('u.locale = :locale OR u.locale IS NULL')
                 ->setParameter('locale', $this->getLocale())
             ;
         }
+        
+        //var_dump($qb);
+        //exit;
 
         return $qb->getQuery();
     }

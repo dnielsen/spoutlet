@@ -1,0 +1,16 @@
+parameters:
+    # I don't believe these are used
+    # I don't believe these are used
+    media_bucket_name: knp_media_test
+    media_subdirectory: media
+
+services:
+    knp_media.media_persistence_listener:
+        class: Knp\MediaBundle\Listener\MediaPersistenceListener
+        arguments:
+            # todo - refactor this to be configurable - is hardcoded for us right now
+            - @pd_media_filesystem
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }
+

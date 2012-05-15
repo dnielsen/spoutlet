@@ -16,7 +16,7 @@
             </div>
             <div class="widget-content">
                 <div class="text">
-                    <table>
+                    <table width="100%">
                         <tbody>
                             <tr>
                                 <th>{{ 'platformd.giveaway.giveaway' | trans }}</th>
@@ -24,23 +24,34 @@
                                 <th>{{ 'platformd.giveaway.assigned.assigned_at' | trans }}</th>
                                 <th>{{ 'platformd.giveaway.assigned.view_giveaway' | trans }}</th>
                             </tr>
-                            {% for giveawayKey in giveawayKeys %}
+                            {% for keyRequest in keyRequests %}
                             <tr>
-                                <td>{{ giveawayKey.pool.giveaway.name }}</td>
-                                <td class="nowrap">{{ giveawayKey.value }}</td>
-                                <td>
-                                    {{ 'sweepstakes_date_format' | trans(giveawayKey.assignedAtTranslationArray) }}
+                                <td>{{ keyRequest.giveaway.name }}</td>
+                                <td class="{{ keyRequest.value ? 'nowrap' : '' }}">
+                                    {% if keyRequest.value %}
+                                        {{ keyRequest.value }}
+                                    {% else %}
+                                        <em>
+                                            {{ keyRequest.status | trans }}
+                                        </em>
+                                    {% endif %}
                                 </td>
                                 <td class="nowrap">
-                                    <a href="{{ path('giveaway_show', {'slug': giveawayKey.pool.giveaway.slug, '_locale': giveawayKey.pool.giveaway.locale} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+                                    {% if keyRequest.assignedAt %}
+                                        {{ 'sweepstakes_date_format' | trans(keyRequest.assignedAtTranslationArray) }}
+                                    {% endif %}
+                                </td>
+                                <td class="nowrap">
+                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': keyRequest.giveaway.locale} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
                                 </td>
                             </tr>
                             {% endfor %}
+                            
                         </tbody>
                     </table>
                 </div>
             </div>
-
+            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}</div>
             <div class="widget-footer">
                 &nbsp;
             </div>

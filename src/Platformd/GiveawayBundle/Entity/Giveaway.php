@@ -21,6 +21,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Giveaway extends AbstractEvent
 {
+    // the traditional key giveaway type
+    const TYPE_KEY_GIVEAWAY = 'key_giveaway';
+
+    // the machine-submit giveaway type
+    const TYPE_MACHINE_CODE_SUBMIT = 'machine_code_submit';
+
+    const TYPE_TEXT_PREFIX = 'giveaway.type.';
+
+    const REDEMPTION_LINE_PREFIX = '* ';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -36,7 +46,6 @@ class Giveaway extends AbstractEvent
      * instructions on the giveaway.
      *
      * @ORM\Column(type="text")
-     * @Assert\NotBlank
      *
      * @var string
      */
@@ -50,6 +59,11 @@ class Giveaway extends AbstractEvent
      */
     protected $status = 'disabled';
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=30)
+     */
+    protected $giveawayType = self::TYPE_KEY_GIVEAWAY;
 
     /**
      * Key of valid status to a text translation key for that status
@@ -61,7 +75,7 @@ class Giveaway extends AbstractEvent
         'disabled' => 'platformd.giveaway.status.disabled',
         // active but with zero keys
         'inactive' => 'platformd.giveaway.status.inactive',
-        // totally awesome actice
+        // totally awesome active
         'active' => 'platformd.giveaway.status.active',
     );
 
@@ -97,7 +111,7 @@ class Giveaway extends AbstractEvent
     /**
      * Add an user
      *
-     * @param \Platformd\UserBundle\Entity\GiveawayPool $pool
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      */
     public function addUser(GiveawayPool $pool)
     {
@@ -165,6 +179,11 @@ class Giveaway extends AbstractEvent
         return $this->getStatus() == 'active';
     }
 
+    public function setAsActive()
+    {
+        $this->setStatus('active');
+    }
+
     /**
      * @return string
      */
@@ -176,19 +195,44 @@ class Giveaway extends AbstractEvent
     /**
      * @param string $redemptionInstructions
      */
-    public function setRedemptionInstructions($redemptionInstructions)
+    private function setRedemptionInstructions($redemptionInstructions)
     {
         $this->redemptionInstructions = $redemptionInstructions;
     }
 
     /**
-     * Explodes the redemptionInstructions by new line into an array of instructions
+     * Explodes the redemptionInstructions text by new line and removing the prefix:
+     *
+     * The literal source text (with opening asterisks) looks like this:
+     *
+     *  * foo
+     *  * bar
      *
      * @return array
      */
     public function getRedemptionInstructionsArray()
     {
-        return explode("\n", $this->getRedemptionInstructions());
+        $arr = explode(self::REDEMPTION_LINE_PREFIX, $this->getRedemptionInstructions());
+
+        foreach ($arr as $lineNo => $line) {
+            // remove trailing whitespace
+            $arr[$lineNo] = trim($line);
+
+            // unset the whole dang entry if it's empty
+            if (empty($line)) {
+                unset($arr[$lineNo]);
+            }
+        }
+
+        // re-index the array
+        $arr = array_values($arr);
+
+        // make sure we have at least 6 entries
+        while (count($arr) < 6) {
+            $arr[] = '';
+        }
+
+        return $arr;
     }
 
     /**
@@ -199,7 +243,32 @@ class Giveaway extends AbstractEvent
      */
     public function setRedemptionInstructionsArray(array $instructions)
     {
-        $this->setRedemptionInstructions(implode("\n", $instructions));
+        $str = '';
+        foreach ($instructions as $line) {
+            // only store the line if it's non-blank
+            if ($line) {
+                $str .= self::REDEMPTION_LINE_PREFIX . $line."\n";
+            }
+        }
+
+        $this->setRedemptionInstructions(trim($str));
+    }
+
+    /**
+     * Returns the redemption instructions array, but without blank lines
+     *
+     * @return array
+     */
+    public function getCleanedRedemptionInstructionsArray()
+    {
+        $cleaned = array();
+        foreach ($this->getRedemptionInstructionsArray() as $item) {
+            if ($item) {
+                $cleaned[] = $item;
+            }
+        }
+
+        return $cleaned;
     }
 
     /**
@@ -236,5 +305,67 @@ class Giveaway extends AbstractEvent
     public function getShowRouteName()
     {
         return 'giveaway_show';
+    }
+
+    /**
+     * @return string
+     */
+    public function getGiveawayType()
+    {
+        return $this->giveawayType;
+    }
+
+    public function giveawayTypeText()
+    {
+        return self::TYPE_TEXT_PREFIX.$this->getGiveawayType();
+    }
+
+    /**
+     * @param string $giveawayType
+     */
+    public function setGiveawayType($giveawayType)
+    {
+        if ($giveawayType != self::TYPE_KEY_GIVEAWAY && $giveawayType != self::TYPE_MACHINE_CODE_SUBMIT) {
+            throw new \InvalidArgumentException(sprintf('Invalid giveaway type "%s" given', $giveawayType));
+        }
+
+        $this->giveawayType = $giveawayType;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getShowKeys()
+    {
+        // show the keys if its a traditional key giveaway
+        return $this->getGiveawayType() == self::TYPE_KEY_GIVEAWAY;
+    }
+
+    /**
+     * Whether or not a user is able to freely register for giveaway keys for this giveaway
+     *
+     * @return bool
+     */
+    public function allowKeyFetch()
+    {
+        return self::TYPE_KEY_GIVEAWAY == $this->getGiveawayType();
+    }
+
+    /**
+     * Whether or not the user can submit a machine code for this giveaway
+     *
+     * @return bool
+     */
+    public function allowMachineCodeSubmit()
+    {
+        return self::TYPE_MACHINE_CODE_SUBMIT == $this->getGiveawayType();
+    }
+
+    static public function getTypeChoices()
+    {
+        return array(
+            self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX.self::TYPE_KEY_GIVEAWAY,
+            self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX.self::TYPE_MACHINE_CODE_SUBMIT,
+        );
     }
 }

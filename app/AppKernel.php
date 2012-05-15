@@ -26,11 +26,14 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
+            new JMS\TranslationBundle\JMSTranslationBundle(),
+            new \Liip\ImagineBundle\LiipImagineBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new \Knp\MediaBundle\KnpMediaBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
@@ -40,6 +43,8 @@ class AppKernel extends Kernel
             new Platformd\NewsBundle\NewsBundle(),
             new Platformd\CEVOBundle\CEVOBundle(),
             new Platformd\SweepstakesBundle\SweepstakesBundle(),
+            new \Platformd\TranslationBundle\TranslationBundle(),
+            new \Platformd\MediaBundle\MediaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

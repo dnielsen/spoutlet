@@ -1,0 +1,41 @@
+parameters:
+    media_s3_directory: media
+
+services:
+    # gaufrette adapter - used to setup the pd_media_filesystem Gaufrette filesystem
+    platformd.media.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_bucket_name%"
+        calls:
+          - [ "setDirectory", [ %media_s3_directory%]]
+
+    # media exposer path resolver
+    platformd.media_path_resolver:
+        class: Platformd\MediaBundle\Exposer\MediaPathResolver
+        arguments:
+            - %s3_bucket_name%
+            - %media_s3_directory%
+        public: false
+        tags:
+            - { name: 'knp_media_exposer.resolver' }
+
+    # listener for setting locale
+    platformd.media.doctrine.locale_setter_listener:
+        class: Platformd\MediaBundle\Doctrine\LocaleSetterListener
+        arguments:
+            - "@service_container"
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+
+    # custom s3 loader
+    platformd.media.imagine.data.loader.s3_loader:
+        class: Platformd\MediaBundle\Imagine\Data\Loader\S3Loader
+        arguments:
+            - "@liip_imagine"
+            - "@pd_media_filesystem"
+            # temporarily inject filesystem loader, for backup purposes
+            - "@liip_imagine.data.loader.filesystem"
+        tags:
+            - { name: liip_imagine.data.loader, loader: s3 }

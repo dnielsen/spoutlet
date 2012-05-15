@@ -31,10 +31,13 @@ $loader->registerNamespaces(array(
     'Behat\MinkBundle'              => __DIR__.'/../vendor/bundles',
     'Knp\Bundle'                    => __DIR__.'/../vendor/bundles',
     'Knp\Menu'                      => __DIR__.'/../vendor/KnpMenu/src',
+    'Liip'                          => __DIR__.'/../vendor/bundles',
+    'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
+    'PHPParser'        => __DIR__.'/../vendor/php-parser/lib'
 ));
 
 // intl
@@ -62,3 +65,4 @@ Swift::registerAutoload(__DIR__.'/../vendor/swiftmailer/lib/swift_init.php');
 
 // uncomment to see stack traces in PHPUnit
 // xdebug_enable();
+ini_set('xdebug.max_nesting_level', 110);

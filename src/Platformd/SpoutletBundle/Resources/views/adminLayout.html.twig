@@ -27,7 +27,7 @@
 
         {% block javascripts %}
 		    {% javascripts
-		        'bundles/spoutlet/js/jquery-1.6.2.min.js'
+		        'bundles/spoutlet/js/libs/jquery-1.7.2.min.js'
 		        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
 		        'bundles/spoutlet/alt_js/jquery-ui-timepicker-addon.js'
 		        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
@@ -45,7 +45,7 @@
             {%- if block('title') -%}
                 {{ block('title') }} | Admin
             {%- else -%}
-            AlienwareArena Admin
+                {{ 'platformd.layout.default_admin_title' | trans }}
             {%- endif -%}
         </title>
 
@@ -115,6 +115,11 @@
                                 </li>
                             </ul>
                         </li>
+                        {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
+                            <li>
+                                <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 {% endif %}
 

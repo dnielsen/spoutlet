@@ -4,6 +4,9 @@ imports:
     - { resource: "@CEVOBundle/Resources/config/services.yml" }
     - { resource: "@CEVOBundle/Resources/config/security.yml" }
     - { resource: version.php }
+    - { resource: "@GiveawayBundle/Resources/config/services.yml" }
+    - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
+    - { resource: "@MediaBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -17,6 +20,7 @@ framework:
     templating:
         engines: ['twig']
         assets_version: %app.version%
+        assets_version_format: %%s?v=%%s
     session:
         default_locale: %locale%
         auto_start:     true
@@ -81,7 +85,7 @@ fos_user:
     user_class:      Platformd\UserBundle\Entity\User
     from_email:
         address:        %sender_email_address%
-        sender_name:    Alienware Arena
+        sender_name:    %sender_email_name%
     registration:
         form:
             type: platformd_user_registration
@@ -95,7 +99,19 @@ fos_user:
         mailer:       platformd_user.mailer
 
 parameters:
+    # a setting used in the test environment with CEVOAuthenticationListener
+    allow_faked_auth:   false
+    available_locales: [en, ja, zh]
+    locale_translations:
+        en: English
+        ja: Japanese
+        zh: Chinese
+
+    # important to setup the translation DB loader to load things for these domains
+    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
+
     sender_email_address: "noreply@%base_host%"
+    sender_email_name: Alienware Arena
     platformd.news_source:
         alienware: source_alienware
         cevo: CEVO
@@ -203,7 +219,7 @@ parameters:
 
 jms_i18n_routing:
     default_locale: %locale%
-    locales: [en, ja, zh]
+    locales: %available_locales%
     strategy: custom
     hosts:
         # %host_suffix% might be something like "staging"
@@ -259,6 +275,10 @@ knp_gaufrette:
         platformd.homepage_banners:
             service:
                 id: platformd.homepage_banner.s3.adapter
+        # todo - ideally this would be the only one, and we'd use Media everywhere
+        platformd.media:
+            service:
+                id: platformd.media.s3.adapter
     filesystems:
         platformd.avatar:
             adapter: platformd.avatar
@@ -269,6 +289,33 @@ knp_gaufrette:
         platformd.homepage_banners:
             adapter: platformd.homepage_banners
             alias: homepage_banners_filesystem
+        platformd.media:
+            adapter: platformd.media
+            alias: pd_media_filesystem
 
 knp_media_exposer:
     base_url: http://%base_host%
+
+jms_translation:
+    configs:
+        entity_extract:
+            dirs: [%kernel.root_dir%, %kernel.root_dir%/../src]
+            output_dir: %kernel.root_dir%/Resources/translations
+            ignored_domains: [routes]
+            excluded_names: [*TestCase.php, *Test.php]
+            excluded_dirs: [cache, data, logs, Features]
+
+liip_imagine:
+    data_loader:    s3
+    filter_sets:
+        # on a list of articles, for example
+        article_list:
+            quality: 100
+            filters:
+                # usually 200x113 - but we don't care much about the height
+                thumbnail: { size: [200, 150], mode: inset }
+        article_full:
+            quality: 100
+            filters:
+                # usually 634x400 - but we don't care much about the height
+                thumbnail: { size: [634, 500], mode: inset }

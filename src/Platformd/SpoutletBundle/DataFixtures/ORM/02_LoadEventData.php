@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SploutletBundle\DataFixtures\ORM;
+namespace Platformd\SpoutletBundle\DataFixtures\ORM;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;

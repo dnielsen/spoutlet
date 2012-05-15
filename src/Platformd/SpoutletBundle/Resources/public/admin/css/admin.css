@@ -31,3 +31,14 @@ label {
 form .input {
     margin-left: 195px;
 }
+
+.admin-translations-table .edit-form {
+    display: none;
+}
+
+textarea {
+    width: 500px;
+    height: 100px;
+
+}
+

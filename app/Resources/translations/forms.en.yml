@@ -37,15 +37,6 @@ fos_user_registration_form_termsAccepted: |
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
 fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email"
 
-# I don't believe these (or some of these) are used - they are in FOSUserBundle.*.yml
-fos_user_profile_form_user_username: "Username"
-fos_user_profile_form_user_firstname: "First name"
-fos_user_profile_form_user_lastname: "Last name"
-fos_user_profile_form_user_email: "Email"
-fos_user_profile_form_user_is_organizer: "Content Admin"
-fos_user_profile_form_user_is_super_admin: "Super-admin"
-fos_user_profile_form_user_admin_level: Admin Level
-
 giveaway_name: "Name"
 giveaway_slug: "URL string - /giveaways/"
 giveaway_content: "Description"
@@ -60,6 +51,7 @@ giveway_pool_upperLimit: Upper limit
 giveway_pool_lowerLimit: Lower limit
 giveway_pool_isActive: Active
 giveway_pool_keysfile: Keys file
+giveaway_giveawayType: Giveaway Type
 
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/U Display
@@ -68,4 +60,4 @@ giveway_pool_assigned_total: Assigned/Total
 news_title: Title
 news_body: Body
 news_locale: Site
-news_published: Published
+news_published: Published?

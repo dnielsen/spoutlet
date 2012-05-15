@@ -61,6 +61,15 @@
         {{ form_errors(form) }}
         {{ form_label(form, label|default(null)) }}
         {{ form_widget(form) }}
+        {% if form.get('help') %}
+            <p class="help-block">
+                {{ form.get('help') }}
+            </p>
+        {% endif %}
     </div>
 {% endspaceless %}
 {% endblock field_row %}
+
+{% block knp_media_row %}
+    {{ form_row(form.fileObject) }}
+{% endblock %}

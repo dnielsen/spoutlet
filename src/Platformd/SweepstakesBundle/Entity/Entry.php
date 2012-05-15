@@ -27,12 +27,14 @@ class Entry
     /**
      * @var \Platformd\UserBundle\Entity\User
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $user;
 
     /**
      * @var \Platformd\SweepstakesBundle\Entity\Sweepstakes
      * @ORM\ManyToOne(targetEntity="Platformd\SweepstakesBundle\Entity\Sweepstakes", inversedBy="entries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $sweepstakes;
 

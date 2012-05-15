@@ -20,6 +20,11 @@ a.button:hover {
   color: #ddd;
 }
 
+/* should be applied whenever we want text to respect spaces and line breaks */
+.controlled-spacing {
+    white-space: pre-wrap;
+}
+
 ul.normal-margin, ol.normal-margin {
     margin-left: 40px;
 }
@@ -212,10 +217,6 @@ table.list tr.even {
 
 div#content.microsoft {
   text-align: center;
-}
-
-.ad_728x90 {
-  background-image: url('/images/ads/aw-ms7-728x90.jpg') !important;
 }
 
 #fos_user_registration_form_hasAlienwareSystem {
@@ -424,4 +425,47 @@ ul.list-normal {
 #photoArray img {
     width: 280px;
     height: 210px;
+}
+
+.machine-code-form {
+    white-space: nowrap;
+}
+
+/* for use when stacking things on the left and right - gives you the same padding as if you were putting them in std_2col */
+.std-item {
+    padding-bottom: 15px;
+}
+
+.machine-code-form input.txt {
+    border: 1px solid #ccc;
+    padding: 4px 4px;
+    font-size: 13px;
+    width: 120px;
+}
+.machine-code-form input.button {
+    width: 72px;
+}
+.machine-code-form .form-error {
+    display: none;
+}
+.machine-code-form.with-error .form-error {
+    display: block;
+}
+.machine-code-form.with-error input.txt {
+    background-color: #fcb3b3;
+}
+
+.article-image {
+    width: 200px;
+    float: left;
+    margin-right: 12px;
+}
+.article-image img {
+    width: 200px;
+}
+.article-actions a {
+    float: right;
+}
+.article-image-large img {
+    width: 634px;
 }

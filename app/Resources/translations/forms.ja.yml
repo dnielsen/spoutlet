@@ -59,6 +59,7 @@ giveway_pool_upperLimit:  上限
 giveway_pool_lowerLimit:  下限
 giveway_pool_isActive:  有効
 giveway_pool_keysfile:  キーファイル
+giveaway_giveawayType: Giveaway Type
 
 # not an actual field - but used on the index page
 giveway_pool_lower_upper_display: L/Uディスプレー
@@ -67,4 +68,4 @@ giveway_pool_assigned_total:  アサイン/合計
 news_title: Title
 news_body: Body
 news_locale: Site
-news_published: Published
+news_published: Published?

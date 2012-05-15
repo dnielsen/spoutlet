@@ -320,7 +320,7 @@ abstract class AbstractEvent
     {
         $this->locale = $locale;
     }
-
+    
     public function getBannerImage()
     {
         return $this->bannerImage;

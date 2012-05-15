@@ -21,7 +21,7 @@ class NewsRepository extends EntityRepository
     public function getFindNewsQuery()
     {
         return $this->createQueryBuilder('n')
-            ->orderBy('n.created', 'DESC')
+            ->orderBy('n.postedAt', 'DESC')
             ->getQuery();
     }
 
@@ -32,10 +32,42 @@ class NewsRepository extends EntityRepository
     public function findAllForLocale($locale)
     {
         return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
+
+    /**
+     * @param $locale
+     * @return \Platformd\NewsBundle\Entity\News;
+     */
+    public function findOneFeaturedForLocale($locale)
+    {
+        // todo - this will need to do something smarter - see #68
+        return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @param $locale
+     * @param $num
+     * @return \Platformd\NewsBundle\Entity\News[]
+     */
+    public function findMostRecentForLocale($locale, $num)
+    {
+        return $this->createBaseQueryBuilder($locale)
+            ->orderBy('n.postedAt', 'DESC')
+            ->getQuery()
+            ->setMaxResults($num)
+            ->execute()
+        ;
+    }
+
 
     /**
      * Creates a base query builder that's locale-aware and only returns

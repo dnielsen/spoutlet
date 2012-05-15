@@ -1,3 +1,7 @@
+_imagine:
+    resource: .
+    type:     imagine
+
 NewsBundle:
     resource: "@NewsBundle/Resources/config/routing.yml"
     prefix:   /
@@ -18,6 +22,10 @@ PlatformDSweepstakesBundle:
     resource: "@SweepstakesBundle/Resources/config/routing.yml"
     prefix:   /
 
+PlatformdTranslationBundle:
+    resource: "@TranslationBundle/Resources/config/routing.yml"
+    prefix:   /
+
 # user bundle stuff
 _user_bundle_generic_import:
     resource: "@UserBundle/Resources/config/routing.yml"
@@ -31,3 +39,4 @@ fos_comment:
 fos_comment_extra:
     resource: "@CommentBundle/Resources/config/routing_extra.yml"
     prefix:   "/comments"
+

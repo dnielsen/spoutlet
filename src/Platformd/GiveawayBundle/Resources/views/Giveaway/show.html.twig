@@ -43,20 +43,43 @@
                         <div class="widget-title">{{ 'platformd.giveaway.redeem' | trans }}</div>
                     </div>
                     <div class="widget-content">
-                        <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
-                        {% if available_keys > 0 %}
+                        {%  if giveaway.showKeys  %}
+                            <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
+                        {%  endif %}
+
+                        {% if giveaway.allowKeyFetch and available_keys > 0 %}
                             <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
                                 <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
                             </div>
                         {% endif %}
 
+                        {% if giveaway.allowMachineCodeSubmit %}
+                            <div style="margin-bottom: 10px;">
+                                {% if is_granted('ROLE_USER') %}
+                                    {% if has_user_applied_to_giveaway(giveaway) %}
+                                        {{ 'platformd.sweepstakes.entered.message' | trans }}
+                                    {% else %}
+                                        <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">
+                                            <div class="form-error">{{ 'no_machine_code_submitted' | trans }}</div>
+                                            <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
+                                            <input type="text" name="machine_code" id="machine_code_input" class="txt" />
+
+                                            <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
                         <ol>
                             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
+                            {% if  (redemptionSteps is not empty)  %}
                             {% for redemptionStep in redemptionSteps %}
                             <li>
-                                <span class="item">{{ redemptionStep | raw }}</span>
+                                <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
                             </li>
                             {% endfor %}
+                            {% endif %}
                         </ol>
                     </div>
                 </div>
@@ -66,7 +89,7 @@
             <div class="left">
                 <div id="giveaway-info" class="widget-66">
                     <div class="widget-header">
-                        <div class="widget-title">{{ giveaway.name }}</div>
+                        <div class="widget-title controlled-spacing">{{ giveaway.name }}</div>
                     </div><!-- widget-header -->
 
                     <div class="widget-content" id="giveaway-details">
@@ -84,4 +107,23 @@
             </div><!-- clear -->
         </div><!-- std_2col -->
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            $('.machine-code-form').submit(function(e) {
+                var $code = $(this).find('input[name=machine_code]');
+
+                if (!$code.val()) {
+                    e.preventDefault();
+                    $(this).addClass('with-error');
+                } else {
+                    $(this).removeClass('with-error');
+                }
+            });
+        });
+    </script>
 {% endblock %}
