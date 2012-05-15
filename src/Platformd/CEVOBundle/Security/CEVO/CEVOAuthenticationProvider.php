@@ -96,12 +96,12 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         //    Make updates if ncessary
         //    and pass back existingUser data
         if ($existingUser) {
-               $this->checkUpdates($existingUser, $allUserData);
-               return $existingUser;
+            $this->checkUpdates($existingUser, $allUserData);
+            return $existingUser;
         }
 
         // No Cevo ID was found, so look for user by email
-        // if we find an email, update CevoUserID 
+        // if we find an email, update CevoUserID
         if ($email && $existingUser = $this->userManager->findUserByEmail($email)) {
             $existingUser->setCevoUserId($cevoId);
             $this->userManager->updateUser($existingUser);
