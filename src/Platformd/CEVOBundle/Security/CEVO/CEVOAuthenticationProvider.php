@@ -87,8 +87,8 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function findOrCreateUser($cevoId, $email, array $allUserData)
     {
-    	
-    	// look for user in DB by cevoUserId
+        
+        // look for user in DB by cevoUserId
         $existingUser = $this->userManager->findUserBy(array(
             'cevoUserId' => $cevoId,
         ));
@@ -96,8 +96,8 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         // We found CevoUserId 
         //    Make updates if ncessary 
         //    and pass back existingUser data
-        if ($existingUser) {	
-        	   $this->checkUpdates($existingUser, $allUserData);
+        if ($existingUser) {    
+               $this->checkUpdates($existingUser, $allUserData);
                return $existingUser;
         }
 
@@ -164,42 +164,42 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
      * @param array $allUserData
      */
     protected function checkUpdates($existingUser, $allUserData) {
-    	
-    	$update = false;
-    	
-       	$first_name = isset($allUserData['first_name']) ? $allUserData['first_name'] : null;
-    	$last_name  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
-    	$country = isset($allUserData['country']) ? $allUserData['country'] : null;
-    	$birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
+        
+        $update = false;
+        
+           $first_name = isset($allUserData['first_name']) ? $allUserData['first_name'] : null;
+        $last_name  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
+        $country = isset($allUserData['country']) ? $allUserData['country'] : null;
+        $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
 
-    	// Check first name
-    	if ($existingUser->getFirstname() != $first_name) {
-    		$existingUser->setFirstname($first_name);
-    		$update = true;
-    	}
-    	
-    	// Check last name
-    	if ($existingUser->getLastname() != $last_name ) {
-    		$existingUser->setLastname($last_name);
-    		$update = true;
-    	}
-    	
-    	// Check country
-    	if ($existingUser->getCountry() != $country ) {
-    		$existingUser->setCountry($country);
-    		$update = true;
-    	}
-    	
-    	// Check DOB
-    	if ($existingUser->getBirthdate() != $birthday ) {
-    		$existingUser->setBirthdate($birthday);
-    		$update = true;
-    	}
-    	
-    	if ($update) {
-    	    $this->userManager->updateUser($existingUser);
-    	}
-    	
+        // Check first name
+        if ($existingUser->getFirstname() != $first_name) {
+            $existingUser->setFirstname($first_name);
+            $update = true;
+        }
+        
+        // Check last name
+        if ($existingUser->getLastname() != $last_name ) {
+            $existingUser->setLastname($last_name);
+            $update = true;
+        }
+        
+        // Check country
+        if ($existingUser->getCountry() != $country ) {
+            $existingUser->setCountry($country);
+            $update = true;
+        }
+        
+        // Check DOB
+        if ($existingUser->getBirthdate() != $birthday ) {
+            $existingUser->setBirthdate($birthday);
+            $update = true;
+        }
+        
+        if ($update) {
+            $this->userManager->updateUser($existingUser);
+        }
+        
     }
 
     public function supports(TokenInterface $token)
