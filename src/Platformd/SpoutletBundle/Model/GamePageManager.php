@@ -94,6 +94,15 @@ class GamePageManager
     }
 
     /**
+     * @param $age
+     * @return \Platformd\SpoutletBundle\Entity\GamePAge
+     */
+    public function findMostRecentGamePageForAge($age)
+    {
+        return $this->getRepository()->findMostRecentGameForAge($age, $this->getDatabaseSiteKey());
+    }
+
+    /**
      * @return \Platformd\SpoutletBundle\Entity\GamePage[]
      */
     public function findArchives()

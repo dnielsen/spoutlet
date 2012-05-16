@@ -4,6 +4,7 @@
             <ul class="sf-menu sf-js-enabled sf-shadow" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 <li><a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.main_menu.alienware' | trans }}</a></li>
+                <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 <li><a href="{{ path('events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }}</a></li>
 
                 {% if showVideo %}

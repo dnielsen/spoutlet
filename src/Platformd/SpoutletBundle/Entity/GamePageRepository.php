@@ -47,6 +47,26 @@ class GamePageRepository extends EntityRepository
     }
 
     /**
+     * @param $age
+     * @param $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     */
+    public function findMostRecentGameForAge($age, $site)
+    {
+        // we don't use the age yet
+
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addPublishedQueryBuilder($qb);
+
+        return $qb
+            ->addOrderBy('gp.createdAt', 'DESC')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
      * @param $site
      * @return \Platformd\SpoutletBundle\Entity\GamePage[]
      */

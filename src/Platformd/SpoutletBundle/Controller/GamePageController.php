@@ -21,7 +21,7 @@ class GamePageController extends Controller
             ->findActiveGamesInCategoriesForAge($this->getAgeManager()->getUsersAge())
         ;
 
-        $firstGame = (count($categorizedGames)) > 0 ? $categorizedGames : null;
+        $firstGame = $this->getGamePageManager()->findMostRecentGamePageForAge($this->getAgeManager()->getUsersAge());
 
         // todo - make this the real query, this is easy while stubbing out the look of the page
         $archives = $this->getGamePageManager()->findArchives();
@@ -39,6 +39,8 @@ class GamePageController extends Controller
      */
     public function showAction($slug)
     {
+        $this->enforceAgeProtection(self::AGE_LIMIT);
+
         $gamePage = $this->getGamePageManager()->findOneBySlug($slug);
         if (!$gamePage) {
             throw $this->createNotFoundException('No game page found in this site for slug '.$slug);

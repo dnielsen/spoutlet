@@ -22,8 +22,8 @@
                             {% set url = gamePage | pd_link %}
                             <li{{ loop.first ? ' class="first"' : ''}}>
                                 <a href="{{ url }}"{{ target_blank(gamePage) }}>
-                                    {% if gamePage.game.logo %}
-                                        <img src="{{ media_path(gamePage.game.logo, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
+                                    {% if gamePage.game.logoThumbnail %}
+                                        <img src="{{ media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
                                     {% else %}
                                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
                                     {% endif %}
@@ -54,7 +54,7 @@
 {% block javascripts %}
     {{ parent() }}
     {# temporarily disabled because the auto-play is annoying #}
-    {% if firstGame and false %}
+    {% if firstGame %}
         <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
 
         <script type="text/javascript">
