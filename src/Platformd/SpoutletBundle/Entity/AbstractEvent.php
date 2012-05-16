@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
+use Platformd\SpoutletBundle\Entity\Game as Game;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -178,6 +179,14 @@ abstract class AbstractEvent
      * @var string
      */
     protected $timezone = 'UTC';
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Game")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @var Game
+     */
+
+    protected $game;
 
     /**
      * Get id
@@ -559,5 +568,21 @@ abstract class AbstractEvent
         $timestamp = $dt->format('U') + $offset;
 
         return DateTime::createFromFormat('U', $timestamp, $userTimezone);
+    }
+
+    /**
+     * @return Game
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param Game $game
+     */
+    public function setGame($game)
+    {
+        $this->game = $game;
     }
 }

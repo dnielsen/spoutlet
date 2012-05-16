@@ -51,12 +51,12 @@ class Event extends AbstractEvent
     protected $hosted_by;
 
     /**
-     * @var string game
+     * @var string gameStr
      *
-     * @ORM\Column(name="game", type="string", length=255, nullable=true)
+     * @ORM\Column(name="gameStr", type="string", length=255, nullable=true)
      */
-    protected $game;
-    
+    protected $gameStr;
+
     /**
     * @var string url_redirect
     *
@@ -112,7 +112,7 @@ class Event extends AbstractEvent
     /**
      * Get city
      *
-     * @return string 
+     * @return string
      */
     public function getCity()
     {
@@ -132,7 +132,7 @@ class Event extends AbstractEvent
     /**
      * Get country
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
@@ -144,7 +144,7 @@ class Event extends AbstractEvent
      *
      * @return string $hosted_by
      */
-    public function getHostedBy() 
+    public function getHostedBy()
     {
         return $this->hosted_by;
     }
@@ -163,22 +163,24 @@ class Event extends AbstractEvent
      * Get game
      *
      * @return string $game
+     * @depreciated use ->getGame to get the game object instead
      */
-    public function getGame() 
+    public function getGameStr()
     {
-        return $this->game;
+        return $this->gameStr;
     }
 
     /**
      * Set game
      *
-     * @param string $game
+     * @param string $gameStr
+     * @deprecated use ->setGame to se the game object instead
      */
-    public function setGame($game)
+    public function setGameStr($gameStr)
     {
-        $this->game = $game;
+        $this->gameStr = $gameStr;
     }
-    
+
     /**
     * Get url_redirect
     *
@@ -188,7 +190,7 @@ class Event extends AbstractEvent
     {
         return $this->url_redirect;
     }
-    
+
     /**
     * Set url_redirect
     *
@@ -197,8 +199,8 @@ class Event extends AbstractEvent
     public function setUrlRedirect($url_redirect)
     {
         $this->url_redirect = $url_redirect;
-    }    
-    
+    }
+
     /**
      * @return string
      */

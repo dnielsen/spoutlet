@@ -112,7 +112,7 @@ class Game
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -141,7 +141,7 @@ class Game
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -169,7 +169,7 @@ class Game
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -193,7 +193,7 @@ class Game
     /**
      * Get category
      *
-     * @return string 
+     * @return string
      */
     public function getCategory()
     {
@@ -218,7 +218,7 @@ class Game
     /**
      * Get facebookFanpageUrl
      *
-     * @return string 
+     * @return string
      */
     public function getFacebookFanpageUrl()
     {
