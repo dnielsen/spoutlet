@@ -8,6 +8,15 @@
     </a>
 {% endmacro %}
 
+{# either set the custom background image, or leave it to false #}
+{% if gamePage.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(gamePage.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
 {% block content %}
 
     <div class="game-show-page">
@@ -45,6 +54,7 @@
                     {{ gamePage.keyFeature3 | raw }}
                 </div>
             </div>
+            <div class="clear">&nbsp;</div>
         </div>
 
         <div class="std_1col">

@@ -101,7 +101,8 @@
 	</head>
 	<body class="site-{{ app.session.locale }}">
 		<div id="omni">
-	        <div id="page">
+            {# big line to add a background-image if the page_background_image block has been set #}
+	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
 	            <div class="background-takeover" id="custom_background_top">
 	                <div class="background-takeover" id="custom_background_bot">
 	                    <div id="header">
