@@ -396,7 +396,6 @@ translations_admin: Translations Admin
 edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
-status: Status
 
 age_confirm:
     headline: Please Confirm Your Date of Birth
@@ -417,6 +416,7 @@ games_trailers:
         free-to-play: Free to Play
         mmo:   MMO
 games_and_trailers: Games and Trailers
+games: Games
 
 archives: ARCHIVES
 past_partnerships: Past Partnerships
