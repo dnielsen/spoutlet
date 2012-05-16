@@ -122,8 +122,8 @@ abstract class AbstractEvent
 
     /**
      * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     protected $bannerImageFile;
@@ -165,8 +165,8 @@ abstract class AbstractEvent
 
     /**
      * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     protected $generalImageFile;
@@ -182,7 +182,7 @@ abstract class AbstractEvent
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -221,7 +221,7 @@ abstract class AbstractEvent
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -249,7 +249,7 @@ abstract class AbstractEvent
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -278,7 +278,7 @@ abstract class AbstractEvent
      * Get ready
      *
      * @deprecated I don't think this was ever used
-     * @return boolean 
+     * @return boolean
      */
     public function getReady()
     {
@@ -298,7 +298,7 @@ abstract class AbstractEvent
     /**
      * Get content
      *
-     * @return text 
+     * @return text
      */
     public function getContent()
     {
@@ -320,7 +320,7 @@ abstract class AbstractEvent
     {
         $this->locale = $locale;
     }
-    
+
     public function getBannerImage()
     {
         return $this->bannerImage;
