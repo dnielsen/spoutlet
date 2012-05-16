@@ -110,6 +110,13 @@ class GameAdminController extends Controller
                     $game->setLogo(null);
                 }
 
+                // either persist the logo thumbnail, or unset it
+                if ($game->getLogoThumbnail()->getFileObject()) {
+                    $em->persist($game->getLogoThumbnail());
+                } else {
+                    $game->setLogoThumbnail(null);
+                }
+
                 // either persist the logos, or unset it
                 if ($game->getPublisherLogos()->getFileObject()) {
                     $em->persist($game->getPublisherLogos());

@@ -29,6 +29,10 @@ class GameType extends AbstractType
                 'image_label' => 'Game Logo',
                 'image_help'  => 'Recommended size: 440x166',
             ))
+            ->add('logoThumbnail', new MediaType(), array(
+                'image_label' => 'Game Logo Thumbnail',
+                'image_help'  => 'Recommended size: 195x80',
+            ))
             ->add('publisherLogos', new MediaType(), array(
                 'image_label' => 'Publisher/Developer Logos',
                 'image_help'  => 'Recommended size: 634px wide or less and any height',

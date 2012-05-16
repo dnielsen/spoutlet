@@ -76,13 +76,22 @@ class Game
     private $facebookFanpageUrl;
 
     /**
-     * The logo for the game
+     * The fullysize logo for the game
      *
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $logo;
+
+    /**
+     * The logo thumbnail for the game
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $logoThumbnail;
 
     /**
      * An image that contains the logos for the individual publisher/developer logos
@@ -260,5 +269,21 @@ class Game
     public function __toString()
     {
         return (string) $this->getName();
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getLogoThumbnail()
+    {
+        return $this->logoThumbnail;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $logoThumbnail
+     */
+    public function setLogoThumbnail(Media $logoThumbnail)
+    {
+        $this->logoThumbnail = $logoThumbnail;
     }
 }
