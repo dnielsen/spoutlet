@@ -820,6 +820,9 @@ class User extends BaseUser
     /**
      * Used on the user admin form to choose one role
      *
+     * This whole system stinks a bit and needs refactoring.
+     * Also see EditUserFormType
+     *
      * @param string $role either ROLE_ORGANIZER or ROLE_SUPER_ADMIN
      * @throws \InvalidArgumentException
      */
@@ -831,6 +834,10 @@ class User extends BaseUser
         } elseif ($role == 'ROLE_SUPER_ADMIN') {
             $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(true);
+        } elseif ($role == 'ROLE_PARTNER') {
+            $this->setIsOrganizer(false);
+            $this->setIsSuperAdmin(false);
+            $this->switchRole('ROLE_PARTNER', true);
         } else {
             $this->setIsSuperAdmin(false);
             $this->setIsSuperAdmin(false);
@@ -844,6 +851,8 @@ class User extends BaseUser
     {
         if ($this->hasRole('ROLE_ORGANIZER')) {
             return 'ROLE_ORGANIZER';
+        } elseif ($this->hasRole('ROLE_PARTNER')) {
+            return 'ROLE_PARTNER';
         } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
             return 'ROLE_SUPER_ADMIN';
         } else {
@@ -858,6 +867,8 @@ class User extends BaseUser
     {
         if ($this->hasRole('ROLE_ORGANIZER')) {
             return 'Limited admin';
+        } elseif ($this->hasRole('ROLE_PARTNER')) {
+            return 'Dell Partner';
         } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
             return 'Full Admin';
         } else {

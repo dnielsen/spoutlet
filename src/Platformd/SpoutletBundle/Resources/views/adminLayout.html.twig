@@ -81,9 +81,14 @@
         <div class="row-fluid">
             <div class="sidebar span3">
                 <div class="well">
-                    {% if is_granted('ROLE_ORGANIZER') %}
+                    {% if is_granted('ROLE_ORGANIZER') or is_granted('ROLE_ADMIN_GAME') %}
                         <h5>Content Management</h5>
                         <ul>
+                            {#
+                                todo - refactor this too check things like ROLE_ADMIN_GIVEAWAY,
+                                and then use role hierarchy to give the organizer these roles
+                            #}
+                            {% if is_granted('ROLE_ORGANIZER') %}
                             <li>
                                 <a href="{{ path('admin_giveaway_index') }}">Giveaways</a>
                                 <ul>
@@ -124,6 +129,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
 
                             {% if is_granted('ROLE_ADMIN_GAME') %}
                             <li>
@@ -144,6 +150,7 @@
                                 </ul>
                             </li>
                             {% endif %}
+
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
                                     <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
