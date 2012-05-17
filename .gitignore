@@ -1,4 +1,3 @@
-/bin/vendors
 /web/bundles/
 /app/bootstrap*
 /app/cache/*
