@@ -1,23 +1,21 @@
-
-{% if  app.session.locale == 'ja' or app.session.locale == 'en' %}
 <div id="mainAd">
+
+{% if app.session.locale == 'ja' %}
     <!-- 300x250_JP -->
     <div id='div-gpt-ad-1330376602908-0' style='width:300px; height:250px;'>
         <script type='text/javascript'>
             googletag.cmd.push(function() { googletag.display('div-gpt-ad-1330376602908-0'); });
         </script>
     </div>
-</div>
 {% endif %}
 
 {% if  app.session.locale == 'zh' %}
-<div id="mainAd">
     <!-- 300x250_CN -->
     <div id='div-gpt-ad-1330376725290-0' style='width:300px; height:250px;'>
         <script type='text/javascript'>
             googletag.cmd.push(function() { googletag.display('div-gpt-ad-1330376725290-0'); });
         </script>
     </div>
-</div>
 {% endif %}
+</div>
 
