@@ -588,6 +588,53 @@ ul.list-normal {
     margin: 20px 0;
 }
 
+.game-show-page .video-player {
+    border: 1px solid #4a4a4a;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+}
+.game-show-page .video-player h3 {
+    text-align: center;
+}
+.game-show-page .video-player .player-left {
+    width: 635px;
+    float: left;
+    margin-right: 10px;
+}
+.game-show-page .video-player .player-left object {
+    margin-left: -45px;
+    margin-right: -45px;
+}
+.game-show-page .video-player .thumbnails-right {
+    width: 240px;
+    float: left;
+}
+.game-show-page .video-player .thumbnails-right ul {
+    list-style: none;
+}
+.game-show-page .video-player .thumbnails-right ul li {
+    margin-bottom: 10px;
+}
+.game-show-page .video-player .thumbnails-right ul li img {
+    width: 200px;
+    height: 150px;
+}
+.game-show-page .video-player .thumbnails-right ul li a {
+    display: block;
+    border: 2px solid #4a4a4a;
+    width: 200px;
+    height: 150px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+}
+.game-show-page .video-player .thumbnails-right ul li a.active {
+    border-color: #009CDA;
+}
+
 .game-show-page .media-gallery {
     text-align: center;
     padding: 10px 35px;

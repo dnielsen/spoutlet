@@ -8,6 +8,14 @@
     </a>
 {% endmacro %}
 
+{% macro _renderYoutubeThumbnail(youtubeVideoId) %}
+    <li>
+        <a href="#" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play">
+            <img src="http://img.youtube.com/vi/{{ youtubeVideoId }}/0.jpg" alt="video preview" />
+        </a>
+    </li>
+{% endmacro %}
+
 {# either set the custom background image, or leave it to false #}
 {% if gamePage.backgroundImage %}
     {% set customPageBackgroundImage = media_path(gamePage.backgroundImage) %}
@@ -80,7 +88,29 @@
         </div>
 
         <div class="std_1col">
-            <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+            <div class="video-player">
+                <h3>{{ 'videos' | trans }}</h3>
+
+                <div class="player-left">
+                    <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+                </div>
+                <div class="thumbnails-right">
+                    <ul>
+                    {% if gamePage.youtubeIdTrailer2 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2) }}
+                    {% endif %}
+
+                    {% if gamePage.youtubeIdTrailer3 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3) }}
+                    {% endif %}
+
+                    {% if gamePage.youtubeIdTrailer4 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4) }}
+                    {% endif %}
+                    </ul>
+                </div>
+                <div class="clear">&nbsp;</div>
+            </div>
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
             <div class="media-gallery ad-gallery">
@@ -157,9 +187,9 @@
             mediaGalleryAnchors.unbind('click');
         };
 
-        GamePage.initializeMovie = function() {
+        GamePage.initializeMovie = function(youtubeVideoId) {
             var par = {};
-            par.flashvars = "startMovie={{ gamePage.youtubeIdTrailer1 }}";
+            par.flashvars = "startMovie="+youtubeVideoId;
             par.flashvars += "&startCue=none";
             par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
             par.flashvars += "&videoTitle=";
@@ -168,16 +198,32 @@
             par.flashvars += "&alertText=";
             par.allowScriptAccess = "always";
             par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"950", height:"393", id:"theater_screen", name:"theater_screen"};
+            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"740", height:"493", id:"theater_screen", name:"theater_screen"};
             var id = "theater_screen";
 
             // temporarily disable, because the autostart is annoying
-            //var myytplayer = swfobject.createSWF(att, par, id);
+            var myytplayer = swfobject.createSWF(att, par, id);
+        };
+
+        /**
+         * Makes .youtube-play links play their video in the main window
+         */
+        GamePage.initializeVideoLinks = function() {
+            $('.youtube-play').click(function(e) {
+                e.preventDefault();
+
+                var youtubeVideoId = $(this).data('youtube-id');
+                $('.youtube-play').removeClass('active');
+                $(this).addClass('active');
+
+                GamePage.initializeMovie(youtubeVideoId);
+            });
         };
 
         jQuery(document).ready(function() {
-            GamePage.initializeMovie();
+            GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
             GamePage.initializeMediaGallery();
+            GamePage.initializeVideoLinks();
         });
     </script>
 {% endblock %}
