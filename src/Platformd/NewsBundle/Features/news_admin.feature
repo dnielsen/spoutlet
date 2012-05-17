@@ -5,6 +5,7 @@ Feature: News Administration
 
     Scenario: Add a news story
         Given I am authenticated as an organizer
+            And there is a game called "Skyrim"
             And I am on "/admin"
         When I click to add new "News"
             And I fill in the following:
@@ -14,5 +15,16 @@ Feature: News Administration
                 | Blurb     | My cool blurb |
                 | Body      | Lorem ipsum   |
             And I attach the file "foo.jpg" to "Upload an image"
+            And I select "Skyrim" from "Game"
             And I press "Save news"
         Then I should see "news item has been created"
+
+    Scenario: Edit a news story to link it to a game
+        Given I am authenticated as an organizer
+            And there is a news item called "Skryim release"
+            And there is a game called "Skyrim"
+            And I am on the edit page for the news story
+        When I select "Skyrim" from "Game"
+            And I fill in "Title" with "Updated title"
+            And I press "Save news"
+        Then I should see "news item has been modified"
