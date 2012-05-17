@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Entity\GamePage;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
+use Knp\MediaBundle\Util\MediaUtil;
 
 /**
  * Manager for GamePage.
@@ -23,10 +24,13 @@ class GamePageManager
 
     private $session;
 
-    public function __construct(EntityManager $em, Session $session)
+    private $mediaUtil;
+
+    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil)
     {
         $this->em = $em;
         $this->session = $session;
+        $this->mediaUtil = $mediaUtil;
     }
 
     /**
@@ -162,21 +166,15 @@ class GamePageManager
      */
     private function handleMediaFields(GamePage $gamePage)
     {
-        if ($gamePage->getbuttonImage1() && $gamePage->getButtonImage1()->getFileObject()) {
-            $this->em->persist($gamePage->getButtonImage1());
-        } else {
+        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage1())) {
             $gamePage->setButtonImage1(null);
         }
 
-        if ($gamePage->getButtonImage2() && $gamePage->getButtonImage2()->getFileObject()) {
-            $this->em->persist($gamePage->getButtonImage2());
-        } else {
+        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage2())) {
             $gamePage->setButtonImage2(null);
         }
 
-        if ($gamePage->getBackgroundImage() && $gamePage->getBackgroundImage()->getFileObject()) {
-            $this->em->persist($gamePage->getBackgroundImage());
-        } else {
+        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getBackgroundImage())) {
             $gamePage->setBackgroundImage(null);
         }
     }
@@ -191,9 +189,7 @@ class GamePageManager
         /** @var $media \Platformd\MediaBundle\Entity\Media */
         foreach ($gamePage->getMediaGalleryMedias() as $media) {
             // either persist it, or remove it from the collection
-            if ($media->getFileObject() || $media->getId()) {
-                $this->em->persist($media);
-            } else {
+            if (!$this->mediaUtil->persistRelatedMedia($media)) {
                 $gamePage->getMediaGalleryMedias()->removeElement($media);
             }
         }

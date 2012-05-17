@@ -104,23 +104,17 @@ class GameAdminController extends Controller
                 $em->persist($game);
 
                 // either persist the logo, or unset it
-                if ($game->getLogo()->getFileObject()) {
-                    $em->persist($game->getLogo());
-                } else {
+                if (!$this->getMediaUtil()->persistRelatedMedia($game->getLogo())) {
                     $game->setLogo(null);
                 }
 
                 // either persist the logo thumbnail, or unset it
-                if ($game->getLogoThumbnail()->getFileObject()) {
-                    $em->persist($game->getLogoThumbnail());
-                } else {
+                if (!$this->getMediaUtil()->persistRelatedMedia($game->getLogoThumbnail())) {
                     $game->setLogoThumbnail(null);
                 }
 
-                // either persist the logos, or unset it
-                if ($game->getPublisherLogos()->getFileObject()) {
-                    $em->persist($game->getPublisherLogos());
-                } else {
+                // either persist the publisher logos, or unset it
+                if (!$this->getMediaUtil()->persistRelatedMedia($game->getPublisherLogos())) {
                     $game->setPublisherLogos(null);
                 }
 

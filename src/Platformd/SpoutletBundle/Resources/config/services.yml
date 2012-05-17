@@ -99,6 +99,7 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@session"
+            - "@knp_media.util.media_util"
 
     platformd.doctrine.locales_relationship_listener:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener

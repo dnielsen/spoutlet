@@ -184,4 +184,12 @@ class Controller extends BaseController
     {
         return $this->container->get('platformd.age.age_manager');
     }
+
+    /**
+     * @return \Knp\MediaBundle\Util\MediaUtil
+     */
+    protected function getMediaUtil()
+    {
+        return $this->container->get('knp_media.util.media_util');
+    }
 }

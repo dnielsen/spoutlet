@@ -24,3 +24,8 @@ services:
             - "%kernel.debug%"
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    knp_media.util.media_util:
+        class : Knp\MediaBundle\Util\MediaUtil
+        arguments:
+            - "@doctrine.orm.entity_manager"

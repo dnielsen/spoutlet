@@ -597,6 +597,7 @@ ul.list-normal {
 }
 .game-show-page .video-player h3 {
     text-align: center;
+    margin-bottom: 20px;
 }
 .game-show-page .video-player .player-left {
     width: 635px;
