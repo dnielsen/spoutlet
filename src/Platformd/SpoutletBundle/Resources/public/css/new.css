@@ -670,3 +670,8 @@ ul.list-normal {
 .game-show-page .media-gallery .no-scroll .ad-back, .game-show-page .media-gallery .no-scroll .ad-forward {
     display: none;
 }
+
+.legalese {
+    margin: 10px auto;
+    width: 950px;
+}

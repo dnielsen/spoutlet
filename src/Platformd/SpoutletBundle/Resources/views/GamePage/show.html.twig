@@ -16,6 +16,10 @@
     </li>
 {% endmacro %}
 
+{% block legal_footer %}
+    {{ gamePage.legalVerbiage|raw }}
+{% endblock %}
+
 {# either set the custom background image, or leave it to false #}
 {% if gamePage.backgroundImage %}
     {% set customPageBackgroundImage = media_path(gamePage.backgroundImage) %}

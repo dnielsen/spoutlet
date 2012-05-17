@@ -169,7 +169,12 @@
 
 	                    	{% block content %}{% endblock %}
 	                    </div>
-	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}                    
+	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}
+                        {% if block('legal_footer') %}
+                            <div class="legalese">
+                                {{ block('legal_footer') }}
+                            </div>
+                        {% endif %}
 	                    {% include 'SpoutletBundle::footer.html.twig' %}
 	                </div>
 	            </div>
