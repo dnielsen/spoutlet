@@ -417,6 +417,7 @@ games_trailers:
         mmo:   MMO
 games_and_trailers: Games and Trailers
 games: Games
+game_feed: Game Feed
 
 archives: ARCHIVES
 past_partnerships: Past Partnerships

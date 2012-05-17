@@ -26,8 +26,19 @@
                 <div class="split-ad">
                     <a href="#" onclick="alert('Left side!'); return false;" class="split-left"></a>
                     <a href="#" onclick="alert('Right side!'); return false;" class="split-right"></a>
-                    <img src="http://placehold.it/298x250/000000/ffffff&text=Two+ads+half+width+will+go+here" alt="ads" />
+                    <img src="http://placehold.it/298x150/000000/ffffff&text=Two+half+will+go+here+300x150" alt="ads" />
                 </div>
+
+                <div class="game-feed">
+                    <h4>{{ 'game_feed' | trans }}</h4>
+                    <ul>
+                        <li><a href="#">item 1</a></li>
+                        <li><a href="#">item 2</a></li>
+                        <li><a href="#">item 3</a></li>
+                    </ul>
+                </div>
+
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
 
             <div class="left">
@@ -58,6 +69,12 @@
                     {{ gamePage.keyFeature2 | raw }}
                     {{ gamePage.keyFeature3 | raw }}
                 </div>
+
+                {% if gamePage.game.publisherLogos %}
+                    <div class="publisher-logos">
+                        <img src="{{ media_path(gamePage.game.publisherLogos) }}" alt="{{ gamePage.game.name }}" />
+                    </div>
+                {% endif %}
             </div>
             <div class="clear">&nbsp;</div>
         </div>
