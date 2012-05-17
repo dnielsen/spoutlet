@@ -3,10 +3,12 @@ Feature: News Administration
     As an organizer
     I need to be able to add, edit, and publish news stories
 
-    Scenario: Add a news story
+    Background:
         Given I am authenticated as an organizer
             And there is a game called "Skyrim"
-            And I am on "/admin"
+
+    Scenario: Add a news story
+        Given I am on "/admin"
         When I click to add new "News"
             And I fill in the following:
                 | Title     | My new event  |
@@ -19,10 +21,8 @@ Feature: News Administration
             And I press "Save news"
         Then I should see "news item has been created"
 
-    Scenario: Edit a news story to link it to a game
-        Given I am authenticated as an organizer
-            And there is a news item called "Skryim release"
-            And there is a game called "Skyrim"
+    Scenario: Edit a news story
+        Given there is a news item called "Skryim release"
             And I am on the edit page for the news story
         When I select "Skyrim" from "Game"
             And I fill in "Title" with "Updated title"

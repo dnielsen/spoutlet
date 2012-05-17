@@ -15,19 +15,22 @@ class GiveawayType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'textarea');
-        $builder->add('slug', new SlugType());
+        $builder->add('slug', new SlugType(), array('label' => 'URL'));
     	$builder->add('content', 'textarea');
     	$builder->add('giveawayType', 'choice', array(
     			'choices' => Giveaway::getTypeChoices(),
+                'label' => 'Giveaway Type'
     	));
         $builder->add('bannerImageFile', 'file');
         $builder->add('redemptionInstructionsArray', 'collection', array(
             'type' => 'textarea',
+            'label' => 'Redemption Instructions'
         ));
         $builder->add('status', 'choice', array(
             'choices' => Giveaway::getValidStatusesMap(),
             'empty_value' => 'platformd.giveaway.status.blank_value',
         ));
+        $builder->add('game');
         $builder->add('locale', new SiteChoiceType());
     }
 

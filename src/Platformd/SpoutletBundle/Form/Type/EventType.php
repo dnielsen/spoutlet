@@ -37,7 +37,8 @@ class EventType extends AbstractType
     	$builder->add('country', 'text');
     	$builder->add('content', 'textarea');
         $builder->add('hosted_by', 'text');
-        $builder->add('game', 'text');
+        $builder->add('gameStr', 'text', array('label' => 'Game Name (don\'t use anymore)'));
+        $builder->add('game');
         $builder->add('url_redirect', 'text');
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');

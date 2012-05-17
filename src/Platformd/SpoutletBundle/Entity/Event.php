@@ -163,7 +163,7 @@ class Event extends AbstractEvent
      * Get game
      *
      * @return string $game
-     * @depreciated use ->getGame to get the game object instead
+     * @deprecated use ->getGame to get the game object instead
      */
     public function getGameStr()
     {

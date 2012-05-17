@@ -39,6 +39,8 @@ class SweepstakesAdminType extends EventType
 
         $builder->add('officialRules', 'textarea');
 
+        $builder->add('game');
+
     	$builder->add('content', 'textarea');
     }
 

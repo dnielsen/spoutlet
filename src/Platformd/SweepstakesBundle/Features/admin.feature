@@ -1,33 +1,31 @@
-Feature: Admin
-  In order to enter new sweepstakes
-  As an admin
-  I need to manage my sweepstakes
+Feature: Sweepstake Admin
+    In order to control which sweepstakes show up on each site
+    As an admin
+    I need to be able to add and edit sweepstakes
 
-  Background:
-    Given I have an account
-     And I have the "ROLE_ADMIN, ROLE_ORGANIZER" permissions
-     And I am authenticated
+    Background:
+        Given I am authenticated as an organizer
+            And there is a game called "Skyrim"
 
-  Scenario: I can create a new sweepstakes
-     Given I have no "SweepstakesBundle:Sweepstakes" in the database
-    When I go to "/admin"
-     And I follow "Sweepstakes"
-     And I follow "Create"
-     And I fill in "Name" with "My sweepstakes"
-     And I select "Demo" from "Site"
-     And I fill in "Starts at" with "06/05/2012"
-     And I fill in "Ends at" with "06/15/2012"
-     And I select "us" from "Eligible Countries"
-     And I fill in "Official Rules" with "the rules!"
-     And I fill in "Content" with "the release!"
-     And I press "Save"
-    Then I should see "Sweepstakes Saved"
+    Scenario: I can create a new sweepstakes
+        Given I am on "/admin"
+        When I click to add new "Sweepstakes"
+            And I fill in the following:
+                | Name                  | My sweepstakes    |
+                | Site                  | en                |
+                | Starts at             | 06/05/2012        |
+                | Ends at               | 06/15/2012        |
+                | Eligible Countries    | US                |
+                | Official Rules        | the rules!        |
+                | Content               | the release!      |
+            And I select "Skyrim" from "Game"
+            And I press "Save"
+        Then I should see "Sweepstakes Saved"
 
-
-  Scenario: I can export sweepstakes results
-    Given there is a sweepstakes
-     And some people are entered into the sweepstakes
-    When I go to "/admin/sweepstakes/metrics"
-     And I follow "view"
-     And I follow "Download CSV"
-    Then the response status code should be 200
+    Scenario: I can export sweepstakes results
+        Given there is a sweepstakes
+            And some people are entered into the sweepstakes
+        When I go to "/admin/sweepstakes/metrics"
+            And I follow "view"
+            And I follow "Download CSV"
+        Then the response status code should be 200

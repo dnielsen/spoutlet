@@ -29,9 +29,7 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function iAmOnTheEditPageForTheNewsStory()
     {
-        $url = $this->getContainer()->get('router')->generate('NewsBundle_admin_edit', array('id' => $this->currentNewsArticle->getId()));
-
-        $this->getSession()->visit($url);
+        $this->NavigateTo('NewsBundle_admin_edit', array('id' => $this->currentNewsArticle->getId()));
     }
 
     /**

@@ -58,6 +58,12 @@ class AbstractFeatureContext extends MinkContext
         );
     }
 
+    public function NavigateTo($namedRoute, $parameters)
+    {
+        $url = $this->getContainer()->get('router')->generate($namedRoute, $parameters);
+        $this->getSession()->visit($url);
+    }
+
     /**
      * @Given /^I am authenticated as an organizer$/
      */
