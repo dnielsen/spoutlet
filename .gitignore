@@ -1,3 +1,4 @@
+/bin/vendors
 /web/bundles/
 /app/bootstrap*
 /app/cache/*
@@ -12,4 +13,5 @@
 /dev
 /web/video
 /web/media/*
+/.idea
 VERSION
