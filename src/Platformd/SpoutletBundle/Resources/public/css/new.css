@@ -545,6 +545,25 @@ ul.list-normal {
     display: -moz-inline-box;
     display: inline-block;
 }
+.game-show-page .split-ad {
+    position: relative;
+    border: 1px solid #b0b0b0;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+}
+.game-show-page .split-ad a {
+    position: absolute;
+    width: 150px;
+    height: 250px;
+}
+.game-show-page .split-ad a.split-left {
+    left: 0;
+}
+.game-show-page .split-ad a.split-right {
+    left: 150px;
+}
 
 .game-show-page .media-gallery {
     text-align: center;

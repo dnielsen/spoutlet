@@ -35,7 +35,7 @@ class GamePageType extends AbstractType
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended Size: Huge, but with a 980 pixel black gap',
+                'image_help'    => 'Recommended Size: Huge, but with a 970 pixel black gap',
             ))
             ->add('aboutGame', null, array(
                 'label' => 'About the Game',
