@@ -1,40 +1,35 @@
 # (13.5)
 
-* put a game drop-down on each individual other section:
-    (2)
-    - news
-    - giveaways
-    - sweepstakes
-    - events
+TODOS
 
-* Create an additional admin level "Dell Contacts"
-    (1)
-
-* All videos should *not* autoplay
-    (.5)
-
-* all links on games page should open in a new window except video and video
+- all links on games page should open in a new window except video and video
     thumbnails
     (.5)
 
-* "like" button on the games page
+- "like" button on the games page
     (1)
 
-* upper-right ad on page
-    (1)
-
-* video player with thumbnails on
-    (2.5)
-
-* If on a page handled by CEVO, will need to link back to them in various
+- If on a page handled by CEVO, will need to link back to them in various
     places
     (2)
 
-* On frontend, using a lot of images
-    (1)
+DONE
 
-* New navigation entry for games
+x All videos should *not* autoplay
     (.5)
 
-* birthday date formatting is localized
+
++ upper-right ad on page
+    (1)
+
++ video player with thumbnails on
+    (2.5)
+
++ On frontend, using a lot of images
+    (1)
+
++ New navigation entry for games
+    (.5)
+
++ birthday date formatting is localized
     (1.5)

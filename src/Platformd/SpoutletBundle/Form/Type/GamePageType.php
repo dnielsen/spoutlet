@@ -69,6 +69,18 @@ class GamePageType extends AbstractType
                 'label' => 'Game Video 4',
                 'help'  => 'Paste Youtube ID',
             ))
+            ->add('youtubeIdTrailer1Headline', 'text', array(
+                'label' => 'Game Feed Headline',
+            ))
+            ->add('youtubeIdTrailer2Headline', 'text', array(
+                'label' => 'Game Feed Headline',
+            ))
+            ->add('youtubeIdTrailer3Headline', 'text', array(
+                'label' => 'Game Feed Headline',
+            ))
+            ->add('youtubeIdTrailer4Headline', 'text', array(
+                'label' => 'Game Feed Headline',
+            ))
             ->add('legalVerbiage', null, array(
                 'label' => 'Legal Verbiage',
                 'attr'  => array('class' => 'ckeditor')

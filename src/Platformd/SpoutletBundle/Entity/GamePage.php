@@ -137,11 +137,25 @@ class GamePage implements LinkableInterface
     private $youtubeIdTrailer1;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $youtubeIdTrailer1Headline;
+
+    /**
      * @var string $youtubeIdTrailer2
      *
      * @ORM\Column(name="youtubeIdTrailer2", type="string", length=255, nullable=true)
      */
     private $youtubeIdTrailer2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $youtubeIdTrailer2Headline;
 
     /**
      * @var string $youtubeIdTrailer3
@@ -151,11 +165,25 @@ class GamePage implements LinkableInterface
     private $youtubeIdTrailer3;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $youtubeIdTrailer3Headline;
+
+    /**
      * @var string $youtubeIdTrailer4
      *
      * @ORM\Column(name="youtubeIdTrailer4", type="string", length=255, nullable=true)
      */
     private $youtubeIdTrailer4;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $youtubeIdTrailer4Headline;
 
     /**
      * @var text $legalVerbiage
@@ -687,5 +715,69 @@ class GamePage implements LinkableInterface
     public function getLogo()
     {
         return $this->getGame()->getLogo();
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeIdTrailer1Headline()
+    {
+        return $this->youtubeIdTrailer1Headline;
+    }
+
+    /**
+     * @param string $youtubeIdTrailer1Headline
+     */
+    public function setYoutubeIdTrailer1Headline($youtubeIdTrailer1Headline)
+    {
+        $this->youtubeIdTrailer1Headline = $youtubeIdTrailer1Headline;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeIdTrailer2Headline()
+    {
+        return $this->youtubeIdTrailer2Headline;
+    }
+
+    /**
+     * @param string $youtubeIdTrailer2Headline
+     */
+    public function setYoutubeIdTrailer2Headline($youtubeIdTrailer2Headline)
+    {
+        $this->youtubeIdTrailer2Headline = $youtubeIdTrailer2Headline;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeIdTrailer3Headline()
+    {
+        return $this->youtubeIdTrailer3Headline;
+    }
+
+    /**
+     * @param string $youtubeIdTrailer3Headline
+     */
+    public function setYoutubeIdTrailer3Headline($youtubeIdTrailer3Headline)
+    {
+        $this->youtubeIdTrailer3Headline = $youtubeIdTrailer3Headline;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeIdTrailer4Headline()
+    {
+        return $this->youtubeIdTrailer4Headline;
+    }
+
+    /**
+     * @param string $youtubeIdTrailer4Headline
+     */
+    public function setYoutubeIdTrailer4Headline($youtubeIdTrailer4Headline)
+    {
+        $this->youtubeIdTrailer4Headline = $youtubeIdTrailer4Headline;
     }
 }
