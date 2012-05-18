@@ -15,16 +15,18 @@ Feature: Games Page
     Scenario: Only show published games
     Scenario: See games organized by their category
         Given I have the following games pages:
-            | name | category | status      | sites |
-            | Foo  | rpg      | published   | en_GB |
-            | Bar  | rpg      | published   | en_GB |
-            | Baz  | action   | published   | en_GB |
-            | Boo  | mmo      | unpublished | en_GB |
+            | name  | category | status      | sites |
+            | Foo   | rpg      | published   | en_GB |
+            | Bar   | strategy | published   | en_GB |
+            | Baz   | action   | published   | en_GB |
+            | Happy | other    | published   | en_GB |
+            | Fun   | strategy | unpublished | en_GB |
             And I have verified my age
         When I go to "/games"
-        Then I should see 2 games under the "RPG" category
+        Then I should see 1 games under the "RPG" category
             And I should see 1 game under the "Action" category
-            But I shouldn't see any games under the "MMO" category
+            And I should see 1 games under the "Strategy" category
+            And I should see 1 games under the "Other" category
 
     Scenario: See all "events" (news, giveaways, etc) related to the game
 

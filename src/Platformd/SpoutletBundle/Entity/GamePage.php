@@ -679,7 +679,7 @@ class GamePage implements LinkableInterface
      */
     public function getLinkableOverrideUrl()
     {
-        return strlen($this->externalUrl) == 0 ? false : $this->externalUrl;
+        return $this->getExternalUrl();
     }
 
     /**
