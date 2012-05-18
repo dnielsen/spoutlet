@@ -46,8 +46,19 @@ class GamePageController extends Controller
             throw $this->createNotFoundException('No game page found in this site for slug '.$slug);
         }
 
+        // events, giveaways, sweepstakes related to this game and active
+        $feedEvents = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:AbstractEvent')
+            ->findActivesForGame($gamePage->getGame(), $this->getLocale())
+        ;
+
+        $feedNewsItems = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getLocale());
+
         return array(
             'gamePage' => $gamePage,
+            'feedEvents' => $feedEvents,
+            'feedNewsItems' => $feedNewsItems,
         );
     }
 

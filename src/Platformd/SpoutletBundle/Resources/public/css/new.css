@@ -670,6 +670,9 @@ ul.list-normal {
 .game-show-page .media-gallery .no-scroll .ad-back, .game-show-page .media-gallery .no-scroll .ad-forward {
     display: none;
 }
+.game-show-page a.media-link-color {
+    color: #F0E000;
+}
 
 .legalese {
     margin: 10px auto;

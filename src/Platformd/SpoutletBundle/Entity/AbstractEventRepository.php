@@ -165,6 +165,27 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
+     * @param Game $game
+     * @param $siteKey
+     * @return \Platformd\SpoutletBundle\Entity\AbstractEvent[]
+     */
+    public function findActivesForGame(Game $game, $siteKey)
+    {
+        $qb = $this->getBaseQueryBuilder($siteKey);
+        $query = $this->addActiveQuery($qb)
+            ->orderBy('e.created', 'DESC')
+            ->andWhere('e.game = :game')
+            ->setParameter('game', $game)
+            ->getQuery()
+        ;
+
+        $items = $query->getResult();
+        $items = $this->removeDisabledGiveaways($items);
+
+        return $items;
+    }
+
+    /**
      * Adds the "is active" OR upcoming part of the query by date
      *
      * This allows the starts_at or ends_at to be null, and for that to be "active"
