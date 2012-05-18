@@ -371,15 +371,26 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iHaveVerifiedMyAge()
     {
-        return array(
-            new When('I go to "/age/verify"'),
-            new When('I select "1984" from "birthday[year]"'),
-            new When('I select "6" from "birthday[month]"'),
-            new When('I select "5" from "birthday[day]"'),
-            new When('I press "Confirm"'),
-            new When('I go to "/games"'),
-            new Then('the headline should contain "GAMES AND TRAILERS"')
-        );
+        $currentUrl = $this->getSession()->getCurrentUrl();
+
+        if (strlen($currentUrl) == 0) {
+            $currentUrl = '/games';
+        }
+
+        $ra[] = new When('I go to "/age/verify"');
+        $ra[] = new When('I select "1984" from "birthday[year]"');
+        $ra[] = new When('I select "6" from "birthday[month]"');
+        $ra[] = new When('I select "5" from "birthday[day]"');
+        $ra[] = new When('I press "Confirm"');
+        $ra[] = new When('I go to "/games"');
+        $ra[] = new Then('the headline should contain "GAMES AND TRAILERS"');
+
+        if ($currentUrl != '/games')
+        {
+            $ra[] = new When(sprintf('I go to "%s"', $currentUrl));
+        }
+
+        return $ra;
     }
 
     /**

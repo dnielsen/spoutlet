@@ -282,7 +282,7 @@ class Game
     /**
      * @param \Platformd\MediaBundle\Entity\Media $logoThumbnail
      */
-    public function setLogoThumbnail(Media $logoThumbnail)
+    public function setLogoThumbnail(Media $logoThumbnail = null)
     {
         $this->logoThumbnail = $logoThumbnail;
     }

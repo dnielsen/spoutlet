@@ -166,15 +166,15 @@ class GamePageManager
      */
     private function handleMediaFields(GamePage $gamePage)
     {
-        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage1())) {
+        if ($gamePage->getButtonImage1() == null || !$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage1())) {
             $gamePage->setButtonImage1(null);
         }
 
-        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage2())) {
+        if ($gamePage->getButtonImage2() == null || !$this->mediaUtil->persistRelatedMedia($gamePage->getButtonImage2())) {
             $gamePage->setButtonImage2(null);
         }
 
-        if (!$this->mediaUtil->persistRelatedMedia($gamePage->getBackgroundImage())) {
+        if ($gamePage->getBackgroundImage() == null || !$this->mediaUtil->persistRelatedMedia($gamePage->getBackgroundImage())) {
             $gamePage->setBackgroundImage(null);
         }
     }

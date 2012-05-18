@@ -37,6 +37,7 @@ Feature: Games Page Admin
 
     Scenario: Preview the games page
         Given there is a game page for "Starcraft" in "en"
+        And I have verified my age
         When I click on "Game Pages"
             And I click on "Demo"
             And I click on the URL for "Starcraft"
