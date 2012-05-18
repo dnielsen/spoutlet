@@ -36,8 +36,12 @@ class MediaUtil
      * @param \Knp\MediaBundle\Entity\Media $media
      * @return bool
      */
-    public function persistRelatedMedia(Media $media)
+    public function persistRelatedMedia(Media $media = null)
     {
+        if ($media == null) {
+            return false;
+        }
+
         // if it's already processed and legit (previous image) or it has a new image
         if ($media->getFilename() || $media->getFileObject()) {
             $this->em->persist($media);
@@ -47,5 +51,4 @@ class MediaUtil
 
         return false;
     }
-
 }
