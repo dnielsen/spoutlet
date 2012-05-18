@@ -19,7 +19,7 @@
             <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">{{ gamePage.game.name }}</a></td>
             <td>
                 {# todo - change to the real URL #}
-                {% set url = url('game_page_show', {'slug': gamePage.slug, '_locale': site }) %}
+                {% set url = url('game_page_show', {'slug': gamePage.slug, 'category': gamePage.game.category, '_locale': site }) %}
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
             <td>

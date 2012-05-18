@@ -702,6 +702,7 @@ class GamePage implements LinkableInterface
     {
         return array(
             'slug' => $this->getSlug(),
+            'category' => $this->getGame()->getCategory(),
         );
     }
 
