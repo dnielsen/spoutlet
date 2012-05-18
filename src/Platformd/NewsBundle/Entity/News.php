@@ -117,7 +117,6 @@ class News implements LinkableInterface
      * @ORM\JoinColumn(onDelete="SET NULL")
      * @var Game
      */
-
     protected $game;
 
     /**

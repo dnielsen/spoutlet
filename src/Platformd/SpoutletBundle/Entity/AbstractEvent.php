@@ -182,11 +182,10 @@ abstract class AbstractEvent implements LinkableInterface
     protected $timezone = 'UTC';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Game")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      * @var Game
      */
-
     protected $game;
 
     /**

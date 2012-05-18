@@ -8,8 +8,10 @@
 <form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form sweepstakesForm">
 
     {{ form_errors(form) }}
-    
+
     {{ form_row(form.name) }}
+
+    {{ form_row(form.game) }}
 
     {{ form_row(form.slug) }}
 

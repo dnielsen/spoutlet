@@ -32,13 +32,6 @@ class Giveaway extends AbstractEvent
     const REDEMPTION_LINE_PREFIX = '* ';
 
     /**
-    * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
-    * @ORM\JoinColumn(onDelete="SET NULL")
-    */
-
-    protected $game;
-
-    /**
      * One to Many with GiveawayPool
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -95,19 +88,7 @@ class Giveaway extends AbstractEvent
 
     public function __toString()
     {
-        
         return $this->getName();
-    }
-   
-
-    public function getGame()
-    {
-        return $this->game;   
-    }
-
-    public function setGame($game)
-    {
-        $this->game = $game;
     }
 
     /**

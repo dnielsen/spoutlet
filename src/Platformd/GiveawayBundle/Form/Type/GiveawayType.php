@@ -30,7 +30,7 @@ class GiveawayType extends AbstractType
             'choices' => Giveaway::getValidStatusesMap(),
             'empty_value' => 'platformd.giveaway.status.blank_value',
         ));
-        $builder->add('game');
+        $builder->add('game', null, array('empty_value' => 'Select a game'));
         $builder->add('locale', new SiteChoiceType());
     }
 

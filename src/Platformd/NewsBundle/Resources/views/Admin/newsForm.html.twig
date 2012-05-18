@@ -3,6 +3,8 @@
 <form method="post" action="{{ route }}" class="form" {{ form_enctype(form) }}>
     {{ form_row(form.title) }}
 
+    {{ form_row(form.game) }}
+
     {{ form_row(form.slug) }}
 
     {{ form_row(form.locale) }}
