@@ -67,8 +67,7 @@ class SpoutletExtension extends Twig_Extension
      */
     private function ensureLinkable($obj)
     {
-        if (!$obj instanceof LinkableInterface)
-        {
+        if (!$obj instanceof LinkableInterface) {
             $type = is_object($obj) ? get_class($obj) : gettype($obj);
 
             throw new \InvalidArgumentException(sprintf('You must pass an object that implements LinkableInterface to a pd_link* filter. "%s" given', $type));
