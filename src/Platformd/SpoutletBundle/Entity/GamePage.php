@@ -67,6 +67,13 @@ class GamePage implements LinkableInterface
     private $game;
 
     /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="external_url", length="255", nullable=true)
+     */
+    private $externalUrl;
+
+    /**
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -250,7 +257,7 @@ class GamePage implements LinkableInterface
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -278,7 +285,7 @@ class GamePage implements LinkableInterface
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -298,7 +305,7 @@ class GamePage implements LinkableInterface
     /**
      * Get aboutGame
      *
-     * @return text 
+     * @return text
      */
     public function getAboutGame()
     {
@@ -318,7 +325,7 @@ class GamePage implements LinkableInterface
     /**
      * Get keyFeature1
      *
-     * @return text 
+     * @return text
      */
     public function getKeyFeature1()
     {
@@ -338,7 +345,7 @@ class GamePage implements LinkableInterface
     /**
      * Get keyFeature2
      *
-     * @return text 
+     * @return text
      */
     public function getKeyFeature2()
     {
@@ -358,7 +365,7 @@ class GamePage implements LinkableInterface
     /**
      * Get keyFeature3
      *
-     * @return text 
+     * @return text
      */
     public function getKeyFeature3()
     {
@@ -378,7 +385,7 @@ class GamePage implements LinkableInterface
     /**
      * Get youtubeTrailer1
      *
-     * @return string 
+     * @return string
      */
     public function getYoutubeIdTrailer1()
     {
@@ -398,7 +405,7 @@ class GamePage implements LinkableInterface
     /**
      * Get youtubeIdTrailer2
      *
-     * @return string 
+     * @return string
      */
     public function getYoutubeIdTrailer2()
     {
@@ -418,7 +425,7 @@ class GamePage implements LinkableInterface
     /**
      * Get youtubeIdTrailer3
      *
-     * @return string 
+     * @return string
      */
     public function getYoutubeIdTrailer3()
     {
@@ -438,7 +445,7 @@ class GamePage implements LinkableInterface
     /**
      * Get youtubeIdTrailer4
      *
-     * @return string 
+     * @return string
      */
     public function getYoutubeIdTrailer4()
     {
@@ -458,11 +465,25 @@ class GamePage implements LinkableInterface
     /**
      * Get legalVerbiage
      *
-     * @return text 
+     * @return text
      */
     public function getLegalVerbiage()
     {
         return $this->legalVerbiage;
+    }
+
+    /**
+     * @param string $externalUrl
+     */
+    public function setExternalUrl($externalUrl) {
+        $this->externalUrl = $externalUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExternalUrl() {
+        return $this->externalUrl;
     }
 
     /**

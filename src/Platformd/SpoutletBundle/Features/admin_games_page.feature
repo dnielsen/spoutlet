@@ -11,7 +11,9 @@ Feature: Games Page Admin
     Scenario: Add a new games page
         When I click to add new "Game Pages"
             And I select "Starcraft" from "Game"
-            And I fill in "About the Game" with "It's fun!"
+            And I fill in the following:
+                | About the Game    | It's fun!                 |
+                | External URL      | http://www.example.com    |
             And I check the "Demo" option for "Sites"
             And I select "published" from "Status"
             And I press "Create"
@@ -31,7 +33,9 @@ Feature: Games Page Admin
         When I click on "Game Pages"
             And I click on "Demo"
             And I click on "Starcraft"
-            And I fill in "About the Game" with "It's old!"
+            And I fill in the following:
+                | About the Game    | It's old!                 |
+                | External URL      | http://www.example.com/sc |
             And I press "Save"
         Then I should see "game page was saved"
 
