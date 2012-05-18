@@ -17,6 +17,8 @@ class GamePageType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
+            ->add('recommendedDesktopUrl', null, array('label' => 'Recommended Desktop URL'))
+            ->add('recommendedLaptopUrl', null, array('label' => 'Recommended Laptop URL'))
             ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this game\'s Game Page.'))
             ->add('game')
             ->add('slug', new SlugType())

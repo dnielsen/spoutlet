@@ -12,8 +12,10 @@ Feature: Games Page Admin
         When I click to add new "Game Pages"
             And I select "Starcraft" from "Game"
             And I fill in the following:
-                | About the Game    | It's fun!                 |
-                | External URL      | http://www.example.com    |
+                | About the Game            | It's fun!                         |
+                | External URL              | http://www.example.com            |
+                | Recommended Laptop URL    | http://www.example.com/laptop     |
+                | Recommended Desktop URL   | http://www.example.com/desktop    |
             And I check the "Demo" option for "Sites"
             And I select "published" from "Status"
             And I press "Create"
@@ -34,8 +36,10 @@ Feature: Games Page Admin
             And I click on "Demo"
             And I click on "Starcraft"
             And I fill in the following:
-                | About the Game    | It's old!                 |
-                | External URL      | http://www.example.com/sc |
+                | About the Game            | It's old!                         |
+                | External URL              | http://www.example.com/sc         |
+                | Recommended Laptop URL    | http://www.example.com/laptop     |
+                | Recommended Desktop URL   | http://www.example.com/desktop    |
             And I press "Save"
         Then I should see "game page was saved"
 
