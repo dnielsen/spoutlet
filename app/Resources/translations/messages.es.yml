@@ -316,26 +316,29 @@ username: Username
 status: Status
 
 age_confirm:
-    headline: Please Confirm Your Date of Birth
-    message: The content is intended for mature audiences. Please confirm your age below
+    headline: Por favor, confirme su fecha de nacimiento.
+    message: El contenido está dirigido a un público maduro.
+    content_for_mature_audiences: Contenido recomendado para audiencia adulta.
+    too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
 confirm: Confirm
 
 error:
     fill_in_birthday: Please fill in your birthday!
 
 games_trailers:
-    channel_header: CHANNEL: GAMES AND TRAILERS
-    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    channel_header: "Canal: Juegos y Tráiler"
+    intro_text: Deleiten sus ojos en videos promocionales y tráiler de los títulos más candentes!
     categories:
-        action: Action
-        rpg: RPG
-        strategy: Strategy
-        other: Other
-        free-to-play: Free to Play
+        action: Juegos de acción
+        rpg: Juegos de rol
+        strategy: Juegos de estrategia
+        other: Otros Juegos
+        free-to-play: Libres para jugar
         mmo:   MMO
 games_and_trailers: Games and Trailers
+games: Games
+game_feed: Imágenes de Vídeo
+videos: Vídeos
 
-archives: ARCHIVES
-past_partnerships: Past Partnerships
-created_date: Created Date
-media_gallery: Media Gallery
+past_partnerships: Asociaciones anteriores
+media_gallery: Galería de medios
