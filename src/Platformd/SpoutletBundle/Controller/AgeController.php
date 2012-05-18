@@ -23,7 +23,8 @@ class AgeController extends Controller
     public function verifyAgeAction(Request $request)
     {
         if ($this->getAgeManager()->isUsersAgeVerified()) {
-            $this->getAgeManager()->clearUsersBirthday();
+            // uncomment out to have a nice way to clear birthday when testing
+            //$this->getAgeManager()->clearUsersBirthday();
             $this->onSuccess();
         }
 

@@ -117,8 +117,11 @@ services:
         class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
         arguments:
             - "@router"
+            - "@platformd.age.age_manager"
+            - "@templating"
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+        scope: request
 
     platformd.tenant.site_protection_listener:
         class: Platformd\SpoutletBundle\Tenant\SiteProtectionListener

@@ -6,6 +6,9 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Age\AgeManager;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Handles listening and handling the InsufficientAgeException
@@ -19,9 +22,15 @@ class InsufficientAgeListener
 
     private $router;
 
-    public function __construct(UrlGeneratorInterface $router)
+    private $ageManager;
+
+    private $templating;
+
+    public function __construct(UrlGeneratorInterface $router, AgeManager $ageManager, EngineInterface $templating)
     {
         $this->router = $router;
+        $this->ageManager = $ageManager;
+        $this->templating = $templating;
     }
 
     /**
@@ -34,6 +43,17 @@ class InsufficientAgeListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         if (!$event->getException() instanceof InsufficientAgeException) {
+            return;
+        }
+
+        if ($this->ageManager->isUsersAgeVerified()) {
+            $content = $this->templating->render(
+                'SpoutletBundle:Age:insufficientAge.html.twig'
+            );
+            $response = new Response($content);
+
+            $event->setResponse($response);
+
             return;
         }
 

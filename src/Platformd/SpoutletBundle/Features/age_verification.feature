@@ -30,3 +30,11 @@ Feature: Age Verification
             And I select "5" from "birthday[day]"
             And I press "Confirm"
         Then the headline should contain "GAMES AND TRAILERS"
+
+    Scenario: I should see the "access denied" screen if I'm verified, but not old enough
+        When I go to "/games"
+            And I select "2010" from "birthday[year]"
+            And I select "6" from "birthday[month]"
+            And I select "5" from "birthday[day]"
+            And I press "Confirm"
+        Then the headline should contain "Content Intended for Mature Audiences"
