@@ -45,7 +45,7 @@ class GiveawayRepository extends AbstractEventRepository
      * 
      * @param string $slug
      * @param string $locale
-     * @return Platformd\GiveawayBundle\Entity\Giveway|null
+     * @return \Platformd\GiveawayBundle\Entity\Giveway|null
      */
     public function findOneBySlug($slug, $locale)
     {
@@ -66,7 +66,7 @@ class GiveawayRepository extends AbstractEventRepository
     /**
      * Returns ALL giveaways, from newest to oldest
      *
-     * @return mixed
+     * @return \Platformd\GiveawayBundle\Entity\Giveway[]
      */
     public function findAllOrderedByNewest()
     {
