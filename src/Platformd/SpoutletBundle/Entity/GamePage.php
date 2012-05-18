@@ -74,6 +74,20 @@ class GamePage implements LinkableInterface
     private $externalUrl;
 
     /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="recommended_desktop_url", length="255", nullable=true)
+     */
+    private $recommendedDesktopUrl;
+
+    /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="recommended_laptop_url", length="255", nullable=true)
+     */
+    private $recommendedLaptopUrl;
+
+    /**
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -484,6 +498,34 @@ class GamePage implements LinkableInterface
      */
     public function getExternalUrl() {
         return $this->externalUrl;
+    }
+
+    /**
+     * @param string $recommendedDesktopUrl
+     */
+    public function setRecommendedDesktopUrl($recommendedDesktopUrl) {
+        $this->recommendedDesktopUrl = $recommendedDesktopUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecommendedDesktopUrl() {
+        return $this->recommendedDesktopUrl;
+    }
+
+    /**
+     * @param string $recommendedLaptopUrl
+     */
+    public function setRecommendedLaptopUrl($recommendedLaptopUrl) {
+        $this->recommendedLaptopUrl = $recommendedLaptopUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRecommendedLaptopUrl() {
+        return $this->recommendedLaptopUrl;
     }
 
     /**
