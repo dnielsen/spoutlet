@@ -22,6 +22,12 @@ class GameType extends AbstractType
                 'choices' => self::getCategoryChoices(),
                 'label' => 'Genre',
             ))
+            ->add('subcategories', 'choice', array(
+                'choices' => self::getSubcategoryChoices(),
+                'label' => 'Subcategory',
+                'multiple' => true,
+                'expanded' => true,
+            ))
             ->add('facebookFanpageUrl', 'url', array(
                 'label' => 'platformd.admin.facebook_fanpage'
             ))
@@ -59,6 +65,25 @@ class GameType extends AbstractType
         $choices = array('' => 'Choose a Category');
         foreach ($values as $value) {
             $choices[$value]  = Game::GAME_CATEGORY_LABEL_PREFIX.$value;
+        }
+
+        return $choices;
+    }
+
+    /**
+     * Returns the choices for subcategory
+     *
+     * Labels are platformd.admin.games.subcategory.KEY
+     *
+     * @static
+     * @return array
+     */
+    private static function getSubcategoryChoices()
+    {
+        $values = Game::getValidSubcategories();
+        $choices = array();
+        foreach ($values as $value) {
+            $choices[$value]  = Game::GAME_SUBCATEGORY_LABEL_PREFIX.$value;
         }
 
         return $choices;

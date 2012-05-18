@@ -295,7 +295,8 @@ platformd:
                 rpg:        RPG
                 strategy:   Strategy
                 other:      Other
-                free_to_play: Free-to-play
+            subcategory:
+                free-to-play: Free-to-play
                 mmo:        MMO
         facebook_fanpage: Facebook Fan Page
 

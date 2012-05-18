@@ -30,6 +30,13 @@
                                 </a>
 
                                 <a href="{{ url }}">{{ gamePage.game.name }}</a>
+                                {% if gamePage.game.subcategories is not empty %}
+                                    <br/>
+                                    {% for subcategory in gamePage.game.subcategories %}
+                                        {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                                        {{- loop.last ? '' : ', ' }}
+                                    {% endfor %}
+                                {% endif %}
                             </li>
                         {% endfor %}
                     </ul>

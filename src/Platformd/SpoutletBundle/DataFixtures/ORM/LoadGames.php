@@ -22,7 +22,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $manager->persist($game1);
 
         $game2 = new Game();
-        $game2->setCategory('mmo');
+        $game2->setCategory('action');
         $game2->setName('Warcraft3');
         $manager->persist($game2);
 

@@ -24,13 +24,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Game
 {
-    const GAME_CATEGORY_LABEL_PREFIX = 'platformd.admin.games.category.';
+    const GAME_CATEGORY_LABEL_PREFIX    = 'platformd.admin.games.category.';
+    const GAME_SUBCATEGORY_LABEL_PREFIX = 'platformd.admin.games.subcategory.';
 
     static private $validCategories = array(
         'action',
         'rpg',
         'strategy',
         'other',
+    );
+
+    static private $validSubcategories = array(
         'free-to-play',
         'mmo',
     );
@@ -67,6 +71,13 @@ class Game
      * @Assert\NotNull
      */
     private $category;
+
+    /**
+     * @var string $subcategory
+     *
+     * @ORM\Column(name="subcategories", type="array")
+     */
+    private $subcategories = array();
 
     /**
      * @var string $facebookFanpageUrl
@@ -212,6 +223,33 @@ class Game
     public static function getValidCategories()
     {
         return self::$validCategories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubcategories()
+    {
+        return $this->subcategories;
+    }
+
+    /**
+     * @param array $subcategories
+     */
+    public function setSubcategories(array $subcategories)
+    {
+        foreach ($subcategories as $subcategory) {
+            if (!in_array($subcategory, self::$validSubcategories)) {
+                throw new \InvalidArgumentException(sprintf('Invalid game subcategory "%s" given', $subcategory));
+            }
+        }
+
+        $this->subcategories = $subcategories;
+    }
+
+    public static function getValidSubcategories()
+    {
+        return self::$validSubcategories;
     }
 
     /**
