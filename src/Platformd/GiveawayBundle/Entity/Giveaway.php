@@ -318,6 +318,7 @@ class Giveaway extends AbstractEvent
     /**
      * Returns the route name to this item's show page
      *
+     * @deprecated It's use should be replaced by the LinkableInterface
      * @return string
      */
     public function getShowRouteName()
@@ -385,5 +386,25 @@ class Giveaway extends AbstractEvent
             self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX.self::TYPE_KEY_GIVEAWAY,
             self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX.self::TYPE_MACHINE_CODE_SUBMIT,
         );
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'giveaway_show';
     }
 }

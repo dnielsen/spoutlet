@@ -245,4 +245,25 @@ class Event extends AbstractEvent
     {
         return 'events_detail';
     }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getUrlRedirect();
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @deprecated Use the LinkableInterface
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'events_detail';
+    }
 }

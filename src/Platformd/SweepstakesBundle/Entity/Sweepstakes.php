@@ -176,6 +176,7 @@ class Sweepstakes extends AbstractEvent
     /**
      * Returns the route name to this item's show page
      *
+     * @deprecated Use LinkableInterface
      * @return string
      */
     public function getShowRouteName()
@@ -189,5 +190,26 @@ class Sweepstakes extends AbstractEvent
     public function getEntriesCount()
     {
         return count($this->entries);
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @deprecated Use the LinkableInterface
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'sweepstakes_show';
     }
 }

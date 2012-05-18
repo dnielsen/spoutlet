@@ -16,6 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
 use Platformd\SpoutletBundle\Entity\Game as Game;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -40,7 +41,7 @@ use Platformd\SpoutletBundle\Entity\Game as Game;
  * Special validation on our slug field
  * @AssertUniqueSlug()
  */
-abstract class AbstractEvent
+abstract class AbstractEvent implements LinkableInterface
 {
     /**
      * A map of UTC offsets and common timezone names
@@ -584,5 +585,17 @@ abstract class AbstractEvent
     public function setGame($game)
     {
         $this->game = $game;
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+        );
     }
 }
