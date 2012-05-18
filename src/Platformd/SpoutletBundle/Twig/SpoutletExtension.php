@@ -30,6 +30,8 @@ class SpoutletExtension extends Twig_Extension
     {
         return array(
             'pd_link' => new Twig_Filter_Method($this, 'linkToObject'),
+            'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget'),
+            'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull'),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName')
         );
     }
@@ -60,19 +62,58 @@ class SpoutletExtension extends Twig_Extension
         );
     }
 
+     /**
+     * @param $obj
+     */
+    private function ensureLinkable($obj)
+    {
+        if (!$obj instanceof LinkableInterface)
+        {
+            $type = is_object($obj) ? get_class($obj) : gettype($obj);
+
+            throw new \InvalidArgumentException(sprintf('You must pass an object that implements LinkableInterface to a pd_link* filter. "%s" given', $type));
+        }
+    }
+
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function linkToObjectTarget($obj)
+    {
+        $linkToObject = $this->linkToObject($obj);
+
+        return $this->testExternal($linkToObject) ? 'target="_blank"' : '';
+    }
+
     /**
      * @param $obj
      * @return string
      */
     public function linkToObject($obj)
     {
-        if (!$obj instanceof LinkableInterface) {
-            $type = is_object($obj) ? get_class($obj) : gettype($obj);
-
-            throw new \InvalidArgumentException(sprintf('You must pass an object that implements LinkableInterface to the pd_link filter. "%s" given', $type));
-        }
+        $this->ensureLinkable($obj);
 
         return $this->getLinkableManager()->link($obj);
+    }
+
+    /**
+     * @param $obj
+     * @return string
+     */
+    public function linkToObjectFull($obj, $urlText = null)
+    {
+        $this->ensureLinkable($obj);
+
+        $url        = $this->getLinkableManager()->link($obj);
+        $target     = $this->testExternal($url);
+        $urlText    = $urlText ?: $url;
+
+        if (strlen($target) > 0) {
+            $target = ' '.$target;
+        }
+
+        return sprintf('<a href="%s"%s>%s</a>', $url, $target, $urlText);
     }
 
     /**
