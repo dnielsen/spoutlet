@@ -24,7 +24,8 @@
                 })}}
             </h6>
 
-            {% if news.image %}
+            {# temporarily disabled for deploy #}
+            {% if news.image and false %}
                 <p class="article-image-large">
                     <img src="{{ media_path(news.image, {'local': true}) | imagine_filter('article_full') }}" alt="{{ news.title }}" />
                 </p>

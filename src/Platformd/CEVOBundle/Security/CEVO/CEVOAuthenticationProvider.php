@@ -87,17 +87,26 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
      */
     private function findOrCreateUser($cevoId, $email, array $allUserData)
     {
+        // look for user in DB by cevoUserId
         $existingUser = $this->userManager->findUserBy(array(
             'cevoUserId' => $cevoId,
         ));
 
+        // We found CevoUserId
+        //    Make updates if ncessary
+        //    and pass back existingUser data
         if ($existingUser) {
+            $this->checkUpdates($existingUser, $allUserData);
             return $existingUser;
         }
 
+        // No Cevo ID was found, so look for user by email
+        // if we find an email, update CevoUserID
         if ($email && $existingUser = $this->userManager->findUserByEmail($email)) {
             $existingUser->setCevoUserId($cevoId);
             $this->userManager->updateUser($existingUser);
+
+            $this->checkUpdates($existingUser, $allUserData);
 
             return $existingUser;
         }
@@ -114,6 +123,8 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
                 $existingUser->setCevoUserId($cevoId);
                 $this->userManager->updateUser($existingUser);
 
+                $this->checkUpdates($existingUser, $allUserData);
+
                 return $existingUser;
             }
         }
@@ -121,6 +132,8 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         // CEVO is not sending us an email right now, so use username :/
         $usableEmail = $email ? $email : $allUserData['username'];
 
+        $firstName = isset($allUserData['first_name']) ? $allUserData['first_name'] : null;
+        $lastName  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
         $country = isset($allUserData['country']) ? $allUserData['country'] : null;
 
         $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
@@ -130,6 +143,9 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $newUser->setEmail($usableEmail);
         $newUser->setCevoUserId($cevoId);
         $newUser->setUsername($allUserData['username']);
+        $newUser->setLastname($lastName);
+        $newUser->setFirstname($firstName);
+
         $newUser->setPassword(self::FAKE_PASSWORD);
         $newUser->setCountry($country);
         $newUser->setBirthdate($birthday);
@@ -138,6 +154,51 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         // todo - use country to set locale instead of automatic?
 
         return $newUser;
+    }
+    
+    /**
+     * Need to see if certain content was updated on CEVO site and if so
+     * update the data. 
+     * 
+     * @param array $existingUser
+     * @param array $allUserData
+     */
+    protected function checkUpdates($existingUser, $allUserData)
+    {
+        $update = false;
+
+        $first_name = isset($allUserData['first_name']) ? $allUserData['first_name'] : null;
+        $last_name  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
+        $country = isset($allUserData['country']) ? $allUserData['country'] : null;
+        $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
+
+        // Check first name
+        if ($existingUser->getFirstname() != $first_name) {
+            $existingUser->setFirstname($first_name);
+            $update = true;
+        }
+
+        // Check last name
+        if ($existingUser->getLastname() != $last_name ) {
+            $existingUser->setLastname($last_name);
+            $update = true;
+        }
+
+        // Check country
+        if ($existingUser->getCountry() != $country ) {
+            $existingUser->setCountry($country);
+            $update = true;
+        }
+
+        // Check DOB
+        if ($existingUser->getBirthdate() != $birthday ) {
+            $existingUser->setBirthdate($birthday);
+            $update = true;
+        }
+
+        if ($update) {
+            $this->userManager->updateUser($existingUser);
+        }
     }
 
     public function supports(TokenInterface $token)

@@ -393,10 +393,21 @@ denied: Denied
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
 
+email:
+    giveaway_machine_code_approve: |
+        Hi %userFirstName%,
+
+        Thank you for registering for %giveawayName%. Your key is posted to your ALIENWARE ARENA account (%accountUrl%) and is now ready to use.
+
+        If you have any questions, please feel free to email us at japan@alienwarearena.com.
+
+        -ALIENWARE ARENA
+
 translations_admin: Translations Admin
 edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
+
 
 age_confirm:
     headline: Please Confirm Your Date of Birth
@@ -424,3 +435,4 @@ videos: Videos
 past_partnerships: Past Partnerships
 created_date: Created Date
 media_gallery: Media Gallery
+

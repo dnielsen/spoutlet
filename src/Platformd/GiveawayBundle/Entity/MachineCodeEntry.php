@@ -48,6 +48,20 @@ class MachineCodeEntry
     protected $status = self::STATUS_PENDING;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $approvedAt;
+
+    /**
+     * If an email was sent regarding the approval of this entry, when was it sent?
+     *
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $notificationEmailSentAt;
+
+    /**
      * The user assigned to this key
      *
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
@@ -124,6 +138,7 @@ class MachineCodeEntry
     {
         $this->key = $key;
         $this->status = self::STATUS_APPROVED;
+        $this->setApprovedAt(new \DateTime());
     }
 
     /**
@@ -176,5 +191,37 @@ class MachineCodeEntry
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getApprovedAt()
+    {
+        return $this->approvedAt;
+    }
+
+    /**
+     * @param \DateTime $approvedAt
+     */
+    public function setApprovedAt($approvedAt)
+    {
+        $this->approvedAt = $approvedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getNotificationEmailSentAt()
+    {
+        return $this->notificationEmailSentAt;
+    }
+
+    /**
+     * @param \DateTime $notificationEmailSentAt
+     */
+    public function setNotificationEmailSentAt($notificationEmailSentAt)
+    {
+        $this->notificationEmailSentAt = $notificationEmailSentAt;
     }
 }

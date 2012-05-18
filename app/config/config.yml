@@ -85,7 +85,7 @@ fos_user:
     user_class:      Platformd\UserBundle\Entity\User
     from_email:
         address:        %sender_email_address%
-        sender_name:    Alienware Arena
+        sender_name:    %sender_email_name%
     registration:
         form:
             type: platformd_user_registration
@@ -155,6 +155,7 @@ parameters:
     available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
 
     sender_email_address: "noreply@%base_host%"
+    sender_email_name: Alienware Arena
     platformd.news_source:
         alienware: source_alienware
         cevo: CEVO
