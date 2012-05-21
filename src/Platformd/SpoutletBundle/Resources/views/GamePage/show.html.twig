@@ -154,6 +154,10 @@
                 </div>
                 <div class="thumbnails-right">
                     <ul>
+                    {% if gamePage.youtubeIdTrailer1 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1) }}
+                    {% endif %}
+
                     {% if gamePage.youtubeIdTrailer2 %}
                         {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2) }}
                     {% endif %}
@@ -265,7 +269,7 @@
             par.flashvars += "&alertText=";
             par.allowScriptAccess = "always";
             par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"740", height:"493", id:"theater_screen", name:"theater_screen"};
+            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"840", height:"593", id:"theater_screen", name:"theater_screen"};
             var id = "theater_screen";
 
             // temporarily disable, because the autostart is annoying

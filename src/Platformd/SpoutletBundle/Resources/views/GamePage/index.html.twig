@@ -76,7 +76,7 @@
 
                     <ul class="games">
                         {% for archive in archives %}
-                            <li>
+                            <li class="widget-item">
                                 <a href="{{ archive | pd_link }}"{{ target_blank(archive) }}>{{ archive.game.name }}</a>
                             </li>
                         {% endfor %}
