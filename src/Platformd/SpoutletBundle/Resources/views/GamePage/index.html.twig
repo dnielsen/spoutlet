@@ -11,48 +11,78 @@
 
     <div class="games-list-page">
         <div class="left">
-            <h1>{{ 'games_trailers.channel_header' | trans }}</h1>
-            <p>{{ 'games_trailers.intro_text' | trans }}</p>
+            <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">{{ 'games_trailers.channel_header' | trans }}</div>
+                </div>
 
-            {% for category,gamePages in categorizedGames %}
-                <div>
-                    <h3>{{ ('games_trailers.categories.'~category) | trans }}</h3>
-                    <ul class="games">
+                <div class="widget-content">
+                    <p>{{ 'games_trailers.intro_text' | trans }}</p>
+
+                    {% for category,gamePages in categorizedGames %}
+                    <div class="movie-section">
+                        <div class="movie-section-title">
+                            {{ ('games_trailers.categories.'~category) | trans }}
+                        </div>
+
                         {% for gamePage in gamePages %}
                             {% set url = gamePage | pd_link %}
-                            <li{{ loop.first ? ' class="first"' : ''}}>
-                                <a href="{{ url }}"{{ target_blank(gamePage) }}>
-                                    {% if gamePage.game.logoThumbnail %}
+                            <div class="movie">
+                                <div class="movie-thumb">
+                                    <a href="{{ url }}"{{ target_blank(gamePage) }}>
+                                        {% if gamePage.game.logoThumbnail %}
                                         <img src="{{ media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
-                                    {% else %}
+                                        {% else %}
                                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
-                                    {% endif %}
-                                </a>
+                                        {% endif %}
+                                    </a>
+                                </div>
 
-                                <a href="{{ url }}">{{ gamePage.game.name }}</a>
+                                <p class="movie-title">
+                                    <a href="{{ url }}">{{ gamePage.game.name }}</a>
+                                </p>
+
                                 {% if gamePage.game.subcategories is not empty %}
-                                    <br/>
+                                    <p class="movie-views">
                                     {% for subcategory in gamePage.game.subcategories %}
                                         {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
                                         {{- loop.last ? '' : ', ' }}
                                     {% endfor %}
+                                    </p>
                                 {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="clear"></div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right">
+            <div class="game-feed widget-33">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'past_partnerships' | trans }}
+                    </div>
+                    <div class="widget-icon"><img src="{{ asset('bundles/spoutlet/images/photo-icon.png') }}" /></div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="widget-content normalized">
+
+                    <ul class="games">
+                        {% for archive in archives %}
+                            <li>
+                                <a href="{{ archive | pd_link }}"{{ target_blank(archive) }}>{{ archive.game.name }}</a>
                             </li>
                         {% endfor %}
                     </ul>
-                    <div class="clear"></div>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="right">
-            <h2>{{ 'past_partnerships' | trans }}</h2>
-            <ul class="games">
-                {% for archive in archives %}
-                    <li>
-                        <a href="{{ archive | pd_link }}"{{ target_blank(archive) }}>{{ archive.game.name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 {% endblock %}

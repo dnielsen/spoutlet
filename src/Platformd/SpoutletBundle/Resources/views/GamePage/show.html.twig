@@ -17,7 +17,7 @@
 {% endmacro %}
 
 {% macro _renderYoutubeFeedLink(youtubeVideoId, headline) %}
-<li>
+<li class="widget-item">
     <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play media-link-color">
         {{ headline }}
     </a>
@@ -49,57 +49,64 @@
                     <img src="http://placehold.it/298x150/000000/ffffff&text=Two+half+will+go+here+300x150" alt="ads" />
                 </div>
 
-                <div class="game-feed">
-                    <h4>{{ 'game_feed' | trans }}</h4>
-                    <ul>
-                        {% for feedEvent in feedEvents %}
-                            <li>
+                <div class="game-feed widget-33">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ 'game_feed' | trans }}
+                        </div>
+                        <div class="widget-icon"><img src="{{ asset('bundles/spoutlet/images/photo-icon.png') }}" /></div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="widget-content normalized">
+                        <ul>
+                            {% for feedEvent in feedEvents %}
+                            <li class="widget-item">
                                 <a href="{{ feedEvent | pd_link }}" {{ feedEvent | pd_link_target }}>
                                     {{ feedEvent.name }}
                                 </a>
                             </li>
-                        {% endfor %}
+                            {% endfor %}
 
-                        {% for feedNewsItem in feedNewsItems %}
-                        <li>
-                            <a href="{{ feedNewsItem | pd_link }}" {{ feedNewsItem | pd_link_target }}>
-                                {{ feedNewsItem.title }}
-                            </a>
-                        </li>
-                        {% endfor %}
+                            {% for feedNewsItem in feedNewsItems %}
+                            <li class="widget-item">
+                                <a href="{{ feedNewsItem | pd_link }}" {{ feedNewsItem | pd_link_target }}>
+                                    {{ feedNewsItem.title }}
+                                </a>
+                            </li>
+                            {% endfor %}
 
-                        {# videos #}
-                        {% if gamePage.youtubeIdTrailer1Headline %}
-                            {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
-                        {% endif %}
+                            {# videos #}
+                            {% if gamePage.youtubeIdTrailer1Headline %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                            {% endif %}
 
-                        {% if gamePage.youtubeIdTrailer2Headline %}
-                            {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
-                        {% endif %}
+                            {% if gamePage.youtubeIdTrailer2Headline %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                            {% endif %}
 
-                        {% if gamePage.youtubeIdTrailer3Headline %}
-                            {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
-                        {% endif %}
+                            {% if gamePage.youtubeIdTrailer3Headline %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                            {% endif %}
 
-                        {% if gamePage.youtubeIdTrailer4Headline %}
-                            {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
-                        {% endif %}
+                            {% if gamePage.youtubeIdTrailer4Headline %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                            {% endif %}
 
-                        {# media gallery #}
-                        {% for media in gamePage.mediaGalleryMedias %}
-                            <li>
+                            {# media gallery #}
+                            {% for media in gamePage.mediaGalleryMedias %}
+                            <li class="widget-item">
                                 <a href="#media" class="media-link-color">{{ 'uploaded_desktop' | trans }} {{ media.filename }}</a>
                             </li>
-                        {% endfor %}
-                    </ul>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
 
                 {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
 
             <div class="left">
-                <h1>{{ gamePage.game.name }}</h1>
-
                 {% if gamePage.logo %}
                     <div class="logo">
                         <img src="{{ media_path(gamePage.logo, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ gamePage.game.name }}" />
@@ -164,9 +171,15 @@
             </div>
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
-            <div class="media-gallery ad-gallery">
+            <div class="media-gallery ad-gallery widget-100">
                 <a name="media"></a>
-                <h3>{{ 'media_gallery' | trans }}</h3>
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'media_gallery' | trans }}
+                    </div>
+                    <div class="widget-icon"><img src="{{ asset('bundles/spoutlet/images/photo-icon.png') }}" /></div>
+                    <div class="clear"></div>
+                </div>
 
                 {#
                     Left off because we don't need the big image
@@ -178,18 +191,20 @@
                     </div>
                 #}
 
-                <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
-                    <div class="ad-thumbs">
-                        <ul class="ad-thumb-list">
-                            {% for media in gamePage.mediaGalleryMedias %}
-                            <li{{ loop.last ? ' class="last"' : '' }}>
-                                {% set url = media_path(media) %}
-                                <a href="{{ url }}" target="_blank">
-                                    <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
-                                </a>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                <div class="widget-content">
+                    <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
+                        <div class="ad-thumbs">
+                            <ul class="ad-thumb-list">
+                                {% for media in gamePage.mediaGalleryMedias %}
+                                <li{{ loop.last ? ' class="last"' : '' }}>
+                                    {% set url = media_path(media) %}
+                                    <a href="{{ url }}" target="_blank">
+                                        <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

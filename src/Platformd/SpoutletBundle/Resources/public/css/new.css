@@ -480,18 +480,13 @@ ul.list-normal {
 .games-list-page {
 
 }
-.games-list-page .left, .games-list-page .right {
+.games-list-page .left {
     float: left;
-    background: url('../images/games-pages/background_content.jpg') top left repeat-x;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -khtml-border-radius: 5px;
-    border-radius: 5px;
-    padding: 12px 24px 4px 24px;
+}
+.games-list-page .right {
+    float: right;
 }
 .games-list-page .left {
-    width: 662px;
-    width: 614px;
     margin-right: 20px;
 }
 .games-list-page .right {
@@ -499,7 +494,11 @@ ul.list-normal {
     width: 217px;
     float: left;
 }
-.games-list-page h1, .games-list-page h2 {
+.games-list-page .right .widget-title {
+    width: 200px;
+    float: left;
+}
+.games-list-page h2 {
     font-size: 16px;
     color: #fff;
     margin: 0;
@@ -567,17 +566,19 @@ ul.list-normal {
 }
 
 .game-show-page .game-feed {
-    border: 1px solid #4a4a4a;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    border-radius: 3px;
-    padding: 10px 30px;
     margin-bottom: 20px;
 }
-.game-show-page .game-feed h4 {
-    text-align: center;
-    margin-bottom: 10px;
+.game-show-page .game-feed .widget-title {
+    width: 200px;
+    float: left;
+}
+.game-show-page .game-feed .widget-content {
+    margin: 0 10px;
+}
+.game-show-page .game-feed.widget-33 {
+    height: auto;
+    /* effectively undo the height */
+    min-height: 20px;
 }
 .game-show-page .game-feed ul {
     list-style-type: none;
@@ -640,14 +641,11 @@ ul.list-normal {
     text-align: center;
     padding: 10px 35px;
     width: auto;
-    border: 3px solid #4a4a4a;
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;
-    -khtml-border-radius: 7px;
-    border-radius: 7px;
+    margin-top: 20px;
 }
-.game-show-page .media-gallery h3 {
-    margin-bottom: 10px;
+.game-show-page .media-gallery .widget-title {
+    width: 600px;
+    float: left;
 }
 .game-show-page .media-gallery .ad-thumbs {
     /* causes the spacing (along to be right with respect to the scrollers */
