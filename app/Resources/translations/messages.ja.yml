@@ -410,14 +410,14 @@ email:
 username: ユーザー名
 
 age_confirm:
-    headline: Please Confirm Your Date of Birth
+    headline: ご自身の誕生日をご確認ください。
     message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
-confirm: Confirm
+confirm: 確認
 
 error:
-    fill_in_birthday: Please fill in your birthday!
+    fill_in_birthday: 誕生日をご記入ください
 
 games_trailers:
     channel_header: ゲーム＆動画チャンネル
@@ -429,8 +429,8 @@ games_trailers:
         other: 他のゲーム
         free-to-play: 無料プレイ
         mmo:   ＭＭＯ
-games_and_trailers: Games and Trailers
-games: Games
+games_and_trailers: ゲームとトレーラー
+games: ゲーム
 game_feed: ゲームフィード
 videos: ビデオ
 uploaded_desktop: Uploaded Desktop

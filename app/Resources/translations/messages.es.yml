@@ -55,7 +55,7 @@ platformd:
             manage_users: Manage Users
             manage_news: Manage News
             manage_homepage_banners: Manage Homepage Banners
-        
+
         main_menu:
             home: Home
             alienware: Alienware
@@ -63,7 +63,7 @@ platformd:
             video: Video
             news: Noticias
             microsoft: Microsoft
-    
+
         page_content:
             featured: Featured
             giveaways: Giveaways
@@ -121,8 +121,8 @@ platformd:
             create: Create New Event
             approve: Approve
             unpublish: Unpublish
-            approved: Event "%event_title%" has been approved and is now published. 
-            unpublished: Event "%event_title%" has been unpublished. 
+            approved: Event "%event_title%" has been approved and is now published.
+            unpublished: Event "%event_title%" has been unpublished.
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
             save_event: Save Event
@@ -207,9 +207,9 @@ platformd:
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
-        in_process_2: please allow at least 10 days for it to be posted into your account. 
-        in_process_3: If after 10 days it has not been posted, please email 
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
+        in_process_2: please allow at least 10 days for it to be posted into your account.
+        in_process_3: If after 10 days it has not been posted, please email
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -320,10 +320,10 @@ age_confirm:
     message: El contenido está dirigido a un público maduro.
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
-confirm: Confirm
+confirm: Confirmar
 
 error:
-    fill_in_birthday: Please fill in your birthday!
+    fill_in_birthday: Por favor, escriba su cumpleaños!
 
 games_trailers:
     channel_header: "Canal: Juegos y Tráiler"
@@ -335,8 +335,8 @@ games_trailers:
         other: Otros Juegos
         free-to-play: Libres para jugar
         mmo:   MMO
-games_and_trailers: Games and Trailers
-games: Games
+games_and_trailers: Juegos y Tráilers
+games: Juegos
 game_feed: Imágenes de Vídeo
 videos: Vídeos
 
