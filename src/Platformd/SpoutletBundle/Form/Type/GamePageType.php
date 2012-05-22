@@ -21,7 +21,7 @@ class GamePageType extends AbstractType
             ->add('recommendedLaptopUrl', null, array('label' => 'Recommended Laptop URL'))
             ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this game\'s Game Page.'))
             ->add('game', null, array('empty_value' => 'Select a game'))
-            ->add('slug', new SlugType())
+            ->add('slug', new SlugType(), array('url_prefix' => '/games/genre/{game name}'))
             ->add('buttonImage1', new MediaType(), array(
                 'image_label'   => 'Button Image 1',
                 'image_help'    => 'Recommended size: 204x45',
