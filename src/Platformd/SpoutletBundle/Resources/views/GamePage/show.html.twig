@@ -38,6 +38,8 @@
 {% block page_background_image customPageBackgroundImage %}
 
 {% block content %}
+{% set feedItemCount = 0 %}
+{% set maxFeedItems = 7 %}
 
     <div class="game-show-page">
 
@@ -61,43 +63,58 @@
                     <div class="widget-content normalized">
                         <ul>
                             {% for feedEvent in feedEvents %}
-                            <li class="widget-item">
-                                <a href="{{ feedEvent | pd_link }}" {{ feedEvent | pd_link_target }}>
-                                    {{ feedEvent.name }}
-                                </a>
-                            </li>
+                                {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="{{ feedEvent | pd_link }}" {{ feedEvent | pd_link_target }}>
+                                            {{ feedEvent.name }}
+                                        </a>
+                                    </li>
+
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
                             {% endfor %}
 
                             {% for feedNewsItem in feedNewsItems %}
-                            <li class="widget-item">
-                                <a href="{{ feedNewsItem | pd_link }}" {{ feedNewsItem | pd_link_target }}>
-                                    {{ feedNewsItem.title }}
-                                </a>
-                            </li>
+                                {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="{{ feedNewsItem | pd_link }}" {{ feedNewsItem | pd_link_target }}>
+                                            {{ feedNewsItem.title }}
+                                        </a>
+                                    </li>
+
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
                             {% endfor %}
 
                             {# videos #}
-                            {% if gamePage.youtubeIdTrailer1Headline %}
+                            {% if gamePage.youtubeIdTrailer1Headline and feedItemCount < maxFeedItems %}
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
 
-                            {% if gamePage.youtubeIdTrailer2Headline %}
+                            {% if gamePage.youtubeIdTrailer2Headline and feedItemCount < maxFeedItems %}
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
 
-                            {% if gamePage.youtubeIdTrailer3Headline %}
+                            {% if gamePage.youtubeIdTrailer3Headline and feedItemCount < maxFeedItems %}
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
 
-                            {% if gamePage.youtubeIdTrailer4Headline %}
+                            {% if gamePage.youtubeIdTrailer4Headline and feedItemCount < maxFeedItems %}
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
 
                             {# media gallery #}
                             {% for media in gamePage.mediaGalleryMedias %}
-                            <li class="widget-item">
-                                <a href="#media" class="media-link-color">{{ 'uploaded_desktop' | trans }} {{ media.filename }}</a>
-                            </li>
+                                 {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="#media" class="media-link-color">{{ 'uploaded_desktop' | trans }} {{ media.filename }}</a>
+                                    </li>
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>
