@@ -49,4 +49,4 @@ Feature: Games Page Admin
         When I click on "Game Pages"
             And I click on "Demo"
             And I click on the URL for "Starcraft"
-            Then the headline should contain "Starcraft"
+        Then I should be on the game page for "Starcraft" in "en"

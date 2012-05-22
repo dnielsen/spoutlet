@@ -11,15 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Platformd\SpoutletBundle\Entity\Game
  *
- * @ORM\Table(
- *      name="pd_game",
- *      uniqueConstraints={
- *          @ORM\UniqueConstraint(
- *              name="slug_unique",
- *              columns={"slug"}
- *          )
- *      }
- * )
+ * @ORM\Table(name="pd_game")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GameRepository")
  */
 class Game
@@ -55,14 +47,6 @@ class Game
      * @Assert\NotNull
      */
     private $name;
-
-    /**
-     * @var string $slug
-     *
-     * @ORM\Column(name="slug", type="string", length=255)
-     * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")]
-     */
-    private $slug;
 
     /**
      * @var string $category
@@ -146,15 +130,6 @@ class Game
      */
     public function setName($name)
     {
-        // sets the, but only if it's blank
-        // this is not meant to be smart enough to guarantee correct uniqueness
-        // that will happen with validation
-        if (!$this->getSlug()) {
-            $slug = Urlizer::urlize($name);
-
-            $this->setSlug($slug);
-        }
-
         $this->name = $name;
     }
 
@@ -166,34 +141,6 @@ class Game
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     */
-    public function setSlug($slug)
-    {
-        // don't let the slug be blanked out
-        // this allows the user to not enter a slug in the form. The slug
-        // will be generated from the name, but not overridden by that blank
-        // slug value
-        if (!$slug) {
-            return;
-        }
-
-        $this->slug = $slug;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     /**

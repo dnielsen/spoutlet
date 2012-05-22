@@ -23,8 +23,7 @@ class GamePageRepository extends EntityRepository
         return $this->createSiteQueryBuilder($site)
             ->addOrderBy('gp.createdAt', 'DESC')
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
@@ -42,8 +41,7 @@ class GamePageRepository extends EntityRepository
         return $qb
             ->addOrderBy('gp.createdAt', 'DESC')
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
@@ -62,8 +60,7 @@ class GamePageRepository extends EntityRepository
             ->addOrderBy('gp.createdAt', 'DESC')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -78,8 +75,7 @@ class GamePageRepository extends EntityRepository
         return $qb
             ->addOrderBy('gp.createdAt', 'DESC')
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 
     /**
@@ -93,10 +89,23 @@ class GamePageRepository extends EntityRepository
             ->andWhere('gp.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\Game $game
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     */
+    public function findOneByGame($game, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('gp.game = :game')
+            ->setParameter('game', $game)
+            ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-
 
     /**
      * @param $site
@@ -107,21 +116,18 @@ class GamePageRepository extends EntityRepository
         return $this->createQueryBuilder('gp')
             ->leftJoin('gp.gamePageLocales', 'gpl')
             ->andWhere('gpl.locale = :site')
-            ->setParameter('site', $site)
-        ;
+            ->setParameter('site', $site);
     }
 
     private function addPublishedQueryBuilder(QueryBuilder $qb)
     {
         return $qb->andWhere('gp.status = :status')
-            ->setParameter('status', GamePage::STATUS_PUBLISHED)
-        ;
+            ->setParameter('status', GamePage::STATUS_PUBLISHED);
     }
 
     private function addArchivedQueryBuilder(QueryBuilder $qb)
     {
         return $qb->andWhere('gp.status = :status')
-            ->setParameter('status', GamePage::STATUS_ARCHIVED)
-            ;
+            ->setParameter('status', GamePage::STATUS_ARCHIVED);
     }
 }

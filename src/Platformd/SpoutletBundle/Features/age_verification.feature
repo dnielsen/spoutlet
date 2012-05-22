@@ -21,7 +21,8 @@ Feature: Age Verification
             And I select "5" from "birthday[day]"
             And I press "Confirm"
             And I go to "/games"
-        Then the headline should contain "GAMES AND TRAILERS"
+        Then I should see "GAMES AND TRAILERS"
+            But I should not see "Content Intended for Mature Audiences"
 
     Scenario: I'm redirected back to my original page after verification
         When I go to "/games"
@@ -29,7 +30,8 @@ Feature: Age Verification
             And I select "6" from "birthday[month]"
             And I select "5" from "birthday[day]"
             And I press "Confirm"
-        Then the headline should contain "GAMES AND TRAILERS"
+        Then I should see "GAMES AND TRAILERS"
+            But I should not see "Content Intended for Mature Audiences"
 
     Scenario: I should see the "access denied" screen if I'm verified, but not old enough
         When I go to "/games"
@@ -38,3 +40,4 @@ Feature: Age Verification
             And I select "5" from "birthday[day]"
             And I press "Confirm"
         Then the headline should contain "Content Intended for Mature Audiences"
+            But I should not see "GAMES AND TRAILERS"

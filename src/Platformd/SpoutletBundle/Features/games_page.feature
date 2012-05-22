@@ -8,6 +8,8 @@ Feature: Games Page
         # it's more likely that this would break, due to our site listener
         # that redirects users back to aa.com when accessing pages they should not
         Given I am on the "Europe" site
+            And I go to "/games"
+            And I verify my age
 
     # todo
     Scenario: See only games that are approved for my age
@@ -21,12 +23,12 @@ Feature: Games Page
             | Baz   | action   | published   | en_GB |
             | Happy | other    | published   | en_GB |
             | Fun   | strategy | unpublished | en_GB |
-            And I have verified my age
         When I go to "/games"
-        Then I should see 1 games under the "RPG" category
-            And I should see 1 game under the "Action" category
+        Then I should see 1 game under the "Action" category
             And I should see 1 games under the "Strategy" category
             And I should see 1 games under the "Other" category
+            And I should see 1 games under the "RPG" category
+
 
     Scenario: See all "events" (news, giveaways, etc) related to the game
 
@@ -35,7 +37,6 @@ Feature: Games Page
             | name | status     | sites |
             | Foo  | published  | en_GB |
             | Bar  | archived   | en_GB |
-            And I have verified my age
         When I go to "/games"
         Then I should see 1 game in the archived list
 
@@ -47,13 +48,11 @@ Feature: Games Page
             | Foo  | rpg      | published   | en_GB,ja |
             | Bar  | rpg      | published   | en_GB    |
             | Baz  | rpg      | published   | ja       |
-            And I have verified my age
         When I go to "/games"
-        Then I should see 2 games under the "RPG" category
+        Then I should see 2 games under the "rpg" category
 
     Scenario: See information about a specific game
         Given there is a game page for "Awesome Game" in "en_GB"
-            And I have verified my age
-            And I am on "/games"
+            And I go to "/games"
         When I click "Awesome Game"
-            Then the headline should contain "Awesome Game"
+        Then I should be on the game page for "Awesome Game" in "en_GB"

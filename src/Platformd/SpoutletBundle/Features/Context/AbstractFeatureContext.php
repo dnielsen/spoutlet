@@ -266,8 +266,7 @@ class AbstractFeatureContext extends MinkContext
         $page->setStatus(GamePage::STATUS_PUBLISHED);
 
         $this->getContainer()->get('platformd.model.game_page_manager')
-            ->saveGamePage($page)
-        ;
+            ->saveGamePage($page);
     }
 
     /**
@@ -307,6 +306,40 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^I should be on the game page for "([^"]*)" in "([^"]*)"$/
+     */
+    public function iShouldBeOnTheGamePageFor($gameName, $siteName)
+    {
+        $em     = $this->getEntityManager();
+        $game   = $em->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $gameName));
+
+        if (!$game) {
+            throw new \Exception('Could not find game in the database');
+        }
+
+        $gamePage = $em->getRepository('SpoutletBundle:GamePage')->findOneByGame($game, $siteName);
+
+        if (!$gamePage) {
+            throw new \Exception('Could not find the game page for this game in the database');
+        }
+
+        $session    = $this->getSession();
+        $currentUrl = $session->getCurrentUrl();
+        $slug       = $gamePage->getSlug();
+
+        if (strpos($currentUrl, $slug) === false) {
+            throw new \Exception(sprintf('Not currently on the game\'s Game Page.  Expected URL was "%s" but currently on "%s"', $slug, $currentUrl));
+        }
+
+        $statusCode = $session->getStatusCode();
+        $httpOk = 200;
+
+        if ($statusCode != $httpOk) {
+            throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
+        }
+    }
+
+    /**
      * Used to click on the frontend "show" URL when in an admin list section
      *
      * @Given /^I click on the URL for "([^"]*)"$/
@@ -336,6 +369,11 @@ class AbstractFeatureContext extends MinkContext
     public function theHeadlineShouldContain($headline)
     {
         $h1 = $this->getPage()->find('css', 'h1');
+
+        if (!$h1) {
+            throw new \Exception(sprintf('Title was not found on the page. Looking for "%s" on page "%s".', $headline, $this->getSession()->getCurrentUrl()));
+        }
+
         assertRegExp('/'.preg_quote($headline).'/', $h1->getText());
     }
 
@@ -367,14 +405,15 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^I have verified my age$/
+     * @Given /^I (?:|have )verif(?:ied|y) my age$/
      */
     public function iHaveVerifiedMyAge()
     {
-        $currentUrl = $this->getSession()->getCurrentUrl();
+        $currentUrl             = $this->getSession()->getCurrentUrl();
+        $onAgeVerifyPageAlready = strpos($currentUrl, 'age/verify') !== false;
 
-        if (strlen($currentUrl) == 0) {
-            $currentUrl = '/games';
+        if ($onAgeVerifyPageAlready) {
+            $currentUrl = null;
         }
 
         $ra[] = new When('I go to "/age/verify"');
@@ -383,9 +422,10 @@ class AbstractFeatureContext extends MinkContext
         $ra[] = new When('I select "5" from "birthday[day]"');
         $ra[] = new When('I press "Confirm"');
         $ra[] = new When('I go to "/games"');
-        $ra[] = new Then('the headline should contain "GAMES AND TRAILERS"');
+        $ra[] = new Then('I should not see "Content Intended for Mature Audiences"');
+        $ra[] = new Then('I should see "GAMES AND TRAILERS"');
 
-        if ($currentUrl != '/games')
+        if ($currentUrl)
         {
             $ra[] = new When(sprintf('I go to "%s"', $currentUrl));
         }
