@@ -30,8 +30,8 @@ class SpoutletExtension extends Twig_Extension
     {
         return array(
             'pd_link' => new Twig_Filter_Method($this, 'linkToObject'),
-            'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget'),
-            'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull'),
+            'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
+            'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName')
         );
     }
