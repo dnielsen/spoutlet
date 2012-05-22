@@ -37,7 +37,7 @@ platformd:
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
-            
+
         top_menu:
             admin: Admin
             account: アカウント
@@ -65,7 +65,7 @@ platformd:
             video: ビデオ
             news: ニュース
             microsoft: Microsoft
-    
+
         page_content:
             featured: トピックス
             giveaways: キャンペーン
@@ -411,25 +411,29 @@ username: ユーザー名
 
 age_confirm:
     headline: Please Confirm Your Date of Birth
-    message: The content is intended for mature audiences. Please confirm your age below
+    message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
+    content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
+    too_young_message: 申し訳ありませんがアクセスできません。
 confirm: Confirm
 
 error:
     fill_in_birthday: Please fill in your birthday!
 
 games_trailers:
-    channel_header: CHANNEL: GAMES AND TRAILERS
-    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    channel_header: ゲーム＆動画チャンネル
+    intro_text: プロモーションビデオをみてホットなゲームを見つけよう！
     categories:
-        action: Action
-        rpg: RPG
-        strategy: Strategy
-        other: Other
-        free-to-play: Free to Play
-        mmo:   MMO
+        action: アクションゲーム
+        rpg: ＲＰＧ
+        strategy: 戦略ゲーム
+        other: 他のゲーム
+        free-to-play: 無料プレイ
+        mmo:   ＭＭＯ
 games_and_trailers: Games and Trailers
+games: Games
+game_feed: ゲームフィード
+videos: ビデオ
+uploaded_desktop: Uploaded Desktop
 
-archives: ARCHIVES
-past_partnerships: Past Partnerships
-created_date: Created Date
-media_gallery: Media Gallery
+past_partnerships: 過去のパートナー
+media_gallery: メディアギャラリー
