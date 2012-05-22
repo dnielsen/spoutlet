@@ -20,8 +20,8 @@ class MultitenancyManager
         'en_GB' => 'Europe',
         'en_IN' => 'India',
         'es'    => 'Latin America',
-        'en_SG' => 'Singapore',
-        'en_US' => 'USA',
+        'en_SG' => 'Singapore / Malaysia',
+        'en_US' => 'North America',
     );
 
     static public function getSiteChoices()
