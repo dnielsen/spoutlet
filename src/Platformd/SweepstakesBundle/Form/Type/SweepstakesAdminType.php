@@ -39,7 +39,7 @@ class SweepstakesAdminType extends EventType
 
         $builder->add('officialRules', 'textarea');
 
-        $builder->add('game', null, array('empty_value' => 'Select a game'));
+        $builder->add('game', null, array('empty_value' => 'N/A'));
 
     	$builder->add('content', 'textarea');
     }
