@@ -36,6 +36,7 @@ class AgeController extends Controller
             'empty_value' => '--', 'required' => true,
             'years' => range(date('Y'), 1940),
             'validation_constraint' => $constraint,
+            'invalid_message' => ''
         ));
 
         if ($request->getMethod() == 'POST') {
