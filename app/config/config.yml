@@ -120,7 +120,7 @@ parameters:
         en:     demo%host_suffix%.%base_host%
         ja:     japan%host_suffix%.%base_host%
         zh:     china%host_suffix%.%base_host%
-        en_AU:  au%host_suffix%.%base_host%
+        en_AU:  anz%host_suffix%.%base_host%
         en_GB:  europe%host_suffix%.%base_host%
         en_IN:  india%host_suffix%.%base_host%
         es:     latinam%host_suffix%.%base_host%
