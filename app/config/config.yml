@@ -124,7 +124,7 @@ parameters:
         en_GB:  europe%host_suffix%.%base_host%
         en_IN:  india%host_suffix%.%base_host%
         es:     latinam%host_suffix%.%base_host%
-        en_SG:  singapore%host_suffix%.%base_host%
+        en_SG:  mysg%host_suffix%.%base_host%
         en_US:  us%host_suffix%.%base_host%
 
     # this is repeated in the multitenancy manager - should not be
@@ -224,7 +224,7 @@ parameters:
             - 大分県
             - 宮崎県
             - 鹿児島県
-            - 沖縄県 
+            - 沖縄県
         zh:
             - 北京市
             - 天津市
@@ -308,10 +308,10 @@ knp_gaufrette:
     adapters:
         platformd.avatar:
             service:
-                id: platformd.avatar.s3.adapter 
+                id: platformd.avatar.s3.adapter
         platformd.event:
             service:
-                id: platformd.event.s3.adapter 
+                id: platformd.event.s3.adapter
         platformd.homepage_banners:
             service:
                 id: platformd.homepage_banner.s3.adapter
