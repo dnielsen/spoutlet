@@ -20,7 +20,11 @@ class GamePageType extends AbstractType
             ->add('recommendedDesktopUrl', null, array('label' => 'Recommended Desktop URL'))
             ->add('recommendedLaptopUrl', null, array('label' => 'Recommended Laptop URL'))
             ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this game\'s Game Page.'))
-            ->add('game', null, array('empty_value' => 'N/A'))
+            ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
+                'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
+                    return $er->createQueryBuilder('g')
+                              ->orderBy('g.name', 'ASC');
+                    }))
             ->add('slug', new SlugType(), array('url_prefix' => '/games/genre/{game name}'))
             ->add('buttonImage1', new MediaType(), array(
                 'image_label'   => 'Button Image 1',
