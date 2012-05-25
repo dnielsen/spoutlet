@@ -449,11 +449,6 @@ html body .lastBlurb { margin-bottom:0; }
 #footer .right a { color:#009cda; text-decoration:none; outline:none; font-weight: bold; }
 #footer .right a:hover { color:#17b8f8; }
 #footer .right a:focus, a:hover, a:active { outline:none; }
-
-a { color:#009cda; text-decoration:none; outline:none; font-weight: bold; }
-a:hover { color:#17b8f8; }
-a:focus, a:hover, a:active { outline:none; }
-
 #footer .legal { clear:both; text-align:center; font-size:11px; color:#575757; margin-top: 10px; }
 
 
