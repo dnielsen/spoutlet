@@ -21,7 +21,7 @@
             {% endif %}
         </ul>
         <div class="right">
-            <a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans }}</a>
+            {% if app.session.locale == 'zh' %}<ul class="nav"><li>{% endif %}<a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans }}</a>{% if app.session.locale == 'zh' %}</li><li class="noborder"><a href="http://bbs.alienfans.net/" target="_blank">Alienware官方粉丝站</a></li></ul>{% endif %}
         </div>
         <div style="clear:both;"></div>
         <div class="legal">

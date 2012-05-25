@@ -1,4 +1,4 @@
-/* 
+/*
 
 Color Palette #1 (light)
 	Dark Blue: #515661 (text) - most headings
@@ -20,7 +20,7 @@ Color Palette #2 (dark)
 	Sharp Blue: #01A2D2 (accent)
 	Bold Blue: #12B5EA (text)
 	Neon Blue: #30EAF7 (link)
-	
+
 Color Palette #3 (AW Rainbow)
 	Astal Aqua: #00F0F0
 	Plasma Purple: #5000F0
@@ -28,13 +28,13 @@ Color Palette #3 (AW Rainbow)
 	Terra Green: #00F000
 	Mars Red: #F00000
 	Quasar Blue: #0000F0
-	
+
 Redesign Palette
 	Sharp Blue: #009cda (links) #17b8f8 (hover)
 	Background (darker): #131313
 	Background (lighter): #252525
-	
-	
+
+
 */
 
 .quasar { color: #0000F0; }
@@ -332,7 +332,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainAd { width:300px; height:250px; margin-bottom: 0px; border: 1px solid #4A4A4A; }
 
 /** Event Tabs **/
-#eventTabs { width:100%; } 
+#eventTabs { width:100%; }
 #eventTabs ul { list-style:none; height:27px;  } /*background:url(/bundles/spoutlet/images/eventTab-bg.gif) top left repeat-x;*/
 #eventTabs ul li { float:left; height:27px; background:url(/bundles/spoutlet/images/eventTab-left-bg.gif) top left no-repeat; margin-right:5px; }
 #eventTabs ul li a { display:block; height:20px; padding:7px 10px 0px 10px; background:url(/bundles/spoutlet/images/eventTab-right-bg.gif) top right no-repeat; font-size:12px; font-weight:bold; }
@@ -440,10 +440,12 @@ html body .lastBlurb { margin-bottom:0; }
 /** footer **/
 #footer { clear:both; padding-top:40px; padding-bottom:20px; background:url(/bundles/spoutlet/images/footer-bg.gif) top left repeat-x; }
 #footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 20px; }
-#footer .nav a {  color:#b3b3b3; }
+#footer .nav a { color:#b3b3b3; }
 #footer .nav li { float:left; margin-left:5px; padding-right:5px; border-right:#575757 solid 1px; }
 #footer .nav li.noborder { border:none; }
 #footer .right { float:right; font-size:11px; font-weight:bold; text-align:right; }
+#footer .right a { color: #b3b3b3; }
+#footer .right li { list-style:none; font-size:11px; font-weight:bold; text-align:right; }
 #footer .legal { clear:both; text-align:center; font-size:11px; color:#575757; margin-top: 10px; }
 
 
@@ -460,23 +462,23 @@ html body .lastBlurb { margin-bottom:0; }
 /* notices */
 .xnotices { width:85%; margin:0 auto; padding-top:16px; }
 .xnotices .notice { margin-bottom:6px; }
-.xnotices .pad { background:url(/bundles/spoutlet/images/errors/corner-black-top-left.gif) top left no-repeat; } 
-.xnotices .pad2 { background:url(/bundles/spoutlet/images/errors/corner-black-top-right.gif) top right no-repeat; } 
-.xnotices .pad3 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-left.gif) bottom left no-repeat; } 
+.xnotices .pad { background:url(/bundles/spoutlet/images/errors/corner-black-top-left.gif) top left no-repeat; }
+.xnotices .pad2 { background:url(/bundles/spoutlet/images/errors/corner-black-top-right.gif) top right no-repeat; }
+.xnotices .pad3 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-left.gif) bottom left no-repeat; }
 .xnotices .pad4 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-right.gif) bottom right no-repeat; padding:10px 20px 2px 10px; }
 .xnotices h3 { font-size:18px; font-weight:bold; margin:0 0 10px 70px; }
 .xnotices p { margin:0 0 10px 70px; font-size:12px; color:#000000; }
 
-.xnotices .infoNotice { background:url(/bundles/spoutlet/images/errors/notice-info-bg.png) 0px 0px no-repeat #97d0e0; } 
+.xnotices .infoNotice { background:url(/bundles/spoutlet/images/errors/notice-info-bg.png) 0px 0px no-repeat #97d0e0; }
 .xnotices .infoNotice h3 { color:#0f5ea7; }
 
-.xnotices .successNotice { background:url(/bundles/spoutlet/images/errors/notice-success-bg.png) 7px 7px no-repeat #a5e49b; } 
+.xnotices .successNotice { background:url(/bundles/spoutlet/images/errors/notice-success-bg.png) 7px 7px no-repeat #a5e49b; }
 .xnotices .successNotice h3 { color:#25641b; }
 
-.xnotices .warningNotice { background:url(/bundles/spoutlet/images/errors/notice-warning-bg.png) 4px 4px no-repeat #e0c797; } 
+.xnotices .warningNotice { background:url(/bundles/spoutlet/images/errors/notice-warning-bg.png) 4px 4px no-repeat #e0c797; }
 .xnotices .warningNotice h3 { color:#604717; }
 
-.xnotices .errorNotice { background:url(/bundles/spoutlet/images/errors/notice-error-bg.png) 7px 7px no-repeat #fcb3b3; } 
+.xnotices .errorNotice { background:url(/bundles/spoutlet/images/errors/notice-error-bg.png) 7px 7px no-repeat #fcb3b3; }
 .xnotices .errorNotice h3 { color:#7c3333; }
 
 
@@ -493,7 +495,7 @@ html body .lastBlurb { margin-bottom:0; }
 /* leader boards */
 .leaderBoard .caption { font-weight: bold; margin: 0; color: #b3b3b3; padding: 0 0 0 8px; }
 .leaderBoard table {width:100%; margin-left: 5px; margin: 10px 0 0 0; }
-.leaderBoard th { font-size:13px; font-weight:bold; color: #b3b3b3; text-align: center; padding:3px 0px 7px 3px; } 
+.leaderBoard th { font-size:13px; font-weight:bold; color: #b3b3b3; text-align: center; padding:3px 0px 7px 3px; }
 .leaderBoard td { font-size: 12px; padding: 0 0 4px 0; }
 .leaderBoard td.rank { padding-right:20px; }
 .leaderboartRight { float:right; }
@@ -552,7 +554,7 @@ html body .lastBlurb { margin-bottom:0; }
 
 /*xfTHREAD*/
 #commentsView { width:100%; background:none; }
-#commentList { padding:10px 0; }	
+#commentList { padding:10px 0; }
 .submitComment { text-align: center; clear: left; }
 
 .pageList { margin: 0 0 6px 0; }
@@ -564,7 +566,7 @@ a.page-warp { color: #009cda; font-size: 9px; }
 
 .forumComment { padding-bottom:19px;}
 .forumComment .left { float:left; width:146px; }
-.forumComment .right { float:right; width:738px; } 
+.forumComment .right { float:right; width:738px; }
 #commentsView .forumComment .right { width:490px; }
 .submitComment #topicReply { width: 100%; height: 250px; }
 
