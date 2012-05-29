@@ -38,6 +38,7 @@ twig:
     globals:
         base_host:    %base_host%
         showVideo:    false
+        facebook_app_id: %facebook_app_id%
 
 # Assetic Configuration
 assetic:

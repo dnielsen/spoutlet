@@ -100,6 +100,17 @@
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 	</head>
 	<body class="site-{{ app.session.locale }}">
+        {% if facebook_app_id %}
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ facebook_app_id }}";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        {% endif %}
+
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
 	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
