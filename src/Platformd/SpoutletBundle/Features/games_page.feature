@@ -15,19 +15,20 @@ Feature: Games Page
     Scenario: See only games that are approved for my age
 
     Scenario: Only show published games
-    #Scenario: See games organized by their category
-     #   Given I have the following games pages:
-     #       | name  | category | status      | sites |
-     #       | Foo   | rpg      | published   | en_GB |
-     #       | Bar   | strategy | published   | en_GB |
-     #       | Baz   | action   | published   | en_GB |
-     #       | Happy | other    | published   | en_GB |
-     #       | Fun   | strategy | unpublished | en_GB |
-     #   When I go to "/games"
-     #   Then I should see 1 game under the "Action" category
-     #       And I should see 1 games under the "Strategy" category
-     #       And I should see 1 games under the "Other" category
-     #       And I should see 1 games under the "RPG" category
+
+    Scenario: See games organized by their category
+        Given I have the following games pages:
+            | name  | category | status      | sites |
+            | Foo   | rpg      | published   | en_GB |
+            | Bar   | strategy | published   | en_GB |
+            | Baz   | action   | published   | en_GB |
+            | Happy | other    | published   | en_GB |
+            | Fun   | strategy | unpublished | en_GB |
+        When I go to "/games"
+        Then I should see 1 game under the "Action" category
+            And I should see 1 games under the "Strategy" category
+            And I should see 1 games under the "Other" category
+            And I should see 1 games under the "RPG" category
 
 
     Scenario: See all "events" (news, giveaways, etc) related to the game
@@ -42,14 +43,14 @@ Feature: Games Page
 
     Scenario: The most recently created games page's trailer is automatically played
 
-    #Scenario: Only show games for the locale I'm in
-    #    Given I have the following games pages:
-    #        | name | category | status      | sites    |
-    #        | Foo  | rpg      | published   | en_GB,ja |
-    #        | Bar  | rpg      | published   | en_GB    |
-    #        | Baz  | rpg      | published   | ja       |
-    #    When I go to "/games"
-    #    Then I should see 2 games under the "rpg" category
+    Scenario: Only show games for the locale I'm in
+        Given I have the following games pages:
+            | name | category | status      | sites    |
+            | Foo  | rpg      | published   | en_GB,ja |
+            | Bar  | rpg      | published   | en_GB    |
+            | Baz  | rpg      | published   | ja       |
+        When I go to "/games"
+        Then I should see 2 games under the "RPG" category
 
     Scenario: See information about a specific game
         Given there is a game page for "Awesome Game" in "en_GB"

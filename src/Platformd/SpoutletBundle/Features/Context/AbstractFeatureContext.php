@@ -440,14 +440,14 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldSeeGamesUnderTheCategory($count, $category)
     {
-        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
-        if (!$h3Ele) {
+        $movieSectionEle = $this->getPage()->find('css', sprintf('.movie-section-title:contains("%s")', $category));
+        if (!$movieSectionEle) {
             throw new \Exception('Cannot find a category named '.$category);
         }
 
-        $liElements = $h3Ele->getParent()->findAll('css', 'ul.games li');
+        $gameElements = $movieSectionEle->getParent()->findAll('css', '.movie');
 
-        assertEquals($count, count($liElements));
+        assertEquals($count, count($gameElements));
     }
 
     /**
@@ -455,8 +455,8 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldNotSeeAnyGamesUnderTheCategory($category)
     {
-        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
-        if ($h3Ele) {
+        $movieSectionElement = $this->getPage()->find('css', sprintf('.movie-section-title:contains("%s")', $category));
+        if ($movieSectionElement) {
             throw new \Exception(sprintf('Found category for "%s", but should not have', $category));
         }
     }
