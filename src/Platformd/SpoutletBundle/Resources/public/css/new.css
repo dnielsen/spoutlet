@@ -636,13 +636,17 @@ ul.list-normal {
 
 .game-show-page .media-gallery {
     text-align: center;
-    padding: 10px 35px;
+    padding: 10px 0;
     width: auto;
     margin-top: 20px;
 }
 .game-show-page .media-gallery .widget-title {
     width: 600px;
     float: left;
+}
+.game-show-page .media-gallery .widget-content {
+    padding: 0 35px;
+    width: 880px;
 }
 .game-show-page .media-gallery .ad-thumbs {
     /* causes the spacing (along to be right with respect to the scrollers */
