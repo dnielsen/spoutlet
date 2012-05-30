@@ -480,13 +480,18 @@ ul.list-normal {
 .games-list-page {
 
 }
-.games-list-page .left {
+.games-list-page .left, .games-list-page .right {
     float: left;
-}
-.games-list-page .right {
-    float: right;
+    background: url('../images/games-pages/background_content.jpg') top left repeat-x;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    padding: 12px 24px 4px 24px;
 }
 .games-list-page .left {
+    width: 662px;
+    width: 614px;
     margin-right: 20px;
 }
 .games-list-page .right {
@@ -494,11 +499,7 @@ ul.list-normal {
     width: 217px;
     float: left;
 }
-.games-list-page .right .widget-title {
-    width: 200px;
-    float: left;
-}
-.games-list-page h2 {
+.games-list-page h1, .games-list-page h2 {
     font-size: 16px;
     color: #fff;
     margin: 0;
@@ -590,7 +591,7 @@ ul.list-normal {
 }
 
 .game-show-page .video-player {
-
+    overflow: hidden;
 }
 .game-show-page .video-player h3 {
     text-align: center;

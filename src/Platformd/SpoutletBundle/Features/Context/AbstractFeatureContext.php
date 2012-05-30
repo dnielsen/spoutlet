@@ -4,10 +4,10 @@ namespace Platformd\SpoutletBundle\Features\Context;
 
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Exception\PendingException;
+Behat\Behat\Context\TranslatedContextInterface,
+Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+Behat\Gherkin\Node\TableNode;
 
 use Behat\Behat\Event\ScenarioEvent;
 use Behat\Behat\Context\Step\Given;
@@ -440,14 +440,14 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldSeeGamesUnderTheCategory($count, $category)
     {
-        $movieSectionEle = $this->getPage()->find('css', sprintf('.movie-section-title:contains("%s")', $category));
-        if (!$movieSectionEle) {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if (!$h3Ele) {
             throw new \Exception('Cannot find a category named '.$category);
         }
 
-        $gameElements = $movieSectionEle->getParent()->findAll('css', '.movie');
+        $liElements = $h3Ele->getParent()->findAll('css', 'ul.games li');
 
-        assertEquals($count, count($gameElements));
+        assertEquals($count, count($liElements));
     }
 
     /**
@@ -455,8 +455,8 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldNotSeeAnyGamesUnderTheCategory($category)
     {
-        $movieSectionElement = $this->getPage()->find('css', sprintf('.movie-section-title:contains("%s")', $category));
-        if ($movieSectionElement) {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if ($h3Ele) {
             throw new \Exception(sprintf('Found category for "%s", but should not have', $category));
         }
     }
@@ -591,7 +591,7 @@ class AbstractFeatureContext extends MinkContext
     {
         return $this->getEntityManager()
             ->getRepository($repo)
-        ;
+            ;
     }
 
     protected function getCurrentSite()
