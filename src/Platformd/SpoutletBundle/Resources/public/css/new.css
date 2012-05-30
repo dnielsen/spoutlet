@@ -649,6 +649,10 @@ ul.list-normal {
     padding: 0 35px;
     width: 880px;
 }
+.game-show-page .media-gallery .ad-nav {
+    width: 860px;
+    margin: 10px auto;
+}
 .game-show-page .media-gallery .ad-thumbs {
     /* causes the spacing (along to be right with respect to the scrollers */
     width: 874px;
