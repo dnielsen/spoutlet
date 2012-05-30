@@ -59,9 +59,13 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            events: Acontecimientos
-            video: Video
-            news: Noticias
+            events: Eventos
+            video: Vídeos
+            news: Novedades
+            arp: ARP
+            forums: Foros
+            sweeps: Sweeps
+            wallpapers: Explorar
             microsoft: Microsoft
 
         page_content:

@@ -59,6 +59,10 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'isAdminPage'
             ),
+            'site_has_feature'              => new Twig_Function_Method(
+                $this,
+                'siteHasFeature'
+            ),
         );
     }
 
@@ -187,6 +191,30 @@ class SpoutletExtension extends Twig_Extension
     public function getName()
     {
         return 'spoutlet';
+    }
+
+    /**
+     * A little temporary function (temporary because it will be much more
+     * built-out in the future).
+     *
+     * Currently-supported features:
+     *  * EXTRA_NAVIGATION: do we show the extra navigation items in the layout?
+     *
+     * @param string $feature
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    public function siteHasFeature($feature)
+    {
+        $locale = $this->container->get('session')->getLocale();
+        $chinaOrJapan = in_array($locale, array('zh', 'ja'));
+
+        switch ($feature) {
+            case 'EXTRA_NAVIGATION':
+                return !$chinaOrJapan;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
     }
 
     /**

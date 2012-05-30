@@ -64,6 +64,10 @@ platformd:
             events: Events
             video: Video
             news: News
+            arp: ARP
+            forums: Forums
+            sweeps: Sweepstakes
+            wallpapers: Wallpapers
             microsoft: Microsoft
     
         page_content:
