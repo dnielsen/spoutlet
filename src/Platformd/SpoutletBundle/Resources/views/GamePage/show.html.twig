@@ -45,11 +45,13 @@
 
         <div class="std_2col">
             <div class="right">
+                {% if gamePage.recommendedLaptopUrl and gamePage.recommendedDesktopUrl %}
                 <div class="split-ad">
-                    <a href="#" onclick="alert('Left side!'); return false;" class="split-left"></a>
-                    <a href="#" onclick="alert('Right side!'); return false;" class="split-right"></a>
+                    <a href="{{ gamePage.recommendedLaptopUrl }}" target="_blank" class="split-left"></a>
+                    <a href="{{ gamePage.recommendedDesktopUrl }}" target="_blank" class="split-right"></a>
                     <img src="{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}" alt="{{ 'recommended_rig' | trans }}" />
                 </div>
+                {% endif %}
 
                 <div class="game-feed widget-33">
                     <div class="widget-header">
