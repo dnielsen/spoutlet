@@ -667,8 +667,15 @@ ul.list-normal {
 }
 
 .game-show-page .media-gallery .ad-back, .game-show-page .media-gallery .ad-forward {
-    background-position-y: 40px;
-    width: 20px;
+    width: 28px;
+    height: 110px;
+    background-position-y: 5px;
+}
+.game-show-page .media-gallery .ad-back {
+    left: -30px;
+}
+.game-show-page .media-gallery .ad-forward {
+    right: -30px;
 }
 /* if we only have 4 items or less, there's no scrolling */
 .game-show-page .media-gallery .no-scroll .ad-back, .game-show-page .media-gallery .no-scroll .ad-forward {
