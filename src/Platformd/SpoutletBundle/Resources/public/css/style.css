@@ -336,6 +336,8 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-100 th { color: #888888; font-size:12px; text-align:left; padding-bottom:4px; }
 .widget-100 td { color: #c6c6c6; font-size: 12px; padding: 2px 0; }
 
+.widget-100.no-header { background-image: url('../images/widget-100-bg-no-header.png'); }
+
 /** Rotator **/
 #rotator { width:634px; }
 #mainAd { width:300px; height:250px; margin-bottom: 0px; border: 1px solid #4A4A4A; }

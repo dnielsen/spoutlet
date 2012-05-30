@@ -192,15 +192,11 @@
             </div>
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
-            <div class="media-gallery ad-gallery widget-100">
+            <div class="media-gallery ad-gallery widget-100 no-header">
                 <a name="media"></a>
-                <div class="widget-header">
-                    <div class="widget-title">
-                        {{ 'media_gallery' | trans }}
-                    </div>
-                    <div class="widget-icon"><img src="{{ asset('bundles/spoutlet/images/photo-icon.png') }}" /></div>
-                    <div class="clear"></div>
-                </div>
+                <h3>
+                    {{ 'media_gallery' | trans }}
+                </h3>
 
                 {#
                     Left off because we don't need the big image
@@ -212,7 +208,7 @@
                     </div>
                 #}
 
-                <div class="widget-content">
+                <div class="media-content">
                     <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
                         <div class="ad-thumbs">
                             <ul class="ad-thumb-list">
