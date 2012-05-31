@@ -199,6 +199,7 @@ class SpoutletExtension extends Twig_Extension
      *
      * Currently-supported features:
      *  * EXTRA_NAVIGATION: do we show the extra navigation items in the layout?
+     *  * STEAM_XFIRE_COMMUNITIES: do we show the steam/xfire community links in the footer?
      *
      * @param string $feature
      * @return bool
@@ -211,6 +212,8 @@ class SpoutletExtension extends Twig_Extension
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':
+                return !$chinaOrJapan;
+            case 'STEAM_XFIRE_COMMUNITIES':
                 return !$chinaOrJapan;
         }
 

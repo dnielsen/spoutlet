@@ -4,7 +4,7 @@
             <li><a href="{{ path('contact') }}">{{ 'platformd.layout.bottom_menu.contact_us' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('privacy') }}">{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('terms_conditions') }}">{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}</a></li>
-            {% if app.session.locale == 'en' %}
+            {% if site_has_feature('STEAM_XFIRE_COMMUNITIES') %}
             <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
             <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
             {% endif %}
@@ -21,7 +21,7 @@
             {% endif %}
         </ul>
         <div class="right">
-            <a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans }}</a>
+            <a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans | raw }}</a>
         </div>
         <div style="clear:both;"></div>
         <div class="legal">

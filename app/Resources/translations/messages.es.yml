@@ -4,20 +4,24 @@ platformd:
     not_found:
         title: Page not found
         body: We're sorry - but we can't find the page you're looking for
+    layout:
+
+        region:
+            change: (Cambiar)
 
         top_menu:
             admin: Admin
-            account: Account
-            sign_in: Sign in
-            sign_out: Sign out
-            join: Join
-            about: About
-            contact: Contacto
+            account: Cuenta
+            sign_in: Iniciar
+            sign_out: Cerrar sesión
+            join: Registrarse
+            about: Sobre
+            contact: Contáctenos
             search: Buscar
             logged_in_as: Sesión iniciada como: <a href="%route%">%username%</a>
 
         main_menu:
-            home: Home
+            home: Inicio
             alienware: Alienware
             events: Eventos
             video: Vídeos
@@ -27,6 +31,15 @@ platformd:
             sweeps: Sweeps
             wallpapers: Explorar
             microsoft: Microsoft
+
+        bottom_menu:
+            contact_us: Contáctenos
+            privacy_policy: Política de Privacidad
+            terms_and_conditions: "Términos y Condiciones"
+            steam_community: Comunidad Steam
+            xfire_community: Comunidad Xfire
+            link: "¿Busca un equipo poderoso? <br/> ¡Encuéntrelo en Alienware!"
+            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.
@@ -55,3 +68,5 @@ videos: Vídeos
 
 past_partnerships: Asociaciones anteriores
 media_gallery: Galería de medios
+
+follow_us: Siguenos

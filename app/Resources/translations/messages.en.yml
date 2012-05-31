@@ -21,7 +21,7 @@ platformd:
 
         #translations that are not used yet
         region:
-            region: Region
+            region: "Region:"
             register: Register
             china: China
             change: (change)
@@ -345,8 +345,8 @@ follow_us: Follow Us
 # alienware-specific things
 alienware:
     social:
-        twitter_url: ''
-        facebook_url: ''
+        twitter_url: 'http://www.twitter.com/alienware'
+        facebook_url: 'http://www.facebook.com/alienware'
         follow_on_facebook: Follow Aliewnare on Facebook
         follow_on_twitter: Follow Alieneware on Twitter
 
