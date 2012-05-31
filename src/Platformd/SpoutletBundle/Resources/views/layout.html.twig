@@ -85,14 +85,18 @@
 		<script type="text/javascript">
 
 			$(document).ready(function(){
-				$('#toggleRegion').click(function(){
-				$('#selectRegion').toggle();
-				$('#selectLanguage').hide();
+				$('#toggleRegion').click(function(e){
+                    e.preventDefault();
+
+				    $('#selectRegion').toggle();
+				    $('#selectLanguage').hide();
 				});
 
-				$('#toggleLanguage').click(function(){
-				$('#selectLanguage').toggle();
-				$('#selectRegion').hide();
+				$('#toggleLanguage').click(function(e){
+                    e.preventDefault();
+
+				    $('#selectLanguage').toggle();
+				    $('#selectRegion').hide();
 				});
 			});
 		</script>
