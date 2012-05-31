@@ -15,7 +15,6 @@ class GamePageController extends Controller
     public function indexAction()
     {
         $this->enforceAgeProtection(self::AGE_LIMIT);
-        // todo - add the age check
 
         $categorizedGames = $this->getGamePageManager()
             ->findActiveGamesInCategoriesForAge($this->getAgeManager()->getUsersAge())

@@ -113,7 +113,6 @@ class Controller extends BaseController
     }
 
     /**
-<<<<<<< HEAD
      * Checks whether a Linkable object is actually a link to another site
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
