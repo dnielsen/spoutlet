@@ -122,11 +122,11 @@ parameters:
         ja:     japan%host_suffix%.%base_host%
         zh:     china%host_suffix%.%base_host%
         en_AU:  anz%host_suffix%.%base_host%
-        en_GB:  europe%host_suffix%.%base_host%
-        en_IN:  india%host_suffix%.%base_host%
-        es:     latinam%host_suffix%.%base_host%
+        en_GB:  eu%host_suffix%.%base_host%
+        en_IN:  in%host_suffix%.%base_host%
+        es:     latam%host_suffix%.%base_host%
         en_SG:  mysg%host_suffix%.%base_host%
-        en_US:  us%host_suffix%.%base_host%
+        en_US:  na%host_suffix%.%base_host%
 
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
