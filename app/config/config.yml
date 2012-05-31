@@ -138,7 +138,7 @@ parameters:
         en_IN: India
         es:    Latin America
         en_SG: Singapore
-        en_US: USA
+        en_US: North America
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users

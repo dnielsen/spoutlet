@@ -23,17 +23,17 @@ platformd:
         region:
             region: "Region:"
             register: Register
-            china: China
+            zh: China
             change: (change)
             change_region: Change your region
             global: Global
-            usa_canada: "USA/Canada"
-            malasia_singapore: "Malasia/Singapore"
-            america_latina: América Latina
-            europe: Europe
-            japan: Japan
-            india: India
-            australia_new_zealand: "Australia/New Zealand"
+            en_US: "USA/Canada"
+            en_SG: "Malasia/Singapore"
+            es: América Latina
+            en_GB: Europe
+            ja: Japan
+            en_IN: India
+            en_AU: "Australia/New Zealand"
             change_language: Change preferred language
             english: English
             espanol: Español

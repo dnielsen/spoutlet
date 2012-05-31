@@ -23,17 +23,17 @@ platformd:
         region:
             region: 地区:
             register: 注册
-            china: 中国
+            zh: 中国
             change: 切换
             change_region: 切换地区
             global: 全球
-            usa_canada: "美国/加拿大"
-            malasia_singapore: "马来西亚/新加坡"
-            america_latina: 拉丁美洲
-            europe: 欧洲
-            japan: 日本
-            india: 印
-            australia_new_zealand: "澳大利亚/新西兰"
+            en_US: "美国/加拿大"
+            en_SG: "马来西亚/新加坡"
+            es: 拉丁美洲
+            en_GB: 欧洲
+            ja: 日本
+            en_IN: 印
+            en_AU: "澳大利亚/新西兰"
             change_language: 改变首选语言
             english: 英语
             espanol: 西班牙语

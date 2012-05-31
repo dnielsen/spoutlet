@@ -23,17 +23,17 @@ platformd:
         region:
             region: 地域
             register: 登録登録
-            china: 中国
+            zh: 中国
             change: 変更
             change_region: 地域変更
             global: 全世界
-            usa_canada: "北米/カナダ"
-            malasia_singapore: "マレーシア/シンガポール"
-            america_latina: 南米
-            europe: ヨーロッパ
-            japan: 日本
-            india: インド
-            australia_new_zealand: "オーストラリア/ニュージーランド"
+            en_US: "北米/カナダ"
+            en_SG: "マレーシア/シンガポール"
+            es: 南米
+            en_GB: ヨーロッパ
+            ja: 日本
+            en_IN: インド
+            en_AU: "オーストラリア/ニュージーランド"
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
