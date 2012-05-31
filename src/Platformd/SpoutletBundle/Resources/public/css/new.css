@@ -547,11 +547,6 @@ ul.list-normal {
 }
 .game-show-page .split-ad {
     position: relative;
-    border: 1px solid #4a4a4a;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    border-radius: 3px;
     margin-bottom: 20px;
 }
 .game-show-page .split-ad a {
