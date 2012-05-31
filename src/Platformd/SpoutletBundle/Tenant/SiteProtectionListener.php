@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\CEVOBundle\CEVOAuthManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Responsible for preventing anyone from a non-implemented site from viewing
@@ -20,6 +21,8 @@ class SiteProtectionListener
     private $allowedSites;
 
     private $cevoAuthManager;
+
+    private $debug;
 
     /**
      * An array of allowed URL regular expressions
@@ -44,10 +47,11 @@ class SiteProtectionListener
     /**
      * @param array $allowedSites
      */
-    public function __construct(array $allowedSites, CEVOAuthManager $cevoAuthManager)
+    public function __construct(array $allowedSites, CEVOAuthManager $cevoAuthManager, $debug)
     {
         $this->allowedSites = $allowedSites;
         $this->cevoAuthManager = $cevoAuthManager;
+        $this->debug = $debug;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -73,6 +77,11 @@ class SiteProtectionListener
 
         // at this point, we don't match, so we need to redirect back to CEVO
         $url = $this->translateToCEVOUrl($request->getPathInfo());
+
+        if ($this->debug) {
+            throw new NotFoundHttpException(sprintf('No access to this URL on this site. In non-debug mode, we would redirect to the main CEVO site at "%s"', $url));
+        }
+
         $absoluteUrl = $this->cevoAuthManager->generateCevoUrl(
             $url,
             null,

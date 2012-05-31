@@ -128,5 +128,6 @@ services:
         arguments:
             - "%allowed_sites%"
             - "@pd.cevo.cevo_auth_manager"
+            - "%kernel.debug%"
         tags:
             - { name: kernel.event_listener, event: kernel.request }
