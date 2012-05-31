@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage
@@ -26,6 +27,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * )
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GamePageRepository")
  * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
+ * @Assert\Callback(methods={"validateExternalArchivedGamePage", "validatePossibilityOfSlug"})
  */
 class GamePage implements LinkableInterface
 {
@@ -58,11 +60,14 @@ class GamePage implements LinkableInterface
     private $slug;
 
     /**
-     * @Assert\NotBlank
+     * This is *almost* required. It's not because archived game pages
+     * can be created with an external URL that simply point to the old
+     * site. Yea, that's totally a hack, but it's what they want. These
+     * MUST be archived or else things will go crazy.
      *
      * @var \Platformd\SpoutletBundle\Entity\Game
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $game;
 
@@ -842,5 +847,56 @@ class GamePage implements LinkableInterface
     public function setYoutubeIdTrailer4Headline($youtubeIdTrailer4Headline)
     {
         $this->youtubeIdTrailer4Headline = $youtubeIdTrailer4Headline;
+    }
+
+    /**
+     * It's ok to not choose a game, but ONLY if there is an external URL
+     * and this game is archived.
+     *
+     * @param \Symfony\Component\Validator\ExecutionContext $executionContext
+     */
+    public function validateExternalArchivedGamePage(ExecutionContext $executionContext)
+    {
+        // we have a game... cool
+        if ($this->getGame()) {
+            return;
+        }
+
+        if (!$this->getExternalUrl() || !$this->getStatus() == self::STATUS_ARCHIVED) {
+            $propertyPath = $executionContext->getPropertyPath() . '.game';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $executionContext->addViolation(
+                'You must either choose a game or give this game page an External URL and mark it as archived so that it does not have a real page on the site',
+                array(),
+                null
+            );
+        }
+    }
+
+    /**
+     * Validates that if there is no slug and not game is set, we need to
+     * tell the user to manually set the slug.
+     *
+     * @param \Symfony\Component\Validator\ExecutionContext $executionContext
+     */
+    public function validatePossibilityOfSlug(ExecutionContext $executionContext)
+    {
+        if ($this->getSlug()) {
+            return;
+        }
+
+        if ($this->getGame()) {
+            return;
+        }
+
+        $propertyPath = $executionContext->getPropertyPath() . '.slug';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            'If this game page has no related game, you must manually set the URL string. This string is not used, but it must be set to something unique.',
+            array(),
+            null
+        );
     }
 }
