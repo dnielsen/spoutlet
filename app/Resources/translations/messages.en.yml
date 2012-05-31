@@ -28,6 +28,7 @@ platformd:
             change_region: Change your region
             global: Global
             en_US: "USA/Canada"
+            en: "USA/Canada"
             en_SG: "Malasia/Singapore"
             es: América Latina
             en_GB: Europe
