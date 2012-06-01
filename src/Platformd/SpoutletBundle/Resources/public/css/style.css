@@ -230,6 +230,16 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
 #mainNav ul li.more:hover > a{ background: url('/bundles/spoutlet/images/nav-arrow-2.png') right center no-repeat; cursor: pointer; }
+#mainNav ul li.more li {
+    padding: 0 7px;
+    display: block;
+    margin: 0;
+}
+#mainNav ul li.more li a {
+    display: block;
+    height: 12px;
+    text-align: left;
+}
 
 #mainNav ul li.last { background: url('/bundles/spoutlet/images/nav_divider.png') right no-repeat; }
 #mainNav ul li li { background: none; }
@@ -248,7 +258,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul li a.blue { color: #BFCACE; font-weight: bold; }
 #mainNav ul li a.blue:hover { color: #ffffff; }
 #omni #page #mainNav ul li li { height:20px; }
-#omni #page #mainNav ul li li a { background-color:#525252; padding:5px 0 4px 10px;  }
+#omni #page #mainNav ul li li a { background-color:#000; padding:5px 0 4px 10px; margin: 0; }
 #omni #page #mainNav ul li li a:hover { background:#333333; }
 
 #nav-wrapper { }
