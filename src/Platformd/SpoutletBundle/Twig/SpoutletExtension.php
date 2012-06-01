@@ -109,7 +109,7 @@ class SpoutletExtension extends Twig_Extension
         $this->ensureLinkable($obj);
 
         $url        = $this->getLinkableManager()->link($obj);
-        $target     = $this->testExternal($url);
+        $target     = $this->linkToObjectTarget($obj);
         $urlText    = $urlText ?: $url;
 
         if (strlen($target) > 0) {
