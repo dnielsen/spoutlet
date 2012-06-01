@@ -874,6 +874,31 @@ class GamePage implements LinkableInterface
         }
     }
 
+    public function getBestNameForGame()
+    {
+        if ($this->getGame()) {
+            $gameName = $this->getGame()->getName();
+
+            if (strlen($gameName) > 0) {
+                return $gameName;
+            }
+        }
+
+        $slug = $this->getSlug();
+
+        if (strlen($slug) > 0) {
+            return $slug;
+        }
+
+        $externalUrl = $this->getExternalUrl();
+
+        if (strlen($externalUrl) > 0) {
+            return $externalUrl;
+        }
+
+        return "Unknown Game Name";
+    }
+
     /**
      * Validates that if there is no slug and not game is set, we need to
      * tell the user to manually set the slug.

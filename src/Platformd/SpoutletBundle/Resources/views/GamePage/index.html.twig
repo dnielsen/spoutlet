@@ -49,7 +49,7 @@
         <ul class="games">
             {% for archive in archives %}
             <li>
-                {{ archive | pd_link_full(archive.slug) }}
+                {{ archive | pd_link_full(archive.getBestNameForGame) }}
             </li>
             {% endfor %}
         </ul>
