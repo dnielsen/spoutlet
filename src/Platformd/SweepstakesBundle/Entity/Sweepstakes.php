@@ -47,6 +47,13 @@ class Sweepstakes extends AbstractEvent
      */
     protected $entries;
 
+     /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="external_url", length="255", nullable=true)
+     */
+    private $externalUrl;
+
     public function __construct()
     {
         $this->entries = new ArrayCollection();
@@ -193,13 +200,40 @@ class Sweepstakes extends AbstractEvent
     }
 
     /**
+     * @param string $externalUrl
+     */
+    public function setExternalUrl($externalUrl) {
+        $this->externalUrl = $externalUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExternalUrl() {
+        return $this->externalUrl;
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+            '_locale' => $this->getLocale()
+        );
+    }
+
+    /**
      * If there is a set URL that should be used without doing anything else, return it here
      *
      * @return string
      */
     public function getLinkableOverrideUrl()
     {
-        return false;
+       return $this->getExternalUrl();
     }
 
     /**
