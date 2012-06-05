@@ -1,3 +1,5 @@
+{% set facebookLink = site_link('FACEBOOK') %}
+{% set twitterLink = site_link('TWITTER') %}
 <div class="wide-950">
     <div id="footer">
         <ul class="nav">
@@ -8,20 +10,15 @@
             <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
             <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
             {% endif %}
-
-            {% if 'alienware.social.facebook_url' | trans or 'alienware.social.twitter_url' | trans %}
+            {% if facebookLink or twitterLink %}
                 <li style="border-right: none; padding-top: 3px;">
-                    {% if 'alienware.social.facebook_url' | trans %}
-                        <a href="{{ 'alienware.social.facebook_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-fb-14.png') }}" alt="{{ 'alienware.social.follow_on_facebook' }}" /></a>
-                    {% endif %}
-                    {% if 'alienware.social.twitter_url' | trans %}
-                        <a href="{{ 'alienware.social.twitter_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-tw-14.png') }}" alt="{{ 'alienware.social.follow_on_twitter' }}" /></a>
-                    {% endif %}
+                    {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
+                    {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
                 </li>
             {% endif %}
         </ul>
         <div class="right">
-            <a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans | raw }}</a>
+            {{ site_link('ALIENWARE') }}<br /><br />
         </div>
         <div style="clear:both;"></div>
         <div class="legal">

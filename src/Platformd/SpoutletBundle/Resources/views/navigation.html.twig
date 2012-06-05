@@ -25,7 +25,11 @@
                 {% if site_has_feature('EXTRA_NAVIGATION') %}
                     <li><a href="/arp">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                     <li><a href="/forums">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
-                    <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+
+                    {% if site_has_feature('SWEEPSTAKES') %}
+                        <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                    {% endif %}
+
                     <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
                 {% endif %}
 

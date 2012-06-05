@@ -63,6 +63,9 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'siteHasFeature'
             ),
+            'site_link'                     => new Twig_Function_Method(
+                $this,
+                'siteLink', array('is_safe' => array('html')))
         );
     }
 
@@ -194,6 +197,78 @@ class SpoutletExtension extends Twig_Extension
     }
 
     /**
+     * A small function to allow the various link types that are common across all AWA sites to have their own unique
+     * destinations and text.  This was in translations before but that forces all sites that share a common language
+     * to have the same links.  This should definately be moved elsewhere but I wanted to discuss the best location
+     * for site specific data-related settings first.
+     *
+     * @param string $linkType
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function SiteLink($linkType) {
+
+        $locale = $this->container->get('session')->getLocale();
+
+        switch ($linkType) {
+            case 'ALIENWARE':   return $this->GetAlienwareLink($locale);
+            case 'FACEBOOK':    return $this->GetFacebookLink($locale);
+            case 'TWITTER':     return $this->GetTwitterLink($locale);
+
+            default:
+                throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
+        }
+    }
+
+    private function GetAlienwareLink($locale) {
+        $format = '<a href="%s" target="_blank">%s</a>';
+        $enLink = 'http://alienware.com';
+        $enText = 'Need a kickass rig? Check out Alienware';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'http://alienware.jp/', 'ALIENWARE.JPへ移動する');
+            case 'zh':      return sprintf($format, 'http://alienware.com.cn/', '需要一个牛逼的装备? 请看看 Alienware');
+            case 'es':      return sprintf($format, 'http://www.alienware.com/mx/', '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!');
+            case 'en_SG':   return sprintf($format, 'http://allpowerful.com/asia', $enText);
+            case 'en_AU':   return sprintf($format, 'http://www.alienware.com.au/', $enText);
+            case 'en_GB':   return sprintf($format, 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn', $enText);
+            case 'en_IN':   return sprintf($format, 'http://www.alienware.co.in/', $enText);
+            case 'en_US':   return sprintf($format, $enLink, $enText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetFacebookLink($locale) {
+        $format = '<a href="http://www.facebook.com/%s" target="_blank"><img src="/bundles/spoutlet/images/icons/icon-fb-14.png" alt="%s" /></a>';
+        $enLink = 'Alienware';
+        $enAltText = 'Facebook';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'DellJapan', $enAltText);
+            case 'es':      return sprintf($format, 'AlienwareLatinoamerica', $enAltText);
+            case 'en_IN':   return sprintf($format, 'alienwareindia', $enAltText);
+            case 'en_US':   return sprintf($format, $enLink, $enAltText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetTwitterLink($locale) {
+        $format = '<a href="http://twitter.com/#!/%s" target="_blank"><img src="/bundles/spoutlet/images/icons/icon-tw-14.png" alt="%s" /></a>';
+        $enLink = 'alienware';
+        $enAltText = 'Twitter';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'Alienware_JP', $enAltText);
+            case 'es':      return sprintf($format, 'AlienwareLatAm', $enAltText);
+            case 'en_US':   return sprintf($format, $enLink, $enAltText);
+
+            default:        return false;
+        }
+    }
+
+    /**
      * A little temporary function (temporary because it will be much more
      * built-out in the future).
      *
@@ -209,12 +284,12 @@ class SpoutletExtension extends Twig_Extension
     {
         $locale = $this->container->get('session')->getLocale();
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
+        $northAmerica = in_array($locale, array('en_US'));
 
         switch ($feature) {
-            case 'EXTRA_NAVIGATION':
-                return !$chinaOrJapan;
-            case 'STEAM_XFIRE_COMMUNITIES':
-                return !$chinaOrJapan;
+            case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
+            case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
+            case 'SWEEPSTAKES':                 return $northAmerica;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

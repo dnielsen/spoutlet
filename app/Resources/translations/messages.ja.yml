@@ -80,7 +80,6 @@ platformd:
             terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            link: "Alienware.jpへ移動する"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -339,16 +338,6 @@ sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
 
 follow_us: ''
-
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: "http://twitter.com/#!/Alienware_JP"
-        facebook_url: http://www.facebook.com/DellJapan
-        follow_on_facebook: ''
-        follow_on_twitter: ''
-
-    alienware_link_url: http://alienware.jp/
 
 # admin-only translations - we don't need these
 url:  URL
