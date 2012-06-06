@@ -290,6 +290,7 @@ class SpoutletExtension extends Twig_Extension
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
+            case 'NEWS':                        return $chinaOrJapan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
