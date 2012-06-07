@@ -108,16 +108,6 @@
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
                                 {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
-
-                            {# media gallery #}
-                            {% for media in gamePage.mediaGalleryMedias %}
-                                 {% if feedItemCount < maxFeedItems %}
-                                    <li class="widget-item">
-                                        <a href="#media" class="media-link-color">{{ 'uploaded_desktop' | trans }} {{ media.filename }}</a>
-                                    </li>
-                                    {% set feedItemCount = feedItemCount + 1 %}
-                                {% endif %}
-                            {% endfor %}
                         </ul>
                     </div>
                 </div>
