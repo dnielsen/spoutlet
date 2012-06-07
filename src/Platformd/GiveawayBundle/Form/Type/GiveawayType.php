@@ -32,8 +32,8 @@ class GiveawayType extends AbstractType
         ));
         $builder->add('game', null, array('empty_value' => 'N/A'));
         $builder->add('locale', new SiteChoiceType());
+        $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'));
     }
-
 
     public function getName()
     {

@@ -189,6 +189,13 @@ abstract class AbstractEvent implements LinkableInterface
     protected $game;
 
     /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="external_url", length="255", nullable=true)
+     */
+    private $externalUrl;
+
+    /**
      * Get id
      *
      * @return integer
@@ -586,6 +593,30 @@ abstract class AbstractEvent implements LinkableInterface
         $this->game = $game;
     }
 
+     /**
+     * @param string $externalUrl
+     */
+    public function setExternalUrl($externalUrl) {
+        $this->externalUrl = $externalUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExternalUrl() {
+        return $this->externalUrl;
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getExternalUrl();
+    }
+
     /**
      * Returns an array route parameters to link to this object
      *
@@ -595,6 +626,7 @@ abstract class AbstractEvent implements LinkableInterface
     {
         return array(
             'slug' => $this->getSlug(),
+            '_locale' => $this->getLocale()
         );
     }
 }

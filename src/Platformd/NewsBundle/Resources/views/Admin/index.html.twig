@@ -21,8 +21,7 @@
             <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
             <td>{{ item.locale | site_name }}</td>
             <td>
-                {% set newsUrl = url('news_show', {'slug': item.slug, '_locale': item.locale }) %}
-                <a href="{{ newsUrl }}" target="_blank">{{ newsUrl }}</a>
+                {{ item | pd_link_full }}
             </td>
             <td>
                 <i>
@@ -63,7 +62,7 @@
                 .submit()
                 .remove()
             ;
-        })     
+        })
     });
 </script>
 {% endblock %}

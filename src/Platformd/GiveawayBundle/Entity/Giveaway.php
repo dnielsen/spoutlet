@@ -370,16 +370,6 @@ class Giveaway extends AbstractEvent
     }
 
     /**
-     * If there is a set URL that should be used without doing anything else, return it here
-     *
-     * @return string
-     */
-    public function getLinkableOverrideUrl()
-    {
-        return false;
-    }
-
-    /**
      * Returns the name of the route used to link to this object
      *
      * @return string

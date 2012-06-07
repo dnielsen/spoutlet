@@ -14,7 +14,7 @@
                     {% else %}
                     {% for giveaway in giveaways %}
                     <tr class="eventListGroup_online">
-                        <td><a href="{{ path('giveaway_show', { 'slug' : giveaway.slug }) }}">{{ giveaway.name }}</a></td>
+                        <td>{{ giveaway | pd_link_full(giveaway.name) }}</td>
                     </tr>
                     {% endfor %}
                     {% endif %}
