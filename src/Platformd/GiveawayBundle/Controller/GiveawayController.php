@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 
 /**
-* 
+*
 */
 class GiveawayController extends Controller
 {
@@ -41,7 +41,7 @@ class GiveawayController extends Controller
         }
 
         $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
-       
+
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $instruction,
@@ -79,8 +79,10 @@ class GiveawayController extends Controller
             return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
         }
 
+        $clientIp = $request->getClientIp(true);
+
         // check the IP limit
-        if (!$this->getKeyRepository()->canIpHaveMoreKeys($request->getClientIp(), $pool)) {
+        if (!$this->getKeyRepository()->canIpHaveMoreKeys($clientIp, $pool)) {
             $this->setFlash('error', 'platformd.giveaway.max_ip_limit');
 
             return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
@@ -104,7 +106,7 @@ class GiveawayController extends Controller
         }
 
         // assign this key to this user - record ip address
-        $key->assign($this->getUser(), $request->getClientIp(), $this->getLocale());
+        $key->assign($this->getUser(), $clientIp, $this->getLocale());
         $this->getDoctrine()->getEntityManager()->flush();
 
         return $this->redirect($this->generateUrl('giveaway_show', array(
@@ -137,8 +139,10 @@ class GiveawayController extends Controller
             $this->createNotFoundException('No machine code submitted');
         }
 
+        $clientIp = $request->getClientIp(true);
+
         $machineCode = new MachineCodeEntry($giveaway, $code);
-        $machineCode->attachToUser($this->getUser(), $request->getClientIp());
+        $machineCode->attachToUser($this->getUser(), $clientIp);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($machineCode);
