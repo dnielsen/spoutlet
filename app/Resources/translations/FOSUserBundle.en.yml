@@ -16,7 +16,7 @@ fos_user_profile_form_user_firstname: "First name"
 fos_user_profile_form_user_file: "Avatar"
 fos_user_profile_form_current_avatar: "Your current avatar"
 
-profile.show.title: '%firstname% "%username%" %lastname%'
+profile.show.title: '%username%'
 profile.show.firstname: "First name"
 profile.show.lastname: "Last name"
 profile.show.my_rig: "My Rig"
