@@ -168,6 +168,17 @@ class Controller extends BaseController
      */
     protected function enforceAgeProtection($minimumAge = 13)
     {
+        # it is really important that when facebook (and other spiders/bots) scrape our pages that we don't block their
+        # access (with the Age Verification) otherwise sections like the GamePages won't get indexed by google, and/or
+        # the facebook OG scraping won't work... so place any exceptions to age protection here and skip the forced
+        # "enter age" page.
+
+        $userAgent = $this->getRequest()->server->get('HTTP_USER_AGENT');
+
+        if(strpos($userAgent, 'facebookexternalhit') !== false) { # facebook OG scrapper user agent = facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
+            return;
+        }
+
         /** @var $ageManager \Platformd\SpoutletBundle\Age\AgeManager */
         $ageManager = $this->container->get('platformd.age.age_manager');
 
