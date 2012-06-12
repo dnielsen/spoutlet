@@ -525,7 +525,12 @@ ul.list-normal {
     margin-left: 0;
 }
 .games-list-page .left ul.games li a {
-    display: block;
+
+}
+
+.games-list-page .left ul.games li span {
+    font-size: 0.8em;
+    color: #b2b2b2;
 }
 
 .games-list-page .right ul.games li {

@@ -20,7 +20,7 @@
             <ul class="games">
                 {% for gamePage in gamePages %}
                 {% set url = gamePage | pd_link %}
-                <li{{ loop.first ? ' class="first"' : ''}}>
+                <li class="first">
                     <a href="{{ url }}"{{ target_blank(gamePage) }}>
                         {% if gamePage.game.logoThumbnail %}
                         <img src="{{ media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
@@ -28,14 +28,17 @@
                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
                         {% endif %}
                     </a>
-
+                    <br />
                     <a href="{{ url }}">{{ gamePage.game.name }}</a>
                     {% if gamePage.game.subcategories is not empty %}
-                    <br/>
-                    {% for subcategory in gamePage.game.subcategories %}
-                    {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
-                    {{- loop.last ? '' : ', ' }}
-                    {% endfor %}
+                        <span>
+                            (
+                            {% for subcategory in gamePage.game.subcategories %}
+                            {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                            {{- loop.last ? '' : ', ' }}
+                            {% endfor %}
+                            )
+                        </span>
                     {% endif %}
                 </li>
                 {% endfor %}
@@ -45,7 +48,8 @@
         {% endfor %}
     </div>
     <div class="right">
-        <h2>{{ 'past_partnerships' | trans }}</h2>
+        <h1>ARCHIVES</h1>
+        <p>{{ 'past_partnerships' | trans }}</p>
         <ul class="games">
             {% for archive in archives %}
             <li>
