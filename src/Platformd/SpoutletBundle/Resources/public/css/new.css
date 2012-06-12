@@ -641,6 +641,12 @@ ul.list-normal {
     width: auto;
     margin-top: 20px;
 }
+
+.game-show-page .media-gallery h3 {
+    text-shadow: 2px 2px 2px #000000;
+    filter: dropshadow(color=#000000, offx=2, offy=2);
+}
+
 .game-show-page .media-gallery .widget-title {
     width: 600px;
     float: left;
@@ -668,6 +674,16 @@ ul.list-normal {
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
+}
+
+.game-show-page .game-media-gallery {
+    background: url('../images/games-pages/background_content.jpg') repeat-x top left;
+    width: 950px;
+    overflow: hidden;
+    border-radius:5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    -khtml-border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
 }
 
 .game-show-page .media-gallery .ad-back, .game-show-page .media-gallery .ad-forward {

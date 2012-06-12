@@ -2,6 +2,19 @@
 
 {% block title gamePage.game.name ~ ' '~ ('games_and_trailers' | trans) %}
 
+{% block open_graph %}
+    <meta property="og:title" content="{{ gamePage.game.name }}" />
+    <meta property="og:type" content="game" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    {% if gamePage.backgroundImage %}
+        <meta property="og:image" content="{{ gamePage.backgroundImage }}" />
+    {% endif %}
+    {% if gamePage.aboutGame %}
+        <meta property="og:description" content="{{ gamePage.aboutGame | striptags }}" />
+    {% endif %}
+{% endblock %}
+
 {% macro _renderButtonImage(buttonImageMedia, buttonImageUrl) %}
     <a href="{{ buttonImageUrl }}" target="_blank" class="game-button">
         <img src="{{ media_path(buttonImageMedia) }}" {# todo - have some text we can use as an alt #} />
@@ -42,7 +55,6 @@
 {% set maxFeedItems = 7 %}
 
     <div class="game-show-page">
-
         <div class="std_2col">
             <div class="right">
                 {% if gamePage.recommendedLaptopUrl and gamePage.recommendedDesktopUrl %}
@@ -184,7 +196,7 @@
             </div>
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
-            <div class="media-gallery ad-gallery widget-100 no-header">
+            <div class="media-gallery ad-gallery game-media-gallery">
                 <a name="media"></a>
                 <h3>
                     {{ 'media_gallery' | trans }}
