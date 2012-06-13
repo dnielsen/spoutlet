@@ -32,7 +32,8 @@ class SpoutletExtension extends Twig_Extension
             'pd_link' => new Twig_Filter_Method($this, 'linkToObject'),
             'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
-            'site_name' => new Twig_Filter_Method($this, 'translateSiteName')
+            'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
+            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl')
         );
     }
 
@@ -67,6 +68,27 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'siteLink', array('is_safe' => array('html')))
         );
+    }
+
+    /**
+     * @return string
+     */
+
+    public function getAbsoluteUrl($obj)
+    {
+
+        # look at the url that is being passed in and if it is relative, return base path + url... if it is not, then return obj
+
+        $request = $this->container->get('request');
+        $base = $request->getScheme() . '://' . $request->getHost();
+        $path = $obj[0] == '/' ? $obj : '/' . $obj;
+
+        /* return if already absolute URL */
+        if (parse_url($obj, PHP_URL_SCHEME) != '') {
+            return $obj;
+        }
+
+        return $base.$path;
     }
 
      /**
