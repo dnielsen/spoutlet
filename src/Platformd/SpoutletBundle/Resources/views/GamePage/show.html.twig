@@ -3,6 +3,7 @@
 {% block title gamePage.game.name ~ ' '~ ('games_and_trailers' | trans) %}
 
 {% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
     <meta property="og:title" content="{{ gamePage.game.name }}" />
     <meta property="og:type" content="game" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
