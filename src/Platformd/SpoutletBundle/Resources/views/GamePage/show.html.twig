@@ -8,8 +8,8 @@
     <meta property="og:type" content="game" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if gamePage.backgroundImage %}
-        <meta property="og:image" content="{{ gamePage.backgroundImage }}" />
+    {% if gamePage.game.logoThumbnail %}
+        <meta property="og:image" content="{{ media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" />
     {% endif %}
     {% if gamePage.aboutGame %}
         <meta property="og:description" content="{{ gamePage.aboutGame | striptags }}" />
