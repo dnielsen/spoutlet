@@ -20,7 +20,9 @@
             <ul class="games">
                 {% for gamePage in gamePages %}
                 {% set url = gamePage | pd_link %}
-                <li class="first">
+                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(gamePage) }}>
                         {% if gamePage.game.logoThumbnail %}
                         <img src="{{ media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ gamePage.game.name }}" />
