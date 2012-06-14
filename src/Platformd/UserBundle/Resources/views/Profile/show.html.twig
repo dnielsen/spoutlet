@@ -1,9 +1,7 @@
 {% extends (isCurrentUser|default(false) ? 'UserBundle::accountLayout.html.twig' : 'SpoutletBundle::layout.html.twig') %}
 
-{% block title %}{{ "profile.show.title" | trans({ 
+{% block title %}{{ "profile.show.title" | trans({
                 "%username%": user.username,
-                "%firstname%" : user.firstname,
-                "%lastname%" : user.lastname
             }, 'FOSUserBundle') }}{% endblock %}
 
 {% block content %}
