@@ -35,7 +35,8 @@ class SiteProtectionListener
         '^/admin',
         // our little "fake" CEVO - without this, we'll get a redirect loop locally
         '^/cevo/api/stub',
-        '^/media'
+        '^/media',
+        '^/login'
     );
 
     static private $urlMap = array(
