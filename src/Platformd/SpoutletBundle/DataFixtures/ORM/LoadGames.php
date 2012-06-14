@@ -16,22 +16,30 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
 
     public function load($manager)
     {
+
         $game1 = new Game();
-        $game1->setCategory('rpg');
+        $game1->setCategory('action');
         $game1->setName('Battlefield3');
         $manager->persist($game1);
 
         $game2 = new Game();
-        $game2->setCategory('action');
+        $game2->setCategory('rpg');
         $game2->setName('Warcraft3');
         $manager->persist($game2);
 
         $game3 = new Game();
-        $game3->setCategory('rpg');
+        $game3->setCategory('other');
         $game3->setName('Brawl Busters');
         $manager->persist($game3);
 
+        $game4 = new Game();
+        $game4->setCategory('rpg');
+        $game4->setName('Skyrim');
+        $manager->persist($game4);
+
         $manager->flush();
+
+        $gpManager = $this->getGamePageManager();
 
         $gamePage1 = new GamePage();
         $gamePage1->setGame($game1);
@@ -42,8 +50,8 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage1->setYoutubeIdTrailer4('Qkp2SAPLuDk');
         $gamePage1->setStatus(GamePage::STATUS_PUBLISHED);
         $gamePage1->setLocales(array('en', 'ja'));
-        $manager->persist($gamePage1);
-        $this->getGamePageManager()->saveGamePage($gamePage1);
+
+        $gpManager->saveGamePage($gamePage1);
 
         $gamePage2 = new GamePage();
         $gamePage2->setGame($game2);
@@ -54,7 +62,8 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage2->setYoutubeIdTrailer4('2f96hKqkY_Y');
         $gamePage2->setStatus(GamePage::STATUS_PUBLISHED);
         $gamePage2->setLocales(array('en', 'zh'));
-        $this->getGamePageManager()->saveGamePage($gamePage2);
+
+        $gpManager->saveGamePage($gamePage2);
 
         $gamePage3 = new GamePage();
         $gamePage3->setGame($game3);
@@ -65,7 +74,16 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage3->setYoutubeIdTrailer4('2f96hKqkY_Y');
         $gamePage3->setStatus(GamePage::STATUS_ARCHIVED);
         $gamePage3->setLocales(array('en', 'ja'));
-        $this->getGamePageManager()->saveGamePage($gamePage3);
+
+        $gpManager->saveGamePage($gamePage3);
+
+        $gamePage4 = new GamePage();
+        $gamePage4->setGame($game4);
+        $gamePage4->setExternalUrl("https://www.google.com/search?btnG=1&pws=0&q=skyrim");
+        $gamePage4->setStatus(GamePage::STATUS_ARCHIVED);
+        $gamePage4->setLocales(array('en', 'ja'));
+
+        $gpManager->saveGamePage($gamePage4);
     }
 
     /**
