@@ -375,6 +375,13 @@ span.required {
     display: inline;
 }
 
+#header #header-home-link {
+    height: 111px;
+    width: 950px;
+    margin: 0px auto;
+    display: block
+}
+
 /* SimpleModal Styles */
 #simplemodal-overlay {background-color:#000; cursor:wait;}
 a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-18px; cursor:pointer;}
