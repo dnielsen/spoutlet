@@ -155,7 +155,13 @@ class GamePageAdminController extends Controller
      * @return string
      */
     private function getYoutubeTitle($videoId) {
+
+        if (!$videoId) {
+            return false;
+        }
+
         $url = 'http://gdata.youtube.com/feeds/api/videos/' . $videoId . '?alt=jsonc&v=2';
+
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
