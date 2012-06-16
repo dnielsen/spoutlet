@@ -20,6 +20,10 @@
                     </li>
                 {% endif %}
 
+                {% if site_has_feature('DEALS') %}
+                    <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
+                {% endif %}
+
                 {% if showVideo or site_has_feature('EXTRA_NAVIGATION') %}
                     <li><a href="/video">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
                 {% endif %}

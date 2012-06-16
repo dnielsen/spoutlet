@@ -1,0 +1,51 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+{% endblock %}
+
+{% block title deal.name ~ ' '~ ('deal' | trans) %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{# facebook_app_id #}">
+    <meta property="og:title" content="{# dealPage.deal.name #}" />
+    <meta property="og:type" content="TYPE_HERE" />
+    <meta property="og:url" content="{# app.request.getUri #}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    {# if dealPage.deal.logoThumbnail #}
+        {# set thumbUrl = media_path(dealPage.deal.logoThumbnail, {'local': true}) | imagine_filter('deal_list_logo') #}
+        <meta property="og:image" content="{# thumbUrl | absolute_url #}" />
+    {# endif #}
+    {# if dealPage.aboutDeal #}
+        <meta property="og:description" content="{# dealPage.aboutDeal | striptags #}" />
+    {# endif #}
+{% endblock %}
+
+{% block content %}
+
+    <div class="deal-code-display">
+        {% if userAlreadyRedeemed %}
+        <p>
+            {{ 'deal_redeem_success' | trans }}
+        </p>
+
+        <p class="notice-data">
+            {{ 'deal_redeem_code' | trans }}: {{ dealCode }}
+        </p>
+    {% else %}
+        <a href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">Click here to redeem</a>
+    {% endif %}
+    </div>
+
+    <div class="deal-show-page">
+        <div class="std_2col">
+            <div>
+                <h1>
+                    {{ deal.name }}
+                </h1>
+        </div>
+    </div>
+
+{% endblock %}

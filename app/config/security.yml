@@ -29,6 +29,7 @@ security:
 
         # protects games and game pages
         - { path: ^/([\w]+\/)?admin/game, role: ROLE_ADMIN_GAME }
+        - { path: ^/([\w]+\/)?admin/deal, role: ROLE_ADMIN_DEAL }
         - { path: ^/([\w]+\/)?admin/events, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/giveaways, role: ROLE_ORGANIZER }
         - { path: ^/([\w]+\/)?admin/news, role: ROLE_ORGANIZER }
@@ -43,6 +44,6 @@ security:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page
         ROLE_ADMIN:       [ROLE_USER]
         # the dell contacts role
-        ROLE_PARTNER:     [ROLE_ADMIN, ROLE_ADMIN_GAME]
+        ROLE_PARTNER:     [ROLE_ADMIN, ROLE_ADMIN_GAME, ROLE_ADMIN_DEAL]
         ROLE_ORGANIZER:   [ROLE_PARTNER]
         ROLE_SUPER_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_USER_ADMIN, ROLE_ADMIN_TRANSLATIONS, ROLE_ALLOWED_TO_SWITCH]

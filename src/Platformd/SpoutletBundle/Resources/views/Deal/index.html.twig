@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'deals' | trans %}
+
+{% block content %}
+
+<div class="deals-list-page">
+    <div>
+        <h1>{{ 'deals' | trans }}</h1>
+
+        <ul class="deals">
+            {% for deal in deals %}
+            <li>
+                {{ deal | pd_link_full(deal.name) }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="clear">&nbsp;</div>
+</div>
+{% endblock %}

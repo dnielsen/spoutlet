@@ -1,0 +1,16 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>a) Basic Information</legend>
+        {{ form_row(form.name) }}
+        {{ form_row(form.slug) }}
+        {{ form_row(form.game) }}
+        {{ form_row(form.externalUrl) }}
+    </fieldset>
+</div>
+
+{{ form_rest(form) }}

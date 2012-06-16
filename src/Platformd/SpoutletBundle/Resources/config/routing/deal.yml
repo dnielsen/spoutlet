@@ -1,0 +1,11 @@
+deal_list:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:Deal:index" }
+
+deal_show:
+    pattern:  /{slug}
+    defaults: { _controller: "SpoutletBundle:Deal:show" }
+
+deal_redeem:
+    pattern:  /{slug}/redeem
+    defaults: { _controller: "SpoutletBundle:Deal:redeem" }

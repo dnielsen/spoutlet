@@ -33,6 +33,7 @@ class SiteProtectionListener
         '^/games',
         '^/age',
         '^/admin',
+        '^/deal',
         // our little "fake" CEVO - without this, we'll get a redirect loop locally
         '^/cevo/api/stub',
         '^/media',

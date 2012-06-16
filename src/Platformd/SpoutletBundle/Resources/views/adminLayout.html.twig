@@ -151,6 +151,17 @@
                             </li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_ADMIN_DEAL') %}
+                            <li>
+                                <a href="{{ path('admin_deal') }}">Deals</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_deal_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
+
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
                                     <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>

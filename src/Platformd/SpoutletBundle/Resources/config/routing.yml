@@ -48,3 +48,11 @@ SpoutletBundle_admin_game:
 SpoutletBundle_admin_game_page:
     resource: "@SpoutletBundle/Resources/config/routing/admin_game_page.yml"
     prefix:   /admin/game-page
+
+SpoutletBundle_admin_deal:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_deal.yml"
+    prefix:   /admin/deal
+
+SpoutletBundle_deal:
+    resource: "@SpoutletBundle/Resources/config/routing/deal.yml"
+    prefix:   /deal

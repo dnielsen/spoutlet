@@ -1,0 +1,22 @@
+admin_deal:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:DealAdmin:index" }
+
+admin_deal_new:
+    pattern:  /new
+    defaults: { _controller: "SpoutletBundle:DealAdmin:new" }
+
+admin_deal_create:
+    pattern:  /create
+    defaults: { _controller: "SpoutletBundle:DealAdmin:new" }
+    requirements: { _method: post }
+
+admin_deal_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SpoutletBundle:DealAdmin:edit" }
+
+admin_deal_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SpoutletBundle:DealAdmin:edit" }
+    requirements: { _method: post }
+
