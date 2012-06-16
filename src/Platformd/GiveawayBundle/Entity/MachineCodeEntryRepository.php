@@ -33,6 +33,27 @@ class MachineCodeEntryRepository extends EntityRepository
         ;
     }
 
+     /**
+     * Returns all entries related to the User that do *not* yet have a giveaway key associated with them but that are
+     * specific to a particular giveaway
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param Giveaway $giveaway
+     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntry[]
+     */
+    public function findAssignedToUserWithoutGiveawayKeyForGiveaway(User $user, Giveaway $giveaway)
+    {
+        $qb = $this->createQueryBuilder('mce');
+        $this->addUserQueryBuilder($user, $qb);
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        return $qb
+            ->andWhere('mce.key IS NULL')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
     /**
      * Returns all the entries this user has for this giveaway.
      *
