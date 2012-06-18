@@ -23,12 +23,13 @@
     </a>
 {% endmacro %}
 
-{% macro _renderYoutubeThumbnail(youtubeVideoId) %}
-    <li>
+{% macro _renderYoutubeThumbnail(youtubeVideoId, headline) %}
+    <div>
         <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play">
             <img src="http://img.youtube.com/vi/{{ youtubeVideoId }}/0.jpg" alt="video preview" />
         </a>
-    </li>
+        <a href="#videos" data-youtube-id="{{ youtubeVideoId}}" title="{{ headline }}" class="youtube-thumb-headline">{{ headline }}</a>
+    </div>
 {% endmacro %}
 
 {% macro _renderYoutubeFeedLink(youtubeVideoId, headline) %}
@@ -176,23 +177,21 @@
                     <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
                 </div>
                 <div class="thumbnails-right">
-                    <ul>
                     {% if gamePage.youtubeIdTrailer1 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer2 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer3 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer4 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
                     {% endif %}
-                    </ul>
                 </div>
                 <div class="clear">&nbsp;</div>
             </div>
@@ -299,14 +298,17 @@
          * Makes .youtube-play links play their video in the main window
          */
         GamePage.initializeVideoLinks = function() {
-            $('.youtube-play').click(function(e) {
+
+            $('.youtube-thumb-headline').truncate();
+
+            $('.youtube-play, .youtube-thumb-headline').click(function(e) {
                 var youtubeVideoId = $(this).data('youtube-id');
 
                 $('.video-player .youtube-play').each(function() {
                     if ($(this).data('youtube-id') == youtubeVideoId) {
-                        $(this).addClass('active');
+                        $(this).parent().addClass('active');
                     } else {
-                        $(this).removeClass('active');
+                        $(this).parent().removeClass('active');
                     }
                 });
 

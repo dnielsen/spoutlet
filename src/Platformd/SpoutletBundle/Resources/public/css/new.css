@@ -623,15 +623,7 @@ ul.list-normal {
 .game-show-page .video-player .thumbnails-right ul {
     list-style: none;
 }
-.game-show-page .video-player .thumbnails-right ul li {
-    margin-bottom: 10px;
-}
-.game-show-page .video-player .thumbnails-right ul li img {
-    width: 153px;
-    height: 115px;
-}
-.game-show-page .video-player .thumbnails-right ul li a {
-    display: block;
+.game-show-page .video-player .thumbnails-right div {
     border: 2px solid #4a4a4a;
     width: 153px;
     height: 115px;
@@ -639,9 +631,48 @@ ul.list-normal {
     -webkit-border-radius: 3px;
     -khtml-border-radius: 3px;
     border-radius: 3px;
+    margin-bottom: 20px;
 }
-.game-show-page .video-player .thumbnails-right ul li a.active {
+
+.game-show-page .video-player .thumbnails-right div.active {
     border-color: #009CDA;
+}
+
+.game-show-page .video-player .thumbnails-right div:hover {
+    border: 2px solid #4a4a4a;
+    width: 153px;
+    height: 115px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -moz-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -webkit-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+}
+
+.game-show-page .video-player .thumbnails-right div img {
+    width: 153px;
+    height: 115px;
+}
+.game-show-page .video-player .thumbnails-right div a {
+
+}
+.game-show-page .video-player .thumbnails-right div a.active {
+    border-color: #009CDA;
+}
+
+.game-show-page .video-player .thumbnails-right div a.youtube-thumb-headline {
+    color:#009cda;
+    text-decoration:none;
+    outline:none;
+    font-weight: bold;
+    display: block;
+    border: none;
+    width: auto;
+    height: auto;
+    font-size: 0.8em;
 }
 
 .games-page-category {
