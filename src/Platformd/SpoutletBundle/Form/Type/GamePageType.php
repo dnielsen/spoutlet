@@ -18,7 +18,10 @@ class GamePageType extends AbstractType
     {
         $builder
             ->add('recommendedDesktopUrl', null, array('label' => 'Recommended Desktop URL'))
-            ->add('recommendedLaptopUrl', null, array('label' => 'Recommended Laptop URL'))
+            ->add('recommendedLaptopUrl', null, array(
+                'label' => 'Recommended Laptop URL',
+                'help'  => 'Provide both urls for recommended rigs in order for the ad to appear on the game page.'
+            ))
             ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this game\'s Game Page.'))
             ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
                 'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
