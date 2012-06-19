@@ -22,6 +22,23 @@ class DealType extends AbstractType
                               ->orderBy('g.name', 'ASC');
                     }))
             ->add('slug', new SlugType(), array('url_prefix' => '/deal/{slug}'))
+            ->add('startsAt', 'date', array(
+                'widget' => 'single_text',
+                'attr' => array(
+                    'class' => 'datetime-picker'
+                ),
+                'format' => 'yyyy-MM-dd hh:mm:ss',
+                'label' => 'Starts At'
+            ))
+            ->add('endsAt', 'date', array(
+                'widget' => 'single_text',
+                'attr' => array(
+                    'class' => 'datetime-picker'
+                ),
+                'format' => 'yyyy-MM-dd hh:mm:ss',
+                'label' => 'Ends At'
+            ))
+            ->add('timezone', 'timezone', array('label' => 'Timezone'))
         ;
     }
 
