@@ -173,7 +173,7 @@ class GiveawayAdminController extends Controller
 
                         continue;
                     }
-                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKey($user);
+                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKeyForGiveaway($user, $giveaway);
 
                     if (count($machineCodes) == 0) {
                         $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
@@ -306,7 +306,7 @@ class GiveawayAdminController extends Controller
         $this
             ->get('platformd.events_manager')
             ->save($giveaway);
-            
+
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
 
