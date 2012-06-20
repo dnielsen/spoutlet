@@ -4,6 +4,7 @@
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/deals.css') }}" />
 {% endblock %}
 
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
@@ -11,7 +12,7 @@
 {% block open_graph %}
     <meta property="fb:app_id" content="{# facebook_app_id #}">
     <meta property="og:title" content="{# dealPage.deal.name #}" />
-    <meta property="og:type" content="TYPE_HERE" />
+    <meta property="og:type" content="product" />
     <meta property="og:url" content="{# app.request.getUri #}" />
     <meta property="og:site_name" content="Alienware Arena" />
     {# if dealPage.deal.logoThumbnail #}
@@ -24,7 +25,52 @@
 {% endblock %}
 
 {% block content %}
+    <div class="deals-header">
+            <div class="deals-timeleft" style="display: none;">
+                {% if deal.endsAt > date() %}
+                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y-m-d h:m:s') }}" />
+                <div id="time-left">
+                    <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
+                    <span id="deals-daysleft">{dn}</span>
+                    <span id="deals-daysleft-label" class="timeleft-label">{dl}</span>
+                    <span id="deals-hoursleft">{hn}</span>
+                    <span id="deals-hoursleft-label" class="timeleft-label">{hl}</span>
+                    <span id="deals-minutesleft">{mn}</span>
+                    <span id="deals-minutesleft-label" class="timeleft-label">{ml}</span>
+                    <span id="deals-secondsleft">{sn}</span>
+                    <span id="deals-secondsleft-label" class="timeleft-label">{sl}<span>
+                </div>
+                {% else %}
+                    <span>{{ 'deal_timeleft_expired_label' | trans }}</span>
+                {% endif %}
+            </div>
+    </div>
+    <div id="deal-features-instructions">
+        <table id="features-instructions" style="border-spacing: 3px;">
+            <thead>
+                <tr>
+                    <th style="width: 600px; background: #303338; text-align: left; padding: 5px">
+                        {{ deal.game.name }} - {{ 'deal_features_table_header' | trans }}</th>
+                    <th style="width: 350px; background: #303338; text-align: left; padding: 5px">
+                        {{ 'deal_instructions_table_header' | trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {# if deal.description #}
+                            <p>{# deal.description #}</p>
+                        {# endif #}
+                    </td>
+                    <td>
+                        {# if deal.instructions #}
 
+                        {# endif #}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <div class="deal-code-display">
         {% if userAlreadyRedeemed %}
         <p>
@@ -47,5 +93,22 @@
                 </h1>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function() {
+            var endsAt = new Date($('#deal-ends-date').val());
+            $('#time-left').countdown({
+                until: endsAt,
+                compact: false,
+                layout: $('#time-left').html()
+            });
+
+            $('.deals-timeleft').fadeIn();
+        });
+    </script>
 
 {% endblock %}

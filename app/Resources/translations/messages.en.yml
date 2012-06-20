@@ -442,3 +442,15 @@ deal_redeem_max_ip_hit: Your IP address is not allowed to redeem any more deals.
 deal_redeem_user_already_redeemed: You have already redeemed this deal.
 deal_redeem_success: "You have successfully redeemed this deal.  Here is your deal code, please follow the redemption instructions."
 deal_redeem_code: Deal Code
+deal_timeleft_label: DEAL EXPIRES IN:
+deal_timeleft_expired_label: DEAL EXPIRED
+deal_days: Days
+deal_day: Day
+deal_hours: Hours
+deal_hour: Hour
+deal_minutes: Minutes
+deal_minute: Minute
+deal_seconds: Seconds
+deal_second: Second
+deal_features_table_header: FEATURES
+deal_instructions_table_header: INSTRUCTIONS

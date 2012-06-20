@@ -1,0 +1,19 @@
+.deals-header {
+    width: 950px;
+    height: 610px;
+    position: relative;
+}
+
+.deals-timeleft {
+    width: 950px;
+    height: 20px;
+    position: absolute;
+    bottom: 33px;
+    left: 0;
+    text-align: center;
+     font-size: 30px;
+}
+
+.timeleft-label {
+    font-size: 18px;
+}
