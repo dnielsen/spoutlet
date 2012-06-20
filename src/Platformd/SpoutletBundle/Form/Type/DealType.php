@@ -39,6 +39,11 @@ class DealType extends AbstractType
                 'label' => 'Ends At'
             ))
             ->add('timezone', 'timezone', array('label' => 'Timezone'))
+            ->add('banner', new MediaType(), array(
+                'image_label' => 'Banner Image',
+                'image_help'  => 'Recommended size: 950x610',
+            ))
+            ->add('openGraphOverride', null, array('label' => 'Open Graph Description'))
         ;
     }
 

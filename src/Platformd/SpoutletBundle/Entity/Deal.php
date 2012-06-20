@@ -102,6 +102,22 @@ class Deal implements LinkableInterface
      */
     protected $timezone = 'UTC';
 
+
+    /**
+     * The banner image for the deal (950px by 610px)
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    private $banner;
+
+    /**
+     *
+     * @var \OpenGraphOverride
+     * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
+     */
+    private $openGraphOverride;
+
     /**
      * Get id
      *
@@ -295,5 +311,37 @@ class Deal implements LinkableInterface
         return array(
             'slug' => $this->getSlug()
         );
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getBanner()
+    {
+        return $this->banner;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $banner
+     */
+    public function setBanner(Media $banner = null)
+    {
+        $this->banner = $banner;
+    }
+
+    /**
+     * @return \OpenGraphOverride
+     */
+    public function getOpenGraphOverride()
+    {
+        return $this->openGraphOverride;
+    }
+
+    /**
+     * @param \OpenGraphOverride $openGraphOverride
+     */
+    public function setOpenGraphOverride(OpenGraphOverride $openGraphOverride = null)
+    {
+        $this->openGraphOverride = $openGraphOverride;
     }
 }

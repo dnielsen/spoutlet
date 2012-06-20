@@ -11,9 +11,24 @@
     bottom: 33px;
     left: 0;
     text-align: center;
-     font-size: 30px;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .timeleft-label {
     font-size: 18px;
+}
+
+.deals-features-col-header {
+    width: 600px;
+    background: #303338;
+    text-align: left;
+    padding: 5px
+}
+
+.deals-instructions-col-header {
+    width: 350px;
+    background: #303338;
+    text-align: left;
+    padding: 5px
 }

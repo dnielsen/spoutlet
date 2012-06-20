@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="deals-header">
+    <div class="deals-header" style="background: url('{{ media_path(deal.banner) }}')">
             <div class="deals-timeleft" style="display: none;">
                 {% if deal.endsAt > date() %}
                 <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y-m-d h:m:s') }}" />
@@ -49,9 +49,9 @@
         <table id="features-instructions" style="border-spacing: 3px;">
             <thead>
                 <tr>
-                    <th style="width: 600px; background: #303338; text-align: left; padding: 5px">
+                    <th class="deals-features-col-header">
                         {{ deal.game.name }} - {{ 'deal_features_table_header' | trans }}</th>
-                    <th style="width: 350px; background: #303338; text-align: left; padding: 5px">
+                    <th class="deals-instructions-col-header">
                         {{ 'deal_instructions_table_header' | trans }}</th>
                 </tr>
             </thead>
