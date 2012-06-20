@@ -84,7 +84,7 @@ class Deal implements LinkableInterface
 
     /**
      * @var \DateTime $startsAt
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="starts_at", type="datetime")
      */
     private $startsAt;
 
