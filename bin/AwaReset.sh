@@ -18,10 +18,22 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v0.7              |"
+echo "|  Alienware Arena Reset Script v0.8              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
+
+echo "The time on your development machine is currently:"
+echo
+echo "   `date`"
+echo
+echo "Only continue if this is correct.  If you need to update it please abort this script and set the date and time:"
+echo
+echo "   sudo date --set=\"YYYY-MM-DD HH:mm:SS\""
+echo
+echo "Press any key to continue (or press Ctrl+c to abort)..."
+
+read text
 
 if [ -z "$AwaResetDirectory" ]; then
     echo "Aborting... Could not find AwaResetDirectory environmental variable...".
