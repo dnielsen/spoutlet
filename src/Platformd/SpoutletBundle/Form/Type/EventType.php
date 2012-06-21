@@ -18,7 +18,7 @@ class EventType extends AbstractType
         'country',
         'hosted_by',
         'game',
-        'url_redirect',
+        'externalUrl',
         'bannerImageFile',
         'description',
         'timezone',
@@ -28,6 +28,7 @@ class EventType extends AbstractType
     {
         $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType());
+        $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this Event page.'));
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
@@ -39,7 +40,6 @@ class EventType extends AbstractType
         $builder->add('hosted_by', 'text');
         $builder->add('gameStr', 'text', array('label' => 'Game Name (don\'t use anymore)'));
         $builder->add('game', null, array('empty_value' => 'N/A'));
-        $builder->add('url_redirect', 'text');
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');
         $builder->add('locale', new SiteChoiceType());

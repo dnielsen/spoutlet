@@ -125,6 +125,23 @@ class GamePageAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
+                /* Use the youtube title if the video id is valid, if not it will return a blank string */
+                if(!$gamePage->getYoutubeIdTrailer1Headline()) {
+                    $gamePage->setYoutubeIdTrailer1Headline($this->getYoutubeTitle($gamePage->getYoutubeIdTrailer1()));
+                }
+
+                if(!$gamePage->getYoutubeIdTrailer2Headline()) {
+                    $gamePage->setYoutubeIdTrailer2Headline($this->getYoutubeTitle($gamePage->getYoutubeIdTrailer2()));
+                }
+
+                if(!$gamePage->getYoutubeIdTrailer3Headline()) {
+                    $gamePage->setYoutubeIdTrailer3Headline($this->getYoutubeTitle($gamePage->getYoutubeIdTrailer3()));
+                }
+
+                if(!$gamePage->getYoutubeIdTrailer4Headline()) {
+                    $gamePage->setYoutubeIdTrailer4Headline($this->getYoutubeTitle($gamePage->getYoutubeIdTrailer4()));
+                }
+
                 $this->getGamePageManager()->saveGamePage($gamePage);
 
                 return true;
@@ -132,6 +149,33 @@ class GamePageAdminController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function getYoutubeTitle($videoId) {
+
+        if (!$videoId) {
+            return false;
+        }
+
+        $url = 'http://gdata.youtube.com/feeds/api/videos/' . $videoId . '?alt=jsonc&v=2';
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
+
+        $result = json_decode(curl_exec($curl), true);
+
+        if(array_key_exists('error', $result)) {
+            return '';
+        }
+
+        return $result['data']['title'];
     }
 
     /**

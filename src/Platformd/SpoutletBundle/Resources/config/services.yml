@@ -1,5 +1,5 @@
 services:
-    platformd.s3: 
+    platformd.s3:
         class: AmazonS3
         arguments:
             - %s3.access_key%
@@ -128,6 +128,6 @@ services:
         arguments:
             - "%allowed_sites%"
             - "@pd.cevo.cevo_auth_manager"
-            - "%kernel.debug%"
+            - %allow_cevo_forwarding%
         tags:
             - { name: kernel.event_listener, event: kernel.request }

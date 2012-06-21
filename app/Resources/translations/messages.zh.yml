@@ -65,7 +65,7 @@ platformd:
             video: 视频
             news: 新闻
             microsoft: 微软
-    
+
         page_content:
             featured: 专栏
             giveaways: 邀请码
@@ -80,7 +80,6 @@ platformd:
             terms_and_conditions: 服务条款
             steam_community: Steam社区
             xfire_community: Xfire社区
-            link: "需要一个牛逼的装备? 请看看 ALienware"
             copyright_2012: "&copy;2012版权所有，Alienware公司"
 
     help:
@@ -228,9 +227,9 @@ platformd:
         max_ip_limit: 您的IP地址已不能领取更多的激活码，如果你认为这是一个错误，请联系 china@alienwarearena.com。
         already_assigned: 您已经为该赠送品指定了一个账号
         view_giveaway_site: 查看邀请码站点
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
-        in_process_2: please allow at least 10 days for it to be posted into your account. 
-        in_process_3: If after 10 days it has not been posted, please email 
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
+        in_process_2: please allow at least 10 days for it to be posted into your account.
+        in_process_3: If after 10 days it has not been posted, please email
         admin:
             title: 管理邀请码
             edit_giveaway: 编辑邀请码 | %giveaway_title%
@@ -326,16 +325,6 @@ eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
 follow_us: Follow Us
-
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: ''
-        facebook_url: ''
-        follow_on_facebook: ''
-        follow_on_twitter: ''
-
-    alienware_link_url: http://alienware.com.cn/
 
 # admin-only translations - we don't need these
 url:  URL

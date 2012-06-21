@@ -6,6 +6,12 @@ parameters:
     # this allows us to fake CEVO's api right on our own site
     cevo_base_url: /cevo/api/stub
 
+    # This determines whether to silently forward the user to the CEVO site if the current
+    # site (japan, china, na, etc) isn't enabled to host the content for the requested page
+    # or resource. If set this to false then a NotFoundHttpException will be thrown instead
+    # of forwarding the user to the CEVO site
+    allow_cevo_forwarding: false
+
 framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
     profiler: { only_exceptions: false }

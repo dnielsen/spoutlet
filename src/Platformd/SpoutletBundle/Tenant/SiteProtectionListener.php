@@ -22,7 +22,7 @@ class SiteProtectionListener
 
     private $cevoAuthManager;
 
-    private $debug;
+    private $allowCevoForwarding;
 
     /**
      * An array of allowed URL regular expressions
@@ -35,6 +35,8 @@ class SiteProtectionListener
         '^/admin',
         // our little "fake" CEVO - without this, we'll get a redirect loop locally
         '^/cevo/api/stub',
+        '^/media',
+        '^/login'
     );
 
     static private $urlMap = array(
@@ -47,11 +49,11 @@ class SiteProtectionListener
     /**
      * @param array $allowedSites
      */
-    public function __construct(array $allowedSites, CEVOAuthManager $cevoAuthManager, $debug)
+    public function __construct(array $allowedSites, CEVOAuthManager $cevoAuthManager, $allowCevoForwarding)
     {
         $this->allowedSites = $allowedSites;
         $this->cevoAuthManager = $cevoAuthManager;
-        $this->debug = $debug;
+        $this->allowCevoForwarding = $allowCevoForwarding;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -78,8 +80,8 @@ class SiteProtectionListener
         // at this point, we don't match, so we need to redirect back to CEVO
         $url = $this->translateToCEVOUrl($request->getPathInfo());
 
-        if ($this->debug) {
-            throw new NotFoundHttpException(sprintf('No access to this URL on this site. In non-debug mode, we would redirect to the main CEVO site at "%s"', $url));
+        if ($this->allowCevoForwarding == false) {
+            throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "%s"', $url));
         }
 
         $absoluteUrl = $this->cevoAuthManager->generateCevoUrl(

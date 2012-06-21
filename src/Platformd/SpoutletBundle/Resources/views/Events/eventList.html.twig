@@ -27,13 +27,7 @@
                         </td>
                         {# todo - refactor this next line somewhere else #}
                         <td style="width:259px;">
-                            {# this is just here for the target=_blank, since the controller will redirect #}
-                            {# we need to find a way to centralize this #}
-                            {% if event.urlRedirect is not empty %}
-                                <a href="{{  event.urlRedirect }}" target="_blank">{{ event.name }}</a>
-                            {% else %}
-                                <a href="{{  path(event.showRouteName, { 'slug' : event.slug, '_locale': event.locale }) }}">{{ event.name }}</a>
-                            {% endif %}
+                           {{ event | pd_link_full(event.name) }}
                         </td>
                         <td style="width:212px;">
                             {% if event.game is defined %}

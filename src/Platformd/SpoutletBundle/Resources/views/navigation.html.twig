@@ -4,28 +4,48 @@
             <ul class="sf-menu sf-js-enabled sf-shadow" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 <li><a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.main_menu.alienware' | trans }}</a></li>
-                <li class="more">
-                    <a class="blue">{{ 'games' | trans }}</a>
-                    <ul>
-                        <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
-                        <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
-                        <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
-                        <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
-                        <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
-                    </ul>
-                </li>
+
+                {% if site_has_feature('GAMES') %}
+                    <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
+                {% else %}
+                    <li class="more">
+                        <a class="blue">{{ 'games' | trans }}</a>
+                        <ul>
+                            <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
+                            <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
+                            <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
+                            <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
+                            <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
 
                 {% if showVideo or site_has_feature('EXTRA_NAVIGATION') %}
                     <li><a href="/video">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
                 {% endif %}
 
                 <li><a href="{{ path('events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }}</a></li>
-                <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
+
+                {% if site_has_feature('NEWS') %}
+                    <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
+                {% else %}
+                    <li class="more">
+                        <a class="blue">{{ 'platformd.layout.main_menu.news' | trans }}</a>
+                        <ul>
+                            <li><a href="http://www.alienwarearena.com/articles/">Articles</a></li>
+                            <li><a href="http://www.alienwarearena.com/news/">Announcements</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
 
                 {% if site_has_feature('EXTRA_NAVIGATION') %}
                     <li><a href="/arp">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                     <li><a href="/forums">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
-                    <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+
+                    {% if site_has_feature('SWEEPSTAKES') %}
+                        <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                    {% endif %}
+
                     <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
                 {% endif %}
 

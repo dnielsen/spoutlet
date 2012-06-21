@@ -57,13 +57,6 @@ class Event extends AbstractEvent
      */
     protected $gameStr;
 
-    /**
-    * @var string url_redirect
-    *
-    * @ORM\Column(name="url_redirect", type="string", length=255, nullable=true)
-    */
-    protected $url_redirect;
-
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -182,26 +175,6 @@ class Event extends AbstractEvent
     }
 
     /**
-    * Get url_redirect
-    *
-    * @param string $url_redirect
-    */
-    public function getUrlRedirect()
-    {
-        return $this->url_redirect;
-    }
-
-    /**
-    * Set url_redirect
-    *
-    * @param string $url_redirect
-    */
-    public function setUrlRedirect($url_redirect)
-    {
-        $this->url_redirect = $url_redirect;
-    }
-
-    /**
      * @return string
      */
     public function getLocation()
@@ -244,16 +217,6 @@ class Event extends AbstractEvent
     public function getShowRouteName()
     {
         return 'events_detail';
-    }
-
-    /**
-     * If there is a set URL that should be used without doing anything else, return it here
-     *
-     * @return string
-     */
-    public function getLinkableOverrideUrl()
-    {
-        return $this->getUrlRedirect();
     }
 
     /**

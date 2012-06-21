@@ -58,7 +58,7 @@ platformd:
             manage_users: Manage Users
             manage_news: Manage News
             manage_homepage_banners: Manage Homepage Banners
-        
+
         main_menu:
             home: Home
             alienware: Alienware
@@ -67,10 +67,10 @@ platformd:
             news: News
             arp: ARP
             forums: Forums
-            sweeps: Sweepstakes
+            sweeps: SWEEPS
             wallpapers: Wallpapers
             microsoft: Microsoft
-    
+
         page_content:
             featured: Featured
             giveaways: Giveaways
@@ -85,7 +85,6 @@ platformd:
             terms_and_conditions: "Terms & Conditions"
             steam_community: Steam Community
             xfire_community: Xfire Community
-            link: "Need a kick ass rig? Checkout Alienware"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -128,8 +127,8 @@ platformd:
             create: Create New Event
             approve: Approve
             unpublish: Unpublish
-            approved: Event "%event_title%" has been approved and is now published. 
-            unpublished: Event "%event_title%" has been unpublished. 
+            approved: Event "%event_title%" has been approved and is now published.
+            unpublished: Event "%event_title%" has been unpublished.
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
             save_event: Save Event
@@ -235,9 +234,9 @@ platformd:
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”, 
-        in_process_2: please allow at least 10 days for it to be posted into your account. 
-        in_process_3: If after 10 days it has not been posted, please email 
+        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
+        in_process_2: please allow at least 10 days for it to be posted into your account.
+        in_process_3: If after 10 days it has not been posted, please email
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -343,16 +342,6 @@ sweeps_not_open: This sweepstakes is not currently open
 
 follow_us: Follow Us
 
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: 'http://www.twitter.com/alienware'
-        facebook_url: 'http://www.facebook.com/alienware'
-        follow_on_facebook: Follow Aliewnare on Facebook
-        follow_on_twitter: Follow Alieneware on Twitter
-
-    alienware_link_url: http://alienware.com
-
 # admin-only translations - we don't need these
 url:  URL
 total_registered: Total Registered
@@ -443,5 +432,6 @@ uploaded_desktop: Uploaded Desktop
 recommended_rig: Recommended Rig
 
 past_partnerships: Past Partnerships
+archives: ARCHIVES
 media_gallery: Media Gallery
 more_games: More Games

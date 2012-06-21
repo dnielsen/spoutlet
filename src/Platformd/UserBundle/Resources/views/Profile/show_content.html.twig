@@ -1,15 +1,13 @@
 <div class="fos_user_user_show memberProfile">
     <div class="memberProfileLeft">
-        <div class="profileAvatar_big"> 
-            <img src="{{ asset(user.avatar and user.isAvatarApproved ? media_path(user) : "/images/profile-default.png") }}" alt="" /> 
+        <div class="profileAvatar_big">
+            <img src="{{ asset(user.avatar and user.isAvatarApproved ? media_path(user) : "/images/profile-default.png") }}" alt="" />
         </div>
     </div>
-    
+
     <div class="memberProfileRight">
-        <h2>{{ "profile.show.title" | trans({ 
+        <h2>{{ "profile.show.title" | trans({
                 "%username%": user.username,
-                "%firstname%" : user.firstname,
-                "%lastname%" : user.lastname
             }, 'FOSUserBundle') }}</h2>
 
         <div class="profileBloc">
