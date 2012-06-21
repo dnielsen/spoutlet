@@ -2,12 +2,9 @@
 
 namespace Platformd\GiveawayBundle\Entity;
 
-use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Superclass\Pool;
 
-use Doctrine\ORM\Mapping as ORM,
-    Doctrine\Common\Collections\Collection,
-    Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile,
     Symfony\Component\Validator\Constraints as Assert;
