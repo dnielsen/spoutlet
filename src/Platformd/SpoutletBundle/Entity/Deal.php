@@ -10,7 +10,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 use DateTime;
 use DateTimezone;
 
@@ -164,7 +163,7 @@ class Deal implements LinkableInterface
 
     /**
      *
-     * @var \OpenGraphOverride
+     * @var OpenGraphOverride
      * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
      */
     private $openGraphOverride;
@@ -485,7 +484,7 @@ class Deal implements LinkableInterface
     }
 
     /**
-     * @return \OpenGraphOverride
+     * @return OpenGraphOverride
      */
     public function getOpenGraphOverride()
     {
@@ -493,7 +492,7 @@ class Deal implements LinkableInterface
     }
 
     /**
-     * @param \OpenGraphOverride $openGraphOverride
+     * @param OpenGraphOverride $openGraphOverride
      */
     public function setOpenGraphOverride(OpenGraphOverride $openGraphOverride = null)
     {
