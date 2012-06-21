@@ -72,6 +72,18 @@ abstract class Pool
      */
     protected $keysfile;
 
+    /**
+     * Returns whether or not this pool should be treated as active
+     *
+     * This goes beyond the normal isActive to check anything else.
+     * For example, a GiveawayPool is only active if both the pool and
+     * the related Giveaway are active
+     *
+     * @abstract
+     * @return boolean
+     */
+    abstract public function isTotallyActive();
+
     public function getId()
     {
         return $this->id;
