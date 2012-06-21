@@ -152,10 +152,6 @@ class TranslationAdminController extends Controller
     {
         $translations = $this->container->getParameter('locale_translations');
 
-        if (!array_key_exists($locale, $translations)) {
-            throw new \InvalidArgumentException(sprintf('Invalid locale or locale without translation: "%s"', $locale));
-        }
-
-        return $translations[$locale];
+        return isset($translations[$locale]) ? $translations[$locale] : $locale;
     }
 }
