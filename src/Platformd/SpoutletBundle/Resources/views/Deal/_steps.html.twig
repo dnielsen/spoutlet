@@ -1,0 +1,12 @@
+<li>
+    <span class="item">
+        <span class="step-number">{{ 'deal_instructions_step' | trans }} 1:</span>
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {{ 'platformd.create_account_or_login' | trans }}
+        {% else %}
+            <a href="{{ path('fos_user_security_login') }}?return={{ url('deal_show', {'slug': deal.slug}) | e }}">
+                {{ 'platformd.create_account_or_login' | trans }}
+            </a>
+        {% endif %}
+    </span>
+</li>

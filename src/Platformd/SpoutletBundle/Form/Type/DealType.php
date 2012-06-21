@@ -15,7 +15,10 @@ class DealType extends AbstractType
     {
         $builder
             ->add('name', null, array('label' => 'Deal Name'))
-            ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'))
+            ->add('externalUrl', null, array(
+                'label' => 'External URL',
+                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'
+            ))
             ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
                 'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
                     return $er->createQueryBuilder('g')
@@ -24,27 +27,81 @@ class DealType extends AbstractType
             ->add('slug', new SlugType(), array('url_prefix' => '/deal/{slug}'))
             ->add('startsAt', 'date', array(
                 'widget' => 'single_text',
-                'attr' => array(
+                'attr'   => array(
                     'class' => 'datetime-picker'
                 ),
                 'format' => 'yyyy-MM-dd hh:mm',
-                'label' => 'Starts At'
+                'label'  => 'Starts At'
             ))
             ->add('endsAt', 'date', array(
                 'widget' => 'single_text',
-                'attr' => array(
+                'attr'   => array(
                     'class' => 'datetime-picker'
                 ),
                 'format' => 'yyyy-MM-dd hh:mm',
-                'label' => 'Ends At'
+                'label'  => 'Ends At'
             ))
             ->add('timezone', 'timezone', array('label' => 'Timezone'))
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950x610',
             ))
+            ->add('thumbnailLarge', new MediaType(), array(
+                'image_label' => 'Large Thumbnail',
+                'image_help'  => 'Recommended size: 245x194',
+            ))
+            ->add('thumbnailComment', new MediaType(), array(
+                'image_label' => 'Comment Thumbnail',
+                'image_help'  => 'Recommended size: 80x46',
+            ))
+            ->add('claimCodeButton', new MediaType(), array(
+                'image_label' => 'Claim Code Now',
+                'image_help'  => 'Recommended size: 224x43',
+            ))
+            ->add('visitWebsiteButton', new MediaType(), array(
+                'image_label' => 'Visit Website Image',
+                'image_help'  => 'Recommended size: 224x43',
+            ))
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
+            ->add('description', null, array(
+                'label' => 'Description',
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('redemptionInstructionsArray', 'collection', array(
+                'type' => 'textarea',
+                'label' => 'Redemption Instructions'
+            ))
+            ->add('websiteUrl', null, array(
+                'label' => 'Website URL',
+                'help'  => 'ex: http://www.facebook.com'
+            ))
+            ->add('mediaGalleryMedias', 'collection', array(
+                'label' => 'Screenshots',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'type'      => new MediaType(),
+                'options'   => array(
+                    'image_label' => 'Screenshot',
+                    'image_help'  => 'This can be any size, and will probably be quite large.',
+                )
+            ))
+            ->add('status', 'choice', array(
+                'choices' => $this->getStatusChoices(),
+            ))
         ;
+    }
+
+    public function getStatusChoices()
+    {
+        $choices = array(
+            '' => 'status.choose_status',
+        );
+
+        foreach (Deal::getValidStatuses() as $status) {
+            $choices[$status] = 'status.'.$status;
+        }
+
+        return $choices;
     }
 
     public function getName()

@@ -32,6 +32,14 @@ use DateTimezone;
 class Deal implements LinkableInterface
 {
 
+    const REDEMPTION_LINE_PREFIX = '* ';
+    const STATUS_PUBLISHED       = 'published';
+    const STATUS_UNPUBLISHED     = 'unpublished';
+
+    private static $validStatuses = array(
+        self::STATUS_PUBLISHED,
+        self::STATUS_UNPUBLISHED
+    );
     /**
      * A map of UTC offsets and common timezone names
      *
@@ -112,11 +120,92 @@ class Deal implements LinkableInterface
     private $banner;
 
     /**
+     * The large thumbnail for the deal (245px by 194px)
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    private $thumbnailLarge;
+
+    /**
+     * The comment thumbnail for the deal (80px by 46px)
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    private $thumbnailComment;
+
+    /**
+     * The claim code image for the deal (224px by 43px)
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    private $claimCodeButton;
+
+    /**
+     * The visit website image for the deal (224px by 43px)
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    private $visitWebsiteButton;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\JoinTable(
+     *   name="pd_deal_page_gallery_media",
+     *   joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
+     *   inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     * )
+     */
+    protected $mediaGalleryMedias;
+
+    /**
      *
      * @var \OpenGraphOverride
      * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
      */
     private $openGraphOverride;
+
+    /**
+     * @var string $description
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
+    /**
+     * This is a raw HTML field, but with a special format.
+     *
+     * Each line will be exploded into an array, and used for numbered
+     * instructions on the giveaway.
+     *
+     * @ORM\Column(type="text")
+     *
+     * @var string
+     */
+    protected $redemptionInstructions;
+
+    /**
+     * website url
+     * @ORM\Column(name="website_url", type="string", length=255)
+     */
+    private $websiteUrl;
+
+    /**
+     * The published/unpublished/archived field
+     *
+     * @var string
+     * @ORM\Column(name="status", type="string", length=50, nullable=false)
+     * @Assert\NotBlank(message="error.select_status")
+     */
+    private $status;
+
+    public function __construct()
+    {
+        $this->mediaGalleryMedias = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -330,6 +419,72 @@ class Deal implements LinkableInterface
     }
 
     /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getThumbnailLarge()
+    {
+        return $this->thumbnailLarge;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $thumbnailLarge
+     */
+    public function setThumbnailLarge(Media $thumbnailLarge = null)
+    {
+        $this->thumbnailLarge = $thumbnailLarge;
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getThumbnailComment()
+    {
+        return $this->thumbnailComment;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $thumbnailComment
+     */
+    public function setThumbnailComment(Media $thumbnailComment = null)
+    {
+        $this->thumbnailComment = $thumbnailComment;
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getClaimCodeButton()
+    {
+        return $this->claimCodeButton;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $claimCodeButton
+     */
+    public function setClaimCodeButton(Media $claimCodeButton = null)
+    {
+        $this->claimCodeButton = $claimCodeButton;
+    }
+
+    // visitWebsiteButton
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getVisitWebsiteButton()
+    {
+        return $this->visitWebsiteButton;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $visitWebsiteButton
+     */
+    public function setVisitWebsiteButton(Media $visitWebsiteButton = null)
+    {
+        $this->visitWebsiteButton = $visitWebsiteButton;
+    }
+
+    /**
      * @return \OpenGraphOverride
      */
     public function getOpenGraphOverride()
@@ -343,5 +498,169 @@ class Deal implements LinkableInterface
     public function setOpenGraphOverride(OpenGraphOverride $openGraphOverride = null)
     {
         $this->openGraphOverride = $openGraphOverride;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedemptionInstructions()
+    {
+        return $this->redemptionInstructions;
+    }
+
+    /**
+     * @param string $redemptionInstructions
+     */
+    private function setRedemptionInstructions($redemptionInstructions)
+    {
+        $this->redemptionInstructions = $redemptionInstructions;
+    }
+
+    /**
+     * Explodes the redemptionInstructions text by new line and removing the prefix:
+     *
+     * The literal source text (with opening asterisks) looks like this:
+     *
+     *  * foo
+     *  * bar
+     *
+     * @return array
+     */
+    public function getRedemptionInstructionsArray()
+    {
+        $arr = explode(self::REDEMPTION_LINE_PREFIX, $this->getRedemptionInstructions());
+
+        foreach ($arr as $lineNo => $line) {
+            // remove trailing whitespace
+            $arr[$lineNo] = trim($line);
+
+            // unset the whole dang entry if it's empty
+            if (empty($line)) {
+                unset($arr[$lineNo]);
+            }
+        }
+
+        // re-index the array
+        $arr = array_values($arr);
+
+        // make sure we have at least 6 entries
+        while (count($arr) < 6) {
+            $arr[] = '';
+        }
+
+        return $arr;
+    }
+
+    /**
+     * Allows you to set the redemption instructions where each step is
+     * an item in an array
+     *
+     * @param array $instructions
+     */
+    public function setRedemptionInstructionsArray(array $instructions)
+    {
+        $str = '';
+        foreach ($instructions as $line) {
+            // only store the line if it's non-blank
+            if ($line) {
+                $str .= self::REDEMPTION_LINE_PREFIX . $line."\n";
+            }
+        }
+
+        $this->setRedemptionInstructions(trim($str));
+    }
+
+    /**
+     * Returns the redemption instructions array, but without blank lines
+     *
+     * @return array
+     */
+    public function getCleanedRedemptionInstructionsArray()
+    {
+        $cleaned = array();
+        foreach ($this->getRedemptionInstructionsArray() as $item) {
+            if ($item) {
+                $cleaned[] = $item;
+            }
+        }
+
+        return $cleaned;
+    }
+
+    /**
+     * Set websiteUrl
+     *
+     * @param string $websiteUrl
+     */
+    public function setWebsiteUrl($websiteUrl)
+    {
+        $this->websiteUrl = $websiteUrl;
+    }
+
+    /**
+     * Get websiteUrl
+     *
+     * @return string
+     */
+    public function getWebsiteUrl()
+    {
+        return $this->websiteUrl;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMediaGalleryMedias()
+    {
+        return $this->mediaGalleryMedias;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        if ($status && !in_array($status, self::$validStatuses)) {
+            throw new \InvalidArgumentException(sprintf('Invalid status passed: "%s"', $status));
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @static
+     * @return array
+     */
+    static public function getValidStatuses()
+    {
+        return self::$validStatuses;
     }
 }

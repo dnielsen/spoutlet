@@ -26,9 +26,69 @@
     padding: 5px
 }
 
+.deals-features-col {
+    width: 600px;
+    vertical-align: top;
+}
+
 .deals-instructions-col-header {
     width: 350px;
     background: #303338;
     text-align: left;
     padding: 5px
 }
+
+.deals-instructions-col {
+    width: 350px;
+    vertical-align: top;
+}
+
+#deal-actions {
+    width: 100%;
+    text-align: center;
+}
+
+#deals-recommend {
+    padding: 5px;
+}
+
+#deal-websiteurl {
+    width: 100%;
+    padding-top: 10px;
+}
+
+#deal-instructions { padding: 5px;}
+#deal-instructions ul { margin: 5px; padding: 0;}
+#deal-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
+#deal-instructions ul li span.item { font-weight: bold;}
+#deal-instructions ul li span.step-number { font-weight: bold; padding-right: 3px;}
+
+#deal-redeem-button {
+    margin: 5px auto;
+    width: 224px;
+    height: 43px;
+    cursor: pointer;
+}
+
+#deal-countries {
+    margin: 3px auto;
+    text-align: left;
+}
+
+.dd-selected { color: #000; }
+.dd-selected:hover { color: #000; }
+
+/*.dd-select
+.dd-desc
+.dd-selected
+.dd-pointer
+.dd-pointer-down
+.dd-pointer-up
+.dd-options
+.dd-option
+.dd-options > li:last-child > .dd-option
+.dd-option:hover
+.dd-selected-description-truncated
+.dd-option-selected
+.dd-option-image, .dd-selected-image
+.dd-image-right .dd-container*/

@@ -27,7 +27,7 @@
     <div class="deals-header" style="background: url('{{ media_path(deal.banner) }}')">
             <div class="deals-timeleft" style="display: none;">
                 {% if deal.endsAt > date() %}
-                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y-m-d h:m:s') }}" />
+                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y/m/d h:m:s') }}" />
                 <div id="time-left">
                     <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
                     <span id="deals-daysleft">{dn}</span>
@@ -49,22 +49,50 @@
             <thead>
                 <tr>
                     <th class="deals-features-col-header">
-                        {{ deal.game.name }} - {{ 'deal_features_table_header' | trans }}</th>
+                        {{ deal.name }}</th>
                     <th class="deals-instructions-col-header">
                         {{ 'deal_instructions_table_header' | trans }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        {# if deal.description #}
-                            <p>{# deal.description #}</p>
-                        {# endif #}
+                    <td class="deals-features-col">
+                        {% if deal.description %}
+                            <p>{{ deal.description | raw }}</p>
+                        {% endif %}
+                        {% if deal.websiteUrl %}
+                        <div id="deal-websiteurl">
+                            <a href="{{ deal.websiteUrl }}" {% if deal.visitWebsiteButton %} style="background: url('{{ media_path(deal.visitWebsiteButton)}}') no-repeat; display: block; width: 224px; height: 43px; margin: 0px auto;" {% endif %} target="_blank"></a>
+                        </div>
+                        {% endif %}
                     </td>
-                    <td>
-                        {# if deal.instructions #}
-
-                        {# endif #}
+                    <td class="deals-instructions-col">
+                        <div id="deal-actions">
+                            <div id="deal-countries">
+                                <select id="deal-countries">
+                                    <option value="1">United States</option>
+                                    <option value="2">Canada</option>
+                                    <option value="3">Mexico</option>
+                                </select>
+                            </div>
+                            <button id="deal-redeem-button" {% if deal.claimCodeButton %} style="background: url('{{ media_path(deal.claimCodeButton) }}') no-repeat; border: none;" {% endif %}></button>
+                        </div>
+                        <div id="deal-instructions">
+                            <ul>
+                                {% include 'SpoutletBundle:Deal:_steps.html.twig' with {'deal': deal} %}
+                                {% if  (redemptionSteps is not empty)  %}
+                                {% for redemptionStep in redemptionSteps %}
+                                <li>
+                                    <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
+                                    <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
+                                </li>
+                                {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div id="deals-recommend">
+                            <div class="fb-like" data-send="false" data-width="350" data-show-faces="false" data-colorscheme="dark" data-action="like"></div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -107,6 +135,10 @@
             });
 
             $('.deals-timeleft').fadeIn();
+            $('#deal-countries').ddslick({
+                width: 223,
+                selectText: 'SELECT YOUR COUNTRY',
+            });
         });
     </script>
 

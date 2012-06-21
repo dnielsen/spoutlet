@@ -36,11 +36,12 @@ class DealController extends Controller
         }
 
         # figure out if the user has redeemed this deal already, if so pass relevant details to the view here
-
+        $instructions = $deal->getCleanedRedemptionInstructionsArray();
         return array(
             'deal' => $deal,
             'userAlreadyRedeemed' => true,
-            'dealCode' => '[deal code goes here]'
+            'dealCode' => '[deal code goes here]',
+            'redemptionSteps' => $instructions
         );
     }
 
