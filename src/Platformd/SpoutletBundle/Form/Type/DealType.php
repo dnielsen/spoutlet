@@ -43,7 +43,7 @@ class DealType extends AbstractType
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950x610',
             ))
-            ->add('openGraphOverride', null, array('label' => 'Open Graph Description'))
+            ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
         ;
     }
 

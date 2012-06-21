@@ -10,18 +10,17 @@
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
 {% block open_graph %}
-    <meta property="fb:app_id" content="{# facebook_app_id #}">
-    <meta property="og:title" content="{# dealPage.deal.name #}" />
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ deal.name }}" />
     <meta property="og:type" content="product" />
-    <meta property="og:url" content="{# app.request.getUri #}" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {# if dealPage.deal.logoThumbnail #}
-        {# set thumbUrl = media_path(dealPage.deal.logoThumbnail, {'local': true}) | imagine_filter('deal_list_logo') #}
-        <meta property="og:image" content="{# thumbUrl | absolute_url #}" />
-    {# endif #}
-    {# if dealPage.aboutDeal #}
-        <meta property="og:description" content="{# dealPage.aboutDeal | striptags #}" />
-    {# endif #}
+    {% if deal.openGraphOverride.thumbnail %}
+        <meta property="og:image" content="{{ deal.openGraphOverride.thumbnail | media_path }}" />
+    {% endif %}
+    {% if deal.openGraphOverride.description %}
+        <meta property="og:description" content="{{ deal.openGraphOverride.description | striptags }}" />
+    {% endif %}
 {% endblock %}
 
 {% block content %}

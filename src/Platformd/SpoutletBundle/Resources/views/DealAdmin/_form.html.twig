@@ -10,10 +10,15 @@
         {{ form_row(form.slug) }}
         {{ form_row(form.game) }}
         {{ form_row(form.externalUrl) }}
+        {{ form_row(form.startsAt) }}
+        {{ form_row(form.endsAt) }}
+        {{ form_row(form.timezone) }}
+        {{ form_row(form.banner) }}
     </fieldset>
     <fieldset>
         <legend>b) Open Graph Information</legend>
-        {{ form_row(form.openGraphOverride) }}
+        {{ form_row(form.openGraphOverride.description) }}
+        {{ form_row(form.openGraphOverride.thumbnail) }}
     </fieldset>
 </div>
 
