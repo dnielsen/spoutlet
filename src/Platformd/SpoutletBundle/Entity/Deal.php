@@ -92,13 +92,13 @@ class Deal implements LinkableInterface
 
     /**
      * @var \DateTime $startsAt
-     * @ORM\Column(name="starts_at", type="datetime")
+     * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     private $startsAt;
 
     /**
      * @var \DateTime $endsAt
-     * @ORM\Column(name="ends_at", type="datetime")
+     * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     private $endsAt;
 
@@ -309,7 +309,7 @@ class Deal implements LinkableInterface
     /**
      * @param \DateTime $startsAt
      */
-    public function setStartsAt(\DateTime $startsAt)
+    public function setStartsAt(\DateTime $startsAt = null)
     {
         $this->startsAt = $startsAt;
     }
@@ -325,7 +325,7 @@ class Deal implements LinkableInterface
     /**
      * @param \DateTime $startsAt
      */
-    public function setEndsAt(\DateTime $endsAt)
+    public function setEndsAt(\DateTime $endsAt = null)
     {
         $this->endsAt = $endsAt;
     }
