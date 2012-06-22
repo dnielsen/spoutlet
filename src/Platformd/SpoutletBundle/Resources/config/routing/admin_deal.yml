@@ -2,6 +2,11 @@ admin_deal:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:DealAdmin:index" }
 
+# show the true "list" page for a site
+admin_deal_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "SpoutletBundle:DealAdmin:list", site: ~ }
+
 admin_deal_new:
     pattern:  /new
     defaults: { _controller: "SpoutletBundle:DealAdmin:new" }

@@ -1,0 +1,28 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Deals</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Url</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for deal in entities %}
+        <tr>
+            <td><a href="{{ path('admin_deal_edit', { 'id': deal.id }) }}">{{ deal.name }}</a></td>
+            <td>{{ deal | pd_link_full }}</td>
+            <td><a href="{{ path('admin_deal_pool_index', {'dealId': deal.id}) }}">Manage pools</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_deal_new') }}">
+    Create a new entry
+</a>
+{% endblock %}

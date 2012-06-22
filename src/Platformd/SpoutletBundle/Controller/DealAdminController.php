@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Entity\Deal;
 use Platformd\SpoutletBundle\Form\Type\DealType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 /**
  * Deal admin controller.
@@ -14,18 +15,29 @@ use Symfony\Component\Form\Form;
 class DealAdminController extends Controller
 {
     /**
-     * Lists all Deal entities.
-     *
+     * Lists all locales - a gateway to the "list" action
      */
     public function indexAction()
     {
         $this->addDealsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entities = $em->getRepository('SpoutletBundle:Deal')->findAll();
 
         return $this->render('SpoutletBundle:DealAdmin:index.html.twig', array(
-            'entities' => $entities
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    /**
+     * Lists all Deal entities for the selected site.
+     */
+    public function listAction($site)
+    {
+        $this->addDealsBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
+
+        return $this->render('SpoutletBundle:DealAdmin:list.html.twig', array(
+            'entities' => $deals
         ));
     }
 
@@ -101,15 +113,27 @@ class DealAdminController extends Controller
             if ($form->isValid()) {
                 /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
                 $deal = $form->getData();
-                $em->persist($deal);
 
-                $em->flush();
+                $this->getDealManager()->saveDeal($deal);
 
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_deal_site',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
     }
 
     /**
@@ -122,5 +146,13 @@ class DealAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\DealManager
+     */
+    private function getDealManager()
+    {
+        return $this->get('platformd.model.deal_manager');
     }
 }
