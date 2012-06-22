@@ -3,7 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\SpoutletBundle\Locale\JoinedLocaleInterface;
+use Platformd\SpoutletBundle\Entity\Superclass\JoinedLocale;
 
 /**
  * Effectively a many-to-many join table between GamePage and locale (which is not a real table)
@@ -19,24 +19,8 @@ use Platformd\SpoutletBundle\Locale\JoinedLocaleInterface;
  * )
  * @ORM\Entity()
  */
-class GamePageLocale implements JoinedLocaleInterface
+class GamePageLocale extends JoinedLocale
 {
-    /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
-    /**
-     * @var string $locale
-     *
-     * @ORM\Column(name="locale", type="string", length=255)
-     */
-    private $locale;
-
     /**
      * @var GamePage
      *
@@ -44,30 +28,6 @@ class GamePageLocale implements JoinedLocaleInterface
      * @ORM\JoinColumn(onDelete="CASCADE", name="game_page_id")
      */
     private $gamePage;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
 
     /**
      * @return \Platformd\SpoutletBundle\Entity\GamePage
