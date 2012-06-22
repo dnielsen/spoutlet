@@ -10,14 +10,11 @@ use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 
 /**
- * Manager for GamePage.
+ * Manager for GamePage:
  *
- * In particular, this transforms a "locales" array property to a proper "hasMany" relationship
- *
- * This helps us overcome the fact that "locales" aren't a database object,
- * so creating a classic ManyToMany to it actually involves creating a OneToMany
- * to a new entity. Getting that in a form is hard, unless we can just set
- * a locales array and have a listener handle the relationship.
+ *  * Handles our special logic for locales
+ *  * Saves the media fields
+ *  * saves the media gallery
  */
 class GamePageManager
 {
@@ -40,8 +37,7 @@ class GamePageManager
     /**
      * Call this to save a GamePage
      *
-     * The originalGalleryMedias is an array of the Media objects that were
-     * part of the media *before* any changes were made to this entity.
+     * This must be used instead of persisting it directly
      *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
      */
