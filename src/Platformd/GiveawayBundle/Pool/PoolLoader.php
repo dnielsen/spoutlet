@@ -27,49 +27,55 @@ class PoolLoader
      * @param \Symfony\Component\HttpFoundation\File\File $file
      * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
      */
-    public function loadKeysFromFile(File $file, GiveawayPool $pool)
+    public function loadKeysFromFile(File $file, $pool, $type = 'GIVEAWAY')
     {
         $content = $file->openFile();
         $limit = 1000;
 
         $valuesString = array();
         $i = 0;
+        $formatString = '("%s", '.$pool->getId().')';
+
         while (!$content->eof()) {
+
             $value = $content->fgets();
+
             if (!$value || empty($value)) {
                 continue;
             }
 
-            // remove the trailing line break
-            $value = str_replace("\n", '', $value);
-
-            // create the little part of the insert string
-            // optimized for speed - but ugly...
-            // this IS a security risk, but only admin users can use this
-            // and damnit, we NEED speed!!!
-            $valuesString[] = sprintf("('%s', %s)", $value, $pool->getId());
+            $valuesString[] = sprintf($formatString, $this->conn->quote(trim($value)));
 
             $i++;
 
             if (0 == ($i % $limit)) {
-                $this->executeLoadQuery($valuesString);
+                $this->executeLoadQuery($valuesString, $type);
                 $valuesString = array();
             }
         }
 
         // execute everything else
-        $this->executeLoadQuery($valuesString);
-
-
+        $this->executeLoadQuery($valuesString, $type);
     }
 
-    private function executeLoadQuery(array $valuesString)
+    private function executeLoadQuery(array $valuesString, $type)
     {
         if (empty($valuesString)) {
             return;
         }
 
-        $query = sprintf('INSERT INTO giveaway_key (value, pool) VALUES %s', implode(', ', $valuesString));
+        switch ($type) {
+            case 'GIVEAWAY':
+                $tableName = 'giveaway_key';
+                break;
+            case 'DEAL':
+                $tableName = 'deal_code';
+                break;
+            default:
+                throw new \Exception('Unknown table type.');
+        }
+
+        $query = sprintf('INSERT INTO `%s` (value, pool) VALUES %s', $tableName, implode(', ', $valuesString));
         $stmt = $this->conn->prepare($query);
 
         $stmt->execute();

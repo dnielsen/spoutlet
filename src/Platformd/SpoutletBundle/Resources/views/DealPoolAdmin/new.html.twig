@@ -1,0 +1,10 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.giveaway_pool.admin.create" | trans }}{% endblock %}
+
+{% block content %}
+    {% include 'SpoutletBundle:DealPoolAdmin:_form.html.twig' with {
+        'form': form,
+        'route': path('admin_deal_pool_new', { "dealId" : dealId }),
+        'dealId': dealId
+    } %}
+{% endblock %}

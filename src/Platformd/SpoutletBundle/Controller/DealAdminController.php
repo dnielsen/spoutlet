@@ -37,8 +37,8 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb()->addChild('New Deal');
 
-        $deal  = new Deal();
-        $form    = $this->createForm(new DealType(), $deal);
+        $deal   = new Deal();
+        $form   = $this->createForm(new DealType(), $deal);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The Deal was created!');
@@ -47,7 +47,7 @@ class DealAdminController extends Controller
         }
 
         return $this->render('SpoutletBundle:DealAdmin:new.html.twig', array(
-            'entity' => $deal,
+            'deal' => $deal,
             'form'   => $form->createView()
         ));
     }

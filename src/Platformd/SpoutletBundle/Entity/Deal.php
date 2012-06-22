@@ -10,6 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
 
@@ -188,7 +189,7 @@ class Deal implements LinkableInterface
 
     /**
      * website url
-     * @ORM\Column(name="website_url", type="string", length=255)
+     * @ORM\Column(name="website_url", type="string", length=255, nullable=true)
      */
     private $websiteUrl;
 
@@ -200,6 +201,14 @@ class Deal implements LinkableInterface
      * @Assert\NotBlank(message="error.select_status")
      */
     private $status;
+
+    /**
+     * One to Many with DealPool
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\DealPool", mappedBy="deal")
+     */
+    protected $dealPools;
 
     public function __construct()
     {
@@ -652,6 +661,22 @@ class Deal implements LinkableInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $pools
+     */
+    public function setDealPools($pools)
+    {
+        $this->dealPools = $pools;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDealPools()
+    {
+        return $this->dealPools;
     }
 
     /**

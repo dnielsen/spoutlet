@@ -1,0 +1,85 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% set title = "platformd.deal_pool.admin.title" | trans({'%deal_name%': deal.name}) %}
+{% block title title %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="help-block">
+    {{ 'platformd.deal_pool.first_active_used' | trans }}
+</div>
+
+<table class="table table-striped table-bordered tablesorter">
+    <tbody>
+        <tr>
+            <th>{{ "platformd.deal_pool.pool" | trans }}</th>
+            <th>{{ "giveway_pool_maxKeysPerIp" | trans({}, 'forms') }}</th>
+            <th>{{ "giveway_pool_lower_upper_display" | trans({}, 'forms') }}</th>
+            <th>{{ "giveway_pool_assigned_total" | trans({}, 'forms') }}</th>
+            <th>{{ "deal_status" | trans({}, 'forms') }}</th>
+            <th>{{ "platformd.help.actions" | trans }}</th>
+        </tr>
+        {% for pool in pools %}
+        <tr class="eventListGroup_online">
+            <td><a href="{{ path('admin_deal_pool_edit', {
+                    'dealId' : pool.deal.id,
+                    'poolId' : pool.id
+                })
+            }}">{{ pool.description ? pool.description : '[no description]' }}</a></td>
+
+            <td>
+                {{ pool.maxKeysPerIp }}
+            </td>
+
+            <td>
+                {% if pool.shouldEnforceUpperAndLower %}
+                    {{ pool.lowerLimit }}/{{ pool.upperLimit }}
+                {% else %}
+                    <i>none</i>
+                {% endif %}
+            </td>
+
+            <td>
+                {{ codeRepo.getAssignedForPool(pool) }} / {{ codeRepo.getTotalForPool(pool) }}
+            </td>
+
+            <td>
+                {{ pool.isActive ? 'Active' : 'Inactive' }}
+            </td>
+
+            <td>
+                <a href="{{ path('admin_deal_pool_edit', {
+                    'dealId' : pool.deal.id,
+                    'poolId' : pool.id
+                }) }}">Edit</a>
+                |
+                <a href="{{ path('admin_deal_pool_delete', {
+                    'dealId' : pool.deal.id,
+                    'poolId' : pool.id
+                }) }}" class="delete_link">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_deal_pool_new', {
+    "dealId" : deal.id
+}) }}" style="margin-right:10px;">{{ "platformd.deal_pool.admin.create" | trans }}</a>
+
+<script type="text/javascript">
+jQuery(function($) {
+    $(".delete_link").bind("click", function(event) {
+
+        if (!confirm('Are you sure you want to delete this pool?')) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            return false;
+        }
+    });
+});
+</script>
+
+{% endblock %}

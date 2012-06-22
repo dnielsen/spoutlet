@@ -20,3 +20,23 @@ admin_deal_update:
     defaults: { _controller: "SpoutletBundle:DealAdmin:edit" }
     requirements: { _method: post }
 
+admin_deal_pool_new:
+    pattern:  /{dealId}/pool/new
+    defaults: { _controller: "SpoutletBundle:DealPoolAdmin:new" }
+
+admin_deal_pool_edit:
+    pattern:  /{dealId}/pool/edit/{poolId}
+    defaults: { _controller: "SpoutletBundle:DealPoolAdmin:edit" }
+
+admin_deal_pool_index:
+    pattern:  /{dealId}/pool
+    defaults: { _controller: "SpoutletBundle:DealPoolAdmin:index" }
+
+admin_deal_pool_create:
+    pattern:  /{dealId}/pool/create
+    defaults: { _controller: "SpoutletBundle:DealPoolAdmin:new" }
+    requirements: { _method: post }
+
+admin_deal_pool_delete:
+    pattern:  /{dealId}/pool/delete/{poolId}
+    defaults: { _controller: "SpoutletBundle:DealPoolAdmin:delete" }
