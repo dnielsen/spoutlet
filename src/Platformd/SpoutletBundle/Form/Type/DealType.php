@@ -88,6 +88,10 @@ class DealType extends AbstractType
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),
             ))
+            ->add('locales', new SiteChoiceType(), array(
+                'multiple' => true,
+                'expanded' => true,
+            ))
         ;
     }
 
