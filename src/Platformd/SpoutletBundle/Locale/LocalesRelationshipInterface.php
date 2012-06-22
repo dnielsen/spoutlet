@@ -32,5 +32,34 @@ interface LocalesRelationshipInterface
      */
     function getJoinedLocales();
 
+    /**
+     * Sets the locales on the object
+     *
+     * @abstract
+     * @param array $locales
+     */
     function setLocales(array $locales);
+
+    /**
+     * Returns the locales that were set on setLocales
+     *
+     * @abstract
+     * @return array
+     */
+    function getLocales();
+
+    /**
+     * A funny function where you create a new Instance of whatever the
+     * entities actual JoinedLocaleInterface is. You'll typically also
+     * need to set the relationship on that new object back to this object:
+     *
+     *     $newGamePageLocale = new GamePageLocale();
+     *     $newGamePageLocale->setGamePage($this);
+     *
+     *     return $newGamePageLocale;
+     *
+     * @abstract
+     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
+     */
+    function createJoinedLocale();
 }

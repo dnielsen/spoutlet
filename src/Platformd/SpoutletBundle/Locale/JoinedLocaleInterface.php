@@ -18,4 +18,12 @@ interface JoinedLocaleInterface
      * @return string
      */
     function getLocale();
+
+    /**
+     * Sets the locale on this object
+     *
+     * @abstract
+     * @param string $locale
+     */
+    function setLocale($locale);
 }

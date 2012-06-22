@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 
 /**
  * Manager for GamePage.
@@ -26,11 +27,14 @@ class GamePageManager
 
     private $mediaUtil;
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil)
+    private $localesHelper;
+
+    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper)
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
+        $this->localesHelper = $localesHelper;
     }
 
     /**
@@ -39,14 +43,13 @@ class GamePageManager
      * The originalGalleryMedias is an array of the Media objects that were
      * part of the media *before* any changes were made to this entity.
      *
-     *
      * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
      */
     public function saveGamePage(GamePage $gamePage)
     {
         $this->em->persist($gamePage);
 
-        $this->handleLocales($gamePage);
+        $this->localesHelper->processLocalesSave($gamePage);
         $this->handleMediaFields($gamePage);
         $this->handleMediaGallery($gamePage);
 
@@ -121,42 +124,6 @@ class GamePageManager
     public function findOneBySlug($slug)
     {
         return $this->getRepository()->findOneBySlugForSite($slug, $this->getDatabaseSiteKey());
-    }
-
-    /**
-     * Handles the complex locales setup
-     *
-     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
-     */
-    private function handleLocales(GamePage $gamePage)
-    {
-        $remainingNewLocales = $gamePage->getLocales();
-
-        /** @var $gamePageLocale \Platformd\SpoutletBundle\Entity\GamePageLocale */
-        foreach ($gamePage->getGamePageLocales() as $gamePageLocale) {
-            if (in_array($gamePageLocale->getLocale(), $remainingNewLocales)) {
-                // no need to remove this GamePageLocale
-                // but let's make sure it doesn't get added new
-                $key = array_search($gamePageLocale->getLocale(), $remainingNewLocales);
-                unset($remainingNewLocales[$key]);
-            } else {
-                // this GamePageLocale is no longer being used... murder it!
-                $this->em->remove($gamePageLocale);
-                // update the inverse side for good measure
-                $gamePage->getGamePageLocales()->removeElement($gamePageLocale);
-            }
-        }
-
-        // now add the new guys
-        foreach ($remainingNewLocales as $newLocale) {
-            $newGamePageLocale = new GamePageLocale();
-            $newGamePageLocale->setGamePage($gamePage);
-            $newGamePageLocale->setLocale($newLocale);
-            $this->em->persist($newGamePageLocale);
-
-            // set the inverse side
-            $gamePage->getGamePageLocales()->add($newGamePageLocale);
-        }
     }
 
     /**

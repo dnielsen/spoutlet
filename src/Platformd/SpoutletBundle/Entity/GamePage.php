@@ -930,4 +930,26 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
     {
         return $this->getGamePageLocales();
     }
+
+    /**
+     * A funny function where you create a new Instance of whatever the
+     * entities actual JoinedLocaleInterface is. You'll typically also
+     * need to set the relationship on that new object back to this object:
+     *
+     *     $newGamePageLocale = new GamePageLocale();
+     *     $newGamePageLocale->setGamePage($this);
+     *
+     *     return $newGamePageLocale;
+     *
+     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
+     */
+    public function createJoinedLocale()
+    {
+        $newGamePageLocale = new GamePageLocale();
+        $newGamePageLocale->setGamePage($this);
+
+        return $newGamePageLocale;
+    }
+
+
 }
