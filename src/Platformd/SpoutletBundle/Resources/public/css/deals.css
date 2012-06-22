@@ -23,7 +23,8 @@
     width: 600px;
     background: #303338;
     text-align: left;
-    padding: 5px
+    padding: 5px;
+    font-size: 16px;
 }
 
 .deals-features-col {
@@ -35,7 +36,8 @@
     width: 350px;
     background: #303338;
     text-align: left;
-    padding: 5px
+    padding: 5px;
+    font-size: 16px;
 }
 
 .deals-instructions-col {
@@ -46,6 +48,11 @@
 #deal-actions {
     width: 100%;
     text-align: center;
+}
+
+#deal-actions p {
+    padding: 5px;
+    text-align: left;
 }
 
 #deals-recommend {
@@ -64,31 +71,36 @@
 #deal-instructions ul li span.step-number { font-weight: bold; padding-right: 3px;}
 
 #deal-redeem-button {
-    margin: 5px auto;
+    margin: 0px auto;
     width: 224px;
     height: 43px;
-    cursor: pointer;
+    display: block;
 }
 
 #deal-countries {
     margin: 3px auto;
     text-align: left;
+    padding-bottom: 5px;
 }
 
 .dd-selected { color: #000; }
 .dd-selected:hover { color: #000; }
 
-/*.dd-select
-.dd-desc
-.dd-selected
-.dd-pointer
-.dd-pointer-down
-.dd-pointer-up
-.dd-options
-.dd-option
-.dd-options > li:last-child > .dd-option
-.dd-option:hover
-.dd-selected-description-truncated
-.dd-option-selected
-.dd-option-image, .dd-selected-image
-.dd-image-right .dd-container*/
+#deal-screenshots {
+    margin: 100px auto;
+}
+
+#deal-screenshots a {
+    display: inline-block;
+    margin: 40px 0 0 40px;
+}
+
+#deal-screenshots a img {
+    border: 2px #fe0303 solid;
+}
+
+#legal-verbiage {
+    margin: 10px auto;
+    padding: 5px;
+    font-size: 13px;
+}

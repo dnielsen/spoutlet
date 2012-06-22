@@ -1,12 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/deals.css') }}" />
-{% endblock %}
-
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
 {% block open_graph %}
@@ -58,7 +51,7 @@
                 <tr>
                     <td class="deals-features-col">
                         {% if deal.description %}
-                            <p>{{ deal.description | raw }}</p>
+                            {{ deal.description | raw }}
                         {% endif %}
                         {% if deal.websiteUrl %}
                         <div id="deal-websiteurl">
@@ -68,14 +61,19 @@
                     </td>
                     <td class="deals-instructions-col">
                         <div id="deal-actions">
+                            {% if userAlreadyRedeemed %}
+                                <p>{{ 'deal_redeem_success' | trans }}</p>
+                                <p class="notice-data">{{ 'deal_redeem_code' | trans }}: {{ dealCode }}</p>
+                            {% else %}
                             <div id="deal-countries">
                                 <select id="deal-countries">
-                                    <option value="1">United States</option>
-                                    <option value="2">Canada</option>
-                                    <option value="3">Mexico</option>
+                                    {% for country in countries %}
+                                        <option>{{ country }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
-                            <button id="deal-redeem-button" {% if deal.claimCodeButton %} style="background: url('{{ media_path(deal.claimCodeButton) }}') no-repeat; border: none;" {% endif %}></button>
+                            <a href="{{ path('deal_redeem', { "slug" : deal.slug }) }}" id="deal-redeem-button" {% if deal.claimCodeButton %} style="background: url('{{ media_path(deal.claimCodeButton) }}') no-repeat; border: none;" {% endif %}>{% if deal.claimCodeButton is null %}CLAIM CODE NOW {% endif %}</a>
+                            {% endif %}
                         </div>
                         <div id="deal-instructions">
                             <ul>
@@ -98,33 +96,32 @@
             </tbody>
         </table>
     </div>
-    <div class="deal-code-display">
-        {% if userAlreadyRedeemed %}
-        <p>
-            {{ 'deal_redeem_success' | trans }}
-        </p>
-
-        <p class="notice-data">
-            {{ 'deal_redeem_code' | trans }}: {{ dealCode }}
-        </p>
-    {% else %}
-        <a href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">Click here to redeem</a>
+    {% if (deal.mediaGalleryMedias | length) > 0 %}
+    <div id="deal-screenshots">
+        {% for media in deal.mediaGalleryMedias %}
+            {% set url = media_path(media) %}
+            <a href="{{ url }}" target="_blank">
+                <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+            </a>
+        {% endfor %}
+    </div>
     {% endif %}
+    {% if deal.legalVerbiage %}
+    <div id="legal-verbiage">
+        {{ deal.legalVerbiage }}
     </div>
+    {% endif %}
+{% endblock %}
 
-    <div class="deal-show-page">
-        <div class="std_2col">
-            <div>
-                <h1>
-                    {{ deal.name }}
-                </h1>
-        </div>
-    </div>
+{% block stylesheets %}
+    {{ parent() }}
 
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/deals.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.smoothdivscroll-1.2-min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var endsAt = new Date($('#deal-ends-date').val());
@@ -139,6 +136,26 @@
                 width: 223,
                 selectText: 'SELECT YOUR COUNTRY',
             });
+
+            var galleries = $('.media-gallery').adGallery({
+                loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+                display_next_and_prev: false,
+                display_back_and_forward: true,
+                slideshow: {
+                    enable: false,
+                    autostart: false,
+                    speed: 5000,
+                    stop_on_scroll: false
+                },
+                effect: 'fade'
+            });
+
+            // we actually grab the thumbnails, and remove the adgallery behavior
+            // this allows them to be clean, and we can do whatever next
+            // this is done because adgallery normally loads the image in the larger view
+            // but we don't even have the larger view
+            var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
+            mediaGalleryAnchors.unbind('click');
         });
     </script>
 

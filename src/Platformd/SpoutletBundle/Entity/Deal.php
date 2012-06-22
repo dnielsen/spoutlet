@@ -154,7 +154,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
      * @ORM\JoinTable(
      *   name="pd_deal_page_gallery_media",
      *   joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
@@ -175,6 +175,13 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @var text $legalVerbiage
+     *
+     * @ORM\Column(name="legal_verbiage", type="text", nullable=true)
+     */
+    private $legalVerbiage;
 
     /**
      * This is a raw HTML field, but with a special format.
@@ -558,6 +565,26 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set legalVerbiage
+     *
+     * @param text $legalVerbiage
+     */
+    public function setLegalVerbiage($legalVerbiage)
+    {
+        $this->legalVerbiage = $legalVerbiage;
+    }
+
+    /**
+     * Get legalVerbiage
+     *
+     * @return text
+     */
+    public function getLegalVerbiage()
+    {
+        return $this->legalVerbiage;
     }
 
     /**

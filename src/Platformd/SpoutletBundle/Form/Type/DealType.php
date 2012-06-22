@@ -17,7 +17,7 @@ class DealType extends AbstractType
             ->add('name', null, array('label' => 'Deal Name'))
             ->add('externalUrl', null, array(
                 'label' => 'External URL',
-                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'
+                'help'  => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'
             ))
             ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
                 'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
@@ -48,7 +48,7 @@ class DealType extends AbstractType
             ))
             ->add('thumbnailLarge', new MediaType(), array(
                 'image_label' => 'Large Thumbnail',
-                'image_help'  => 'Recommended size: 245x194',
+                'image_help'  => 'Recommended size: 245x94',
             ))
             ->add('thumbnailComment', new MediaType(), array(
                 'image_label' => 'Comment Thumbnail',
@@ -68,7 +68,7 @@ class DealType extends AbstractType
                 'attr'  => array('class' => 'ckeditor')
             ))
             ->add('redemptionInstructionsArray', 'collection', array(
-                'type' => 'textarea',
+                'type'  => 'textarea',
                 'label' => 'Redemption Instructions'
             ))
             ->add('websiteUrl', null, array(
@@ -76,11 +76,11 @@ class DealType extends AbstractType
                 'help'  => 'ex: http://www.facebook.com'
             ))
             ->add('mediaGalleryMedias', 'collection', array(
-                'label' => 'Screenshots',
-                'allow_add' => true,
-                'allow_delete' => true,
-                'type'      => new MediaType(),
-                'options'   => array(
+                'label'         => 'Screenshots',
+                'allow_add'     => true,
+                'allow_delete'  => true,
+                'type'          => new MediaType(),
+                'options'       => array(
                     'image_label' => 'Screenshot',
                     'image_help'  => 'This can be any size, and will probably be quite large.',
                 )
@@ -92,6 +92,7 @@ class DealType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ))
+            ->add('legalVerbiage', 'textarea', array('label' => 'Legal Vergiage'))
         ;
     }
 

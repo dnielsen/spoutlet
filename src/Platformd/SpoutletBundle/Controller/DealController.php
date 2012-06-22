@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Locale\Locale;
 
 class DealController extends Controller
 {
@@ -30,6 +31,7 @@ class DealController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
         $deal = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug);
+        $countries = Locale::getDisplayCountries('en');
 
         if (!$deal) {
             throw $this->createNotFoundException('No deal found in this site for slug '.$slug);
@@ -39,9 +41,10 @@ class DealController extends Controller
         $instructions = $deal->getCleanedRedemptionInstructionsArray();
         return array(
             'deal' => $deal,
-            'userAlreadyRedeemed' => true,
-            'dealCode' => '[deal code goes here]',
-            'redemptionSteps' => $instructions
+            'userAlreadyRedeemed' => false,
+            'dealCode' => 'alkjshdfljkasdfhaksdf',
+            'redemptionSteps' => $instructions,
+            'countries' => $countries
         );
     }
 
