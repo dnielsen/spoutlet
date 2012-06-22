@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
+use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\Deal
@@ -29,7 +30,7 @@ use DateTimezone;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\DealRepository")
  */
 
-class Deal implements LinkableInterface
+class Deal implements LinkableInterface, LocalesRelationshipInterface
 {
 
     const REDEMPTION_LINE_PREFIX = '* ';
@@ -210,9 +211,24 @@ class Deal implements LinkableInterface
      */
     protected $dealPools;
 
+    /**
+     * Holds the "many" locales relationship
+     *
+     * Don't set this directly, instead set "locales" directly, and a listener
+     * will take care of properly creating the DealLocale relationship
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="DealLocale", orphanRemoval=true, mappedBy="deal")
+     */
+    private $dealLocales;
+
+    private $locales;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
+        $this->dealPools = new ArrayCollection();
+        $this->gamePageLocales = new ArrayCollection();
     }
 
     /**
@@ -686,5 +702,54 @@ class Deal implements LinkableInterface
     static public function getValidStatuses()
     {
         return self::$validStatuses;
+    }
+
+    public function getLocales()
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(array $locales)
+    {
+        $this->locales = $locales;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDealLocales()
+    {
+        return $this->dealLocales;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $dealLocales
+     */
+    public function setDealLocales($dealLocales)
+    {
+        $this->dealLocales = $dealLocales;
+    }
+
+    /**
+     * Returns true if setLocales as already been called and the locales are set
+     *
+     * e.g.
+     *      return is_array($this->locales);
+     *
+     * @return boolean
+     */
+    public function areLocalesInitialized()
+    {
+        return is_array($this->locales);
+    }
+
+    /**
+     * Returns the ArrayCollection of
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getJoinedLocales()
+    {
+        return $this->getDealLocales();
     }
 }
