@@ -12,6 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\Validator\ExecutionContext;
+use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage
@@ -29,7 +30,7 @@ use Symfony\Component\Validator\ExecutionContext;
  * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
  * @Assert\Callback(methods={"validateExternalArchivedGamePage", "validatePossibilityOfSlug"})
  */
-class GamePage implements LinkableInterface
+class GamePage implements LinkableInterface, LocalesRelationshipInterface
 {
     const STATUS_PUBLISHED      = 'published';
     const STATUS_UNPUBLISHED    = 'unpublished';
@@ -664,7 +665,7 @@ class GamePage implements LinkableInterface
         return is_array($this->locales);
     }
 
-    public function setLocales($locales)
+    public function setLocales(array $locales)
     {
         $this->locales = $locales;
 
@@ -923,5 +924,10 @@ class GamePage implements LinkableInterface
             array(),
             null
         );
+    }
+
+    public function getJoinedLocales()
+    {
+        return $this->getGamePageLocales();
     }
 }

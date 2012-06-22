@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Platformd\SpoutletBundle\Locale\JoinedLocaleInterface;
 
 /**
  * Effectively a many-to-many join table between GamePage and locale (which is not a real table)
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ORM\Entity()
  */
-class GamePageLocale
+class GamePageLocale implements JoinedLocaleInterface
 {
     /**
      * @var integer $id
