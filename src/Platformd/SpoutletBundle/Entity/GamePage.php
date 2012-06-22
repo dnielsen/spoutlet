@@ -649,7 +649,7 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
 
     public function getLocales()
     {
-        return is_array($this->locales) ? $this->locales : array();
+        return $this->areLocalesInitialized() ? $this->locales : array();
     }
 
     /**

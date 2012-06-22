@@ -244,7 +244,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     {
         $this->mediaGalleryMedias = new ArrayCollection();
         $this->dealPools = new ArrayCollection();
-        $this->gamePageLocales = new ArrayCollection();
+        $this->dealLocales = new ArrayCollection();
     }
 
     /**
@@ -722,7 +722,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
 
     public function getLocales()
     {
-        return $this->locales;
+        return $this->areLocalesInitialized() ? $this->locales : array();
     }
 
     public function setLocales(array $locales)
