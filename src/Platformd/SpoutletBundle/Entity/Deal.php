@@ -224,6 +224,22 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
 
     private $locales;
 
+    /**
+     * @var \DateTime $created
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updatedAt;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
@@ -751,5 +767,57 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function getJoinedLocales()
     {
         return $this->getDealLocales();
+    }
+
+    /**
+     * A funny function where you create a new Instance of whatever the
+     * entities actual JoinedLocaleInterface is. You'll typically also
+     * need to set the relationship on that new object back to this object:
+     *
+     *     $newGamePageLocale = new GamePageLocale();
+     *     $newGamePageLocale->setGamePage($this);
+     *
+     *     return $newGamePageLocale;
+     *
+     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
+     */
+    public function createJoinedLocale()
+    {
+        $newDealLocale = new DealLocale();
+        $newDealLocale->setDeal($this);
+
+        return $newDealLocale;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 }
