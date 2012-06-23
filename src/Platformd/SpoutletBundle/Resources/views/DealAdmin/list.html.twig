@@ -8,6 +8,7 @@
         <tr>
             <th>Name</th>
             <th>Url</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,7 +21,31 @@
                 {% set url = deal.externalUrl ? deal.externalUrl : url('deal_show', {'slug': deal.slug, '_locale': site }) %}
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
-            <td><a href="{{ path('admin_deal_pool_index', {'dealId': deal.id}) }}">Manage pools</a></td>
+            <td>
+                {% if deal.isPublished %}
+                    <span class="label label-success">Published</span>
+
+                    {% if deal.isActive %}
+                        <span class="label label-success">Active</span>
+                    {% else %}
+                        <span class="label label-warning">Inactive</span>
+                    {% endif %}
+                {% else %}
+                    <span class="label label-warning">Unpublished</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+                        Action
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('admin_deal_edit', {'id': deal.id}) }}"><i class="icon-pencil"></i> Edit Deal</a></li>
+                        <li><a href="{{ path('admin_deal_pool_index', {'dealId': deal.id}) }}"><i class="icon-tasks"></i> Manage Pools</a></li>
+                    </ul>
+                </div>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
