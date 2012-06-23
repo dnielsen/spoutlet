@@ -4,6 +4,8 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use DateTime;
+use DateTimeZone;
 
 class DealRepository extends EntityRepository
 {
@@ -146,6 +148,7 @@ class DealRepository extends EntityRepository
 
         $qb->andWhere('d.startsAt < :now OR d.startsAt IS NULL');
         $qb->andWhere('d.endsAt > :now OR d.ends_at IS NULL');
+        $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
 
         return $qb;
     }
