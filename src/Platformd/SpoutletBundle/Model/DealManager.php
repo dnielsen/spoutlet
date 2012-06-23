@@ -93,6 +93,14 @@ class DealManager
     }
 
     /**
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findExpiredDeals()
+    {
+        return $this->getRepository()->findExpiredDealsForSite($this->getDatabaseSiteKey());
+    }
+
+    /**
      * Properly persists or unsets the media fields
      *
      * @param \Platformd\SpoutletBundle\Entity\Deal $deal

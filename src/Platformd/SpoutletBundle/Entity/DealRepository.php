@@ -62,8 +62,11 @@ class DealRepository extends EntityRepository
      */
     public function findFeaturedDealsForSite($site)
     {
-        return $this->createSiteQueryBuilder($site)
-            ->addOrderBy('d.createdAt', 'DESC')
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addActiveQueryBuilder($qb);
+        $this->addOrderByQuery($qb);
+
+        return $qb
             ->getQuery()
             ->setMaxResults(4)
             ->execute()
@@ -81,10 +84,28 @@ class DealRepository extends EntityRepository
     {
         $qb = $this->createSiteQueryBuilder($site);
         $this->addActiveQueryBuilder($qb);
+        $this->addOrderByQuery($qb);
 
-        $qb->andWhere('d.id NOT IN :featuredIds')
+        $qb->andWhere('d.id NOT IN (:featuredIds)')
             ->setParameter('featuredIds', self::objectsToIdsString($featuredDeals))
         ;
+
+        return $qb->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
+     * Finds all expired deals
+     *
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findExpiredDealsForSite($site)
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addExpiredQueryBuilder($qb);
+        $this->addOrderByQuery($qb);
 
         return $qb->getQuery()
             ->execute()
@@ -130,16 +151,16 @@ class DealRepository extends EntityRepository
     }
 
     /**
-     * Adds a query builder to return only "active" deals:
-     *      * deals that have already started
-     *      * deals that have not expired
-     *
-     * This allows both the startsAt and endsAt to be null, which implies
-     * that the Deal is active
-     *
-     * @param QueryBuilder|null $qb
-     * @return \Doctrine\ORM\QueryBuilder|null
-     */
+ * Adds a query builder to return only "active" deals:
+ *      * deals that have already started
+ *      * deals that have not expired
+ *
+ * This allows both the startsAt and endsAt to be null, which implies
+ * that the Deal is active
+ *
+ * @param QueryBuilder|null $qb
+ * @return \Doctrine\ORM\QueryBuilder|null
+ */
     private function addActiveQueryBuilder(QueryBuilder $qb = null)
     {
         if ($qb === null) {
@@ -147,8 +168,42 @@ class DealRepository extends EntityRepository
         }
 
         $qb->andWhere('d.startsAt < :now OR d.startsAt IS NULL');
-        $qb->andWhere('d.endsAt > :now OR d.ends_at IS NULL');
+        $qb->andWhere('d.endsAt > :now OR d.endsAt IS NULL');
         $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
+
+        return $qb;
+    }
+
+    /**
+     * Adds a query builder to return only "expired" deals:
+     *      * deals that have not already started
+     *      * deals that have expired
+     *
+     * This is the opposite of addActiveQueryBuilder
+     *
+     * @param QueryBuilder|null $qb
+     * @return \Doctrine\ORM\QueryBuilder|null
+     */
+    private function addExpiredQueryBuilder(QueryBuilder $qb = null)
+    {
+        if ($qb === null) {
+            $qb = $this->createQueryBuilder('d');
+        }
+
+        $qb->andWhere('d.startsAt > :now AND d.startsAt IS NOT NULL');
+        $qb->andWhere('d.endsAt < :now AND d.endsAt IS NOT NULL');
+        $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
+
+        return $qb;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function addOrderByQuery(QueryBuilder $qb)
+    {
+        $qb->addOrderBy('d.createdAt', 'DESC');
 
         return $qb;
     }

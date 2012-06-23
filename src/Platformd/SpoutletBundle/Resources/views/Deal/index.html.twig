@@ -9,7 +9,7 @@
         <h1>{{ 'deals' | trans }}</h1>
 
         <ul class="deals">
-            {% for deal in deals %}
+            {% for deal in allDeals %}
             <li>
                 {{ deal | pd_link_full(deal.name) }}
             </li>

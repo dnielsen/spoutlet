@@ -8,18 +8,20 @@ use Symfony\Component\Locale\Locale;
 
 class DealController extends Controller
 {
-
     /**
      * The main deals "list" page
      * @Template
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $deals = $em->getRepository('SpoutletBundle:Deal')->findAll();
+        $featuredDeals = $this->getDealManager()->findFeaturedDeals();
+        $allDeals = $this->getDealManager()->findActiveNonFeaturedDeals($featuredDeals);
+        $expiredDeals = $this->getDealManager()->findExpiredDeals();
 
         return array(
-            'deals'  => $deals
+            'featuredDeals'  => $featuredDeals,
+            'allDeals'  => $allDeals,
+            'expiredDeals'  => $expiredDeals,
         );
     }
 
@@ -76,5 +78,13 @@ class DealController extends Controller
         # redeem the deal here so that when they go back to the show page, the show action can see that this user has redeemed the key
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\DealManager
+     */
+    private function getDealManager()
+    {
+        return $this->get('platformd.model.deal_manager');
     }
 }
