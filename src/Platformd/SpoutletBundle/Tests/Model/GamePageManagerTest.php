@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Test\Model;
+namespace Platformd\SpoutletBundle\Tests\Model;
 
 use Platformd\SpoutletBundle\Test\WebTestCase;
 use Platformd\SpoutletBundle\Entity\Game;
