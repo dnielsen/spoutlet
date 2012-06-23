@@ -22,7 +22,7 @@ class DealRepository extends EntityRepository
     /**
      * @param string $slug
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function findOneBySlugForSite($slug, $site)
     {
@@ -37,7 +37,7 @@ class DealRepository extends EntityRepository
     /**
      * @param string $name
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function findOneByNameForSite($name, $site)
     {
