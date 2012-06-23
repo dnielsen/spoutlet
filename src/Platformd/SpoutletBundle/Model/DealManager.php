@@ -76,6 +76,23 @@ class DealManager
     }
 
     /**
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findFeaturedDeals()
+    {
+        return $this->getRepository()->findFeaturedDealsForSite($this->getDatabaseSiteKey());
+    }
+
+    /**
+     * @param array $featuredDeals
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findActiveNonFeaturedDeals(array $featuredDeals)
+    {
+        return $this->getRepository()->findAllActiveNonFeatureDealsForSite($this->getDatabaseSiteKey(), $featuredDeals);
+    }
+
+    /**
      * Properly persists or unsets the media fields
      *
      * @param \Platformd\SpoutletBundle\Entity\Deal $deal
