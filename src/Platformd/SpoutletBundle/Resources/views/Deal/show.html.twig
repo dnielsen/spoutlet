@@ -8,16 +8,18 @@
     <meta property="og:type" content="product" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if deal.openGraphOverride.thumbnail %}
-        <meta property="og:image" content="{{ deal.openGraphOverride.thumbnail | media_path }}" />
-    {% endif %}
-    {% if deal.openGraphOverride.description %}
-        <meta property="og:description" content="{{ deal.openGraphOverride.description | striptags }}" />
+    {% if deal.openGraphOverride %}
+        {% if deal.openGraphOverride.thumbnail %}
+            <meta property="og:image" content="{{ deal.openGraphOverride.thumbnail | media_path }}" />
+        {% endif %}
+        {% if deal.openGraphOverride.description %}
+            <meta property="og:description" content="{{ deal.openGraphOverride.description | striptags }}" />
+        {% endif %}
     {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="deals-header" style="background: url('{{ media_path(deal.banner) }}')">
+    <div class="deals-header" {{ deal.banner ? 'style="background: url('~media_path(deal.banner)~')"' : '' }}>
             <div class="deals-timeleft" style="display: none;">
                 {% if deal.endsAt > date() %}
                 <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y/m/d h:m:s') }}" />

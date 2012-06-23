@@ -18,6 +18,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\SpoutletBundle\Entity\Deal;
 
 /**
  * Base Feature context.
@@ -340,6 +341,35 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^I should be on the deal called "([^"]*)" in "([^"]*)"$/
+     */
+    public function iShouldBeOnTheDealCalledIn($dealName, $locale)
+    {
+        $em     = $this->getEntityManager();
+        /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
+        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $locale);
+
+        if (!$deal) {
+            throw new \Exception('Could not find the deal in the database');
+        }
+
+        $session    = $this->getSession();
+        $currentUrl = $session->getCurrentUrl();
+        $slug       = $deal->getSlug();
+
+        if (strpos($currentUrl, $slug) === false) {
+            throw new \Exception(sprintf('Not currently on the Deal.  Expected URL was "%s" but currently on "%s"', $slug, $currentUrl));
+        }
+
+        $statusCode = $session->getStatusCode();
+        $httpOk = 200;
+
+        if ($statusCode != $httpOk) {
+            throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
+        }
+    }
+
+    /**
      * Used to click on the frontend "show" URL when in an admin list section
      *
      * @Given /^I click on the URL for "([^"]*)"$/
@@ -501,6 +531,28 @@ class AbstractFeatureContext extends MinkContext
     {
         $cevoUrl = $this->getContainer()->getParameter('cevo_base_url');
         assertRegExp('#'.preg_quote($cevoUrl).'#', $this->getSession()->getCurrentUrl(), 'The URL does not contain our faked "CEVO" path - we are not on the main CEVO site.');
+    }
+
+    /**
+     * @Given /^there is a deal called "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsADealCalledIn($dealName, $locale)
+    {
+        if ($deal = $this->getEntityManager()->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
+            $this->getEntityManager()->remove($deal);
+            $this->getEntityManager()->flush();
+        }
+
+        $deal = new Deal();
+        $deal->setName($dealName);
+        $deal->setLocales(array($locale));
+        $deal->setStatus(Deal::STATUS_PUBLISHED);
+        $deal->setRedemptionInstructionsArray(array('Do something'));
+
+        $this->getContainer()->get('platformd.model.deal_manager')
+            ->saveDeal($deal);
+
+        return $deal;
     }
 
     /**

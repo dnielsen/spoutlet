@@ -37,7 +37,8 @@ class DealAdminController extends Controller
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
         return $this->render('SpoutletBundle:DealAdmin:list.html.twig', array(
-            'entities' => $deals
+            'entities' => $deals,
+            'site'     => $site,
         ));
     }
 
@@ -53,7 +54,7 @@ class DealAdminController extends Controller
         $form   = $this->createForm(new DealType(), $deal);
 
         if ($this->processForm($form, $request)) {
-            $this->setFlash('success', 'The Deal was created!');
+            $this->setFlash('success', 'The deal was created!');
 
             return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $deal->getId())));
         }
@@ -83,7 +84,7 @@ class DealAdminController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {
-            $this->setFlash('success', 'The Deal was saved!');
+            $this->setFlash('success', 'The deal was saved!');
 
             return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $id)));
         }

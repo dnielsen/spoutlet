@@ -35,6 +35,21 @@ class DealRepository extends EntityRepository
     }
 
     /**
+     * @param string $name
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     */
+    public function findOneByNameForSite($name, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('d.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
      * @param $site
      * @return \Doctrine\ORM\QueryBuilder
      */
