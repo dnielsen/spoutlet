@@ -86,9 +86,9 @@ class DealRepository extends EntityRepository
         $this->addActiveQueryBuilder($qb);
         $this->addOrderByQuery($qb);
 
-        $qb->andWhere('d.id NOT IN (:featuredIds)')
-            ->setParameter('featuredIds', self::objectsToIdsString($featuredDeals))
-        ;
+        if (!empty($featuredDeals)) {
+            $qb->andWhere($qb->expr()->notIn('d.id', self::objectsToIdsArray($featuredDeals)));
+        }
 
         return $qb->getQuery()
             ->execute()
@@ -210,24 +210,19 @@ class DealRepository extends EntityRepository
 
     /**
      * Utility function that takes an array of entities and returns
-     * a CSV of their ids:
-     *
-     *  4, 6, 10
-     *
-     * This is useful because a "WHERE IN" needs to to be a string, not
-     * an array, strangely enough
+     * an array of their ids
      *
      * @static
      * @param array $objects
-     * @return string
+     * @return array
      */
-    static private function objectsToIdsString(array $objects)
+    static private function objectsToIdsArray(array $objects)
     {
         $ids = array();
         foreach ($objects as $object) {
             $ids[] = $object->getId();
         }
 
-        return implode(',', $ids);
+        return $ids;
     }
 }

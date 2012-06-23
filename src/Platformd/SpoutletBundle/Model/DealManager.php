@@ -40,9 +40,10 @@ class DealManager
      *
      * This must be used instead of persisting it directly
      *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @param Deal $deal
+     * @param bool $flush
      */
-    public function saveDeal(Deal $deal)
+    public function saveDeal(Deal $deal, $flush = true)
     {
         $this->em->persist($deal);
 
@@ -50,7 +51,9 @@ class DealManager
         $this->handleMediaFields($deal);
         $this->handleMediaGallery($deal);
 
-        $this->em->flush();
+        if ($flush) {
+            $this->em->flush();
+        }
     }
 
     /**
