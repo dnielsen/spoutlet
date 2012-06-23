@@ -4,7 +4,10 @@
 
 {% block content %}
 
-<div class="deals-list-page">
+    {% if mainDeal %}
+        {% include 'SpoutletBundle:Deal:_dealHeaderCountdown.html.twig' with { 'deal': mainDeal } %}
+    {% endif %}
+
     <div>
         <h1>{{ 'deals' | trans }}</h1>
 
@@ -18,5 +21,5 @@
     </div>
 
     <div class="clear">&nbsp;</div>
-</div>
+
 {% endblock %}

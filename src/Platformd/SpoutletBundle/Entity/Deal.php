@@ -722,6 +722,11 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
         return $this->status;
     }
 
+    public function isPublished()
+    {
+        return $this->getStatus() == self::STATUS_PUBLISHED;
+    }
+
     /**
      * @param \Doctrine\Common\Collections\ArrayCollection $pools
      */
@@ -846,5 +851,18 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * TODO - THIS IS WRONG!!!!
+     *
+     * But Chris already has this written locally, so he should replace
+     * this with his when we collide.
+     *
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        return $this->isPublished();
     }
 }

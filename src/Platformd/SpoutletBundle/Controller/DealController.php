@@ -15,13 +15,15 @@ class DealController extends Controller
     public function indexAction()
     {
         $featuredDeals = $this->getDealManager()->findFeaturedDeals();
+        $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
         $allDeals = $this->getDealManager()->findActiveNonFeaturedDeals($featuredDeals);
         $expiredDeals = $this->getDealManager()->findExpiredDeals();
 
         return array(
-            'featuredDeals'  => $featuredDeals,
-            'allDeals'  => $allDeals,
-            'expiredDeals'  => $expiredDeals,
+            'mainDeal'          => $mainDeal,
+            'featuredDeals'     => $featuredDeals,
+            'allDeals'          => $allDeals,
+            'expiredDeals'      => $expiredDeals,
         );
     }
 
