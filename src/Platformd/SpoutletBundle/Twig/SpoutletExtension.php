@@ -307,7 +307,7 @@ class SpoutletExtension extends Twig_Extension
         $locale = $this->container->get('session')->getLocale();
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
         $northAmerica = in_array($locale, array('en_US'));
-        $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB'));
+        $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
