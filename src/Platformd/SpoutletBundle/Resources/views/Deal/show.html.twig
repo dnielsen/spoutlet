@@ -53,6 +53,7 @@
                             {% else %}
                             <div id="deal-countries">
                                 <select id="deal-countries">
+                                    <option value="">{{ 'choose_country' | trans }}</option>
                                     {% for country in countries %}
                                         <option>{{ country }}</option>
                                     {% endfor %}
