@@ -63,9 +63,12 @@
 
                             {# todo - run this through the KnpTimeBundle #}
                             <div>
-                                {% if deal.endsAt %}
+                                {% if deal.endsAtUtc %}
                                     <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
                                     <div>{{ time_diff(deal.endsAtUtc) }}</div>
+                                {% else %}
+                                    <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                    <div>&nbsp;</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -92,8 +95,13 @@
 
                             {# todo - run this through the KnpTimeBundle #}
                             <div>
-                                <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                <div>{{ 'time_remaining' }}</div>
+                                {% if deal.endsAtUtc %}
+                                    <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                    <div>{{ time_diff(deal.endsAtUtc) }}</div>
+                                {% else %}
+                                    <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                    <div>&nbsp;</div>
+                                {% endif %}
                             </div>
                         </div>
                             {% endfor %}
@@ -143,6 +151,7 @@
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
+                timezone: 0,
                 compact: false,
                 layout: $('#time-left').html()
             });
