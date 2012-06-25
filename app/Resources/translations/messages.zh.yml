@@ -411,6 +411,9 @@ deal_redeem_success: "You have successfully redeemed this deal.  Here is your de
 deal_redeem_code: Deal Code
 deal_show_expired: This deal has expired.
 
+featured_deals: Featured Deals
+expired_deals: Expired Deals
+
 platformd.user.account.deals: My Deals
 
 platformd.deal.deal: Deal

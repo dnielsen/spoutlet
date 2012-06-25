@@ -458,6 +458,9 @@ deal_instructions_table_header: INSTRUCTIONS
 deal_instructions_step: STEP
 deal_show_expired: This deal has expired.
 
+featured_deals: Featured Deals
+expired_deals: Expired Deals
+
 platformd.user.account.deals: My Deals
 
 platformd.deal.deal: Deal

@@ -226,7 +226,7 @@ class DealRepository extends EntityRepository
             $qb = $this->createQueryBuilder('d');
         }
 
-        $qb->andWhere('d.startsAt > :now AND d.startsAt IS NOT NULL');
+        $qb->andWhere('d.startsAt < :now AND d.startsAt IS NOT NULL');
         $qb->andWhere('d.endsAt < :now AND d.endsAt IS NOT NULL');
         $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
 
