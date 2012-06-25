@@ -8,6 +8,7 @@ use Platformd\SpoutletBundle\Form\Type\DealPoolType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Entity\Deal;
+use Symfony\Component\Locale\Locale;
 
 /**
 *
@@ -64,9 +65,12 @@ class DealPoolAdminController extends Controller
             var_dump($form->createView()->get('errors'));die;
         }
 
+        $countries = Locale::getDisplayCountries('en');
+
         return $this->render('SpoutletBundle:DealPoolAdmin:new.html.twig', array(
             'form'      => $form->createView(),
-            'dealId'  => $deal->getId()
+            'dealId'  => $deal->getId(),
+            'countries' => $countries
         ));
     }
 
@@ -101,10 +105,13 @@ class DealPoolAdminController extends Controller
             }
         }
 
+        $countries = Locale::getDisplayCountries('en');
+
         return $this->render('SpoutletBundle:DealPoolAdmin:edit.html.twig', array(
             'pool' => $pool,
             'form' => $form->createView(),
             'dealId' => $dealId,
+            'countries' => $countries
         ));
     }
 
