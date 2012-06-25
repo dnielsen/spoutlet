@@ -888,7 +888,12 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     }
 
     public function hasExpired() {
-        return $this->getEndsAt() && TzUtil::isNowAfter($this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
+        // it can never expire without an end date
+        if (!$this->getEndsAt()) {
+            return false;
+        }
+
+        return TzUtil::isNowAfter($this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
     }
 
     /**
