@@ -97,6 +97,13 @@
         {{ deal.legalVerbiage }}
     </div>
     {% endif %}
+
+    <div class="std_2col">
+        <div class="right">&nbsp;</div>
+        <div class="left">
+            {% render "FOSCommentBundle:Thread:showFlat" with {"id": deal.threadId } %}
+        </div>
+    </div>
 {% endblock %}
 
 {% block stylesheets %}

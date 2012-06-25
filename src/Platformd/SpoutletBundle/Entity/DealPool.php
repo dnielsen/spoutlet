@@ -27,6 +27,12 @@ class DealPool extends Pool
     protected $deal;
 
     /**
+     * @var \Platformd\SpoutletBundle\Entity\Country[]
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country")
+     */
+    protected $allowedCountries;
+
+    /**
      * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function getDeal()

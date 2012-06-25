@@ -93,3 +93,10 @@ platformd.deal.assigned.view_deal: View Deal
 platformd.deal.view_deal_site: Go to Site
 platformd.account_page.deal.your_deal_keys: My Deals
 platformd.deal.you_have_not_redeemed_any_codes: You have not redeemed any deal codes yet.
+
+platformd.deal_pool.admin.title: Manage Deal Pools
+platformd.deal_pool.first_active_used: The first pool on this list will be the first pool used.
+platformd.deal_pool.admin.create: Create New Pool
+platformd.deal_pool.admin.save_deal_pool: Save Pool
+platformd.deal_pool.pool: Pool
+platformd.deal_pool.admin.saved: Your pool was saved successfully.

@@ -38,7 +38,9 @@ class SiteProtectionListener
         '^/cevo/api/stub',
         '^/media',
         '^/login',
-        '^/account'
+        '^/account',
+        // we have to "ok" comments, since they're used on some features for everyone
+        '^/comments',
     );
 
     static private $urlMap = array(
