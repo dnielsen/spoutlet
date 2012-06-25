@@ -875,4 +875,8 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
 
         return TzUtil::isNowBetween($this->getStartsAt(), $this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
     }
+
+    public function hasExpired() {
+        return TzUtil::isNowAfter($this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
+    }
 }

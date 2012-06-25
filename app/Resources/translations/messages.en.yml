@@ -456,6 +456,7 @@ deal_second: Second
 deal_features_table_header: FEATURES
 deal_instructions_table_header: INSTRUCTIONS
 deal_instructions_step: STEP
+deal_show_expired: This deal has expired.
 
 platformd.user.account.deals: My Deals
 

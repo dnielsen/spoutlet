@@ -60,4 +60,20 @@ class TimeZoneUtil
 
         return !$nowBeforeStart && !$nowAfterEnd;
     }
+
+    static public function isNowAfter($dt, \DateTimeZone $tz = null) {
+
+        if (is_null($dt)) { # assuming null = +infinity
+            return false;
+        }
+
+        if (is_null($tz)) {
+            $tz = new \DateTimeZone('UTC');
+        }
+
+        $nowUtc = self::getUtcNow();
+        $dtUtc  = self::getUtc($dt, $tz);
+
+        return $nowUtc > $dtUtc;
+    }
 }

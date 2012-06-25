@@ -48,6 +48,8 @@
                             {% if userAlreadyRedeemed %}
                                 <p>{{ 'deal_redeem_success' | trans }}</p>
                                 <p class="notice-data">{{ 'deal_redeem_code' | trans }}: {{ dealCode }}</p>
+                            {% elseif deal.hasExpired %}
+                                <p>{{ 'deal_show_expired' | trans }}</p>
                             {% else %}
                             <div id="deal-countries">
                                 <select id="deal-countries">
