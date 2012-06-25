@@ -48,7 +48,7 @@ class DealType extends AbstractType
             ))
             ->add('thumbnailLarge', new MediaType(), array(
                 'image_label' => 'Large Thumbnail',
-                'image_help'  => 'Recommended size: 245x94',
+                'image_help'  => 'Recommended size: 138x83',
             ))
             ->add('thumbnailComment', new MediaType(), array(
                 'image_label' => 'Comment Thumbnail',
@@ -93,6 +93,8 @@ class DealType extends AbstractType
                 'expanded' => true,
             ))
             ->add('legalVerbiage', 'textarea', array('label' => 'Legal Vergiage'))
+            ->add('topColor', null, array('label' => 'Top background color'))
+            ->add('bottomColor', null, array('label' => 'Bottom background color'))
         ;
     }
 

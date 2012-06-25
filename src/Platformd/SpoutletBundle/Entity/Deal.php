@@ -124,7 +124,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     private $banner;
 
     /**
-     * The large thumbnail for the deal (245px by 194px)
+     * The large thumbnail for the deal (138px by 83px)
      *
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
@@ -165,6 +165,18 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
      * )
      */
     protected $mediaGalleryMedias;
+
+    /**
+     * Top gradient color value
+     * @ORM\Column(name="top_color", type="string", length=255, nullable=true)
+     */
+    private $topColor;
+
+    /**
+     * Bottom gradient color value
+     * @ORM\Column(name="bottom_color", type="string", length=255, nullable=true)
+     */
+    private $bottomColor;
 
     /**
      *
@@ -930,5 +942,45 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    /**
+     * Set topColor
+     *
+     * @param string $topColor
+     */
+    public function setTopColor($topColor)
+    {
+        $this->topColor = $topColor;
+    }
+
+    /**
+     * Get topColor
+     *
+     * @return string
+     */
+    public function getTopColor()
+    {
+        return $this->topColor;
+    }
+
+    /**
+     * Set bottomColor
+     *
+     * @param string $bottomColor
+     */
+    public function setBottomColor($bottomColor)
+    {
+        $this->bottomColor = $bottomColor;
+    }
+
+    /**
+     * Get bottomColor
+     *
+     * @return string
+     */
+    public function getBottomColor()
+    {
+        return $this->bottomColor;
     }
 }
