@@ -11,7 +11,28 @@
     <div class="std_2col">
         <div class="right">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-            {{ 'comments' }}
+
+            <div class="deals-comments">
+                <h3>{{ 'deal_comments' | trans }}</h3>
+
+                <ul>
+                    {% for commentObject in commentsArr %}
+                    {% set comment = commentObject.comment %}
+                    {% set deal = commentObject.object %}
+                    <li>
+                        {% set dealCommentImage = deal.thumbnailComment ? media_path(deal.thumbnailComment) : dealDeafultImage %}
+                        <img src="{{ dealCommentImage }}" alt="{{ deal.name }}" />
+                        <a href="{{ deal | pd_link }}">{{ deal.name }}</a>
+                        <br/>
+                        {{ 'by' | trans }} {{ comment.author }}
+                        <br/>
+                        {{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}
+                    </li>
+                    {% else %}
+                    {{ 'fos_comment_comment_new_headline_first' | trans({}, 'FOSCommentBundle') }}
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
         <div class="left">
             <div class="widget-66">

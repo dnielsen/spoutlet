@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Locale\Locale;
+use Platformd\SpoutletBundle\Entity\Deal;
 
 class DealController extends Controller
 {
@@ -18,12 +19,16 @@ class DealController extends Controller
         $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
         $allDeals = $this->getDealManager()->findActiveNonFeaturedDeals($featuredDeals);
         $expiredDeals = $this->getDealManager()->findExpiredDeals();
+        $commentsArr = $this->getCommentManager()
+            ->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5)
+        ;
 
         return array(
             'mainDeal'          => $mainDeal,
             'featuredDeals'     => $featuredDeals,
             'allDeals'          => $allDeals,
             'expiredDeals'      => $expiredDeals,
+            'commentsArr'       => $commentsArr,
         );
     }
 
@@ -123,5 +128,13 @@ class DealController extends Controller
     private function getDealManager()
     {
         return $this->get('platformd.model.deal_manager');
+    }
+
+    /**
+     * @return \Platformd\CommentBundle\Model\CommentManager
+     */
+    protected function getCommentManager()
+    {
+        return $this->container->get('fos_comment.manager.comment');
     }
 }

@@ -7,6 +7,7 @@ imports:
     - { resource: "@GiveawayBundle/Resources/config/services.yml" }
     - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
     - { resource: "@MediaBundle/Resources/config/services.yml" }
+    - { resource: "@CommentBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -286,6 +287,9 @@ fos_comment:
             default: date_desc
         blamer:
             comment: fos_comment.blamer.comment.security
+        manager:
+            # our own custom CommentManager
+            comment: platformd.comment.model.comment_manager
 
 ewz_recaptcha:
     public_key: %recaptcha.public_key%

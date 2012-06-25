@@ -26,7 +26,7 @@ class CommentController extends BaseCommentController
             throw new NotFoundHttpException('Comment not found.');
         }
 
-        $url = $this->getUrlForObject($this->getObjectFromThread($comment->getThread()));
+        $url = $this->getUrlForObject($this->getCommentManager()->getObjectFromThread($comment->getThread()));
         $url .= '#commentsView';
         
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -48,7 +48,7 @@ class CommentController extends BaseCommentController
     protected function onCreateSuccess(Form $form)
     {
         // Did we post a comment on a giveway or an event, news maybe ?
-        $obj = $this->getObjectFromThread($form->getData()->getThread());
+        $obj = $this->getCommentManager()->getObjectFromThread($form->getData()->getThread());
 
         $url = $this->getUrlForObject($obj);
 
@@ -69,69 +69,6 @@ class CommentController extends BaseCommentController
         return $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('SpoutletBundle:AbstractEvent')
             ->findOneBy(array('slug' => $slug));
-    }
-
-    /**
-     * Attempts to look at the Thread and find the right object
-     *
-     * todo - this will eventually need to be more elegant (aka, it's damned disaster...)
-     *
-     * @param \FOS\CommentBundle\Entity\Thread $thread
-     */
-    private function getObjectFromThread(Thread $thread)
-    {
-        $id = $thread->getId();
-
-        // case news
-        if (strpos($id, 'news-') === 0) {
-            // this is a news item (news-zh-15)
-            $pieces = explode('-', $id);
-            if (count($pieces) != 3) {
-                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
-            }
-
-            $newsId = $pieces[2];
-            $news = $this->container->get('doctrine.orm.entity_manager')
-                ->getRepository('NewsBundle:News')
-                ->find($newsId)
-            ;
-
-            if (!$news) {
-                throw new NotFoundHttpException(sprintf('Cannot find News from thread id "%s"', $id));
-            }
-
-            return $news;
-        }
-
-        // case deal
-        if (strpos($id, 'deal-') === 0) {
-            // this is a deal (deal-15)
-            $pieces = explode('-', $id);
-            if (count($pieces) != 2) {
-                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
-            }
-
-            $dealId = $pieces[1];
-            $deal = $this->container->get('doctrine.orm.entity_manager')
-                ->getRepository('SpoutletBundle:Deal')
-                ->find($dealId)
-            ;
-
-            if (!$deal) {
-                throw new NotFoundHttpException(sprintf('Cannot find Deal from thread id "%s"', $id));
-            }
-
-            return $deal;
-        }
-
-        // everything else is an abstract event and stores *just* the slug as the id
-        $event = $this->findGiveawayBySlug($id);
-
-        if (!$event) {
-            throw new NotFoundHttpException(sprintf('Cannot find abstract event form thread id "%s"', $id));
-        }
-
-        return $event;
     }
 
     /**
@@ -175,5 +112,13 @@ class CommentController extends BaseCommentController
     {
         return $this->container->get('platformd.link.linkable_manager')
             ->link($linkableObj);
+    }
+
+    /**
+     * @return \Platformd\CommentBundle\Model\CommentManager
+     */
+    protected function getCommentManager()
+    {
+        return $this->container->get('fos_comment.manager.comment');
     }
 }
