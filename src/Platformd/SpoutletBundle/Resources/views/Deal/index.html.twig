@@ -16,9 +16,9 @@
                 <li>
                     <a href="{{ deal | pd_link }}">
                         {% if deal.thumbnailLarge %}
-                        <img src="{{ media_path(deal.thumbnailLarge, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ deal.name }}" />
+                            <img src="{{ media_path(deal.thumbnailLarge) }}" alt="{{ deal.name }}" />
                         {% else %}
-                        <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ deal.name }}" />
+                            <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' }}" alt="{{ deal.name }}" />
                         {% endif %}
                     </a>
 

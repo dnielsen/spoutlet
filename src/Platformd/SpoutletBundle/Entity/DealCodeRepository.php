@@ -39,7 +39,7 @@ class DealCodeRepository extends CodeRepository
         $qb  = $this->createForDealQueryBuilder($deal);
         $this->addAssignedQueryBuilder($qb);
 
-        return (int) $qb
+        return (int) $qbb
             ->select('COUNT(k.id)')
             ->getQuery()
             ->getSingleScalarResult()
@@ -102,6 +102,28 @@ class DealCodeRepository extends CodeRepository
             ->getSingleScalarResult();
 
         return $count > 0;
+    }
+
+     /**
+     * Retrieves the deal code information for a user and deal
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @return \Platormd\SpoutletBundle\Entity\DealCode
+     */
+    public function getUserAssignedCodeForDeal(User $user, Deal $deal)
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->leftJoin('k.pool', 'p')
+            ->andWhere('k.user = :user')
+            ->andWhere('p.deal = :deal')
+            ->setParameters(array(
+                'user'      => $user,
+                'deal'  => $deal,
+            ))
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

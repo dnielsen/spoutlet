@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
+use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 
 /**
  * Platformd\SpoutletBundle\Entity\Deal
@@ -92,13 +93,13 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     private $game;
 
     /**
-     * @var \DateTime $startsAt
+     * @var \DateTime $startsAtUtc
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     private $startsAt;
 
     /**
-     * @var \DateTime $endsAt
+     * @var \DateTime $endsAtUtc
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     private $endsAt;
@@ -346,19 +347,28 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getStartsAt()
-    {
-        return $this->startsAt;
-    }
-
-    /**
      * @param \DateTime $startsAt
      */
     public function setStartsAt(\DateTime $startsAt = null)
     {
         $this->startsAt = $startsAt;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartsAt()
+    {
+       return $this->startsAt;
+    }
+
+     /**
+     * @param \DateTime $endsAt
+     */
+    public function setEndsAt(\DateTime $endsAt = null)
+    {
+        $this->endsAt = $endsAt;
     }
 
     /**
@@ -367,14 +377,6 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function getEndsAt()
     {
         return $this->endsAt;
-    }
-
-    /**
-     * @param \DateTime $startsAt
-     */
-    public function setEndsAt(\DateTime $endsAt = null)
-    {
-        $this->endsAt = $endsAt;
     }
 
     /**
@@ -743,6 +745,15 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
         return $this->dealPools;
     }
 
+    public function getActivePool()
+    {
+        foreach($this->getDealPools() as $pool) {
+            if ($pool->getIsActive()) {
+                return $pool;
+            }
+        }
+    }
+
     /**
      * @static
      * @return array
@@ -854,15 +865,14 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
-     * TODO - THIS IS WRONG!!!!
-     *
-     * But Chris already has this written locally, so he should replace
-     * this with his when we collide.
-     *
-     * @return bool
+     * @return boolean
      */
-    public function getIsActive()
-    {
-        return $this->isPublished();
+    public function isActive() {
+
+        if ($this->getStatus() !== self::STATUS_PUBLISHED) {
+            return false;
+        }
+
+        return TzUtil::isNowBetween($this->getStartsAt(), $this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
     }
 }

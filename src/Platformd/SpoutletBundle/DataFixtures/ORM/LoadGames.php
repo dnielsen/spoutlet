@@ -37,6 +37,11 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $game4->setName('Skyrim');
         $manager->persist($game4);
 
+        $game5 = new Game();
+        $game5->setCategory('rpg');
+        $game5->setName('Diablo III');
+        $manager->persist($game5);
+
         $manager->flush();
 
         $gpManager = $this->getGamePageManager();

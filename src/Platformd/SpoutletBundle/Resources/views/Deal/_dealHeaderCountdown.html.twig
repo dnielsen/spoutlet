@@ -1,4 +1,4 @@
-<div class="deals-header" {{ deal.banner ? 'style="background: url('~media_path(deal.banner)~')"' : '' }}>
+<div class="deals-header">{% if deal.banner %}<img src="{{ media_path(deal.banner) }}" />{% endif %}
     <div class="deals-timeleft" style="display: none;">
         {% if deal.endsAt > date() %}
         <input id="deal-ends-date" type="hidden" value="{{ deal.endsAt | date('Y/m/d h:m:s') }}" />
