@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
+use \Platformd\SpoutletBundle\Entity\Game as Game;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
@@ -22,6 +23,24 @@ class DealRepository extends EntityRepository
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * Get all published deals for this site and game
+     *
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findAllPublishedForSiteNewestFirstForGame($site, Game $game)
+    {
+
+        $qb = $this->createSiteQueryBuilder($site, true);
+        $qb = $this->addActiveQueryBuilder($qb);
+        $qb = $this->addGameQueryBuilder($qb, $game);
+
+        return $qb->addOrderBy('d.createdAt', 'DESC')
+            ->getQuery()
+            ->execute();
     }
 
     /**
@@ -146,6 +165,23 @@ class DealRepository extends EntityRepository
         $qb->andWhere('d.status = :publishedStatus')
             ->setParameter('publishedStatus', Deal::STATUS_PUBLISHED)
         ;
+
+        return $qb;
+    }
+
+    /**
+     * Adds game to a query
+     *
+     * @param null|QueryBuilder $qb
+     * @return \Doctrine\ORM\QueryBuilder|null|QueryBuilder
+     */
+    private function addGameQueryBuilder(QueryBuilder $qb = null, Game $game)
+    {
+        if ($qb === null) {
+            $qb = $this->createQueryBuilder('d');
+        }
+
+        $qb->andWhere('d.game = :game')->setParameter('game', $game);
 
         return $qb;
     }

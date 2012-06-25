@@ -52,12 +52,18 @@ class GamePageController extends Controller
             ->findActivesForGame($gamePage->getGame(), $this->getLocale())
         ;
 
-        $feedNewsItems = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getLocale());
+        $dealRepo = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Deal');
+
+        $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($this->getLocale(), $gamePage->getGame());
+        $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getLocale());
 
         return array(
             'gamePage' => $gamePage,
             'feedEvents' => $feedEvents,
             'feedNewsItems' => $feedNewsItems,
+            'feedDeals' => $deals
         );
     }
 
