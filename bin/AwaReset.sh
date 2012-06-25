@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v0.8              |"
+echo "|  Alienware Arena Reset Script v0.9              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -72,7 +72,9 @@ echo "  - Migrating database..."
 
 echo "  - Loading fixtures..."
 
-./app/console doctrine:fixtures:load > /dev/null
+# Note: this needs to be --append, because some database data comes from the migrations
+
+./app/console doctrine:fixtures:load --append > /dev/null
 
 echo
 echo "Resetting test database:"
@@ -90,7 +92,9 @@ echo "  - Migrating database..."
 
 echo "  - Loading fixtures..."
 
-./app/console doctrine:fixtures:load --env=test > /dev/null
+# Note: this needs to be --append, because some database data comes from the migrations
+
+./app/console doctrine:fixtures:load --append --env=test > /dev/null
 
 echo
 echo "Clearing caches:"
