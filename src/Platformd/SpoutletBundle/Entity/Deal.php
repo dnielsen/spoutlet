@@ -93,13 +93,13 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     private $game;
 
     /**
-     * @var \DateTime $startsAtUtc
+     * @var \DateTime $startsAt
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     private $startsAt;
 
     /**
-     * @var \DateTime $endsAtUtc
+     * @var \DateTime $endsAt
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     private $endsAt;
@@ -869,7 +869,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
      */
     public function isActive() {
 
-        if ($this->getStatus() !== self::STATUS_PUBLISHED) {
+        if (!$this->isPublished()) {
             return false;
         }
 
