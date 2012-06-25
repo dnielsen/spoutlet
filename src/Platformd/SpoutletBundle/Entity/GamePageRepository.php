@@ -107,6 +107,18 @@ class GamePageRepository extends EntityRepository
         ;
     }
 
+    public function findAllByGamePagesByCategory($category, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->leftJoin('gp.game', 'g')
+            ->andWhere('g.category = :category')
+            ->andWhere('gp.status = :status')
+            ->setParameter('category', $category)
+            ->setParameter('status', GamePage::STATUS_PUBLISHED)
+            ->getQuery()
+            ->execute();
+    }
+
     /**
      * @param $site
      * @return \Doctrine\ORM\QueryBuilder
