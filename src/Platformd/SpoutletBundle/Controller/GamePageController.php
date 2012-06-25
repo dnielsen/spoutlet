@@ -16,19 +16,23 @@ class GamePageController extends Controller
     {
         $this->enforceAgeProtection(self::AGE_LIMIT);
 
-        $categorizedGames = $this->getGamePageManager()
-            ->findActiveGamesInCategoriesForAge($this->getAgeManager()->getUsersAge())
-        ;
-
         $firstGame = $this->getGamePageManager()->findMostRecentGamePageForAge($this->getAgeManager()->getUsersAge());
 
         // todo - make this the real query, this is easy while stubbing out the look of the page
         $archives = $this->getGamePageManager()->findArchives();
 
+        $actionPages    = $this->getGamePageManager()->findAllByGamePagesByCategory('action');
+        $rpgPages       = $this->getGamePageManager()->findAllByGamePagesByCategory('rpg');
+        $strategyPages  = $this->getGamePageManager()->findAllByGamePagesByCategory('strategy');
+        $otherPages     = $this->getGamePageManager()->findAllByGamePagesByCategory('other');
+
         return array(
-            'categorizedGames'  => $categorizedGames,
             'firstGame'         => $firstGame,
             'archives'          => $archives,
+            'actionPages'       => $actionPages,
+            'rpgPages'          => $rpgPages,
+            'strategyPages'     => $strategyPages,
+            'otherPages'        => $otherPages
         );
     }
 

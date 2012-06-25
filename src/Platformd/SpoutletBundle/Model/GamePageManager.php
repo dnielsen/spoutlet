@@ -65,6 +65,13 @@ class GamePageManager
         return $this->getRepository()->findAllForSiteNewestFirst($site);
     }
 
+    public function findAllByGamePagesByCategory($category)
+    {
+        $pages = $this->getRepository()->findAllByGamePagesByCategory($category, $this->getDatabaseSiteKey());
+
+        return $pages;
+    }
+
     /**
      * Returns an array of arrays of active GamePage objects relevant for this user
      *
