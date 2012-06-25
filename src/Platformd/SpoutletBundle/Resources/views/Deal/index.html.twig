@@ -65,7 +65,7 @@
                             <div>
                                 {% if deal.endsAt %}
                                     <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                    <div>{{ time_diff(deal.endsAt) }}</div>
+                                    <div>{{ time_diff(deal.endsAtUtc) }}</div>
                                 {% endif %}
                             </div>
                         </div>
