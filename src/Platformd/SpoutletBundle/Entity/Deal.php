@@ -38,6 +38,8 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     const STATUS_PUBLISHED       = 'published';
     const STATUS_UNPUBLISHED     = 'unpublished';
 
+    const COMMENT_PREFIX         = 'deal-';
+
     private static $validStatuses = array(
         self::STATUS_PUBLISHED,
         self::STATUS_UNPUBLISHED
@@ -878,5 +880,17 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
 
     public function hasExpired() {
         return TzUtil::isNowAfter($this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
+    }
+
+    /**
+     * Used to return the commenting thread id that should be used for this deal
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A deal needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }

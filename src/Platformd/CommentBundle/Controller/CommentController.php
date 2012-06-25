@@ -21,18 +21,13 @@ class CommentController extends BaseCommentController
     {
         $manager = $this->container->get('fos_comment.manager.comment');
 
+        /** @var $comment \Platformd\CommentBundle\Entity\Comment */
         if (!$comment = $manager->findCommentById($id)) {
-            
             throw new NotFoundHttpException('Comment not found.');
         }
-        
-        // Not sure if the CommentBundle provides a way to delete comments easily
-        // so we just use the ORM directly
-        $threadSlug = $comment->getThread()->getId();
 
-        $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
-        
-        $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
+        $url = $this->getUrlForObject($this->getObjectFromThread($comment->getThread()));
+        $url .= '#commentsView';
         
         $em = $this->container->get('doctrine.orm.entity_manager');
 
@@ -52,27 +47,10 @@ class CommentController extends BaseCommentController
      */
     protected function onCreateSuccess(Form $form)
     {
-        $threadId = $form->getData()->getThread()->getId();
-
         // Did we post a comment on a giveway or an event, news maybe ?
         $obj = $this->getObjectFromThread($form->getData()->getThread());
 
-        if ($obj instanceof LinkableInterface) {
-            $url = $this->getLinkableUrl($obj);
-        } else {
-            // todo - refactor everything to be a LinkableInterface
-            if ($obj instanceof Event) {
-                $route = 'events_detail';
-            } elseif ($obj instanceof Giveaway) {
-                $route = 'giveaway_show';
-            } elseif ($obj instanceof Sweepstakes) {
-                $route = 'sweepstakes_show';
-            } else {
-                throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
-            }
-
-            $url = $this->container->get('router')->generate($route, array('slug' => $threadId));
-        }
+        $url = $this->getUrlForObject($obj);
 
         // append the dom ID to the comment, for auto-scroll
         $url .= '#comment-message-'.$form->getData()->getId();
@@ -88,7 +66,6 @@ class CommentController extends BaseCommentController
      */
     private function findGiveawayBySlug($slug) 
     {
-
         return $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('SpoutletBundle:AbstractEvent')
             ->findOneBy(array('slug' => $slug));
@@ -97,7 +74,7 @@ class CommentController extends BaseCommentController
     /**
      * Attempts to look at the Thread and find the right object
      *
-     * todo - this will eventually need to be more elegant
+     * todo - this will eventually need to be more elegant (aka, it's damned disaster...)
      *
      * @param \FOS\CommentBundle\Entity\Thread $thread
      */
@@ -126,6 +103,27 @@ class CommentController extends BaseCommentController
             return $news;
         }
 
+        // case deal
+        if (strpos($id, 'deal-') === 0) {
+            // this is a deal (deal-15)
+            $pieces = explode('-', $id);
+            if (count($pieces) != 2) {
+                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
+            }
+
+            $dealId = $pieces[1];
+            $deal = $this->container->get('doctrine.orm.entity_manager')
+                ->getRepository('SpoutletBundle:Deal')
+                ->find($dealId)
+            ;
+
+            if (!$deal) {
+                throw new NotFoundHttpException(sprintf('Cannot find Deal from thread id "%s"', $id));
+            }
+
+            return $deal;
+        }
+
         // everything else is an abstract event and stores *just* the slug as the id
         $event = $this->findGiveawayBySlug($id);
 
@@ -134,6 +132,37 @@ class CommentController extends BaseCommentController
         }
 
         return $event;
+    }
+
+    /**
+     * Returns the URL to the given object
+     *
+     * todo - this all needs to jsut use the linkable interface. This is done on the other branch :/
+     *
+     * @param $obj
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    private function getUrlForObject($obj)
+    {
+        if ($obj instanceof LinkableInterface) {
+            $url = $this->getLinkableUrl($obj);
+        } else {
+            // todo - refactor everything to be a LinkableInterface
+            if ($obj instanceof Event) {
+                $route = 'events_detail';
+            } elseif ($obj instanceof Giveaway) {
+                $route = 'giveaway_show';
+            } elseif ($obj instanceof Sweepstakes) {
+                $route = 'sweepstakes_show';
+            } else {
+                throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
+            }
+
+            $url = $this->container->get('router')->generate($route, array('slug' => $obj->getSlug()));
+        }
+
+        return $url;
     }
 
     /**
