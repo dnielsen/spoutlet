@@ -24,7 +24,7 @@
                     {% for deal in featuredDeals %}
                     {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
-                        <div style="display: inline-table; padding: 10px;">
+                        <div style="display: inline-table; padding: 6px;">
                             <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px;">
                                 <img src="{{ dealImage }}" alt="{{ deal.name }}" style="width: 138px; height: 83px; border: 1px solid #4a4a4a;" />
                             </a>
@@ -51,7 +51,7 @@
                             {% for deal in allDeals %}
                             {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
-                            <div style="display: inline-table; padding: 10px;">
+                            <div style="display: inline-table; padding: 5px;">
                             <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px;">
                                 <img src="{{ dealImage }}" alt="{{ deal.name }}" style="width: 138px; height: 83px; border: 1px solid #4a4a4a;" />
                             </a>
