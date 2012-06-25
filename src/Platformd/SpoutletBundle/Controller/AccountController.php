@@ -13,17 +13,17 @@ class AccountController extends Controller
         if ($username) {
             $manager = $this->get('fos_user.user_manager');
             if (!$user = $manager->findUserByUsername($username)) {
-                
+
                 throw $this->createNotFoundException(sprintf('Unable to find an user with username "%s"', $username));
             }
         } else if ($context->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->get('security.context')->getToken()->getUser();
         } else {
-            
+
             throw $this->createNotFoundException();
         }
 
-		return $this->render('FOSUserBundle:Profile:show.html.twig', array('user' => $user));		
+		return $this->render('FOSUserBundle:Profile:show.html.twig', array('user' => $user));
 	}
 
 
@@ -70,6 +70,26 @@ class AccountController extends Controller
 
         return $this->render('SpoutletBundle:Account:giveaways.html.twig', array(
             'keyRequests' => $keyRequests,
+        ));
+    }
+
+    /**
+     * Displays a list of deals that this user has redeemed
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function dealsAction()
+    {
+        $this->checkSecurity();
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $dealCodes = $em->getRepository('SpoutletBundle:DealCode')
+            ->getUserAssignedCodes($this->getUser())
+        ;
+
+        return $this->render('SpoutletBundle:Account:deals.html.twig', array(
+            'dealCodes' => $dealCodes,
         ));
     }
 

@@ -456,3 +456,13 @@ deal_second: Second
 deal_features_table_header: FEATURES
 deal_instructions_table_header: INSTRUCTIONS
 deal_instructions_step: STEP
+
+platformd.user.account.deals: My Deals
+
+platformd.deal.deal: Deal
+platformd.deal.assigned.key: Code
+platformd.deal.assigned.assigned_at: Assigned
+platformd.deal.assigned.view_deal: View Deal
+platformd.deal.view_deal_site: Go to Site
+platformd.account_page.deal.your_deal_keys: My Deals
+platformd.deal.you_have_not_redeemed_any_codes: You have not redeemed any deal codes yet.

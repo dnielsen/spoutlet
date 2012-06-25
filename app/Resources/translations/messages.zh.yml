@@ -409,3 +409,13 @@ deal_redeem_user_already_redeemed: You have already redeemed this deal.
 deal_redeem_no_keys_left: "Sorry, no more redemptions are available for this deal."
 deal_redeem_success: "You have successfully redeemed this deal.  Here is your deal code, please follow the redemption instructions."
 deal_redeem_code: Deal Code
+
+platformd.user.account.deals: My Deals
+
+platformd.deal.deal: Deal
+platformd.deal.assigned.key: Code
+platformd.deal.assigned.assigned_at: Assigned
+platformd.deal.assigned.view_deal: View Deal
+platformd.deal.view_deal_site: Go to Site
+platformd.account_page.deal.your_deal_keys: My Deals
+platformd.deal.you_have_not_redeemed_any_codes: You have not redeemed any deal codes yet.

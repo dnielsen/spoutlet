@@ -13,7 +13,11 @@ accounts_events:
 accounts_giveaways:
     pattern: /profile/giveaways
     defaults: { _controller: SpoutletBundle:Account:giveaways }
-    
+
+accounts_deals:
+    pattern: /profile/deals
+    defaults: { _controller: SpoutletBundle:Account:deals }
+
 videos_edit:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }

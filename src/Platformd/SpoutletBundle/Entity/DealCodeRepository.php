@@ -127,6 +127,23 @@ class DealCodeRepository extends CodeRepository
     }
 
     /**
+     * Retrieves all deal codes a user
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @return \Platormd\SpoutletBundle\Entity\DealCode[]
+     */
+    public function getUserAssignedCodes(User $user)
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->leftJoin('k.pool','gkp')
+            ->andWhere('k.user = :user')
+            ->setParameters(array('user' => $user))
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
      * @param \Platformd\SpoutletBundle\Entity\Deal $deal
      * @return \Doctrine\ORM\QueryBuilder
      */
