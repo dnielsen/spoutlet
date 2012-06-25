@@ -34,6 +34,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new \Knp\MediaBundle\KnpMediaBundle(),
+            new Knp\Bundle\TimeBundle\KnpTimeBundle(),
 
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
