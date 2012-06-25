@@ -365,6 +365,30 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
        return $this->startsAt;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getStartsAtUtc()
+    {
+        if (!$this->getStartsAt()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getStartsAt(), new \DateTimeZone($this->getTimezone()));
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndsAtUtc()
+    {
+        if (!$this->getEndsAt()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getEndsAt(), new \DateTimeZone($this->getTimezone()));
+    }
+
      /**
      * @param \DateTime $endsAt
      */
