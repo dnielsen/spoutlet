@@ -51,7 +51,7 @@
                             {% elseif deal.hasExpired %}
                                 <p>{{ 'deal_show_expired' | trans }}</p>
                             {% else %}
-                            <div id="deal-countries">
+                            <div id="deal-countries-wrapper">
                                 <select id="deal-countries">
                                     <option value="">{{ 'choose_country' | trans }}</option>
                                     {% for country in countries %}
@@ -128,7 +128,7 @@
             $('.deals-timeleft').fadeIn();
             $('#deal-countries').ddslick({
                 width: 223,
-                selectText: 'SELECT YOUR COUNTRY',
+                selectText: 'SELECT YOUR COUNTRY'
             });
 
             var galleries = $('.media-gallery').adGallery({
