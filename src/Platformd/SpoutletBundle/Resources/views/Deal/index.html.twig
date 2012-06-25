@@ -12,26 +12,35 @@
         <div class="right">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
 
-            <div class="deals-comments">
-                <h3>{{ 'deal_comments' | trans }}</h3>
-
-                <ul>
-                    {% for commentObject in commentsArr %}
-                    {% set comment = commentObject.comment %}
-                    {% set deal = commentObject.object %}
-                    <li>
-                        {% set dealCommentImage = deal.thumbnailComment ? media_path(deal.thumbnailComment) : dealDeafultImage %}
-                        <img src="{{ dealCommentImage }}" alt="{{ deal.name }}" />
-                        <a href="{{ deal | pd_link }}">{{ deal.name }}</a>
-                        <br/>
-                        {{ 'by' | trans }} {{ comment.author }}
-                        <br/>
-                        {{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}
-                    </li>
-                    {% else %}
-                    {{ 'fos_comment_comment_new_headline_first' | trans({}, 'FOSCommentBundle') }}
-                    {% endfor %}
-                </ul>
+            <div class="widget-33" style="margin-top: 10px;">
+                <div class="widget-header">
+                    <div class="widget-title">
+                         {{ 'deal_comments' | trans }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div class="deals-comments">
+                        {% for commentObject in commentsArr %}
+                        {% set comment = commentObject.comment %}
+                        {% set deal = commentObject.object %}
+                            {% set dealCommentImage = deal.thumbnailComment ? media_path(deal.thumbnailComment) : dealDeafultImage %}
+                            <div class="dealListItem">
+                            <div>
+                                <img class="dealListItemThumb" src="{{ dealCommentImage }}" title="{{ deal.name }}" alt="{{ deal.name }}">
+                                <div class="commentListItemDetails">
+                                    <ul class="dealDetails">
+                                        <li class="dealTitle"><a class="movie_ellipsis" title="" href="{{ deal | pd_link }}">{{ deal.name }}</a></li>
+                                        <li class="dealCommentAuthor">{{ 'by' | trans }} {{ comment.author }}</li>
+                                        <li class="dealCommentAt">{{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        {{ 'fos_comment_comment_new_headline_first' | trans({}, 'FOSCommentBundle') }}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="left">
