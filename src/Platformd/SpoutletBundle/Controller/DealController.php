@@ -83,6 +83,7 @@ class DealController extends Controller
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $em             = $this->getDoctrine()->getEntityManager();
+        /** @var $dealCodeRepo \Platformd\SpoutletBundle\Entity\DealCodeRepository */
         $dealCodeRepo   = $em->getRepository('SpoutletBundle:DealCode');
         $deal           = $this->getDealManager()->findOneBySlug($slug);
         $clientIp       = $request->getClientIp(true);
