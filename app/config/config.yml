@@ -386,3 +386,5 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
+
+knp_time: ~

@@ -161,3 +161,7 @@
 [LiipImagineBundle]
     git=http://github.com/liip/LiipImagineBundle.git
     target=bundles/Liip/ImagineBundle
+
+[KnpTimeBundle]
+    git=http://github.com/KnpLabs/KnpTimeBundle.git
+    target=bundles/Knp/Bundle/TimeBundle

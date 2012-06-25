@@ -30,7 +30,7 @@ class DealType extends AbstractType
                 'attr'   => array(
                     'class' => 'datetime-picker'
                 ),
-                'format' => 'yyyy-MM-dd hh:mm',
+                'format' => 'yyyy-MM-dd HH:mm',
                 'label'  => 'Starts At'
             ))
             ->add('endsAt', 'date', array(
@@ -38,7 +38,7 @@ class DealType extends AbstractType
                 'attr'   => array(
                     'class' => 'datetime-picker'
                 ),
-                'format' => 'yyyy-MM-dd hh:mm',
+                'format' => 'yyyy-MM-dd HH:mm',
                 'label'  => 'Ends At'
             ))
             ->add('timezone', 'timezone', array('label' => 'Timezone'))
