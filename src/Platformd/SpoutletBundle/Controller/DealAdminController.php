@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Form\Type\DealType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
+use DateTime;
 
 /**
  * Deal admin controller.
@@ -93,6 +94,67 @@ class DealAdminController extends Controller
             'deal'      => $deal,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Shows metrics for all the deals
+     *
+     * @param Request $request
+     */
+    public function metricsAction(Request $request)
+    {
+        /** @var $metricManager \Platformd\SpoutletBundle\Metric\MetricManager */
+        $metricManager = $this->container->get('platformd.metric_manager');
+
+        $deals = $this->getDealManager()->findAllOrderedByNewest();
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Deals');
+
+        $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
+            ->add('status', 'choice', array(
+            'choices' => array(
+                1 => 'Published Deals',
+                0 => 'Unpublished Deals',
+            )
+        ))
+            ->getForm()
+        ;
+
+        // default filtering stuff
+        $since = null;
+        $onlyEnabled = true;
+
+        $requestData = $request->query->get($filterForm->getName());
+        if (!empty($requestData)) {
+            $filterForm->bindRequest($request);
+            if ($filterForm->isValid()) {
+                $data = $filterForm->getData();
+                $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
+
+                $onlyEnabled = ($data['status'] == 1);
+            }
+        }
+
+        $dealMetrics = array();
+        /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
+        foreach($deals as $deal) {
+            /*
+             * Filter results: Skip giveway if
+             *     a) We only want enabled giveaways and this giveaway is *not* active/enabled
+             *     b) We only want disabled giveaways and this giveaway *is* active/enabled
+             */
+            if (($onlyEnabled && !$deal->isPublished()) || (!$onlyEnabled && $deal->isPublished())) {
+                continue;
+            }
+
+            $dealMetrics[] = $metricManager->createDealReport($deal, $since);
+        }
+
+        return $this->render('SpoutletBundle:DealAdmin:metrics.html.twig', array(
+            'metrics' => $dealMetrics,
+            'sites'   => $metricManager->getSites(),
+            'form'    => $filterForm->createView()
         ));
     }
 

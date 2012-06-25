@@ -45,3 +45,8 @@ admin_deal_pool_create:
 admin_deal_pool_delete:
     pattern:  /{dealId}/pool/delete/{poolId}
     defaults: { _controller: "SpoutletBundle:DealPoolAdmin:delete" }
+
+# metrics
+admin_deal_metrics:
+    pattern: /metrics
+    defaults: { _controller: SpoutletBundle:DealAdmin:metrics }

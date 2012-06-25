@@ -39,7 +39,7 @@ class DealCodeRepository extends CodeRepository
         $qb  = $this->createForDealQueryBuilder($deal);
         $this->addAssignedQueryBuilder($qb);
 
-        return (int) $qbb
+        return (int) $qb
             ->select('COUNT(k.id)')
             ->getQuery()
             ->getSingleScalarResult()

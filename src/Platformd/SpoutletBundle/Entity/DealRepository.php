@@ -26,6 +26,18 @@ class DealRepository extends EntityRepository
     }
 
     /**
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findAllOrderedByNewest()
+    {
+        return $this->createQueryBuilder('d')
+            ->addOrderBy('d.createdAt', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    /**
      * Get all published deals for this site and game
      *
      * @param string $site

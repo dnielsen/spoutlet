@@ -69,6 +69,11 @@ class DealManager
         return $this->getRepository()->findAllForSiteNewestFirst($site);
     }
 
+    public function findAllOrderedByNewest()
+    {
+        return $this->getRepository()->findAllOrderedByNewest();
+    }
+
     /**
      * @param string $slug
      * @return \Platformd\SpoutletBundle\Entity\Deal

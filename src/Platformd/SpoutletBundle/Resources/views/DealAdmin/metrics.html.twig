@@ -1,0 +1,57 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>Deals</h1>
+
+<div class="pull-right filter-form-wrapper">
+    <form action="{{ path('admin_deal_metrics') }}" method="GET">
+        {{ form_widget(form.results_range) }}
+        {{ form_widget(form.status) }}
+    </form>
+</div>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Deal</th>
+            <th>Total Keys</th>
+            <th>Total Assigned</th>
+            <th>Keys Left</th>
+            {% for site in sites %}
+                <th>{{ site }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics %}
+        <tr>
+            <td>{{ metric.name }}</td>
+            <td>{{ metric.total }}</td>
+            <td>{{ metric.assigned }}</td>
+            <td>{{ metric.remaining }}</td>
+            {% for key, site in sites %}
+                <td>
+                    {{ metric.sites[key] }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="{{ 4 + (sites | length) }}">
+                There are no deals matching this criteria.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery('.filter-form-wrapper select').change(function() {
+            $(this).closest('form').submit();
+        });
+    });
+</script>
+
+{% endblock %}

@@ -221,11 +221,14 @@ class GiveawayAdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
+        /** @var $metricManager \Platformd\SpoutletBundle\Metric\MetricManager */
+        $metricManager = $this->container->get('platformd.metric_manager');
+
         $giveaways = $this->getGiveawayRepo()->findAllOrderedByNewest();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
-        $filterForm = $this->createFormBuilder(array(), array('csrf_protection' => false))
+        $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('results_range', 'choice', array(
                 'choices' => array(
                     '7'  => 'Last 7 days',
@@ -258,7 +261,6 @@ class GiveawayAdminController extends Controller
         }
 
         $giveawayMetrics = array();
-        $metricManager = $this->container->get('platformd.metric_manager');
         foreach($giveaways as $giveaway) {
             /*
              * Filter results: Skip giveway if
