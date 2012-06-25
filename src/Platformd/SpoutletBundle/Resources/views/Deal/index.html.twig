@@ -8,80 +8,115 @@
     {% if mainDeal %}
         {% include 'SpoutletBundle:Deal:_dealHeaderCountdown.html.twig' with { 'deal': mainDeal } %}
     {% endif %}
-
-    <div class="deal-list-page">
-        <h1>{{ 'featured_deals' | trans }}</h1>
-
-        <ul class="featured-deals">
-            {% for deal in featuredDeals %}
-            {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
-
-                <li>
-                    <a href="{{ deal | pd_link }}">
-                        <img src="{{ dealImage }}" alt="{{ deal.name }}" />
-                    </a>
-
-                    <br/>
-
-                    {{ deal | pd_link_full(deal.name) }}
-
-                    {# todo - run this through the KnpTimeBundle #}
-                    {{ 'time_remaining' }}
-                </li>
-            {% endfor %}
-        </ul>
-
-        {% if allDeals %}
-            <h1>{{ 'deals' | trans }}</h1>
-
-            <ul class="all-deals">
-                {% for deal in allDeals %}
-                {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
-
-                <li>
-                    <a href="{{ deal | pd_link }}">
-                        <img src="{{ dealImage }}" alt="{{ deal.name }}" />
-                    </a>
-
-                    <br/>
-
-                    {{ deal | pd_link_full(deal.name) }}
-
-                    {# todo - run this through the KnpTimeBundle #}
-                    {{ 'time_remaining' }}
-                </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if expiredDeals %}
-            <h1>{{ 'expired_deals' | trans }}</h1>
-
-            <ul class="expired-deals">
-                {% for deal in expiredDeals %}
-                {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
-
-                <li>
-
-                    {# We need to improve this, but it does work #}
-
-                    <div style="background: url({{ dealImage }}); background-repeat: no-repeat; width: 245px; height: 95px;">
-                        <a href="{{ deal | pd_link }}" style="width: 245px; height: 95px; display:block;">
-                            <img src="/bundles/spoutlet/images/expired.png" alt="deal expired" style="margin-left: 60px;" />
-                        </a>
+    <div class="std_2col">
+        <div class="right">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            {{ 'comments' }}
+        </div>
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'featured_deals' | trans }}
                     </div>
+                </div>
+                <div class="widget-content">
+                    {% for deal in featuredDeals %}
+                    {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
+                        <div style="display: inline-table; padding: 10px;">
+                            <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px;">
+                                <img src="{{ dealImage }}" alt="{{ deal.name }}" style="width: 138px; height: 83px; border: 1px solid #4a4a4a;" />
+                            </a>
 
-                    <br/>
+                            <div>{{ deal | pd_link_full(deal.name) }}</div>
 
-                    {{ deal | pd_link_full(deal.name) }}
-                </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+                            {# todo - run this through the KnpTimeBundle #}
+                            <div>
+                                <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                <div>{{ 'time_remaining' }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="widget-66" style="margin: 10px 0 0 0;">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'deals' | trans }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    {% if allDeals %}
+                            {% for deal in allDeals %}
+                            {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
+                            <div style="display: inline-table; padding: 10px;">
+                            <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px;">
+                                <img src="{{ dealImage }}" alt="{{ deal.name }}" style="width: 138px; height: 83px; border: 1px solid #4a4a4a;" />
+                            </a>
+
+                            <div>{{ deal | pd_link_full(deal.name) }}</div>
+
+                            {# todo - run this through the KnpTimeBundle #}
+                            <div>
+                                <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                <div>{{ 'time_remaining' }}</div>
+                            </div>
+                        </div>
+                            {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="widget-66" style="margin: 10px 0 0 0;">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'expired_deals' | trans }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    {% if expiredDeals %}
+                            {% for deal in expiredDeals %}
+                            {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
+
+                                {# We need to improve this, but it does work #}
+
+                                <div style="background: url({{ dealImage }}); background-repeat: no-repeat; width: 138px; height: 83px; border: 1px solid #4a4a4a;">
+                                    <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px; display:block;">
+                                        <img src="/bundles/spoutlet/images/expired.png" alt="deal expired" />
+                                    </a>
+                                </div>
+                                <div style="padding-top: 3px; font-weight: bold;">{{ deal | pd_link_full(deal.name) }}</div>
+                            {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="clear">&nbsp;</div>
+        </div>
     </div>
 
-    <div class="clear">&nbsp;</div>
+
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/deals.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function() {
+            var endsAt = new Date($('#deal-ends-date').val());
+            $('#time-left').countdown({
+                until: endsAt,
+                compact: false,
+                layout: $('#time-left').html()
+            });
+
+            $('.deals-timeleft').fadeIn();
+        });
+    </script>
 
 {% endblock %}
