@@ -22,6 +22,8 @@
 
     {{ form_row(form.keysfile)}}
 
+    {{ form_row(form.allowedCountries) }}
+
     {{ form_rest(form) }}
 
     <input type="submit" class="btn btn-primary" value="{{ "platformd.deal_pool.admin.save_deal_pool" | trans }}" formnovalidate />

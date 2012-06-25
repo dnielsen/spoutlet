@@ -22,6 +22,7 @@ class DealPoolType extends AbstractType
             ->add('upperLimit', 'integer', array('required' => false))
             ->add('lowerLimit', 'integer', array('required' => false))
             ->add('isActive', 'checkbox', array('required' => false))
+            ->add('allowedCountries', 'entity', array('multiple' => true, 'expanded' => true, 'class' => 'Platformd\SpoutletBundle\Entity\Country', 'property' => 'name'))
             ->add('keysfile', 'file');
     }
 

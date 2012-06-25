@@ -49,6 +49,24 @@ class DealPool extends Pool
     }
 
     /**
+     * @return \Platformd\SpoutletBundle\Entity\Country[]
+     */
+    public function getAllowedCountries()
+    {
+        return $this->allowedCountries;
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\Country[] $allowedCountries
+     */
+    public function setAllowedCountries($allowedCountries)
+    {
+        $this->allowedCountries = $allowedCountries;
+    }
+
+    /*
+
+    /**
      * Returns whether or not this pool should be treated as active
      *
      * This goes beyond the normal isActive to check anything else.

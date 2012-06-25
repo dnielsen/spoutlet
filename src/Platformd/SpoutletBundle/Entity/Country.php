@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
 /**
  * Platformd\SpoutletBundle\Entity\Country
  *
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\CountryRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="country")
  */
 class Country
