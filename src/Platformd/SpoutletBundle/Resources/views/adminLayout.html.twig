@@ -152,7 +152,7 @@
                             </li>
                             {% endif %}
 
-                            {% if is_granted('ROLE_ADMIN_DEAL') %}
+                            {% if site_has_feature('DEALS') and is_granted('ROLE_ADMIN_DEAL') %}
                             <li>
                                 <a href="{{ path('admin_deal') }}">Deals</a>
                                 <ul>
