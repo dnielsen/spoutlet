@@ -109,7 +109,6 @@ class GiveawayManager
 
         $this->sendDeniedNotificationEmail($machineCode);
 
-        $this->em->persist($machineCode->getKey());
         $this->em->persist($machineCode);
         $this->em->flush();
     }
