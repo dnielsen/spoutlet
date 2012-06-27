@@ -14,7 +14,7 @@
     mailer_user       =
     mailer_password   =
     mailer_encryption = tls
-    mailer_port       = 465
+    mailer_port       = 587
 
     locale            = en
 
