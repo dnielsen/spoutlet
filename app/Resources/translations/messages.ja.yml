@@ -37,7 +37,7 @@ platformd:
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
-            
+
         top_menu:
             admin: Admin
             account: アカウント
@@ -65,7 +65,7 @@ platformd:
             video: ビデオ
             news: ニュース
             microsoft: Microsoft
-    
+
         page_content:
             featured: トピックス
             giveaways: キャンペーン
@@ -226,6 +226,7 @@ platformd:
             my_giveaways: 参加済みキャンペーン
             my_videos: マイビデオ
             help: お問い合わせ
+            game_ids: Game IDs
 
     giveaway:
         giveaway: プレゼント

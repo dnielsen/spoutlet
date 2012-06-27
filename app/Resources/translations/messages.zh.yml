@@ -219,6 +219,7 @@ platformd:
             my_giveaways:     获取赠品
             my_videos: My Videos
             help: 帮助？
+            game_ids: Game IDs
 
     giveaway:
         giveaway: 邀请码
