@@ -94,6 +94,28 @@ class GiveawayManager
     }
 
     /**
+     * Denies the machine code entry and sends notification email
+     *
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
+     */
+    public function denyMachineCode(MachineCodeEntry $machineCode)
+    {
+        // see if it's already assigned to a key
+        if ($machineCode->getKey()) {
+            return;
+        }
+
+        $machineCode->markAsDenied();
+
+        $this->sendDeniedNotificationEmail($machineCode);
+
+        $this->em->persist($key);
+        $this->em->persist($machineCode);
+        $this->em->flush();
+    }
+
+
+    /**
      * Has the user applied to this giveaway yet?
      *
      * @param \Platformd\UserBundle\Entity\User $user
@@ -193,6 +215,54 @@ class GiveawayManager
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
+            '%giveawayName%'  => $giveaway->getName(),
+        ), 'messages', $giveaway->getLocale());
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($this->fromAddress, $this->fromName)
+            ->setTo($user->getEmail())
+            ->setBody($message)
+        ;
+        $this->mailer->send($message);
+
+        // mark the notification email as sent
+        $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
+
+        return $message;
+    }
+
+    /**
+     * Sends a notification to the user about being denied for a machine
+     * code entry.
+     *
+     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCodeEntry
+     * @return string
+     */
+    private function sendDeniedNotificationEmail(MachineCodeEntry $machineCodeEntry)
+    {
+        // don't send more than once
+        if ($machineCodeEntry->getNotificationEmailSentAt()) {
+            return;
+        }
+
+        $giveaway = $machineCodeEntry->getGiveaway();
+        $user = $machineCodeEntry->getUser();
+
+        $accountUrl = $this->router->generate('accounts_giveaways', array(
+            '_locale' => $user->getLocale()
+        ), true);
+
+        // translate the message into the user's locale
+        $message = $this->translator->trans('email.giveaway_machine_code_deny', array(
+            '%giveawayName%'  => $giveaway->getName(),
+            '%userFirstName%' => $user->getFirstname(),
+            '%userLastName%'  => $user->getLastname(),
+            '%accountUrl%'    => $accountUrl,
+            '%systemTag%'     => $machineCodeEntry->getMachineCode(),
+        ), 'messages', $giveaway->getLocale());
+
+        $subject = $this->translator->trans('email.subject.giveaway_machine_code_deny', array(
             '%giveawayName%'  => $giveaway->getName(),
         ), 'messages', $giveaway->getLocale());
 

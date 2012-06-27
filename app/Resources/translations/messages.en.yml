@@ -367,6 +367,8 @@ giveaway:
         machine_code_submit: System Tag Submit Key Giveaway
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
+deny_machine_codes: Deny System Tags
+
 
 submit_machine_code: Apply
 machine_code: System Tag
@@ -391,3 +393,5 @@ translations_admin: Translations Admin
 edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
+
+deny_codes: Deny Codes
