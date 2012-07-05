@@ -19,7 +19,42 @@
             <th>Total Assigned</th>
             <th>Keys Left</th>
             {% for site in sites %}
-                <th>{{ site }}</th>
+                {% if site == 'North America' %}
+                    <th>NA</th>
+                {% endif %}
+
+                {% if site == 'India' %}
+                    <th>IN</th>
+                {% endif %}
+
+                {% if site == 'Latin America' %}
+                    <th>LATAM</th>
+                {% endif %}
+
+                {% if site == 'Europe' %}
+                    <th>EMEA</th>
+                {% endif %}
+
+                {% if site == 'Singapore' %}
+                    <th>MYSG</th>
+                {% endif %}
+
+                {% if site == 'Australia / New Zealand' %}
+                    <th>ANZ</th>
+                {% endif %}
+
+                {% if site == 'China' %}
+                    <th>CN</th>
+                {% endif %}
+
+                {% if site == 'Japan' %}
+                    <th>JP</th>
+                {% endif %}
+
+                {% if site == 'Demo' %}
+                    <th>Demo</th>
+                {% endif %}
+
             {% endfor %}
         </tr>
     </thead>
