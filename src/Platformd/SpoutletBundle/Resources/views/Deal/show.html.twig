@@ -19,8 +19,25 @@
 {% endblock %}
 
 {% block content %}
-    <div id="deals-wrapper">
-    {% include 'SpoutletBundle:Deal:_dealHeaderCountdown.html.twig' %}
+<div id="deals-wrapper">
+    {% if userAlreadyRedeemed %}
+    <div class="xnotices">
+        <div class="successNotice notice">
+            <div class="pad">
+                <div class="pad2">
+                    <div class="pad3">
+                        <div class="pad4">
+                            <h3>{{ 'platformd.flash.success_title' | trans }}</h3>
+                            <p>{{ 'deal_redeem_success_code' | trans}} {{ 'deal_redeem_code' | trans }}: {{ dealCode | replace({"'":"", ",":""}) }}</p>
+                            <p>{{ 'deal_redeem_success' | trans }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% include 'SpoutletBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-features-instructions">
             <table id="features-instructions" style="border-spacing: 3px;">
@@ -47,17 +64,14 @@
                         <td class="deals-instructions-col">
                             <div id="deal-actions">
                                 {% if userAlreadyRedeemed %}
-                                    <p>{{ 'deal_redeem_success' | trans }}</p>
-                                    <p class="notice-data">{{ 'deal_redeem_code' | trans }}: {{ dealCode }}</p>
+                                    <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans }}</p>
                                 {% elseif deal.hasExpired %}
                                     <p>{{ 'deal_show_expired' | trans }}</p>
                                 {% else %}
+
                                 <div id="deal-countries-wrapper">
                                     <select id="deal-countries">
-                                        <option value="">{{ 'choose_country' | trans }}</option>
-                                        {% for country in countries %}
-                                            <option>{{ country }}</option>
-                                        {% endfor %}
+
                                     </select>
                                 </div>
                                 <a href="{{ path('deal_redeem', { "slug" : deal.slug }) }}" id="deal-redeem-button" {% if deal.claimCodeButton %} style="background: url('{{ media_path(deal.claimCodeButton) }}') no-repeat; border: none;" {% endif %}>{% if deal.claimCodeButton is null %}CLAIM CODE NOW {% endif %}</a>
@@ -116,11 +130,11 @@
 
     {% if deal.topColor and deal.bottomColor %}
     <style type="text/css">
-        #deals-wrapper { background-image: linear-gradient(bottom, {{ deal.topColor }} 8%, {{ deal.bottomColor }} 58%);}
-        #deals-wrapper { background-image: -o-linear-gradient(bottom, {{ deal.topColor }} 8%, {{ deal.bottomColor }} 58%);}
-        #deals-wrapper { background-image: -moz-linear-gradient(bottom, {{ deal.topColor }} 8%, {{ deal.bottomColor }} 58%); }
-        #deals-wrapper { background-image: -webkit-linear-gradient(bottom, {{ deal.topColor }} 8%, {{ deal.bottomColor }} 58%); }
-        #deals-wrapper { background-image: -ms-linear-gradient(bottom, {{ deal.topColor }} 8%, {{ deal.bottomColor }} 58%); }
+        #deals-wrapper { background-image: linear-gradient(bottom, {{ deal.bottomColor }} 8%, {{ deal.topColor }} 58%);}
+        #deals-wrapper { background-image: -o-linear-gradient(bottom, {{ deal.bottomColor }} 8%, {{ deal.topColor }} 58%);}
+        #deals-wrapper { background-image: -moz-linear-gradient(bottom, {{ deal.bottomColor }} 8%, {{ deal.topColor }} 58%); }
+        #deals-wrapper { background-image: -webkit-linear-gradient(bottom, {{ deal.bottomColor }} 8%, {{ deal.topColor }} 58%); }
+        #deals-wrapper { background-image: -ms-linear-gradient(bottom, {{ deal.bottomColor }} 8%, {{ deal.topColor }} 58%); }
     </style>
 
     {% endif %}
@@ -128,7 +142,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.smoothdivscroll-1.2-min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var endsAt = new Date($('#deal-ends-date').val());
@@ -140,9 +153,14 @@
             });
 
             $('.deals-timeleft').fadeIn();
+
+            {{ countriesJson | raw }}
+
             $('#deal-countries').ddslick({
+                data: countries,
                 width: 223,
-                selectText: 'SELECT YOUR COUNTRY'
+                height: 215,
+                selectText: 'Select Your Country'
             });
 
             var galleries = $('.media-gallery').adGallery({

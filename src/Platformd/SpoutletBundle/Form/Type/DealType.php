@@ -92,7 +92,7 @@ class DealType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ))
-            ->add('legalVerbiage', 'textarea', array('label' => 'Legal Vergiage'))
+            ->add('legalVerbiage', 'textarea', array('label' => 'Legal Verbiage'))
             ->add('topColor', null, array('label' => 'Top background color'))
             ->add('bottomColor', null, array('label' => 'Bottom background color'))
         ;

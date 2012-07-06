@@ -44,7 +44,19 @@ class DealController extends Controller
         $countries              = Locale::getDisplayCountries('en');
         $user                   = $this->getUser();
         $userAlreadyRedeemed    = false;
-        $dealCode               = "";
+        $dealCode               = '';
+        $countriesJson          = 'var countries = [';
+
+
+        /*
+         * this is hacky but the only way i could get ddslick jquery plugin to use the selectText property
+         * was to inject json into the javascript.
+        */
+        foreach($countries as $country) {
+            $countriesJson .= '{ text: "'.$country.'"},';
+        }
+
+        $countriesJson .= '];';
 
         if (!$deal) {
             throw $this->createNotFoundException('No deal found in this site for slug '.$slug);
@@ -68,7 +80,8 @@ class DealController extends Controller
             'userAlreadyRedeemed' => $userAlreadyRedeemed,
             'dealCode' => $dealCode,
             'redemptionSteps' => $instructions,
-            'countries' => $countries
+            'countries' => $countries,
+            'countriesJson' => $countriesJson,
         );
     }
 

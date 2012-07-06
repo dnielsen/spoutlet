@@ -436,12 +436,15 @@ archives: ARCHIVES
 media_gallery: Media Gallery
 more_games: More Games
 
+deals_alienware_title: ALIENWARE ARENA DEAL
 deals: Deals
 deal: Deal
 deal_redeem_max_ip_hit: Your IP address is not allowed to redeem any more deals.
 deal_redeem_user_already_redeemed: You have already redeemed this deal.
 deal_redeem_no_keys_left: "Sorry, no more redemptions are available for this deal."
-deal_redeem_success: "You have successfully redeemed this deal.  Here is your deal code, please follow the redemption instructions."
+deal_redeem_success_code: "Here is your code: "
+deal_redeem_success: "Please follow the redemption instructions below. You may review this code at any time by visiting your Deals Page by clicking Account on the top right."
+deal_redeem_success_bottom: "You were already assigned a code for this deal. You may review this code at any time by visiting Account > My Deals on the top right."
 deal_redeem_code: Deal Code
 deal_timeleft_label: DEAL EXPIRES IN:
 deal_timeleft_expired_label: DEAL EXPIRED
@@ -454,7 +457,7 @@ deal_minute: Minute
 deal_seconds: Seconds
 deal_second: Second
 deal_features_table_header: FEATURES
-deal_instructions_table_header: INSTRUCTIONS
+deal_instructions_table_header: Instructions
 deal_instructions_step: STEP
 deal_show_expired: This deal has expired.
 deal_time_remaining: Time Remaining:

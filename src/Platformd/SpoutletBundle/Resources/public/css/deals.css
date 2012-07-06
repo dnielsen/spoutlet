@@ -4,16 +4,25 @@
 
 .deals-header {
     width: 950px;
-    height: 610px;
+    height: 400px;
     position: relative;
+}
+
+.deals-header img {
+    width: 950px;
+    height: 400px;
+}
+
+.deals-title {
+    width: 950px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
 }
 
 .deals-timeleft {
     width: 950px;
-    height: 20px;
-    position: absolute;
-    bottom: 33px;
-    left: 0;
     text-align: center;
     font-size: 30px;
     font-weight: bold;
@@ -29,11 +38,17 @@
     text-align: left;
     padding: 5px;
     font-size: 16px;
+    font-weight: normal;
 }
 
 .deals-features-col {
     width: 600px;
     vertical-align: top;
+    color: #BFBFBF;
+}
+
+.deals-features-col ol, ul, dl {
+    padding: 0 40px;
 }
 
 .deals-instructions-col-header {
@@ -42,11 +57,13 @@
     text-align: left;
     padding: 5px;
     font-size: 16px;
+    font-weight: normal;
 }
 
 .deals-instructions-col {
     width: 350px;
     vertical-align: top;
+    color: #BFBFBF;
 }
 
 #deal-actions {
@@ -57,6 +74,10 @@
 #deal-actions p {
     padding: 5px;
     text-align: left;
+}
+
+#deal-redeem-success {
+    font-style: italic;
 }
 
 #deals-recommend {
@@ -71,8 +92,8 @@
 #deal-instructions { padding: 5px;}
 #deal-instructions ul { margin: 5px; padding: 0;}
 #deal-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
-#deal-instructions ul li span.item { font-weight: bold;}
-#deal-instructions ul li span.step-number { font-weight: bold; padding-right: 3px;}
+#deal-instructions ul li span.item { color: #BFBFBF;}
+#deal-instructions ul li span.step-number { color: #BFBFBF; padding-right: 3px;}
 
 #deal-redeem-button {
     margin: 0px auto;
@@ -107,6 +128,7 @@
     margin: 10px auto;
     padding: 5px;
     font-size: 13px;
+    color: #BFBFBF;
 }
 
 div.dealListItem
@@ -207,4 +229,22 @@ li.dealCommentAt
 #deal-comments {
     width: 294px;
     padding: 2px;
+}
+
+.deal-item {
+   display: inline-table;
+   padding: 6px;
+   width: 138px;
+   height: 165px;
+}
+
+.deal-item a {
+    width: 138px;
+    height: 83px;
+}
+
+.deal-item a img {
+    width: 138px;
+    height: 83px;
+    border: 1px solid #4a4a4a;
 }
