@@ -8,6 +8,7 @@
         <tr>
             <th>Name</th>
             <th>Url</th>
+            <th>Sites</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -22,28 +23,21 @@
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
             <td>
+                {% for locale in deal.locales %}
+                    {{ locale | site_name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
+            <td>
                 {% if deal.isPublished %}
                     <span class="label label-success">Published</span>
-
-                    {% if deal.isActive %}
-                        <span class="label label-success">Active</span>
-                    {% else %}
-                        <span class="label label-warning">Inactive</span>
-                    {% endif %}
                 {% else %}
                     <span class="label label-warning">Unpublished</span>
                 {% endif %}
             </td>
             <td>
-                <div class="btn-group">
-                    <a href="{{ path('admin_deal_edit', {'id': deal.id}) }}" class="btn btn-primary">
-                        <i class="icon-pencil"></i> Edit Deal
-                    </a>
-                    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ path('admin_deal_pool_index', {'dealId': deal.id}) }}"><i class="icon-tasks"></i> Manage Pools</a></li>
-                    </ul>
-                </div>
+                <a href="{{ path('admin_deal_edit', { 'id': deal.id }) }}">Edit</a> |
+                <a href="{{ path('admin_deal_pool_index', {'dealId': deal.id}) }}">Manage pools</a>
             </td>
         </tr>
     {% endfor %}

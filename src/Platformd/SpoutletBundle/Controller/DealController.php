@@ -17,7 +17,7 @@ class DealController extends Controller
     {
         $featuredDeals = $this->getDealManager()->findFeaturedDeals();
         $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
-        $allDeals = $this->getDealManager()->findActiveNonFeaturedDeals($featuredDeals);
+        $allDeals = $this->getDealManager()->findActiveDeals($featuredDeals);
         $expiredDeals = $this->getDealManager()->findExpiredDeals();
         $commentsArr = $this->getCommentManager()
             ->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5)
@@ -42,6 +42,7 @@ class DealController extends Controller
         $deal                   = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug);
         $dealCodeRepo           = $em->getRepository('SpoutletBundle:DealCode');
         $countries              = Locale::getDisplayCountries('en');
+
         $user                   = $this->getUser();
         $userAlreadyRedeemed    = false;
         $dealCode               = '';
@@ -64,6 +65,8 @@ class DealController extends Controller
 
         $loggedIn = $this->get('security.context')->isGranted('ROLE_USER');
 
+        $hasKeys = $dealCodeRepo->getTotalAvailableForDeal($deal);
+
         if ($loggedIn) {
 
             $currentlyAssigned = $dealCodeRepo->getUserAssignedCodeForDeal($user, $deal);
@@ -82,6 +85,7 @@ class DealController extends Controller
             'redemptionSteps' => $instructions,
             'countries' => $countries,
             'countriesJson' => $countriesJson,
+            'hasKeys' => $hasKeys > 0,
         );
     }
 

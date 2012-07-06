@@ -101,6 +101,15 @@ class DealManager
     }
 
     /**
+     * @param array $featuredDeals
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findActiveDeals()
+    {
+        return $this->getRepository()->findAllActiveDealsForSite($this->getDatabaseSiteKey());
+    }
+
+    /**
      * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
     public function findExpiredDeals()

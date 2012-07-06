@@ -59,7 +59,7 @@
                                 <img src="{{ dealImage }}" alt="{{ deal.name }}" />
                             </a>
 
-                            <div>{{ deal | pd_link_full(deal.name) }}</div>
+                            <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
 
                             {# todo - run this through the KnpTimeBundle #}
                             <div>
@@ -78,33 +78,35 @@
             <div class="widget-66" style="margin: 10px 0 0 0;">
                 <div class="widget-header">
                     <div class="widget-title">
-                        {{ 'deals' | trans }}
+                        {{ 'deals_all' | trans }}
                     </div>
                 </div>
                 <div class="widget-content">
                     {% if allDeals %}
-                            {% for deal in allDeals %}
-                            {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
+
+                        {% for deal in allDeals %}
+                        {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
                             <div class="deal-item">
-                            <a href="{{ deal | pd_link }}">
-                                <img src="{{ dealImage }}" alt="{{ deal.name }}" />
-                            </a>
+                                <a href="{{ deal | pd_link }}">
+                                    <img src="{{ dealImage }}" alt="{{ deal.name }}" />
+                                </a>
 
-                            <div>{{ deal | pd_link_full(deal.name) }}</div>
+                                <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
 
-                            {# todo - run this through the KnpTimeBundle #}
-                            <div>
-                                {% if deal.endsAtUtc %}
-                                    <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                    <div>{{ time_diff(deal.endsAtUtc) }}</div>
-                                {% else %}
-                                    <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                    <div>&nbsp;</div>
-                                {% endif %}
+                                {# todo - run this through the KnpTimeBundle #}
+                                <div>
+                                    {% if deal.endsAtUtc %}
+                                        <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                        <div>{{ time_diff(deal.endsAtUtc) }}</div>
+                                    {% else %}
+                                        <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
+                                        <div>&nbsp;</div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
-                            {% endfor %}
+                        {% endfor %}
+
                     {% endif %}
                 </div>
             </div>
@@ -119,14 +121,18 @@
                             {% for deal in expiredDeals %}
                             {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
 
-                                {# We need to improve this, but it does work #}
+                            {# We need to improve this, but it does work #}
 
-                                <div style="background: url({{ dealImage }}); background-repeat: no-repeat; width: 138px; height: 83px; border: 1px solid #4a4a4a;">
-                                    <a href="{{ deal | pd_link }}" style="width: 138px; height: 83px; display:block;">
+                            <div class="deal-item-expired">
+                                <div class="deal-item" style="background: url({{ dealImage }}); background-repeat: no-repeat; padding: 0px;">
+                                    <a href="{{ deal | pd_link }}">
+
                                         <img src="/bundles/spoutlet/images/expired.png" alt="deal expired" />
                                     </a>
+
+                                    <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
                                 </div>
-                                <div style="padding-top: 3px; font-weight: bold;">{{ deal | pd_link_full(deal.name) }}</div>
+                            </div>
                             {% endfor %}
                     {% endif %}
                 </div>
@@ -145,7 +151,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.scrollTo-1.4.2-min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.localscroll-1.2.7-min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.serialScroll-1.2.2-min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var endsAt = new Date($('#deal-ends-date').val());
@@ -157,6 +165,9 @@
             });
 
             $('.deals-timeleft').fadeIn();
+
+            $('.movie_ellipsis').truncate();
+            $('.deal-link').truncate({ width: 276 });
         });
     </script>
 

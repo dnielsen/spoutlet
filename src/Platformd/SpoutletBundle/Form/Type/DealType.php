@@ -93,8 +93,13 @@ class DealType extends AbstractType
                 'expanded' => true,
             ))
             ->add('legalVerbiage', 'textarea', array('label' => 'Legal Verbiage'))
-            ->add('topColor', null, array('label' => 'Top background color'))
-            ->add('bottomColor', null, array('label' => 'Bottom background color'))
+            ->add('topColor', 'hidden', array(
+                'data' => '#000000',
+            ))
+            ->add('bottomColor', null, array(
+                'label' => 'Bottom background color',
+                'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
+            ))
         ;
     }
 

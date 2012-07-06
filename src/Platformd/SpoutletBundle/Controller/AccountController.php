@@ -37,8 +37,11 @@ class AccountController extends Controller
         $isItAprilYet = time() < 1333256400;
         $showSweepstakesMessage = ($isJapan && $isItAprilYet);
 
+
+
 		return $this->render('SpoutletBundle:Account:account.html.twig', array(
             'showSweepstakesMessage' => $showSweepstakesMessage,
+            'cevoUserId' => $this->getUser()->getCevoUserId(),
         ));
 	}
 

@@ -5,14 +5,18 @@
 <div class="std_1col">
     <div id="accountHeader">
         <ul class="links">
-            <li><a href="{{ path('accounts_index') }}">{{ "platformd.user.account.account_home" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/">{{ "platformd.user.account.account_home" | trans }}</a></li>
             {# Commenting out for now, until we figure out how this work with CEVO
                 <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
             #}
-            <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | trans }}</a></li>
-            <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
-            <li><a href="{{ path('accounts_events') }}">{{ "platformd.user.account.registered_events" | trans }}</a></li>
-            <li><a href="{{ path('accounts_giveaways') }}">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/member/{{ cevoUserId }}/">{{ "platformd.user.account.profile" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/events/">{{ "platformd.user.account.registered_events" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/ids/">{{ 'platformd.user.account.gameids' | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/client/">{{ 'platformd.user.account.match_client' | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/external/match-lobby/" target="_blank">{{ 'platformd.user.account.match_lobby' | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/my-giveaway-keys/">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
 
             {% if site_has_feature('DEALS') %}
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>

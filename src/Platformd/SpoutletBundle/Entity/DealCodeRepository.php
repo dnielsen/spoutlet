@@ -29,6 +29,23 @@ class DealCodeRepository extends CodeRepository
     }
 
     /**
+     * Returns the total number of available codes for all pools across a deal
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @return integer
+     */
+    public function getTotalAvailableForDeal(Deal $deal)
+    {
+        return (int)$this
+            ->createForDealQueryBuilder($deal)
+            ->select('COUNT(k.id)')
+            ->andWhere('k.user is NULL')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    /**
      * Returns the total number of assigned codes across all pools of a deal
      *
      * @param \Platformd\SpoutletBundle\Entity\Deal $deal

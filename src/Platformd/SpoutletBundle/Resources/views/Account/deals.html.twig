@@ -1,6 +1,6 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+{% block title %}{{ "platformd.user.account.deals" | trans }}{% endblock %}
 
 {% block content %}
 <div class="std_2col control_panel">
@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{ dealCode.pool.deal.name }}</td>
                                 <td class="nowrap">
-                                    {{ dealCode.value }}
+                                    {{ dealCode.value | replace({"'":"", ",":""}) }}
                                 </td>
                                 <td class="nowrap">
                                     {{ 'sweepstakes_date_format' | trans(dealCode.assignedAtTranslationArray) }}

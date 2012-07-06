@@ -126,6 +126,23 @@ class DealRepository extends EntityRepository
         ;
     }
 
+        /**
+     * Finds all active deals, except for those "featured", which are passed in
+     *
+     * @param string $site
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findAllActiveDealsForSite($site)
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+        $this->addActiveQueryBuilder($qb);
+        $this->addOrderByQuery($qb);
+
+        return $qb->getQuery()
+            ->execute()
+        ;
+    }
+
     /**
      * Finds all expired deals
      *

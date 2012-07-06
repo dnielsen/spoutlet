@@ -89,6 +89,11 @@
     padding-top: 10px;
 }
 
+#deal-show-expired {
+    font-style: italic;
+    font-weight: bold;
+}
+
 #deal-instructions { padding: 5px;}
 #deal-instructions ul { margin: 5px; padding: 0;}
 #deal-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
@@ -121,7 +126,7 @@
 }
 
 #deal-screenshots a img {
-    border: 2px #fe0303 solid;
+
 }
 
 #legal-verbiage {
@@ -231,6 +236,11 @@ li.dealCommentAt
     padding: 2px;
 }
 
+.deal-item-expired {
+    padding: 6px;
+    display: inline-table;
+}
+
 .deal-item {
    display: inline-table;
    padding: 6px;
@@ -247,4 +257,22 @@ li.dealCommentAt
     width: 138px;
     height: 83px;
     border: 1px solid #4a4a4a;
+}
+
+#slider {
+    width: 634px;
+    margin: 0px auto;
+    position: relative;
+}
+
+.scroll {
+    height: 165px;
+    overflow: auto;
+    position: relative; /* fix for IE to respect overflow */
+    clear: left;
+}
+
+.scrollContainer div.panel {
+  height: 165px;
+  width: 634px; /* change to 560px if not using JS to remove rh.scroll */
 }
