@@ -105,6 +105,8 @@
     width: 224px;
     height: 43px;
     display: block;
+    border: 0px;
+    cursor: pointer;
 }
 
 #deal-countries {

@@ -73,12 +73,25 @@
                                         <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
                                     {% else %}
 
-                                    <div id="deal-countries-wrapper">
-                                        <select id="deal-countries">
+                                        <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
 
-                                        </select>
-                                    </div>
-                                    <a href="{{ path('deal_redeem', { "slug" : deal.slug }) }}" id="deal-redeem-button" {% if deal.claimCodeButton %} style="background: url('{{ media_path(deal.claimCodeButton) }}') no-repeat; border: none;" {% endif %}>{% if deal.claimCodeButton is null %}CLAIM CODE NOW {% endif %}</a>
+                                            <div id="deal-countries-wrapper">
+                                                <select id="deal-country" name="deal-country">
+
+                                                    {% for countryCode, countryName in allowedCountries %}
+                                                        <option value="{{countryCode}}">{{ countryName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" id="deal-redeem-button">
+                                                {% if deal.claimCodeButton %}
+                                                    <img src="{{ media_path(deal.claimCodeButton) }}" />
+                                                {% else %}
+                                                    {{ "CLAIM CODE NOW" }}
+                                                {% endif %}
+                                            </button>
+                                        </form>
                                     {% endif %}
                                 </div>
                                 <div id="deal-instructions">
@@ -159,14 +172,8 @@
 
             $('.deals-timeleft').fadeIn();
 
-            {{ countriesJson | raw }}
-
-            $('#deal-countries').ddslick({
-                data: countries,
-                width: 223,
-                height: 215,
-                selectText: 'Select Your Country'
-            });
+            {# had problems with dd slick... so I removed it... if you can get it working for this page quickly... then great! - chris #}
+            {# $('#deal-country').ddslick({ width: 223, height: 215, selectText: 'Select Your Country' }); #}
 
             var galleries = $('.media-gallery').adGallery({
                 loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',

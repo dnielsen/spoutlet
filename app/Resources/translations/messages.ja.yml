@@ -432,6 +432,7 @@ deal: Deal
 deal_redeem_max_ip_hit: Your IP address is not allowed to redeem any more deals.
 deal_redeem_user_already_redeemed: You have already redeemed this deal.
 deal_redeem_no_keys_left: "Sorry, no more redemptions are available for this deal."
+deal_redeem_invalid_country: "Invalid country selection."
 deal_redeem_success: "You have successfully redeemed this deal.  Here is your deal code, please follow the redemption instructions."
 deal_redeem_code: Deal Code
 deal_show_expired: This deal has expired.

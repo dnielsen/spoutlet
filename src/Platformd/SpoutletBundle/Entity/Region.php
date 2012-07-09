@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
     Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Platformd\SpoutletBundle\Entity\Country
+ * Platformd\SpoutletBundle\Entity\Region
  *
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\CountryRepository")
- * @ORM\Table(name="country")
+ * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\RegionRepository")
+ * @ORM\Table(name="region")
  */
-class Country
+class Region
 {
     /**
      * @var integer $id
@@ -40,14 +40,13 @@ class Country
      */
     private $name;
 
-    /**
-     * Many to one with Region
+     /**
+     * @ORM\OneToMany(targetEntity="Country", mappedBy="region")
+     * @ORM\OrderBy({"code" = "DESC"})
      *
-     * @var Region
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Region", inversedBy="countries")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
+     * @var ArrayCollection $countries
      */
-    protected $region;
+    private $countries;
 
      /**
      * Get id
@@ -100,20 +99,22 @@ class Country
     }
 
     /**
-     * Get Region
-     * @return \Platformd\SpoutletBundle\Entity\Region
+     * Set countries
+     *
+     * @param string $countries
      */
-    public function getRegion()
+    public function setCountries($countries)
     {
-        return $this->region;
+        $this->countries = $countries;
     }
 
     /**
-     * Set Region
-     * @param \Platformd\SpoutletBundle\Entity\Region $region
+     * Get countries
+     *
+     * @return string
      */
-    public function setRegion(\Platformd\SpoutletBundle\Entity\Region $region)
+    public function getCountries()
     {
-        $this->region = $region;
+        return $this->countries;
     }
 }
