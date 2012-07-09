@@ -98,7 +98,45 @@
                     &nbsp;
                 </div>
             </div>
+            <div>
+                <div id="theater_screen" class="align_center" style="width:450px; height:300px;"></div>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+
+    <script type="text/javacript">
+        var GamePage = {
+
+        };
+
+        GamePage.initializeMovie = function(youtubeVideoId) {
+            var par = {};
+            par.flashvars = "startMovie="+youtubeVideoId;
+            par.flashvars += "&startCue=none";
+            par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
+            par.flashvars += "&videoTitle=";
+            par.flashvars += "&displayWelcome=no";
+            par.flashvars += "&displayAlert=no";
+            par.flashvars += "&alertText=";
+            par.flashvars += "&muteOnStart=yes";
+            par.allowScriptAccess = "always";
+            par.wmode = "transparent";
+            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"450", height:"300", id:"theater_screen", name:"theater_screen"};
+            var id = "theater_screen";
+
+            // temporarily disable, because the autostart is annoying
+            var myytplayer = swfobject.createSWF(att, par, id);
+        };
+
+        jQuery(document).ready(function() {
+            GamePage.initializeMovie('lzKyxzYJX0U');
+        });
+    </script>
 {% endblock %}
