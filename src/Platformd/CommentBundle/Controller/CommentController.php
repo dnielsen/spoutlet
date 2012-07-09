@@ -16,24 +16,24 @@ use FOS\CommentBundle\Entity\Thread;
  */
 class CommentController extends BaseCommentController
 {
-    
-    public function deleteAction($id) 
+
+    public function deleteAction($id)
     {
         $manager = $this->container->get('fos_comment.manager.comment');
 
         if (!$comment = $manager->findCommentById($id)) {
-            
+
             throw new NotFoundHttpException('Comment not found.');
         }
-        
+
         // Not sure if the CommentBundle provides a way to delete comments easily
         // so we just use the ORM directly
         $threadSlug = $comment->getThread()->getId();
 
         $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
-        
+
         $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
-        
+
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $thread = $comment->getThread();
@@ -53,6 +53,12 @@ class CommentController extends BaseCommentController
     protected function onCreateSuccess(Form $form)
     {
         $threadId = $form->getData()->getThread()->getId();
+
+        // temporarily here for custom military page. will be removed when groups are implemented.
+        if($threadId == 'custom-military-page') {
+            $url = $this->container->get('router')->generate('military');
+            return new RedirectResponse($url);
+        }
 
         // Did we post a comment on a giveway or an event, news maybe ?
         $obj = $this->getObjectFromThread($form->getData()->getThread());
@@ -80,13 +86,13 @@ class CommentController extends BaseCommentController
         return new RedirectResponse($url);
     }
 
-    /** 
+    /**
      * Syntactic sugar to retrieve a giveaway using its slug
-     * 
+     *
      * @param string $slug
      * @return Giveaway|null
      */
-    private function findGiveawayBySlug($slug) 
+    private function findGiveawayBySlug($slug)
     {
 
         return $this->container->get('doctrine.orm.entity_manager')

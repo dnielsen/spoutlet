@@ -3,14 +3,29 @@
 {% block content %}
 
 <div id="content" class="military">
+    <div class="std_1col">
+        <div style="background: url('{{ asset('bundles/spoutlet/images/military/bannerheader-950x120.jpg') }}') no-repeat; height: 120px;">
+        </div>
+    </div>
+    <div id="military-sub-nav-wrapper">
+        <div id="military-sub-nav">
+            <ul>
+                <li class="first"><a href="#">MAIN</a></li>
+                <li><a href="#">FORUMS</a></li>
+                <li><a href="#">Member Purchase Program</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="std_2col">
         <div class="right">
             <div class="widget-33">
                 <div class="widget-content" style="text-align: center;">
-                    <img src="{{ asset('bundles/spoutlet/images/military/military_group_banner_280x250.jpg') }}" alt="Military Group" style="margin: 5px auto;" />
+                    <a href="http://www.dell.com/us/eep/p/d/campaigns/military-experience?~ck=mn?&dgc=AF&cid=246361&lid=4252661&Link_number113010291" style="border: none;">
+                        <img src="{{ asset('bundles/spoutlet/images/military/military_group_banner_280x250.jpg') }}" alt="Military Group" style="margin: 5px auto;" />
+                    </a>
                 </div>
                 <div class="widget-footer">
-                    <a href="#" class="aw-link">See More</a>
+                    <a href="http://www.dell.com/us/eep/p/d/campaigns/military-experience?~ck=mn?&dgc=AF&cid=246361&lid=4252661&Link_number113010291" class="aw-link" target="_blank">See More</a>
                     <div class="clear"></div>
                 </div>
             </div>
@@ -57,7 +72,7 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    poll goes here
+                    <iframe height="313" allowTransparency="true" frameborder="0" scrolling="no" style="width:100%;border:none"  src="http://igames.wufoo.com/embed/z7x3x5/"><a href="http://igames.wufoo.com/forms/z7x3x5/">Fill out my Wufoo form!</a></iframe>
                 </div>
             </div>
         </div>
@@ -98,12 +113,95 @@
                     &nbsp;
                 </div>
             </div>
-            <div>
-                <div id="theater_screen" class="align_center" style="width:450px; height:300px;"></div>
+            <div style="text-align: center; padding: 40px;">
+                <a name="youtube-player"></a>
+                <div id="theater_screen" style="width:600px; height:350px;"></div>
+                <div id="theater_thumbs">
+                    <div style="width: 138px; height: 83px; display: inline-table; text-align: left;">
+                        <a href="#youtube-player" youtube-data="lzKyxzYJX0U" style="border: none;" class="youtube-link">
+                        <img src="{{ asset('bundles/spoutlet/images/military/lzKyxzYJX0U_thumbnail.jpg') }}" alt="Battlefield 3 Tactics: Recon Class" style="border: 1px solid #4a4a4a" /></a>
+                        <a href="#youtube-player" youtube-data="lzKyxzYJX0U" class="youtube-link">Battlefield 3 Tactics: Recon Class</a>
+                    </div>
+                    <div style="width: 138px; height: 83px; display: inline-table; padding-left: 5px; text-align: left;">
+                        <a href="#youtube-player" youtube-data="KnJxTL7qSVE" style="border: none;" class="youtube-link">
+                        <img src="{{ asset('bundles/spoutlet/images/military/KnJxTL7qSVE_thumbnail.jpg') }}" alt="Battlefield 3 Tactics: Strike at Karkand" style="border: 1px solid #4a4a4a" /></a><a href="#youtube-player" youtube-data="KnJxTL7qSVE" class="youtube-link">Battlefield 3 Tactics: Strike at Karkand</a>
+                    </div>
+                    <div style="width: 138px; height: 83px; display: inline-table; padding-left: 5px; text-align: left;">
+                        <a href="#youtube-player" youtube-data="9iRYOQTiFZ8" style="border: none;" class="youtube-link">
+                        <img src="{{ asset('bundles/spoutlet/images/military/9iRYOQTiFZ8_thumbnail.jpg') }}" alt="Alienware Mobile LAN Tour @ Comic Con 2011" style="border: 1px solid #4a4a4a" /></a><a href="#youtube-player" youtube-data="9iRYOQTiFZ8" class="youtube-link">Alienware Mobile LAN Tour @ Comic Con 2011</a>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        Photo Gallery
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div class="military-page">
+                        <div class="media-gallery ad-gallery">
+
+                            <div class="media-content">
+                                <div class="ad-nav"></div>
+                                    <div class="ad-thumbs">
+                                        <ul class="ad-thumb-list">
+                                            <li>
+                                                <a href="{{ asset('bundles/spoutlet/images/military/one.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/one_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/one.jpg') }}" />
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ asset('bundles/spoutlet/images/military/two.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/two_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/two.jpg') }}" />
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ asset('bundles/spoutlet/images/military/three.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/three_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/three.jpg') }}" />
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ asset('bundles/spoutlet/images/military/four.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/four_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/four.jpg') }}" />
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ asset('bundles/spoutlet/images/military/five.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/five_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/five.jpg') }}" />
+                                                </a>
+                                            </li>
+                                            <li class="last">
+                                                <a href="{{ asset('bundles/spoutlet/images/military/six.jpg') }}" target="_blank">
+                                                    <img src="{{ asset('bundles/spoutlet/images/military/six_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/six.jpg') }}" />
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget-footer">
+                    &nbsp;
+                </div>
             </div>
         </div>
     </div>
+    <div class="std_2col">
+        <div class="right">&nbsp;</div>
+        <div class="left">
+            {% render "FOSCommentBundle:Thread:showFlat" with {"id": "custom-military-page" } %}
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/military.css') }}" />
+
 {% endblock %}
 
 {% block javascripts %}
@@ -111,7 +209,7 @@
 
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
 
-    <script type="text/javacript">
+    <script type="text/javascript">
         var GamePage = {
 
         };
@@ -128,15 +226,42 @@
             par.flashvars += "&muteOnStart=yes";
             par.allowScriptAccess = "always";
             par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"450", height:"300", id:"theater_screen", name:"theater_screen"};
+            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"600", height:"350", id:"theater_screen", name:"theater_screen"};
             var id = "theater_screen";
 
             // temporarily disable, because the autostart is annoying
             var myytplayer = swfobject.createSWF(att, par, id);
         };
 
+        GamePage.initializeMediaGallery = function() {
+            var galleries = $('.media-gallery').adGallery({
+                loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+                display_next_and_prev: false,
+                display_back_and_forward: true,
+                slideshow: {
+                    enable: false,
+                    autostart: false,
+                    speed: 5000,
+                    stop_on_scroll: false
+                },
+                effect: 'fade'
+            });
+
+            // we actually grab the thumbnails, and remove the adgallery behavior
+            // this allows them to be clean, and we can do whatever next
+            // this is done because adgallery normally loads the image in the larger view
+            // but we don't even have the larger view
+            var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list li a');
+            mediaGalleryAnchors.unbind('click');
+        };
+
         jQuery(document).ready(function() {
             GamePage.initializeMovie('lzKyxzYJX0U');
+            GamePage.initializeMediaGallery();
+            $('.youtube-link').click(function () {
+               var youtubeId = $(this).attr('youtube-data');
+               GamePage.initializeMovie(youtubeId);
+            });
         });
     </script>
 {% endblock %}
