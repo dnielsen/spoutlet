@@ -32,3 +32,7 @@ _spoutlet_events:
 _spoutlet_account:
     resource: routing/account.yml
     prefix:   /account
+
+military:
+    pattern: /groups/military
+    defaults: { _controller: SpoutletBundle:Default:military }

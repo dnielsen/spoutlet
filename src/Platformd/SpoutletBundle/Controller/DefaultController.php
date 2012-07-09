@@ -95,4 +95,8 @@ class DefaultController extends Controller
 
         return $this->render('SpoutletBundle:Default:banner.html.twig', array('banners' => $banners));
     }
+
+    public function militaryAction() {
+        return $this->render('SpoutletBundle:Default:military.html.twig');
+    }
 }
