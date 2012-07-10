@@ -19,6 +19,11 @@
     <div class="std_2col">
         <div class="right">
             <div class="widget-33">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        REWARDS PROGRAM
+                    </div>
+                </div>
                 <div class="widget-content" style="text-align: center;">
                     <a href="http://www.dell.com/us/eep/p/d/campaigns/military-experience?~ck=mn?&dgc=AF&cid=246361&lid=4252661&Link_number113010291" style="border: none;">
                         <img src="{{ asset('bundles/spoutlet/images/military/military_group_banner_280x250.jpg') }}" alt="Military Group" style="margin: 5px auto;" />
@@ -29,7 +34,7 @@
                     <div class="clear"></div>
                 </div>
             </div>
-            <div class="widget-33" style="padding-top: 0; margin-top: -40px;">
+            <div class="widget-33" style="padding-top: 0; margin-top: -10px;">
                 <div class="widget-header">
                     <div class="widget-title">
                         MILITARY FEED
@@ -62,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="widget-33" style="padding-top: 0; margin-top: -120px;">
+            <div class="widget-33" style="padding-top: 0; margin-top: -130px;">
                 <div class="widget-header">
                     <div class="widget-title">
                         Latest Poll
@@ -72,7 +77,33 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    <iframe height="313" allowTransparency="true" frameborder="0" scrolling="no" style="width:100%;border:none"  src="http://igames.wufoo.com/embed/z7x3x5/"><a href="http://igames.wufoo.com/forms/z7x3x5/">Fill out my Wufoo form!</a></iframe>
+                    <div id="wufoo-z7x3x5">
+                    Fill out my <a href="http://igames.wufoo.com/forms/z7x3x5">online form</a>.
+                    </div>
+                    <script type="text/javascript">
+                        var z7x3x5;(function(d, t) {
+                        var s = d.createElement(t), options = {
+                            'userName':'igames',
+                            'formHash':'z7x3x5',
+                            'autoResize':true,
+                            'height':'313',
+                            'async':true,
+                            'header':'show'
+                        };
+                        s.src = ('https:' == d.location.protocol ? 'https://' : 'http://') + 'wufoo.com/scripts/embed/form.js';
+                        s.onload = s.onreadystatechange = function() {
+                            var rs = this.readyState; if (rs) if (rs != 'complete') if (rs != 'loaded') return;
+                            try {
+                                z7x3x5 = new WufooForm();
+                                z7x3x5.initialize(options);
+                                z7x3x5.display();
+                            } catch (e) {
+
+                            }
+                        };
+                            var scr = d.getElementsByTagName(t)[0], par = scr.parentNode; par.insertBefore(s, scr);
+                        })(document, 'script');
+                    </script>
                 </div>
             </div>
         </div>
@@ -85,24 +116,24 @@
                 </div>
                 <div class="widget-content">
                     <div class="newsBlurb">
-                        <h2><a href="#">Preparing for the LoL Battlegrounds</a></h2>
+                        <h2>Alienware Arena Launches United States Armed Forces Group Page</h2>
                         <div class="article-content">
                             <div class="article-blurb">
                                 <h6>Announced Wednesday, May 16, 2012</h6>
                                 <p class="article-blurb-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam faucibus nisl at felis congue dictum. Mauris quis odio sed ligula posuere tempus ut ut diam. Sed posuere mollis purus, quis lobortis arcu viverra eu. Vestibulum in sem ut nunc ultrices tincidunt ornare sit amet sem. Aliquam ultrices volutpat dictum. Donec vitae pretium sem. Nunc ut diam nec lorem molestie elementum nec eu dolor. Integer sed quam lacus.
+                                    Alienware Arena is proud to announce the United States Armed Forces group page for those serving in the US military. With the launch of the United States Armed Forces group page, Alienware Arena members with a U.S. military background will have an exclusive place on Alienware Arena to call their own. Connect with other military service members, read and watch military related content, and find the latest Alienware/Dell updates on military related programs.
                                 </p>
                             </div>
                             <div class="clear"></div>
                         </div>
                     </div>
                     <div class="newsBlurb">
-                        <h2><a href="#">NA League of Legends Spring Season Champions</a></h2>
+                        <h2>Dell's Military Discount Program</a></h2>
                         <div class="article-content">
                             <div class="article-blurb">
                                 <h6>Announced Wednesday, May 7, 2012</h6>
                                 <p class="article-blurb-text">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam faucibus nisl at felis congue dictum. Mauris quis odio sed ligula posuere tempus ut ut diam. Sed posuere mollis purus, quis lobortis arcu viverra eu. Vestibulum in sem ut nunc ultrices tincidunt ornare sit amet sem. Aliquam ultrices volutpat dictum. Donec vitae pretium sem. Nunc ut diam nec lorem molestie elementum nec eu dolor. Integer sed quam lacus.
+                                    In recognition of their service and sacrifice, Dell is making great offers on an array of PCs to all U.S. military personnel. Check out Dell’s military discount page for a list of the current discounts for military personnel. Make sure to check back regularly, as discount rates and discounted products continually change.
                                 </p>
                             </div>
                             <div class="clear"></div>
@@ -115,7 +146,9 @@
             </div>
             <div style="text-align: center; padding: 40px;">
                 <a name="youtube-player"></a>
-                <div id="theater_screen" style="width:600px; height:350px;"></div>
+                <div style="margin-left: -20px; width: 100%">
+                    <div id="theater_screen" style="width:600px; height:350px;"></div>
+                </div>
                 <div id="theater_thumbs">
                     <div style="width: 138px; height: 83px; display: inline-table; text-align: left;">
                         <a href="#youtube-player" youtube-data="lzKyxzYJX0U" style="border: none;" class="youtube-link">
