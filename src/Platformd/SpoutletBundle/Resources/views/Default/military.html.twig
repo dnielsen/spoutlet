@@ -10,9 +10,9 @@
     <div id="military-sub-nav-wrapper">
         <div id="military-sub-nav">
             <ul>
-                <li class="first"><a href="#">MAIN</a></li>
-                <li><a href="#">FORUMS</a></li>
-                <li><a href="#">Member Purchase Program</a></li>
+                <li class="first"><a href="/groups/military">MAIN</a></li>
+                <li><a href="http://www.alienwarearena.com/forums/">FORUMS</a></li>
+                <li><a href="http://www.dell.com/us/eep/p/d/campaigns/military-experience?~ck=mn?&dgc=AF&cid=246361&lid=4252661&Link_number113010291">Member Purchase Program</a></li>
             </ul>
         </div>
     </div>
@@ -172,49 +172,21 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    <div class="military-page">
-                        <div class="media-gallery ad-gallery">
-
-                            <div class="media-content">
-                                <div class="ad-nav"></div>
-                                    <div class="ad-thumbs">
-                                        <ul class="ad-thumb-list">
-                                            <li>
-                                                <a href="{{ asset('bundles/spoutlet/images/military/one.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/one_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/one.jpg') }}" />
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ asset('bundles/spoutlet/images/military/two.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/two_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/two.jpg') }}" />
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ asset('bundles/spoutlet/images/military/three.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/three_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/three.jpg') }}" />
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ asset('bundles/spoutlet/images/military/four.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/four_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/four.jpg') }}" />
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ asset('bundles/spoutlet/images/military/five.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/five_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/five.jpg') }}" />
-                                                </a>
-                                            </li>
-                                            <li class="last">
-                                                <a href="{{ asset('bundles/spoutlet/images/military/six.jpg') }}" target="_blank">
-                                                    <img src="{{ asset('bundles/spoutlet/images/military/six_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/six.jpg') }}" />
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                    <div style="width: 100%; text-align: center">
+                        <div id="prev"></div>
+                        <div class="image_carousel">
+                            <div id="military-carousel">
+                                <img src="{{ asset('bundles/spoutlet/images/military/one_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/one.jpg') }}" />
+                                <img src="{{ asset('bundles/spoutlet/images/military/two_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/two.jpg') }}" />
+                                <img src="{{ asset('bundles/spoutlet/images/military/three_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/three.jpg') }}" />
+                                <img src="{{ asset('bundles/spoutlet/images/military/four_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/four.jpg') }}" />
+                                <img src="{{ asset('bundles/spoutlet/images/military/five_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/five.jpg') }}" />
+                                <img src="{{ asset('bundles/spoutlet/images/military/six_thumbnail.jpg') }}" data-url="{{ asset('bundles/spoutlet/images/military/six.jpg') }}" />
                             </div>
+                            <div class="clearfix"></div>
                         </div>
-                    </div>
+                        <div id="next"></div>
+                        </div>
                 </div>
                 <div class="widget-footer">
                     &nbsp;
@@ -241,7 +213,7 @@
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
-
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.carouFredSel-5.6.1-packed.js') }}"></script>
     <script type="text/javascript">
         var GamePage = {
 
@@ -267,30 +239,24 @@
         };
 
         GamePage.initializeMediaGallery = function() {
-            var galleries = $('.media-gallery').adGallery({
-                loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
-                display_next_and_prev: false,
-                display_back_and_forward: true,
-                slideshow: {
-                    enable: false,
-                    autostart: false,
-                    speed: 5000,
-                    stop_on_scroll: false
-                },
-                effect: 'fade'
-            });
 
-            // we actually grab the thumbnails, and remove the adgallery behavior
-            // this allows them to be clean, and we can do whatever next
-            // this is done because adgallery normally loads the image in the larger view
-            // but we don't even have the larger view
-            var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
-            mediaGalleryAnchors.unbind('click');
         };
 
         jQuery(document).ready(function() {
+            $('#page').css('background', 'url("/bundles/spoutlet/images/military/top_bg v2.jpg") center 164px no-repeat');
+
             GamePage.initializeMovie('lzKyxzYJX0U');
-            GamePage.initializeMediaGallery();
+            $('#military-carousel').carouFredSel({
+                width: 500,
+                auto: false,
+                next: '#next',
+                prev: '#prev'
+            });
+
+            $('.image_carousel img').click(function () {
+                window.open($(this).attr('data-url'));
+            });
+
             $('.youtube-link').click(function () {
                var youtubeId = $(this).attr('youtube-data');
                GamePage.initializeMovie(youtubeId);
