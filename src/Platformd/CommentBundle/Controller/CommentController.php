@@ -26,14 +26,6 @@ class CommentController extends BaseCommentController
             throw new NotFoundHttpException('Comment not found.');
         }
 
-        // Not sure if the CommentBundle provides a way to delete comments easily
-        // so we just use the ORM directly
-        $threadSlug = $comment->getThread()->getId();
-
-        $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
-
-        $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
-
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $thread = $comment->getThread();
@@ -43,6 +35,19 @@ class CommentController extends BaseCommentController
         $em->remove($comment);
 
         $em->flush();
+
+        // Not sure if the CommentBundle provides a way to delete comments easily
+        // so we just use the ORM directly
+        $threadSlug = $comment->getThread()->getId();
+
+        if($threadSlug == 'custom-military-page') {
+            $url = $this->container->get('router')->generate('military');
+            return new RedirectResponse($url);
+        }
+
+        $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
+
+        $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
 
         return new RedirectResponse($url);
     }
