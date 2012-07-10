@@ -45,25 +45,22 @@
                 </div>
                 <div class="widget-content">
                     <div class="widget-item">
-                        <a href="#">Lorem ipsum dolor sit amet, elit.</a>
+                        <a href="#">Alienware Arena Launches United States Armed Forces Group Page</a>
                     </div>
                     <div class="widget-item">
-                        <a href="#">Mauris ultricies tristique fringilla.</a>
+                        <a href="#">Dell’s Military Discount Program</a>
                     </div>
                     <div class="widget-item">
-                        <a href="#">Sed ac felis non risus varius ultrices.</a>
+                        <a href="#youtube-player" youtube-data="lzKyxzYJX0U" class="youtube-feed">Battlefield 3 Tactics: Recon Class</a>
                     </div>
                     <div class="widget-item">
-                        <a href="#" style="color: #f1cf18">Lorem ipsum dolor sit amet, elit.</a>
+                        <a href="#youtube-player" youtube-data="KnJxTL7qSVE" class="youtube-feed">Battlefield 3 Tactics: Strike at Karkand</a>
                     </div>
                     <div class="widget-item">
-                        <a href="#">Lorem ipsum dolor sit amet, elit.</a>
+                        <a href="http://www.alienwarearena.com/giveaway/battlefield-3-dog-tag-item-giveaway/">Battlefield 3 Dog Tag Key Giveaway</a>
                     </div>
                     <div class="widget-item">
-                        <a href="#">Mauris ultricies tristique fringilla.</a>
-                    </div>
-                    <div class="widget-item">
-                        <a href="#">Mauris ultricies tristique fringilla.</a>
+                        <a href="#youtube-player" youtube-data="9iRYOQTiFZ8" class="youtube-feed">Alienware Mobile LAN Tour @ Comic Con 2011</a>
                     </div>
                 </div>
             </div>
@@ -258,6 +255,11 @@
             });
 
             $('.youtube-link').click(function () {
+               var youtubeId = $(this).attr('youtube-data');
+               GamePage.initializeMovie(youtubeId);
+            });
+
+            $('.youtube-feed').click(function () {
                var youtubeId = $(this).attr('youtube-data');
                GamePage.initializeMovie(youtubeId);
             });
