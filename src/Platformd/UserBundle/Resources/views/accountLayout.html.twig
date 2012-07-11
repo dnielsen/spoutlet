@@ -10,7 +10,7 @@
                 <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
             #}
             <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
-            <li><a href="http://alienwarearena.com/member/{{ cevoUserId }}/">{{ "platformd.user.account.profile" | trans }}</a></li>
+            <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
             <li><a href="http://alienwarearena.com/account/events/">{{ "platformd.user.account.registered_events" | trans }}</a></li>
             <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
             <li><a href="http://alienwarearena.com/account/ids/">{{ 'platformd.user.account.gameids' | trans }}</a></li>
