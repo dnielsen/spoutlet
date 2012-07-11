@@ -66,7 +66,12 @@ class SpoutletExtension extends Twig_Extension
             ),
             'site_link'                     => new Twig_Function_Method(
                 $this,
-                'siteLink', array('is_safe' => array('html')))
+                'siteLink', array('is_safe' => array('html'))
+            ),
+            'get_avatar_url'                => new Twig_Function_Method(
+                $this,
+                'getAvatarUrl'
+            ),
         );
     }
 
@@ -76,7 +81,6 @@ class SpoutletExtension extends Twig_Extension
 
     public function getAbsoluteUrl($obj)
     {
-
         # look at the url that is being passed in and if it is relative, return base path + url... if it is not, then return obj
 
         $request = $this->container->get('request');
@@ -242,6 +246,28 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    /**
+     * Use this to find the proper avatar URL for a user, and wrap it in an asset call
+     *
+     *     asset(get_avatar_url(comment.author))
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @param string $default
+     * @return string
+     */
+    public function getAvatarUrl(User $user, $default = '/images/profile-default.png')
+    {
+        if ($user->getCevoAvatarUrl()) {
+            return $user->getCevoAvatarUrl();
+        }
+
+        if ($user->getAvatar() && $user->isAvatarApproved()) {
+            return $this->getMediaExposer()->getPath($user);
+        }
+
+        return $default;
+    }
+
     private function GetAlienwareLink($locale) {
         $format = '<a href="%s" target="_blank">%s</a>';
         $enLink = 'http://alienware.com';
@@ -343,5 +369,13 @@ class SpoutletExtension extends Twig_Extension
     private function getGiveawayManager()
     {
         return $this->container->get('pd_giveaway.giveaway_manager');
+    }
+
+    /**
+     * @return \MediaExposer\Exposer
+     */
+    private function getMediaExposer()
+    {
+        return $this->container->get('media_exposer');
     }
 }
