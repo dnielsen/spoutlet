@@ -53,8 +53,14 @@
             <div class="profileAvatar">
                 <span class="png"></span>
                 {# A twig test would be cleaned #}
-                <img src="{{ asset(comment.author.avatar and comment.author.isAvatarApproved ? media_path(comment.author) : "/images/profile-default.png") }}" alt="{{ comment.author.username }}" />
-                
+
+                {% if comment.author.cevoAvatarUrl %}
+                    {% set avatar = comment.author.cevoAvatarUrl %}
+                {% else %}
+                    {% set avatar = asset(comment.author.avatar and comment.author.isAvatarApproved ? media_path(comment.author) : "/images/profile-default.png") %}
+                {% endif %}
+
+                <img src="{{ avatar }}" alt="{{ comment.author.username }}" />
             </div>
             <div class="profileName">
                 {# we should always have an author, but just in case... #}

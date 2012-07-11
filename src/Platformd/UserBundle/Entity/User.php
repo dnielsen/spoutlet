@@ -136,6 +136,13 @@ class User extends BaseUser
     protected $avatar;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $cevoAvatarUrl;
+
+    /**
      * @var Platformd\SpoutletBundle\Entity\Event $events
      *
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", inversedBy="users")
@@ -1026,5 +1033,21 @@ class User extends BaseUser
     public function setCevoUserId($cevoUserId)
     {
         $this->cevoUserId = $cevoUserId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCevoAvatarUrl()
+    {
+        return $this->cevoAvatarUrl;
+    }
+
+    /**
+     * @param string $cevoAvatarUrl
+     */
+    public function setCevoAvatarUrl($cevoAvatarUrl)
+    {
+        $this->cevoAvatarUrl = $cevoAvatarUrl;
     }
 }

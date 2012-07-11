@@ -120,7 +120,7 @@ class StubApiController extends Controller
                 'user_id'       => $userId,
                 'username'      => $username,
                 'handle'        => $username,
-                'avatar_url'    => 'http://avatar.com',
+                'avatar_url'    => 'http://alienwarearena.com/images/profile-default.png',
                 'country'       => 'japan',
                 'profile_url'   => 'http://profile.com',
                 'dob'           => '1984-06-05',

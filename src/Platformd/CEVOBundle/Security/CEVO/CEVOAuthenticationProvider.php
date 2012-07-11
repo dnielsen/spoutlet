@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Platformd\CEVOBundle\Api\ApiException;
 use DateTime;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * This is notified after a CEVO Token has been set
@@ -135,6 +136,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $firstName = isset($allUserData['first_name']) ? $allUserData['first_name'] : null;
         $lastName  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
         $country = isset($allUserData['country']) ? $allUserData['country'] : null;
+        $avatarUrl = isset($allUserData['avatar_url']) ? $allUserData['avatar_url'] : null;
 
         $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
 
@@ -145,6 +147,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $newUser->setUsername($allUserData['username']);
         $newUser->setLastname($lastName);
         $newUser->setFirstname($firstName);
+        $newUser->setCevoAvatarUrl($avatarUrl);
 
         $newUser->setPassword(self::FAKE_PASSWORD);
         $newUser->setCountry($country);
@@ -160,10 +163,10 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
      * Need to see if certain content was updated on CEVO site and if so
      * update the data. 
      * 
-     * @param array $existingUser
+     * @param User $existingUser
      * @param array $allUserData
      */
-    protected function checkUpdates($existingUser, $allUserData)
+    protected function checkUpdates(User $existingUser, $allUserData)
     {
         $update = false;
 
@@ -171,6 +174,7 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         $last_name  = isset($allUserData['last_name'])  ? $allUserData['last_name']  : null;
         $country = isset($allUserData['country']) ? $allUserData['country'] : null;
         $birthday = isset($allUserData['dob']) ? new DateTime($allUserData['dob']) : null;
+        $avatarUrl = isset($allUserData['avatar_url']) ? $allUserData['avatar_url'] : null;
 
         // Check first name
         if ($existingUser->getFirstname() != $first_name) {
@@ -193,6 +197,12 @@ class CEVOAuthenticationProvider implements AuthenticationProviderInterface
         // Check DOB
         if ($existingUser->getBirthdate() != $birthday ) {
             $existingUser->setBirthdate($birthday);
+            $update = true;
+        }
+
+        // Check avatar URL
+        if ($existingUser->getCevoAvatarUrl() != $avatarUrl) {
+            $existingUser->setCevoAvatarUrl($avatarUrl);
             $update = true;
         }
 
