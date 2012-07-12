@@ -8,6 +8,19 @@
             "poolId"  : pool.id,
             "dealId"  : pool.deal.id
         }),
-        'dealId': pool.deal.id
+    'dealId': pool.deal.id
     } %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+           $("#deal_pool_allowedCountries").multiselect({
+               selectedText: "# of # selected",
+               noneSelectedText: 'Select allowed countries',
+               selectedList: 4,
+            }).multiselectfilter();
+        });
+    </script>
 {% endblock %}

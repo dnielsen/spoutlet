@@ -19,6 +19,9 @@ h1 i {
     margin-top: 10px;
 }
 
+#deal_pool_allowedCountries {
+    width: 500px;
+}
 
 /* css for timepicker */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
