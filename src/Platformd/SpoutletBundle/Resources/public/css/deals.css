@@ -45,6 +45,7 @@
     width: 600px;
     vertical-align: top;
     color: #BFBFBF;
+    font-size: 12px;
 }
 
 .deals-features-col ol, ul, dl {
@@ -64,6 +65,7 @@
     width: 350px;
     vertical-align: top;
     color: #BFBFBF;
+    font-size: 12px;
 }
 
 #deal-actions {
@@ -248,6 +250,7 @@ li.dealCommentAt
    padding: 6px;
    width: 138px;
    height: 165px;
+   font-size: 12px;
 }
 
 .deal-item a {
