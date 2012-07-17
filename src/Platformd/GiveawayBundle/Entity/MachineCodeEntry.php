@@ -53,6 +53,12 @@ class MachineCodeEntry
      */
     protected $approvedAt;
 
+     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $deniedAt;
+
     /**
      * If an email was sent regarding the approval of this entry, when was it sent?
      *
@@ -110,7 +116,7 @@ class MachineCodeEntry
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -142,9 +148,18 @@ class MachineCodeEntry
     }
 
     /**
+     * Call this to deny the machine code entry
+     */
+    public function markAsDenied()
+    {
+        $this->status = self::STATUS_DENIED;
+        $this->setDeniedAt(new \DateTime());
+    }
+
+    /**
      * Get machineCode
      *
-     * @return string 
+     * @return string
      */
     public function getMachineCode()
     {
@@ -207,6 +222,22 @@ class MachineCodeEntry
     public function setApprovedAt($approvedAt)
     {
         $this->approvedAt = $approvedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeniedAt()
+    {
+        return $this->deniedAt;
+    }
+
+    /**
+     * @param \DateTime $deniedAt
+     */
+    public function setDeniedAt($deniedAt)
+    {
+        $this->deniedAt = $deniedAt;
     }
 
     /**

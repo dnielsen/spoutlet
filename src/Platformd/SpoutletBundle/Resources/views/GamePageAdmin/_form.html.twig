@@ -130,5 +130,15 @@
         {{ form_widget(form.mediaGalleryMedias) }}
     </fieldset>
 
+    <fieldset>
+        <legend>f) Facebook Info</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_row(form.openGraphOverride.description) }}
+                {{ form_row(form.openGraphOverride.thumbnail) }}
+            </div>
+        </div>
+    </fieldset>
+
     {{ form_rest(form) }}
 </div>

@@ -215,6 +215,75 @@ class GiveawayAdminController extends Controller
     }
 
     /**
+     * Allows the user to deny machine codes
+     *
+     * @Template()
+     *
+     * @param $id
+     * @return array
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function denyCodesAction($id, Request $request)
+    {
+        $this->addGiveawayBreadcrumb()->addChild('Deny machine codes');
+
+        $giveaway = $this->getGiveawayRepo()->find($id);
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway for that id');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('emails', 'textarea', array('attr' => array('class' => 'input-xlarge')))
+            ->getForm()
+        ;
+
+        $successEmails = array();
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $emails = explode(',', $data['emails']);
+
+                // iterate through the emails and deny their machine codes
+                foreach ($emails as $email) {
+                    $user = $this->getUserManager()->findUserByEmail(trim($email));
+                    if (!$user) {
+                        $form->addError(new FormError('No user with email %email% found', array('%email%' => $email)));
+
+                        continue;
+                    }
+
+                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKeyForGiveaway($user, $giveaway);
+
+                    if (count($machineCodes) == 0) {
+                        $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
+
+                        continue;
+                    }
+
+                    // pop up the first one, ideally there's only one
+                    $machineCode = $machineCodes[0];
+
+                    $this->getGiveawayManager()->denyMachineCode($machineCode);
+
+                    $successEmails[] = $email;
+                }
+
+                $this->setFlash('success', sprintf('%s codes were denied', count($successEmails)));
+
+                return $this->redirect($this->generateUrl('admin_giveaway_machine_deny_codes', array('id' => $giveaway->getId())));
+            }
+        }
+
+        return array(
+            'giveaway' => $giveaway,
+            'form'     => $form->createView(),
+            'successEmails' => $successEmails,
+        );
+    }
+
+    /**
      * Shows key giveaway metrics
      * @Template()
      * @return array

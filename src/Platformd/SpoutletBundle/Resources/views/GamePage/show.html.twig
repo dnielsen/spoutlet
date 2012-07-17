@@ -8,12 +8,14 @@
     <meta property="og:type" content="game" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if gamePage.game.logoThumbnail %}
-        {% set thumbUrl = media_path(gamePage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') %}
-        <meta property="og:image" content="{{ thumbUrl | absolute_url }}" />
-    {% endif %}
-    {% if gamePage.aboutGame %}
-        <meta property="og:description" content="{{ gamePage.aboutGame | striptags }}" />
+    {% if gamePage.openGraphOverride %}
+        {% if gamePage.openGraphOverride.thumbnail %}
+            {% set thumbUrl = media_path(gamePage.openGraphOverride.thumbnail) %}
+            <meta property="og:image" content="{{ thumbUrl }}" />
+        {% endif %}
+        {% if gamePage.openGraphOverride.description %}
+            <meta property="og:description" content="{{ gamePage.openGraphOverride.description | striptags }}" />
+        {% endif %}
     {% endif %}
 {% endblock %}
 

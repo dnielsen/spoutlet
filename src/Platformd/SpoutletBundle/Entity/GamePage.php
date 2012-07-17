@@ -268,6 +268,13 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
      */
     protected $mediaGalleryMedias;
 
+    /**
+     *
+     * @var OpenGraphOverride
+     * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
+     */
+    private $openGraphOverride;
+
     public function __construct()
     {
         $this->gamePageLocales = new ArrayCollection();
@@ -951,5 +958,19 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
         return $newGamePageLocale;
     }
 
+    /**
+     * @return OpenGraphOverride
+     */
+    public function getOpenGraphOverride()
+    {
+        return $this->openGraphOverride;
+    }
 
+    /**
+     * @param OpenGraphOverride $openGraphOverride
+     */
+    public function setOpenGraphOverride(OpenGraphOverride $openGraphOverride = null)
+    {
+        $this->openGraphOverride = $openGraphOverride;
+    }
 }

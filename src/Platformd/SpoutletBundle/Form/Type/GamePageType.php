@@ -119,6 +119,7 @@ class GamePageType extends AbstractType
                     'image_help'  => 'This can be any size, and will probably be quite large.',
                 )
             ))
+            ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
         ;
     }
 

@@ -218,6 +218,7 @@ platformd:
             my_giveaways:     获取赠品
             my_videos: My Videos
             help: 帮助？
+            game_ids: Game IDs
 
     giveaway:
         giveaway: 邀请码
@@ -355,6 +356,7 @@ giveaway:
         machine_code_submit: System Tag Submit Key Giveaway
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
+deny_machine_codes: Deny System Tags
 
 submit_machine_code: Apply
 machine_code: System Tag

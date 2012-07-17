@@ -13,12 +13,14 @@
     mailer_host       = localhost
     mailer_user       =
     mailer_password   =
+    mailer_encryption = tls
+    mailer_port       = 587
 
     locale            = en
 
     secret            = ThisTokenIsNotSoSecretChangeIt
 
-    recaptcha.public_key = 
+    recaptcha.public_key =
     recaptcha.private_key =
 
     base_host         = site.com

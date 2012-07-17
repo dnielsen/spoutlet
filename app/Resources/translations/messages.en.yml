@@ -225,6 +225,7 @@ platformd:
             my_giveaways: My Giveaways
             my_videos: My Videos
             help: Help
+            game_ids: Game IDs
 
     giveaway:
         giveaway: Giveaway
@@ -378,6 +379,7 @@ giveaway:
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
 created_date: Created Date
+deny_machine_codes: Deny System Tags
 
 submit_machine_code: Apply
 machine_code: System Tag
@@ -489,3 +491,4 @@ platformd.deal_pool.admin.create: Create New Pool
 platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
+deny_codes: Deny Codes

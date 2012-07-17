@@ -225,6 +225,7 @@ platformd:
             my_giveaways: 参加済みキャンペーン
             my_videos: マイビデオ
             help: お問い合わせ
+            game_ids: Game IDs
 
     giveaway:
         giveaway: プレゼント
@@ -368,13 +369,14 @@ giveaway:
         machine_code_submit: System Tag Submit Key Giveaway
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
+deny_machine_codes: Deny System Tags
 
 submit_machine_code: 応募する
 machine_code: システムタグ
 no_machine_code_submitted: サービスタグナンバーを入力して下さい。
 
 pending: 進行中
-denied: Denied
+denied: 無効
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
 
@@ -392,9 +394,23 @@ email:
 
         - ALIENWARE ARENA TEAM
 
+    giveaway_machine_code_deny: |
+        こんにちは%userLastName%様,
+
+        この度は「%giveawayName%」にご登録いただき誠にありがとうございます。
+        ご登録頂いたサービスタグナンバーのパソコンは、ご購入時期に相違があるため、本キャンペーンの対象外となります。
+        誠に申し訳ございませんが、本キャンペーンのお申し込みは無効となりますので、ご了承ください。
+        ご登録頂いたサービスタグナンバー: %systemTag%
+        また、ご購入時期が一致されている場合は、再度サービスタグナンバーをご確認の上、お申込みください。
+
+        ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
+        japan@alienwarearena.com.
+
+         - ALIENWARE ARENA TEAM
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ
+        giveaway_machine_code_deny:  %giveawayName%のお知らせ
 
 username: ユーザー名
 
