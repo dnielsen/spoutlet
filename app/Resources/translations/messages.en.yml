@@ -225,6 +225,7 @@ platformd:
             my_giveaways: My Giveaways
             my_videos: My Videos
             help: Help
+            game_ids: Game IDs
 
     giveaway:
         giveaway: Giveaway
@@ -378,6 +379,7 @@ giveaway:
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
 created_date: Created Date
+deny_machine_codes: Deny System Tags
 
 submit_machine_code: Apply
 machine_code: System Tag
@@ -435,3 +437,4 @@ past_partnerships: Past Partnerships
 archives: ARCHIVES
 media_gallery: Media Gallery
 more_games: More Games
+deny_codes: Deny Codes
