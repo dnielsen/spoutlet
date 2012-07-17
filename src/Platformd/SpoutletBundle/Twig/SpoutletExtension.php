@@ -236,6 +236,8 @@ class SpoutletExtension extends Twig_Extension
             case 'ALIENWARE':   return $this->GetAlienwareLink($locale);
             case 'FACEBOOK':    return $this->GetFacebookLink($locale);
             case 'TWITTER':     return $this->GetTwitterLink($locale);
+            case 'USER_EVENT':   return $this->GetUserEventLink($locale);
+            case 'USER_GAME_ID': return $this->GetUserGameIdLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -285,6 +287,31 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, 'Alienware_JP', $enAltText);
             case 'es':      return sprintf($format, 'AlienwareLatAm', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetUserEventLink($locale) {
+        $format = '<a href="http://www.alienwarearena.com/%s/account/events/" target="_blank">%s</a>';
+        $enLink = $this->container->get('router')->generate('accounts_events');
+        $enLinkText = 'Events';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'japan', '参加済みイベント');
+            case 'zh':      return sprintf($format, 'china', '我的活动');
+            case 'en_US':   return sprintf($format, $enLink, $enLinkText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetUserGameIdLink($locale) {
+        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/" target="_blank">%s</a>';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'japan', 'Game IDs');
+            case 'zh':      return sprintf($format, 'china', 'Game IDs');
 
             default:        return false;
         }
