@@ -438,6 +438,7 @@ games_trailers:
         rpg: ＲＰＧ
         strategy: 戦略ゲーム
         other: 他のゲーム
+    subcategory:
         free-to-play: 無料プレイ
         mmo:   ＭＭＯ
 games_and_trailers: ゲームとトレーラー

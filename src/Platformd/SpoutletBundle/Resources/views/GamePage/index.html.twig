@@ -55,7 +55,7 @@
                             <span>
                                 (
                                 {% for subcategory in actionPage.game.subcategories %}
-                                {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                                {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
                                 {{- loop.last ? '' : ', ' }}
                                 {% endfor %}
                                 )
