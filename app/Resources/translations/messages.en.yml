@@ -467,6 +467,7 @@ deal_instructions_step: STEP
 deal_show_expired: This deal is no longer available.
 deal_time_remaining: Time Remaining:
 deal_comments: Deals Comments
+deal_comments_posted_on: Posted on
 choose_country: Choose your country
 
 featured_deals: Alienware Arena Featured Deals

@@ -31,7 +31,7 @@
                                     <ul class="dealDetails">
                                         <li class="dealTitle"><a class="movie_ellipsis" title="" href="{{ deal | pd_link }}">{{ deal.name }}</a></li>
                                         <li class="dealCommentAuthor">{{ 'by' | trans }} {{ comment.author }}</li>
-                                        <li class="dealCommentAt">{{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}</li>
+                                        <li class="dealCommentAt">{{ 'deal_comments_posted_on' | trans}} {{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
             $('.deals-timeleft').fadeIn();
 
             $('.movie_ellipsis').truncate();
-            $('.deal-link').truncate({ width: 276 });
+            $('.deal-link').truncate({ width: 225 });
         });
     </script>
 
