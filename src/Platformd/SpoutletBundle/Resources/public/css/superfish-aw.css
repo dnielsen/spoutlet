@@ -31,7 +31,7 @@
 .sf-menu li.sfHover ul {
 	left:			1px;
 	top:			28px; /* match top ul list item height */
-	z-index:		9999;
+	z-index:		99999;
 }
 ul.sf-menu li:hover li ul,
 ul.sf-menu li.sfHover li ul {
@@ -64,7 +64,7 @@ ul.sf-menu li li li.sfHover ul {
 }
 
 .sf-menu li a { font-size:12px; /* font-weight:bold; */ color#ffffff; }
-.sf-menu li a:hover { color:#BCD021; }	
+.sf-menu li a:hover { color:#BCD021; }
 .sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
 	color:			#ffffff;
 }
