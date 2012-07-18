@@ -90,7 +90,7 @@
                         <span>
                             (
                             {% for subcategory in rpgPage.game.subcategories %}
-                            {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
                             {{- loop.last ? '' : ', ' }}
                             {% endfor %}
                             )
@@ -125,7 +125,7 @@
                         <span>
                             (
                             {% for subcategory in strategyPage.game.subcategories %}
-                            {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
                             {{- loop.last ? '' : ', ' }}
                             {% endfor %}
                             )
@@ -160,7 +160,7 @@
                         <span>
                             (
                             {% for subcategory in otherPage.game.subcategories %}
-                            {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_SUBCATEGORY_LABEL_PREFIX')~subcategory) | trans -}}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
                             {{- loop.last ? '' : ', ' }}
                             {% endfor %}
                             )
