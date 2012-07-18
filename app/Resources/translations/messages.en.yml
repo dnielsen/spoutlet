@@ -449,7 +449,7 @@ deal_redeem_no_keys_left: "This deal has expired."
 deal_redeem_invalid_country: "Invalid country selection."
 deal_redeem_success_code: "Here is your code: "
 deal_redeem_success: "Please follow the redemption instructions below. You may review this code at any time by visiting your Deals Page by clicking Account on the top right."
-deal_redeem_success_bottom: "You were already assigned a code for this deal. You may review this code at any time by visiting Account > My Deals on the top right."
+deal_redeem_success_bottom: You were already assigned a code for this deal. You may review this code at anytime by clicking <a href="%account_link%">here</a>.
 deal_redeem_code: Deal Code
 deal_timeleft_label: DEAL EXPIRES IN:
 deal_timeleft_expired_label: DEAL EXPIRED
