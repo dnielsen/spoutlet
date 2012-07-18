@@ -9,18 +9,20 @@
 <div class="deals-timeleft" style="display: none;">
     {% if deal.endsAtUtc is not null %}
         {% if not deal.hasExpired %}
-        <input id="deal-ends-date" type="hidden" value="{{ deal.endsAtUtc | date('Y/m/d h:i:s') }}" />
-        <div id="time-left">
-            <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
-            <span id="deals-daysleft">{dn}</span>
-            <span id="deals-daysleft-label" class="timeleft-label">{dl}</span>
-            <span id="deals-hoursleft">{hn}</span>
-            <span id="deals-hoursleft-label" class="timeleft-label">{hl}</span>
-            <span id="deals-minutesleft">{mn}</span>
-            <span id="deals-minutesleft-label" class="timeleft-label">{ml}</span>
-            <span id="deals-secondsleft">{sn}</span>
-            <span id="deals-secondsleft-label" class="timeleft-label">{sl}<span>
-        </div>
+            {% if hasKeys %}
+                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAtUtc | date('Y/m/d h:i:s') }}" />
+                <div id="time-left">
+                    <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
+                    <span id="deals-daysleft">{dn}</span>
+                    <span id="deals-daysleft-label" class="timeleft-label">{dl}</span>
+                    <span id="deals-hoursleft">{hn}</span>
+                    <span id="deals-hoursleft-label" class="timeleft-label">{hl}</span>
+                    <span id="deals-minutesleft">{mn}</span>
+                    <span id="deals-minutesleft-label" class="timeleft-label">{ml}</span>
+                    <span id="deals-secondsleft">{sn}</span>
+                    <span id="deals-secondsleft-label" class="timeleft-label">{sl}<span>
+                </div>
+            {% endif %}
         {% else %}
         <span>{{ 'deal_timeleft_expired_label' | trans }}</span>
         {% endif %}

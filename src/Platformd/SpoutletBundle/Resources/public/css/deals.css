@@ -96,6 +96,11 @@
     font-weight: bold;
 }
 
+#deal-show-nokeys {
+    font-style: italic;
+    font-weight: bold;
+}
+
 #deal-instructions { padding: 5px;}
 #deal-instructions ul { margin: 5px; padding: 0;}
 #deal-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
