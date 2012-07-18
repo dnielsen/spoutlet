@@ -214,36 +214,6 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 /** MAIN NAV **/
 #nav, #sub-nav { text-transform: uppercase; }
-#mainNav-wrapper { height: 32px; background: url('/bundles/spoutlet/images/nav_bg.png') repeat-x; }
-#mainNav { }
-#mainNav ul { display: block; list-style:none; width: 100%; }
-#mainNav ul#nav { width: 845px; margin: 0 auto; }
-#mainNav ul#sub-nav { width: 845px; margin: 0 auto; }
-#mainNav ul li { float:left; background-repeat:no-repeat; padding: 0 7px; margin: 2px 0 0 0; }
-#mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
-#mainNav ul li:hover { }
-#mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
-#mainNav ul li.more:hover > a{ background: url('/bundles/spoutlet/images/nav-arrow-2.png') right center no-repeat; cursor: pointer; }
-
-#mainNav ul li.last { padding: 0; width: 1px; height: 28px; }
-#mainNav ul li li { background: none; }
-#omni #page #mainNav ul li li a { background-image:none; }
-#mainNav ul li a { display:block; margin: 0; height: 12px; padding: 8px 12px; font: 11px Arial, Helvetica, sans-serif; text-transform: uppercase; color: #bfcace; }
-#mainNav ul#nav li a:hover { color: #bfcace; }
-#mainNav ul#sub-nav li a:hover { color: #bfcace; background-color: #003048; }
-#mainNav ul li a.blue { color: #bfcace; }
-#mainNav ul li a.blue:hover { color: #bfcace; }
-#omni #page #mainNav ul li li { height:20px; margin: 0; }
-#omni #page #mainNav ul li li a { background-color:black; padding:5px 0 4px 10px; margin: 0; }
-#omni #page #mainNav ul li li a:hover { background:#333333; }
-
-#nav-wrapper { width: 845px; margin: 0 auto; }
-#sub-nav-wrapper { width: 237px; margin: 0 auto; }
-
-.nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
-
-/** MAIN NAV **/
-/*#nav, #sub-nav { text-transform: uppercase; }
 #mainNav-wrapper { height: 30px; background: url('/bundles/spoutlet/images/nav_bg.png') repeat-x; }
 #mainNav { }
 #mainNav ul { display: block; list-style:none; width: 100%; }
@@ -294,7 +264,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #nav-wrapper { }
 #sub-nav-wrapper { width: 237px; margin: 0 auto; }
 
-.nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }*/
+.nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
 
 #content {  width: 950px; margin: 20px auto 0 auto; }
 .wide-950 { width: 950px; margin: 0 auto; }
