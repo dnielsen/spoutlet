@@ -353,6 +353,7 @@ class SpoutletExtension extends Twig_Extension
     public function siteHasFeature($feature)
     {
         $locale = $this->container->get('session')->getLocale();
+        $japan = in_array($locale, array('ja'));
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
         $northAmerica = in_array($locale, array('en_US'));
 
@@ -361,7 +362,7 @@ class SpoutletExtension extends Twig_Extension
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'NEWS':                        return $chinaOrJapan;
-            case 'GAMES':                       return $northAmerica; // $chinaOrJapan; #replace after soft launch
+            case 'GAMES':                       return $japan; // $chinaOrJapan; #replace after soft launch
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
