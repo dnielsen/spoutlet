@@ -19,6 +19,7 @@ class SweepstakesAdminType extends EventType
         $builder->add('slug', new SlugType(), array(
             'url_prefix' => '/sweepstakes/'
         ));
+        $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this Sweepstake page.'));
         $builder->add('locale', new SiteChoiceType());
 
         $this->createStartsAtField($builder);
@@ -38,6 +39,8 @@ class SweepstakesAdminType extends EventType
         ));
 
         $builder->add('officialRules', 'textarea');
+
+        $builder->add('game', null, array('empty_value' => 'N/A'));
 
     	$builder->add('content', 'textarea');
     }

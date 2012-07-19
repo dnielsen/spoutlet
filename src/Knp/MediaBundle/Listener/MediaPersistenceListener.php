@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Monolog\Logger;
+use Knp\MediaBundle\Exception\UniqueFilenameGenerationException;
 
 /**
  * Handles all actions taken on a Media on persistence:
@@ -21,6 +23,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class MediaPersistenceListener implements EventSubscriber
 {
+    const UNIQUE_FILENAME_TRIES_LIMIT = 10;
+
     /**
      * The "safe" character to replace bad characters within a filename
      *
@@ -34,6 +38,11 @@ class MediaPersistenceListener implements EventSubscriber
     private $filesystem;
 
     private $container;
+
+    /**
+     * @var \Monolog\Logger
+     */
+    private $logger;
 
     /**
      * Container is passed in to avoid a circular reference on security.context
@@ -92,6 +101,14 @@ class MediaPersistenceListener implements EventSubscriber
     }
 
     /**
+     * @param \Monolog\Logger $logger
+     */
+    public function setLogger(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
      * Actually saves any new file objects, sets the path correctly
      *
      * @param \Knp\MediaBundle\Entity\Media $media
@@ -113,12 +130,14 @@ class MediaPersistenceListener implements EventSubscriber
                 $media->setMimeType($mimeType);
             }
 
+            $this->log(sprintf('About to save uploaded filename "%s"', $targetFilename));
             $size = $this->filesystem->write(
                 $targetFilename,
                 file_get_contents($file->getPathname()),
                 false,
                 $metadata
             );
+            $this->log('Uploaded saving complete!');
 
             // set some metadata
             $media->setFilename($targetFilename);
@@ -171,8 +190,12 @@ class MediaPersistenceListener implements EventSubscriber
             $cleanedName = $this->cleanFilename($file->getFilename());
         }
 
+        $this->log(sprintf('About to find a unique filename for "%s"', $cleanedName));
+
         // if no file by the cleaned original name already exists, just return the originally uploaded filename
         if (!$this->filesystem->has($cleanedName)) {
+            $this->log(sprintf('Found unique filename "%s"', $cleanedName));
+
             return $cleanedName;
         }
 
@@ -180,11 +203,42 @@ class MediaPersistenceListener implements EventSubscriber
         $i = 1;
         while (true) {
             $basename = str_replace('.'.$file->guessExtension(), '', $cleanedName);
-            $newFilename = sprintf('%s-%s.%s', $basename, ++$i, $file->guessExtension());
+            $newFilename = sprintf('%s-%s.%s', $basename, $this->generateRandomString($i), $file->guessExtension());
             if (!$this->filesystem->has($newFilename)) {
+                $this->log(sprintf('Found unique filename "%s"', $newFilename));
+
                 return $newFilename;
+            } else {
+                $this->log(sprintf('Filename "%s" was already taken, trying again', $newFilename));
+
+                // if we try so many times, something is probably wrong and we should bail
+                if ($i > self::UNIQUE_FILENAME_TRIES_LIMIT) {
+                    throw new UniqueFilenameGenerationException($cleanedName);
+                }
             }
+
+            $i++;
         }
+    }
+
+    /**
+     * Generates a random string or a length that's based on how many tries this is
+     *
+     * @param integer $attemptCount
+     * @return string
+     */
+    private function generateRandomString($attemptCount)
+    {
+        // length gets longer on each "try", but only ever 3 tries or so
+        $length = ceil($attemptCount / 3);
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz_';
+
+        $string = '';
+        for ($p = 0; $p < $length; $p++) {
+            $string .= $characters[mt_rand(0, strlen($characters) - 1)];
+        }
+
+        return $string;
     }
 
     /**
@@ -201,5 +255,18 @@ class MediaPersistenceListener implements EventSubscriber
         $pattern = '#('.preg_quote(self::$replaceCharacter).'){2,}#';
 
         return preg_replace($pattern, self::$replaceCharacter, $cleaned);
+    }
+
+    /**
+     * Log a message
+     *
+     * @param string $msg
+     * @param int $level
+     */
+    private function log($msg, $level = Logger::DEBUG)
+    {
+        if ($this->logger) {
+            $this->logger->addRecord($level, $msg);
+        }
     }
 }

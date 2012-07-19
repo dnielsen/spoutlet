@@ -63,7 +63,7 @@
         {{ form_widget(form) }}
         {% if form.get('help') %}
             <p class="help-block">
-                {{ form.get('help') }}
+                {{ form.get('help') | trans }}
             </p>
         {% endif %}
     </div>
@@ -71,5 +71,11 @@
 {% endblock field_row %}
 
 {% block knp_media_row %}
-    {{ form_row(form.fileObject) }}
+    <div class="file-upload">
+        {{ form_row(form.fileObject) }}
+
+        {% if form.get('mediaObject') %}
+            <img src="{{ media_path(form.get('mediaObject')) }}" />
+        {% endif %}
+    </div>
 {% endblock %}

@@ -1,0 +1,218 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'games_and_trailers' | trans %}
+
+{% block content %}
+
+    {% if firstGame %}
+        <div class="right">
+            <div id="theater_screen" class="align_center" style="width:500px; height:393px;"></div>
+        </div>
+        <div class="left">
+            <div id="first-game-info" style="width: 450px; height: 393px; text-align: center;">
+                <div style="padding-top: 130px;">
+                    {% if firstGame.game.logoThumbnail %}
+                    <img src="{{ media_path(firstGame.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ firstGame.game.name }}" />
+                    {% else %}
+                    <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ firstGame.game.name }}" />
+                    {% endif %}
+
+                    {% if firstGame.youtubeIdTrailer1 %}
+                        {% if firstGame.youtubeIdTrailer1Headline %}
+                            <p style="font-weight: bold;">{{ firstGame.youtubeIdTrailer1Headline }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+<div class="games-list-page">
+    <div class="left">
+        <h1>{{ 'games_trailers.channel_header' | trans }}</h1>
+        <p>{{ 'games_trailers.intro_text' | trans }}</p>
+        {% if actionPages %}
+        <div>
+            <h3>{{ ('games_trailers.categories.action') | trans }}</h3>
+
+                <ul class="games">
+                    {% for actionPage in actionPages %}
+                    {% set url = actionPage | pd_link %}
+                    {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                    <li{{ isFirstInRow ? ' class="first"' : ''}}>
+                        <a href="{{ url }}"{{ target_blank(actionPage) }}>
+                            {% if actionPage.game.logoThumbnail %}
+                            <img src="{{ media_path(actionPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ actionPage.game.name }}" />
+                            {% else %}
+                            <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ actionPage.game.name }}" />
+                            {% endif %}
+                        </a>
+                        <br />
+                        <a href="{{ url }}">{{ actionPage.game.name }}</a>
+                        {% if actionPage.game.subcategories is not empty %}
+                            <span>
+                                (
+                                {% for subcategory in actionPage.game.subcategories %}
+                                {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
+                                {{- loop.last ? '' : ', ' }}
+                                {% endfor %}
+                                )
+                            </span>
+                        {% endif %}
+                    </li>
+                     {% endfor %}
+                </ul>
+                <div class="clear"></div>
+        </div>
+        {% endif %}
+
+        {% if rpgPages %}
+        <div>
+            <h3>{{ ('games_trailers.categories.rpg') | trans }}</h3>
+            <ul class="games">
+                {% for rpgPage in rpgPages %}
+                {% set url = rpgPage | pd_link %}
+                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                <li{{ isFirstInRow ? ' class="first"' : ''}}>
+                    <a href="{{ url }}"{{ target_blank(rpgPage) }}>
+                        {% if rpgPage.game.logoThumbnail %}
+                        <img src="{{ media_path(rpgPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ rpgPage.game.name }}" />
+                        {% else %}
+                        <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ rpgPage.game.name }}" />
+                        {% endif %}
+                    </a>
+                    <br />
+                    <a href="{{ url }}">{{ rpgPage.game.name }}</a>
+                    {% if rpgPage.game.subcategories is not empty %}
+                        <span>
+                            (
+                            {% for subcategory in rpgPage.game.subcategories %}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
+                            {{- loop.last ? '' : ', ' }}
+                            {% endfor %}
+                            )
+                        </span>
+                    {% endif %}
+                </li>
+                 {% endfor %}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        {% endif %}
+
+        {% if strategyPages %}
+        <div>
+            <h3>{{ ('games_trailers.categories.strategy') | trans }}</h3>
+            <ul class="games">
+                {% for strategyPage in strategyPages %}
+                {% set url = strategyPage | pd_link %}
+                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                <li{{ isFirstInRow ? ' class="first"' : ''}}>
+                    <a href="{{ url }}"{{ target_blank(strategyPage) }}>
+                        {% if strategyPage.game.logoThumbnail %}
+                        <img src="{{ media_path(strategyPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ strategyPage.game.name }}" />
+                        {% else %}
+                        <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ strategyPage.game.name }}" />
+                        {% endif %}
+                    </a>
+                    <br />
+                    <a href="{{ url }}">{{ strategyPage.game.name }}</a>
+                    {% if strategyPage.game.subcategories is not empty %}
+                        <span>
+                            (
+                            {% for subcategory in strategyPage.game.subcategories %}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
+                            {{- loop.last ? '' : ', ' }}
+                            {% endfor %}
+                            )
+                        </span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        {% endif %}
+
+        {% if otherPages %}
+        <div>
+            <h3>{{ ('games_trailers.categories.other') | trans }}</h3>
+            <ul class="games">
+                {% for otherPage in otherPages %}
+                {% set url = otherPage | pd_link %}
+                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                <li{{ isFirstInRow ? ' class="first"' : ''}}>
+                    <a href="{{ url }}"{{ target_blank(otherPage) }}>
+                        {% if otherPage.game.logoThumbnail %}
+                        <img src="{{ media_path(otherPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ otherPage.game.name }}" />
+                        {% else %}
+                        <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ otherPage.game.name }}" />
+                        {% endif %}
+                    </a>
+                    <br />
+                    <a href="{{ url }}">{{ otherPage.game.name }}</a>
+                    {% if otherPage.game.subcategories is not empty %}
+                        <span>
+                            (
+                            {% for subcategory in otherPage.game.subcategories %}
+                            {{ ('games_trailers.subcategory.'~subcategory) | trans -}}
+                            {{- loop.last ? '' : ', ' }}
+                            {% endfor %}
+                            )
+                        </span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="right">
+        <h1>{{ 'archives' | trans }}</h1>
+        <p>{{ 'past_partnerships' | trans }}</p>
+        <ul class="games">
+            {% for archive in archives %}
+            <li>
+                {{ archive | pd_link_full(archive.getBestNameForGame) }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="clear">&nbsp;</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# temporarily disabled because the auto-play is annoying #}
+    {% if firstGame %}
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                var par = {};
+                par.flashvars = "startMovie={{ firstGame.youtubeIdTrailer1 }}";
+                par.flashvars += "&startCue=none";
+                par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
+                par.flashvars += "&videoTitle=";
+                par.flashvars += "&displayWelcome=no";
+                par.flashvars += "&displayAlert=no";
+                par.flashvars += "&alertText=";
+                par.allowScriptAccess = "always";
+                par.wmode = "transparent";
+                var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"500", height:"393", id:"theater_screen", name:"theater_screen"};
+                var id = "theater_screen";
+                myytplayer = swfobject.createSWF(att, par, id);
+
+                var obj = swfobject.getObjectById('theater_screen');
+            });
+        </script>
+    {% endif %}
+{% endblock %}

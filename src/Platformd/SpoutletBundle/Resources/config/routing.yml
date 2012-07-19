@@ -36,3 +36,19 @@ _spoutlet_account:
 military:
     pattern: /groups/military
     defaults: { _controller: SpoutletBundle:Default:military }
+
+SpoutletBundle_age:
+    resource: "@SpoutletBundle/Resources/config/routing/age.yml"
+    prefix:   /age
+
+SpoutletBundle_game_page:
+    resource: "@SpoutletBundle/Resources/config/routing/game_page.yml"
+    prefix:   /games
+
+SpoutletBundle_admin_game:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_game.yml"
+    prefix:   /admin/game
+
+SpoutletBundle_admin_game_page:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_game_page.yml"
+    prefix:   /admin/game-page

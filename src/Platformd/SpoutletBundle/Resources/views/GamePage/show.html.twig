@@ -1,0 +1,330 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title gamePage.game.name ~ ' '~ ('games_and_trailers' | trans) %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ gamePage.game.name }}" />
+    <meta property="og:type" content="game" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    {% if gamePage.openGraphOverride %}
+        {% if gamePage.openGraphOverride.thumbnail %}
+            {% set thumbUrl = media_path(gamePage.openGraphOverride.thumbnail) %}
+            <meta property="og:image" content="{{ thumbUrl }}" />
+        {% endif %}
+        {% if gamePage.openGraphOverride.description %}
+            <meta property="og:description" content="{{ gamePage.openGraphOverride.description | striptags }}" />
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% macro _renderButtonImage(buttonImageMedia, buttonImageUrl) %}
+    <a href="{{ buttonImageUrl }}" target="_blank" class="game-button">
+        <img src="{{ media_path(buttonImageMedia) }}" {# todo - have some text we can use as an alt #} />
+    </a>
+{% endmacro %}
+
+{% macro _renderYoutubeThumbnail(youtubeVideoId, headline) %}
+    <div>
+        <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play">
+            <img src="http://img.youtube.com/vi/{{ youtubeVideoId }}/0.jpg" alt="video preview" />
+        </a>
+        <a href="#videos" data-youtube-id="{{ youtubeVideoId}}" title="{{ headline }}" class="youtube-thumb-headline">{{ headline }}</a>
+    </div>
+{% endmacro %}
+
+{% macro _renderYoutubeFeedLink(youtubeVideoId, headline) %}
+<li class="widget-item">
+    <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play media-link-color">
+        {{ headline }}
+    </a>
+</li>
+{% endmacro %}
+
+{% block legal_footer %}
+    {{ gamePage.legalVerbiage|raw }}
+{% endblock %}
+
+{# either set the custom background image, or leave it to false #}
+{% if gamePage.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(gamePage.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block content %}
+{% set feedItemCount = 0 %}
+{% set maxFeedItems = 7 %}
+
+    <div class="game-show-page">
+        <div class="std_2col">
+            <div class="right">
+                {% if gamePage.recommendedLaptopUrl and gamePage.recommendedDesktopUrl %}
+                <div class="split-ad">
+                    <a href="{{ gamePage.recommendedLaptopUrl }}" target="_blank" class="split-left"
+                        onClick="recordOutboundLink(this, 'Recommended Laptop', 'alienware.com')return false;"></a>
+                    <a href="{{ gamePage.recommendedDesktopUrl }}" target="_blank" class="split-right"
+                        onClick="recordOutboundLink(this, 'Recommended Desktop', 'alienware.com')return false;"></a>
+                    <img src="{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}" alt="{{ 'recommended_rig' | trans }}" />
+                </div>
+                {% endif %}
+
+                <div class="game-feed widget-33">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ 'game_feed' | trans }}
+                        </div>
+                        <div class="widget-icon"><img src="{{ asset('bundles/spoutlet/images/photo-icon.png') }}" /></div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="widget-content normalized">
+                        <ul>
+                            {% for feedEvent in feedEvents %}
+                                {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="{{ feedEvent | pd_link }}" {{ feedEvent | pd_link_target }}>
+                                            {{ feedEvent.name }}
+                                        </a>
+                                    </li>
+
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% for feedNewsItem in feedNewsItems %}
+                                {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="{{ feedNewsItem | pd_link }}" {{ feedNewsItem | pd_link_target }}>
+                                            {{ feedNewsItem.title }}
+                                        </a>
+                                    </li>
+
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {# videos #}
+                            {% if gamePage.youtubeIdTrailer1Headline and feedItemCount < maxFeedItems %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
+                            {% endif %}
+
+                            {% if gamePage.youtubeIdTrailer2Headline and feedItemCount < maxFeedItems %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
+                            {% endif %}
+
+                            {% if gamePage.youtubeIdTrailer3Headline and feedItemCount < maxFeedItems %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
+                            {% endif %}
+
+                            {% if gamePage.youtubeIdTrailer4Headline and feedItemCount < maxFeedItems %}
+                                {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                                {% set feedItemCount = feedItemCount + 1 %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
+            <div class="left">
+                {% if gamePage.logo %}
+                    <div class="logo">
+                        <img src="{{ media_path(gamePage.logo, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ gamePage.game.name }}" />
+                    </div>
+                {% endif %}
+
+                {% if gamePage.hasButtons %}
+                    <div class="game-buttons">
+                        {% if gamePage.buttonImage1 %}
+                            {{ _self._renderButtonImage(gamePage.buttonImage1, gamePage.buttonUrl1) }}
+                        {% endif %}
+
+                        {% if gamePage.buttonImage2 %}
+                            {{ _self._renderButtonImage(gamePage.buttonImage2, gamePage.buttonUrl2) }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div class="fb-like" data-send="false" data-width="450" data-show-faces="false" data-colorscheme="dark"></div>
+
+                <div class="content">
+                    {{ gamePage.aboutGame | raw }}
+
+                    {{ gamePage.keyFeature1 | raw }}
+                    {{ gamePage.keyFeature2 | raw }}
+                    {{ gamePage.keyFeature3 | raw }}
+                </div>
+
+                {% if gamePage.game.publisherLogos %}
+                    <div class="publisher-logos">
+                        <img src="{{ media_path(gamePage.game.publisherLogos) }}" alt="{{ gamePage.game.name }}" />
+                    </div>
+                {% endif %}
+            </div>
+            <div class="clear">&nbsp;</div>
+        </div>
+
+        <div class="std_1col">
+            <div class="video-player">
+                <a name="videos"></a>
+                <h3>{{ 'videos' | trans }}</h3>
+
+                <div class="player-left">
+                    <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+                </div>
+                <div class="thumbnails-right">
+                    {% if gamePage.youtubeIdTrailer1 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                    {% endif %}
+
+                    {% if gamePage.youtubeIdTrailer2 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                    {% endif %}
+
+                    {% if gamePage.youtubeIdTrailer3 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                    {% endif %}
+
+                    {% if gamePage.youtubeIdTrailer4 %}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                    {% endif %}
+                </div>
+                <div class="clear">&nbsp;</div>
+            </div>
+
+            {% if (gamePage.mediaGalleryMedias | length) > 0 %}
+            <div class="media-gallery ad-gallery game-media-gallery">
+                <a name="media"></a>
+                <h3>
+                    {{ 'media_gallery' | trans }}
+                </h3>
+
+                {#
+                    Left off because we don't need the big image
+                    <div class="ad-image-wrapper">
+                    </div>
+
+                    # left off because we don't need the controls
+                    <div class="ad-controls">
+                    </div>
+                #}
+
+                <div class="media-content">
+                    <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
+                        <div class="ad-thumbs">
+                            <ul class="ad-thumb-list">
+                                {% for media in gamePage.mediaGalleryMedias %}
+                                <li{{ loop.last ? ' class="last"' : '' }}>
+                                    {% set url = media_path(media) %}
+                                    <a href="{{ url }}" target="_blank">
+                                        <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="clear">&nbsp;</div>
+
+    </div>
+
+{% endblock %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+
+        <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+    {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+
+    <script type="text/javascript">
+        var GamePage = {
+
+        };
+
+        GamePage.initializeMediaGallery = function() {
+            var galleries = $('.media-gallery').adGallery({
+                loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+                display_next_and_prev: false,
+                display_back_and_forward: true,
+                slideshow: {
+                    enable: false,
+                    autostart: false,
+                    speed: 5000,
+                    stop_on_scroll: false
+                },
+                effect: 'fade'
+            });
+
+            // we actually grab the thumbnails, and remove the adgallery behavior
+            // this allows them to be clean, and we can do whatever next
+            // this is done because adgallery normally loads the image in the larger view
+            // but we don't even have the larger view
+            var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
+            mediaGalleryAnchors.unbind('click');
+        };
+
+        GamePage.initializeMovie = function(youtubeVideoId) {
+            var par = {};
+            par.flashvars = "startMovie="+youtubeVideoId;
+            par.flashvars += "&startCue=none";
+            par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
+            par.flashvars += "&videoTitle=";
+            par.flashvars += "&displayWelcome=no";
+            par.flashvars += "&displayAlert=no";
+            par.flashvars += "&alertText=";
+            par.flashvars += "&muteOnStart=yes";
+            par.allowScriptAccess = "always";
+            par.wmode = "transparent";
+            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"840", height:"593", id:"theater_screen", name:"theater_screen"};
+            var id = "theater_screen";
+
+            // temporarily disable, because the autostart is annoying
+            var myytplayer = swfobject.createSWF(att, par, id);
+        };
+
+        /**
+         * Makes .youtube-play links play their video in the main window
+         */
+        GamePage.initializeVideoLinks = function() {
+
+            $('.youtube-thumb-headline').truncate();
+
+            $('.youtube-play, .youtube-thumb-headline').click(function(e) {
+                var youtubeVideoId = $(this).data('youtube-id');
+
+                $('.video-player .youtube-play').each(function() {
+                    if ($(this).data('youtube-id') == youtubeVideoId) {
+                        $(this).parent().addClass('active');
+                    } else {
+                        $(this).parent().removeClass('active');
+                    }
+                });
+
+                GamePage.initializeMovie(youtubeVideoId);
+            });
+        };
+
+        jQuery(document).ready(function() {
+            GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
+            GamePage.initializeMediaGallery();
+            GamePage.initializeVideoLinks();
+        });
+    </script>
+{% endblock %}

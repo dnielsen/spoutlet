@@ -16,6 +16,7 @@ class CreateNewsFormType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
+            ->add('game', null, array('empty_value' => 'N/A'))
             ->add('title', 'textarea')
             ->add('slug', new SlugType(), array(
                 'url_prefix' => '/news/',
@@ -51,8 +52,6 @@ class CreateNewsFormType extends AbstractType
      */
     public function getName()
     {
-        
         return 'news';
     }
-
 }

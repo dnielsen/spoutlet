@@ -24,7 +24,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setLocale('en');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Lyon');
-        $event->setGame('StarCraft 2');
+        $event->setGameStr('StarCraft 2');
 
         $manager->persist($event);
 
@@ -41,7 +41,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setLocale('en');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Lyon');
-        $event->setGame('Portal 2');
+        $event->setGameStr('Portal 2');
 
         $manager->persist($event);
 
@@ -58,7 +58,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setLocale('ja');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Lyon');
-        $event->setGame('Portal 2');
+        $event->setGameStr('Portal 2');
 
         $manager->persist($event);
 
@@ -75,7 +75,7 @@ class LoadEventData extends AbstractFixture implements OrderedFixtureInterface
         $event->setLocale('en');
         $event->setContent('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempor est sem, vitae interdum odio. Praesent varius, tortor eget venenatis molestie, dui urna tristique nisl, a tincidunt quam nulla ac nisl. Mauris nulla lacus, lobortis dictum luctus ut, condimentum a sapien. Morbi dignissim, nulla non hendrerit molestie, dolor nisl ultrices ipsum, sit amet pharetra dolor metus vitae eros. Pellentesque ac turpis sapien, id commodo justo. Quisque commodo cursus tristique. Phasellus sit amet sem felis, et hendrerit mauris.');
         $event->setHostedBy('KnpLabs Nashville');
-        $event->setGame('Batman Arkham City');
+        $event->setGameStr('Batman Arkham City');
 
         $manager->persist($event);
 

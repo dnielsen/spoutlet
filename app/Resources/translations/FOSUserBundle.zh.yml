@@ -110,7 +110,6 @@ resetting.email: |
 layout.logout: 登出
 layout.login: 登陆
 layout.register: 注册
-layout.logged_in_as: 登录名%username%
 
 # Form field labels
 fos_user_group_form_name: "群组名称:"

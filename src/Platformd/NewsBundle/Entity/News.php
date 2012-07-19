@@ -8,6 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\MediaBundle\Entity\Media;
+use Platformd\SpoutletBundle\Entity\Game as Game;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -112,9 +113,16 @@ class News implements LinkableInterface
     protected $updated;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @var Game
+     */
+    protected $game;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -134,7 +142,7 @@ class News implements LinkableInterface
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -350,5 +358,21 @@ class News implements LinkableInterface
     public function setImage(Media $image = null)
     {
         $this->image = $image;
+    }
+
+    /**
+     * @param Game $game
+     */
+    public function setGame($game)
+    {
+        $this->game = $game;
+    }
+
+    /**
+     * @return Game
+     */
+    public function getGame()
+    {
+        return $this->game;
     }
 }

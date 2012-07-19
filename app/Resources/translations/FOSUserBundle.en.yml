@@ -112,7 +112,6 @@ resetting.email: |
 layout.logout: Logout
 layout.login: Sign in
 layout.register: Register
-layout.logged_in_as: Logged in as %username%
 
 # Form field labels
 fos_user_group_form_name: "Group name:"

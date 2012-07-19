@@ -88,10 +88,9 @@ class Giveaway extends AbstractEvent
 
     public function __toString()
     {
-        
         return $this->getName();
     }
-    
+
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -300,6 +299,7 @@ class Giveaway extends AbstractEvent
     /**
      * Returns the route name to this item's show page
      *
+     * @deprecated It's use should be replaced by the LinkableInterface
      * @return string
      */
     public function getShowRouteName()
@@ -367,5 +367,15 @@ class Giveaway extends AbstractEvent
             self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX.self::TYPE_KEY_GIVEAWAY,
             self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX.self::TYPE_MACHINE_CODE_SUBMIT,
         );
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'giveaway_show';
     }
 }

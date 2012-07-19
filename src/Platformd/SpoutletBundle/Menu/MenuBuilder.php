@@ -22,13 +22,19 @@ class MenuBuilder
         $this->router = $router;
     }
 
-    public function createBreadcrumbs(Request $request)
+    /**
+     * The admin breadcrumbs
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Knp\Menu\ItemInterface
+     */
+    public function createAdminBreadcrumbs(Request $request)
     {
         $menu = $this->factory->createItem('root');
         $menu->setCurrentUri($request->getRequestUri());
         $menu->setAttribute('class', 'breadcrumb');
-        
-        $menu->addChild('Home', array('route' => 'default_index'));
+
+        $menu->addChild('Home', array('route' => 'admin_index'));
 
         return $menu;
     }

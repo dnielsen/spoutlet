@@ -1,0 +1,35 @@
+# (13.5)
+
+TODOS
+
+- all links on games page should open in a new window except video and video
+    thumbnails
+    (.5)
+
+- "like" button on the games page
+    (1)
+
+- If on a page handled by CEVO, will need to link back to them in various
+    places
+    (2)
+
+DONE
+
+x All videos should *not* autoplay
+    (.5)
+
+
++ upper-right ad on page
+    (1)
+
++ video player with thumbnails on
+    (2.5)
+
++ On frontend, using a lot of images
+    (1)
+
++ New navigation entry for games
+    (.5)
+
++ birthday date formatting is localized
+    (1.5)

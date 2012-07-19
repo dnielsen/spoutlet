@@ -23,17 +23,17 @@ platformd:
         region:
             region: 地域
             register: 登録登録
-            china: 中国
+            zh: 中国
             change: 変更
             change_region: 地域変更
             global: 全世界
-            usa_canada: "北米/カナダ"
-            malasia_singapore: "マレーシア/シンガポール"
-            america_latina: 南米
-            europe: ヨーロッパ
-            japan: 日本
-            india: インド
-            australia_new_zealand: "オーストラリア/ニュージーランド"
+            en_US: "北米/カナダ"
+            en_SG: "マレーシア/シンガポール"
+            es: 南米
+            en_GB: ヨーロッパ
+            ja: 日本
+            en_IN: インド
+            en_AU: "オーストラリア/ニュージーランド"
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
@@ -80,7 +80,6 @@ platformd:
             terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            link: "Alienware.jpへ移動する"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -334,21 +333,12 @@ platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
 sweepstakes_date_format: %year%年%month%月%day%日
+date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
 
 follow_us: ''
-
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: "http://twitter.com/#!/Alienware_JP"
-        facebook_url: http://www.facebook.com/DellJapan
-        follow_on_facebook: ''
-        follow_on_twitter: ''
-
-    alienware_link_url: http://alienware.jp/
 
 # admin-only translations - we don't need these
 url:  URL
@@ -358,6 +348,12 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+status:
+    published: Published
+    unpublished: Unpublished
+    archived: Archived
+    choose_status: Status
 
 # More frontend things
 no_news_currently: 投稿がありません
@@ -405,15 +401,51 @@ email:
         ご登録頂いたサービスタグナンバーのパソコンは、ご購入時期に相違があるため、本キャンペーンの対象外となります。
         誠に申し訳ございませんが、本キャンペーンのお申し込みは無効となりますので、ご了承ください。
         ご登録頂いたサービスタグナンバー: %systemTag%
-        また、ご購入時期が一致されている場合は、再度サービスタグナンバーをご確認の上、お申込みください。
+        恐れ入りますが、サービスタグナンバーを再度ご確認の上、以下の3つの情報を添えてjapan@alienwarearena.comまで、Ｅメールにてご連絡をお願いいたします。
 
-        ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
+        1)        ALIENWARE ARENAに登録した際のユーザー名
+        2)        ALIENWARE ARENAに登録した際のEメールアドレス
+        3)        パソコンのサービスタグナンバー(7桁)
+
+        Eメール受領後に再照合し、10日前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
+
+        万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
         japan@alienwarearena.com.
 
-         - ALIENWARE ARENA TEAM
+         - ALIENWARE ARENA チーム
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ
         giveaway_machine_code_deny:  %giveawayName%のお知らせ
 
 username: ユーザー名
+
+age_confirm:
+    headline: ご自身の誕生日をご確認ください。
+    message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
+    content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
+    too_young_message: 申し訳ありませんがアクセスできません。
+confirm: 確認
+
+error:
+    fill_in_birthday: 誕生日をご記入ください
+
+games_trailers:
+    channel_header: ゲーム＆動画チャンネル
+    intro_text: プロモーションビデオをみてホットなゲームを見つけよう！
+    categories:
+        action: アクションゲーム
+        rpg: ＲＰＧ
+        strategy: 戦略ゲーム
+        other: 他のゲーム
+    subcategory:
+        free-to-play: 無料プレイ
+        mmo:   ＭＭＯ
+games_and_trailers: ゲームとトレーラー
+games: ゲーム
+game_feed: ゲームフィード
+videos: ビデオ
+uploaded_desktop: Uploaded Desktop
+
+past_partnerships: 過去のパートナー
+media_gallery: メディアギャラリー

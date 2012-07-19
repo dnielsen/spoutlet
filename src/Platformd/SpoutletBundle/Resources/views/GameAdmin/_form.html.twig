@@ -1,0 +1,28 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <div class="span6">
+        <fieldset>
+            <legend>a) Basic Information</legend>
+            {{ form_row(form.name) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.subcategories) }}
+            {{ form_row(form.facebookFanpageUrl) }}
+        </fieldset>
+    </div>
+    <div class="span6">
+        <fieldset>
+            <legend>b) Social and Images</legend>
+
+            {{ form_row(form.logo) }}
+            {{ form_row(form.logoThumbnail) }}
+
+            {{ form_row(form.publisherLogos) }}
+        </fieldset>
+    </div>
+</div>
+
+{{ form_rest(form) }}

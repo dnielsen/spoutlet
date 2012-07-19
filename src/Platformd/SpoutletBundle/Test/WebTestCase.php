@@ -29,6 +29,19 @@ class WebTestCase extends BaseWebTestCase
     }
 
     /**
+     * Deletes all records in the given model
+     *
+     * @param $alias
+     */
+    protected function emptyModel($alias)
+    {
+        $this->getEntityManager()
+            ->createQuery(sprintf('DELETE FROM %s', $alias))
+            ->execute()
+        ;
+    }
+
+    /**
      * @param $username
      * @return \Platformd\UserBundle\Entity\User
      */

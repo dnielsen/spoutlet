@@ -1,4 +1,4 @@
-{% form_theme form 'SpoutletBundle:Admin:bootstrapForm.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
 <h1>
     {{ 'platformd.giveaway.admin.create' | trans }}
@@ -7,18 +7,21 @@
 <form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
 
     {{ form_errors(form) }}
-    
+
     {{ form_row(form.name) }}
 
+    {{ form_row(form.game) }}
+
     {{ form_row(form.slug) }}
+
+    {{ form_row(form.externalUrl) }}
 
     {{ form_row(form.locale) }}
 
     {{ form_row(form.status) }}
-    
+
     {{ form_row(form.giveawayType) }}
-    
-   
+
     <div>
         {{ form_label(form.redemptionInstructionsArray) }}
         {{ form_errors(form.redemptionInstructionsArray) }}
@@ -46,5 +49,5 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
+    <input type="submit" class="btn btn-primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
 </form>

@@ -4,14 +4,20 @@ namespace Platformd\SpoutletBundle\Features\Context;
 
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Exception\PendingException;
+Behat\Behat\Context\TranslatedContextInterface,
+Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+Behat\Gherkin\Node\TableNode;
 
 use Behat\Behat\Event\ScenarioEvent;
+use Behat\Behat\Context\Step\Given;
 use Behat\Behat\Context\Step\When;
+use Behat\Behat\Context\Step\Then;
+
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Behat\Mink\Driver\GoutteDriver;
+use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\SpoutletBundle\Entity\GamePage;
 
 /**
  * Base Feature context.
@@ -52,6 +58,12 @@ class AbstractFeatureContext extends MinkContext
         );
     }
 
+    public function NavigateTo($namedRoute, $parameters)
+    {
+        $url = $this->getContainer()->get('router')->generate($namedRoute, $parameters);
+        $this->getSession()->visit($url);
+    }
+
     /**
      * @Given /^I am authenticated as an organizer$/
      */
@@ -71,14 +83,36 @@ class AbstractFeatureContext extends MinkContext
         return $this->iAmAuthenticated();
     }
 
+    /**
+     * @Given /^I am authenticated as a Dell Contact$/
+     */
+    public function iAmAuthenticatedAsDellContact()
+    {
+        // guarantee there is a user, because we wouldn't normally say it beforehand...
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
+        // enforce the right role
+        $this->currentUser->setRoles(array(
+            'ROLE_ORGANIZER',
+        ));
+        $this->getUserManager()->updateUser($this->currentUser);
+
+        return $this->iAmAuthenticated();
+    }
 
     /**
      * @AfterScenario
      */
     public function printLastResponseOnError(ScenarioEvent $scenarioEvent)
     {
-        if ($scenarioEvent->getResult() != 0) {
-            $this->printLastResponse();
+        if ($scenarioEvent->getResult()) {
+            if ($this->getSession()->getDriver() instanceof GoutteDriver
+                && $this->getSession()->getDriver()->getClient()->getRequest()) {
+
+                $this->printLastResponse();
+            }
         }
     }
 
@@ -178,9 +212,343 @@ class AbstractFeatureContext extends MinkContext
     public function iClickToAddNew($section)
     {
         $sidebar = $this->getPage()->find('css', '.sidebar .well');
-        $section = $sidebar->findLink($section);
+        if (!$sidebar) {
+            throw new \Exception('Cannot find the sidebar! Are you on the wrong page?');
+        }
+        $sectionEle = $sidebar->findLink($section);
 
-        $section->getParent()->clickLink('Add new');
+        if (!$sectionEle) {
+            throw new \Exception(sprintf('Could not found sidebar link called "%s"', $section));
+        }
+
+
+        $sectionEle->getParent()->clickLink('Add new');
+    }
+
+    /**
+     * @When /^I click (?:|on )"([^"]*)"$/
+     */
+    public function iClick($link)
+    {
+        return new When(sprintf('I follow "%s"', $link));
+    }
+
+    /**
+     * @Given /^there is a game called "([^"]*)"$/
+     */
+    public function thereIsAGameCalled($name)
+    {
+        if ($game = $this->getEntityManager()->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $name))) {
+            $this->getEntityManager()->remove($game);
+            $this->getEntityManager()->flush();
+        }
+
+        $game = new Game();
+        $game->setName($name);
+        $game->setCategory('rpg');
+
+        $this->getEntityManager()->persist($game);
+        $this->getEntityManager()->flush();
+
+        return $game;
+    }
+
+    /**
+     * @Given /^there is a game page for "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsAGamePageFor($gameName, $siteName)
+    {
+        $game = $this->thereIsAGameCalled($gameName);
+
+        $page = new GamePage();
+        $page->setGame($game);
+        $page->setLocales(array($siteName));
+        $page->setStatus(GamePage::STATUS_PUBLISHED);
+
+        $this->getContainer()->get('platformd.model.game_page_manager')
+            ->saveGamePage($page);
+    }
+
+    /**
+     * Used in the admin to count rows in a table
+     *
+     * @Then /^I should see (\d+) data rows$/
+     */
+    public function iShouldSeeDataRows($num)
+    {
+        $rows = $this->getPage()->findAll('css', 'table.table tbody tr');
+
+        assertEquals($num, count($rows));
+    }
+
+    /**
+     * Checks a checkbox in a "many" choice field.
+     *
+     * This is do, I believe, to some custom way we're rendering our labels
+     * for a group of collection boxes.
+     *
+     * @Given /^I check the "([^"]*)" option for "([^"]*)"$/
+     */
+    public function iCheckTheOptionFor($optionName, $fieldLabelName)
+    {
+        $label = $this->getPage()->find('css', sprintf('label:contains("%s")', $fieldLabelName));
+        if (!$label) {
+            throw new \Exception('Cannot find label with text '.$fieldLabelName);
+        }
+
+        /** @var $optionEle \Behat\Mink\Element\NodeElement */
+        $optionEle = $label->getParent()->findField($optionName);
+        if (!$optionEle) {
+            throw new \Exception(sprintf('Cannot find option named "%s" under "%s"', $optionName, $fieldLabelName));
+        }
+
+        $optionEle->check();
+    }
+
+    /**
+     * @Then /^I should be on the game page for "([^"]*)" in "([^"]*)"$/
+     */
+    public function iShouldBeOnTheGamePageFor($gameName, $siteName)
+    {
+        $em     = $this->getEntityManager();
+        $game   = $em->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $gameName));
+
+        if (!$game) {
+            throw new \Exception('Could not find game in the database');
+        }
+
+        $gamePage = $em->getRepository('SpoutletBundle:GamePage')->findOneByGame($game, $siteName);
+
+        if (!$gamePage) {
+            throw new \Exception('Could not find the game page for this game in the database');
+        }
+
+        $session    = $this->getSession();
+        $currentUrl = $session->getCurrentUrl();
+        $slug       = $gamePage->getSlug();
+
+        if (strpos($currentUrl, $slug) === false) {
+            throw new \Exception(sprintf('Not currently on the game\'s Game Page.  Expected URL was "%s" but currently on "%s"', $slug, $currentUrl));
+        }
+
+        $statusCode = $session->getStatusCode();
+        $httpOk = 200;
+
+        if ($statusCode != $httpOk) {
+            throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
+        }
+    }
+
+    /**
+     * Used to click on the frontend "show" URL when in an admin list section
+     *
+     * @Given /^I click on the URL for "([^"]*)"$/
+     */
+    public function iClickOnTheUrlFor($itemName)
+    {
+        $row = $this->getPage()->find('css', sprintf('table.table tbody tr:contains("%s")', $itemName));
+        if (!$row) {
+            throw new \Exception(sprintf('Could not find any data row matching an item "%s"', $itemName));
+        }
+
+        // now that we have the row, we need to find the public link
+        // which, is probably just a link that starts with "http://"
+        $aEle = $row->find('css', 'a[href*="http"]');
+        if (!$aEle) {
+            throw new \Exception('Cannot find the link!!!');
+        }
+
+        $aEle->click();
+    }
+
+    /**
+     * Tries to match to the first h1
+     *
+     * @Then /^the headline should contain "([^"]*)"$/
+     */
+    public function theHeadlineShouldContain($headline)
+    {
+        $h1 = $this->getPage()->find('css', 'h1');
+
+        if (!$h1) {
+            throw new \Exception(sprintf('Title was not found on the page. Looking for "%s" on page "%s".', $headline, $this->getSession()->getCurrentUrl()));
+        }
+
+        assertRegExp('/'.preg_quote($headline).'/', $h1->getText());
+    }
+
+    /**
+     * @Given /^I have the following games pages:$/
+     */
+    public function iHaveTheFollowingGamesPages(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+
+        foreach ($table->getHash() as $row) {
+            $game = $this->thereIsAGameCalled($row['name']);
+            $gamePage = new GamePage();
+            $gamePage->setGame($game);
+
+            $category = isset($row['category']) ? $row['category'] : 'rpg';
+            $status = isset($row['status']) ? $row['status'] : GamePage::STATUS_PUBLISHED;
+            $sites = isset($row['sites']) ? $row['sites'] : 'en';
+
+            $game->setCategory($category);
+            $gamePage->setStatus($status);
+            $gamePage->setLocales(explode(',', $sites));
+
+            $em->persist($game);
+            $em->flush();
+
+            $this->getGamePageManager()->saveGamePage($gamePage);
+        }
+    }
+
+    /**
+     * @Given /^I (?:|have )verif(?:ied|y) my age$/
+     */
+    public function iHaveVerifiedMyAge()
+    {
+        $currentUrl             = $this->getSession()->getCurrentUrl();
+        $onAgeVerifyPageAlready = strpos($currentUrl, 'age/verify') !== false;
+
+        if ($onAgeVerifyPageAlready) {
+            $currentUrl = null;
+        }
+
+        $ra[] = new When('I go to "/age/verify"');
+        $ra[] = new When('I select "1984" from "birthday[year]"');
+        $ra[] = new When('I select "6" from "birthday[month]"');
+        $ra[] = new When('I select "5" from "birthday[day]"');
+        $ra[] = new When('I press "Confirm"');
+        $ra[] = new When('I go to "/games"');
+        $ra[] = new Then('I should not see "Content Intended for Mature Audiences"');
+        $ra[] = new Then('I should see "GAMES AND TRAILERS"');
+
+        if ($currentUrl)
+        {
+            $ra[] = new When(sprintf('I go to "%s"', $currentUrl));
+        }
+
+        return $ra;
+    }
+
+    /**
+     * Used when looking at the games page
+     *
+     * @Then /^I should see (\d+) game(?:|s) under the "([^"]*)" category$/
+     */
+    public function iShouldSeeGamesUnderTheCategory($count, $category)
+    {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if (!$h3Ele) {
+            throw new \Exception('Cannot find a category named '.$category);
+        }
+
+        $liElements = $h3Ele->getParent()->findAll('css', 'ul.games li');
+
+        assertEquals($count, count($liElements));
+    }
+
+    /**
+     * @Given /^I shouldn\'t see any games under the "([^"]*)" category$/
+     */
+    public function iShouldNotSeeAnyGamesUnderTheCategory($category)
+    {
+        $h3Ele = $this->getPage()->find('css', sprintf('h3:contains("%s")', $category));
+        if ($h3Ele) {
+            throw new \Exception(sprintf('Found category for "%s", but should not have', $category));
+        }
+    }
+
+    /**
+     * @Then /^I should see (\d+) game in the archived list$/
+     */
+    public function iShouldSeeGameInTheArchivedList($count)
+    {
+        $liEles = $this->getPage()->findAll('css', '.games-list-page .right ul.games li');
+
+        assertEquals($count, count($liEles));
+    }
+
+    /**
+     * Changes the base URL to be a different site (is demo by default)
+     *
+     * @Given /^I am on the "([^"]*)" site$/
+     */
+    public function iAmOnTheACertainSite($siteName)
+    {
+        $this->currentSite = $this->getSiteKeyFromSiteName($siteName);
+    }
+
+    /**
+     * @Given /^I should still be on the "([^"]*)" site$/
+     */
+    public function iShouldStillBeOnTheSite($siteName)
+    {
+        $key = $this->getSiteKeyFromSiteName($siteName);
+        $baseUrl = $this->getBaseUrlFromSiteKey($key);
+
+        assertRegExp('/'.preg_quote($baseUrl).'/', $this->getSession()->getCurrentUrl());
+    }
+
+    /**
+     * Test that we're sent back to CEVO's site
+     *
+     * @Then /^I should be on the main site$/
+     */
+    public function iShouldBeOnTheMainSite()
+    {
+        $cevoUrl = $this->getContainer()->getParameter('cevo_base_url');
+        assertRegExp('#'.preg_quote($cevoUrl).'#', $this->getSession()->getCurrentUrl(), 'The URL does not contain our faked "CEVO" path - we are not on the main CEVO site.');
+    }
+
+    /**
+     * Overridden to handle the base URL for different sites
+     */
+    public function getParameter($name)
+    {
+        // if we're not on the "demo" site, then we need to modify the base URL
+        if ($name == 'base_url' && $this->currentSite != 'en') {
+            return 'http://'.$this->getBaseUrlFromSiteKey($this->currentSite);
+        }
+
+        return parent::getParameter($name);
+    }
+
+    /**
+     * Given "en", this returns "demo.yourbasehost.com"
+     *
+     * @param $siteKey
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getBaseUrlFromSiteKey($siteKey)
+    {
+        $urlMap = $this->getContainer()->getParameter('site_host_map');
+        if (!isset($urlMap[$siteKey])) {
+            throw new \Exception('Cannot find the proper base URL for site '.$siteKey);
+        }
+
+        return $urlMap[$siteKey];
+    }
+
+    /**
+     * Given "Europe", this returns "en_GB"
+     *
+     * @param $siteName
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getSiteKeyFromSiteName($siteName)
+    {
+        $sites = $this->getContainer()->getParameter('platformd_sites');
+        $key = array_search($siteName, $sites);
+        if ($key === false) {
+            throw new \Exception('Cannot find site '.$siteName.'. Available sites: '.explode(',', $sites));
+        }
+
+        return $key;
     }
 
     /**
@@ -223,12 +591,20 @@ class AbstractFeatureContext extends MinkContext
     {
         return $this->getEntityManager()
             ->getRepository($repo)
-        ;
+            ;
     }
 
     protected function getCurrentSite()
     {
         return $this->currentSite;
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     */
+    protected function getGamePageManager()
+    {
+        return $this->getContainer()->get('platformd.model.game_page_manager');
     }
 
     /**

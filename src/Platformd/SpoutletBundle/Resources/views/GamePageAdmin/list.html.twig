@@ -1,0 +1,57 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Game Pages</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Sites</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for gamePage in entities %}
+        <tr>
+            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">{{ gamePage.getBestNameForGame }}</a></td>
+            <td>
+                {# todo - should use linkable, but linkable doesn't support passing in which site/locale you're targeting #}
+                {% set url = gamePage.externalUrl ? gamePage.externalUrl : url('game_page_show', {'slug': gamePage.slug, 'category': gamePage.game.category, '_locale': site }) %}
+                <a href="{{ url }}" target="_blank">{{ url }}</a>
+            </td>
+            <td>
+                {% for locale in gamePage.gamePageLocales %}
+                    {{ locale.locale | site_name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
+            <td>
+                {% if gamePage.isPublished %}
+                    <span class="label label-success">Published</span>
+                {% elseif gamePage.isArchived %}
+                    <span class="label">Archived</span>
+                {% else %}
+                    <span class="label label-warning">Unpublished</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">edit</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="4">
+                <em>There are no game pages currently!</em>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_game_page_new', { 'site': site }) }}">
+    Create a new game page
+</a>
+{% endblock %}

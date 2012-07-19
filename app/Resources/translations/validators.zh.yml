@@ -26,3 +26,6 @@ state_not_blank: 请输入省份
 "You must accept the terms and conditions and the privacy policy": 您必须同意使用条款和隐私政策
 
 "The entered password is invalid.": 所输入的密码无效
+
+error:
+    select_status: Please choose a status

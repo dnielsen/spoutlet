@@ -1,3 +1,5 @@
+{% set facebookLink = site_link('FACEBOOK') %}
+{% set twitterLink = site_link('TWITTER') %}
 <script type="text/javascript">
 //<![CDATA[
 $(document).ready(function() {
@@ -21,21 +23,16 @@ $(".featured-content-header a").click(function() {
             <div class="left">
                 {% include 'SpoutletBundle::region.html.twig' %}
             </div>
-
             <div class="right">
                 <div class="links">
                     <ul>
-                        {% if 'alienware.social.facebook_url' | trans or 'alienware.social.twitter_url' | trans %}
+                        {% if facebookLink or twitterLink %}
                             <li>
                                 <strong>{{ 'follow_us' | trans }}</strong>
                             </li>
                             <li class="separator">
-                                {% if 'alienware.social.facebook_url' | trans %}
-                                    <a href="{{ 'alienware.social.facebook_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-fb-14.png') }}" alt="{{ 'alienware.social.follow_on_facebook' }}" /></a>
-                                {% endif %}
-                                {% if 'alienware.social.twitter_url' | trans %}
-                                    <a href="{{ 'alienware.social.twitter_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-tw-14.png') }}" alt="{{ 'alienware.social.follow_on_twitter' }}" /></a>
-                                {% endif %}
+                                {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
+                                {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
                             </li>
                         {% endif %}
 
@@ -49,4 +46,5 @@ $(".featured-content-header a").click(function() {
             </div>
         </div>
     </div>
+    <a href="{{ path('default_index') }}" id="header-home-link">&nbsp;</a>
 </div>

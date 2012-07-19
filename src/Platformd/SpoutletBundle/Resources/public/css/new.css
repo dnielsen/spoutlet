@@ -375,6 +375,13 @@ span.required {
     display: inline;
 }
 
+#header #header-home-link {
+    height: 111px;
+    width: 950px;
+    margin: 0px auto;
+    display: block
+}
+
 /* SimpleModal Styles */
 #simplemodal-overlay {background-color:#000; cursor:wait;}
 a.modalCloseImg {background:url(../images/x.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-18px; cursor:pointer;}
@@ -468,4 +475,286 @@ ul.list-normal {
 }
 .article-image-large img {
     width: 634px;
+}
+.age-wrapper {
+    text-align: center;
+}
+.age-wrapper select {
+    margin: 0 10px;
+}
+
+/* GAMES PAGES */
+.games-list-page {
+
+}
+.games-list-page .left, .games-list-page .right {
+    float: left;
+    background: url('../images/games-pages/background_content.jpg') top left repeat-x;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    padding: 12px 24px 4px 24px;
+}
+.games-list-page .left {
+    width: 662px;
+    width: 614px;
+    margin-right: 20px;
+}
+.games-list-page .right {
+    width: 265px;
+    width: 217px;
+    float: left;
+}
+.games-list-page h1, .games-list-page h2 {
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+}
+.games-list-page h3 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+.games-list-page p {
+    margin: 6px 0;
+    color: #b2b2b2;
+}
+.games-list-page .left ul.games {
+    margin-bottom: 10px;
+}
+.games-list-page .left ul.games li {
+    list-style-type: none;
+    width: 195px;
+    float: left;
+    margin: 8px 0 8px 14px;
+    text-align: center;
+}
+.games-list-page .left ul.games li.first {
+    margin-left: 0;
+}
+.games-list-page .left ul.games li a {
+
+}
+
+.games-list-page .left ul.games li span {
+    font-size: 0.8em;
+    color: #b2b2b2;
+}
+
+.games-list-page .right ul.games li {
+    list-style-type: none;
+    margin-bottom: 6px;
+}
+
+.game-show-page .logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.game-show-page .game-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.game-show-page .game-buttons a.game-button {
+    display: -moz-inline-box;
+    display: inline-block;
+}
+.game-show-page .split-ad {
+    position: relative;
+    margin-bottom: 20px;
+}
+.game-show-page .split-ad a {
+    position: absolute;
+    width: 150px;
+    height: 90px;
+}
+.game-show-page .split-ad a.split-left {
+    left: 0;
+}
+.game-show-page .split-ad a.split-right {
+    left: 150px;
+}
+
+.game-show-page .game-feed {
+    margin-bottom: 20px;
+}
+.game-show-page .game-feed .widget-title {
+    width: 200px;
+    float: left;
+}
+.game-show-page .game-feed .widget-content {
+    margin: 0 10px;
+}
+.game-show-page .game-feed.widget-33 {
+    height: auto;
+    /* effectively undo the height */
+    min-height: 20px;
+}
+.game-show-page .game-feed ul {
+    list-style-type: none;
+}
+
+.game-show-page .publisher-logos {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.game-show-page .video-player {
+    overflow: hidden;
+}
+.game-show-page .video-player h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.game-show-page .video-player .player-left {
+    width: 635px;
+    float: left;
+    margin-right: 10px;
+}
+.game-show-page .video-player .player-left object {
+    margin-left: -66px;
+    margin-right: -45px;
+}
+.game-show-page .video-player .thumbnails-right {
+    width: 200px;
+    float: left;
+    margin-left: 75px;
+}
+.game-show-page .video-player .thumbnails-right ul {
+    list-style: none;
+}
+.game-show-page .video-player .thumbnails-right div {
+    border: 2px solid #4a4a4a;
+    width: 153px;
+    height: 115px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+}
+
+.game-show-page .video-player .thumbnails-right div.active {
+    border-color: #009CDA;
+}
+
+.game-show-page .video-player .thumbnails-right div:hover {
+    border: 2px solid #4a4a4a;
+    width: 153px;
+    height: 115px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -moz-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -webkit-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+}
+
+.game-show-page .video-player .thumbnails-right div img {
+    width: 153px;
+    height: 115px;
+}
+.game-show-page .video-player .thumbnails-right div a {
+
+}
+.game-show-page .video-player .thumbnails-right div a.active {
+    border-color: #009CDA;
+}
+
+.game-show-page .video-player .thumbnails-right div a.youtube-thumb-headline {
+    color:#009cda;
+    text-decoration:none;
+    outline:none;
+    font-weight: bold;
+    display: block;
+    border: none;
+    width: auto;
+    height: auto;
+    font-size: 0.8em;
+}
+
+.games-page-category {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.game-show-page .media-gallery {
+    text-align: center;
+    padding: 10px 0;
+    width: auto;
+    margin-top: 20px;
+}
+
+.game-show-page .media-gallery h3 {
+    text-shadow: 2px 2px 2px #000000;
+    filter: dropshadow(color=#000000, offx=2, offy=2);
+}
+
+.game-show-page .media-gallery .widget-title {
+    width: 600px;
+    float: left;
+}
+.game-show-page .media-gallery .media-content {
+    padding: 0 35px;
+    width: 880px;
+}
+.game-show-page .media-gallery .ad-nav {
+    width: 860px;
+    margin: 10px auto;
+}
+.game-show-page .media-gallery .ad-thumbs {
+    /* causes the spacing (along to be right with respect to the scrollers */
+    width: 874px;
+}
+.game-show-page .media-gallery .ad-thumbs li {
+    margin-right: 10px;
+}
+.game-show-page .media-gallery .ad-thumbs li.last {
+    margin-right: 0;
+}
+.game-show-page .media-gallery .ad-thumbs li a img, .game-show-page .media-gallery .ad-thumbs li a.ad-active img {
+    border: none;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+}
+
+.game-show-page .game-media-gallery {
+    background: url('../images/games-pages/background_content.jpg') repeat-x top left;
+    width: 950px;
+    overflow: hidden;
+    border-radius:5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    -khtml-border-radius: 5px 5px 0px 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+}
+
+.game-show-page .media-gallery .ad-back, .game-show-page .media-gallery .ad-forward {
+    width: 28px;
+    height: 110px;
+    background-position-y: 5px;
+}
+.game-show-page .media-gallery .ad-back {
+    left: -30px;
+}
+.game-show-page .media-gallery .ad-forward {
+    right: -30px;
+}
+/* if we only have 4 items or less, there's no scrolling */
+.game-show-page .media-gallery .no-scroll .ad-back, .game-show-page .media-gallery .no-scroll .ad-forward {
+    display: none;
+}
+.game-show-page a.media-link-color {
+    color: #F0E000;
+}
+
+.game-button {
+    padding: 0px 10px 0px 10px;
+}
+
+.legalese {
+    margin: 10px auto;
+    width: 950px;
 }

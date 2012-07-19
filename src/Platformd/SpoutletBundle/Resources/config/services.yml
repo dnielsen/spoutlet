@@ -1,12 +1,5 @@
-parameters:
-    # this is repeated in the multitenancy manager - should not be
-    platformd_sites:
-        en: Demo
-        ja: Japan
-        zh: China
-
 services:
-    platformd.s3: 
+    platformd.s3:
         class: AmazonS3
         arguments:
             - %s3.access_key%
@@ -55,15 +48,15 @@ services:
             - "@knp_menu.factory"
             - "@router"
 
-    platformd.breadcrumbs_menu:
+    platformd.breadcrumbs_admin_menu:
         class: Knp\Menu\MenuItem
         scope: request
         factory_service: "platformd.menu_builder"
-        factory_method: createBreadcrumbs
+        factory_method: createAdminBreadcrumbs
         arguments:
             - "@request"
         tags:
-            - { name: knp_menu.menu, alias: breadcrumbs }
+            - { name: knp_menu.menu, alias: admin_breadcrumbs }
 
     # our metric manager service
     platformd.metric_manager:
@@ -95,3 +88,46 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    platformd.form.extension.help_form_type_extension:
+        class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
+        tags:
+            - { name: form.type_extension, alias: field }
+
+    platformd.model.game_page_manager:
+        class: Platformd\SpoutletBundle\Model\GamePageManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@session"
+            - "@knp_media.util.media_util"
+
+    platformd.doctrine.locales_relationship_listener:
+        class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    platformd.age.age_manager:
+        class: Platformd\SpoutletBundle\Age\AgeManager
+        arguments:
+            - "@security.context"
+            - "@session"
+        scope: request
+
+    platformd.age.insufficient_age_listener:
+        class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
+        arguments:
+            - "@router"
+            - "@platformd.age.age_manager"
+            - "@templating"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+        scope: request
+
+    platformd.tenant.site_protection_listener:
+        class: Platformd\SpoutletBundle\Tenant\SiteProtectionListener
+        arguments:
+            - "%allowed_sites%"
+            - "@pd.cevo.cevo_auth_manager"
+            - %allow_cevo_forwarding%
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }

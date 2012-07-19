@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\SpoutletBundle\Util\HttpUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 
 /**
  * Our custom base controller
@@ -84,7 +85,7 @@ class Controller extends BaseController
      */
     protected function getBreadcrumbs()
     {
-        return $this->get('platformd.breadcrumbs_menu');
+        return $this->get('platformd.breadcrumbs_admin_menu');
     }
 
     /**
@@ -112,7 +113,6 @@ class Controller extends BaseController
     }
 
     /**
-<<<<<<< HEAD
      * Checks whether a Linkable object is actually a link to another site
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
@@ -157,5 +157,49 @@ class Controller extends BaseController
     protected function trans($key, $params = array(), $domain = 'messages')
     {
         return $this->container->get('translator')->trans($key, $params, $domain);
+    }
+
+    /**
+     * Enforces that the user is a certain age and throws the InsufficientAgeException
+     * if he/she is now.
+     *
+     * @param int $minimumAge
+     * @throws \Platformd\SpoutletBundle\Exception\InsufficientAgeException
+     */
+    protected function enforceAgeProtection($minimumAge = 13)
+    {
+        # it is really important that when facebook (and other spiders/bots) scrape our pages that we don't block their
+        # access (with the Age Verification) otherwise sections like the GamePages won't get indexed by google, and/or
+        # the facebook OG scraping won't work... so place any exceptions to age protection here and skip the forced
+        # "enter age" page.
+
+        $userAgent = $this->getRequest()->server->get('HTTP_USER_AGENT');
+
+        if(strpos($userAgent, 'facebookexternalhit') !== false) { # facebook OG scrapper user agent = facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
+            return;
+        }
+
+        /** @var $ageManager \Platformd\SpoutletBundle\Age\AgeManager */
+        $ageManager = $this->container->get('platformd.age.age_manager');
+
+        if ($ageManager->getUsersAge() < $minimumAge) {
+            throw new InsufficientAgeException();
+        }
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Age\AgeManager
+     */
+    protected  function getAgeManager()
+    {
+        return $this->container->get('platformd.age.age_manager');
+    }
+
+    /**
+     * @return \Knp\MediaBundle\Util\MediaUtil
+     */
+    protected function getMediaUtil()
+    {
+        return $this->container->get('knp_media.util.media_util');
     }
 }

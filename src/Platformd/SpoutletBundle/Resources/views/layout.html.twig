@@ -7,6 +7,10 @@
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
 
+        {% block open_graph %}
+
+        {% endblock %}
+
         {% block stylesheets %}
 		    {% stylesheets
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
@@ -85,14 +89,18 @@
 		<script type="text/javascript">
 
 			$(document).ready(function(){
-				$('#toggleRegion').click(function(){
-				$('#selectRegion').toggle();
-				$('#selectLanguage').hide();
+				$('#toggleRegion').click(function(e){
+                    e.preventDefault();
+
+				    $('#selectRegion').toggle();
+				    $('#selectLanguage').hide();
 				});
 
-				$('#toggleLanguage').click(function(){
-				$('#selectLanguage').toggle();
-				$('#selectRegion').hide();
+				$('#toggleLanguage').click(function(e){
+                    e.preventDefault();
+
+				    $('#selectLanguage').toggle();
+				    $('#selectRegion').hide();
 				});
 			});
 		</script>
@@ -100,8 +108,20 @@
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 	</head>
 	<body class="site-{{ app.session.locale }}">
+        {% if facebook_app_id %}
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId={{ facebook_app_id }}";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        {% endif %}
+
 		<div id="omni">
-	        <div id="page">
+            {# big line to add a background-image if the page_background_image block has been set #}
+	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
 	            <div class="background-takeover" id="custom_background_top">
 	                <div class="background-takeover" id="custom_background_bot">
 	                    <div id="header">
@@ -168,7 +188,12 @@
 
 	                    	{% block content %}{% endblock %}
 	                    </div>
-	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}                    
+	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}
+                        {% if block('legal_footer') %}
+                            <div class="legalese">
+                                {{ block('legal_footer') }}
+                            </div>
+                        {% endif %}
 	                    {% include 'SpoutletBundle::footer.html.twig' %}
 	                </div>
 	            </div>

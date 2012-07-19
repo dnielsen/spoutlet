@@ -21,19 +21,20 @@ platformd:
 
         #translations that are not used yet
         region:
-            region: Region
+            region: "Region:"
             register: Register
-            china: China
+            zh: China
             change: (change)
             change_region: Change your region
             global: Global
-            usa_canada: "USA/Canada"
-            malasia_singapore: "Malasia/Singapore"
-            america_latina: América Latina
-            europe: Europe
-            japan: Japan
-            india: India
-            australia_new_zealand: "Australia/New Zealand"
+            en_US: "USA/Canada"
+            en: "USA/Canada"
+            en_SG: "Malasia/Singapore"
+            es: América Latina
+            en_GB: Europe
+            ja: Japan
+            en_IN: India
+            en_AU: "Australia/New Zealand"
             change_language: Change preferred language
             english: English
             espanol: Español
@@ -62,8 +63,12 @@ platformd:
             home: Home
             alienware: Alienware
             events: Events
-            video: Video
+            video: Videos
             news: News
+            arp: ARP
+            forums: Forums
+            sweeps: SWEEPS
+            wallpapers: Wallpapers
             microsoft: Microsoft
 
         page_content:
@@ -80,7 +85,6 @@ platformd:
             terms_and_conditions: "Terms & Conditions"
             steam_community: Steam Community
             xfire_community: Xfire Community
-            link: "Need a kick ass rig? Checkout Alienware"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
     help:
@@ -290,6 +294,16 @@ platformd:
             edit_title: Edit a news item
             upload_image: Upload an image
             image_dimensions: (recommended size: 634x400)
+        games:
+            category:
+                action:     Action
+                rpg:        RPG
+                strategy:   Strategy
+                other:      Other
+            subcategory:
+                free-to-play: Free-to-play
+                mmo:        MMO
+        facebook_fanpage: Facebook Fan Page
 
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
@@ -323,20 +337,11 @@ na: N/A
 instructions: Instructions
 sweepstakes_datetime_format: %year%-%month%-%day% %time%
 sweepstakes_date_format: %year%-%month%-%day%
+date_format: %month% %day% %year%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
 
 follow_us: Follow Us
-
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: ''
-        facebook_url: ''
-        follow_on_facebook: Follow Aliewnare on Facebook
-        follow_on_twitter: Follow Alieneware on Twitter
-
-    alienware_link_url: http://alienware.com
 
 # admin-only translations - we don't need these
 url:  URL
@@ -350,6 +355,12 @@ Officialrules: Official Rules
 posted_at: Post Date
 override_url: Override URL
 published_status: Status
+
+status:
+    published: Published
+    unpublished: Unpublished
+    archived: Archived
+    choose_status: Status
 
 # More frontend things
 no_news_currently: There is currently no featured news - check back later!
@@ -367,8 +378,8 @@ giveaway:
         machine_code_submit: System Tag Submit Key Giveaway
         type: Giveaway Type
 approve_machine_codes: Approve System Tags
+created_date: Created Date
 deny_machine_codes: Deny System Tags
-
 
 submit_machine_code: Apply
 machine_code: System Tag
@@ -389,9 +400,45 @@ email:
 
         -ALIENWARE ARENA
 
+# admin stuff
 translations_admin: Translations Admin
 edit_locale_title: Edit %locale% Translations
 saving: saving...
 username: Username
 
+age_confirm:
+    headline: Please Confirm Your Date of Birth
+    message: The content is intended for mature audiences. Please confirm your age below
+    content_for_mature_audiences: Content Intended for Mature Audiences
+    too_young_message: Sorry, we are unable to provide you with access at this time
+confirm: Confirm
+
+error:
+    fill_in_birthday: Please fill in your birthday!
+
+games_trailers:
+    channel_header: CHANNEL: GAMES AND TRAILERS
+    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    categories:
+        action: Action
+        rpg: RPG
+        strategy: Strategy
+        other: Other
+    subcategory:
+        free-to-play: Free to Play
+        mmo:   MMO
+games_and_trailers: Games and Trailers
+games: Games
+game_feed: Game Feed
+videos: Videos
+uploaded_desktop: Uploaded Desktop
+recommended_rig: Recommended Rig
+
+past_partnerships: Past Partnerships
+archives: ARCHIVES
+media_gallery: Media Gallery
+more_games: More Games
 deny_codes: Deny Codes
+platformd.user.account.messages: Messages
+platformd.user.account.match_client: Match Client
+platformd.user.account.match_lobby: Match Lobby

@@ -23,17 +23,17 @@ platformd:
         region:
             region: 地区:
             register: 注册
-            china: 中国
+            zh: 中国
             change: 切换
             change_region: 切换地区
             global: 全球
-            usa_canada: "美国/加拿大"
-            malasia_singapore: "马来西亚/新加坡"
-            america_latina: 拉丁美洲
-            europe: 欧洲
-            japan: 日本
-            india: 印
-            australia_new_zealand: "澳大利亚/新西兰"
+            en_US: "美国/加拿大"
+            en_SG: "马来西亚/新加坡"
+            es: 拉丁美洲
+            en_GB: 欧洲
+            ja: 日本
+            en_IN: 印
+            en_AU: "澳大利亚/新西兰"
             change_language: 改变首选语言
             english: 英语
             espanol: 西班牙语
@@ -80,7 +80,6 @@ platformd:
             terms_and_conditions: 服务条款
             steam_community: Steam社区
             xfire_community: Xfire社区
-            link: "Alienware官方网站"
             copyright_2012: "&copy;2012版权所有，Alienware公司"
 
     help:
@@ -322,20 +321,11 @@ platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
 instructions: 说明
 sweepstakes_date_format: %year%年%month%月%day%日
+date_format: %year%年%month%月%day%日
 eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
 follow_us: Follow Us
-
-# alienware-specific things
-alienware:
-    social:
-        twitter_url: ''
-        facebook_url: ''
-        follow_on_facebook: ''
-        follow_on_twitter: ''
-
-    alienware_link_url: http://www.alienware.com.cn/
 
 # admin-only translations - we don't need these
 url:  URL
@@ -345,6 +335,12 @@ Allowedcountries: Eligible Countries
 save: Save
 Liabilityrelease: Liability Release
 Officialrules: Official Rules
+
+status:
+    published: Published
+    unpublished: Unpublished
+    archived: Archived
+    choose_status: Status
 
 # More frontend things
 no_news_currently: 没有找到新闻文章
@@ -383,3 +379,28 @@ email:
 
 username: 用户名
 
+age_confirm:
+    headline: Please Confirm Your Date of Birth
+    message: The content is intended for mature audiences. Please confirm your age below
+confirm: Confirm
+
+error:
+    fill_in_birthday: Please fill in your birthday!
+
+games_trailers:
+    channel_header: CHANNEL: GAMES AND TRAILERS
+    intro_text: Feast your eyes on promo videos and trailers from the hottest titles!
+    categories:
+        action: Action
+        rpg: RPG
+        strategy: Strategy
+        other: Other
+    subcategory:
+        free-to-play: Free to Play
+        mmo:   MMO
+games_and_trailers: Games and Trailers
+
+archives: ARCHIVES
+past_partnerships: Past Partnerships
+created_date: Created Date
+media_gallery: Media Gallery

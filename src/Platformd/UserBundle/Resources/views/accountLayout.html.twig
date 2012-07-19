@@ -1,35 +1,20 @@
 {# base layout for the account section #}
 {% extends 'SpoutletBundle::layout.html.twig' %}
-
+{% set event_link = site_link('USER_EVENT') %}
+{% set game_id_link = site_link('USER_GAME_ID') %}
 {% block pre_content_nav %}
 <div class="std_1col">
     <div id="accountHeader">
         <ul class="links">
-            <li><a href="{{ path('accounts_index') }}">{{ "platformd.user.account.account_home" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/">{{ "platformd.user.account.account_home" | trans }}</a></li>
             {# Commenting out for now, until we figure out how this work with CEVO
                 <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
             #}
-            <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | trans }}</a></li>
+            <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
             <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
-
-            {# this needs to be updated to use site_link & site_has_feature when they are brought into master #}
-            {% set locale = app.session.locale %}
-
-            {% if locale == 'zh' %}
-                {% set game_ids_url = 'http://www.alienwarearena.com/china/account/ids/' %}
-                {% set event_url = 'http://www.alienwarearena.com/china/account/events/' %}
-            {% elseif locale == 'ja' %}
-                {% set game_ids_url = 'http://www.alienwarearena.com/japan/account/ids/' %}
-                {% set event_url = 'http://www.alienwarearena.com/japan/account/events/' %}
-            {% else %}
-                {% set event_url = path('accounts_events') %}
-            {% endif %}
-
-            {% if game_ids_url is defined %}
-                <li><a href="{{ game_ids_url }}">{{ "platformd.user.account.game_ids" | trans }}</a></li>
-            {% endif %}
-
-            <li><a href="{{ event_url }}">{{ "platformd.user.account.registered_events" | trans }}</a></li>
+            {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
+            {% if game_id_link %}<li>{{ game_id_link | raw }}</li>{% endif %}
+            <li><a href="http://alienwarearena.com/account/my-giveaway-keys/">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
             <li><a href="{{ path('accounts_giveaways') }}">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
             {% if showVideo %}
                 <li><a href="{{ path('videos_edit') }}">{{ "platformd.user.account.my_videos" | trans }}</a></li>

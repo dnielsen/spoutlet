@@ -4,6 +4,7 @@ namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Platformd\SpoutletBundle\Entity\Game;
 
 /**
  * NewsRepository
@@ -68,6 +69,21 @@ class NewsRepository extends EntityRepository
         ;
     }
 
+    /**
+     * @param Game $game
+     * @param string $site The site (i.e. locale)
+     * @return \Platformd\NewsBundle\Entity\News[]
+     */
+    public function findActivesForGame(Game $game, $site)
+    {
+        return $this->createBaseQueryBuilder($site)
+            ->andWhere('n.game = :game')
+            ->setParameter('game', $game)
+            ->orderBy('n.postedAt', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
 
     /**
      * Creates a base query builder that's locale-aware and only returns

@@ -1,0 +1,26 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Game Page Regions' %}
+
+{% block content %}
+<h1>Game Page Regions</h1>
+
+<div class="row-fluid">
+    <div class="well span4" style="padding: 8px 0;">
+    <ul class="nav nav-list">
+        <li class="nav-header">
+            Choose a Region
+        </li>
+        {% for site, name in sites %}
+            <li>
+                <a href="{{ path('admin_game_page_site', {'site': site}) }}">{{ site | site_name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+</div>
+
+<a class="btn btn-primary" href="{{ path('admin_game_page_new') }}">
+    Create a new game page
+</a>
+{% endblock %}

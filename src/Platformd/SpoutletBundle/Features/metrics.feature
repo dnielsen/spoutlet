@@ -11,9 +11,9 @@ Feature: Metrics
   Scenario: I can access the giveaways metrics page
     When I go to "/admin/metrics/giveaways"
     Then the "h1" element should contain "Key Giveaways"
-     And I should see a "table.zebra-striped" element
+     And I should see a "table.table-striped" element
 
   Scenario: I can access the members metrics page
     When I go to "/admin/metrics/users/country"
      Then the "h1" element should contain "Members by Country"
-      And I should see a "table.zebra-striped" element
+      And I should see a "table.table-striped" element

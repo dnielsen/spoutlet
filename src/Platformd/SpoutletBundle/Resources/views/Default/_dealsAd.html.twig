@@ -1,23 +1,41 @@
-
-{% if  app.session.locale == 'ja' %}
 <div id="mainAd">
+{% if app.session.locale == 'ja' %}
     <!-- 300x250_JP -->
-    <div id='div-gpt-ad-1330376602908-0' style='width:300px; height:250px;'>
+    <div id='div-gpt-ad-1336154141967-0' style='width:300px; height:250px;'>
         <script type='text/javascript'>
-            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1330376602908-0'); });
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1336154141967-0'); });
         </script>
     </div>
-</div>
-{% endif %}
-
-{% if  app.session.locale == 'zh' %}
-<div id="mainAd">
+{% elseif app.session.locale == 'zh' %}
     <!-- 300x250_CN -->
-    <div id='div-gpt-ad-1330376725290-0' style='width:300px; height:250px;'>
+    <div id='div-gpt-ad-1336154036610-0' style='width:300px; height:250px;'>
         <script type='text/javascript'>
-            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1330376725290-0'); });
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1336154036610-0'); });
         </script>
     </div>
-</div>
+{% else %}
+   <!-- Begin -  Site: Alienware Zone: Arena_300x250 -->
+    <script language="javascript"  type="text/javascript">
+        <!--
+        var browName = navigator.appName;
+        var SiteID = 2;
+        var ZoneID = 44;
+        var browDateTime = (new Date()).getTime();
+        if (browName=='Netscape')
+        {
+        document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://www.igames.org/bmp7/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=97651&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime + '">'); document.write('</'+'scr'+'ipt>');
+        }
+        if (browName!='Netscape')
+        {
+        document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://www.igames.org/bmp7/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=97651&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime + '">'); document.write('</'+'scr'+'ipt>');
+        }
+        // -->
+    </script>
+    <noscript>
+        <a href="http://www.igames.org/bmp7/a.aspx?ZoneID=44&amp;Task=Click&amp;Mode=HTML&amp;SiteID=2&amp;PageID=97651" target="_blank">
+        <img src="http://www.igames.org/bmp7/a.aspx?ZoneID=44&amp;Task=Get&amp;Mode=HTML&amp;SiteID=2&amp;PageID=97651" width="300" height="250" border="0"  alt=""></a>
+    </noscript>
+    <!-- End -  Site: Alienware Zone: Arena_300x250 -->
 {% endif %}
+</div>
 

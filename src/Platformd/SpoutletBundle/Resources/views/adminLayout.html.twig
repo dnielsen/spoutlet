@@ -14,7 +14,8 @@
 
         {% block stylesheets %}
 		    {% stylesheets
-		        'bundles/spoutlet/admin/css/bootstrap.css'
+		        'bundles/spoutlet/css/bootstrap/css/bootstrap.css'
+		        'bundles/spoutlet/css/bootstrap/css/bootstrap-responsive.css'
 		        'bundles/spoutlet/css/custom-theme/jquery-ui-1.8.16.custom.css'
 		        'bundles/spoutlet/admin/css/admin.css'
 		        filter='cssrewrite'
@@ -31,6 +32,7 @@
 		        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
 		        'bundles/spoutlet/alt_js/jquery-ui-timepicker-addon.js'
 		        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
+		        'bundles/spoutlet/js/jquery.autogrow-textarea.js'
 		        'bundles/spoutlet/admin/js/admin.js'
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.js'
@@ -53,14 +55,20 @@
 	</head>
 	<body>
 
-    <div class="topbar">
-        <div class="topbar-inner">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
             <div class="container-fluid">
                 <a class="brand" href="{{ path('admin_index') }}">Alienware Arena Admin</a>
                 <ul class="nav">
-                    <li><a href="{{ path('admin_index') }}">Home</a></li>
+                    <li><a href="{{ path('admin_index') }}">Admin Home</a></li>
+                    <li>
+                        <a href="{{ path('admin_index') }}">
+                            <i class="icon-home icon-white"></i>
+                            Website Frontend
+                        </a>
+                    </li>
                 </ul>
-                <p class="pull-right">
+                <p class="pull-right navbar-text">
                     Logged in as {{ app.user.username }}
                     &nbsp;&nbsp;&nbsp;
                     <a href="{{ path('_fos_user_security_logout') }}">logout</a>
@@ -70,94 +78,125 @@
     </div>
 
     <div class="container-fluid">
-        <div class="sidebar">
-            <div class="well">
-                {% if is_granted('ROLE_ORGANIZER') %}
-                    <h5>Content Management</h5>
-                    <ul>
-                        <li>
-                            <a href="{{ path('admin_giveaway_index') }}">Giveaways</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('admin_giveaway_new') }}">Add new</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{{ path('NewsBundle_admin_homepage') }}">News</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('NewsBundle_admin_new') }}">Add new</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{{ path('admin_homepage_banner_index') }}">Homepage Banner</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('admin_homepage_banner_new') }}">Add new</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{{ path('admin_events_index') }}">Events</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('admin_events_new') }}">Add new</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="{{ path('admin_sweepstakes_index') }}">Sweepstakes</a>
-                            <ul>
-                                <li>
-                                    <a href="{{ path('admin_sweepstakes_new') }}">Add new</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
+        <div class="row-fluid">
+            <div class="sidebar span3">
+                <div class="well">
+                    {% if is_granted('ROLE_ORGANIZER') or is_granted('ROLE_ADMIN_GAME') %}
+                        <h5>Content Management</h5>
+                        <ul>
+                            {#
+                                todo - refactor this too check things like ROLE_ADMIN_GIVEAWAY,
+                                and then use role hierarchy to give the organizer these roles
+                            #}
+                            {% if is_granted('ROLE_ORGANIZER') %}
                             <li>
-                                <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
+                                <a href="{{ path('admin_giveaway_index') }}">Giveaways</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_giveaway_new') }}">Add new</a>
+                                    </li>
+                                </ul>
                             </li>
-                        {% endif %}
-                    </ul>
+                            <li>
+                                <a href="{{ path('NewsBundle_admin_homepage') }}">News</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('NewsBundle_admin_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_homepage_banner_index') }}">Homepage Banner</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_homepage_banner_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_events_index') }}">Events</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_events_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_sweepstakes_index') }}">Sweepstakes</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_sweepstakes_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_ADMIN_GAME') %}
+                            <li>
+                                <a href="{{ path('admin_game') }}">Games</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_game_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                                {% if app.session.locale in ['en', 'en_US', 'en_AU', 'en_GB', 'en_IN', 'en_SG'] %}
+                                <li>
+                                    <a href="{{ path('admin_game_page') }}">Game Pages</a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('admin_game_page_new') }}">Add new</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
+                                <li>
+                                    <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_STATS_ADMIN') %}
+                        <h5>Stats</h5>
+                        <ul>
+                            <li><a href="{{ path('admin_giveaway_metrics') }}">Giveaway</a></li>
+                            <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
+                            <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
+                        </ul>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_USER_ADMIN') %}
+                        <h5>Members</h5>
+                        <ul>
+                            <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
+                            <li><a href="#">Mass Unsubscribe</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="content span9">
+
+                {{ knp_menu_render('admin_breadcrumbs', {}, "breadcrumbs") }}
+
+                {% if app.session.hasFlash('success') %}
+                    <div class="alert alert-success">
+                        <i class="icon-ok"></i>
+                        {{ app.session.getflash('success') | trans }}
+                    </div>
                 {% endif %}
 
-                {% if is_granted('ROLE_STATS_ADMIN') %}
-                    <h5>Stats</h5>
-                    <ul>
-                        <li><a href="{{ path('admin_giveaway_metrics') }}">Giveaway</a></li>
-                        <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
-                        <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
-                    </ul>
-                {% endif %}
+                {% block content %}{% endblock %}
 
-                {% if is_granted('ROLE_USER_ADMIN') %}
-                    <h5>Members</h5>
-                    <ul>
-                        <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
-                        <li><a href="#">Mass Unsubscribe</a></li>
-                    </ul>
-                {% endif %}
+                <footer>
+                    <p>&copy; Alienware Arena {{ '' | date('Y') }}</p>
+                </footer>
             </div>
         </div>
-        <div class="content">
-
-            {{ knp_menu_render('breadcrumbs', {}, "breadcrumbs") }}
-
-            {% if app.session.hasFlash('success') %}
-                <div class="alert-message success">
-                    {{ app.session.getflash('success') | trans }}
-                </div>
-            {% endif %}
-
-            {% block content %}{% endblock %}
-
-            <footer>
-                <p>&copy; Alienware Arena {{ '' | date('Y') }}</p>
-            </footer>
-        </div>
-    </div>
+    </div> <!-- /container--fluid -->
 
 	</body>
 </html>

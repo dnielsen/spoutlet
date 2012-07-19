@@ -20,7 +20,7 @@
 
     secret            = ThisTokenIsNotSoSecretChangeIt
 
-    recaptcha.public_key = 
+    recaptcha.public_key =
     recaptcha.private_key =
 
     base_host         = site.com
@@ -30,5 +30,7 @@
     s3.secret_key     = ajuJPKJQE//JfaXfeHjZZp0B/lGkvk3dFG9pxnC1
     s3_bucket_name    = platformd-testing
 
+    ; this is for the "alienware" staging
+    facebook_app_id   = 468808186479620
 
     mink_base_url     = http://your_app.dev/app_test.php

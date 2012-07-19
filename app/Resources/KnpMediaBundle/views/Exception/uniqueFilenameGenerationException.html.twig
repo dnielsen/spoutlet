@@ -1,0 +1,11 @@
+{% extends (is_admin_page()) ? 'SpoutletBundle::adminLayout.html.twig' : 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>Error uploading file!</h1>
+
+    <p>
+        There was an error generating a filename for "{{ exception.filename }}".
+        This likely means that there is an issue with uploading service. Please
+        try again in a few minutes or contact support.
+    </p>
+{% endblock %}

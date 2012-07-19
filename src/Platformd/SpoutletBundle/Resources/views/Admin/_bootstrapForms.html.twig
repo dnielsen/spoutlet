@@ -1,0 +1,100 @@
+{% use "form_div_layout.html.twig" with url_widget as base_url_widget %}
+
+{# give a form_row class to all form row divs #}
+{% block field_row %}
+{% spaceless %}
+<div class="control-group {% if errors|length > 0 %}error{% endif %}">
+    {{ form_label(form, label|default(null)) }}
+    <div class="controls">
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+
+        {% if form.get('help') %}
+        <p class="alert alert-info help">
+            <i class="icon-info-sign"></i>
+            {{ form.get('help') | trans }}
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endspaceless %}
+{% endblock field_row %}
+
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+
+    {% for error in errors %}
+        <div class="help-inline">
+            {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
+        </div>
+    {% endfor %}
+
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
+{# special errors block for form errors - at the top of the form, for example #}
+{% block form_errors %}
+{% spaceless %}
+{% if errors|length > 0 %}
+<div class="alert alert-error" style="display: inline-block;">
+    {% for error in errors %}
+    {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
+    <br/>
+    {% endfor %}
+</div>
+{% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+
+{% block generic_label %}
+{% set attr = attr|merge({'class': ''}) %}
+{% spaceless %}
+    {% if required %}
+        {% set attr = attr|merge({'class': 'required'}) %}
+    {% endif %}
+    {% set attr = attr|merge({'class': 'control-label'}) %}
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ label|trans }}</label>
+{% endspaceless %}
+{% endblock %}
+
+{# adds our little icon to the front #}
+{% block url_widget %}
+    <div class="input-prepend">
+        <span class="add-on">
+            <i class="icon-share-alt"></i>
+        </span>
+    </div>
+    {{ block('base_url_widget') }}
+{% endblock %}
+
+{# the first part is overriden to give us checkboxes that look schweet in bootstrap#}
+{% block choice_widget %}
+{% spaceless %}
+    {% if expanded %}
+        {% for child in form %}
+            <label class="checkbox">
+                {{ form_widget(child) }}
+                {{ child.get('label') | trans }}
+            </label>
+        {% endfor %}
+    {% else %}
+        {# this side is untouched #}
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {% if empty_value is not none %}
+                <option value="">{{ empty_value|trans }}</option>
+            {% endif %}
+            {% if preferred_choices|length > 0 %}
+                {% set options = preferred_choices %}
+                {{ block('widget_choice_options') }}
+                {% if choices|length > 0 and separator is not none %}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% endif %}
+            {% endif %}
+            {% set options = choices %}
+            {{ block('widget_choice_options') }}
+        </select>
+    {% endif %}
+{% endspaceless %}
+{% endblock choice_widget %}

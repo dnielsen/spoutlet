@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
+use Platformd\SpoutletBundle\Entity\Game as Game;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -39,7 +41,7 @@ use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSl
  * Special validation on our slug field
  * @AssertUniqueSlug()
  */
-abstract class AbstractEvent
+abstract class AbstractEvent implements LinkableInterface
 {
     /**
      * A map of UTC offsets and common timezone names
@@ -110,7 +112,7 @@ abstract class AbstractEvent
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="2", nullable=false)
+     * @ORM\Column(name="locale", type="string", length="10", nullable=false)
      * @Assert\NotBlank
      */
     protected $locale;
@@ -122,8 +124,8 @@ abstract class AbstractEvent
 
     /**
      * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     protected $bannerImageFile;
@@ -165,8 +167,8 @@ abstract class AbstractEvent
 
     /**
      * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
      * )
      */
     protected $generalImageFile;
@@ -180,9 +182,23 @@ abstract class AbstractEvent
     protected $timezone = 'UTC';
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @var Game
+     */
+    protected $game;
+
+    /**
+     * @Assert\Url
+     * @var string
+     * @ORM\Column(name="external_url", length="255", nullable=true)
+     */
+    private $externalUrl;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -221,7 +237,7 @@ abstract class AbstractEvent
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -249,7 +265,7 @@ abstract class AbstractEvent
     /**
      * Get slug
      *
-     * @return string 
+     * @return string
      */
     public function getSlug()
     {
@@ -278,7 +294,7 @@ abstract class AbstractEvent
      * Get ready
      *
      * @deprecated I don't think this was ever used
-     * @return boolean 
+     * @return boolean
      */
     public function getReady()
     {
@@ -298,7 +314,7 @@ abstract class AbstractEvent
     /**
      * Get content
      *
-     * @return text 
+     * @return text
      */
     public function getContent()
     {
@@ -320,7 +336,7 @@ abstract class AbstractEvent
     {
         $this->locale = $locale;
     }
-    
+
     public function getBannerImage()
     {
         return $this->bannerImage;
@@ -559,5 +575,58 @@ abstract class AbstractEvent
         $timestamp = $dt->format('U') + $offset;
 
         return DateTime::createFromFormat('U', $timestamp, $userTimezone);
+    }
+
+    /**
+     * @return Game
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param Game $game
+     */
+    public function setGame($game)
+    {
+        $this->game = $game;
+    }
+
+     /**
+     * @param string $externalUrl
+     */
+    public function setExternalUrl($externalUrl) {
+        $this->externalUrl = $externalUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExternalUrl() {
+        return $this->externalUrl;
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getExternalUrl();
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->getSlug(),
+            '_locale' => $this->getLocale()
+        );
     }
 }

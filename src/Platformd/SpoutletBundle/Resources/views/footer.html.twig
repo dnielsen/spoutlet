@@ -1,27 +1,24 @@
+{% set facebookLink = site_link('FACEBOOK') %}
+{% set twitterLink = site_link('TWITTER') %}
 <div class="wide-950">
     <div id="footer">
         <ul class="nav">
             <li><a href="{{ path('contact') }}">{{ 'platformd.layout.bottom_menu.contact_us' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('privacy') }}">{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}</a></li>
             <li><a rel="nofollow" href="{{ path('terms_conditions') }}">{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}</a></li>
-            {% if app.session.locale == 'en' %}
+            {% if site_has_feature('STEAM_XFIRE_COMMUNITIES') %}
             <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
             <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
             {% endif %}
-
-            {% if 'alienware.social.facebook_url' | trans or 'alienware.social.twitter_url' | trans %}
+            {% if facebookLink or twitterLink %}
                 <li style="border-right: none; padding-top: 3px;">
-                    {% if 'alienware.social.facebook_url' | trans %}
-                        <a href="{{ 'alienware.social.facebook_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-fb-14.png') }}" alt="{{ 'alienware.social.follow_on_facebook' }}" /></a>
-                    {% endif %}
-                    {% if 'alienware.social.twitter_url' | trans %}
-                        <a href="{{ 'alienware.social.twitter_url' | trans }}" target="_blank"><img src="{{ asset('bundles/spoutlet/images/icons/icon-tw-14.png') }}" alt="{{ 'alienware.social.follow_on_twitter' }}" /></a>
-                    {% endif %}
+                    {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
+                    {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
                 </li>
             {% endif %}
         </ul>
         <div class="right">
-            {% if app.session.locale == 'zh' %}<ul class="nav"><li>{% endif %}<a target="_blank" href="{{ 'alienware.alienware_link_url' | trans }}">{{ 'platformd.layout.bottom_menu.link' | trans }}</a>{% if app.session.locale == 'zh' %}</li><li class="noborder"><a href="http://bbs.alienfans.net/" target="_blank">Alienware官方粉丝站</a></li></ul>{% endif %}
+            {% if app.session.locale == 'zh' %}<ul class="nav"><li>{% endif %}{{ site_link('ALIENWARE') }}{% if app.session.locale == 'zh' %}</li><li class="noborder"><a href="http://bbs.alienfans.net/" target="_blank">Alienware官方粉丝站</a></li></ul>{% endif %}
         </div>
         <div style="clear:both;"></div>
         <div class="legal">

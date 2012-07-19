@@ -1,0 +1,74 @@
+
+platformd:
+
+    not_found:
+        title: Page not found
+        body: We're sorry - but we can't find the page you're looking for
+    layout:
+
+        region:
+            change: (Cambiar)
+
+        top_menu:
+            admin: Admin
+            account: Cuenta
+            sign_in: Iniciar
+            sign_out: Cerrar sesión
+            join: Registrarse
+            about: Sobre
+            contact: Contáctenos
+            search: Buscar
+            logged_in_as: Sesión iniciada como: <a href="%route%">%username%</a>
+
+        main_menu:
+            home: Inicio
+            alienware: Alienware
+            events: Eventos
+            video: Vídeos
+            news: Novedades
+            arp: ARP
+            forums: Foros
+            sweeps: Sweeps
+            wallpapers: Explorar
+            microsoft: Microsoft
+
+        bottom_menu:
+            contact_us: Contáctenos
+            privacy_policy: Política de Privacidad
+            terms_and_conditions: "Términos y Condiciones"
+            steam_community: Comunidad Steam
+            xfire_community: Comunidad Xfire
+            link: "¿Busca un equipo poderoso? <br/> ¡Encuéntrelo en Alienware!"
+            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
+
+age_confirm:
+    headline: Por favor, confirme su fecha de nacimiento.
+    message: El contenido está dirigido a un público maduro.
+    content_for_mature_audiences: Contenido recomendado para audiencia adulta.
+    too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
+confirm: Confirmar
+
+error:
+    fill_in_birthday: Por favor, escriba su cumpleaños!
+
+games_trailers:
+    channel_header: "Canal: Juegos y Tráiler"
+    intro_text: Deleiten sus ojos en videos promocionales y tráiler de los títulos más candentes!
+    categories:
+        action: Juegos de acción
+        rpg: Juegos de rol
+        strategy: Juegos de estrategia
+        other: Otros Juegos
+    subcategory:
+        free-to-play: Libres para jugar
+        mmo:   MMO
+games_and_trailers: Juegos y Tráilers
+games: Juegos
+game_feed: Imágenes de Vídeo
+videos: Vídeos
+
+past_partnerships: Asociaciones anteriores
+media_gallery: Galería de medios
+
+follow_us: Siguenos
+more_games: más juegos

@@ -22,6 +22,9 @@ use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
  */
 class FeatureContext extends AbstractFeatureContext
 {
+    /**
+     * @var Giveaway
+     */
     protected $currentGiveaway;
 
     /**
@@ -138,4 +141,32 @@ class FeatureContext extends AbstractFeatureContext
     {
         return $this->getContainer()->get('pd_giveaway.giveaway_manager');
     }
+
+    /**
+     * @Given /^there is a key giveaway called "([^"]*)"$/
+     */
+    public function thereIsAKeyGiveawayCalled($giveawayName)
+    {
+        $em = $this->getEntityManager();
+
+        $giveaway = new Giveaway();
+        $giveaway->setName($giveawayName);
+        $giveaway->setLocale("en");
+        $giveaway->setContent("content");
+        $giveaway->setGame(NULL);
+
+        $em->persist($giveaway);
+        $em->flush();
+
+        $this->currentGiveaway = $giveaway;
+    }
+
+    /**
+     * @Given /^I am on the edit page for the key giveaway$/
+     */
+    public function iAmOnTheEditPageForTheKeyGiveaway()
+    {
+        $this->NavigateTo('admin_giveaway_edit', array('id' => $this->currentGiveaway->getId()));
+    }
+
 }

@@ -13,9 +13,15 @@ class MultitenancyManager
      * @var array
      */
     static private $sites = array(
-        'en' => 'Demo',
-        'ja' => 'Japan',
-        'zh' => 'China',
+        'en'    => 'Demo',
+        'ja'    => 'Japan',
+        'zh'    => 'China',
+        'en_AU' => 'Australia / New Zealand',
+        'en_GB' => 'Europe',
+        'en_IN' => 'India',
+        'es'    => 'Latin America',
+        'en_SG' => 'Singapore / Malaysia',
+        'en_US' => 'North America',
     );
 
     static public function getSiteChoices()
