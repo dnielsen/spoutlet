@@ -137,7 +137,9 @@
         <div class="std_2col">
             <div class="right">&nbsp;</div>
             <div class="left">
-                {% render "FOSCommentBundle:Thread:showFlat" with {"id": deal.threadId } %}
+                <div class="deals-comments">
+                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": deal.threadId } %}
+                </div>
             </div>
         </div>
     </div>

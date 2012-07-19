@@ -288,3 +288,7 @@ li.dealCommentAt
   height: 165px;
   width: 634px; /* change to 560px if not using JS to remove rh.scroll */
 }
+
+.deals-comments {
+    font-size: 12px;
+}
