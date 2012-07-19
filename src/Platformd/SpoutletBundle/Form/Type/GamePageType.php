@@ -45,7 +45,7 @@ class GamePageType extends AbstractType
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended Size: Huge, but with a 970 pixel black gap',
+                'image_help'    => 'Recommended size: 2001x1496 with the center being 970 pixels wide and black.',
             ))
             ->add('aboutGame', null, array(
                 'label' => 'About the Game',
@@ -81,15 +81,19 @@ class GamePageType extends AbstractType
             ))
             ->add('youtubeIdTrailer1Headline', 'text', array(
                 'label' => 'Game Feed Headline',
+                'help'  => 'Must include game title in the context for SEO purposes.'
             ))
             ->add('youtubeIdTrailer2Headline', 'text', array(
                 'label' => 'Game Feed Headline',
+                'help'  => 'Must include game title in the context for SEO purposes.'
             ))
             ->add('youtubeIdTrailer3Headline', 'text', array(
                 'label' => 'Game Feed Headline',
+                'help'  => 'Must include game title in the context for SEO purposes.'
             ))
             ->add('youtubeIdTrailer4Headline', 'text', array(
                 'label' => 'Game Feed Headline',
+                'help'  => 'Must include game title in the context for SEO purposes.'
             ))
             ->add('legalVerbiage', null, array(
                 'label' => 'Legal Verbiage',
@@ -116,7 +120,7 @@ class GamePageType extends AbstractType
                 'type'      => new MediaType(),
                 'options'   => array(
                     'image_label' => 'Media Image',
-                    'image_help'  => 'This can be any size, and will probably be quite large.',
+                    'image_help'  => 'Recommended size: 5333x3000, jpg format. For SEO purposes, file name should be in this format [game name]_wallpaper_0001.',
                 )
             ))
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))

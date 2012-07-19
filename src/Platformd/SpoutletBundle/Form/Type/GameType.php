@@ -27,9 +27,6 @@ class GameType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ))
-            ->add('facebookFanpageUrl', 'url', array(
-                'label' => 'platformd.admin.facebook_fanpage'
-            ))
             ->add('logo', new MediaType(), array(
                 'image_label' => 'Game Logo',
                 'image_help'  => 'Recommended size: 440x166',
