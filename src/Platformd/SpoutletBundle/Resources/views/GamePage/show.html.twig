@@ -170,9 +170,12 @@
                 <div class="content">
                     {{ gamePage.aboutGame | raw }}
 
-                    {{ gamePage.keyFeature1 | raw }}
-                    {{ gamePage.keyFeature2 | raw }}
-                    {{ gamePage.keyFeature3 | raw }}
+                    <h1>{{ gamePage.game.name }} Key Features</h1>
+                    <div>
+                        {{ gamePage.keyFeature1 | raw }}
+                        {{ gamePage.keyFeature2 | raw }}
+                        {{ gamePage.keyFeature3 | raw }}
+                    </div>
                 </div>
 
                 {% if gamePage.game.publisherLogos %}
