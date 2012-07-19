@@ -219,7 +219,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul { display: block; list-style:none; width: 100%; }
 #mainNav ul#nav { margin: 0 auto; text-align: center }
 #mainNav ul li {
-    float:none;
+    float: none;
     background-repeat:no-repeat;
     margin: 2px 0 0 0;
     padding: 0 4px;

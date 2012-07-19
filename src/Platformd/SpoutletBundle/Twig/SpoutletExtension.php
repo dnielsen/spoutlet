@@ -233,11 +233,12 @@ class SpoutletExtension extends Twig_Extension
         $locale = $this->container->get('session')->getLocale();
 
         switch ($linkType) {
-            case 'ALIENWARE':   return $this->GetAlienwareLink($locale);
-            case 'FACEBOOK':    return $this->GetFacebookLink($locale);
-            case 'TWITTER':     return $this->GetTwitterLink($locale);
-            case 'USER_EVENT':   return $this->GetUserEventLink($locale);
-            case 'USER_GAME_ID': return $this->GetUserGameIdLink($locale);
+            case 'ALIENWARE':       return $this->GetAlienwareLink($locale);
+            case 'ALIENWARE_BARE':  return $this->GetAlienwareBareLink($locale);
+            case 'FACEBOOK':        return $this->GetFacebookLink($locale);
+            case 'TWITTER':         return $this->GetTwitterLink($locale);
+            case 'USER_EVENT':      return $this->GetUserEventLink($locale);
+            case 'USER_GAME_ID':    return $this->GetUserGameIdLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -258,6 +259,26 @@ class SpoutletExtension extends Twig_Extension
             case 'en_GB':   return sprintf($format, 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn', $enText);
             case 'en_IN':   return sprintf($format, 'http://www.alienware.co.in/', $enText);
             case 'en_US':   return sprintf($format, $enLink, $enText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetAlienwareBareLink($locale) {
+        $format = '<a href="%s" target="_blank">%s</a>';
+        $enLink = 'http://alienware.com';
+        $enText = 'Alienware';
+
+        switch($locale) {
+            case 'ja':      return sprintf($format, 'http://alienware.jp/', $enText);
+            case 'zh':      return sprintf($format, 'http://alienware.com.cn/', $enText);
+            case 'es':      return sprintf($format, 'http://www.alienware.com/mx/', $enText);
+            case 'en_SG':   return sprintf($format, 'http://allpowerful.com/asia', $enText);
+            case 'en_AU':   return sprintf($format, 'http://www.alienware.com.au/', $enText);
+            case 'en_GB':   return sprintf($format, 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn', $enText);
+            case 'en_IN':   return sprintf($format, 'http://www.alienware.co.in/', $enText);
+            case 'en_US':   return sprintf($format, $enLink, $enText);
+            case 'en':   return sprintf($format, $enLink, $enText);
 
             default:        return false;
         }

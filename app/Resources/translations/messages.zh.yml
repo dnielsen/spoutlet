@@ -395,6 +395,7 @@ games_trailers:
         rpg: RPG
         strategy: Strategy
         other: Other
+    subcategory:
         free-to-play: Free to Play
         mmo:   MMO
 games_and_trailers: Games and Trailers
