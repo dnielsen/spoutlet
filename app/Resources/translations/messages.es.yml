@@ -59,6 +59,7 @@ games_trailers:
         rpg: Juegos de rol
         strategy: Juegos de estrategia
         other: Otros Juegos
+    subcategory:
         free-to-play: Libres para jugar
         mmo:   MMO
 games_and_trailers: Juegos y Tráilers

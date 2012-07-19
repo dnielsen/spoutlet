@@ -424,6 +424,7 @@ games_trailers:
         rpg: RPG
         strategy: Strategy
         other: Other
+    subcategory:
         free-to-play: Free to Play
         mmo:   MMO
 games_and_trailers: Games and Trailers
@@ -493,3 +494,6 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 deny_codes: Deny Codes
+platformd.user.account.messages: Messages
+platformd.user.account.match_client: Match Client
+platformd.user.account.match_lobby: Match Lobby
