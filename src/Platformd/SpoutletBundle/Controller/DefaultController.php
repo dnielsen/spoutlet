@@ -98,6 +98,12 @@ class DefaultController extends Controller
 
     public function militaryAction()
     {
+        $locale = $this->getLocale();
+
+        if($locale != 'en_US') {
+            throw $this->createNotFoundException('Page not found');
+        }
+
         return $this->render('SpoutletBundle:Default:military.html.twig');
     }
 }
