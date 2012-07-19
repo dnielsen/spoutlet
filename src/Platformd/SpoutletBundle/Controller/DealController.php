@@ -114,7 +114,11 @@ class DealController extends Controller
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
 
-        $country = $request->request->get('deal-country');
+        $country        = $request->request->get('deal-country');
+
+        if ($country == "") {
+            $country = $request->request->get('selected-country');
+        }
 
         if (!$country) {
             $this->setFlash('error', 'deal_redeem_invalid_country');

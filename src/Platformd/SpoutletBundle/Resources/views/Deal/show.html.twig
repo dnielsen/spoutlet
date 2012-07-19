@@ -76,12 +76,14 @@
                                         <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
 
                                             <div id="deal-countries-wrapper">
-                                                <select id="deal-country" name="deal-country">
-
-                                                    {% for countryCode, countryName in allowedCountries %}
-                                                        <option value="{{countryCode}}">{{ countryName }}</option>
-                                                    {% endfor %}
-                                                </select>
+                                                <div id="deal-countries">
+                                                    <select id="deal-country" name="deal-country">
+                                                        {% for countryCode, countryName in allowedCountries %}
+                                                            <option value="{{countryCode}}">{{ countryName }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <input id="selected-country" type="hidden" name="selected-country" />
+                                                </div>
                                             </div>
 
                                             <button type="submit" id="deal-redeem-button">
@@ -173,7 +175,16 @@
             $('.deals-timeleft').fadeIn();
 
             {# had problems with dd slick... so I removed it... if you can get it working for this page quickly... then great! - chris #}
-            {# $('#deal-country').ddslick({ width: 223, height: 215, selectText: 'Select Your Country' }); #}
+            $('#deal-country').ddslick({
+                width: 223,
+                height: 215,
+                onSelected: function(data) {
+                    $('#selected-country').val(data.selectedData.value);
+                } });
+
+            $('#deal-country').ddslick({
+
+            });
 
             var galleries = $('.media-gallery').adGallery({
                 loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',

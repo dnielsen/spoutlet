@@ -1,7 +1,3 @@
-#deals-wrapper {
-
-}
-
 .deals-header {
     width: 950px;
     height: 400px;
@@ -115,6 +111,11 @@
     display: block;
     border: 0px;
     cursor: pointer;
+}
+
+#deal-countries-wrapper {
+    width:224px;
+    margin:0 auto;
 }
 
 #deal-countries {
