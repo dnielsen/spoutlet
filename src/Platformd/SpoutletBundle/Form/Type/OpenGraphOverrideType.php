@@ -16,7 +16,9 @@ class OpenGraphOverrideType extends AbstractType
         $builder
             ->add('description', 'textarea', array(
                 'label' => 'Description',
-                'max_length' => 255
+                'help' => 'Needs to be 140 characters or less. Tone: social, casual, conversational description that appears on someone\'s facebook wall/timeline when that person likes the page.
+',
+                'max_length' => 140
             ))
             ->add('thumbnail', new MediaType(), array(
                 'image_label' => 'Thumbnail',
