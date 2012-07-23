@@ -362,7 +362,7 @@ class SpoutletExtension extends Twig_Extension
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'NEWS':                        return $chinaOrJapan;
-            case 'GAMES':                       return $japan; // $chinaOrJapan; #replace after soft launch
+            case 'GAMES':                       return false; // $chinaOrJapan; #replace after soft launch
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
