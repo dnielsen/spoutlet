@@ -71,7 +71,7 @@
 
                                     {% elseif not hasKeys %}
                                         <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
-                                    {% else %}
+                                    {% elseif is_granted('ROLE_USER') %}
 
                                         <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
 
