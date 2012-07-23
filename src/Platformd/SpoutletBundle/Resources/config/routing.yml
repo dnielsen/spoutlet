@@ -33,6 +33,10 @@ _spoutlet_account:
     resource: routing/account.yml
     prefix:   /account
 
+military:
+    pattern: /groups/military
+    defaults: { _controller: SpoutletBundle:Default:military }
+
 SpoutletBundle_age:
     resource: "@SpoutletBundle/Resources/config/routing/age.yml"
     prefix:   /age
