@@ -44,7 +44,7 @@ class DealType extends AbstractType
             ->add('timezone', 'timezone', array('label' => 'Timezone'))
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
-                'image_help'  => 'Recommended size: 950x610',
+                'image_help'  => 'Recommended size: 950x400',
             ))
             ->add('thumbnailLarge', new MediaType(), array(
                 'image_label' => 'Large Thumbnail',
@@ -77,12 +77,13 @@ class DealType extends AbstractType
             ))
             ->add('mediaGalleryMedias', 'collection', array(
                 'label'         => 'Screenshots',
+                'help'          => 'Only upload 3 images.',
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'type'          => new MediaType(),
                 'options'       => array(
                     'image_label' => 'Screenshot',
-                    'image_help'  => 'This can be any size, and will probably be quite large.',
+                    'image_help'  => 'Recommended size 250x200',
                 )
             ))
             ->add('status', 'choice', array(

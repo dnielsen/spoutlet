@@ -121,9 +121,8 @@
             <div id="deal-screenshots">
                 {% for media in deal.mediaGalleryMedias %}
                     {% set url = media_path(media) %}
-                    <a href="{{ url }}" target="_blank">
-                        <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
-                    </a>
+
+                    <img src="{{ url }}" data-url="{{ url }}" {% if loop.first %}class="first"{% endif %} />
                 {% endfor %}
             </div>
             {% endif %}
@@ -182,31 +181,8 @@
                 height: 215,
                 onSelected: function(data) {
                     $('#selected-country').val(data.selectedData.value);
-                } });
-
-            $('#deal-country').ddslick({
-
+                }
             });
-
-            var galleries = $('.media-gallery').adGallery({
-                loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
-                display_next_and_prev: false,
-                display_back_and_forward: true,
-                slideshow: {
-                    enable: false,
-                    autostart: false,
-                    speed: 5000,
-                    stop_on_scroll: false
-                },
-                effect: 'fade'
-            });
-
-            // we actually grab the thumbnails, and remove the adgallery behavior
-            // this allows them to be clean, and we can do whatever next
-            // this is done because adgallery normally loads the image in the larger view
-            // but we don't even have the larger view
-            var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
-            mediaGalleryAnchors.unbind('click');
         });
     </script>
 
