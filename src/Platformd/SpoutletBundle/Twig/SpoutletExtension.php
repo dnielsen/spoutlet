@@ -381,17 +381,22 @@ class SpoutletExtension extends Twig_Extension
         $locale = $this->container->get('session')->getLocale();
         $japan = in_array($locale, array('ja'));
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
+        $chinaOrJapanOrLatam = in_array($locale, array('zh', 'ja', 'es'));
         $northAmerica = in_array($locale, array('en_US'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
+            case 'VIDEO':                       return !$chinaOrJapan;
+            case 'WALLPAPER':                   return !$chinaOrJapan;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
+            case 'FORUMS':                      return !$chinaOrJapan;
+            case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
             case 'DEALS':                       return $northAmericaOrEurope;
-            case 'GAMES':                       return false; // $chinaOrJapan; #replace after soft launch
-
+            case 'GAMES':                       return $chinaOrJapan;
+            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

@@ -65,6 +65,7 @@ platformd:
             video: 视频
             news: 新闻
             microsoft: 微软
+            media: Media
 
         page_content:
             featured: 专栏

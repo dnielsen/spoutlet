@@ -5,18 +5,21 @@
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 <li>{{ site_link('ALIENWARE_BARE') }}</li>
 
-                {% if site_has_feature('GAMES') %}
+                {% if site_has_feature('GAMES_NAV_DROP_DOWN') %}
+                    <li class="more">
+                        <a class="blue">{{ 'games' | trans }}</a>
+                        <ul>
+                            <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
+                            <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
+                            <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
+                            <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
+                            {% if site_has_feature('GAMES') -%}
+                                <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
+                            {%- endif %}
+                        </ul>
+                    </li>
+                {% elseif site_has_feature('GAMES') %}
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
-                {% else %}
-
-                {% endif %}
-
-                {% if site_has_feature('DEALS') %}
-                    <li><a href="{{ path('deal_list') }}"><sup style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</sup>{{ 'deals' | trans }}</a></li>
-                {% endif %}
-
-                {% if showVideo or site_has_feature('EXTRA_NAVIGATION') %}
-                    <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
                 {% endif %}
 
                 <li><a href="{{ path('events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }}</a></li>
@@ -33,19 +36,37 @@
                     </li>
                 {% endif %}
 
-                {% if site_has_feature('EXTRA_NAVIGATION') %}
-                    <li><a href="/arp">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
+                {% if site_has_feature('VIDEO') or site_has_feature('WALLPAPER') %}
+                    <li class="more">
+                        <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
+                        <ul>
+                            {% if site_has_feature('VIDEO') %}
+                                <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
+                            {% endif %}
+                            {% if site_has_feature('WALLPAPER') %}
+                                <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {% if site_has_feature('DEALS') %}
+                    <li><a href="{{ path('deal_list') }}"><sup style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</sup>{{ 'deals' | trans }}</a></li>
+                {% endif %}
+
+                {% if site_has_feature('SWEEPSTAKES') %}
+                    <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                {% endif %}
+
+                {% if site_has_feature('FORUMS') %}
                     <li><a href="/forums">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
+                {% endif %}
 
-                    {% if site_has_feature('SWEEPSTAKES') %}
-                        <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
-                    {% endif %}
-
-                    <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
+                {% if site_has_feature('ARP') %}
+                    <li><a href="/arp">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                 {% endif %}
 
                 <li><a href="{{ path('microsoft') }}">{{ 'platformd.layout.main_menu.microsoft' | trans }}</a></li>
-                <li><a></a></li>
             </ul>
             <div class="clear"></div>
         </div>

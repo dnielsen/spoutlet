@@ -65,6 +65,7 @@ platformd:
             video: ビデオ
             news: ニュース
             microsoft: Microsoft
+            media: Media
 
         page_content:
             featured: トピックス

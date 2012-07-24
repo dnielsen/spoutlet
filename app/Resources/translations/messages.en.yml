@@ -65,6 +65,7 @@ platformd:
             events: Events
             video: Videos
             news: News
+            media: Media
             arp: ARP
             forums: Forums
             sweeps: SWEEPS
