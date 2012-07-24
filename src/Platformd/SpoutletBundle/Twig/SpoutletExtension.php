@@ -237,17 +237,19 @@ class SpoutletExtension extends Twig_Extension
         $locale = $this->container->get('session')->getLocale();
 
         switch ($linkType) {
-            case 'ALIENWARE':       return $this->GetAlienwareLink($locale);
-            case 'ALIENWARE_BARE':  return $this->GetAlienwareBareLink($locale);
-            case 'FACEBOOK':        return $this->GetFacebookLink($locale);
-            case 'TWITTER':         return $this->GetTwitterLink($locale);
-            case 'USER_EVENT':      return $this->GetUserEventLink($locale);
-            case 'USER_GAME_ID':    return $this->GetUserGameIdLink($locale);
+            case 'ALIENWARE_LINK':                  return $this->GetAlienwareLink($locale);
+            case 'ALIENWARE_LINK_BOTTOM_RIGHT':     return $this->GetAlienwareBottomRightLink($locale);
+            case 'ALIENWARE_LINK_ADDRESS':          return $this->GetAlienwareLinkAddress($locale);
+            case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
+            case 'TWITTER':                         return $this->GetTwitterLink($locale);
+            case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
+            case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
         }
     }
+
 
     /**
      * Use this to find the proper avatar URL for a user, and wrap it in an asset call
@@ -271,42 +273,67 @@ class SpoutletExtension extends Twig_Extension
         return $default;
     }
 
-    private function GetAlienwareLink($locale) {
-        $format = '<a href="%s" target="_blank">%s</a>';
-        $enLink = 'http://alienware.com';
-        $enText = 'Need a kickass rig? Check out Alienware';
+    private function GetAlienwareBottomRightLink($locale) {
+
+        $link = $this->GetAlienwareLinkAddress($locale);
+
+        if (!$link) {
+            return false;
+        }
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'http://alienware.jp/', 'ALIENWARE.JPへ移動する');
-            case 'zh':      return sprintf($format, 'http://alienware.com.cn/', '需要一个牛逼的装备? 请看看 Alienware');
-            case 'es':      return sprintf($format, 'http://www.alienware.com/mx/', '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!');
-            case 'en_SG':   return sprintf($format, 'http://allpowerful.com/asia', $enText);
-            case 'en_AU':   return sprintf($format, 'http://www.alienware.com.au/', $enText);
-            case 'en_GB':   return sprintf($format, 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn', $enText);
-            case 'en_IN':   return sprintf($format, 'http://www.alienware.co.in/', $enText);
-            case 'en_US':   return sprintf($format, $enLink, $enText);
+            case 'ja':       $text = 'ALIENWARE.JPへ移動する'; break;
+            case 'zh':       $text = '需要一个牛逼的装备? 请看看 Alienware'; break;
+            case 'es':       $text = '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!'; break;
 
-            default:        return false;
+            case 'en_SG':
+            case 'en_AU':
+            case 'en_GB':
+            case 'en_IN':
+            case 'en_US':
+            case 'en':
+
+                $text = 'Need a kickass rig? Check out Alienware';
+                break;
+
+            default:
+
+                return false;
         }
+
+        return sprintf('<a href="%s" target="_blank">%s</a>', $link, $text);
     }
 
-    private function GetAlienwareBareLink($locale) {
-        $format = '<a href="%s" target="_blank">%s</a>';
-        $enLink = 'http://alienware.com';
-        $enText = 'Alienware';
+    private function GetAlienwareLink($locale) {
+
+        $link = $this->GetAlienwareLinkAddress($locale);
+
+        if (!$link) {
+            return false;
+        }
+
+        return sprintf('<a href="%s" target="_blank">Alienware</a>', $link);
+    }
+
+    private function GetAlienwareLinkAddress($locale) {
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'http://alienware.jp/', $enText);
-            case 'zh':      return sprintf($format, 'http://alienware.com.cn/', $enText);
-            case 'es':      return sprintf($format, 'http://www.alienware.com/mx/', $enText);
-            case 'en_SG':   return sprintf($format, 'http://allpowerful.com/asia', $enText);
-            case 'en_AU':   return sprintf($format, 'http://www.alienware.com.au/', $enText);
-            case 'en_GB':   return sprintf($format, 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn', $enText);
-            case 'en_IN':   return sprintf($format, 'http://www.alienware.co.in/', $enText);
-            case 'en_US':   return sprintf($format, $enLink, $enText);
-            case 'en':   return sprintf($format, $enLink, $enText);
+            case 'ja':      return 'http://alienware.jp/';
+            case 'zh':      return 'http://alienware.com.cn/';
+            case 'es':      return 'http://www.alienware.com/mx/';
+            case 'en_SG':   return 'http://allpowerful.com/asia';
+            case 'en_AU':   return 'http://www.alienware.com.au/';
+            case 'en_GB':   return 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn';
+            case 'en_IN':   return 'http://www.alienware.co.in/';
 
-            default:        return false;
+            case 'en_US':
+            case 'en':
+
+                return 'http://www.alienware.com/';
+
+            default:
+
+                return false;
         }
     }
 
