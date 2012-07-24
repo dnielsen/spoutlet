@@ -16,7 +16,6 @@
             {% if site_has_feature('MESSAGES') %}
                 <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
             {% endif %}
-            <li><a href="http://alienwarearena.com/account/my-giveaway-keys/">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
             <li><a href="{{ path('accounts_giveaways') }}">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
             {% if showVideo %}
                 <li><a href="{{ path('videos_edit') }}">{{ "platformd.user.account.my_videos" | trans }}</a></li>
