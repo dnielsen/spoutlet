@@ -32,6 +32,11 @@
 {% endblock %}
 
 {% block content %}
+
+{% if dealCode %}
+    {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
+{% endif %}
+
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
     <div class="xnotices">
@@ -41,7 +46,13 @@
                     <div class="pad3">
                         <div class="pad4">
                             <h3>{{ 'platformd.flash.success_title' | trans }}</h3>
-                            <p>{{ 'deal_redeem_success_code' | trans}}{{ dealCode | replace({"'":"", ",":""}) }}</p>
+                            <p>{{ 'deal_redeem_success_code' | trans}}
+                                {%- if dealCodeIsUrl -%}
+                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | raw }}</a>
+                                {%- else -%}
+                                    {{ dealCode | replace({"'":"", ",":""}) }}
+                                {%- endif -%}
+                            </p>
                             <p>{{ 'deal_redeem_success' | trans }}</p>
                         </div>
                     </div>
@@ -187,7 +198,6 @@
 
             $('.deals-timeleft').fadeIn();
 
-            {# had problems with dd slick... so I removed it... if you can get it working for this page quickly... then great! - chris #}
             $('#deal-country').ddslick({
                 width: 223,
                 height: 215,

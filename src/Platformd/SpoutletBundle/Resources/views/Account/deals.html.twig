@@ -3,57 +3,56 @@
 {% block title %}{{ "platformd.user.account.deals" | trans }}{% endblock %}
 
 {% block content %}
-<div class="std_2col control_panel">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-    </div>
-    <div class="left">
-        <div class="pad">
-            <div class="widget-header">
-                <div class="widget-title">
-                    <h2>{{ "platformd.account_page.deal.your_deal_keys" | trans }}</h2>
-                </div>
-            </div>
-            <div class="widget-content">
-                <div class="text">
-                    <table width="100%">
-                        <tbody>
-                            <tr>
-                                <th>{{ 'platformd.deal.deal' | trans }}</th>
-                                <th>{{ 'platformd.deal.assigned.key' | trans }}</th>
-                                <th>{{ 'platformd.deal.assigned.assigned_at' | trans }}</th>
-                                <th>{{ 'platformd.deal.assigned.view_deal' | trans }}</th>
-                            </tr>
-                            {% for dealCode in dealCodes %}
-                            <tr>
-                                <td>{{ dealCode.pool.deal.name }}</td>
-                                <td class="nowrap">
-                                    {{ dealCode.value | replace({"'":"", ",":""}) }}
-                                </td>
-                                <td class="nowrap">
-                                    {{ 'sweepstakes_date_format' | trans(dealCode.assignedAtTranslationArray) }}
-                                </td>
-                                <td class="nowrap">
-                                    <a href="{{ path('deal_show', {'slug': dealCode.pool.deal.slug, '_locale': dealCode.assignedSite} ) }}">{{ 'platformd.deal.view_deal_site' | trans }}</a>
-                                </td>
-                            </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="4">{{ 'platformd.deal.you_have_not_redeemed_any_codes' | trans }}</td>
-                                </tr>
-                            </tr>
-                            {% endfor %}
+<div class="control_panel">
 
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="widget-footer">
-                &nbsp;
-            </div>
+    <div class="widget-header">
+        <div class="widget-title">
+            <h2>{{ "platformd.account_page.deal.your_deal_keys" | trans }}</h2>
         </div>
     </div>
+    <div class="widget-content">
+        <div class="text">
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <th>{{ 'platformd.deal.deal' | trans }}</th>
+                        <th>{{ 'platformd.deal.assigned.key' | trans }}</th>
+                        <th>{{ 'platformd.deal.assigned.assigned_at' | trans }}</th>
+                        <th>{{ 'platformd.deal.assigned.view_deal' | trans }}</th>
+                    </tr>
+                    {% for dealCode in dealCodes %}
+                    {% if dealCode.value %}
+                        {% set dealCodeVal = dealCode.value | replace({"'":"", ",":""}) %}
+                    {% endif %}
+                    <tr>
+                        <td>{{ dealCode.pool.deal.name }}</td>
+                        <td class="nowrap">
+                            {%- if dealCode.pool.keysAreUrls -%}
+                                <a href='{{ dealCodeVal | raw }}' target='_blank'>{{ dealCodeVal | raw }}</a>
+                            {%- else -%}
+                                {{ dealCodeVal }}
+                            {%- endif -%}
+                        </td>
+                        <td class="nowrap">
+                            {{ 'sweepstakes_date_format' | trans(dealCode.assignedAtTranslationArray) }}
+                        </td>
+                        <td class="nowrap">
+                            <a href="{{ path('deal_show', {'slug': dealCode.pool.deal.slug, '_locale': dealCode.assignedSite} ) }}">{{ 'platformd.deal.view_deal_site' | trans }}</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">{{ 'platformd.deal.you_have_not_redeemed_any_codes' | trans }}</td>
+                        </tr>
+                    </tr>
+                    {% endfor %}
 
-    <div class="clear"></div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="widget-footer">
+        &nbsp;
+    </div>
 </div>
 {% endblock %}

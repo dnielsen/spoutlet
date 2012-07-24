@@ -26,6 +26,13 @@ class DealPool extends Pool
      */
     protected $deal;
 
+      /**
+     * @var boolean $ready
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $keysAreUrls = false;
+
     /**
      * @var \Platformd\SpoutletBundle\Entity\Country[]
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country")
@@ -46,6 +53,22 @@ class DealPool extends Pool
     public function setDeal($deal)
     {
         $this->deal = $deal;
+    }
+
+     /**
+     * @return boolean
+     */
+    public function getKeysAreUrls()
+    {
+        return $this->keysAreUrls;
+    }
+
+    /**
+     * @param boolean $value
+     */
+    public function setKeysAreUrls($value)
+    {
+        $this->keysAreUrls = $value;
     }
 
     /**

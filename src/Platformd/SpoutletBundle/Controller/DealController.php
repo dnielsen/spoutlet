@@ -47,6 +47,7 @@ class DealController extends Controller
         $user                   = $this->getUser();
         $userAlreadyRedeemed    = false;
         $dealCode               = '';
+        $dealCodeIsUrl          = false;
 
         if (!$deal) {
             throw $this->createNotFoundException('No deal found in this site for slug '.$slug);
@@ -81,6 +82,7 @@ class DealController extends Controller
             if ($currentlyAssigned) {
                 $userAlreadyRedeemed = true;
                 $dealCode = $currentlyAssigned->getValue();
+                $dealCodeIsUrl = $currentlyAssigned->getPool()->getKeysAreUrls();
             }
         }
 
@@ -89,6 +91,7 @@ class DealController extends Controller
             'deal' => $deal,
             'userAlreadyRedeemed' => $userAlreadyRedeemed,
             'dealCode' => $dealCode,
+            'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
             'allowedCountries' => $allowedCountries,
             'hasKeys' => $hasKeys > 0,
@@ -113,19 +116,20 @@ class DealController extends Controller
         $locale         = $this->getLocale();
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
-
         $country        = $request->request->get('deal-country');
 
         if ($country == "") {
             $country = $request->request->get('selected-country');
         }
 
+        if (!($country instanceof Country)) {
+            $country = $countryRepo->findOneByCode($country);
+        }
+
         if (!$country) {
             $this->setFlash('error', 'deal_redeem_invalid_country');
             return $this->redirect($dealShow);
         }
-
-        $country = $countryRepo->findOneByCode($country);
 
         if (!$country) {
             $this->setFlash('error', 'deal_redeem_invalid_country');
