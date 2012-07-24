@@ -508,6 +508,7 @@ ul.list-normal {
 }
 .games-list-page h1, .games-list-page h2 {
     font-size: 16px;
+    font-weight: bold;
     color: #fff;
     margin: 0;
 }

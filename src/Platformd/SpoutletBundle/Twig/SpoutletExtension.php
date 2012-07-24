@@ -379,6 +379,7 @@ class SpoutletExtension extends Twig_Extension
     public function siteHasFeature($feature)
     {
         $locale = $this->container->get('session')->getLocale();
+        $japan = in_array($locale, array('ja'));
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
         $northAmerica = in_array($locale, array('en_US'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));

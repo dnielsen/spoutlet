@@ -41,6 +41,7 @@ class SiteProtectionListener
         '^/account',
         // we have to "ok" comments, since they're used on some features for everyone
         '^/comments',
+        '^/groups'
     );
 
     static private $urlMap = array(

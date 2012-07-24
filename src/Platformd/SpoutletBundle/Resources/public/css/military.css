@@ -1,0 +1,89 @@
+.military-page .media-gallery {
+    text-align: center;
+    padding: 20px 0 0 0;
+    width: auto;
+}
+
+.military-page .media-gallery .media-content {
+    margin: 0px auto;
+    width: 500px;
+    height: 100px;
+}
+.military-page .media-gallery .ad-nav {
+    width: 500px;
+    margin: 10px auto;
+}
+.military-page .media-gallery .ad-thumbs {
+    /* causes the spacing (along to be right with respect to the scrollers */
+    height: 110px;
+    width: 500px;
+}
+.military-page .media-gallery .ad-thumbs li {
+    height: 110px;
+    margin-right: 1px;
+}
+.military-page .media-gallery .ad-thumbs li.last {
+    margin-right: 0;
+}
+.military-page .media-gallery .ad-thumbs li a img, .military-page .media-gallery .ad-thumbs li a.ad-active img {
+    border: 1px solid #4a4a4a;
+}
+
+#military-sub-nav-wrapper {
+    padding: 20px 0 20px 0;
+}
+
+#military-sub-nav ul li {
+    float:none;
+    background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 7px;
+    display: inline;
+    padding-top: 5px;
+    padding-bottom: 4px;
+}
+
+#military-sub-nav ul li.first { background: none; }
+
+#military-sub-nav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
+
+.youtube-link img:hover {
+    box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -moz-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -webkit-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+
+}
+
+#next {
+    display: inline-table;
+    width: 13px;
+    height: 60px;
+    background: url('/bundles/spoutlet/images/gallery_next.png') no-repeat;
+    cursor: pointer;
+}
+
+#prev {
+    display: inline-table;
+    width: 13px;
+    height: 60px;
+    background: url('/bundles/spoutlet/images/gallery_prev.png') no-repeat;
+    cursor: pointer;
+}
+
+.image_carousel {
+    display: inline-table;
+    width: 500px;
+    margin: 0px auto;
+}
+.image_carousel img {
+    border: 1px solid #4a4a4a;
+    margin: 7px;
+    height: 83px;
+    width: 138px;
+    float: left;
+    cursor: pointer;
+}
+.clearfix {
+    float: none;
+    clear: both;
+}
