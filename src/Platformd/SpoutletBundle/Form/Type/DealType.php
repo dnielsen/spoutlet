@@ -50,10 +50,6 @@ class DealType extends AbstractType
                 'image_label' => 'Large Thumbnail',
                 'image_help'  => 'Recommended size: 138x83',
             ))
-            ->add('thumbnailComment', new MediaType(), array(
-                'image_label' => 'Comment Thumbnail',
-                'image_help'  => 'Recommended size: 80x46',
-            ))
             ->add('claimCodeButton', new MediaType(), array(
                 'image_label' => 'Claim Code Now',
                 'image_help'  => 'Recommended size: 224x43',

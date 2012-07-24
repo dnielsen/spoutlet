@@ -3,19 +3,32 @@
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
 {% block open_graph %}
+    {% if deal.openGraphOverride and deal.openGraphOverride.thumbnail and deal.openGraphOverride.thumbnail.filename %}
+        {% set openGraphImage = deal.openGraphOverride.thumbnail %}
+    {% elseif deal.thumbnailLarge %}
+        {% set openGraphImage = deal.thumbnailLarge %}
+    {% endif %}
+    {% if deal.openGraphOverride and deal.openGraphOverride.description %}
+        {% set openGraphDescription = deal.openGraphOverride.description | striptags %}
+    {% elseif deal.description %}
+        {% set openGraphDescription = deal.description | striptags | trim %}
+    {% endif %}
+    {% if openGraphDescription is defined and openGraphDescription|length > 140 %}
+        {% set openGraphDescription = openGraphDescription | slice(0, 139) ~ '…' %}
+    {% endif %}
+
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
     <meta property="og:title" content="{{ deal.name }}" />
     <meta property="og:type" content="product" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if deal.openGraphOverride %}
-        {% if deal.openGraphOverride.thumbnail %}
-            <meta property="og:image" content="{{ deal.openGraphOverride.thumbnail | media_path }}" />
-        {% endif %}
-        {% if deal.openGraphOverride.description %}
-            <meta property="og:description" content="{{ deal.openGraphOverride.description | striptags }}" />
-        {% endif %}
+    {% if openGraphImage is defined -%}
+        <meta property="og:image" content="{{ openGraphImage | media_path }}" />
+    {% endif -%}
+    {% if openGraphDescription is defined -%}
+        <meta property="og:description" content="{{ openGraphDescription }}" />
     {% endif %}
+
 {% endblock %}
 
 {% block content %}
@@ -68,7 +81,6 @@
                                         <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans({'%account_link%': path('accounts_deals')}) | raw }}</p>
                                     {% elseif deal.hasExpired %}
                                         <p id="deal-show-expired">{{ 'deal_show_expired' | trans }}</p>
-
                                     {% elseif not hasKeys %}
                                         <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
                                     {% elseif is_granted('ROLE_USER') %}

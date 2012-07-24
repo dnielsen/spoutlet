@@ -23,7 +23,7 @@
                         {% for commentObject in commentsArr %}
                         {% set comment = commentObject.comment %}
                         {% set deal = commentObject.object %}
-                            {% set dealCommentImage = deal.thumbnailComment ? media_path(deal.thumbnailComment) : dealDeafultImage %}
+                            {% set dealCommentImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
                             <div class="dealListItem">
                             <div>
                                 <img class="dealListItemThumb" src="{{ dealCommentImage }}" title="{{ deal.name }}" alt="{{ deal.name }}">

@@ -134,10 +134,6 @@ class DealManager
             $deal->setThumbnailLarge(null);
         }
 
-        if (!$mUtil->persistRelatedMedia($deal->getThumbnailComment())) {
-            $deal->setThumbnailComment(null);
-        }
-
         if (!$mUtil->persistRelatedMedia($deal->getClaimCodeButton())) {
             $deal->setClaimCodeButton(null);
         }

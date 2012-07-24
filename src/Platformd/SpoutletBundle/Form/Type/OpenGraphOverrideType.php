@@ -22,7 +22,7 @@ class OpenGraphOverrideType extends AbstractType
             ))
             ->add('thumbnail', new MediaType(), array(
                 'image_label' => 'Thumbnail',
-                'image_help'  => 'Recommended size: 115 x 100',
+                'image_help'  => 'The large thumbnail image will be resized for this image.  Alternatively, if you choose to upload an image, recommended size is 115 x 100.',
             ))
         ;
     }

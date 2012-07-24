@@ -132,14 +132,6 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     private $thumbnailLarge;
 
     /**
-     * The comment thumbnail for the deal (80px by 46px)
-     *
-     * @var \Platformd\MediaBundle\Entity\Media
-     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
-     */
-    private $thumbnailComment;
-
-    /**
      * The claim code image for the deal (224px by 43px)
      *
      * @var \Platformd\MediaBundle\Entity\Media
@@ -519,22 +511,6 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function setThumbnailLarge(Media $thumbnailLarge = null)
     {
         $this->thumbnailLarge = $thumbnailLarge;
-    }
-
-    /**
-     * @return \Platformd\MediaBundle\Entity\Media
-     */
-    public function getThumbnailComment()
-    {
-        return $this->thumbnailComment;
-    }
-
-    /**
-     * @param \Platformd\MediaBundle\Entity\Media $thumbnailComment
-     */
-    public function setThumbnailComment(Media $thumbnailComment = null)
-    {
-        $this->thumbnailComment = $thumbnailComment;
     }
 
     /**
