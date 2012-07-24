@@ -363,6 +363,8 @@ class SpoutletExtension extends Twig_Extension
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'NEWS':                        return $chinaOrJapan;
             case 'GAMES':                       return false; // $chinaOrJapan; #replace after soft launch
+            case 'MESSAGES':                    return !$chinaOrJapan;
+            case 'DEALS':                       return $northAmericaOrEurope;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

@@ -226,6 +226,7 @@ platformd:
             my_videos: My Videos
             help: Help
             game_ids: Game IDs
+            tournaments: Tournaments
 
     giveaway:
         giveaway: Giveaway
