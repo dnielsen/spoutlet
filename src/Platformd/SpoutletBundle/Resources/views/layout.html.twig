@@ -75,27 +75,26 @@
 
 		    $(document).ready(function(){
 		        $("ul.sf-menu").supersubs({
-		            minWidth:   12,   // minimum width of sub-menus in em units
-		            maxWidth:   27,   // maximum width of sub-menus in em units
-		            extraWidth: 1     // extra width can ensure lines don't sometimes turn over
-		                              // due to slight rounding differences and font-family
+		            minWidth:   12,
+		            maxWidth:   27,
+		            extraWidth: 1
 		        }).superfish({
 					delay:		150
-				});           // call supersubs first, then superfish, so that subs are
-		                              // not display:none when measuring. Call before initialising
-		                              // containing tabs for same reason.
+				});
+
+                var width = 0;
+                $('ul.sf-menu').children().each(function(){
+                    width += ($(this).width() + 10);
+                });
+                $('#nav-wrapper').width(width);
 
                 $("ul.sf-menu-account").supersubs({
-                    minWidth:   12,   // minimum width of sub-menus in em units
-                    maxWidth:   27,   // maximum width of sub-menus in em units
-                    extraWidth: 1     // extra width can ensure lines don't sometimes turn over
-                                      // due to slight rounding differences and font-family
+                    minWidth:   12,
+                    maxWidth:   27,
+                    extraWidth: 1
                 }).superfish({
                     delay:      150
-                });           // call supersubs first, then superfish, so that subs are
-                                      // not display:none when measuring. Call before initialising
-                                      // containing tabs for same reason.
-
+                });
 		    });
 		</script>
 		<script type="text/javascript">

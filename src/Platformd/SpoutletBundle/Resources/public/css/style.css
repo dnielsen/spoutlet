@@ -219,13 +219,9 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul { display: block; list-style:none; width: 100%; }
 #mainNav ul#nav { margin: 0 auto; text-align: center }
 #mainNav ul li {
-    float: none;
+    float: left;
     background-repeat:no-repeat;
-    margin: 2px 0 0 0;
-    padding: 0 4px;
     display: inline;
-    padding-top: 5px;
-    padding-bottom: 4px;
 }
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
@@ -261,7 +257,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #omni #page #mainNav ul li li a { background-color:#000; padding:5px 0 4px 10px; margin: 0; }
 #omni #page #mainNav ul li li a:hover { background:#333333; }
 
-#nav-wrapper { }
+#nav-wrapper { margin: 0px auto; }
 #sub-nav-wrapper { width: 237px; margin: 0 auto; }
 
 .nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
