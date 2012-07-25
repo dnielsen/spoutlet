@@ -51,6 +51,8 @@ class GroupController extends Controller
      */
     public function newGettingStartedAction(Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         return $this->render('SpoutletBundle:Group:newGettingStarted.html.twig');
     }
 
@@ -60,6 +62,8 @@ class GroupController extends Controller
      */
     public function newAction(Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $this->addGroupsBreadcrumb()->addChild('New Group');
 
         $group  = new Group();
@@ -83,6 +87,8 @@ class GroupController extends Controller
      */
     public function editAction($id, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
         $em = $this->getDoctrine()->getEntityManager();
 
