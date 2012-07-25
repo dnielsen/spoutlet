@@ -60,3 +60,7 @@ SpoutletBundle_admin_deal:
 SpoutletBundle_deal:
     resource: "@SpoutletBundle/Resources/config/routing/deal.yml"
     prefix:   /deal
+
+SpoutletBundle_group:
+    resource: "@SpoutletBundle/Resources/config/routing/group.yml"
+    prefix:   /groups

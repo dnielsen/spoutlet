@@ -1,0 +1,31 @@
+# shows a chooser for locales
+group:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:Group:index" }
+
+group_new_getting_started:
+    pattern:  /new-getting-started/
+    defaults: { _controller: "SpoutletBundle:Group:newGettingStarted", site: ~ }
+
+group_new:
+    pattern:  /new/
+    defaults: { _controller: "SpoutletBundle:Group:new", site: ~ }
+
+group_create:
+    pattern:  /create/
+    defaults: { _controller: "SpoutletBundle:Group:new", site: ~ }
+    requirements: { _method: post }
+
+group_edit:
+    pattern:  /{id}/edit/
+    defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
+
+group_show:
+    pattern:  /{id}/show/
+    defaults: { _controller: "SpoutletBundle:Group:show", site: ~ }
+
+group_update:
+    pattern:  /{id}/update/
+    defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
+    requirements: { _method: post }
+

@@ -1,0 +1,45 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'New Group - Getting Started' %}
+
+{% block content %}
+    <div class="group-new-getting-started-page" style="margin: 0px 5px 0px 20px;">
+            <div style="float:right; border: 1px; border: solid 1px white; padding: 10px 50px 30px 50px;">
+                <div>
+                    <h1 style="text-align: center;">Private Group</h1>
+                    <ol>
+                        <li>Group content is visible to members in the group only.</li>
+                        <li>User must be approved in order to be a member of the group.</li>
+                    </ol>
+                </div>
+            </div>
+            <div style="float:left; border: 1px; border: solid 1px white; padding: 10px 50px 30px 50px;">
+                <h1 style="text-align: center;">Public Group</h1>
+                    <ol>
+                        <li>Group content is public to all users.</li>
+                        <li>Any user can join group.</li>
+                    </ol>
+            </div>
+        <div class="clear" style="margin-bottom: 25px;">&nbsp;</div>
+
+        <div style="border: 1px; border: solid 1px white; padding: 10px 50px 30px 50px;">
+            <h1>You'll need the following to create a group page:</h1>
+                <h2>Step 1: Create your group</h2>
+                <ul>
+                    <li>Group Name</li>
+                    <li>Group Avatar</li>
+                    <li>Background Image</li>
+                    <li>Group Information</li>
+                </ul>
+
+                <h2>Step 2: Now invite your friends!</h2>
+                <ul>
+                    <li>Invite Friends</li>
+                </ul>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0px 30px 0px;">
+            <a href="{{ path('group_new') }}" style="border: 1px solid white; padding: 10px;">Get Started!</a>
+        </div>
+    </div>
+{% endblock %}
