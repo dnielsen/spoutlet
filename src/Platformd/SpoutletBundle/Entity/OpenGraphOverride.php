@@ -36,6 +36,7 @@ class OpenGraphOverride
      *
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $thumbnail;
 
