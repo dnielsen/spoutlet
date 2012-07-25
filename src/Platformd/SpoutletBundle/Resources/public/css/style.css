@@ -221,7 +221,10 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNav ul li {
     float: left;
     background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 4px;
     display: inline;
+
 }
 #mainNav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 #mainNav ul li.more > a{ background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; }
@@ -237,7 +240,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
     text-align: left;
 }
 
-#mainNav ul li.last { background: url('/bundles/spoutlet/images/nav_divider.png') right no-repeat; }
+#mainNav ul li.last { padding: 0; width: 1px; height: 30px;}
 #mainNav ul li li { background: none; }
 #omni #page #mainNav ul li li a { background-image:none; }
 #mainNav ul li a {
