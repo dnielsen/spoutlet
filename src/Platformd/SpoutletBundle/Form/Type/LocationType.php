@@ -19,6 +19,7 @@ class LocationType extends AbstractType
         ))
         ->add('city', null, array(
             'label' => 'City',
+            'required' => true,
         ))
         ->add('state_province', null, array(
             'label' => 'State/Province'
