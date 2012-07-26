@@ -26,6 +26,8 @@
     {% set customPageBackgroundImage = false %}
 {% endif %}
 
+{% set inviteThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+
 {% block page_background_image customPageBackgroundImage %}
 
 {% block content %}
@@ -64,9 +66,10 @@
             $('#group-invite').click(function () {
                 FB.ui({
                     method: 'send',
-                    name: 'You are invited to the group {{ group.name | raw }}',
+                    name: "You are invited to the group {{ group.name | raw }}",
                     link: 'http://demo.alienwarearena.com/',
-                    description: 'Alienware Arena Groups'
+                    description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
+                    image: '{{ inviteThumb }}'
                 });
             });
         });
