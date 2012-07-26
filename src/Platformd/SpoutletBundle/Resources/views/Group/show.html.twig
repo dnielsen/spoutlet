@@ -35,7 +35,9 @@
         <div class="std_2col">
             <div class="right">
                 {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-                <div id="google-map-location" style="width: 300px; height: 250px; margin: 10px auto;"></div>
+                {% if group.location %}
+                    <div id="google-map-location" style="width: 300px; height: 250px; margin: 10px auto;"></div>
+                {% endif %}
             </div>
             <div class="left">
                 <div class="fb-like" data-send="false" data-width="450" data-show-faces="false" data-colorscheme="dark"></div>
