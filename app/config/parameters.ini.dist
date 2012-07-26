@@ -34,3 +34,5 @@
     facebook_app_id   = 468808186479620
 
     mink_base_url     = http://your_app.dev/app_test.php
+
+    google_api_key    = YourGoogleApiKey

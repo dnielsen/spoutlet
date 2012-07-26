@@ -8,6 +8,7 @@ use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\SpoutletBundle\Form\Type\LocationType;
 
 class GroupType extends AbstractType
 {
@@ -37,7 +38,10 @@ class GroupType extends AbstractType
                 'label' => 'How to Join?',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'));
+            ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
+            ->add('location', new LocationType(), array(
+                'label' => 'Location',
+            ));
     }
 
     public function getName()

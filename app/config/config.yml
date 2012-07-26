@@ -40,6 +40,7 @@ twig:
         base_host:    %base_host%
         showVideo:    false
         facebook_app_id: %facebook_app_id%
+        google_api_key: %google_api_key%
 
 # Assetic Configuration
 assetic:

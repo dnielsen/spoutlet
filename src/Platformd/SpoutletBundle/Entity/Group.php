@@ -82,6 +82,13 @@ class Group
     private $groupAvatar;
 
     /**
+     * @var \Platformd\SpoutletBundle\Entity\Location
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Location", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $location;
+
+    /**
      * Get id
      *
      * @return integer
@@ -230,5 +237,21 @@ class Group
     public function setGroupAvatar(Media $groupAvatar = null)
     {
         $this->groupAvatar = $groupAvatar;
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\Location $location
+     */
+    public function setLocation(Location $location = null)
+    {
+        $this->location = $location;
     }
 }

@@ -35,6 +35,7 @@
         <div class="std_2col">
             <div class="right">
                 {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+                <div id="google-map-location" style="width: 300px; height: 250px; margin: 10px auto;"></div>
             </div>
             <div class="left">
                 <div class="fb-like" data-send="false" data-width="450" data-show-faces="false" data-colorscheme="dark"></div>
@@ -61,8 +62,37 @@
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript"src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
     <script type="text/javascript">
         $(function () {
+            var geocoder;
+            var map;
+
+            function initialize() {
+                geocoder = new google.maps.Geocoder();
+                var latlng = new google.maps.LatLng(-34.397, 150.644);
+                var mapOptions = {
+                    zoom: 8,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                map = new google.maps.Map(document.getElementById('google-map-location'), mapOptions);
+            }
+
+            function codeAddress() {
+                var address = '{{ group.location.getFormattedLocation }}'; {# location address goes here #}
+                geocoder.geocode( { 'address': address}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        var marker = new google.maps.Marker({ map: map, position: results[0].geometry.location });
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
+
+
             $('#group-invite').click(function () {
                 FB.ui({
                     method: 'send',
@@ -72,6 +102,9 @@
                     image: '{{ inviteThumb }}'
                 });
             });
+
+            initialize();
+            codeAddress();
         });
     </script>
 
