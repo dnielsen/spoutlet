@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Symfony\Component\Validator\ExecutionContext;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\SpoutletBundle\Entity\GamePage

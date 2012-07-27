@@ -110,6 +110,14 @@ services:
             - "@knp_media.util.media_util"
             - "@platformd.locale.locales_relationship_helper"
 
+    platformd.model.group_manager:
+        class: Platformd\SpoutletBundle\Model\GroupManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@session"
+            - "@knp_media.util.media_util"
+            - "@platformd.locale.locales_relationship_helper"
+
     platformd.doctrine.locales_relationship_listener:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener
         tags:

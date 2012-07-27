@@ -3,6 +3,10 @@
 namespace Platformd\SpoutletBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\MediaBundle\Entity\Media;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
  */
-class Group
+class Group implements LinkableInterface, LocalesRelationshipInterface
 {
 
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
@@ -61,6 +65,22 @@ class Group
     private $howToJoin;
 
     /**
+     * @var \DateTime $created
+     *
+     * @ORM\Column(name="created_at", type="datetime")
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(name="updated_at", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    protected $updatedAt;
+
+    /**
      * @var boolean $isPublic
      * @Assert\NotNull
      * @ORM\Column(name="isPublic", type="boolean")
@@ -87,6 +107,32 @@ class Group
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $location;
+
+     /**
+     * Holds the "many" locales relationship
+     *
+     * Don't set this directly, instead set "locales" directly, and a listener
+     * will take care of properly creating the GamePageLocale relationship
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="GroupLocale", orphanRemoval=true, mappedBy="group")
+     */
+    private $groupLocales;
+
+    private $locales;
+
+    /**
+     * @var boolean $allLocales
+     * @Assert\NotNull
+     * @ORM\Column(name="allLocales", type="boolean")
+     */
+
+    private $allLocales;
+
+    public function __construct()
+    {
+        $this->groupLocales = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -208,6 +254,26 @@ class Group
     }
 
     /**
+     * Set allLocales
+     *
+     * @param boolean $allLocales
+     */
+    public function setAllLocales($allLocales)
+    {
+        $this->allLocales = $allLocales;
+    }
+
+    /**
+     * Get allLocales
+     *
+     * @return boolean
+     */
+    public function getAllLocales()
+    {
+        return $this->allLocales;
+    }
+
+    /**
      * @return \Platformd\MediaBundle\Entity\Media
      */
     public function getBackgroundImage()
@@ -240,6 +306,38 @@ class Group
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+      /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
      * @return \Platformd\SpoutletBundle\Entity\Location
      */
     public function getLocation()
@@ -253,5 +351,98 @@ class Group
     public function setLocation(Location $location = null)
     {
         $this->location = $location;
+    }
+
+
+
+     public function getJoinedLocales()
+    {
+        return $this->getGroupLocales();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getGroupLocales()
+    {
+        return $this->groupLocales;
+    }
+
+    /**
+     * A funny function where you create a new Instance of whatever the
+     * entities actual JoinedLocaleInterface is. You'll typically also
+     * need to set the relationship on that new object back to this object:
+     *
+     *     $newGroupLocale = new GroupLocale();
+     *     $newGroupLocale->setGroup($this);
+     *
+     *     return $newGroupLocale;
+     *
+     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
+     */
+    public function createJoinedLocale()
+    {
+        $newGroupLocale = new GroupLocale();
+        $newGroupLocale->setGroup($this);
+
+        return $newGroupLocale;
+    }
+
+     /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function  getLinkableRouteName()
+    {
+        return 'group_show';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function  getLinkableRouteParameters()
+    {
+        return array(
+            'id' => $this->getId()
+        );
+    }
+
+     public function getLocales()
+    {
+        return $this->areLocalesInitialized() ? $this->locales : array();
+    }
+
+    /**
+     * The locales are null until someone actually sets them
+     *
+     * This allows us to set them on load of the entity based on the relationship,
+     * but by checking this, we can be careful not to run over real values
+     *
+     * @return bool
+     */
+    public function areLocalesInitialized()
+    {
+        return is_array($this->locales);
+    }
+
+    public function setLocales(array $locales)
+    {
+        $this->locales = $locales;
+
+        // force Doctrine to see this as dirty
+        $this->updatedAt = new \DateTime();
     }
 }

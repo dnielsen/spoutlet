@@ -41,7 +41,12 @@ class GroupType extends AbstractType
             ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
-            ));
+            ))
+            ->add('locales', new SiteChoiceType(), array(
+                'multiple' => true,
+                'expanded' => true,
+            ))
+            ->add('allLocales', 'checkbox', array('required' => true, 'label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
     }
 
     public function getName()

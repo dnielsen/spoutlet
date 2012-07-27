@@ -48,7 +48,13 @@
                     <h1>Name</h1>
                     <p style="margin-left: 25px;">{{ group.name }}</p>
                     <h1>Group Avatar</h1>
-                    <p style="margin-left: 25px;"><img src="{{ media_path(group.groupAvatar, {'local': true}) | imagine_filter('image_thumb') }}" /></p>
+                    <p style="margin-left: 25px;">
+                        {% if group.groupAvatar %}
+                            <img src="{{ media_path(group.groupAvatar, {'local': true}) | imagine_filter('image_thumb') }}" />
+                        {% else %}
+                            [None Set]
+                        {% endif %}
+                    </p>
                     <h1>Description</h1>
                     <p style="margin-left: 25px;">{{ group.description }}</p>
                     <h1>How To Join</h1>

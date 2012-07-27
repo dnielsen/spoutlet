@@ -3,6 +3,9 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use DateTime;
+use DateTimeZone;
 
 /**
  * GroupsRepository
@@ -12,4 +15,37 @@ use Doctrine\ORM\EntityRepository;
  */
 class GroupRepository extends EntityRepository
 {
+
+    /**
+     * @param $site
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function createSiteQueryBuilder($site, $allowAllLocaleEntries = true)
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.groupLocales', 'gl')
+            ->andWhere(($allowAllLocaleEntries ? 'g.allLocales = true or ' : 'g.allLocales = false and ') . 'gl.locale = :site')
+            ->setParameter('site', $site);
+    }
+
+    private function addPublicOnlyQueryBuilder(QueryBuilder $qb)
+    {
+        return $qb->andWhere('g.isPublic = true');
+    }
+
+    public function findAllPublicGroupsForSite($site, $allowAllLocaleEntries = true)
+    {
+        $qb = $this->createSiteQueryBuilder($site, $allowAllLocaleEntries);
+
+        $this->addPublicOnlyQueryBuilder($qb);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllPublicAndPrivateGroupsForSite($site, $allowAllLocaleEntries = true)
+    {
+        $qb = $this->createSiteQueryBuilder($site, $allowAllLocaleEntries);
+
+        return $qb->getQuery()->execute();
+    }
 }

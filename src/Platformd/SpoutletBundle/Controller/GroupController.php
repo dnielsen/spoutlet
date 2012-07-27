@@ -22,7 +22,7 @@ class GroupController extends Controller
         $this->addGroupsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('SpoutletBundle:Group')->findAll();
+        $entities = $em->getRepository('SpoutletBundle:Group')->findAllPublicGroupsForSite($this->getLocale());
 
         return $this->render('SpoutletBundle:Group:index.html.twig', array(
             'entities' => $entities
@@ -124,6 +124,7 @@ class GroupController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
+
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
@@ -132,19 +133,8 @@ class GroupController extends Controller
             if ($form->isValid()) {
                 /** @var $group \Platformd\SpoutletBundle\Entity\Group */
                 $group = $form->getData();
-                $em->persist($group);
 
-                $mUtil = $this->getMediaUtil();
-
-                if (!$mUtil->persistRelatedMedia($group->getBackgroundImage())) {
-                    $group->setBackgroundImage(null);
-                }
-
-                if (!$mUtil->persistRelatedMedia($group->getGroupAvatar())) {
-                    $group->setGroupAvatar(null);
-                }
-
-                $em->flush();
+                $this->getGroupManager()->saveGroup($group);
 
                 return true;
             }
@@ -163,5 +153,13 @@ class GroupController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
     }
 }
