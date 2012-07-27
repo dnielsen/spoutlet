@@ -1,0 +1,29 @@
+#group-avatar {
+    padding: 10px 0 10px 0;
+}
+
+#google-map-location {
+    width: 300px;
+    height: 250px;
+    margin: 10px auto;
+}
+
+#group-name {
+
+}
+
+.side-nav {
+    float: left;
+    width: 250px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    background: #191919;
+}
+
+.main-content {
+    float: left;
+    width: 400px;
+
+}
