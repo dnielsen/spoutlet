@@ -24,6 +24,7 @@ class GroupRepository extends EntityRepository
     {
         return $this->createQueryBuilder('g')
             ->leftJoin('g.groupLocales', 'gl')
+            ->andWhere('g.deleted = false')
             ->andWhere(($allowAllLocaleEntries ? 'g.allLocales = true or ' : 'g.allLocales = false and ') . 'gl.locale = :site')
             ->setParameter('site', $site);
     }

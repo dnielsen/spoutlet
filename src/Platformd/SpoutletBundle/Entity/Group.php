@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\UserBundle\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -128,6 +129,23 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      */
 
     private $allLocales;
+
+    /**
+     * @var boolean $deleted
+     * @Assert\NotNull
+     * @ORM\Column(name="deleted", type="boolean")
+     */
+
+    private $deleted;
+
+    /**
+     * The person who uploaded this media
+     *
+     * @var \Platformd\UserBundle\Entity\User
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
+     * @ORM\JoinColumn(onDelete="cascade")
+     */
+    protected $owner;
 
     public function __construct()
     {
@@ -274,6 +292,26 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
      * @return \Platformd\MediaBundle\Entity\Media
      */
     public function getBackgroundImage()
@@ -355,7 +393,7 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
 
 
 
-     public function getJoinedLocales()
+    public function getJoinedLocales()
     {
         return $this->getGroupLocales();
     }
@@ -444,5 +482,23 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
 
         // force Doctrine to see this as dirty
         $this->updatedAt = new \DateTime();
+    }
+
+
+
+    /**
+     * @return \Platformd\UserBundle\Entity\User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param \Platformd\UserBundle\Entity\User $owner
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
     }
 }

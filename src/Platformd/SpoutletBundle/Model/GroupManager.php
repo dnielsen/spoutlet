@@ -8,6 +8,9 @@ use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\SpoutletBundle\Entity\UserInterface;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * Manager for Group:
@@ -26,12 +29,15 @@ class GroupManager
 
     private $localesHelper;
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper)
+    private $securityContext;
+
+    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper, SecurityContextInterface $securityContext)
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
         $this->localesHelper = $localesHelper;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -44,6 +50,12 @@ class GroupManager
      */
     public function saveGroup(Group $group, $flush = true)
     {
+
+        if (!$group->getOwner()) {
+            $user = $this->securityContext->getToken()->getUser();
+            $group->setOwner($user);
+        }
+
         $this->em->persist($group);
 
         $this->localesHelper->processLocalesSave($group);

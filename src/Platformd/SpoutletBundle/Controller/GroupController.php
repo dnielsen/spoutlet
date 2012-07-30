@@ -13,6 +13,19 @@ use Symfony\Component\Form\Form;
  */
 class GroupController extends Controller
 {
+    private function ensureValidGroup($group) {
+
+        if ($group->getDeleted()) {
+            throw $this->createNotFoundException('Group not found.'); // make sure this group hasn't been marked as deleted
+        }
+
+        $locale = $this->container->get('session')->getLocale();
+
+        if (!$group->getAllLocales() && !in_array($locale, $group->getLocales())) { // make sure this group is visible for this site
+            throw $this->createNotFoundException('The group does not exist');
+        }
+    }
+
     /**
      * Lists all Group entities.
      *
@@ -39,6 +52,8 @@ class GroupController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+
+        $this->ensureValidGroup($group);
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
             'group' => $group
@@ -98,6 +113,8 @@ class GroupController extends Controller
             throw $this->createNotFoundException('Unable to find Group group.');
         }
 
+        $this->ensureValidGroup($group);
+
         $editForm   = $this->createForm(new GroupType(), $group);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -120,6 +137,25 @@ class GroupController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Delete entity
+     */
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+
+        $this->ensureValidGroup($group);
+
+        $group->setDeleted(true);
+
+        $this->getGroupManager()->saveGroup($group);
+
+        $this->setFlash('success', 'The group was successfully deleted!');
+
+        return $this->redirect($this->generateUrl('group'));
     }
 
     private function processForm(Form $form, Request $request)

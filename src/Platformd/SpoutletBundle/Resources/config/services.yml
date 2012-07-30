@@ -117,6 +117,8 @@ services:
             - "@session"
             - "@knp_media.util.media_util"
             - "@platformd.locale.locales_relationship_helper"
+            - "@security.context"
+        scope: request
 
     platformd.doctrine.locales_relationship_listener:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener

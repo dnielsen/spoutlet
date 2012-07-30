@@ -20,6 +20,10 @@ group_edit:
     pattern:  /{id}/edit/
     defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
 
+group_delete:
+    pattern:  /{id}/delete/
+    defaults: { _controller: "SpoutletBundle:Group:delete", site: ~ }
+
 group_show:
     pattern:  /{id}/show/
     defaults: { _controller: "SpoutletBundle:Group:show", site: ~ }
