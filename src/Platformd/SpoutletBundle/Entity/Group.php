@@ -430,6 +430,13 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
         $this->members = $members;
     }
 
+    /**
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function isMember(User $user)
+    {
+        return $this->getMembers()->contains($user);
+    }
 
     /**
      * A funny function where you create a new Instance of whatever the

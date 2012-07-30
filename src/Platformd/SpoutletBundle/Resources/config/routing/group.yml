@@ -20,6 +20,14 @@ group_edit:
     pattern:  /{id}/edit/
     defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
 
+group_leave:
+    pattern:  /{id}/leave/
+    defaults: { _controller: "SpoutletBundle:Group:leave", site: ~ }
+
+group_join:
+    pattern:  /{id}/join/
+    defaults: { _controller: "SpoutletBundle:Group:join", site: ~ }
+
 group_delete:
     pattern:  /{id}/delete/
     defaults: { _controller: "SpoutletBundle:Group:delete", site: ~ }

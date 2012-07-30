@@ -13,17 +13,16 @@ use Symfony\Component\Form\Form;
  */
 class GroupController extends Controller
 {
-    private function ensureValidGroup($group) {
+    private function getGroup($id) {
+        return $this
+        ->getDoctrine()
+        ->getEntityManager()
+        ->getRepository('SpoutletBundle:Group')
+        ->find($id);
+    }
 
-        if ($group->getDeleted()) {
-            throw $this->createNotFoundException('Group not found.'); // make sure this group hasn't been marked as deleted
-        }
-
-        $locale = $this->container->get('session')->getLocale();
-
-        if (!$group->getAllLocales() && !in_array($locale, $group->getLocales())) { // make sure this group is visible for this site
-            throw $this->createNotFoundException('The group does not exist');
-        }
+    private function getCurrentUser() {
+        return $this->get('security.context')->getToken()->getUser();
     }
 
     /**
@@ -43,17 +42,77 @@ class GroupController extends Controller
     }
 
     /**
+     * Leave group.
+     *
+     */
+    public function leaveAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        $mgr = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
+
+        $user = $this->getCurrentUser();
+
+        if ($group->getOwner() === $user) {
+            $this->setFlash('error', 'You are the group owner, you are not allowed to leave the group!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        if (!$group->getMembers()->contains($user)) {
+            $this->setFlash('error', 'You are not a member of this group!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $group->getMembers()->removeElement($user);
+
+        $mgr->saveGroup($group);
+
+        $this->setFlash('success', 'You have successfully left this group!');
+
+        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
+
+    /**
+     * Join group.
+     *
+     */
+    public function joinAction($id)
+    {
+        $mgr    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $mgr->ensureGroupIsVisible($group);
+
+        if ($group->isMember($user)) {
+             $this->setFlash('error', 'You are already a member of this group!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $group->getMembers()->add($user);
+
+        $mgr->saveGroup($group);
+
+        $this->setFlash('success', 'You have successfully joined this group!');
+
+        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
+
+    /**
      * Shows a Group entitie.
      *
      */
     public function showAction($id)
     {
         $this->addGroupsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
 
-        $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+        $group = $this->getGroup($id);
 
-        $this->ensureValidGroup($group);
+        $mgr = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
             'group' => $group
@@ -105,15 +164,19 @@ class GroupController extends Controller
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
-        $em = $this->getDoctrine()->getEntityManager();
 
-        $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+        $group = $this->getGroup($id);
 
-        if (!$group) {
-            throw $this->createNotFoundException('Unable to find Group group.');
+        $user = $this->getUser();
+
+        if ($group->getOwner() !== $user) {
+            $this->setFlash('error', 'You are not the owner of this group!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $id)));
         }
 
-        $this->ensureValidGroup($group);
+        $mgr = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
 
         $editForm   = $this->createForm(new GroupType(), $group);
         $deleteForm = $this->createDeleteForm($id);
@@ -144,14 +207,21 @@ class GroupController extends Controller
      */
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+        $group = $this->getGroup($id);
+        $user = $this->getUser();
 
-        $this->ensureValidGroup($group);
+        if ($group->getOwner() !== $user) {
+            $this->setFlash('error', 'You are not the owner of this group!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $id)));
+        }
+
+        $mgr = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
 
         $group->setDeleted(true);
 
-        $this->getGroupManager()->saveGroup($group);
+        $mgr->saveGroup($group);
 
         $this->setFlash('success', 'The group was successfully deleted!');
 

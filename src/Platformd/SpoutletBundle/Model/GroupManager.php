@@ -10,6 +10,7 @@ use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Manager for Group:
@@ -70,6 +71,23 @@ class GroupManager
 
         if ($flush) {
             $this->em->flush();
+        }
+    }
+
+    public function ensureGroupIsVisible($group) {
+
+        if (!$group) {
+            throw new NotFoundHttpException('The group does not exist');
+        }
+
+        if ($group->getDeleted()) {
+            throw new NotFoundHttpException('The group does not exist'); // make sure this group hasn't been marked as deleted
+        }
+
+        $locale = $this->session->getLocale();
+
+        if (!$group->getAllLocales() && !in_array($locale, $group->getLocales())) { // make sure this group is visible for this site
+            throw new NotFoundHttpException('The group does not exist');
         }
     }
 
