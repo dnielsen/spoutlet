@@ -9,7 +9,7 @@ use Platformd\SpoutletBundle\Entity\Superclass\JoinedLocale;
  * Effectively a many-to-many join table between Group and locale (which is not a real table)
  *
  * @ORM\Table(
- *      name="pd_group_locale",
+ *      name="pd_groups_locales",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(
  *              name="group_locale",

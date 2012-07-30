@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Platformd\SpoutletBundle\Entity\UserInterface;
 use Platformd\UserBundle\Entity\User;
 
 /**
@@ -54,6 +53,14 @@ class GroupManager
         if (!$group->getOwner()) {
             $user = $this->securityContext->getToken()->getUser();
             $group->setOwner($user);
+        }
+
+        $owner      = $group->getOwner();
+        $members    = $group->getMembers();
+
+        if (!in_array($owner, (array) $members)) {
+            $members[] = $owner;
+            $group->setMembers($members);
         }
 
         $this->em->persist($group);

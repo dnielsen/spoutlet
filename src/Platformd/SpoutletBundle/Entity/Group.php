@@ -113,7 +113,7 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      * Holds the "many" locales relationship
      *
      * Don't set this directly, instead set "locales" directly, and a listener
-     * will take care of properly creating the GamePageLocale relationship
+     * will take care of properly creating the GroupLocale relationship
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="GroupLocale", orphanRemoval=true, mappedBy="group")
@@ -136,7 +136,7 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      * @ORM\Column(name="deleted", type="boolean")
      */
 
-    private $deleted;
+    private $deleted = false;
 
     /**
      * The person who uploaded this media
@@ -147,9 +147,17 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      */
     protected $owner;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="pd_groups_members")
+     */
+    private $members;
+
     public function __construct()
     {
         $this->groupLocales = new ArrayCollection();
+        $this->members = new ArrayCollection();
     }
 
     /**
@@ -405,6 +413,23 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     {
         return $this->groupLocales;
     }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getMembers()
+    {
+        return $this->members;
+    }
+
+     /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $members
+     */
+    public function setMembers($members)
+    {
+        $this->members = $members;
+    }
+
 
     /**
      * A funny function where you create a new Instance of whatever the
