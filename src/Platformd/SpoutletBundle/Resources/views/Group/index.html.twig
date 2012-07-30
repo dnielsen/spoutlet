@@ -14,7 +14,7 @@
     <tbody>
     {% for group in entities %}
         <tr>
-            <td><a href="{{ path('group_edit', { 'id': group.id }) }}">edit</a> | <a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">delete</a> | <a href="{{ path('group_join', { 'id': group.id }) }}">join</a> | <a href="{{ path('group_leave', { 'id': group.id }) }}">leave</a></td>
+            <td><a href="{{ path('group_edit', { 'id': group.id }) }}">edit</a> | <a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">delete</a> | <a href="{{ path('group_join', { 'id': group.id }) }}">join</a> | <a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">leave</a></td>
             <td><a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a></td>
             <td>
                 {% if group.isPublic %}
