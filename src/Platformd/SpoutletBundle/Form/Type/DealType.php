@@ -93,7 +93,7 @@ class DealType extends AbstractType
             ->add('topColor', 'hidden', array(
                 'data' => '#000000',
             ))
-            ->add('bottomColor', null, array(
+            ->add('bottomColor', 'hidden', array(
                 'label' => 'Bottom background color',
                 'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
             ))
