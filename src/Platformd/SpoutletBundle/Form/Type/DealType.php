@@ -44,7 +44,7 @@ class DealType extends AbstractType
             ->add('timezone', 'timezone', array('label' => 'Timezone'))
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
-                'image_help'  => 'Recommended size: 950x400',
+                'image_help'  => 'Recommended size: 950x270',
             ))
             ->add('thumbnailLarge', new MediaType(), array(
                 'image_label' => 'Large Thumbnail',
