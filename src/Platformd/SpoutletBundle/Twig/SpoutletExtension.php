@@ -367,7 +367,7 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserEventLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com%s/account/events/" target="_blank">%s</a>';
+        $format = '<a href="http://www.alienwarearena.com%s/account/events/">%s</a>';
         $enLinkText = 'My Events';
 
         switch($locale) {
@@ -380,7 +380,7 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserGameIdLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/" target="_blank">%s</a>';
+        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">%s</a>';
 
         switch($locale) {
             case 'ja':      return sprintf($format, 'japan', 'ゲームID');
