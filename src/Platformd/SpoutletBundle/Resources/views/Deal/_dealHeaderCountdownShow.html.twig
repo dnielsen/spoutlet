@@ -3,9 +3,6 @@
         <img src="{{ media_path(deal.banner) }}" />
     {% endif %}
 </div>
-<div class="deals-title">
-    {{ 'deals_alienware_title' | trans }}
-</div>
 <div class="deals-timeleft" style="display: none;">
     {% if deal.endsAtUtc is not null %}
         {% if not deal.hasExpired %}
@@ -24,7 +21,7 @@
                 </div>
             {% endif %}
         {% else %}
-        <span>{{ 'deal_timeleft_expired_label' | trans }}</span>
+        <span id="deal-expired-label">{{ 'deal_timeleft_expired_label' | trans }}</span>
         {% endif %}
     {% endif %}
 </div>

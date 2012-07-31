@@ -3,9 +3,6 @@
         <a href="{{ deal | pd_link }}" style="border: none;"><img src="{{ media_path(deal.banner) }}" /></a>
     {% endif %}
 </div>
-<div class="deals-title">
-    {{ 'deals_alienware_title' | trans }}
-</div>
 <div class="deals-timeleft" style="display: none;">
     {% if deal.endsAtUtc is not null %}
         {% if not deal.hasExpired %}

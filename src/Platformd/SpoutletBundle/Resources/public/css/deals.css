@@ -22,46 +22,23 @@
     text-align: center;
     font-size: 30px;
     font-weight: bold;
+    padding-top: 10px;
+}
+
+#deal-expired-label {
+    color: #ff0000;
 }
 
 .timeleft-label {
     font-size: 18px;
 }
 
-.deals-features-col-header {
-    width: 600px;
-    background: #303338;
-    text-align: left;
-    padding: 5px;
-    font-size: 16px;
-    font-weight: normal;
-}
-
-.deals-features-col {
-    width: 600px;
-    vertical-align: top;
-    color: #BFBFBF;
-    font-size: 12px;
-}
-
 .deals-features-col ol, ul, dl {
     padding: 0 40px;
 }
 
-.deals-instructions-col-header {
-    width: 350px;
-    background: #303338;
-    text-align: left;
-    padding: 5px;
-    font-size: 16px;
-    font-weight: normal;
-}
-
-.deals-instructions-col {
-    width: 350px;
-    vertical-align: top;
+#deal-description {
     color: #BFBFBF;
-    font-size: 12px;
 }
 
 #deal-actions {
@@ -98,7 +75,7 @@
     font-weight: bold;
 }
 
-#deal-instructions { padding: 5px;}
+#deal-instructions { }
 #deal-instructions ul { margin: 5px; padding: 0;}
 #deal-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
 #deal-instructions ul li span.item { color: #BFBFBF;}
