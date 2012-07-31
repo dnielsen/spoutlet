@@ -35,6 +35,7 @@
         <div class="right">
             <div id="group-name">
                 <h2>{{ group.name }}</h2>
+                <span>{{ group.isPublic ? 'Public' : 'Private' }}</span>
             </div>
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             {% if group.location and group.category == 'location' %}
