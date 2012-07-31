@@ -383,7 +383,7 @@ class SpoutletExtension extends Twig_Extension
         $format = '<a href="http://www.alienwarearena.com/%s/account/ids/" target="_blank">%s</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'japan', 'Game IDs');
+            case 'ja':      return sprintf($format, 'japan', 'ゲームID');
             case 'zh':      return sprintf($format, 'china', 'Game IDs');
 
             default:        return false;
