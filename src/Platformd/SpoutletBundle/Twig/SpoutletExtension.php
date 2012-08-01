@@ -33,7 +33,8 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
-            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl')
+            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
+            'wrap' => new Twig_Filter_Method($this, 'wrap')
         );
     }
 
@@ -42,6 +43,10 @@ class SpoutletExtension extends Twig_Extension
         return array(
             'external' => new Twig_Test_Method($this, 'testExternal')
         );
+    }
+
+    public function wrap($obj, $length = 100, $breakWith = '<br />', $cut = true) {
+        return wordwrap($obj, $length, $breakWith, $cut);
     }
 
     public function getFunctions()

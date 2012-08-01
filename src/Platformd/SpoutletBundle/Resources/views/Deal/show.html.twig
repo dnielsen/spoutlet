@@ -46,9 +46,10 @@
                     <div class="pad3">
                         <div class="pad4">
                             <h3>{{ 'platformd.flash.success_title' | trans }}</h3>
-                            <p>{{ 'deal_redeem_success_code' | trans}}
+                            <p>{{ 'deal_redeem_success_code' | trans}}</p>
+                            <p>
                                 {%- if dealCodeIsUrl -%}
-                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | raw }}</a>
+                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | wrap | raw }}</a>
                                 {%- else -%}
                                     {{ dealCode | replace({"'":"", ",":""}) }}
                                 {%- endif -%}
