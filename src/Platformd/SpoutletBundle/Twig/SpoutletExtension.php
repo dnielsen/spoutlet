@@ -389,7 +389,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
             case 'ja':      return sprintf($format, 'japan', 'ゲームID');
-            case 'zh':      return sprintf($format, 'china', 'Game IDs');
+            //case 'zh':      return sprintf($format, 'china', 'Game IDs');
 
             default:        return false;
         }
