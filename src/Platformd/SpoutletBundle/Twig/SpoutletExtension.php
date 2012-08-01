@@ -45,7 +45,7 @@ class SpoutletExtension extends Twig_Extension
         );
     }
 
-    public function wrap($obj, $length = 100, $breakWith = '<br />', $cut = true) {
+    public function wrap($obj, $length = 75, $breakWith = '<br />', $cut = true) {
         return wordwrap($obj, $length, $breakWith, $cut);
     }
 
