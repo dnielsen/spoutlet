@@ -25,6 +25,10 @@ abstract class MediaType extends AbstractType
                 'required' => false,
             ))
         ;
+
+        if (isset($options['with_remove_checkbox']) && $options['with_remove_checkbox']) {
+            $builder->add('removed', 'checkbox', array('label' => 'Remove'));
+        }
     }
 
     /**
@@ -38,6 +42,7 @@ abstract class MediaType extends AbstractType
             'data_class' => $this->getDataClass(),
             'image_label' => 'Upload a file',
             'image_help' => null,
+            'with_remove_checkbox' => false
         );
     }
 

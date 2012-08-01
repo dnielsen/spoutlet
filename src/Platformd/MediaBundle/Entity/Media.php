@@ -43,6 +43,12 @@ class Media extends BaseMedia implements MediaOwnerInterface
     protected $locale;
 
     /**
+     * @var boolean $removed
+     * @ORM\Column(name="removed", type="boolean")
+     */
+    protected $removed = false;
+
+    /**
      * @return \Platformd\UserBundle\Entity\User
      */
     public function getOwner()
@@ -72,5 +78,21 @@ class Media extends BaseMedia implements MediaOwnerInterface
     public function setLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+     /**
+     * @return boolean
+     */
+    public function getRemoved()
+    {
+        return $this->removed;
+    }
+
+    /**
+     * @param boolean $removed
+     */
+    public function setRemoved($removed)
+    {
+        $this->removed = $removed;
     }
 }

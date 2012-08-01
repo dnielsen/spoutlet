@@ -45,18 +45,22 @@ class DealType extends AbstractType
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950x270',
+                'with_remove_checkbox' => true
             ))
             ->add('thumbnailLarge', new MediaType(), array(
                 'image_label' => 'Large Thumbnail',
                 'image_help'  => 'Recommended size: 138x83',
+                'with_remove_checkbox' => true
             ))
             ->add('claimCodeButton', new MediaType(), array(
                 'image_label' => 'Claim Code Now',
                 'image_help'  => 'Recommended size: 224x43',
+                'with_remove_checkbox' => true
             ))
             ->add('visitWebsiteButton', new MediaType(), array(
                 'image_label' => 'Visit Website Image',
                 'image_help'  => 'Recommended size: 224x43',
+                'with_remove_checkbox' => true
             ))
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
             ->add('description', null, array(
