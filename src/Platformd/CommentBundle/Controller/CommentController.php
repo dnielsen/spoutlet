@@ -20,6 +20,7 @@ class CommentController extends BaseCommentController
     public function deleteAction($id)
     {
         $manager = $this->container->get('fos_comment.manager.comment');
+        $router = $this->container->get('router');
 
         /** @var $comment \Platformd\CommentBundle\Entity\Comment */
         if (!$comment = $manager->findCommentById($id)) {
@@ -44,13 +45,27 @@ class CommentController extends BaseCommentController
         $threadSlug = $comment->getThread()->getId();
 
         if($threadSlug == 'custom-military-page') {
-            $url = $this->container->get('router')->generate('military');
+            $url = $router->generate('military');
+            return new RedirectResponse($url);
+        }
+
+        if (strpos($threadSlug, 'deal-') === 0) {
+            $dealId = (int) substr($threadSlug, 5);
+            $dealRepo = $em->getRepository('SpoutletBundle:Deal');
+            $deal = $dealRepo->find($dealId);
+
+            if (!$deal) {
+                return new RedirectResponse($router->generate('deal_list'));
+            }
+
+            $url = $router->generate('deal_show', array('slug' => $deal->getSlug()));
+
             return new RedirectResponse($url);
         }
 
         $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
 
-        $url = $this->container->get('router')->generate($route, array('slug' => $threadSlug));
+        $url = $router->generate($route, array('slug' => $threadSlug));
 
         return new RedirectResponse($url);
     }
