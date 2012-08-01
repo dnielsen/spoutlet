@@ -415,6 +415,7 @@ class SpoutletExtension extends Twig_Extension
         $chinaOrJapanOrLatam = in_array($locale, array('zh', 'ja', 'es'));
         $northAmerica = in_array($locale, array('en_US'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
+        $demoOnly = in_array($locale, array('en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -425,7 +426,7 @@ class SpoutletExtension extends Twig_Extension
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
-            case 'DEALS':                       return false; // $northAmerica // this will be NA and EU shortly after launch
+            case 'DEALS':                       return $demoOnly; // $northAmerica // this will be NA and EU shortly after launch
             case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
