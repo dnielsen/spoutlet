@@ -21,23 +21,17 @@ class CommentController extends BaseCommentController
     {
         $manager = $this->container->get('fos_comment.manager.comment');
         $router = $this->container->get('router');
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
         /** @var $comment \Platformd\CommentBundle\Entity\Comment */
         if (!$comment = $manager->findCommentById($id)) {
             throw new NotFoundHttpException('Comment not found.');
         }
 
-        $url = $this->getUrlForObject($this->getCommentManager()->getObjectFromThread($comment->getThread()));
-        $url .= '#commentsView';
-
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
         $thread = $comment->getThread();
         $thread->setNumComments($thread->getNumComments() - 1);
         $em->persist($thread);
-
         $em->remove($comment);
-
         $em->flush();
 
         // Not sure if the CommentBundle provides a way to delete comments easily
@@ -45,27 +39,11 @@ class CommentController extends BaseCommentController
         $threadSlug = $comment->getThread()->getId();
 
         if($threadSlug == 'custom-military-page') {
-            $url = $router->generate('military');
-            return new RedirectResponse($url);
+            return new RedirectResponse($router->generate('military').'#commentsView');
         }
 
-        if (strpos($threadSlug, 'deal-') === 0) {
-            $dealId = (int) substr($threadSlug, 5);
-            $dealRepo = $em->getRepository('SpoutletBundle:Deal');
-            $deal = $dealRepo->find($dealId);
-
-            if (!$deal) {
-                return new RedirectResponse($router->generate('deal_list'));
-            }
-
-            $url = $router->generate('deal_show', array('slug' => $deal->getSlug()));
-
-            return new RedirectResponse($url);
-        }
-
-        $route = !is_null($this->findGiveawayBySlug($threadSlug)) ? 'giveaway_show' : 'events_detail';
-
-        $url = $router->generate($route, array('slug' => $threadSlug));
+        $url = $this->getUrlForObject($this->getCommentManager()->getObjectFromThread($comment->getThread()));
+        $url .= '#commentsView';
 
         return new RedirectResponse($url);
     }
