@@ -16,7 +16,7 @@ class Version20120802102255 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql");
 
         $this->addSql("
-            ALTER TABLE  `spoutlet`.`giveaway_key`
+            ALTER TABLE  `giveaway_key`
             ADD INDEX  `pool_ip_idx` (  `pool` ,  `ip_address` ),
             ADD INDEX  `user_pool_idx` (  `user` ,  `pool` )
         ");
