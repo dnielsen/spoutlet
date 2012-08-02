@@ -12,7 +12,13 @@ use Platformd\SpoutletBundle\Entity\Superclass\Pool;
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayKey
  * 
- * @ORM\Table(name="giveaway_key")
+ * @ORM\Table(
+ *      name="giveaway_key",
+ *      indexes={
+ *          @ORM\index(name="user_pool_idx", columns={"user", "pool"}),
+ *          @ORM\index(name="pool_ip_idx", columns={"pool", "ip_address"})
+ *      }
+ * )
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository")
  */
 class GiveawayKey extends Code
