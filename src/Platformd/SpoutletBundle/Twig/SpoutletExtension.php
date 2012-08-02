@@ -413,7 +413,7 @@ class SpoutletExtension extends Twig_Extension
         $japan = in_array($locale, array('ja'));
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
         $chinaOrJapanOrLatam = in_array($locale, array('zh', 'ja', 'es'));
-        $northAmerica = in_array($locale, array('en_US'));
+        $northAmerica = in_array($locale, array('en_US', 'en'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
         $demoOnly = in_array($locale, array('en'));
 
@@ -426,7 +426,7 @@ class SpoutletExtension extends Twig_Extension
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
-            case 'DEALS':                       return $demoOnly; // $northAmerica // this will be NA and EU shortly after launch
+            case 'DEALS':                       return $northAmerica; // $northAmerica // this will be NA and EU shortly after launch
             case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
