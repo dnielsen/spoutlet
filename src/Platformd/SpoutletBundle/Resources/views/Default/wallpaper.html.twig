@@ -4,19 +4,29 @@
 
 {% block content %}
 
-    <h1>{{ 'wallpapers' | trans }}</h1>
+    <div id="nav_wrapper">
+        <p id="wallpapers">{{ 'wallpapers' | trans }}</p>
+        <p id="exclusive-designs">{{ 'exclusive_designs' | trans }}</p>
+    </div>
 
-    {% for wallpaper in wallpapers %}
+    <div class="wrapitup">
+        {% for wallpaper in wallpapers %}
 
-        <div class="wp_container">
-            <a class="aw_wp_click" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
-                <span>Click to Download</span>
-            </a>
-            <a class="aw_wp" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
-                <img src="{{ media_path(wallpaper.thumbnail) }}" />
-            </a>
-        </div>
+            <div class="wp_container">
+                <a class="aw_wp_click" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
+                    <span>{{ 'click_to_download' | trans }}</span>
+                </a>
+                <a class="aw_wp" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
+                    <img src="{{ media_path(wallpaper.thumbnail) }}" />
+                </a>
+            </div>
 
-    {% endfor %}
+        {% endfor %}
+    </div>
 
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/wallpapers.css') }}" />
 {% endblock %}
