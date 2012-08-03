@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'wallpapers' | trans }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ 'wallpapers' | trans }}</h1>
+
+    {% for wallpaper in wallpapers %}
+
+        <div class="wp_container">
+            <a class="aw_wp_click" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
+                <span>Click to Download</span>
+            </a>
+            <a class="aw_wp" href="{{ media_path(wallpaper.resolutionPack) }}" target="_blank">
+                <img src="{{ media_path(wallpaper.thumbnail) }}" />
+            </a>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

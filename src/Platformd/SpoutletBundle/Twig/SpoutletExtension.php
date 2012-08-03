@@ -34,14 +34,14 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
-            'wrap' => new Twig_Filter_Method($this, 'wrap')
+            'wrap' => new Twig_Filter_Method($this, 'wrap'),
         );
     }
 
     public function getTests()
     {
         return array(
-            'external' => new Twig_Test_Method($this, 'testExternal')
+            'external' => new Twig_Test_Method($this, 'testExternal'),
         );
     }
 
@@ -77,7 +77,22 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'getAvatarUrl'
             ),
+            'ends_with'                => new Twig_Function_Method(
+                $this,
+                'endsWith'
+            ),
         );
+    }
+
+    public function endsWith($haystack, $needle) {
+
+        $length = strlen($needle);
+
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 
     /**
@@ -420,7 +435,6 @@ class SpoutletExtension extends Twig_Extension
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
             case 'VIDEO':                       return !$chinaOrJapan;
-            case 'WALLPAPER':                   return !$chinaOrJapan;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'FORUMS':                      return !$chinaOrJapan;
@@ -430,6 +444,7 @@ class SpoutletExtension extends Twig_Extension
             case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
+            case 'WALLPAPERS':                  return !$chinaOrJapan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

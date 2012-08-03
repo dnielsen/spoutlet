@@ -1,0 +1,13 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <div class="span6">
+        {{ form_row(form.thumbnail) }}
+        {{ form_row(form.resolutionPack) }}
+    </div>
+</div>
+
+{{ form_rest(form) }}

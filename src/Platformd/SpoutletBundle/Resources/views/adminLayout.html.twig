@@ -136,6 +136,19 @@
                             </li>
                             {% endif %}
 
+                            {% if site_has_feature('WALLPAPERS') %}
+
+                                <li>
+                                    <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('admin_wallpaper_new') }}">Add wallpaper</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            {% endif %}
+
                             {% if is_granted('ROLE_ADMIN_GAME') %}
                             <li>
                                 <a href="{{ path('admin_game') }}">Games</a>
