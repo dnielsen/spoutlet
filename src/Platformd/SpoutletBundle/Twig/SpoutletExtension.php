@@ -431,17 +431,13 @@ class SpoutletExtension extends Twig_Extension
         $format         = '<a href="%s">%s</a>';
         $internalUrl    = $this->container->get('router')->generate('events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
+        $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
-        // this was commented out because of the problem on CEVOs end - I couldn't test it with the country codes in the link (was '502 Bad Gateway | nginx/0.7.65'ing)
-
-        //$cevoCountry    = $this->GetCevoCountryLookup($locale);
-
-        //if ($cevoCountry) {
-        //    $externalUrl .= $cevoCountry.'/';
-        //}
+        if ($cevoCountry) {
+            $externalUrl .= $cevoCountry.'/';
+        }
 
         $externalUrl .= 'event/';
-
         $enLinkText = 'Events';
 
         switch($locale) {
