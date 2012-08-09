@@ -36,7 +36,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Novedades >> Articles       | http://www.alienwarearena.com/articles/   |
       | Novedades >> Announcements  | http://www.alienwarearena.com/news/       |
       | Media >> Vídeos             | http://video.alienwarearena.com/          |
-      | Media >> Explorar           | /pages/wallpapers                         |
+      | Media >> Explorar           | /wallpapers                               |
       | Foros                       | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -58,7 +58,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
-      | Media >> Wallpapers         | /pages/wallpapers                               |
+      | Media >> Wallpapers         | /wallpapers                                     |
       | NewDeals                    | http://na.alienwarearena.com/deal/alienware-mpp |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
@@ -80,7 +80,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
-      | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
+      | Media >> Wallpapers         | /wallpapers                                                                                       |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
       | Microsoft                   | /microsoft                                                                                        |
@@ -101,7 +101,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -122,7 +122,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -143,7 +143,7 @@ Scenario: The "Australia / New Zealand" site's main navigation menu has the corr
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
