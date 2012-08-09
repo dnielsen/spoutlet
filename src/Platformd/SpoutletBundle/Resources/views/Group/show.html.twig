@@ -32,17 +32,6 @@
 
 {% block content %}
     <div class="std_2col">
-        <div class="right">
-            <div id="group-name">
-                <h2>{{ group.name }}</h2>
-                <span>{{ group.isPublic ? 'Public' : 'Private' }}</span>
-            </div>
-            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-            {% if group.location and group.category == 'location' %}
-                <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
-                <div id="google-map-location"></div>
-            {% endif %}
-        </div>
         <div class="left">
             <div id="group-avatar">
                 {% if group.groupAvatar %}
@@ -51,29 +40,54 @@
                     [None Set]
                 {% endif %}
             </div>
+        </div>
+        <div class="right">
+            JOIN GROUP
+            <a href="#" id="group-invite">Invite Friends</a>
+        </div>
+    </div>
+    <div class="std_2col">
+        <div class="right">
+            <div class="widget-33">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ group.name }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac mi velit. Sed placerat orci odio.
+                </div>
+            </div>
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            {% if group.location and group.category == 'location' %}
+                <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
+                <div id="google-map-location"></div>
+            {% endif %}
+        </div>
+        <div class="left">
             <div class="widget-66" id="featured-content">
                 <div class="featured-content-header">
-                    <a href="javascript:void(0);" id="group-about" class="active">About</a>
-                    <a href="javascript:void(0);" id="group-news">News</a>
+                    <a href="javascript:void(0);" id="group-news" class="active">News</a>
+                    <a href="javascript:void(0);" id="group-about">About</a>
                     <a href="javascript:void(0);" id="group-events">Event Calendar</a>
                     <a href="javascript:void(0);" id="group-photos">Photo Gallery</a>
                     <a href="javascript:void(0);" id="group-videos">Videos</a>
                     <div style="clear: left;"></div>
                 </div>
-                <div class="widget-content" style="height: 260px;">
-                    <div id="content-group-about" class="featured-content-category active">
-                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
-                    </div>
-                    <div id="content-group-news" class="featured-content-category">
+                <div class="widget-content">
+                    <div id="content-group-news" class="featured-content-category active" style="height: 260px;">
                         {% include 'SpoutletBundle:Group:_news.html.twig' %}
                     </div>
-                    <div id="content-group-events" class="featured-content-category">
+                    <div id="content-group-about" class="featured-content-category" style="height: 260px;">
+                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
+                    </div>
+                    <div id="content-group-events" class="featured-content-category" style="height: 260px;">
                         {% include 'SpoutletBundle:Group:_events.html.twig' %}
                     </div>
-                    <div id="content-group-photos" class="featured-content-category">
+                    <div id="content-group-photos" class="featured-content-category" style="height: 260px;">
                         {% include 'SpoutletBundle:Group:_photos.html.twig' %}
                     </div>
-                    <div id="content-group-videos" class="featured-content-category">
+                    <div id="content-group-videos" class="featured-content-category" style="height: 260px;">
                         {% include 'SpoutletBundle:Group:_videos.html.twig' %}
                     </div>
                 </div>
@@ -128,11 +142,11 @@
                 $('.featured-content-category#content-'+current).fadeOut('fast', function () {
                     $(this).delay(500);
                     $('.featured-content-category#content-'+id).fadeIn();
+                    $('.featured-content-category#content-'+id).mCustomScrollbar('update');
                 });
-
             });
 
-            $('.widget-content').mCustomScrollbar();
+            $('.featured-content-category').mCustomScrollbar();
         });
     </script>
 
