@@ -167,7 +167,13 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
         }
 
-        $actualDestination      = $actual->find('css', 'a')->getAttribute('href');
+        $searchLink = $actual->find('css', 'a');
+
+        if (!$searchLink) {
+            throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
+        }
+
+        $actualDestination = $searchLink->getAttribute('href');
 
         if ($this->isNavSubItem($actual)) {
             $actualText = $this->getNavSubItemHeading($actual).' >> '.$actual->getText();

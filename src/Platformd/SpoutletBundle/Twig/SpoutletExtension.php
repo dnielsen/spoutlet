@@ -249,6 +249,7 @@ class SpoutletExtension extends Twig_Extension
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
+            case 'USER_PROFILE':                    return $this->GetUserProfileLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -381,6 +382,46 @@ class SpoutletExtension extends Twig_Extension
             case 'en_US':   return sprintf($format, '', $enLinkText);
 
             default:        return false;
+        }
+    }
+
+    private function GetCevoCountryLookup($locale, $blankForNorthAmerica = true) {
+
+        switch($locale) {
+            case 'ja':      return 'japan';
+            case 'zh':      return 'china';
+            case 'es':      return 'latam';
+            case 'en_SG':   return 'sg';
+            case 'en_AU':   return 'anz';
+            case 'en_GB':   return 'europe';
+            case 'en_IN':   return 'in';
+            case 'en_US':   return $blankForNorthAmerica ? '' : 'na';
+        }
+
+        return '';
+    }
+
+    private function GetUserProfileLink($locale) {
+
+        $format         = '<a href="%s">%s</a>';
+        $internalUrl    = $this->container->get('router')->generate('accounts_profile');
+        $externalUrl    = 'https://www.alienwarearena.com/';
+        $cevoCountry    = $this->GetCevoCountryLookup($locale);
+
+        if ($cevoCountry) {
+            $externalUrl .= $cevoCountry.'/';
+        }
+
+        $externalUrl .= 'member/'.$this->getCurrentUser()->getCevoUserId().'/';
+
+        $enLinkText = 'Profile';
+
+        switch($locale) {
+
+            case 'ja':      return sprintf($format, $internalUrl, 'プロファイル');
+            case 'zh':      return sprintf($format, $internalUrl, '个人形象');
+
+            default:        return sprintf($format, $externalUrl, $enLinkText);
         }
     }
 

@@ -5,6 +5,7 @@ Feature: User Navigation
 
   Background:
     Given I am authenticated as a user
+    # And my CEVO User ID is 55 # This is just here for reference, don't uncomment - the system is setup with a default user who actually has a CEVO User ID of 55
 
   Scenario: The "Japan" site's user navigation menu has the correct items
     Given I am on the "Japan" site
@@ -38,7 +39,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/latam/member/55/    |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -52,7 +53,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/member/55/          |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Events                     | http://www.alienwarearena.com/account/events/      |
       | My Giveaways                  | /account/profile/giveaways                         |
@@ -68,7 +69,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/europe/member/55/   |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -82,7 +83,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/in/member/55/       |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -96,7 +97,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/sg/member/55/       |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -110,7 +111,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | /account/profile                                   |
+      | Profile                       | https://www.alienwarearena.com/anz/member/55/      |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |

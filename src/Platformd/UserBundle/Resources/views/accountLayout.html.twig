@@ -2,6 +2,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 {% set event_link = site_link('USER_EVENT') %}
 {% set game_id_link = site_link('USER_GAME_ID') %}
+{% set profile_link = site_link('USER_PROFILE') %}
 {% block pre_content_nav %}
 <div class="std_1col">
     <div id="accountHeader">
@@ -11,7 +12,7 @@
                 <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
             #}
             <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
-            <li><a href="{{ path('accounts_profile') }}">{{ "platformd.user.account.profile" | trans }}</a></li>
+            <li>{{ profile_link | raw }}</li>
 
             {% if site_has_feature('MESSAGES') %}
                 <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
