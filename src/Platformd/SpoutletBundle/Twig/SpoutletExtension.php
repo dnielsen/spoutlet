@@ -33,7 +33,8 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
-            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl')
+            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
+            'wrap' => new Twig_Filter_Method($this, 'wrap')
         );
     }
 
@@ -42,6 +43,10 @@ class SpoutletExtension extends Twig_Extension
         return array(
             'external' => new Twig_Test_Method($this, 'testExternal')
         );
+    }
+
+    public function wrap($obj, $length = 75, $breakWith = '<br />', $cut = true) {
+        return wordwrap($obj, $length, $breakWith, $cut);
     }
 
     public function getFunctions()
@@ -367,7 +372,7 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserEventLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com%s/account/events/" target="_blank">%s</a>';
+        $format = '<a href="http://www.alienwarearena.com%s/account/events/">%s</a>';
         $enLinkText = 'My Events';
 
         switch($locale) {
@@ -380,11 +385,11 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserGameIdLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/" target="_blank">%s</a>';
+        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">%s</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'japan', 'Game IDs');
-            case 'zh':      return sprintf($format, 'china', 'Game IDs');
+            case 'ja':      return sprintf($format, 'japan', 'ゲームID');
+            //case 'zh':      return sprintf($format, 'china', 'Game IDs');
 
             default:        return false;
         }
@@ -408,8 +413,9 @@ class SpoutletExtension extends Twig_Extension
         $japan = in_array($locale, array('ja'));
         $chinaOrJapan = in_array($locale, array('zh', 'ja'));
         $chinaOrJapanOrLatam = in_array($locale, array('zh', 'ja', 'es'));
-        $northAmerica = in_array($locale, array('en_US'));
+        $northAmerica = in_array($locale, array('en_US', 'en'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
+        $demoOnly = in_array($locale, array('en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -420,8 +426,8 @@ class SpoutletExtension extends Twig_Extension
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
-            case 'DEALS':                       return $northAmericaOrEurope;
-            case 'GAMES':                       return $chinaOrJapan;
+            case 'DEALS':                       return $northAmerica; // $northAmerica // this will be NA and EU shortly after launch
+            case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
         }

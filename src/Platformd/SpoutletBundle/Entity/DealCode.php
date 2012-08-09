@@ -32,6 +32,13 @@ class DealCode extends Code
     protected $user;
 
     /**
+     * @var \Platformd\SpoutletBundle\Entity\Country
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $country;
+
+    /**
      * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
      */
     public function setPool(Pool $pool)
@@ -40,7 +47,7 @@ class DealCode extends Code
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
+     * @return \Platformd\SpoutletBundle\Entity\Superclass\Pool
      */
     public function getPool()
     {
@@ -69,5 +76,21 @@ class DealCode extends Code
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\Country $country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
     }
 }

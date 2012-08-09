@@ -73,8 +73,8 @@
 {% block knp_media_row %}
     <div class="file-upload">
         {{ form_row(form.fileObject) }}
-
         {% if form.get('mediaObject') %}
+            {{ form_rest(form) }}
             <img src="{{ media_path(form.get('mediaObject')) }}" />
         {% endif %}
     </div>

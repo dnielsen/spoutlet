@@ -61,15 +61,12 @@ class ProfileController extends BaseProfileController
        $cevoAuthManager = $this->container->get('pd.cevo.cevo_auth_manager');
        $cevoProfileUrl = $cevoAuthManager->generateCevoUrl('/member/'.$user->getCevoUserId());
 
-       return new RedirectResponse($cevoProfileUrl);
+       //return new RedirectResponse($cevoProfileUrl);
 
-       /*
-        * actual profile page is commented out
        return $this->container->get('templating')
            ->renderResponse('FOSUserBundle:Profile:show.html.twig', array(
            'user' => $user,
            'isCurrentUser' => $isCurrentUser,
        ));
-       */
    }
 }

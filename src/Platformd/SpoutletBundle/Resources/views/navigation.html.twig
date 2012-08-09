@@ -36,6 +36,10 @@
                     </li>
                 {% endif %}
 
+                {% if site_has_feature('SWEEPSTAKES') %}
+                    <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                {% endif %}
+
                 {% if site_has_feature('VIDEO') or site_has_feature('WALLPAPER') %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
@@ -51,11 +55,10 @@
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}
-                    <li><a href="{{ path('deal_list') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
-                {% endif %}
 
-                {% if site_has_feature('SWEEPSTAKES') %}
-                    <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                    {# {{ path('deal_list') }} #}
+
+                    <li><a href="http://na.alienwarearena.com/deal/alienware-mpp"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('FORUMS') %}

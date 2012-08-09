@@ -30,6 +30,10 @@ class GiveawayController extends Controller
      */
     public function showAction($slug, $keyId)
     {
+        if ($slug == 'dota-2') {
+            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
+        }
+
         $giveaway = $this->findGiveaway($slug);
 
         $pool = $giveaway->getActivePool();
@@ -60,6 +64,10 @@ class GiveawayController extends Controller
      */
     public function keyAction($slug, Request $request)
     {
+        if ($slug == 'dota-2') {
+            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
+        }
+
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
 
@@ -125,6 +133,10 @@ class GiveawayController extends Controller
      */
     public function machineCodeAction($slug, Request $request)
     {
+        if ($slug == 'dota-2') {
+            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
+        }
+
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
 

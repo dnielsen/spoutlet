@@ -1,0 +1,71 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
+{% endblock %}
+
+{% block title 'DOTA 2 特別招待キー' %}
+
+{% block content %}
+    <div id="content">
+        <div class="std_1col">
+
+            <div id="eventHeader" style="background:url('http://s3.amazonaws.com/platformd/banner/8ce24239761a144e9dabe337e3a5f9765df039c4.jpg') no-repeat;"></div>
+        </div><!-- std_1col -->
+
+        <div class="std_2col">
+            <div class="right">
+                <div id="giveaway-getkey" class="widget-33">
+                    <div class="widget-header">
+                        <div class="widget-title">引き換え</div>
+                    </div>
+                    <div class="widget-content">
+                        大変申し訳ございません。現在システムエラーが発生しており、DOTA 2 特別招待キーを取得できない状態です。ご利用のみなさまには大変ご迷惑をおかけいたしますが、しばらくお時間をおいてから再度アクセスいただきますようお願いいたします。
+                    </div>
+                </div>
+
+            </div><!-- right -->
+
+            <div class="left">
+                <div id="giveaway-info" class="widget-66">
+                    <div class="widget-header">
+                        <div class="widget-title controlled-spacing">DOTA 2 特別招待キー</div>
+                    </div><!-- widget-header -->
+
+                    <div class="widget-content" id="giveaway-details">
+
+<p>
+	デルは、「ALIENWARE 2012 BATTLEGROUNDS」に向けてDOTA 2とパートナーシップを結び、非常に人気のDOTA 2特別招待キーを限定数確保しました。特別招待キーはALIENWARE ARENAメンバーの皆様だけにご提供します。</p>
+<p>
+	Valve社が提供するDotAの続編として話題の、DOTA 2を最初にプレイする希少なプレイヤーになりましょう! ALIENWARE ARENAで開催される本キャンペーンで、限定公開のDOTA 2ベータ版をプレイ可能な特別招待キーを獲得できます!</p>
+<p>
+	今すぐ特別招待キーを手に入れましょう!</p>
+<p>
+	&nbsp;</p>
+<p>
+	<strong>このゲームについて:</strong></p>
+<p>
+	DOTA 2はValve社から近日公開予定のアクションRTSゲームで、大人気のDefense of the Ancients（DotA）スタンドアロンゲームの続編です。 現在はベータ版として限定公開されていますが、2012年後半にはFree-to-Playで完全公開予定です。</p>
+<p>
+	&nbsp;DOTA 2はセッションを使用した多人数参加型オンラインゲームです。 各プレイヤーは「ヒーロー」と呼ばれるキャラクターを操作し、そのキャラクターをチームでの戦闘に参加させる必要があります。 敵チームの守る要塞を破壊することが、各マッチの主な目的です。 このマッチは、通常、防衛用のタワーが並んだ敵の拠点を繋ぐ一連のレーン上で行われます。</p>
+<p>
+	&nbsp;<sup>*1</sup>オーストラリア/ニュージーランド、インド、日本、および東南アジアでのみ入手可能</p>
+
+                    </div><!-- giveaway-details -->
+
+
+                </div><!-- giveaway-info -->
+{#
+                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": giveaway.slug } %}
+#}
+            </div><!-- left -->
+
+            <div class="clear">
+
+            </div><!-- clear -->
+        </div><!-- std_2col -->
+    </div>
+{% endblock %}
+

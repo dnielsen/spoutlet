@@ -28,7 +28,7 @@
                         <td>{{ dealCode.pool.deal.name }}</td>
                         <td class="nowrap">
                             {%- if dealCode.pool.keysAreUrls -%}
-                                <a href='{{ dealCodeVal | raw }}' target='_blank'>{{ dealCodeVal | raw }}</a>
+                                <a href='{{ dealCodeVal | raw }}' target='_blank'>{{ dealCodeVal | wrap | raw }}</a>
                             {%- else -%}
                                 {{ dealCodeVal }}
                             {%- endif -%}

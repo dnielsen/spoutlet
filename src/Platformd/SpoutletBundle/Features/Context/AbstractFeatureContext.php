@@ -84,6 +84,166 @@ class AbstractFeatureContext extends MinkContext
         return $this->iAmAuthenticated();
     }
 
+    private function getMainNav() {
+
+        $mainNav = $this->getPage()->find('css', '#nav-wrapper > ul');
+
+        if (!$mainNav) {
+            throw new \Exception('Cannot find the main navigation menu.');
+        }
+
+        return $mainNav;
+    }
+
+    private function getUserNav() {
+
+        $userNav = $this->getPage()->find('css', '#accountHeader > ul');
+
+        if (!$userNav) {
+            throw new \Exception('Cannot find the user navigation menu.');
+        }
+
+        return $userNav;
+    }
+
+    private function getNavItems($navItems) {
+
+        $items = $navItems->findAll('css', 'li');
+
+        for ($i=0; $i < count($items); $i++) {
+            if ($items[$i]->getAttribute('class') === 'last') {
+                unset($items[$i]);
+            }
+        }
+
+        return $items;
+    }
+
+    private function isNavSubItem($item) {
+
+        if (!$item) {
+            return false;
+        }
+
+        $parentClasses = $item
+            ->getParent()
+            ->getParent()
+            ->getAttribute('class');
+
+        return strpos($parentClasses, 'more') !== false;
+    }
+
+    private function getNavSubItemHeading($item) {
+
+        if (!$item) {
+            return false;
+        }
+
+        $aTags = $item
+            ->getParent()
+            ->getParent()
+            ->findAll('css', 'a');
+
+        return $aTags[0]->getHtml();
+    }
+
+    private function isNavHeading($item) {
+
+        if (!$item) {
+            return false;
+        }
+
+        $classes = $item->getAttribute('class');
+
+        return strpos($classes, 'more') !== false;
+    }
+
+    private function ensureNavItemsMatch($actual, $expected, $counter) {
+
+        $expectedText           = $expected['Link'];
+        $expectedDestination    = $expected['Target'];
+
+        if (!$actual) {
+            throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
+        }
+
+        $actualDestination      = $actual->find('css', 'a')->getAttribute('href');
+
+        if ($this->isNavSubItem($actual)) {
+            $actualText = $this->getNavSubItemHeading($actual).' >> '.$actual->getText();
+        } else {
+            $actualText = $actual->getText();
+        }
+
+        if ($actualText !== $expectedText) {
+            throw new \Exception(sprintf('Navigation menu item mismatch.  Expected link text "%s" but got "%s" on item number "%d".', $expectedText, $actualText, $counter + 1));
+        }
+
+        if ($actualDestination !== $expectedDestination) {
+            throw new \Exception(sprintf('Navigation menu item mismatch.  Expected link destination "%s" but got "%s" on item number "%d". Link text was "%s".', $expectedDestination, $actualDestination, $counter + 1, $actualText));
+        }
+    }
+
+    /**
+     * @Given /^I am authenticated as a user$/
+     */
+    public function iAmAuthenticatedAsAUser()
+    {
+        // guarantee there is a user, because we wouldn't normally say it beforehand...
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
+        // enforce the right role
+        $this->currentUser->setRoles(array(
+            'ROLE_USER',
+        ));
+        $this->getUserManager()->updateUser($this->currentUser);
+
+        return $this->iAmAuthenticated();
+    }
+
+    private function ensureNavigationItemsAreCorrect($navMenu, $expectedNavItems) {
+
+        $navItems = $this->getNavItems($navMenu);
+
+        $counter = 0;
+
+        foreach ($expectedNavItems as $expected) {
+
+            if (!isset($navItems[$counter])) {
+                throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expected['Link'], $counter + 1));
+            }
+
+            if ($this->isNavHeading($navItems[$counter])) {
+                $counter++; // increment past the navigation heading
+            }
+
+            $this->ensureNavItemsMatch($navItems[$counter], $expected, $counter);
+
+            $counter++;
+        }
+
+        if (isset($navItems[$counter])) {
+            throw new \Exception(sprintf('Extra navigation menu items detected. Was not expecting any more navigation items, but found "%s".', $navItems[$counter]->getText()));
+        }
+    }
+
+     /**
+     * @Then /^the main navigation menu should be:$/
+     */
+    public function theMainNavigationMenuShouldBe(TableNode $table) {
+        $this->ensureNavigationItemsAreCorrect($this->getMainNav(), $table->getHash());
+    }
+
+    /**
+     * @Then /^the user navigation menu should be:$/
+     */
+    public function theUserNavigationMenuShouldBe(TableNode $table)
+    {
+        $this->ensureNavigationItemsAreCorrect($this->getUserNav(), $table->getHash());
+    }
+
     /**
      * @Given /^I am authenticated as a Dell Contact$/
      */

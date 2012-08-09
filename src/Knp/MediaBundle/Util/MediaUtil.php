@@ -42,6 +42,10 @@ class MediaUtil
             return false;
         }
 
+        if ($media->getRemoved()) {
+            return false;
+        }
+
         // if it's already processed and legit (previous image) or it has a new image
         if ($media->getFilename() || $media->getFileObject()) {
             $this->em->persist($media);

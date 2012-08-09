@@ -46,9 +46,10 @@
                     <div class="pad3">
                         <div class="pad4">
                             <h3>{{ 'platformd.flash.success_title' | trans }}</h3>
-                            <p>{{ 'deal_redeem_success_code' | trans}}
+                            <p>{{ 'deal_redeem_success_code' | trans}}</p>
+                            <p>
                                 {%- if dealCodeIsUrl -%}
-                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | raw }}</a>
+                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | wrap | raw }}</a>
                                 {%- else -%}
                                     {{ dealCode | replace({"'":"", ",":""}) }}
                                 {%- endif -%}
@@ -64,19 +65,17 @@
     {% include 'SpoutletBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-details-wrapper">
-            <div id="deal-features-instructions">
-                <table id="features-instructions" style="border-spacing: 3px;">
-                    <thead>
-                        <tr>
-                            <th class="deals-features-col-header">
-                                {{ deal.name }}</th>
-                            <th class="deals-instructions-col-header">
-                                {{ 'deal_instructions_table_header' | trans }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="deals-features-col">
+
+            <div class="std_2col" style="padding: 0 0 15px 0">
+                <div class="left">
+                    <div class="widget-66">
+                        <div class="widget-header">
+                            <div class="widget-title">
+                                {{ deal.name }}
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <div id="deal-description">
                                 {% if deal.description %}
                                     {{ deal.description | raw }}
                                 {% endif %}
@@ -85,60 +84,70 @@
                                     <a href="{{ deal.websiteUrl }}" {% if deal.visitWebsiteButton %} style="background: url('{{ media_path(deal.visitWebsiteButton)}}') no-repeat; display: block; width: 224px; height: 43px; margin: 0px auto;" {% endif %} target="_blank"></a>
                                 </div>
                                 {% endif %}
-                            </td>
-                            <td class="deals-instructions-col">
-                                <div id="deal-actions">
-                                    {% if userAlreadyRedeemed %}
-                                        <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans({'%account_link%': path('accounts_deals')}) | raw }}</p>
-                                    {% elseif deal.hasExpired %}
-                                        <p id="deal-show-expired">{{ 'deal_show_expired' | trans }}</p>
-                                    {% elseif not hasKeys %}
-                                        <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
-                                    {% elseif is_granted('ROLE_USER') %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="widget-33" style="height: auto;">
+                        <div class="widget-header">
+                            <div class="widget-title">
+                                {{ 'deal_instructions_table_header' | trans }}
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            <div id="deal-actions">
+                                {% if userAlreadyRedeemed %}
+                                    <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans({'%account_link%': path('accounts_deals')}) | raw }}</p>
+                                {% elseif deal.hasExpired %}
+                                    <p id="deal-show-expired">{{ 'deal_show_expired' | trans }}</p>
+                                {% elseif not hasKeys %}
+                                    <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
+                                {% elseif is_granted('ROLE_USER') %}
 
-                                        <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
+                                    <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
 
-                                            <div id="deal-countries-wrapper">
-                                                <div id="deal-countries">
-                                                    <select id="deal-country" name="deal-country">
-                                                        {% for countryCode, countryName in allowedCountries %}
-                                                            <option value="{{countryCode}}">{{ countryName }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                    <input id="selected-country" type="hidden" name="selected-country" />
-                                                </div>
+                                        <div id="deal-countries-wrapper">
+                                            <div id="deal-countries">
+                                                <select id="deal-country" name="deal-country">
+                                                    {% for countryCode, countryName in allowedCountries %}
+                                                        <option value="{{countryCode}}">{{ countryName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <input id="selected-country" type="hidden" name="selected-country" />
                                             </div>
+                                        </div>
 
-                                            <button type="submit" id="deal-redeem-button">
-                                                {% if deal.claimCodeButton %}
-                                                    <img src="{{ media_path(deal.claimCodeButton) }}" />
-                                                {% else %}
-                                                    {{ "CLAIM CODE NOW" }}
-                                                {% endif %}
-                                            </button>
-                                        </form>
+                                        <button type="submit" id="deal-redeem-button">
+                                            {% if deal.claimCodeButton %}
+                                                <img src="{{ media_path(deal.claimCodeButton) }}" />
+                                            {% else %}
+                                                {{ "CLAIM CODE NOW" }}
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            <div id="deal-instructions">
+                                <ul>
+                                    {% include 'SpoutletBundle:Deal:_steps.html.twig' with {'deal': deal} %}
+                                    {% if  (redemptionSteps is not empty)  %}
+                                    {% for redemptionStep in redemptionSteps %}
+                                    <li>
+                                        <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
+                                        <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
+                                    </li>
+                                    {% endfor %}
                                     {% endif %}
-                                </div>
-                                <div id="deal-instructions">
-                                    <ul>
-                                        {% include 'SpoutletBundle:Deal:_steps.html.twig' with {'deal': deal} %}
-                                        {% if  (redemptionSteps is not empty)  %}
-                                        {% for redemptionStep in redemptionSteps %}
-                                        <li>
-                                            <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
-                                            <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
-                                        </li>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                                <div id="deals-recommend">
-                                    <div class="fb-like" data-send="false" data-width="350" data-show-faces="false" data-colorscheme="dark" data-action="like"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div id="deals-recommend">
+                        <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark" data-action="like"></div>
+                    </div>
+                </div>
             </div>
             {% if (deal.mediaGalleryMedias | length) > 0 %}
             <div id="deal-screenshots">
