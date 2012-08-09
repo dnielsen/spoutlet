@@ -59,7 +59,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
       | Media >> Wallpapers         | /pages/wallpapers                               |
-      | NewDeals                    | http://na.alienwarearena.com/deal/alienware-mpp |
+      | NewDeals                    | /deal/                                          |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
       | Microsoft                   | /microsoft                                      |
