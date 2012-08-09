@@ -39,7 +39,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/latam/member/55/    |
+      | Profile                       | http://www.alienwarearena.com/latam/member/55/     |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -53,7 +53,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/member/55/          |
+      | Profile                       | http://www.alienwarearena.com/member/55/           |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Events                     | http://www.alienwarearena.com/account/events/      |
       | My Giveaways                  | /account/profile/giveaways                         |
@@ -69,7 +69,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/europe/member/55/   |
+      | Profile                       | http://www.alienwarearena.com/europe/member/55/    |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -83,7 +83,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/in/member/55/       |
+      | Profile                       | http://www.alienwarearena.com/in/member/55/        |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -97,7 +97,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/sg/member/55/       |
+      | Profile                       | http://www.alienwarearena.com/sg/member/55/        |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |
@@ -111,7 +111,7 @@ Feature: User Navigation
       | Link                          | Target                                             |
       | Account Home                  | http://alienwarearena.com/account/                 |
       | Change Password               | http://alienwarearena.com/account/password/        |
-      | Profile                       | https://www.alienwarearena.com/anz/member/55/      |
+      | Profile                       | http://www.alienwarearena.com/anz/member/55/       |
       | Messages                      | http://alienwarearena.com/account/inbox/           |
       | My Giveaways                  | /account/profile/giveaways                         |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/          |

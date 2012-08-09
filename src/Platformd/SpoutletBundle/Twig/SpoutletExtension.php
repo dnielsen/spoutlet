@@ -246,6 +246,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ALIENWARE_LINK_BOTTOM_RIGHT':     return $this->GetAlienwareBottomRightLink($locale);
             case 'ALIENWARE_LINK_ADDRESS':          return $this->GetAlienwareLinkAddress($locale);
             case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
+            case 'EVENTS':                          return $this->GetEventsLink($locale);
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
@@ -405,7 +406,7 @@ class SpoutletExtension extends Twig_Extension
 
         $format         = '<a href="%s">%s</a>';
         $internalUrl    = $this->container->get('router')->generate('accounts_profile');
-        $externalUrl    = 'https://www.alienwarearena.com/';
+        $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
         if ($cevoCountry) {
@@ -422,6 +423,43 @@ class SpoutletExtension extends Twig_Extension
             case 'zh':      return sprintf($format, $internalUrl, '个人形象');
 
             default:        return sprintf($format, $externalUrl, $enLinkText);
+        }
+    }
+
+    private function GetEventsLink($locale) {
+
+        $format         = '<a href="%s">%s</a>';
+        $internalUrl    = $this->container->get('router')->generate('events_index');
+        $externalUrl    = 'http://www.alienwarearena.com/';
+
+        // this was commented out because of the problem on CEVOs end - I couldn't test it with the country codes in the link (was '502 Bad Gateway | nginx/0.7.65'ing)
+
+        //$cevoCountry    = $this->GetCevoCountryLookup($locale);
+
+        //if ($cevoCountry) {
+        //    $externalUrl .= $cevoCountry.'/';
+        //}
+
+        $externalUrl .= 'event/';
+
+        $enLinkText = 'Events';
+
+        switch($locale) {
+
+            case 'ja':      return sprintf($format, $internalUrl, 'イベント');
+            case 'zh':      return sprintf($format, $internalUrl, '活动');
+
+            case 'es':      return sprintf($format, $externalUrl, 'Eventos');
+            case 'en_SG':
+            case 'en_AU':
+            case 'en_GB':
+            case 'en_IN':
+            case 'en_US':
+            case 'en':
+
+                return sprintf($format, $externalUrl, 'Events');
+
+            default:        return false;
         }
     }
 

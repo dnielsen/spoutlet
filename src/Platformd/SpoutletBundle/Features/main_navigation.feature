@@ -32,7 +32,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Link                        | Target                                    |
       | Inicio                      | /                                         |
       | Alienware                   | http://www.alienware.com/mx/              |
-      | Eventos                     | /events/                                  |
+      | Eventos                     | http://www.alienwarearena.com/event/      |
       | Novedades >> Articles       | http://www.alienwarearena.com/articles/   |
       | Novedades >> Announcements  | http://www.alienwarearena.com/news/       |
       | Media >> Vídeos             | http://video.alienwarearena.com/          |
@@ -53,7 +53,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |
       | Games >> Rift               | http://alienwarearena.com/game/rift/            |
       | Games >> More Games         | /games/                                         |
-      | Events                      | /events/                                        |
+      | Events                      | http://www.alienwarearena.com/event/            |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
       | SWEEPS                      | /sweepstakes                                    |
@@ -76,7 +76,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/                                                               |
       | Games >> Rift               | http://alienwarearena.com/game/rift/                                                              |
       | Games >> More Games         | /games/                                                                                           |
-      | Events                      | /events/                                                                                          |
+      | Events                      | http://www.alienwarearena.com/event/                                                              |
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
@@ -97,7 +97,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
       | Games >> More Games         | /games/                                   |
-      | Events                      | /events/                                  |
+      | Events                      | http://www.alienwarearena.com/event/      |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
@@ -118,7 +118,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
       | Games >> More Games         | /games/                                   |
-      | Events                      | /events/                                  |
+      | Events                      | http://www.alienwarearena.com/event/      |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
@@ -139,7 +139,7 @@ Scenario: The "Australia / New Zealand" site's main navigation menu has the corr
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
       | Games >> More Games         | /games/                                   |
-      | Events                      | /events/                                  |
+      | Events                      | http://www.alienwarearena.com/event/      |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |

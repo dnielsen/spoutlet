@@ -22,7 +22,7 @@
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
-                <li><a href="{{ path('events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }}</a></li>
+                <li>{{ site_link('EVENTS') | raw }}</a></li>
 
                 {% if site_has_feature('NEWS') %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
