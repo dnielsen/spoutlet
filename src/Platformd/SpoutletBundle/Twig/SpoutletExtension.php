@@ -251,6 +251,7 @@ class SpoutletExtension extends Twig_Extension
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
             case 'USER_PROFILE':                    return $this->GetUserProfileLink($locale);
+            case 'USER_GIVEAWAY':                   return $this->GetUserGiveawayLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -415,14 +416,12 @@ class SpoutletExtension extends Twig_Extension
 
         $externalUrl .= 'member/'.$this->getCurrentUser()->getCevoUserId().'/';
 
-        $enLinkText = 'Profile';
-
         switch($locale) {
 
             case 'ja':      return sprintf($format, $internalUrl, 'プロファイル');
             case 'zh':      return sprintf($format, $internalUrl, '个人形象');
 
-            default:        return sprintf($format, $externalUrl, $enLinkText);
+            default:        return sprintf($format, $externalUrl, 'Profile');
         }
     }
 
@@ -438,7 +437,6 @@ class SpoutletExtension extends Twig_Extension
         }
 
         $externalUrl .= 'event/';
-        $enLinkText = 'Events';
 
         switch($locale) {
 
@@ -454,6 +452,39 @@ class SpoutletExtension extends Twig_Extension
             case 'en':
 
                 return sprintf($format, $externalUrl, 'Events');
+
+            default:        return false;
+        }
+    }
+
+    private function GetUserGiveawayLink($locale) {
+
+        $format         = '<a href="%s">%s</a>';
+        $internalUrl    = $this->container->get('router')->generate('accounts_giveaways');
+        $externalUrl    = 'http://www.alienwarearena.com/';
+        $cevoCountry    = $this->GetCevoCountryLookup($locale);
+
+        if ($cevoCountry) {
+            $externalUrl .= $cevoCountry.'/';
+        }
+
+        $externalUrl .= 'account/my-giveaway-keys/';
+        $enLinkText = 'My Giveaways';
+
+        switch($locale) {
+
+            case 'ja':      return sprintf($format, $internalUrl, '参加済みキャンペーン');
+            case 'zh':      return sprintf($format, $internalUrl, '获取赠品');
+
+            case 'es':
+            case 'en_SG':
+            case 'en_AU':
+            case 'en_GB':
+            case 'en_IN':
+            case 'en_US':
+            case 'en':
+
+                return sprintf($format, $externalUrl, 'My Giveaways');
 
             default:        return false;
         }

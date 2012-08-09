@@ -3,6 +3,7 @@
 {% set event_link = site_link('USER_EVENT') %}
 {% set game_id_link = site_link('USER_GAME_ID') %}
 {% set profile_link = site_link('USER_PROFILE') %}
+{% set giveaway_link = site_link('USER_GIVEAWAY') %}
 {% block pre_content_nav %}
 <div class="std_1col">
     <div id="accountHeader">
@@ -20,7 +21,7 @@
 
             {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
 
-            <li><a href="{{ path('accounts_giveaways') }}">{{ "platformd.user.account.my_giveaways" | trans }}</a></li>
+            <li>{{ giveaway_link | raw }}</li>
 
             {% if site_has_feature('DEALS') %}
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>
