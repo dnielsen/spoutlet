@@ -1,5 +1,5 @@
 #group-avatar {
-    padding: 10px 0 10px 0;
+    padding: 10px 0 0 0;
 }
 
 #group-avatar img {
@@ -8,13 +8,18 @@
 }
 
 #google-map-location {
-    width: 300px;
+    width: 298px;
     height: 250px;
     margin: 10px auto;
 }
 
 #group-name {
 
+}
+
+.groups-sub-nav {
+    background: url('/bundles/spoutlet/images/groups/group_subnav_bg.png') no-repeat center;
+    height: 41px;
 }
 
 .side-nav {
@@ -31,4 +36,59 @@
     float: left;
     width: 400px;
 
+}
+
+#group-member-count {
+    display: inline-table;
+    width: 140px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px 0 20px 0;
+}
+
+#group-comment-count {
+    display: inline-table;
+    width: 140px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px 0 20px 0;
+}
+
+#group-blurb {
+    padding: 0 15px 10px 15px;
+}
+
+.location-info {
+    font-weight: bold;
+}
+
+#group-location-address {
+    border-top: 1px solid #B3B3B3;
+    padding: 15px;
+}
+
+.join-group-options {
+    padding-top: 30px;
+    text-align: center;
+}
+
+#join-group-button {
+    background: url('/bundles/spoutlet/images/groups/join_group_off.png') no-repeat;
+    width: 230px;
+    height: 62px;
+    margin: 0px auto;
+    border: none;
+    cursor: pointer;
+}
+
+#join-group-button:hover {
+    background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
+}
+
+#group-invite {
+    margin-top: 10px;
+    font-size: 14px;
+    display: block;
 }

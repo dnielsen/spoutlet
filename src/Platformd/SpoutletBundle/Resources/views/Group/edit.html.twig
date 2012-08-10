@@ -1,11 +1,11 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title 'Edit Game Page' %}
+{% block title 'Edit Group Page' %}
 
 {% block content %}
 <h1>
     <i class="icon-pencil"></i>
-    Edit Game Page
+    Edit Group Page
 </h1>
 
 <form action="{{ path('group_update', { 'id': group.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">

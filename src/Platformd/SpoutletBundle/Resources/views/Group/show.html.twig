@@ -31,72 +31,109 @@
 {% block page_background_image customPageBackgroundImage %}
 
 {% block content %}
-    <div class="std_2col">
-        <div class="left">
-            <div id="group-avatar">
-                {% if group.groupAvatar %}
-                    <img src="{{ media_path(group.groupAvatar, {'local': true}) | imagine_filter('image_thumb') }}" />
-                {% else %}
-                    [None Set]
+<div class="std_2col" style="padding: 0;">
+    <div class="left">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                [None Set]
+            {% endif %}
+        </div>
+    </div>
+    <div class="right">
+        <div class="join-group-options">
+            <form>
+                <button id="join-group-button" type="submit"></button>
+            </form>
+            <a href="javascript:void(0);" id="group-invite">Invite Friends</a>
+        </div>
+    </div>
+</div>
+<div class="std_1col" style="padding: 0;">
+    <div class="groups-sub-nav">
+    </div>
+</div>
+<div class="std_2col">
+    <div class="right">
+        <div class="widget-33" style="height: auto; margin-bottom: 10px;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ group.name }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="group-member-count">
+                    {{ group.members | length }}
+                    <div>Members</div>
+                </div>
+                <div id="group-comment-count">
+                    300
+                    <div>Comments</div>
+                </div>
+                <div id="group-blurb">
+                    <p>{{ group.name }} group is a place where you can discuss, and find news, videos, and information about xxxxxxx.</p>
+                </div>
+
+                {% if group.location and group.category == 'location' %}
+                <div id="group-location-address" class="location-info">
+                    <div>ADDRESS:</div>
+                    <div id="street-address1">
+                        {{ group.location.address1 }}
+                    </div>
+                    <div id="street-address2">
+                        {{ group.location.address2 }}
+                    </div>
+                    <div id="city">
+                        {{ group.location.city }}
+                    </div>
+                    <div id="state">
+                        {{ group.location.stateProvince }}
+                    </div>
+                </div>
                 {% endif %}
             </div>
         </div>
-        <div class="right">
-            JOIN GROUP
-            <a href="#" id="group-invite">Invite Friends</a>
-        </div>
+        {% if group.location and group.category == 'location' %}
+            <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
+            <div id="google-map-location"></div>
+        {% endif %}
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
-    <div class="std_2col">
-        <div class="right">
-            <div class="widget-33">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        {{ group.name }}
-                    </div>
-                </div>
-                <div class="widget-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac mi velit. Sed placerat orci odio.
-                </div>
+    <div class="left">
+        <div class="widget-66" id="featured-content" style="min-height: 400px;">
+            <div class="featured-content-header">
+                <a href="javascript:void(0);" id="group-news" class="active">News</a>
+                <a href="javascript:void(0);" id="group-events">Events</a>
+                <a href="javascript:void(0);" id="group-photos">Photo Gallery</a>
+                <a href="javascript:void(0);" id="group-videos">Videos</a>
+                <a href="javascript:void(0);" id="group-about">About</a>
+                <div style="clear: left;"></div>
             </div>
-            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-            {% if group.location and group.category == 'location' %}
-                <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
-                <div id="google-map-location"></div>
-            {% endif %}
-        </div>
-        <div class="left">
-            <div class="widget-66" id="featured-content">
-                <div class="featured-content-header">
-                    <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                    <a href="javascript:void(0);" id="group-about">About</a>
-                    <a href="javascript:void(0);" id="group-events">Event Calendar</a>
-                    <a href="javascript:void(0);" id="group-photos">Photo Gallery</a>
-                    <a href="javascript:void(0);" id="group-videos">Videos</a>
-                    <div style="clear: left;"></div>
+            <div class="widget-content">
+                <div id="content-group-news" class="featured-content-category active" style="height: 400px;">
+                    {% include 'SpoutletBundle:Group:_news.html.twig' %}
                 </div>
-                <div class="widget-content">
-                    <div id="content-group-news" class="featured-content-category active" style="height: 260px;">
-                        {% include 'SpoutletBundle:Group:_news.html.twig' %}
-                    </div>
-                    <div id="content-group-about" class="featured-content-category" style="height: 260px;">
-                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
-                    </div>
-                    <div id="content-group-events" class="featured-content-category" style="height: 260px;">
-                        {% include 'SpoutletBundle:Group:_events.html.twig' %}
-                    </div>
-                    <div id="content-group-photos" class="featured-content-category" style="height: 260px;">
-                        {% include 'SpoutletBundle:Group:_photos.html.twig' %}
-                    </div>
-                    <div id="content-group-videos" class="featured-content-category" style="height: 260px;">
-                        {% include 'SpoutletBundle:Group:_videos.html.twig' %}
-                    </div>
+                <div id="content-group-events" class="featured-content-category" style="height: 400px;">
+                    {% include 'SpoutletBundle:Group:_events.html.twig' %}
+                </div>
+                <div id="content-group-photos" class="featured-content-category" style="height: 400px;">
+                    {% include 'SpoutletBundle:Group:_photos.html.twig' %}
+                </div>
+                <div id="content-group-videos" class="featured-content-category" style="height: 400px;">
+                    {% include 'SpoutletBundle:Group:_videos.html.twig' %}
+                </div>
+                <div id="content-group-about" class="featured-content-category" style="height: 400px;">
+                    {% include 'SpoutletBundle:Group:_about.html.twig' %}
                 </div>
             </div>
         </div>
+        <div id="group-comments">
+            {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.id } %}
+        </div>
     </div>
 
-
-
+</div>
 {% endblock %}
 
 {% block stylesheets %}
