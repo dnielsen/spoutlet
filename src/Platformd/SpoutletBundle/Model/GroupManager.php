@@ -59,7 +59,7 @@ class GroupManager
         $owner      = $group->getOwner();
         $members    = $group->getMembers();
 
-        if (!in_array($owner, (array) $members)) {
+        if (!in_array($owner, $members->toArray())) {
             $members[] = $owner;
             $group->setMembers($members);
         }
