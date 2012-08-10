@@ -17,10 +17,34 @@
 
 }
 
-.groups-sub-nav {
+.groups-sub-nav-wrapper {
     background: url('/bundles/spoutlet/images/groups/group_subnav_bg.png') no-repeat center;
-    height: 41px;
+    height: 31px;
 }
+
+.groups-sub-nav {
+    padding: 10px 0 10px 0;
+    width: 634px;
+    float: left;
+}
+
+#group-like-wrapper {
+    padding: 5px 0 10px 0;
+}
+
+.groups-sub-nav ul li {
+    float:none;
+    background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 7px;
+    display: inline;
+    padding-top: 5px;
+    padding-bottom: 4px;
+}
+
+.groups-sub-nav ul li.first { background: none; }
+
+.groups-sub-nav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 
 .side-nav {
     float: left;
@@ -87,8 +111,17 @@
     background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
 }
 
+#group-invite-wrapper {
+    margin: 10px auto;
+}
+
 #group-invite {
-    margin-top: 10px;
+    padding: 0 0 0 20px;
     font-size: 14px;
-    display: block;
+    background: url('/bundles/spoutlet/images/icons/icon-fb-14.png') no-repeat left;
+    width: auto;
+}
+
+#group-like-wrapper {
+    float: right;
 }

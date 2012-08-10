@@ -499,3 +499,6 @@ deny_codes: Deny Codes
 platformd.user.account.messages: Messages
 platformd.user.account.match_client: Match Client
 platformd.user.account.match_lobby: Match Lobby
+
+groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
+groups.opengraph.title: Alienware Arena Groups - Join Now!

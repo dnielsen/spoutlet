@@ -2,22 +2,16 @@
 
 {% block title 'Groups - ' ~ group.name %}
 
-{# block open_graph %}
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
-    <meta property="og:title" content="{{ gamePage.game.name }}" />
-    <meta property="og:type" content="game" />
+    <meta property="og:title" content="{{ 'groups.opengraph.title' | trans }}" />
+    <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if gamePage.openGraphOverride %}
-        {% if gamePage.openGraphOverride.thumbnail %}
-            {% set thumbUrl = media_path(gamePage.openGraphOverride.thumbnail) %}
-            <meta property="og:image" content="{{ thumbUrl }}" />
-        {% endif %}
-        {% if gamePage.openGraphOverride.description %}
-            <meta property="og:description" content="{{ gamePage.openGraphOverride.description | striptags }}" />
-        {% endif %}
-    {% endif %}
-{% endblock #}
+    <meta property="og:image" content="{{ openGraphThumb }}" />
+    <meta property="og:description" content="{{ 'groups.opengraph.description' | trans }}" />
+{% endblock %}
 
 {# either set the custom background image, or leave it to false #}
 {% if group.backgroundImage %}
@@ -25,8 +19,6 @@
 {% else %}
     {% set customPageBackgroundImage = false %}
 {% endif %}
-
-{% set inviteThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
 
 {% block page_background_image customPageBackgroundImage %}
 
@@ -46,12 +38,23 @@
             <form>
                 <button id="join-group-button" type="submit"></button>
             </form>
-            <a href="javascript:void(0);" id="group-invite">Invite Friends</a>
+            <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
         </div>
     </div>
 </div>
 <div class="std_1col" style="padding: 0;">
-    <div class="groups-sub-nav">
+    <div class="groups-sub-nav-wrapper">
+        <div class="groups-sub-nav">
+            <ul>
+                <li><a href="{{ path('group') }}">Group Home</a></li>
+                <li><a href="#">Messages</a></li>
+                <li><a href="{{ path('group_new') }}">Create Group</a></li>
+                <li><a href="#">My Groups</a></li>
+            </ul>
+        </div>
+        <div id="group-like-wrapper">
+            <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark"></div>
+        </div>
     </div>
 </div>
 <div class="std_2col">
@@ -167,7 +170,7 @@
                     name: "You are invited to the group {{ group.name | raw }}",
                     link: 'http://demo.alienwarearena.com/',
                     description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
-                    image: '{{ inviteThumb }}'
+                    image: '{{ openGraphThumb }}'
                 });
             });
 
