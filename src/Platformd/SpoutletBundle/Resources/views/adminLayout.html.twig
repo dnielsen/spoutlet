@@ -166,6 +166,14 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="{{ path('admin_group') }}">Groups</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_group_find') }}">Find Groups</a>
+                                    </li>
+                                </ul>
+                            </li>
                             {% endif %}
 
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}

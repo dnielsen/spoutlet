@@ -1,0 +1,7 @@
+admin_group:
+    pattern: /
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:index" }
+
+admin_group_find:
+    pattern: /find-groups
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:find" }

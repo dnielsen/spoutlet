@@ -49,4 +49,10 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function findGroupsByName($groupName)
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.name like %?%', $groupName);
+    }
 }
