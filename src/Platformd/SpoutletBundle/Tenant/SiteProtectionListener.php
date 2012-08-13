@@ -86,7 +86,7 @@ class SiteProtectionListener
         $url = $this->translateToCEVOUrl($request->getPathInfo());
 
         if ($this->allowCevoForwarding == false) {
-            throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "%s"', $url));
+            throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "<a href="http://www.alienwarearena.com%s">http://www.alienwarearena.com%s</a>"', $url, $url));
         }
 
         $absoluteUrl = $this->cevoAuthManager->generateCevoUrl(
