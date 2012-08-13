@@ -14,11 +14,14 @@ group_new:
 group_create:
     pattern:  /create/
     defaults: { _controller: "SpoutletBundle:Group:new", site: ~ }
-    requirements: { _method: post }
 
 group_edit:
     pattern:  /{id}/edit/
     defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
+
+group_add_news:
+    pattern:  /{id}/add-news/
+    defaults: { _controller: "SpoutletBundle:Group:addNews", site: ~ }
 
 group_leave:
     pattern:  /{id}/leave/

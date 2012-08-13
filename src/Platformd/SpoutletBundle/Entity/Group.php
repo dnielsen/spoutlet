@@ -154,6 +154,13 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      */
     private $members;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupNews", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="cascade")
+     */
+    private $newsArticles;
+
     public function __construct()
     {
         $this->groupLocales = new ArrayCollection();
@@ -431,11 +438,35 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getNewsArticles()
+    {
+        return $this->newsArticles;
+    }
+
+     /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $newsArticles
+     */
+    public function setNewsArticles($newsArticles)
+    {
+        $this->newsArticles = $newsArticles;
+    }
+
+    /**
      * @param \Platformd\UserBundle\Entity\User $user
      */
     public function isMember(User $user)
     {
         return $this->getMembers()->contains($user);
+    }
+
+    /**
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function isOwner(User $user)
+    {
+        return $this->getOwner() === $user;
     }
 
     /**

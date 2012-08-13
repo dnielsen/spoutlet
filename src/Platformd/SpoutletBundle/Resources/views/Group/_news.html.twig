@@ -1,3 +1,52 @@
 <div>
+    {% if newsForm is defined %}
 
+        <form action="{{ path('group_add_news', {'id' : group.id }) }}" method="post" {{ form_enctype(newsForm) }} class="form-horizontal">
+
+            {% form_theme newsForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+            {% form_theme newsForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+            {{ form_errors(newsForm) }}
+
+            <div class="row-fluid">
+                <fieldset>
+                    <legend>a) Basic Information</legend>
+                        <div class="row-fluid first">
+                            <div class="span6">
+                                {{ form_row(newsForm.title) }}
+                                {{ form_row(newsForm.article) }}
+                            </div>
+                        </div>
+                </fieldset>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" formnovalidate>Post News</button>
+            </div>
+
+            {{ form_rest(newsForm) }}
+
+        </form>
+
+    {% else %}
+        <a href='{{ path('group_add_news', {'id' : group.id }) }}'>Add News</a>
+
+        {% if groupNews is defined %}
+
+            {% for article in groupNews %}
+
+                <div class="group-news-item">
+                    <div class="group-news-title">{{ article.title }}</div>
+                    <div class="group-news-article">{{ article.article }}</div>
+                </div>
+
+            {% else %}
+                No news articles yet... please come back later!
+            {% endfor %}
+
+        {% else %}
+            No news articles yet... please come back later!
+        {% endif %}
+
+    {% endif %}
 </div>

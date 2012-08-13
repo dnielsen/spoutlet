@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupNews;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
@@ -68,6 +69,20 @@ class GroupManager
 
         $this->localesHelper->processLocalesSave($group);
         $this->handleMediaFields($group);
+
+        if ($flush) {
+            $this->em->flush();
+        }
+    }
+
+    public function saveGroupNews(GroupNews $groupNews, $flush = true)
+    {
+        if (!$groupNews->getAuthor()) {
+            $user = $this->securityContext->getToken()->getUser();
+            $groupNews->setAuthor($user);
+        }
+
+        $this->em->persist($groupNews);
 
         if ($flush) {
             $this->em->flush();

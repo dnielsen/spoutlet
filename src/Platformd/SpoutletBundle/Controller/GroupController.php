@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
@@ -101,6 +102,55 @@ class GroupController extends Controller
     }
 
     /**
+     * Add group news.
+     *
+     */
+    public function addNewsAction($id, Request $request)
+    {
+        $mgr    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $mgr->ensureGroupIsVisible($group);
+
+        if (!$group->isOwner($user)) {
+             $this->setFlash('error', 'You are not allowed to add news to this group, you must be the owner!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $groupNews = new GroupNews();
+
+        $form = $this->createFormBuilder($groupNews)
+            ->add('title', 'text')
+            ->add('article', 'text')
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupNews->setGroup($group);
+
+                $gm = $this->getGroupManager();
+
+                $gm->saveGroupNews($groupNews);
+
+                $this->setFlash('success', 'New article posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:show.html.twig', array(
+            'group' => $group,
+            'newsForm' => $form->createView()
+        ));
+    }
+
+    /**
      * Shows a Group entitie.
      *
      */
@@ -114,8 +164,13 @@ class GroupController extends Controller
 
         $mgr->ensureGroupIsVisible($group);
 
+        $gr = $this->getGroupNewsRepository();
+
+        $groupNews = $gr->getNewsForGroupMostRecentFirst($group);
+
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'group' => $group
+            'group' => $group,
+            'groupNews' => $groupNews
         ));
     }
 
@@ -267,5 +322,10 @@ class GroupController extends Controller
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
+    }
+
+     private function getGroupNewsRepository()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:GroupNews');
     }
 }
