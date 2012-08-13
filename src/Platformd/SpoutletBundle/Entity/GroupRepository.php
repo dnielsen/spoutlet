@@ -52,7 +52,22 @@ class GroupRepository extends EntityRepository
 
     public function findGroupsByName($groupName)
     {
-        return $this->createQueryBuilder('g')
-            ->where('g.name like %?%', $groupName);
+        $qb = $this->createQueryBuilder('g')
+            ->where('g.name like :groupName')
+            ->setParameter('groupName', '%'.$groupName.'%');
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroupsByNameAndSite($groupName, $site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.groupLocales', 'gl')
+            ->where('g.name like :groupName')
+            ->andWhere('gl.locale = :site')
+            ->setParameter('groupName', '%'.$groupName.'%')
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->execute();
     }
 }
