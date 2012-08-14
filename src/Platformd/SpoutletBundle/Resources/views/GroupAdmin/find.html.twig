@@ -35,7 +35,7 @@
                                 <span>[{{ locale }}]</span>
                             {% endfor %}
                         </td>
-                        <td>{{ group.createdAt | date }}</td>
+                        <td>{{ group.createdAt | date('m/d/Y') }}</td>
                         <td>{{ group.category }}</td>
                         <td>{{ group.owner.username }}</td>
                         <td>{{ group.members | length }}</td>

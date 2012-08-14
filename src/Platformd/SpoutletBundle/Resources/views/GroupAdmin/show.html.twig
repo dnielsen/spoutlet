@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td>Created At</td>
-                <td>{{ group.createdAt | date }}</td>
+                <td><div title="{{ group.createdAt | date }}">{{ group.createdAt | date('m/d/Y') }}</div></td>
             </tr>
             <tr>
                 <td>Group Type:</td>
