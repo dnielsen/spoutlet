@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
+use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
@@ -100,8 +101,6 @@ class GroupController extends Controller
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
 
-
-
     /**
      * Add group news.
      *
@@ -142,11 +141,10 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'group' => $group,
+        return $this->renderShow($group, array(
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id))
-        ));
+            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id)))
+        );
     }
 
     /**
@@ -194,11 +192,10 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'group' => $group,
+        return $this->renderShow($group, array(
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId))
-        ));
+            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId)))
+        );
     }
 
     /**
@@ -225,15 +222,171 @@ class GroupController extends Controller
             return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
         }
 
-        $em = $this->getEntityManager();
-        $em->remove($newsArticle);
-        $em->flush();
+        $newsArticle->setDeleted(true);
+
+        $gm->saveGroupNews($newsArticle);
 
         $this->setFlash('success', 'News article was deleted successfully!');
 
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
 
+    private function renderShow($group, $extraParameters = null) {
+
+        $this->addGroupsBreadcrumb();
+
+        $mgr = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
+
+        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
+        $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+
+        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+
+        $parameters = array(
+            'group' => $group,
+            'groupNews' => $groupNews,
+            'groupVideos' => $groupVideos,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner
+        );
+
+        if (is_array($extraParameters)) {
+            $parameters = array_merge($parameters, $extraParameters);
+        }
+
+        return $this->render('SpoutletBundle:Group:show.html.twig', array_merge($parameters, $parameters));
+    }
+
+    /**
+     * Add group video.
+     *
+     */
+    public function addVideoAction($id, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $groupVideo = new GroupVideo();
+
+        $form = $this->createFormBuilder($groupVideo)
+            ->add('title', 'text')
+            ->add('youTubeVideoId', 'text')
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupVideo->setGroup($group);
+
+                $gm->saveGroupVideo($groupVideo);
+
+                $this->setFlash('success', 'New video posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->renderShow($group, array(
+            'videoForm' => $form->createView(),
+            'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),)
+        );
+    }
+
+    /**
+     * Edit group video.
+     *
+     */
+    public function editVideoAction($id, $videoId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupVideoRepository();
+        $videoArticle = $gr->find($videoId);
+
+        if (!$videoArticle) {
+            $this->setFlash('error', 'Video does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $form = $this->createFormBuilder($videoArticle)
+            ->add('title', 'text')
+            ->add('youTubeVideoId', 'text')
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $videoArticle->setGroup($group);
+
+                $gm->saveGroupVideo($videoArticle);
+
+                $this->setFlash('success', 'Video updated successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->renderShow($group, array(
+            'videoForm' => $form->createView(),
+            'videoFormAction' => $this->generateUrl('group_edit_video', array('id' => $id, 'videoId' => $videoId)))
+        );
+    }
+
+    /**
+     * Edit group video.
+     *
+     */
+    public function deleteVideoAction($id, $videoId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupVideoRepository();
+        $videoArticle = $gr->find($videoId);
+
+        if (!$videoArticle) {
+            $this->setFlash('error', 'Video does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $em = $this->getEntityManager();
+        $em->remove($videoArticle);
+        $em->flush();
+
+        $this->setFlash('success', 'Video was deleted successfully!');
+
+        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
 
     /**
      * Shows a Group entitie.
@@ -245,21 +398,7 @@ class GroupController extends Controller
 
         $group = $this->getGroup($id);
 
-        $mgr = $this->getGroupManager();
-
-        $mgr->ensureGroupIsVisible($group);
-
-        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
-
-        $gr = $this->getGroupNewsRepository();
-
-        $groupNews = $gr->getNewsForGroupMostRecentFirst($group);
-
-        return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'group' => $group,
-            'groupNews' => $groupNews,
-            'userIsAdminOrOwner' => $userIsAdminOrOwner
-        ));
+        return $this->renderShow($group);
     }
 
      /**
@@ -419,5 +558,10 @@ class GroupController extends Controller
     private function getGroupNewsRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupNews');
+    }
+
+    private function getGroupVideoRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
     }
 }

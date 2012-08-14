@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Model;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
+use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
@@ -83,6 +84,20 @@ class GroupManager
         }
 
         $this->em->persist($groupNews);
+
+        if ($flush) {
+            $this->em->flush();
+        }
+    }
+
+    public function saveGroupVideo(GroupVideo $groupVideo, $flush = true)
+    {
+        if (!$groupVideo->getAuthor()) {
+            $user = $this->securityContext->getToken()->getUser();
+            $groupVideo->setAuthor($user);
+        }
+
+        $this->em->persist($groupVideo);
 
         if ($flush) {
             $this->em->flush();

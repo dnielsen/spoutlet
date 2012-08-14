@@ -31,6 +31,18 @@ group_edit_news:
     pattern:  /{id}/edit-news/{newsId}
     defaults: { _controller: "SpoutletBundle:Group:editNews", site: ~ }
 
+group_add_video:
+    pattern:  /{id}/add-video/
+    defaults: { _controller: "SpoutletBundle:Group:addVideo", site: ~ }
+
+group_delete_video:
+    pattern:  /{id}/delete-video/{videoId}
+    defaults: { _controller: "SpoutletBundle:Group:deleteVideo", site: ~ }
+
+group_edit_video:
+    pattern:  /{id}/edit-video/{videoId}
+    defaults: { _controller: "SpoutletBundle:Group:editVideo", site: ~ }
+
 group_leave:
     pattern:  /{id}/leave/
     defaults: { _controller: "SpoutletBundle:Group:leave", site: ~ }
