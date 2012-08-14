@@ -70,4 +70,9 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function getUserCountForGroupsBySite($site)
+    {
+
+    }
 }

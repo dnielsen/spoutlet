@@ -1,0 +1,25 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Groups Summary' %}
+
+{% block content %}
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Region</th>
+            <th>Total Groups</th>
+            <th>Total Members</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for group in summary %}
+        <tr>
+            <td>{{ group.region }}</td>
+            <td>{{ group.group_count }}</td>
+            <td>{{ group.member_count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

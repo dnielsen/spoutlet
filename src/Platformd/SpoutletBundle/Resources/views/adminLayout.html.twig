@@ -166,14 +166,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="{{ path('admin_group') }}">Groups</a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ path('admin_group_find') }}">Find Groups</a>
-                                    </li>
-                                </ul>
-                            </li>
+                            <li><a href="{{ path('admin_group') }}">Groups</a></li>
                             {% endif %}
 
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
@@ -191,6 +184,8 @@
                             <li><a href="{{ path('admin_deal_metrics') }}">Deals</a></li>
                             <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
+                            <li><a href="{{ path('admin_group_summary') }}">Group Summary</a></li>
+                            <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
                         </ul>
                     {% endif %}
 

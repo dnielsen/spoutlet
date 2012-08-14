@@ -18,6 +18,7 @@ use Platformd\SpoutletBundle\Entity\Superclass\JoinedLocale;
  *      }
  * )
  * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupLocaleRepository")
  */
 class GroupLocale extends JoinedLocale
 {
