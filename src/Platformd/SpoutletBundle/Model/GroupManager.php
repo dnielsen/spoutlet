@@ -89,8 +89,8 @@ class GroupManager
         }
     }
 
-    public function ensureGroupIsVisible($group) {
-
+    public function ensureGroupIsVisible($group)
+    {
         if (!$group) {
             throw new NotFoundHttpException('The group does not exist');
         }
@@ -104,6 +104,18 @@ class GroupManager
         if (!$group->getAllLocales() && !in_array($locale, $group->getLocales())) { // make sure this group is visible for this site
             throw new NotFoundHttpException('The group does not exist');
         }
+    }
+
+    public function isCurrentUserAllowedToEditGroup($group)
+    {
+        if (!$group) {
+            throw new NotFoundHttpException('The group does not exist');
+        }
+
+        $user = $this->securityContext->getToken()->getUser();
+        $isAdmin = $this->securityContext->isGranted('ROLE_ADMIN');
+
+        return $group->isOwner($user) || $isAdmin;
     }
 
     /**

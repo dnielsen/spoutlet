@@ -142,8 +142,8 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
      * The person who uploaded this media
      *
      * @var \Platformd\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
-     * @ORM\JoinColumn(onDelete="cascade")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $owner;
 
@@ -157,7 +157,7 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupNews", mappedBy="group")
-     * @ORM\JoinColumn(onDelete="cascade")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $newsArticles;
 
@@ -453,19 +453,21 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
         $this->newsArticles = $newsArticles;
     }
 
-    /**
-     * @param \Platformd\UserBundle\Entity\User $user
-     */
-    public function isMember(User $user)
+    public function isMember($user)
     {
+        if (!$user) {
+            return false;
+        }
+
         return $this->getMembers()->contains($user);
     }
 
-    /**
-     * @param \Platformd\UserBundle\Entity\User $user
-     */
-    public function isOwner(User $user)
+    public function isOwner($user)
     {
+        if (!$user) {
+            return false;
+        }
+
         return $this->getOwner() === $user;
     }
 

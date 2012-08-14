@@ -23,6 +23,14 @@ group_add_news:
     pattern:  /{id}/add-news/
     defaults: { _controller: "SpoutletBundle:Group:addNews", site: ~ }
 
+group_delete_news:
+    pattern:  /{id}/delete-news/{newsId}
+    defaults: { _controller: "SpoutletBundle:Group:deleteNews", site: ~ }
+
+group_edit_news:
+    pattern:  /{id}/edit-news/{newsId}
+    defaults: { _controller: "SpoutletBundle:Group:editNews", site: ~ }
+
 group_leave:
     pattern:  /{id}/leave/
     defaults: { _controller: "SpoutletBundle:Group:leave", site: ~ }

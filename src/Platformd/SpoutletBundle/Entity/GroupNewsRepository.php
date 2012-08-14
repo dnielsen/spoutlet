@@ -21,7 +21,7 @@ class GroupNewsRepository extends EntityRepository
             ->where('gn.group = :groupId')
             ->andWhere('gn.deleted = false')
             ->setParameter('groupId', $group->getId())
-            ->orderBy('gn.createdAt')
+            ->orderBy('gn.createdAt', 'DESC')
             ->getQuery()
             ->execute();
     }

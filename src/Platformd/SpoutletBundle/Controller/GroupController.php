@@ -16,7 +16,6 @@ class GroupController extends Controller
 {
     private function getGroup($id) {
         return $this
-        ->getDoctrine()
         ->getEntityManager()
         ->getRepository('SpoutletBundle:Group')
         ->find($id);
@@ -33,7 +32,7 @@ class GroupController extends Controller
     public function indexAction()
     {
         $this->addGroupsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getEntityManager();
 
         $entities = $em->getRepository('SpoutletBundle:Group')->findAllPublicGroupsForSite($this->getLocale());
 
@@ -101,28 +100,29 @@ class GroupController extends Controller
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
 
+
+
     /**
      * Add group news.
      *
      */
     public function addNewsAction($id, Request $request)
     {
-        $mgr    = $this->getGroupManager();
+        $gm    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
 
-        $mgr->ensureGroupIsVisible($group);
+        $gm->ensureGroupIsVisible($group);
 
-        if (!$group->isOwner($user)) {
-             $this->setFlash('error', 'You are not allowed to add news to this group, you must be the owner!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
         }
 
         $groupNews = new GroupNews();
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
-            ->add('article', 'text')
+            ->add('article', 'textarea')
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -131,8 +131,6 @@ class GroupController extends Controller
             if ($form->isValid()) {
 
                 $groupNews->setGroup($group);
-
-                $gm = $this->getGroupManager();
 
                 $gm->saveGroupNews($groupNews);
 
@@ -146,9 +144,96 @@ class GroupController extends Controller
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
             'group' => $group,
-            'newsForm' => $form->createView()
+            'newsForm' => $form->createView(),
+            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id))
         ));
     }
+
+    /**
+     * Edit group news.
+     *
+     */
+    public function editNewsAction($id, $newsId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupNewsRepository();
+        $newsArticle = $gr->find($newsId);
+
+        if (!$newsArticle) {
+            $this->setFlash('error', 'News article does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $form = $this->createFormBuilder($newsArticle)
+            ->add('title', 'text')
+            ->add('article', 'textarea')
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $newsArticle->setGroup($group);
+
+                $gm->saveGroupNews($newsArticle);
+
+                $this->setFlash('success', 'New article updated successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:show.html.twig', array(
+            'group' => $group,
+            'newsForm' => $form->createView(),
+            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId))
+        ));
+    }
+
+    /**
+     * Edit group news.
+     *
+     */
+    public function deleteNewsAction($id, $newsId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupNewsRepository();
+        $newsArticle = $gr->find($newsId);
+
+        if (!$newsArticle) {
+            $this->setFlash('error', 'News article does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $em = $this->getEntityManager();
+        $em->remove($newsArticle);
+        $em->flush();
+
+        $this->setFlash('success', 'News article was deleted successfully!');
+
+        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
+
 
     /**
      * Shows a Group entitie.
@@ -164,13 +249,16 @@ class GroupController extends Controller
 
         $mgr->ensureGroupIsVisible($group);
 
+        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+
         $gr = $this->getGroupNewsRepository();
 
         $groupNews = $gr->getNewsForGroupMostRecentFirst($group);
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
             'group' => $group,
-            'groupNews' => $groupNews
+            'groupNews' => $groupNews,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner
         ));
     }
 
@@ -286,7 +374,7 @@ class GroupController extends Controller
     private function processForm(Form $form, Request $request)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -324,8 +412,12 @@ class GroupController extends Controller
         return $this->get('platformd.model.group_manager');
     }
 
-     private function getGroupNewsRepository()
+    private function getEntityManager() {
+        return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGroupNewsRepository()
     {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:GroupNews');
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupNews');
     }
 }

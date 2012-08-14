@@ -65,7 +65,7 @@ class GroupType extends AbstractType
     private static function getCategoryChoices()
     {
         $values = Group::getValidCategories();
-        $choices = array('' => 'Choose a Category');
+
         foreach ($values as $value) {
             $choices[$value]  = Group::GROUP_CATEGORY_LABEL_PREFIX.$value;
         }

@@ -27,8 +27,8 @@ class GroupNews
     /**
      *
      * @var \Platformd\SpoutletBundle\Entity\Group
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Group", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $group;
 
@@ -52,8 +52,8 @@ class GroupNews
      * The person who created this group news article
      *
      * @var \Platformd\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
-     * @ORM\JoinColumn(onDelete="cascade")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $author;
 
