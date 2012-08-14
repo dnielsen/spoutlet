@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -13,8 +14,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pd_group_video")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupVideoRepository")
  */
-class GroupVideo
+class GroupVideo implements LinkableInterface
 {
+    const COMMENT_PREFIX = 'group_video-';
+
     /**
      * @var integer $id
      *
@@ -195,5 +198,50 @@ class GroupVideo
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function  getLinkableRouteName()
+    {
+        return 'group_view_video';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function  getLinkableRouteParameters()
+    {
+        return array(
+            'id' => $this->getGroup()->getId(),
+            'videoId' => $this->getId()
+        );
+    }
+
+     /**
+     * Used to return the commenting thread id that should be used for this group video
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A group needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }

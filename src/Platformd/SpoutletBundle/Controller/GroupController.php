@@ -102,6 +102,35 @@ class GroupController extends Controller
     }
 
     /**
+     * View group news.
+     *
+     */
+    public function viewNewsAction($id, $newsId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupNewsRepository();
+        $newsArticle = $gr->find($newsId);
+
+        if (!$newsArticle) {
+            $this->setFlash('error', 'News article does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        return $this->renderShow($group, array(
+            'newsArticle' => $newsArticle,
+        ));
+    }
+
+    /**
      * Add group news.
      *
      */
@@ -256,6 +285,35 @@ class GroupController extends Controller
         }
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array_merge($parameters, $parameters));
+    }
+
+    /**
+     * View group news.
+     *
+     */
+    public function viewVideoAction($id, $videoId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupVideoRepository();
+        $video = $gr->find($videoId);
+
+        if (!$video) {
+            $this->setFlash('error', 'Video does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        return $this->renderShow($group, array(
+            'video' => $video,
+        ));
     }
 
     /**

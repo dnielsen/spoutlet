@@ -132,7 +132,16 @@
             </div>
         </div>
         <div id="group-comments">
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.id } %}
+
+            {% if newsArticle is defined %}
+                {% set threadId = newsArticle.threadId %}
+            {% elseif video is defined %}
+                {% set threadId = video.threadId %}
+            {% else %}
+                {% set threadId = group.threadId %}
+            {% endif %}
+
+            {% render "FOSCommentBundle:Thread:showFlat" with {"id": threadId } %}
         </div>
     </div>
 

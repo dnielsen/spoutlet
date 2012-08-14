@@ -28,6 +28,8 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
         'topic',
     );
 
+    const COMMENT_PREFIX = 'group-';
+
     /**
      * @var integer $id
      *
@@ -491,7 +493,7 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
         return $newGroupLocale;
     }
 
-     /**
+    /**
      * If there is a set URL that should be used without doing anything else, return it here
      *
      * @return string
@@ -565,5 +567,17 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     public function setOwner(User $owner)
     {
         $this->owner = $owner;
+    }
+
+    /**
+     * Used to return the commenting thread id that should be used for this group
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A group needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }

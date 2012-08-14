@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -13,8 +14,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pd_group_news")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupNewsRepository")
  */
-class GroupNews
+class GroupNews implements LinkableInterface
 {
+
+    const COMMENT_PREFIX = 'group_news-';
+
     /**
      * @var integer $id
      *
@@ -195,5 +199,50 @@ class GroupNews
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function  getLinkableRouteName()
+    {
+        return 'group_view_news';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function  getLinkableRouteParameters()
+    {
+        return array(
+            'id' => $this->getGroup()->getId(),
+            'newsId' => $this->getId()
+        );
+    }
+
+     /**
+     * Used to return the commenting thread id that should be used for this group new article
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A group needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }
