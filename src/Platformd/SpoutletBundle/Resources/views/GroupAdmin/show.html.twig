@@ -1,0 +1,38 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title group.name ~ ' | Admin'  %}
+
+{% block content %}
+<h1>{{ group.name }}</h1>
+
+<div style="width: 500px">
+    <table class="table table-striped table-bordered tablesorter">
+        <tbody>
+            <tr>
+                <td>Region:</td>
+                <td>
+                    {% for locale in group.locales %}
+                        <span>[{{ locale }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>Created At</td>
+                <td>{{ group.createdAt | date }}</td>
+            </tr>
+            <tr>
+                <td>Group Type:</td>
+                <td>{{ group.category }}</td>
+            </tr>
+            <tr>
+                <td>Organizer:</td>
+                <td>{{ group.owner.username }}</td>
+            </tr>
+            <tr>
+                <td>Members:</td>
+                <td>{{ group.members | length }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -30,7 +30,7 @@ class GroupAdminController extends Controller
     }
 
     public function findAction(Request $request) {
-        $this->addGroupsBreadcrumb()->addChild('Find Groups');
+        $this->addFindGroupsBreadcrumb();
 
         $form = $this->createForm(new GroupFindType());
         $results = $this->processFindForm($form, $request);
@@ -49,6 +49,22 @@ class GroupAdminController extends Controller
         ));
     }
 
+    public function showAction($id, Request $request) {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $group = $em->getRepository('SpoutletBundle:Group')->find($id);
+
+        if(!$group) {
+            throw $this->createNotFoundException('Unable to find group.');
+        }
+
+        $this->addFindGroupsBreadcrumb()->addChild($group->getName());
+
+        return $this->render('SpoutletBundle:GroupAdmin:show.html.twig', array(
+            'group' => $group
+        ));
+    }
+
     private function processFindForm(Form $form, Request $request)
     {
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
@@ -58,8 +74,11 @@ class GroupAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
                 $data = $form->getData();
+
+                if($data['sites'] != '') {
+                    return $groupRepo->findGroupsByNameAndSite($data['groupName'], $data['sites']);
+                }
 
                 return $groupRepo->findGroupsByName($data['groupName']);
             }
@@ -75,6 +94,18 @@ class GroupAdminController extends Controller
     {
         $this->getBreadcrumbs()->addChild('Groups', array(
             'route' => 'admin_group'
+        ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addFindGroupsBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Find Groups', array(
+            'route' => 'admin_group_find'
         ));
 
         return $this->getBreadcrumbs();
