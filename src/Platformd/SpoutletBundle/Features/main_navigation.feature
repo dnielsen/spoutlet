@@ -25,7 +25,7 @@ Feature: Main Navigation
       | 新闻        | /news                     |
       | 微软        | /microsoft                |
 
-Scenario: The "Latin America" site's main navigation menu has the correct items
+  Scenario: The "Latin America" site's main navigation menu has the correct items
     Given I am on the "Latin America" site
     When I go to "/games"
     Then the main navigation menu should be:
@@ -64,7 +64,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | ARP                         | /arp                                            |
       | Microsoft                   | /microsoft                                      |
 
-  Scenario: The "Europe" site's main navigation menu has the correct items
+  Scenario: The "Europe" site's main navigatdfion menu has the correct items
     Given I am on the "Europe" site
     When I go to "/games"
     Then the main navigation menu should be:
@@ -81,6 +81,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
       | Media >> Wallpapers         | /wallpapers                                                                                       |
+      | NewDeals                    | /deal/gameservers-eu                                                                              |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
       | Microsoft                   | /microsoft                                                                                        |
@@ -127,7 +128,7 @@ Scenario: The "Latin America" site's main navigation menu has the correct items
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
 
-Scenario: The "Australia / New Zealand" site's main navigation menu has the correct items
+  Scenario: The "Australia / New Zealand" site's main navigation menu has the correct items
     Given I am on the "Australia / New Zealand" site
     When I go to "/games"
     Then the main navigation menu should be:
