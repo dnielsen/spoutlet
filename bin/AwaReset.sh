@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v0.9              |"
+echo "|  Alienware Arena Reset Script v1.0              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -51,6 +51,13 @@ if [ `pwd` != $AwaResetDirectory ]; then
     exit
 fi
 
+echo "Renewing 'sudo' token now..."
+echo
+
+sudo ls > /dev/null
+
+echo "Done"
+echo
 echo "Updating Vendor files..."
 echo
 
