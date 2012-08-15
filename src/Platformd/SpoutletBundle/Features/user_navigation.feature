@@ -46,7 +46,7 @@ Feature: User Navigation
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                 |
       | Cerrar sesión                 | /logout                                                         |
 
- Scenario: The "North America" site's user navigation menu has the correct items
+  Scenario: The "North America" site's user navigation menu has the correct items
     Given I am on the "North America" site
     When I go to "/account"
     Then the user navigation menu should be:
@@ -62,7 +62,7 @@ Feature: User Navigation
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/           |
       | Sign out                      | /logout                                                   |
 
- Scenario: The "Europe" site's user navigation menu has the correct items
+  Scenario: The "Europe" site's user navigation menu has the correct items
     Given I am on the "Europe" site
     When I go to "/account"
     Then the user navigation menu should be:
@@ -72,11 +72,12 @@ Feature: User Navigation
       | Profile                       | http://www.alienwarearena.com/europe/member/55/                 |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |
       | My Giveaways                  | http://www.alienwarearena.com/europe/account/my-giveaway-keys/  |
+      | My Deals                      | /account/profile/deals                                          |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                       |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                 |
       | Sign out                      | /logout                                                         |
 
- Scenario: The "India" site's user navigation menu has the correct items
+  Scenario: The "India" site's user navigation menu has the correct items
     Given I am on the "India" site
     When I go to "/account"
     Then the user navigation menu should be:
@@ -90,7 +91,7 @@ Feature: User Navigation
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                   |
       | Sign out                      | /logout                                                           |
 
- Scenario: The "Singapore" site's user navigation menu has the correct items
+  Scenario: The "Singapore" site's user navigation menu has the correct items
     Given I am on the "Singapore" site
     When I go to "/account"
     Then the user navigation menu should be:
@@ -104,7 +105,7 @@ Feature: User Navigation
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |
       | Sign out                      | /logout                                                       |
 
- Scenario: The "Australia / New Zealand" site's user navigation menu has the correct items
+  Scenario: The "Australia / New Zealand" site's user navigation menu has the correct items
     Given I am on the "Australia / New Zealand" site
     When I go to "/account"
     Then the user navigation menu should be:
