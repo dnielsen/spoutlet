@@ -48,21 +48,14 @@
                                 <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
                             {% endif %}
                             {% if site_has_feature('WALLPAPERS') %}
-                                <li><a href="{{ path('wallpapers') }}">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
+                                <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}
-
-                    {% if app.session.locale == "en_GB" %}
-                        {% set dealLink = '/deal/gameservers-eu' %}
-                    {% else %}
-                        {% set dealLink = path('deal_list') %}
-                    {% endif %}
-
-                    <li><a href="{{ dealLink }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
+                    <li><a href="{{ path('deal_list') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('FORUMS') %}

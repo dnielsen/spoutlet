@@ -27,7 +27,7 @@ platformd:
             video: Vídeos
             news: Novedades
             arp: ARP
-            media: Media
+            media: Medios
             forums: Foros
             sweeps: Sweeps
             wallpapers: Explorar
@@ -104,6 +104,6 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
-wallpapers: Wallpapers
-exclusive_designs: EXCLUSIVE DESIGNS
-click_to_download: Click to Download
+wallpapers: Fondo de pantalla
+exclusive_designs: Diseños Exclusivos
+click_to_download: Hacer clic para descargar
