@@ -81,7 +81,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
       | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
-      | NewDeals                    | /deal/gameservers-eu                                                                              |
+      | NewDeals                    | /deal/                                                                                            |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
       | Microsoft                   | /microsoft                                                                                        |
