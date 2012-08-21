@@ -19,7 +19,9 @@
             {% endif %}
 
             {% if socialMediaStrip -%}
-                {{ socialMediaStrip | raw }}
+                <li style="border-right: none; padding-top: 3px;">
+                    {{ socialMediaStrip | raw }}
+                </li>
             {%- endif %}
 
         </ul>
