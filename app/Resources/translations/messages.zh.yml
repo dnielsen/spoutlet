@@ -436,6 +436,6 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
-wallpapers: Wallpapers
-exclusive_designs: EXCLUSIVE DESIGNS
-click_to_download: Click to Download
+wallpapers: 壁纸下载
+exclusive_designs: 个性设计
+click_to_download: 点击下载
