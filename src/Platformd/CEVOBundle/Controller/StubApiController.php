@@ -121,7 +121,7 @@ class StubApiController extends Controller
                 'username'      => $username,
                 'handle'        => $username,
                 'avatar_url'    => 'http://alienwarearena.com/images/profile-default.png',
-                'country'       => 'japan',
+                'country'       => $user->getCountry(),
                 'profile_url'   => 'http://profile.com',
                 'dob'           => '1984-06-05',
                 // this field is not in their API yet, but we need it to be

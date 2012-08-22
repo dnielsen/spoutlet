@@ -110,53 +110,61 @@ class DealController extends Controller
 
         $em             = $this->getDoctrine()->getEntityManager();
         $dealCodeRepo   = $em->getRepository('SpoutletBundle:DealCode');
+        $dealPoolRepo   = $em->getRepository('SpoutletBundle:DealPool');
         $deal           = $this->getDealManager()->findOneBySlug($slug);
         $clientIp       = $request->getClientIp(true);
         $user           = $this->getUser();
         $locale         = $this->getLocale();
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
-        $country        = $request->request->get('deal-country');
-
-        if ($country == "") {
-            $country = $request->request->get('selected-country');
-        }
-
-        if (!($country instanceof Country)) {
-            $country = $countryRepo->findOneByCode($country);
-        }
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($dealShow);
-        }
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($dealShow);
-        }
-
-        $pool = $deal->getActivePoolForCountry($country);
-
-        if (!$pool) {
-            $this->setFlash('error', 'deal_redeem_no_keys_left');
-            return $this->redirect($dealShow);
-        }
-
-        if (!$dealCodeRepo->canIpHaveMoreKeys($clientIp, $pool)) {
-            $this->setFlash('error', 'deal_redeem_max_ip_hit');
-            return $this->redirect($dealShow);
-        }
 
         if ($dealCodeRepo->doesUserHaveCodeForDeal($user, $deal)) {
             $this->setFlash('error', 'deal_redeem_user_already_redeemed');
             return $this->redirect($dealShow);
         }
 
-        $code = $dealCodeRepo->getUnassignedKey($pool);
+        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
 
-        if (!$code) {
+        if (!$country) {
+            $this->setFlash('error', 'deal_redeem_invalid_country');
+            return $this->redirect($dealShow);
+        }
+
+        if (!$country) {
+            $this->setFlash('error', 'deal_redeem_invalid_country');
+            return $this->redirect($dealShow);
+        }
+
+        $pools = $dealPoolRepo->getAllPoolsForDealGivenCountry($deal, $country);
+
+        if (!$pools || count($pools) < 1) {
             $this->setFlash('error', 'deal_redeem_no_keys_left');
+            return $this->redirect($dealShow);
+        }
+
+        $code = null;
+        $lastFail = null;
+
+        foreach ($pools as $pool) {
+
+            if (!$dealCodeRepo->canIpHaveMoreKeys($clientIp, $pool)) {
+                $lastFail = 'deal_redeem_max_ip_hit';
+                continue;
+            }
+
+            $code = $dealCodeRepo->getUnassignedKey($pool);
+
+            if (!$code) {
+                $lastFail = 'deal_redeem_no_keys_left';
+                continue;
+            }
+
+            $lastFail = null;
+            break;
+        }
+
+        if ($lastFail) {
+            $this->setFlash('error', $lastFail);
             return $this->redirect($dealShow);
         }
 

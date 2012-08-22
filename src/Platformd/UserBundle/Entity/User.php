@@ -30,7 +30,7 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
 
     /**
      * @var String $firstname
@@ -58,12 +58,12 @@ class User extends BaseUser
      * @var Datetime $birthdate
      *
      * @ORM\Column(type="date", nullable=true)
-     * 
+     *
      * @Assert\NotBlank(groups={"Registration"}, message="birthdate_not_blank")
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
-    
+
     /**
      * @var String $phone_number
      *
@@ -82,7 +82,7 @@ class User extends BaseUser
 
     /**
      * @var String $state
-     * 
+     *
      * @ORM\Column(type="string", nullable=true)
      *
      * @Assert\NotBlank(groups={"Registration"}, message="state_not_blank")
@@ -96,7 +96,7 @@ class User extends BaseUser
      * @Assert\NotNull
      */
     protected $hasAlienwareSystem = false;
-    
+
     /**
      * @var String $latest_news_source
      *
@@ -242,7 +242,7 @@ class User extends BaseUser
 
     /**
      * @var Boolean $avatarApproved
-     * 
+     *
      * @ORM\Column(type="boolean")
      */
     protected $avatar_approved = false;
@@ -277,9 +277,9 @@ class User extends BaseUser
      */
     protected $updated;
 
-    /** 
+    /**
      * @Assert\File(
-        maxSize="6000000", 
+        maxSize="6000000",
         mimeTypes={"image/png", "image/jpeg", "image/jpg"},
         groups={"Profile"})
      */
@@ -300,21 +300,21 @@ class User extends BaseUser
      */
     private $cevoUserId;
 
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct();
         $this->events = new ArrayCollection();
         $this->giveawayKeys = new ArrayCollection();
     }
-    
-    /** 
+
+    /**
      * Return true if the user's avatar has been approved
-     * 
+     *
      * @return Boolean
      */
     public function isAvatarApproved()
     {
-        
+
         return $this->avatar_approved;
     }
 
@@ -328,10 +328,10 @@ class User extends BaseUser
         $this->avatar_approved = false;
     }
 
-    public function getAbsolutePath() 
+    public function getAbsolutePath()
     {
         if (!$this->avatar) {
-            
+
             return null;
         }
 
@@ -351,7 +351,7 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -393,22 +393,22 @@ class User extends BaseUser
     {
         $this->events->removeElement($event);
     }
-    
+
     /**
      * Get user's lastname
      *
      * @return String
      */
-    public function getLastname() 
+    public function getLastname()
     {
-        
+
         return $this->lastname;
     }
-    
+
     /**
      * Set user's firstname
      *
-     * @param String $lastname 
+     * @param String $lastname
      */
     public function setLastname($lastname)
     {
@@ -420,9 +420,9 @@ class User extends BaseUser
      *
      * @return String
      */
-    public function getFirstname() 
+    public function getFirstname()
     {
-        
+
         return $this->firstname;
     }
 
@@ -435,7 +435,7 @@ class User extends BaseUser
     {
         $this->firstname = $firstname;
     }
-    
+
     /**
      * Get user's birthdate
      *
@@ -443,10 +443,10 @@ class User extends BaseUser
      */
     public function getBirthdate()
     {
-        
+
         return $this->birthdate;
     }
-    
+
     /**
      * Set user's birthdate
      *
@@ -462,9 +462,9 @@ class User extends BaseUser
      *
      * @return String
      */
-    public function getPhoneNumber() 
+    public function getPhoneNumber()
     {
-        
+
         return $this->phoneNumber;
     }
 
@@ -477,15 +477,15 @@ class User extends BaseUser
     {
         $this->phoneNumber = $phoneNumber;
     }
-    
+
     /**
-     * Get user's country 
+     * Get user's country
      *
      * @return String
      */
-    public function getCountry() 
+    public function getCountry()
     {
-        
+
         return $this->country;
     }
 
@@ -500,13 +500,13 @@ class User extends BaseUser
     }
 
     /**
-     * Get user's state 
+     * Get user's state
      *
      * @return String
      */
-    public function getState() 
+    public function getState()
     {
-        
+
         return $this->state;
     }
 
@@ -519,15 +519,15 @@ class User extends BaseUser
     {
         $this->state = $state;
     }
-    
-    /** 
+
+    /**
      * Do the user have an Alienware system ?
      *
      * @return boolean
      */
     public function getHasAlienwareSystem()
     {
-        
+
         return $this->hasAlienwareSystem;
     }
 
@@ -543,18 +543,18 @@ class User extends BaseUser
 
     /**
      * Get latest news' source (where has the user heard about alienware last)
-     * 
+     *
      * @return String
      */
     public function getLatestNewsSource()
     {
-        
+
         return $this->latestNewsSource;
     }
 
     /**
      * Set latest news' source
-     * 
+     *
      * @param String $source
      */
     public function setLatestNewsSource($source)
@@ -564,18 +564,18 @@ class User extends BaseUser
 
     /**
      * Get if the user has subscribed to alienware arena news
-     * 
+     *
      * @return boolean
      */
     public function getSubscribedArenaNews()
     {
-          
+
         return $this->subscribedArenaNews;
     }
 
     /**
      * Set if the user has subscribed to alienware arena news
-     * 
+     *
      * @param boolean $subscribed
      */
     public function setSubscribedArenaNews($subscribed)
@@ -585,18 +585,18 @@ class User extends BaseUser
 
     /**
      * Get if the user has subscribed to alienware/dell gaming news
-     * 
+     *
      * @return boolean
      */
     public function getSubscribedGamingNews()
     {
-          
+
         return $this->subscribedGamingNews;
     }
 
     /**
      * Set if the user has subscribed to alienware/dell gaming news
-     * 
+     *
      * @param boolean $subscribed
      */
     public function setSubscribedGamingNews($subscribed)
@@ -606,28 +606,28 @@ class User extends BaseUser
 
     /**
      * Get if the user has accepted terms
-     * 
+     *
      * @return boolean
      */
     public function getTermsAccepted()
     {
-        
+
         return $this->termsAccepted;
     }
 
-    /** 
+    /**
      * Set if the user has accepted terms
-     * 
+     *
      * @param boolean $accepted
      */
     public function setTermsAccepted($accepted)
     {
         $this->termsAccepted = $accepted;
     }
-    
+
     public function getAvatar()
     {
-        
+
         return $this->avatar;
     }
 
@@ -661,20 +661,20 @@ class User extends BaseUser
         return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
     }
 
-    public function getType() 
+    public function getType()
     {
-        
+
         return $this->type;
     }
 
-    public function setType($type) 
+    public function setType($type)
     {
         $this->type = $type;
     }
 
-    public function getManufacturer() 
+    public function getManufacturer()
     {
-        
+
         return $this->manufacturer;
     }
 
@@ -685,18 +685,18 @@ class User extends BaseUser
 
     public function getOperatingSystem()
     {
-        
+
         return $this->operatingSystem;
     }
 
-    public function setOperatingSystem($os) 
+    public function setOperatingSystem($os)
     {
         $this->operatingSystem = $os;
     }
 
-    public function getCPU() 
+    public function getCPU()
     {
-        
+
         return $this->cpu;
     }
 
@@ -707,22 +707,22 @@ class User extends BaseUser
 
     public function getMemory()
     {
-        
+
         return $this->memory;
     }
 
-    public function setMemory($memory) 
+    public function setMemory($memory)
     {
         $this->memory = $memory;
     }
-    
+
     public function getVideoCard()
     {
-        
+
         return $this->videoCard;
     }
 
-    public function setVideoCard($card) 
+    public function setVideoCard($card)
     {
         $this->videoCard = $card;
     }
@@ -740,18 +740,18 @@ class User extends BaseUser
 
     public function getHardDrive()
     {
-        
+
         return $this->hardDrive;
     }
 
-    public function setHardDrive($drive) 
+    public function setHardDrive($drive)
     {
         $this->hardDrive = $drive;
     }
 
     public function getHeadphones()
     {
-    
+
         return $this->headphones;
     }
 
@@ -762,11 +762,11 @@ class User extends BaseUser
 
     public function getMouse()
     {
-        
+
         return $this->mouse;
     }
 
-    public function setMouse($mouse) 
+    public function setMouse($mouse)
     {
         $this->mouse = $mouse;
     }
@@ -784,7 +784,7 @@ class User extends BaseUser
 
     public function getKeyboard()
     {
-        
+
         return $this->keyboard;
     }
 
@@ -795,13 +795,13 @@ class User extends BaseUser
 
     public function getMonitor()
     {
-        
+
         return $this->monitor;
     }
 
     public function setMonitor($monitor)
     {
-        $this->monitor = $monitor;    
+        $this->monitor = $monitor;
     }
 
     public function getIsOrganizer()
@@ -891,7 +891,7 @@ class User extends BaseUser
             $this->removeRole($role);
         }
     }
-    
+
     protected function getUploadRootDir()
     {
 

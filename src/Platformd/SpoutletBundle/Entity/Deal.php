@@ -769,27 +769,6 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
-     * Gets the next active pool given a country code
-     * @param Platformd\SpoutletBundle\Entity\Country $country
-    */
-
-    public function getActivePoolForCountry(\Platformd\SpoutletBundle\Entity\Country $country)
-    {
-        # this need to be refined (as does getActivePool... so that they are SQL based instead of objection iteration based - N+1 issue) ...
-        # don't have time right now unfortunately :( - chris
-
-        foreach($this->getDealPools() as $pool) {
-            if ($pool->getIsActive()) {
-                foreach ($pool->getAllowedCountries() as $allowedCountry) {
-                    if ($allowedCountry == $country) {
-                        return $pool;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * @static
      * @return array
      */

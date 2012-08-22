@@ -104,28 +104,13 @@
                                 {% elseif not hasKeys %}
                                     <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
                                 {% elseif is_granted('ROLE_USER') %}
-
-                                    <form action="{{ path('deal_redeem', { "slug" : deal.slug }) }}" method="post">
-
-                                        <div id="deal-countries-wrapper">
-                                            <div id="deal-countries">
-                                                <select id="deal-country" name="deal-country">
-                                                    {% for countryCode, countryName in allowedCountries %}
-                                                        <option value="{{countryCode}}">{{ countryName }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <input id="selected-country" type="hidden" name="selected-country" />
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" id="deal-redeem-button">
-                                            {% if deal.claimCodeButton %}
-                                                <img src="{{ media_path(deal.claimCodeButton) }}" />
-                                            {% else %}
-                                                {{ "CLAIM CODE NOW" }}
-                                            {% endif %}
-                                        </button>
-                                    </form>
+                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">
+                                        {% if deal.claimCodeButton %}
+                                            <img src="{{ media_path(deal.claimCodeButton) }}" />
+                                        {% else %}
+                                            {{ "CLAIM CODE NOW" }}
+                                        {% endif %}
+                                    </a>
                                 {% endif %}
                             </div>
                             <div id="deal-instructions">
@@ -206,14 +191,6 @@
             });
 
             $('.deals-timeleft').fadeIn();
-
-            $('#deal-country').ddslick({
-                width: 223,
-                height: 215,
-                onSelected: function(data) {
-                    $('#selected-country').val(data.selectedData.value);
-                }
-            });
         });
     </script>
 
