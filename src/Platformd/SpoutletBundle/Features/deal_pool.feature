@@ -15,7 +15,7 @@ Feature: Deal Pool
                 | Peter         | Peter@example.com       | IE           | 4       |
                 | Paul          | Paul@example.com        | IE           | 5       |
                 | CaptAmerica   | CaptAmerica@example.com | US           | 6       |
-                | MrJapan       | MrJapan@example.com     | JA           | 7       |
+                | MrJapan       | MrJapan@example.com     | JP           | 7       |
                 | UnknownMan    | UnknownMan@example.com  | UNKNOWN      | 8       |
             And I go to "/admin"
             And there is a game called "Diablo 3"
@@ -98,6 +98,12 @@ Feature: Deal Pool
         When I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
         Then I should see "Invalid country selection."
+
+    Scenario: I am a user from a country that doesn't have any keys available to it
+        Given I re-login as the user "MrJapan"
+        When I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+        Then I should see "Sorry! This offer is not available at your location."
 
     Scenario: I am a user the second user from the UK I should get the second valid UK key
         Given I re-login as the user "William"

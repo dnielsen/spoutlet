@@ -138,7 +138,7 @@ class DealController extends Controller
         $pools = $dealPoolRepo->getAllPoolsForDealGivenCountry($deal, $country);
 
         if (!$pools || count($pools) < 1) {
-            $this->setFlash('error', 'deal_redeem_no_keys_left');
+            $this->setFlash('error', 'deal_redeem_no_keys_for_your_country');
             return $this->redirect($dealShow);
         }
 
