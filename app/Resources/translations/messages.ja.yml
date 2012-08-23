@@ -68,12 +68,13 @@ platformd:
             media: Media
 
         page_content:
-            featured: トピックス
+            featured: 新着
             giveaways: キャンペーン
             all: すべて
             see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
+            competitions: トーナメント・イベント
 
         bottom_menu:
             contact_us: "お問い合わせ"

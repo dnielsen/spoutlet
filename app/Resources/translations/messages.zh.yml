@@ -68,12 +68,13 @@ platformd:
             media: Media
 
         page_content:
-            featured: 专栏
-            giveaways: 邀请码
+            featured: 最新亮点
+            giveaways: 兑换码
             all: 所有
             see_more: 更多
             photo_gallery: 照片库
             view_all: 查看所有
+            competitions: 近期赛事
 
         bottom_menu:
             contact_us: 联系我们
