@@ -77,6 +77,27 @@ class AbstractEventRepository extends EntityRepository
     }
 
     /**
+     * A funky little function that only return Events and Sweepstakes
+     *
+     * @param string $locale
+     * @param integer $limit
+     * @return array
+     */
+    public function getCurrentEventsOnly($locale, $limit = null)
+    {
+        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+
+        foreach ($abstractEvents as $key => $value) {
+            // unset if it's not an event or sweepstakes
+            if (!($value instanceof Event)) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
+    }
+
+    /**
      * Return past events
      *
      * @param integer $limit

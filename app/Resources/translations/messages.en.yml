@@ -80,6 +80,7 @@ platformd:
             photo_gallery: Photo Gallery
             view_all: View All
             competitions: Competitions
+            hot_stories: Hot Stories
 
         bottom_menu:
             contact_us: Contact Us

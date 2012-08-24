@@ -75,6 +75,7 @@ platformd:
             photo_gallery: フォトギャラリー
             view_all: すべて見る
             competitions: トーナメント・イベント
+            hot_stories: Hot Stories
 
         bottom_menu:
             contact_us: "お問い合わせ"

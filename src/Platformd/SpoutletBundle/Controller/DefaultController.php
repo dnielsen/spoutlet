@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Event;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 class DefaultController extends Controller
 {
@@ -24,16 +25,26 @@ class DefaultController extends Controller
     /**
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
+    public function hotStoriesAction()
+    {
+        $news = $this->getNewsRepo()
+            ->findMostRecentForLocale($this->getLocale(), 10)
+        ;
+
+        return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
+            'news'     => $news,
+        ));
+    }
+
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     */
     public function featuredContentAction()
     {
         $abstractEvents = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
             ->getCurrentEventsOrderedByCreated($this->getLocale())
-        ;
-
-        $news = $this->getNewsRepo()
-            ->findMostRecentForLocale($this->getLocale(), 10)
         ;
 
         // see #64 - we're no longer showing events here
@@ -46,9 +57,38 @@ class DefaultController extends Controller
             }
         }
 
+        $giveaways = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findAllForLocaleWithLimit($this->getLocale(), 10)
+        ;
+
+        $giveaways_list = array();
+        foreach($giveaways as $giveaway) {
+            // filter out proper Event objects
+            if (!$giveaway instanceof Event) {
+                $giveaways_list[] = $giveaway;
+            }
+        }
+
+        $competitions = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:AbstractEvent')
+            ->getCurrentEventsOnly($this->getLocale(), 10)
+        ;
+
+        $competitions_list = array();
+        foreach($competitions as $competition) {
+            // filter out proper Event objects
+            if (!$competition instanceof Event) {
+                $competitions_list[] = $competition;
+            }
+        }
+
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'news'     => $news,
             'abstractEvents' => $finalEvents,
+            'giveaways'      => $giveaways_list,
+            'competitions'   => $competitions_list,
         ));
     }
 

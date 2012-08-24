@@ -75,6 +75,7 @@ platformd:
             photo_gallery: 照片库
             view_all: 查看所有
             competitions: 近期赛事
+            hot_stories: Hot Stories
 
         bottom_menu:
             contact_us: 联系我们

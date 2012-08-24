@@ -17,26 +17,30 @@
             {% endfor %}
         </div>
         {% endif %}
-        <div id="featured-content-featured-giveaways" class="featured-content-category">
-            {% for abstractEvent in abstractEvents %}
+        {% if giveaways %}
+            <div id="featured-content-featured-giveaways" class="featured-content-category">
+            {% for giveaway in giveaways %}
             <div class="widget-item">
-                <a class="widget-link" {{ abstractEvent | pd_link_target }} href="{{ abstractEvent | pd_link }}">{{ abstractEvent.name }}</a>
+                <a class="widget-link" {{ giveaway | pd_link_target }} href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a>
             </div>
             {% endfor %}
         </div>
-        <div id="featured-content-featured-competition" class="featured-content-category">
-            {% for abstractEvent in abstractEvents %}
+        {% endif %}
+        {% if competitions %}
+            <div id="featured-content-featured-competition" class="featured-content-category">
+            {% for competition in competitions %}
             <div class="widget-item">
-                <a class="widget-link" {{ abstractEvent | pd_link_target }} href="{{ abstractEvent | pd_link }}">{{ abstractEvent.name }}</a>
+                <a class="widget-link" {{ competition | pd_link_target }} href="{{ competition | pd_link }}">{{ competition.name }}</a>
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
     <div class="widget-footer">
         {# here just for spacing #}
-        <a href="#" id="featured-footer-featured-giveaways">&nbsp;</a>
-        <a href="#" id="featured-footer-featured-competition">&nbsp;</a>
-        <a href="{{ path('events_index') }}" class="aw-link" id="featured-footer-featured-all">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <a href="#" class="featured-footer-link" id="featured-footer-featured-giveaways">&nbsp;</a>
+        <a href="#" class="featured-footer-link" id="featured-footer-featured-competition">&nbsp;</a>
+        <a href="{{ path('events_index') }}" class="aw-link featured-footer-link" id="featured-footer-featured-all">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         <div class="clear"></div>
     </div>
 </div>

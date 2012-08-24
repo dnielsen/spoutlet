@@ -20,7 +20,7 @@ class GiveawayRepository extends AbstractEventRepository
      */
     public function findActives($locale)
     {
-        
+
         return $this
             ->createActiveQueryBuilder($locale)
             ->orderBy('g.created', 'DESC')
@@ -41,8 +41,21 @@ class GiveawayRepository extends AbstractEventRepository
     }
 
     /**
+     * @param $locale
+     * @return array
+     */
+    public function findAllForLocaleWithLimit($locale, $limit)
+    {
+        return $this->createBaseQueryBuilder($locale)
+            ->getQuery()
+            ->setMaxResults($limit)
+            ->getResult()
+        ;
+    }
+
+    /**
      * Retrieve a Giveaway using a slug
-     * 
+     *
      * @param string $slug
      * @param string $locale
      * @return \Platformd\GiveawayBundle\Entity\Giveway|null
