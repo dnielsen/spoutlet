@@ -35,7 +35,9 @@ class GroupController extends Controller
         $this->addGroupsBreadcrumb();
         $em = $this->getEntityManager();
 
-        $entities = $em->getRepository('SpoutletBundle:Group')->findAllPublicGroupsForSite($this->getLocale());
+        $site = $this->getCurrentSite();
+
+        $entities = $em->getRepository('SpoutletBundle:Group')->findAllGroupsRelevantToSiteAndUser($site, $this->getCurrentUser());
 
         return $this->render('SpoutletBundle:Group:index.html.twig', array(
             'entities' => $entities

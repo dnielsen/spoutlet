@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
+use Platformd\SpoutletBundle\Entity\Group;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
@@ -34,13 +35,17 @@ class GroupRepository extends EntityRepository
         return $qb->andWhere('g.isPublic = true');
     }
 
-    public function findAllPublicGroupsForSite($site, $allowAllLocaleEntries = true)
-    {
-        $qb = $this->createSiteQueryBuilder($site, $allowAllLocaleEntries);
+    public function findAllGroupsRelevantToSiteAndUser($site, $user) {
 
-        $this->addPublicOnlyQueryBuilder($qb);
-
-        return $qb->getQuery()->execute();
+        return $this->getEntityManager()->createQuery('
+            SELECT g FROM SpoutletBundle:Group g
+            LEFT JOIN g.sites s
+            WHERE g.deleted = false
+            AND ((g.allLocales = true OR s = :site)
+                AND (g.isPublic = true OR g.owner = :user))')
+            ->setParameter('site', $site)
+            ->setParameter('user', $user)
+            ->execute();
     }
 
     public function findAllPublicAndPrivateGroupsForSite($site, $allowAllLocaleEntries = true)

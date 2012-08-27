@@ -14,6 +14,15 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
  */
 class Controller extends BaseController
 {
+
+    protected function getCurrentSite() {
+
+        $currentHost = $this->getRequest()->getHost();
+        $subDomain = substr($currentHost, 0, stripos($currentHost, '.'));
+
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
     /**
      * @return string
      */

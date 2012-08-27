@@ -4,10 +4,10 @@ namespace Platformd\SpoutletBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\Site;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
  */
-class Group implements LinkableInterface, LocalesRelationshipInterface
+class Group implements LinkableInterface
 {
 
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
@@ -112,24 +112,18 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     private $location;
 
      /**
-     * Holds the "many" locales relationship
-     *
-     * Don't set this directly, instead set "locales" directly, and a listener
-     * will take care of properly creating the GroupLocale relationship
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="GroupLocale", orphanRemoval=true, mappedBy="group")
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="pd_group_site")
      */
-    private $groupLocales;
-
-    private $locales;
+    private $sites;
 
     /**
      * @var boolean $allLocales
      * @Assert\NotNull
      * @ORM\Column(name="allLocales", type="boolean")
      */
-
     private $allLocales;
 
     /**
@@ -408,21 +402,6 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
         $this->location = $location;
     }
 
-
-
-    public function getJoinedLocales()
-    {
-        return $this->getGroupLocales();
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getGroupLocales()
-    {
-        return $this->groupLocales;
-    }
-
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -437,6 +416,22 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     public function setMembers($members)
     {
         $this->members = $members;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+     /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $sites
+     */
+    public function setSites($sites)
+    {
+        $this->sites = $sites;
     }
 
     /**
@@ -474,26 +469,6 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
-     * A funny function where you create a new Instance of whatever the
-     * entities actual JoinedLocaleInterface is. You'll typically also
-     * need to set the relationship on that new object back to this object:
-     *
-     *     $newGroupLocale = new GroupLocale();
-     *     $newGroupLocale->setGroup($this);
-     *
-     *     return $newGroupLocale;
-     *
-     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
-     */
-    public function createJoinedLocale()
-    {
-        $newGroupLocale = new GroupLocale();
-        $newGroupLocale->setGroup($this);
-
-        return $newGroupLocale;
-    }
-
-    /**
      * If there is a set URL that should be used without doing anything else, return it here
      *
      * @return string
@@ -524,34 +499,6 @@ class Group implements LinkableInterface, LocalesRelationshipInterface
             'id' => $this->getId()
         );
     }
-
-     public function getLocales()
-    {
-        return $this->areLocalesInitialized() ? $this->locales : array();
-    }
-
-    /**
-     * The locales are null until someone actually sets them
-     *
-     * This allows us to set them on load of the entity based on the relationship,
-     * but by checking this, we can be careful not to run over real values
-     *
-     * @return bool
-     */
-    public function areLocalesInitialized()
-    {
-        return is_array($this->locales);
-    }
-
-    public function setLocales(array $locales)
-    {
-        $this->locales = $locales;
-
-        // force Doctrine to see this as dirty
-        $this->updatedAt = new \DateTime();
-    }
-
-
 
     /**
      * @return \Platformd\UserBundle\Entity\User

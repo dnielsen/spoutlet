@@ -116,7 +116,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@session"
             - "@knp_media.util.media_util"
-            - "@platformd.locale.locales_relationship_helper"
             - "@security.context"
         scope: request
 

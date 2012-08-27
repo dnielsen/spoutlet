@@ -29,16 +29,13 @@ class GroupManager
 
     private $mediaUtil;
 
-    private $localesHelper;
-
     private $securityContext;
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper, SecurityContextInterface $securityContext)
+    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext)
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
-        $this->localesHelper = $localesHelper;
         $this->securityContext = $securityContext;
     }
 
@@ -68,7 +65,6 @@ class GroupManager
 
         $this->em->persist($group);
 
-        $this->localesHelper->processLocalesSave($group);
         $this->handleMediaFields($group);
 
         if ($flush) {
@@ -104,7 +100,7 @@ class GroupManager
         }
     }
 
-    public function ensureGroupIsVisible($group)
+    public function ensureGroupIsVisible($group, $site = null)
     {
         if (!$group) {
             throw new NotFoundHttpException('The group does not exist');
@@ -114,9 +110,11 @@ class GroupManager
             throw new NotFoundHttpException('The group does not exist'); // make sure this group hasn't been marked as deleted
         }
 
-        $locale = $this->session->getLocale();
+        if ($site == null) {
+            $site = $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->session->getLocale());
+        }
 
-        if (!$group->getAllLocales() && !in_array($locale, $group->getLocales())) { // make sure this group is visible for this site
+        if (!$group->getSites() && !in_array($site, $group->getSites())) { // make sure this group is visible for this site
             throw new NotFoundHttpException('The group does not exist');
         }
     }
