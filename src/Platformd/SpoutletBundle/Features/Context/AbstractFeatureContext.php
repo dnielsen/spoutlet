@@ -47,7 +47,7 @@ class AbstractFeatureContext extends MinkContext
         $con = $em->getConnection();
 
         $con
-            ->prepare("ALTER TABLE `country` AUTO_INCREMENT = 1")
+            ->prepare("ALTER TABLE `pd_site` AUTO_INCREMENT = 1")
             ->execute();
 
         $con
@@ -61,6 +61,10 @@ class AbstractFeatureContext extends MinkContext
             ('India', 'en_IN', 'in'),
             ('Singapore', 'en_SG', 'mysg'),
             ('Australia / New Zealand', 'en_AU', 'anz')")
+            ->execute();
+
+        $con
+            ->prepare("ALTER TABLE `country` AUTO_INCREMENT = 1")
             ->execute();
 
         $con
