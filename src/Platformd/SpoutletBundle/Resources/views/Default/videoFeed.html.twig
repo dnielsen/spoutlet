@@ -1,0 +1,24 @@
+<div class="widget-66" id="videos" style="margin-top: 15px;">
+    <div class="widget-header">
+        <div class="widget-title">Videos</div>
+    </div>
+    <div class="widget-content">
+        {{ videos | length }}
+        {% if videos %}
+            {% for video in videos.latest %}
+                <div class="movie">
+                    <div class="movie-thumb">
+                        <a href="http://{{ host }}/video/movie/{{ video.movie.id }}/"><img border="0" src="{{ video.movie.thumb }}"></a>
+                    </div>
+                    <p class="movie-title"><a href="http://{{ host }}/video/movie/{{ video.movie.id }}/">{{ video.movie.name }}</a></p>
+                    <p class="movie-views">Views: {{ video.movie.views }}</p>
+                    <p class="movie-rating">Rating: {{ video.movie.rating }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="widget-footer">
+        <a class="aw-link" href="http://video.alienwarearena.com">More Videos</a>
+        <div class="clear"></div>
+    </div>
+</div>

@@ -35,6 +35,32 @@
                         });
                     });
                 </script>
+            {% elseif app.session.locale == 'zh' %}
+                <div id="photoArray">
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/00-covershot.jpg') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/01.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/02.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/03.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/04.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/05.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/06.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/07.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/08.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/09.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/10.JPG') }}" alt="Alienware" />
+                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/11.JPG') }}" alt="Alienware" />
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $('#photoArray').cycle({
+                            fx:     'fade',
+                            speed:   300,
+                            timeout: 3000,
+                            next:   '#photoArray',
+                            pause:   1
+                        });
+                    });
+                </script>
             {% else %}
                 <img src="{{ asset('images/gallery/gallery.'~app.session.locale~'.jpg') }}" width="290" />
             {% endif %}

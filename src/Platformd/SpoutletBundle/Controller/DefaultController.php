@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
@@ -28,7 +29,7 @@ class DefaultController extends Controller
     public function hotStoriesAction()
     {
         $news = $this->getNewsRepo()
-            ->findMostRecentForLocale($this->getLocale(), 10)
+            ->findMostRecentForLocale($this->getLocale(), 11)
         ;
 
         return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
@@ -41,20 +42,16 @@ class DefaultController extends Controller
      */
     public function featuredContentAction()
     {
-        $abstractEvents = $this->getDoctrine()
+
+        $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOrderedByCreated($this->getLocale())
+            ->getCurrentSweepstakes($this->getLocale(), 10)
         ;
 
-        // see #64 - we're no longer showing events here
-        // we could move this into the query above, but this changes so often, I'm hesitant
-        $finalEvents = array();
-        foreach ($abstractEvents as $event) {
-            // filter out proper Event objects
-            if (!$event instanceof Event) {
-                $finalEvents[] = $event;
-            }
+        $sweepstakes_list = array();
+        foreach($sweepstakes as $sweepstake) {
+            $sweepstakes_list[] = $sweepstake;
         }
 
         $giveaways = $this->getDoctrine()
@@ -79,16 +76,17 @@ class DefaultController extends Controller
 
         $competitions_list = array();
         foreach($competitions as $competition) {
-            // filter out proper Event objects
-            if (!$competition instanceof Event) {
-                $competitions_list[] = $competition;
-            }
+            $competitions_list[] = $competition;
         }
 
+        $combined_list = array_merge($competitions_list, $giveaways_list, $sweepstakes_list);
+
+
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'abstractEvents' => $finalEvents,
+            'all_events'       => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,
+            'sweepstakes'    => $sweepstakes_list,
         ));
     }
 
@@ -156,5 +154,33 @@ class DefaultController extends Controller
         }
 
         return $this->render('SpoutletBundle:Default:military.html.twig');
+    }
+
+    public function videoFeedAction(Request $request)
+    {
+        /*http://chinastaging.alienwarearena.com/video/ajax/apjxml
+        http://china.alienwarearena.com/video/ajax/apjxml
+        http://japanstaging.alienwarearena.com/video/ajax/apjxml
+        http://japan.alienwarearena.com/video/ajax/apjxml*/
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,'http://chinastaging.alienwarearena.com/video/ajax/apjxml');
+        curl_setopt($ch, CURLOPT_FAILONERROR,1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $xml = simplexml_load_string(trim($response));
+
+        /*var_dump($xml->latest);
+        die;*/
+
+        $host = $request->getHost();
+
+        return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
+            'videos' => $xml,
+            'host' => $host,
+        ));
     }
 }

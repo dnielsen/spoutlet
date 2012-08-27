@@ -8,11 +8,11 @@
     {# explicit height is to force the left and right sides of homepage to have the same height. Not a good long-term solution, but it's an unnatural thing to force... #}
     <div class="widget-content" style="height: 260px;">
 
-        {% if abstractEvents %}
+        {% if all_events %}
         <div id="featured-content-featured-all" class="featured-content-category active">
-            {% for abstractEvent in abstractEvents %}
+            {% for event in all_events %}
             <div class="widget-item">
-                <a class="widget-link" {{ abstractEvent | pd_link_target }} href="{{ abstractEvent | pd_link }}">{{ abstractEvent.name }}</a>
+                <a class="widget-link" {{ event | pd_link_target }} href="{{ event | pd_link }}">{{ event.name }}</a>
             </div>
             {% endfor %}
         </div>
