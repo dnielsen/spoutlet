@@ -85,6 +85,17 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:news.html.twig');
     }
 
+    public function wallpapersAction()
+    {
+        $wallpapers = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Wallpaper')
+            ->findTopXMostRecentNewestFirst(12)
+        ;
+
+        return $this->render('SpoutletBundle:Default:wallpaper.html.twig', array('wallpapers' => $wallpapers));
+    }
+
     public function bannerAction()
     {
         $banners = $this

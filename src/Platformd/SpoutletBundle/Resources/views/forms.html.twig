@@ -75,7 +75,12 @@
         {{ form_row(form.fileObject) }}
         {% if form.get('mediaObject') %}
             {{ form_rest(form) }}
-            <img src="{{ media_path(form.get('mediaObject')) }}" />
+
+            {% set objPath = media_path(form.get('mediaObject')) %}
+
+            {% if not ends_with(objPath, '.zip') %}
+                <img src="{{ objPath }}" />
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

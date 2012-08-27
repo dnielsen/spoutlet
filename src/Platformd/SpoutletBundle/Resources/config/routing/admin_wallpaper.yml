@@ -1,0 +1,26 @@
+admin_wallpaper:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:index" }
+
+admin_wallpaper_new:
+    pattern:  /new
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:new" }
+
+admin_wallpaper_create:
+    pattern:  /create
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:new" }
+    requirements: { _method: post }
+
+admin_wallpaper_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:edit" }
+
+admin_wallpaper_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:delete" }
+
+admin_wallpaper_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "SpoutletBundle:WallpaperAdmin:edit" }
+    requirements: { _method: post }
+

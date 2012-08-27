@@ -111,6 +111,12 @@ class StubApiController extends Controller
         // default to our fake admin user
         $username = $user ? $user->getUsername() : 'admin';
 
+        if ($user) {
+            $country = $user->getCountry() ?: 'US';
+        } else {
+            $country = 'US';
+        }
+
         if ($request->request->get('_method') != ApiManager::METHOD_AUTH_USER_DETAILS) {
             throw new \Exception('The _method is not set or incorrect!');
         }
@@ -121,7 +127,7 @@ class StubApiController extends Controller
                 'username'      => $username,
                 'handle'        => $username,
                 'avatar_url'    => 'http://alienwarearena.com/images/profile-default.png',
-                'country'       => 'japan',
+                'country'       => $country,
                 'profile_url'   => 'http://profile.com',
                 'dob'           => '1984-06-05',
                 // this field is not in their API yet, but we need it to be

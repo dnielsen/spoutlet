@@ -37,6 +37,10 @@ military:
     pattern: /groups/military
     defaults: { _controller: SpoutletBundle:Default:military }
 
+wallpapers:
+    pattern: /wallpapers
+    defaults: { _controller: SpoutletBundle:Default:wallpapers }
+
 SpoutletBundle_age:
     resource: "@SpoutletBundle/Resources/config/routing/age.yml"
     prefix:   /age
@@ -68,3 +72,7 @@ SpoutletBundle_group:
 SpoutletBundle_admin_group:
     resource: "@SpoutletBundle/Resources/config/routing/admin_group.yml"
     prefix:   /admin/groups
+
+SpoutletBundle_admin_wallpapers:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_wallpaper.yml"
+    prefix:   /admin/wallpapers

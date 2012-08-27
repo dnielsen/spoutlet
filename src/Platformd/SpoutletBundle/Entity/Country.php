@@ -40,15 +40,6 @@ class Country
      */
     private $name;
 
-    /**
-     * Many to one with Region
-     *
-     * @var Region
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Region", inversedBy="countries")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
-     */
-    protected $region;
-
      /**
      * Get id
      *
@@ -97,23 +88,5 @@ class Country
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Get Region
-     * @return \Platformd\SpoutletBundle\Entity\Region
-     */
-    public function getRegion()
-    {
-        return $this->region;
-    }
-
-    /**
-     * Set Region
-     * @param \Platformd\SpoutletBundle\Entity\Region $region
-     */
-    public function setRegion(\Platformd\SpoutletBundle\Entity\Region $region)
-    {
-        $this->region = $region;
     }
 }
