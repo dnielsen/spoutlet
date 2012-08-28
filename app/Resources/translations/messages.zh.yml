@@ -78,6 +78,8 @@ platformd:
             hot_stories: Hot Stories
             videos: 视频
             view_more: 观看更多
+            views: 观看人数
+            rating: Rating
 
         bottom_menu:
             contact_us: 联系我们

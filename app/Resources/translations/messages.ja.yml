@@ -78,6 +78,8 @@ platformd:
             hot_stories: Hot Stories
             videos: ビデオ
             view_more: もっと見る
+            views: ビュー
+            rating: レートする
 
         bottom_menu:
             contact_us: "お問い合わせ"

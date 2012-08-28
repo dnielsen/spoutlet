@@ -16,8 +16,8 @@
                         </a>
                     </div>
                     <p class="movie-title"><a class="ellipse tooltip" title="{{ video.name }}" href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
-                    <p class="movie-views">Views: {{ video.views }}</p>
-                    <p class="movie-rating">Rating: {{ video.rating }}</p>
+                    <p class="movie-views">{{ 'platformd.layout.page_content.views' | trans }}: {{ video.views }}</p>
+                    <p class="movie-rating">{{ 'platformd.layout.page_content.rating' | trans }}: {{ video.rating }}</p>
                 </div>
             {% endfor %}
         {% endif %}

@@ -8,11 +8,11 @@
             <div class="clear"></div>
         </div>
         {# height is a hack for positioning  - see featuredContent.html.twig #}
-        <div class="widget-content normalized" style="height: 256px;">
+        <div class="widget-content normalized" style="height: 300px;">
             {% if news %}
                 {% for news_item in news %}
                     <div class="widget-item">
-                        <a class="widget-link" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
+                        <a class="widget-link news-ellipse" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
                     </div>
                 {% endfor %}
             {% endif %}

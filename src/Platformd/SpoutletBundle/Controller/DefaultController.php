@@ -29,7 +29,7 @@ class DefaultController extends Controller
     public function hotStoriesAction()
     {
         $news = $this->getNewsRepo()
-            ->findMostRecentForLocale($this->getLocale(), 11)
+            ->findMostRecentForLocale($this->getLocale(), 13)
         ;
 
         return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
