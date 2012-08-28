@@ -27,4 +27,15 @@
 {% endblock %}
 
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+           $('.ellipse').truncate({
+                width: '160'
+           });
+           $('.ellipse').qtip();
+        });
+    </script>
+{% endblock %}
 

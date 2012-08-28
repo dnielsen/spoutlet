@@ -5,11 +5,17 @@
     <div class="widget-content">
         {% if videos %}
             {% for video in videos %}
-                <div class="movie">
+                <div class="movie" {% if loop.index > 4 %} style="margin-top: 5px" {% endif %}>
                     <div class="movie-thumb">
-                        <a href="http://{{ host }}/video/movie/{{ video.id }}/"><img border="0" src="{{ video.thumb }}"></a>
+                        <a href="http://{{ host }}/video/movie/{{ video.id }}/">
+                            {% if app.session.locale == 'ja' %}
+                                <img border="0" src="http://japanstaging.alienwarearena.com{{ video.thumb }}"
+                            {% else %}
+                                <img border="0" src="{{ video.thumb }}">
+                            {% endif %}
+                        </a>
                     </div>
-                    <p class="movie-title"><a href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
+                    <p class="movie-title"><a class="ellipse tooltip" title="{{ video.name }}" href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
                     <p class="movie-views">Views: {{ video.views }}</p>
                     <p class="movie-rating">Rating: {{ video.rating }}</p>
                 </div>
@@ -21,3 +27,4 @@
         <div class="clear"></div>
     </div>
 </div>
+
