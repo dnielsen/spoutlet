@@ -3,16 +3,15 @@
         <div class="widget-title">Videos</div>
     </div>
     <div class="widget-content">
-        {{ videos | length }}
         {% if videos %}
-            {% for video in videos.latest %}
+            {% for video in videos %}
                 <div class="movie">
                     <div class="movie-thumb">
-                        <a href="http://{{ host }}/video/movie/{{ video.movie.id }}/"><img border="0" src="{{ video.movie.thumb }}"></a>
+                        <a href="http://{{ host }}/video/movie/{{ video.id }}/"><img border="0" src="{{ video.thumb }}"></a>
                     </div>
-                    <p class="movie-title"><a href="http://{{ host }}/video/movie/{{ video.movie.id }}/">{{ video.movie.name }}</a></p>
-                    <p class="movie-views">Views: {{ video.movie.views }}</p>
-                    <p class="movie-rating">Rating: {{ video.movie.rating }}</p>
+                    <p class="movie-title"><a href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
+                    <p class="movie-views">Views: {{ video.views }}</p>
+                    <p class="movie-rating">Rating: {{ video.rating }}</p>
                 </div>
             {% endfor %}
         {% endif %}

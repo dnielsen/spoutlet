@@ -173,13 +173,15 @@ class DefaultController extends Controller
 
         $xml = simplexml_load_string(trim($response));
 
-        /*var_dump($xml->latest);
-        die;*/
+        $videos = array();
+        foreach ($xml->latest->movie as $video) {
+            $videos[] = $video;
+        }
 
         $host = $request->getHost();
 
         return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
-            'videos' => $xml,
+            'videos' => $videos,
             'host' => $host,
         ));
     }
