@@ -19,7 +19,9 @@
     </div>
     <div class="left">
         {% render 'SpoutletBundle:Default:featuredContent' %}
-        {% render 'SpoutletBundle:Default:videoFeed' %}
+        {% if app.session.locale == 'zh' or app.session.locale == 'ja' %}
+            {% render 'SpoutletBundle:Default:videoFeed' %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}
