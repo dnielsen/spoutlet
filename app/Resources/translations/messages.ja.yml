@@ -76,6 +76,8 @@ platformd:
             view_all: すべて見る
             competitions: トーナメント・イベント
             hot_stories: Hot Stories
+            videos: ビデオ
+            view_more: もっと見る
 
         bottom_menu:
             contact_us: "お問い合わせ"

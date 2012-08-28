@@ -81,6 +81,8 @@ platformd:
             view_all: View All
             competitions: Competitions
             hot_stories: Hot Stories
+            videos: Videos
+            view_more: View More
 
         bottom_menu:
             contact_us: Contact Us

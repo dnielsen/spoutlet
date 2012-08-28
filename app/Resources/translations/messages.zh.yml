@@ -76,6 +76,8 @@ platformd:
             view_all: 查看所有
             competitions: 近期赛事
             hot_stories: Hot Stories
+            videos: 视频
+            view_more: 观看更多
 
         bottom_menu:
             contact_us: 联系我们
