@@ -158,12 +158,8 @@ class DefaultController extends Controller
 
     public function videoFeedAction(Request $request)
     {
-        /*http://chinastaging.alienwarearena.com/video/ajax/apjxml
-        http://china.alienwarearena.com/video/ajax/apjxml
-        http://japanstaging.alienwarearena.com/video/ajax/apjxml
-        http://japan.alienwarearena.com/video/ajax/apjxml*/
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,'http://chinastaging.alienwarearena.com/video/ajax/apjxml');
+        curl_setopt($ch, CURLOPT_URL,$this->getVideoFeedUrl($this->getLocale()));
         curl_setopt($ch, CURLOPT_FAILONERROR,1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
@@ -184,5 +180,22 @@ class DefaultController extends Controller
             'videos' => $videos,
             'host' => $host,
         ));
+    }
+
+    private function getVideoFeedUrl($locale)
+    {
+        /*http://chinastaging.alienwarearena.com/video/ajax/apjxml
+        http://china.alienwarearena.com/video/ajax/apjxml
+        http://japanstaging.alienwarearena.com/video/ajax/apjxml
+        http://japan.alienwarearena.com/video/ajax/apjxml*/
+        switch($locale)
+        {
+            case 'zh':
+                return 'http://china.alienwarearena.com/video/ajax/apjxml';
+            case 'ja':
+                return 'http://japan.alienwarearena.com/video/ajax/apjxml';
+            default:
+                return 'http://video.alienwarearena.com/ajax/moviexml';
+        }
     }
 }
