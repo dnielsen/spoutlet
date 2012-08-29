@@ -79,7 +79,7 @@ platformd:
             videos: 视频
             view_more: 观看更多
             views: 观看人数
-            rating: Rating
+            rating: 评估中
 
         bottom_menu:
             contact_us: 联系我们
