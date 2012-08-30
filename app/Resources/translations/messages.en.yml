@@ -85,6 +85,7 @@ platformd:
             view_more: View More
             views: Views
             rating: Rating
+            all_news: All
 
         bottom_menu:
             contact_us: Contact Us

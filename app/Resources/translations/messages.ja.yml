@@ -80,6 +80,7 @@ platformd:
             view_more: もっと見る
             views: ビュー
             rating: レートする
+            all_news: すべてのニュース
 
         bottom_menu:
             contact_us: "お問い合わせ"

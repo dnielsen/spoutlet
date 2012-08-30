@@ -80,6 +80,7 @@ platformd:
             view_more: 观看更多
             views: 观看人数
             rating: 评估中
+            all_news: 全部
 
         bottom_menu:
             contact_us: 联系我们

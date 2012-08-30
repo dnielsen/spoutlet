@@ -81,9 +81,16 @@ class DefaultController extends Controller
 
         $combined_list = array_merge($competitions_list, $giveaways_list, $sweepstakes_list);
 
+        usort(
+           $combined_list,
+           create_function(
+              '$a, $b',
+              'return ($a->getStartsAt() > $b->getStartsAt());'
+           )
+        );
 
     	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'all_events'       => $combined_list,
+            'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,
             'sweepstakes'    => $sweepstakes_list,
