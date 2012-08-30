@@ -46,7 +46,7 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getLocale(), 10)
+            ->getCurrentSweepstakes($this->getLocale(), 50)
         ;
 
         $sweepstakes_list = array();
@@ -57,7 +57,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllForLocaleWithLimit($this->getLocale(), 10)
+            ->findAllForLocaleWithLimit($this->getLocale(), 50)
         ;
 
         $giveaways_list = array();
@@ -71,7 +71,7 @@ class DefaultController extends Controller
         $competitions = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($this->getLocale(), 10)
+            ->getCurrentEventsOnly($this->getLocale(), 50)
         ;
 
         $competitions_list = array();
@@ -85,7 +85,7 @@ class DefaultController extends Controller
            $combined_list,
            create_function(
               '$a, $b',
-              'return ($a->getStartsAt() > $b->getStartsAt());'
+              'return ($a->getStartsAt() < $b->getStartsAt());'
            )
         );
 
