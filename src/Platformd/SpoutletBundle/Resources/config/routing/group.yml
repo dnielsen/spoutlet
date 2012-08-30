@@ -39,6 +39,26 @@ group_edit_news:
     pattern:  /{id}/edit-news/{newsId}
     defaults: { _controller: "SpoutletBundle:Group:editNews", site: ~ }
 
+group_images:
+    pattern: /{id}/images/
+    defaults: { _controller: "SpoutletBundle:Group:image", site: ~ }
+
+group_view_image:
+    pattern:  /{id}/view-image/{imageId}
+    defaults: { _controller: "SpoutletBundle:Group:viewImage", site: ~ }
+
+group_add_image:
+    pattern:  /{id}/add-image/
+    defaults: { _controller: "SpoutletBundle:Group:addImage", site: ~ }
+
+group_delete_image:
+    pattern:  /{id}/delete-image/{imageId}
+    defaults: { _controller: "SpoutletBundle:Group:deleteImage", site: ~ }
+
+group_edit_image:
+    pattern:  /{id}/edit-image/{imageId}
+    defaults: { _controller: "SpoutletBundle:Group:editImage", site: ~ }
+
 group_videos:
     pattern: /{id}/videos
     defaults: { _controller: "SpoutletBundle:Group:videos", site: ~ }

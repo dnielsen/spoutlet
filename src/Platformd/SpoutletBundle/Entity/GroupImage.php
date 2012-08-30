@@ -7,19 +7,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 
 /**
- * Platformd\SpoutletBundle\Entity\GroupVideo
+ * Platformd\SpoutletBundle\Entity\GroupImage
  *
- * @ORM\Table(name="pd_group_video")
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupVideoRepository")
+ * @ORM\Table(name="pd_group_image")
+ * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupImageRepository")
  */
-class GroupVideo implements LinkableInterface, ReportableContentInterface
+class GroupImage implements LinkableInterface, ReportableContentInterface
 {
-    const COMMENT_PREFIX = 'group_video-';
+
+    const COMMENT_PREFIX = 'group_image-';
 
     /**
      * @var integer $id
@@ -47,22 +47,14 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
     private $title;
 
     /**
-     * @var string $article
-     *
-     * @ORM\Column(name="you_tube_video_id", type="string")
-     * @Assert\NotNull
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $youTubeVideoId;
+    private $image;
 
     /**
-     * @var string $youTubeThumb
-     *
-     * @ORM\Column(name="you_tube_thumb", type="string")
-     */
-    private $youTubeThumb;
-
-    /**
-     * The person who uploaded this group video
+     * The person who created this group image article
      *
      * @var \Platformd\UserBundle\Entity\User
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
@@ -92,7 +84,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
 
     private $deleted = false;
 
-     /**
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -135,44 +127,14 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
         return $this->title;
     }
 
-    /**
-     * Set youTubeVideoId
-     *
-     * @param string $youTubeVideoId
-     */
-    public function setYouTubeVideoId($youTubeVideoId)
+    public function setImage($image)
     {
-        $this->youTubeVideoId = $youTubeVideoId;
+        $this->image = $image;
     }
 
-    /**
-     * Get youTubeVideoId
-     *
-     * @return string
-     */
-    public function getYouTubeVideoId()
+    public function getImage()
     {
-        return $this->youTubeVideoId;
-    }
-
-    /**
-     * Set youTubeThumb
-     *
-     * @param string $youTubeThumb
-     */
-    public function setYouTubeThumb($youTubeThumb)
-    {
-        $this->youTubeThumb = $youTubeThumb;
-    }
-
-    /**
-     * Get youTubeThumb
-     *
-     * @return string
-     */
-    public function getYouTubeThumb()
-    {
-        return $this->youTubeThumb;
+        return $this->image;
     }
 
     /**
@@ -270,7 +232,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
      */
     public function  getLinkableRouteName()
     {
-        return 'group_view_video';
+        return 'group_view_image';
     }
 
     /**
@@ -282,12 +244,12 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
     {
         return array(
             'id' => $this->getGroup()->getId(),
-            'videoId' => $this->getId()
+            'imageId' => $this->getId()
         );
     }
 
      /**
-     * Used to return the commenting thread id that should be used for this group video
+     * Used to return the commenting thread id that should be used for this group new article
      */
     public function getThreadId()
     {

@@ -121,7 +121,7 @@
                     {% include 'SpoutletBundle:Group:_events.html.twig' %}
                 </div>
                 <div id="content-group-photos" class="featured-content-category">
-                    {% include 'SpoutletBundle:Group:_photos.html.twig' %}
+
                 </div>
                 <div id="content-group-videos" class="featured-content-category">
 
@@ -207,6 +207,16 @@
                         case 'group-news':
                             $.ajax({
                                 url: '{{ path('group_news', { 'id' : group.id }) }}',
+                                method: 'get',
+                                success: function(data, textStatus, jqXHR) {
+                                    content.html(data);
+                                    content.mCustomScrollbar();
+                                }
+                            });
+                            break;
+                        case 'group-photos':
+                            $.ajax({
+                                url: '{{ path('group_images', { 'id' : group.id }) }}',
                                 method: 'get',
                                 success: function(data, textStatus, jqXHR) {
                                     content.html(data);

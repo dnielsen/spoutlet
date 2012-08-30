@@ -5,9 +5,11 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
+use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use Platformd\MediaBundle\Form\Type\MediaType;
 
 /**
  * Group controller.
@@ -276,6 +278,183 @@ class GroupController extends Controller
         $gm->saveGroupNews($newsArticle);
 
         $this->setFlash('success', 'News article was deleted successfully!');
+
+        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
+
+    public function imageAction($id, Request $request)
+    {
+        $group              = $this->getGroup($id);
+        $mgr                = $this->getGroupManager();
+
+        $mgr->ensureGroupIsVisible($group);
+
+        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+
+        return $this->render('SpoutletBundle:Group:images.html.twig', array(
+            'group' => $group,
+            'groupImage' => $groupImage,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+        ));
+    }
+
+    /**
+     * View group image.
+     *
+     */
+    public function viewImageAction($id, $imageId, Request $request)
+    {
+        $gm     = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr    = $this->getGroupImageRepository();
+        $image = $gr->find($imageId);
+
+        if (!$image) {
+            $this->setFlash('error', 'Image does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        return $this->renderShow($group, array(
+            'image' => $image,
+        ));
+    }
+
+    /**
+     * Add group image.
+     *
+     */
+    public function addImageAction($id, Request $request)
+    {
+        $gm     = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $groupImage = new GroupImage();
+
+        $form = $this->createFormBuilder($groupImage)
+            ->add('title', 'text')
+            ->add('image', new MediaType(), array('image_label' => 'Image'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupImage->setGroup($group);
+
+                $gm->saveGroupImage($groupImage);
+
+                $this->setFlash('success', 'Image posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:addImage.html.twig', array(
+            'group' => $group,
+            'imageForm' => $form->createView(),
+            'imageFormAction' => $this->generateUrl('group_add_image', array('id' => $id))
+        ));
+    }
+
+    /**
+     * Edit group image.
+     *
+     */
+    public function editImageAction($id, $imageId, Request $request)
+    {
+        $gm     = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupImageRepository();
+        $image = $gr->find($imageId);
+
+        if (!$image) {
+            $this->setFlash('error', 'Image does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $form = $this->createFormBuilder($groupImage)
+            ->add('title', 'text')
+            ->add('image', new MediaType(), array('image_label' => 'Image'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $image->setGroup($group);
+
+                $gm->saveGroupImage($image);
+
+                $this->setFlash('success', 'Image updated successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->renderShow($group, array(
+            'imageForm' => $form->createView(),
+            'imageFormAction' => $this->generateUrl('group_edit_image', array('id' => $id, 'imageId' => $imageId)))
+        );
+    }
+
+    /**
+     * Edit group image.
+     *
+     */
+    public function deleteImageAction($id, $imageId, Request $request)
+    {
+        $gm    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        $gm->ensureGroupIsVisible($group);
+
+        if (!$gm->isCurrentUserAllowedToEditGroup($group)) {
+            throw new AccessDeniedException();
+        }
+
+        $gr = $this->getGroupImageRepository();
+        $image = $gr->find($imageId);
+
+        if (!$image) {
+            $this->setFlash('error', 'Image does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        }
+
+        $image->setDeleted(true);
+
+        $gm->saveGroupImage($image);
+
+        $this->setFlash('success', 'Image was deleted successfully!');
 
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
@@ -675,6 +854,11 @@ class GroupController extends Controller
 
     private function getEntityManager() {
         return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGroupImageRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupImage');
     }
 
     private function getGroupNewsRepository()
