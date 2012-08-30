@@ -90,6 +90,19 @@ class GroupVideo implements LinkableInterface
     private $deleted = false;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $contentReports;
+
+    public function __construct()
+    {
+        $this->contentReports = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -225,6 +238,16 @@ class GroupVideo implements LinkableInterface
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
     }
 
     /**

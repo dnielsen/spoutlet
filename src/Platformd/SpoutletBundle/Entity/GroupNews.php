@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\GroupNews
@@ -14,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pd_group_news")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupNewsRepository")
  */
-class GroupNews implements LinkableInterface
+class GroupNews implements LinkableInterface, ReportableContentInterface
 {
 
     const COMMENT_PREFIX = 'group_news-';
@@ -82,6 +84,19 @@ class GroupNews implements LinkableInterface
      */
 
     private $deleted = false;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $contentReports;
+
+    public function __construct()
+    {
+        $this->contentReports = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -199,6 +214,16 @@ class GroupNews implements LinkableInterface
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
     }
 
     /**
