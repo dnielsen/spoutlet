@@ -25,6 +25,7 @@
         <p>No videos yet... please come back later!</p>
     {% endif %}
 </div>
+{% set hasVideos = groupVideos|length > 0 %}
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
 <script type="text/javascript">
     var GamePage = {

@@ -24,7 +24,7 @@ class GroupType extends AbstractType
             ))
             ->add('groupAvatar', new MediaType(), array(
                 'image_label'   => 'Group Avatar',
-                'image_help'    => 'Recommended size: 150x150',
+                'image_help'    => 'Recommended size: 636x120',
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',

@@ -22,3 +22,7 @@
     Back to the list
 </a>
 {% endblock %}
+{% block stylesheets %}
+ {{ parent() }}
+ <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
