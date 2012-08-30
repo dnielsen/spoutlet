@@ -10,7 +10,9 @@
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.name) }}
-                {{ form_row(form.category) }}
+                <div class="styled-select">
+                    {{ form_row(form.category) }}
+                </div>
                 {{ form_row(form.groupAvatar) }}
                 {{ form_row(form.backgroundImage) }}
                 {{ form_row(form.description) }}

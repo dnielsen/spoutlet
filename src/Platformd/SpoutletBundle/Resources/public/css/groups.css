@@ -125,3 +125,54 @@
 #group-like-wrapper {
     float: right;
 }
+
+#videos-wrapper {
+    margin: 20px auto;
+    height: 150px;
+}
+
+#videos-wrapper li {
+    list-style: none;
+    float: left;
+    width: 138px;
+    height: 83px;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.youtube-link img:hover {
+    box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -moz-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -webkit-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+
+}
+
+.active-video {
+    box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -moz-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+    -webkit-box-shadow: 0px 0px 21px rgba(0, 156, 218, 0.65);
+}
+
+.group-news-date {
+    margin: 0 0 10px 0;
+}
+
+#content-group-news {
+    height: 600px;
+}
+
+#content-group-events {
+    height: 600px;
+}
+
+#content-group-photos {
+    height: 600px;
+}
+
+#content-group-videos {
+    height: 600px;
+}
+
+#content-group-about {
+    height: 600px;
+}

@@ -1,0 +1,65 @@
+<div>
+    {% if userIsAdminOrOwner %}
+        <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
+    {% endif %}
+
+    {% if groupVideos is defined %}
+        <div id="theater_screen" style="width:600px; height:350px;"></div>
+        <ul id="videos-wrapper" class="jcarousel-skin-tango">
+        {% for video in groupVideos %}
+
+                <li>
+                    <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" style="border: none;" class="youtube-link">
+                        <img src="{{ video.youTubeThumb }}" alt="{{ video.title }}" style="border: 1px solid #4a4a4a"  {% if loop.first %} class="active-video" {% endif %} />
+                    </a>
+                    <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" class="youtube-link">{{ video.title }}</a>
+                </li>
+
+        {% else %}
+        </ul>
+            <p>No videos yet... please come back later!</p>
+        {% endfor %}
+    {% else %}
+        <p>No videos yet... please come back later!</p>
+    {% endif %}
+</div>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+<script type="text/javascript">
+    var GamePage = {
+
+    };
+
+    GamePage.initializeMovie = function(youtubeVideoId) {
+        var par = {};
+        par.flashvars = "startMovie="+youtubeVideoId;
+        par.flashvars += "&startCue=none";
+        par.flashvars += "&startParameterMovie=";
+        par.flashvars += "&videoTitle=";
+        par.flashvars += "&displayWelcome=no";
+        par.flashvars += "&displayAlert=no";
+        par.flashvars += "&alertText=";
+        par.flashvars += "&muteOnStart=yes";
+        par.allowScriptAccess = "always";
+        par.wmode = "transparent";
+        var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"600", height:"350", id:"theater_screen", name:"theater_screen"};
+        var id = "theater_screen";
+
+        // temporarily disable, because the autostart is annoying
+        var myytplayer = swfobject.createSWF(att, par, id);
+    };
+
+    GamePage.initializeMediaGallery = function() {
+
+    };
+
+    jQuery(document).ready(function() {
+        GamePage.initializeMovie('{{ groupVideos[0].youTubeVideoId }}');
+        $('.youtube-link').click(function () {
+           var youtubeId = $(this).attr('youtube-data');
+           $('.youtube-link').find('img').removeClass('active-video');
+           $(this).find('img').addClass('active-video');
+           GamePage.initializeMovie(youtubeId);
+        });
+
+    });
+</script>

@@ -1,0 +1,28 @@
+{% if userIsAdminOrOwner %}
+    <a href='{{ path('group_add_news', {'id' : group.id }) }}'>Add News</a>
+{% endif %}
+
+{% if groupNews is defined %}
+
+    {% for article in groupNews %}
+
+        <div class="group-news-item" style="margin: 20px;">
+            <div class="group-news-actions">
+                {% if userIsAdminOrOwner %}
+                    <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
+                    <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a>
+                {% endif %}
+            </div>
+            <h2>{{ article.title }}</h2>
+            <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
+            <div class="group-news-article">
+                {{ article.article | raw }}
+            </div>
+        </div>
+    {% else %}
+        <p>No news articles yet... please come back later!</p>
+    {% endfor %}
+{% else %}
+    <p>No news articles yet... please come back later!</p>
+{% endif %}
+

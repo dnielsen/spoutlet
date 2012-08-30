@@ -52,6 +52,13 @@ class GroupVideo implements LinkableInterface
     private $youTubeVideoId;
 
     /**
+     * @var string $youTubeThumb
+     *
+     * @ORM\Column(name="you_tube_thumb", type="string")
+     */
+    private $youTubeThumb;
+
+    /**
      * The person who uploaded this group video
      *
      * @var \Platformd\UserBundle\Entity\User
@@ -130,6 +137,26 @@ class GroupVideo implements LinkableInterface
     public function getYouTubeVideoId()
     {
         return $this->youTubeVideoId;
+    }
+
+    /**
+     * Set youTubeThumb
+     *
+     * @param string $youTubeThumb
+     */
+    public function setYouTubeThumb($youTubeThumb)
+    {
+        $this->youTubeThumb = $youTubeThumb;
+    }
+
+    /**
+     * Get youTubeThumb
+     *
+     * @return string
+     */
+    public function getYouTubeThumb()
+    {
+        return $this->youTubeThumb;
     }
 
     /**

@@ -1,19 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
-
 {% block title 'Groups - ' ~ group.name %}
 
 {% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
-{% block open_graph %}
-    <meta property="fb:app_id" content="{{ facebook_app_id }}">
-    <meta property="og:title" content="{{ 'groups.opengraph.title' | trans }}" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ app.request.getUri }}" />
-    <meta property="og:site_name" content="Alienware Arena" />
-    <meta property="og:image" content="{{ openGraphThumb }}" />
-    <meta property="og:description" content="{{ 'groups.opengraph.description' | trans }}" />
-{% endblock %}
-
-{# either set the custom background image, or leave it to false #}
 {% if group.backgroundImage %}
     {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
 {% else %}
@@ -104,54 +92,40 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
     <div class="left">
-        <div class="widget-66" id="featured-content" style="min-height: 600px;">
-            <div class="featured-content-header">
-                <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                <a href="javascript:void(0);" id="group-events">Events</a>
-                <a href="javascript:void(0);" id="group-photos">Photo Gallery</a>
-                <a href="javascript:void(0);" id="group-videos">Videos</a>
-                <a href="javascript:void(0);" id="group-about">About</a>
-                <div style="clear: left;"></div>
-            </div>
-            <div class="widget-content">
-                <div id="content-group-news" class="featured-content-category active">
+        <form action="{{ newsFormAction }}" method="post" {{ form_enctype(newsForm) }} class="form-horizontal">
 
-                </div>
-                <div id="content-group-events" class="featured-content-category">
-                    {% include 'SpoutletBundle:Group:_events.html.twig' %}
-                </div>
-                <div id="content-group-photos" class="featured-content-category">
-                    {% include 'SpoutletBundle:Group:_photos.html.twig' %}
-                </div>
-                <div id="content-group-videos" class="featured-content-category">
+            {% form_theme newsForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+            {% form_theme newsForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-                </div>
-                <div id="content-group-about" class="featured-content-category">
-                    {% include 'SpoutletBundle:Group:_about.html.twig' %}
+            {{ form_errors(newsForm) }}
+
+            <div class="row-fluid">
+                <div class="row-fluid first">
+                    <div class="pd_form">
+                        {{ form_row(newsForm.title) }}
+                        {{ form_row(newsForm.article) }}
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="group-comments">
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.threadId } %}
-        </div>
+
+            <div class="form-actions">
+                <button type="submit" formnovalidate>Post News</button>
+            </div>
+
+            {{ form_rest(newsForm) }}
+
+        </form>
     </div>
-
 </div>
 {% endblock %}
-
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/jquery.mCustomScrollbar.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
-
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
         <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
@@ -166,15 +140,6 @@
     <script type="text/javascript">
         $(function () {
 
-            $.ajax({
-                url: '{{ path('group_news', { 'id' : group.id }) }}',
-                method: 'get',
-                success: function(data, textStatus, jqXHR) {
-                    $('#content-group-news').html(data);
-                    $('#content-group-news').mCustomScrollbar();
-                }
-            });
-
             $('#group-invite').click(function () {
                 FB.ui({
                     method: 'send',
@@ -184,47 +149,7 @@
                     image: '{{ openGraphThumb }}'
                 });
             });
-
-            $(".featured-content-header a").click(function() {
-                var current = $('.featured-content-header a.active').attr('id');
-                var id = $(this).attr('id');
-                $('.featured-content-header a.active').removeClass('active');
-                $(this).addClass('active');
-                $('.featured-content-category#content-'+current).fadeOut('fast', function () {
-                    var content = $('.featured-content-category#content-'+id);
-
-                    switch(id) {
-                        case 'group-videos':
-                            $.ajax({
-                                url: '{{ path('group_videos', { 'id' : group.id }) }}',
-                                method: 'get',
-                                success: function(data, textStatus, jqXHR) {
-                                    content.html(data);
-                                    content.mCustomScrollbar();
-                                }
-                            });
-                            break;
-                        case 'group-news':
-                            $.ajax({
-                                url: '{{ path('group_news', { 'id' : group.id }) }}',
-                                method: 'get',
-                                success: function(data, textStatus, jqXHR) {
-                                    content.html(data);
-                                    content.mCustomScrollbar();
-                                }
-                            });
-                            break;
-                    }
-
-                    $(this).delay(500);
-                    content.fadeIn();
-                    content.resize();
-                    content.mCustomScrollbar('update');
-                });
-            });
-
-            $('.featured-content-category').mCustomScrollbar();
         });
     </script>
-
 {% endblock %}
+

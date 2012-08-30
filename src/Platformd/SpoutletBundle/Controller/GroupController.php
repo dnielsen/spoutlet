@@ -103,6 +103,21 @@ class GroupController extends Controller
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
 
+    public function newsAction($id, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $mgr = $this->getGroupManager();
+        $mgr->ensureGroupIsVisible($group);
+        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
+        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+
+        return $this->render('SpoutletBundle:Group:news.html.twig', array(
+            'group' => $group,
+            'groupNews' => $groupNews,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+        ));
+    }
+
     /**
      * View group news.
      *
@@ -174,10 +189,11 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->renderShow($group, array(
+        return $this->render('SpoutletBundle:Group:addNews.html.twig', array(
+            'group' => $group,
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id)))
-        );
+            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id))
+        ));
     }
 
     /**
@@ -291,6 +307,20 @@ class GroupController extends Controller
         return $this->render('SpoutletBundle:Group:show.html.twig', array_merge($parameters, $parameters));
     }
 
+    public function videosAction($id, Request $request)
+    {
+        $mgr = $this->getGroupManager();
+        $group = $this->getGroup($id);
+        $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+
+        return $this->render('SpoutletBundle:Group:videos.html.twig', array(
+            'group' => $group,
+            'groupVideos' => $groupVideos,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner
+        ));
+    }
+
     /**
      * View group news.
      *
@@ -339,8 +369,8 @@ class GroupController extends Controller
         $groupVideo = new GroupVideo();
 
         $form = $this->createFormBuilder($groupVideo)
-            ->add('title', 'text')
-            ->add('youTubeVideoId', 'text')
+            ->add('title', 'text', array('label' => 'Title'))
+            ->add('youTubeVideoId', 'text', array('label' => 'YouTube ID'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -349,6 +379,8 @@ class GroupController extends Controller
             if ($form->isValid()) {
 
                 $groupVideo->setGroup($group);
+
+                $groupVideo->setYouTubeThumb($this->getYoutubeThumb($groupVideo->getYouTubeVideoId()));
 
                 $gm->saveGroupVideo($groupVideo);
 
@@ -360,10 +392,38 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->renderShow($group, array(
+        return $this->render('SpoutletBundle:Group:addVideo.html.twig', array(
+            'group' => $group,
             'videoForm' => $form->createView(),
-            'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),)
-        );
+            'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),
+        ));
+    }
+
+    /**
+     * @return string
+     */
+    private function getYoutubeThumb($videoId) {
+
+        if (!$videoId) {
+            return false;
+        }
+
+        $url = 'http://gdata.youtube.com/feeds/api/videos/' . $videoId . '?alt=jsonc&v=2';
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
+
+        $result = json_decode(curl_exec($curl), true);
+
+        if(array_key_exists('error', $result)) {
+            return '';
+        }
+
+        return $result['data']['thumbnail']['sqDefault'];
     }
 
     /**

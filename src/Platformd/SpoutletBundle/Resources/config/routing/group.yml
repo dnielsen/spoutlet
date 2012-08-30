@@ -19,6 +19,10 @@ group_edit:
     pattern:  /{id}/edit/
     defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
 
+group_news:
+    pattern: /{id}/news/
+    defaults: { _controller: "SpoutletBundle:Group:news", site: ~ }
+
 group_view_news:
     pattern:  /{id}/view-news/{newsId}
     defaults: { _controller: "SpoutletBundle:Group:viewNews", site: ~ }
@@ -34,6 +38,10 @@ group_delete_news:
 group_edit_news:
     pattern:  /{id}/edit-news/{newsId}
     defaults: { _controller: "SpoutletBundle:Group:editNews", site: ~ }
+
+group_videos:
+    pattern: /{id}/videos
+    defaults: { _controller: "SpoutletBundle:Group:videos", site: ~ }
 
 group_view_video:
     pattern:  /{id}/view-video/{videoId}
