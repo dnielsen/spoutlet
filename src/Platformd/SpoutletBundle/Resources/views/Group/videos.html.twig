@@ -4,7 +4,9 @@
     {% endif %}
 
     {% if groupVideos is defined %}
-        <div id="theater_screen" style="width:600px; height:350px;"></div>
+        <div id="theater-screen-wrapper">
+            <div id="theater_screen" style="width:600px; height:350px;"></div>
+        </div>
         <ul id="videos-wrapper" class="jcarousel-skin-tango">
         {% for video in groupVideos %}
 

@@ -10,8 +10,9 @@
             <div class="group-news-actions">
                 {% if userIsAdminOrOwner %}
                     <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
-                    <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a>
+                    <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a> |
                 {% endif %}
+                <a href="javascript:void(0);" class="report-news" news-data="{{ article.id }}">report</a>
             </div>
             <h2>{{ article.title }}</h2>
             <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
@@ -25,4 +26,43 @@
 {% else %}
     <p>No news articles yet... please come back later!</p>
 {% endif %}
+<div id="report-news-dialog" style="display: none;">
+    <input type="hidden" id="article-id" />
+    <div id="report-options">
+        <input type="radio" name="inappropriate" value="content" class="report-option" /> Inappropriate Content <br />
+        <input type="radio" name="inappropriate" value="spam" class="report-option" /> Spam <br />
+        <input type="radio" name="inappropriate" value="violate" class="report-option" /> Violates intellectual property <br />
+        <input type="radio" name="inappropriate" value="harrasment" class="report-option" /> Individual is harrasing me
 
+    </div>
+    <button id="submit-report">Submit</button>
+    <button id="close-dialog" style="float: right;">Cancel</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var reportDialog = $('#report-news-dialog').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 200,
+            width: 350,
+            draggable: false,
+            resizable: false,
+            close: function (e, ui) {
+
+            }
+        });
+       $('.report-news').click(function () {
+            var articleId = $(this).attr('news-data');
+            $('#article-id').val(articleId);
+            reportDialog.dialog('open');
+       });
+
+       $('#submit-report').click(function () {
+            reportDialog.dialog('close');
+       });
+
+       $('#close-dialog').click(function () {
+            reportDialog.dialog('close');
+       })
+    });
+</script>

@@ -176,3 +176,16 @@
 #content-group-about {
     height: 600px;
 }
+
+#theater-screen-wrapper {
+    width:600px;
+    height:350px;
+}
+
+#report-options {
+    height: 120px;
+}
+
+.report-option {
+    margin: 5px 0 0 0;
+}
