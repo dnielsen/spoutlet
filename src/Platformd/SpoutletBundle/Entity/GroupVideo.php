@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\GroupVideo
@@ -14,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pd_group_video")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupVideoRepository")
  */
-class GroupVideo implements LinkableInterface
+class GroupVideo implements LinkableInterface, ReportableContentInterface
 {
     const COMMENT_PREFIX = 'group_video-';
 
@@ -89,7 +90,7 @@ class GroupVideo implements LinkableInterface
 
     private $deleted = false;
 
-    /**
+     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
