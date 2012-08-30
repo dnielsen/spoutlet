@@ -472,7 +472,10 @@ class GroupController extends Controller
 
         $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
 
+        $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+
         $parameters = array(
+            'commentTotal' => $commentTotal[0]['numComments'],
             'group' => $group,
             'groupNews' => $groupNews,
             'groupVideos' => $groupVideos,
@@ -830,6 +833,12 @@ class GroupController extends Controller
         }
 
         return false;
+    }
+
+    private function getTotalCommentCountForGroup($groupId) {
+        return $this->getEntityManager()
+            ->getRepository('CommentBundle:Thread')
+            ->getTotalCommentsByThreadId($groupId);
     }
 
     /**

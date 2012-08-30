@@ -71,7 +71,7 @@
                     <div>Members</div>
                 </div>
                 <div id="group-comment-count">
-                    300
+                    {{ commentTotal }}
                     <div>Comments</div>
                 </div>
                 <div id="group-blurb">
@@ -107,7 +107,6 @@
         <div class="widget-66" id="featured-content" style="min-height: 600px;">
             <div class="featured-content-header">
                 <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                <a href="javascript:void(0);" id="group-events">Events</a>
                 <a href="javascript:void(0);" id="group-photos">Photo Gallery</a>
                 <a href="javascript:void(0);" id="group-videos">Videos</a>
                 <a href="javascript:void(0);" id="group-about">About</a>
@@ -116,9 +115,6 @@
             <div class="widget-content">
                 <div id="content-group-news" class="featured-content-category active">
 
-                </div>
-                <div id="content-group-events" class="featured-content-category">
-                    {% include 'SpoutletBundle:Group:_events.html.twig' %}
                 </div>
                 <div id="content-group-photos" class="featured-content-category">
 

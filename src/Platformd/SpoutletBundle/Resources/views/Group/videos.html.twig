@@ -3,7 +3,7 @@
         <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
     {% endif %}
 
-    {% if groupVideos is defined %}
+    {% if groupVideos | length > 0 %}
         <div id="theater-screen-wrapper">
             <div id="theater_screen" style="width:600px; height:350px;"></div>
         </div>
@@ -16,16 +16,11 @@
                     </a>
                     <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" class="youtube-link">{{ video.title }}</a>
                 </li>
-
-        {% else %}
-        </ul>
-            <p>No videos yet... please come back later!</p>
         {% endfor %}
     {% else %}
         <p>No videos yet... please come back later!</p>
     {% endif %}
 </div>
-{% set hasVideos = groupVideos|length > 0 %}
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
 <script type="text/javascript">
     var GamePage = {
@@ -56,7 +51,7 @@
     };
 
     jQuery(document).ready(function() {
-        GamePage.initializeMovie('{{ groupVideos[0].youTubeVideoId }}');
+
         $('.youtube-link').click(function () {
            var youtubeId = $(this).attr('youtube-data');
            $('.youtube-link').find('img').removeClass('active-video');
@@ -64,5 +59,9 @@
            GamePage.initializeMovie(youtubeId);
         });
 
+        if($('.youtube-link').length > 0) {
+            GamePage.initializeMovie($('.youtube-link').first().attr('youtube-data'));
+        }
     });
+
 </script>
