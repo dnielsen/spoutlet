@@ -25,10 +25,12 @@ class GroupType extends AbstractType
             ->add('groupAvatar', new MediaType(), array(
                 'image_label'   => 'Group Avatar',
                 'image_help'    => 'Recommended size: 636x120',
+                'with_remove_checkbox' => true
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
                 'image_help'    => 'Recommended size: 2001x1496 with the center being 970 pixels wide and black.',
+                'with_remove_checkbox' => true
             ))
             ->add('description', null, array(
                 'label' => 'Information about Group',
