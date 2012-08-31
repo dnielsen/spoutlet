@@ -45,6 +45,7 @@ class ContentReportingController extends Controller
         $reason = $params['Reason'];
         $report = new ContentReport();
         $user   = $this->getCurrentUser();
+        $site   = $this->getCurrentSite();
 
         if (!in_array($reason, $report->getValidReasons())) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid reason not given.")));
@@ -79,12 +80,15 @@ class ContentReportingController extends Controller
 
         $report->setReason($reason);
         $report->setReporter($user);
+        $report->setSite($site);
 
-        $content->getContentReports()->add($report);
+        $setType = 'set'.ucfirst($type);
+
+        $report->$setType($content);
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $em->persist($content);
+        $em->persist($report);
         $em->flush();
 
         $response->setContent(json_encode(array("success" => true)));

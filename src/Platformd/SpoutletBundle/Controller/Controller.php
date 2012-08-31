@@ -20,7 +20,15 @@ class Controller extends BaseController
         $currentHost = $this->getRequest()->getHost();
         $subDomain = substr($currentHost, 0, stripos($currentHost, '.'));
 
+        return $this->getSiteFromSubDomain($subDomain);
+    }
+
+    protected function getSiteFromSubDomain($subDomain) {
         return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
+    protected function getSiteFromDefaultLocale($locale) {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 
     /**

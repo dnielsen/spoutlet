@@ -7,6 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Platformd\SpoutletBundle\Entity\ContentReport
@@ -59,10 +60,37 @@ class ContentReport
     protected $reportedAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $site;
+
+    /**
      * @ORM\Column(type="boolean")
      */
 
     private $deleted = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GroupImage")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupImage = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GroupNews")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupNews = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GroupVideo")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupVideo = null;
 
     /**
      * Get id
@@ -114,6 +142,46 @@ class ContentReport
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    public function getGroupImage()
+    {
+        return $this->groupImage;
+    }
+
+    public function setGroupImage($value)
+    {
+        $this->groupImage = $value;
+    }
+
+    public function getGroupNews()
+    {
+        return $this->groupNews;
+    }
+
+    public function setGroupNews($value)
+    {
+        $this->groupNews = $value;
+    }
+
+    public function getGroupVideo()
+    {
+        return $this->groupVideo;
+    }
+
+    public function setGroupVideo($value)
+    {
+        $this->groupVideo = $value;
+    }
+
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    public function setSite($value)
+    {
+        $this->site = $value;
     }
 
     public function getValidReasons()

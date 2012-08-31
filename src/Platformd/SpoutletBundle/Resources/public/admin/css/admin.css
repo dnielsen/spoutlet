@@ -107,4 +107,61 @@ fieldset .row-fluid.first div[class*="span"] {
     border-radius: 5px;
 }
 
+table#content-reports {
+    border: 1px solid #CCCCCC;
+    text-align: left;
+    min-width: 500px;
+}
+
+table#content-reports tr {
+    border: 1px solid #CCCCCC;
+}
+
+table#content-reports td {
+    border: 1px solid #CCCCCC;
+    padding: 6px;
+}
+
+table#content-reports td h1 {
+    font-size: 10pt;
+    margin: 0px;
+    padding: 0px;
+}
+
+table#content-reports td div {
+    margin: 3px;
+    margin-left: 10px;
+}
+
+table#content-reports td div#remove-content {
+    margin: 3px 3px 40px 10px;
+}
+
+table#content-reports td div#remove-content a {
+    font-weight: bold;
+    color: #FF0000;
+}
+
+table#content-reports td div#hide-complaint {
+
+}
+
+table#content-reports th {
+    border: 1px solid #CCCCCC;
+    font-weight: bold;
+    text-align: left;
+    padding: 5px;
+}
+
+table#content-reports th#content-report-type {
+    min-width: 100px;
+}
+
+table#content-reports th#content-report-content {
+    min-width: 500px;
+}
+
+table#content-reports th#content-report-action {
+    min-width: 200px;
+}
 

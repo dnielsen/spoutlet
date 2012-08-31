@@ -1,0 +1,16 @@
+admin_content_reports:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:index" }
+
+    # show the true "list" page for a site
+admin_content_reports_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", site: ~ }
+
+admin_content_reports_hide_complaint:
+    pattern:  /list/{site}/hideComplaint/{contentReportId}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:hideComplaint", site: ~ }
+
+admin_content_reports_remove_content:
+    pattern:  /list/{site}/removeContent/{contentReportId}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:removeContent", site: ~ }

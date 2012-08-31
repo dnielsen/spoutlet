@@ -134,6 +134,7 @@
                                     </li>
                                 </ul>
                             </li>
+
                             {% endif %}
 
                             {% if site_has_feature('WALLPAPERS') %}
@@ -185,6 +186,12 @@
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
                                     <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
+                                </li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_ORGANIZER') and site_has_feature('GROUPS') %}
+                                <li>
+                                    <a href="{{ path('admin_content_reports') }}">Content Report Admin</a>
                                 </li>
                             {% endif %}
                         </ul>

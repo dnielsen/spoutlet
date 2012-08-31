@@ -56,6 +56,10 @@ SpoutletBundle_game_page:
     resource: "@SpoutletBundle/Resources/config/routing/game_page.yml"
     prefix:   /games
 
+SpoutletBundle_admin_content_reports:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_content_reports.yml"
+    prefix:   /admin/contentReports
+
 SpoutletBundle_admin_game:
     resource: "@SpoutletBundle/Resources/config/routing/admin_game.yml"
     prefix:   /admin/game

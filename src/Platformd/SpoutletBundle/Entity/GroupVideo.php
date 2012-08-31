@@ -92,9 +92,14 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
 
     private $deleted = false;
 
-     /**
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $deletedReason = null;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupVideo")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
@@ -241,6 +246,16 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
     public function setDeleted($deleted)
     {
         $this->deleted = $deleted;
+    }
+
+    public function getDeletedReason()
+    {
+        return $this->deletedReason;
+    }
+
+    public function setDeletedReason($deletedReason)
+    {
+        $this->deletedReason = $deletedReason;
     }
 
     public function getContentReports()

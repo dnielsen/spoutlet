@@ -1,0 +1,74 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Content Report Admin' %}
+
+{% block content %}
+<h1>Content Reports</h1>
+
+<table id="content-reports">
+
+    <tr><th id="content-report-type">Type</th><th id="content-report-content">Content</th><th id="content-report-action">Action</th></tr>
+
+    {% for report in reports %}
+
+        <tr>
+
+            {% if report.groupImage is not null %}
+
+                <td>Group Image</td>
+                <td>
+                    <h1>Title</h1>
+                    <div>{{ report.groupImage.title }}</div>
+                    <h1>Image</h1>
+                    <div><img src="{{ media_path(report.groupImage.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ report.groupImage.title }}" /></div>
+                </td>
+                <td>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                </td>
+
+            {% elseif report.groupNews is not null %}
+
+                <td>Group News</td>
+                <td>
+                    <h1>Title</h1>
+                    <div>{{ report.groupNews.title }}</div>
+                    <h1>Article</h1>
+                    <div>{{ report.groupNews.article }}</div>
+                </td>
+                <td>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                </td>
+
+            {% elseif report.groupVideo is not null %}
+
+                <td>Group Video</td>
+                <td>
+
+                <h1>Title</h1>
+                    <div>{{ report.groupVideo.title }}</div>
+                    <h1>Video (external YouTube link)</h1>
+                    <div><a href="http://www.youtube.com/watch?v={{ report.groupVideo.youTubeVideoId }}" target='_blank'>Watch Video</a></div>
+
+                </td>
+                <td>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                </td>
+
+            {% else %}
+                UNKNOWN TYPE!
+            {% endif %}
+
+        </tr>
+
+    {% else %}
+        <tr>
+            <td colspan="3">There are no Reports for this site.</td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
