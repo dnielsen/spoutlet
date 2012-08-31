@@ -29,10 +29,7 @@
 <div id="report-news-dialog" style="display: none;">
     <input type="hidden" id="article-id" />
     <div id="report-options">
-        <input type="radio" name="inappropriate" value="content" class="report-option" /> Inappropriate Content <br />
-        <input type="radio" name="inappropriate" value="spam" class="report-option" /> Spam <br />
-        <input type="radio" name="inappropriate" value="violate" class="report-option" /> Violates intellectual property <br />
-        <input type="radio" name="inappropriate" value="harrasment" class="report-option" /> Individual is harrasing me
+        {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
     </div>
     <button id="submit-report">Submit</button>
@@ -58,6 +55,15 @@
        });
 
        $('#submit-report').click(function () {
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({ 'ContentId' : $('#article-id').val(), 'Reason' : $('input:radio[name=reason]:checked').val(), 'ContentType' : 'GroupNews' }),
+                contentType: 'json',
+                success: function(data) {
+                    alert(data.success + '' + data.messageForUser);
+                }
+            })
             reportDialog.dialog('close');
        });
 
