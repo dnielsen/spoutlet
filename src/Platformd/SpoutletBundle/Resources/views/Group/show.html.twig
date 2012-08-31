@@ -27,14 +27,16 @@
     <div class="left">
         <div id="group-avatar">
             {% if group.groupAvatar %}
-                <img src="{{ media_path(group.groupAvatar) }}" />
+                <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
             {% endif %}
         </div>
     </div>
     <div class="right">
         <div class="join-group-options">
-            <form>
-                <button id="join-group-button" type="submit"></button>
+            <form action="{{ path('group_join', { 'id': group.id }) }}">
+                {% if not userIsMember %}
+                    <button id="join-group-button" type="submit" ></button>
+                {% endif %}
             </form>
             <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
         </div>
@@ -45,8 +47,14 @@
         <div class="groups-sub-nav">
             <ul>
                 <li><a href="{{ path('group_show', {'id' : group.id }) }}">Group Home</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="{{ path('group_new') }}">Create Group</a></li>
+                {% if userIsAdminOrOwner %}
+                    <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Edit this Group</a></li>
+                    <li><a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">Delete this Group</a></li>
+                {% endif %}
+                {% if userIsMember %}
+                    <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave this Group</a></li>
+                {% endif %}
+                <li><a href="{{ path('group_new') }}">Create A New Group</a></li>
                 <li><a href="#">My Groups</a></li>
             </ul>
         </div>

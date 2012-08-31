@@ -85,6 +85,9 @@ class GroupController extends Controller
      */
     public function joinAction($id)
     {
+
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $mgr    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
@@ -92,7 +95,7 @@ class GroupController extends Controller
         $mgr->ensureGroupIsVisible($group);
 
         if ($group->isMember($user)) {
-             $this->setFlash('error', 'You are already a member of this group!');
+            $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
         }
 
@@ -471,6 +474,7 @@ class GroupController extends Controller
         $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 
         $userIsAdminOrOwner = $mgr->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $mgr->isCurrentUserMemberOfGroup($group);
 
         $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
@@ -485,7 +489,8 @@ class GroupController extends Controller
             'group' => $group,
             'groupNews' => $groupNews,
             'groupVideos' => $groupVideos,
-            'userIsAdminOrOwner' => $userIsAdminOrOwner
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+            'userIsMember' => $userIsMember
         );
 
         if (is_array($extraParameters)) {

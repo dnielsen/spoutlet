@@ -150,6 +150,17 @@ class GroupManager
         return $group->isOwner($user) || $isAdmin;
     }
 
+    public function isCurrentUserMemberOfGroup($group)
+    {
+        if (!$group) {
+            throw new NotFoundHttpException('The group does not exist');
+        }
+
+        $user = $this->securityContext->getToken()->getUser();
+
+        return $group->isMember($user);
+    }
+
     /**
      * Properly persists or unsets the media fields
      *
