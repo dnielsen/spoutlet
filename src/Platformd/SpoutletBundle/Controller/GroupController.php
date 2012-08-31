@@ -474,8 +474,14 @@ class GroupController extends Controller
 
         $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
+        if ($commentTotal && isset($commentTotal[0]) && isset($commentTotal[0]['numComments'])) {
+            $commentCount = $commentTotal[0]['numComments'];
+        } else {
+            $commentCount = 0;
+        }
+
         $parameters = array(
-            'commentTotal' => $commentTotal[0]['numComments'],
+            'commentTotal' => $commentCount,
             'group' => $group,
             'groupNews' => $groupNews,
             'groupVideos' => $groupVideos,
