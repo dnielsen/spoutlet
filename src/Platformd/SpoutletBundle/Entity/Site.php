@@ -79,41 +79,21 @@ class Site
         return $this->name;
     }
 
-    /**
-     * Set deafultLocale
-     *
-     * @param string $deafultLocale
-     */
-    public function setDefaultLocale($deafultLocale)
+    public function setDefaultLocale($defaultLocale)
     {
-        $this->deafultLocale = $deafultLocale;
+        $this->defaultLocale = $defaultLocale;
     }
 
-    /**
-     * Get deafultLocale
-     *
-     * @return string
-     */
     public function getDefaultLocale()
     {
-        return $this->deafultLocale;
+        return $this->defaultLocale;
     }
 
-    /**
-     * Set subDomain
-     *
-     * @param string $subDomain
-     */
     public function setSubDomain($subDomain)
     {
         $this->subDomain = $subDomain;
     }
 
-    /**
-     * Get deafultLocale
-     *
-     * @return string
-     */
     public function getSubDomain()
     {
         return $this->subDomain;
