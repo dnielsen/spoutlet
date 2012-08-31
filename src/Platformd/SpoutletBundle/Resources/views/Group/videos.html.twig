@@ -2,7 +2,7 @@
     {% if userIsAdminOrOwner %}
         <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
     {% endif %}
-
+    {% set reportContentType = 'GroupVideo' %}
     {% if groupVideos | length > 0 %}
         <div id="theater-screen-wrapper">
             <div id="theater_screen" style="width:600px; height:350px;"></div>
@@ -21,6 +21,7 @@
         <p>No videos yet... please come back later!</p>
     {% endif %}
 </div>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
 <script type="text/javascript">
     var GamePage = {

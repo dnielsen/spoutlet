@@ -1,5 +1,59 @@
-<input class="report-option" type="radio" name="reason" value="inappropriate_content"> Inappropriate content <br />
-<input class="report-option" type="radio" name="reason" value="spam"> Spam <br />
-<input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> Violates intellectual property <br />
-<input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> Individual is harrassing me
+<div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;">
+    <input type="hidden" id="report-id-{{ reportContentType }}" />
+    <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
+    <div id="report-options">
+        <input class="report-option" type="radio" name="reason" value="inappropriate_content"> Inappropriate content <br />
+        <input class="report-option" type="radio" name="reason" value="spam"> Spam <br />
+        <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> Violates intellectual property <br />
+        <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> Individual is harrassing me
+    </div>
+    <button id="submit-report-{{ reportContentType }}">Submit</button>
+    <button id="close-dialog-{{ reportContentType }}" style="float: right;">Cancel</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var reportDialog = $('#report-content-dialog-{{ reportContentType }}').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 200,
+            width: 350,
+            draggable: false,
+            resizable: false,
+            close: function (e, ui) {
+
+            }
+        });
+
+        $('.report-content').click(function () {
+            var reportId = $(this).attr('report-data');
+            $('#report-id-{{ reportContentType }}').val(reportId);
+            reportDialog.dialog('open');
+        });
+
+        $('#submit-report-{{ reportContentType }}').click(function () {
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'ContentId' : $('#report-id-{{ reportContentType }}').val(),
+                    'Reason' : $('input:radio[name=reason]:checked').val(),
+                    'ContentType' : $('#content-type-{{ reportContentType }}').val()
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        alert(data.messageForUser);
+                    }
+                }
+            })
+            reportDialog.dialog('close');
+        });
+
+        $('#close-dialog-{{ reportContentType }}').click(function () {
+            reportDialog.dialog('close');
+        });
+
+
+    });
+</script>
 

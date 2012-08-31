@@ -1,7 +1,7 @@
 {% if userIsAdminOrOwner %}
     <a href='{{ path('group_add_news', {'id' : group.id }) }}'>Add News</a>
 {% endif %}
-
+{% set reportContentType = 'GroupNews' %}
 {% if groupNews is defined %}
 
     {% for article in groupNews %}
@@ -12,7 +12,7 @@
                     <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
                     <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a> |
                 {% endif %}
-                <a href="javascript:void(0);" class="report-news" news-data="{{ article.id }}">report</a>
+                <a href="javascript:void(0);" class="report-content" report-data="{{ article.id }}">report</a>
             </div>
             <h2>{{ article.title }}</h2>
             <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
@@ -26,49 +26,4 @@
 {% else %}
     <p>No news articles yet... please come back later!</p>
 {% endif %}
-<div id="report-news-dialog" style="display: none;">
-    <input type="hidden" id="article-id" />
-    <div id="report-options">
-        {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
-
-    </div>
-    <button id="submit-report">Submit</button>
-    <button id="close-dialog" style="float: right;">Cancel</button>
-</div>
-<script type="text/javascript">
-    $(function () {
-        var reportDialog = $('#report-news-dialog').dialog({
-            autoOpen: false,
-            modal: true,
-            height: 200,
-            width: 350,
-            draggable: false,
-            resizable: false,
-            close: function (e, ui) {
-
-            }
-        });
-       $('.report-news').click(function () {
-            var articleId = $(this).attr('news-data');
-            $('#article-id').val(articleId);
-            reportDialog.dialog('open');
-       });
-
-       $('#submit-report').click(function () {
-            $.ajax({
-                url: '{{ path('content_reporting') }}',
-                type: 'post',
-                data: JSON.stringify({ 'ContentId' : $('#article-id').val(), 'Reason' : $('input:radio[name=reason]:checked').val(), 'ContentType' : 'GroupNews' }),
-                contentType: 'json',
-                success: function(data) {
-                    alert(data.success + '' + data.messageForUser);
-                }
-            })
-            reportDialog.dialog('close');
-       });
-
-       $('#close-dialog').click(function () {
-            reportDialog.dialog('close');
-       })
-    });
-</script>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

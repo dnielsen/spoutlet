@@ -1,7 +1,7 @@
 {% if userIsAdminOrOwner %}
     <a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a>
 {% endif %}
-
+{% set reportContentType = 'GroupImage' %}
 {% if groupImage is defined %}
 
     {% for image in groupImage %}
@@ -12,7 +12,7 @@
                     <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a> |
                     <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a> |
                 {% endif %}
-                <a href="javascript:void(0);" class="report-image" image-data="{{ image.id }}">report</a>
+                <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
             </div>
             <h2>{{ image.title }}</h2>
             <div class="group-image-date">Posted on {{ image.createdAt | date('F d, Y') }}</div>
@@ -26,43 +26,4 @@
 {% else %}
     <p>No images yet... please come back later!</p>
 {% endif %}
-<div id="report-image-dialog" style="display: none;">
-    <input type="hidden" id="image-id" />
-    <div id="report-options">
-        <input type="radio" name="inappropriate" value="content" class="report-option" /> Inappropriate Content <br />
-        <input type="radio" name="inappropriate" value="spam" class="report-option" /> Spam <br />
-        <input type="radio" name="inappropriate" value="violate" class="report-option" /> Violates intellectual property <br />
-        <input type="radio" name="inappropriate" value="harrasment" class="report-option" /> Individual is harrasing me
-
-    </div>
-    <button id="submit-report">Submit</button>
-    <button id="close-dialog" style="float: right;">Cancel</button>
-</div>
-<script type="text/javascript">
-    $(function () {
-        var reportDialog = $('#report-image-dialog').dialog({
-            autoOpen: false,
-            modal: true,
-            height: 200,
-            width: 350,
-            draggable: false,
-            resizable: false,
-            close: function (e, ui) {
-
-            }
-        });
-       $('.report-image').click(function () {
-            var imageId = $(this).attr('image-data');
-            $('#image-id').val(imageId);
-            reportDialog.dialog('open');
-       });
-
-       $('#submit-report').click(function () {
-            reportDialog.dialog('close');
-       });
-
-       $('#close-dialog').click(function () {
-            reportDialog.dialog('close');
-       })
-    });
-</script>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

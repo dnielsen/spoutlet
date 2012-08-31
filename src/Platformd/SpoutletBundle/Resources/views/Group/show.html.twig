@@ -193,6 +193,8 @@
                 $('.featured-content-header a.active').removeClass('active');
                 $(this).addClass('active');
                 $('.featured-content-category#content-'+current).fadeOut('fast', function () {
+                    $('.report-wrapper').remove();
+
                     var content = $('.featured-content-category#content-'+id);
 
                     switch(id) {
