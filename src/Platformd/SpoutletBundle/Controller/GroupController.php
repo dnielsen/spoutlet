@@ -161,6 +161,8 @@ class GroupController extends Controller
         $gm    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
 
         $gm->ensureGroupIsVisible($group);
 
@@ -195,6 +197,8 @@ class GroupController extends Controller
         }
 
         return $this->render('SpoutletBundle:Group:addNews.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
             'group' => $group,
             'newsForm' => $form->createView(),
             'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id))
@@ -340,6 +344,8 @@ class GroupController extends Controller
         $gm     = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
 
         $gm->ensureGroupIsVisible($group);
 
@@ -372,6 +378,8 @@ class GroupController extends Controller
         }
 
         return $this->render('SpoutletBundle:Group:addImage.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
             'group' => $group,
             'imageForm' => $form->createView(),
             'imageFormAction' => $this->generateUrl('group_add_image', array('id' => $id))
@@ -552,6 +560,8 @@ class GroupController extends Controller
         $gm    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
 
         $gm->ensureGroupIsVisible($group);
 
@@ -586,6 +596,8 @@ class GroupController extends Controller
         }
 
         return $this->render('SpoutletBundle:Group:addVideo.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
             'group' => $group,
             'videoForm' => $form->createView(),
             'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),

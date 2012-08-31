@@ -30,14 +30,7 @@
 </div>
 <div class="std_1col" style="padding: 0;">
     <div class="groups-sub-nav-wrapper">
-        <div class="groups-sub-nav">
-            <ul>
-                <li><a href="{{ path('group_show', {'id' : group.id }) }}">Group Home</a></li>
-                <li><a href="#">Messages</a></li>
-                <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                <li><a href="#">My Groups</a></li>
-            </ul>
-        </div>
+        {% include 'SpoutletBundle:Group:_subNav.html.twig' %}
         <div id="group-like-wrapper">
             <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark"></div>
         </div>
