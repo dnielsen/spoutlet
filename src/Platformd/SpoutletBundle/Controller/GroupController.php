@@ -214,6 +214,8 @@ class GroupController extends Controller
         $gm    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
 
         $gm->ensureGroupIsVisible($group);
 
@@ -231,7 +233,9 @@ class GroupController extends Controller
 
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
-            ->add('article', 'textarea')
+            ->add('article', 'textarea', array(
+                'attr' => array('style' => "width: 600px;height: 250px;")
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -250,7 +254,10 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->renderShow($group, array(
+        return $this->render('SpoutletBundle:Group:editNews.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+            'group' => $group,
             'newsForm' => $form->createView(),
             'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId)))
         );
@@ -640,6 +647,8 @@ class GroupController extends Controller
         $gm    = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
 
         $gm->ensureGroupIsVisible($group);
 
@@ -676,7 +685,10 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->renderShow($group, array(
+        return $this->render('SpoutletBundle:Group:editVideo.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+            'group' => $group,
             'videoForm' => $form->createView(),
             'videoFormAction' => $this->generateUrl('group_edit_video', array('id' => $id, 'videoId' => $videoId)))
         );
