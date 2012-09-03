@@ -14,10 +14,10 @@
                 {% endif %}
                 <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
             </div>
-            <h2>{{ image.title }}</h2>
-            <div class="group-image-date">Posted on {{ image.createdAt | date('F d, Y') }}</div>
             <div class="group-image-image">
-                <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ image.title }}" />
+                <a href="{{ media_path(image.image) }}" rel="lightbox" style="border:none;">
+                    <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ image.title }}" rel="lightbox" />
+                </a>
             </div>
         </div>
     {% else %}

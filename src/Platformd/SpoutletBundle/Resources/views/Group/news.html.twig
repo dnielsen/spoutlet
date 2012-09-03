@@ -6,7 +6,7 @@
 
     {% for article in groupNews %}
 
-        <div class="group-news-item" style="margin: 20px;">
+        <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
             <div class="group-news-actions">
                 {% if userIsAdminOrOwner %}
                     <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
@@ -20,6 +20,7 @@
                 {{ article.article | raw }}
             </div>
         </div>
+        <a href="javascript:void(0);" class="show-more-news" rel="{{ article.id }}">Show More</a>
     {% else %}
         <p>No news articles yet... please come back later!</p>
     {% endfor %}
@@ -27,3 +28,17 @@
     <p>No news articles yet... please come back later!</p>
 {% endif %}
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+<script type="text/javascript">
+    $(function () {
+        $('.show-more-news').click(function (e) {
+            e.stopPropagation();
+
+            var id = $(this).attr('rel');
+            var h = $('#news-item-' + id)[0].scrollHeight;
+
+            $('#news-item-' + id).animate({
+                'height': h
+            });
+        });
+    });
+</script>

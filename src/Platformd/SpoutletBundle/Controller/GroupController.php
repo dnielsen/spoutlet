@@ -402,6 +402,9 @@ class GroupController extends Controller
         $gm     = $this->getGroupManager();
         $group  = $this->getGroup($id);
         $user   = $this->getUser();
+        $userIsAdminOrOwner = $gm->isCurrentUserAllowedToEditGroup($group);
+        $userIsMember = $gm->isCurrentUserMemberOfGroup($group);
+
 
         $gm->ensureGroupIsVisible($group);
 
@@ -417,7 +420,7 @@ class GroupController extends Controller
             return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
         }
 
-        $form = $this->createFormBuilder($groupImage)
+        $form = $this->createFormBuilder($image)
             ->add('title', 'text')
             ->add('image', new MediaType(), array('image_label' => 'Image'))
             ->getForm();
@@ -438,7 +441,10 @@ class GroupController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->renderShow($group, array(
+        return $this->render('SpoutletBundle:Group:editImage.html.twig', array(
+            'userIsMember' => $userIsMember,
+            'userIsAdminOrOwner' => $userIsAdminOrOwner,
+            'group' => $group,
             'imageForm' => $form->createView(),
             'imageFormAction' => $this->generateUrl('group_edit_image', array('id' => $id, 'imageId' => $imageId)))
         );

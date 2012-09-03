@@ -189,3 +189,12 @@
 .report-option {
     margin: 5px 0 0 0;
 }
+
+.file-upload img {
+    width: 300px;
+}
+
+.group-news-item {
+    height: 160px; 
+    overflow: hidden;
+}

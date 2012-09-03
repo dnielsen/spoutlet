@@ -1,0 +1,146 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% block title 'Groups - ' ~ group.name %}
+
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% if group.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block content %}
+<div class="std_2col" style="padding: 0;">
+    <div class="left">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% endif %}
+        </div>
+    </div>
+    <div class="right">
+        <div class="join-group-options">
+            <form>
+                <button id="join-group-button" type="submit"></button>
+            </form>
+            <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
+        </div>
+    </div>
+</div>
+<div class="std_1col" style="padding: 0;">
+    <div class="groups-sub-nav-wrapper">
+        {% include 'SpoutletBundle:Group:_subNav.html.twig' %}
+        <div id="group-like-wrapper">
+            <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark"></div>
+        </div>
+    </div>
+</div>
+<div class="std_2col">
+    <div class="right">
+        <div class="widget-33" style="height: auto; margin-bottom: 10px;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ group.name }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="group-member-count">
+                    {{ group.members | length }}
+                    <div>Members</div>
+                </div>
+                <div id="group-comment-count">
+                    300
+                    <div>Comments</div>
+                </div>
+                <div id="group-blurb">
+                    <p>{{ group.name }} group is a place where you can discuss, and find image, videos, and information about xxxxxxx.</p>
+                </div>
+
+                {% if group.location and group.category == 'location' %}
+                <div id="group-location-address" class="location-info">
+                    <div>ADDRESS:</div>
+                    <div id="street-address1">
+                        {{ group.location.address1 }}
+                    </div>
+                    <div id="street-address2">
+                        {{ group.location.address2 }}
+                    </div>
+                    <div id="city">
+                        {{ group.location.city }}
+                    </div>
+                    <div id="state">
+                        {{ group.location.stateProvince }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if group.location and group.category == 'location' %}
+            <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
+            <div id="google-map-location"></div>
+        {% endif %}
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+    <div class="left">
+        <form action="{{ imageFormAction }}" method="post" {{ form_enctype(imageForm) }} class="form-horizontal">
+
+            {% form_theme imageForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+            {% form_theme imageForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+            {{ form_errors(imageForm) }}
+
+            <div class="row-fluid">
+                <div class="row-fluid first">
+                    <div class="pd_form">
+                        {{ form_row(imageForm.title) }}
+                        {{ form_row(imageForm.image) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" formnovalidate>Save Image</button>
+            </div>
+
+            {{ form_rest(imageForm) }}
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/jquery.mCustomScrollbar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% if group.location and group.category == 'location' %}
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#google-map-location').groupsmap({
+                    address : $('#location-value').val()
+                });
+            });
+        </script>
+    {% endif %}
+    <script type="text/javascript">
+        $(function () {
+
+            $('#group-invite').click(function () {
+                FB.ui({
+                    method: 'send',
+                    name: "You are invited to the group {{ group.name | raw }}",
+                    link: 'http://demo.alienwarearena.com/',
+                    description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
+                    image: '{{ openGraphThumb }}'
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

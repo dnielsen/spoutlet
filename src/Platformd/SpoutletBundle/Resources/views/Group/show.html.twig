@@ -133,6 +133,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/jquery.mCustomScrollbar.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -140,6 +141,7 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
 
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
@@ -162,16 +164,6 @@
                     $('#content-group-news').html(data);
                     $('#content-group-news').mCustomScrollbar();
                 }
-            });
-
-            $('#group-invite').click(function () {
-                FB.ui({
-                    method: 'send',
-                    name: "You are invited to the group {{ group.name | raw }}",
-                    link: 'http://demo.alienwarearena.com/',
-                    description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
-                    image: '{{ openGraphThumb }}'
-                });
             });
 
             $(".featured-content-header a").click(function() {
