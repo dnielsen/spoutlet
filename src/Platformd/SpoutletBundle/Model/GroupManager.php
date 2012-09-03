@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Model;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
@@ -121,20 +122,25 @@ class GroupManager
 
     public function ensureGroupIsVisible($group, $site = null)
     {
-        if (!$group) {
+        if (!$group || $group->getDeleted()) {
             throw new NotFoundHttpException('The group does not exist');
-        }
-
-        if ($group->getDeleted()) {
-            throw new NotFoundHttpException('The group does not exist'); // make sure this group hasn't been marked as deleted
         }
 
         if ($site == null) {
             $site = $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->session->getLocale());
         }
 
-        if (!$group->getSites() && !in_array($site, $group->getSites())) { // make sure this group is visible for this site
+        $global                     = $group->getAllLocales();
+        $specificallyAllowedForSite = $group->getSites() && $group->getSites()->contains($site);
+
+        if (!$global && !$specificallyAllowedForSite) {
             throw new NotFoundHttpException('The group does not exist');
+        }
+
+        $currentUser = $this->securityContext->getToken()->getUser();
+
+        if (!$group->getIsPublic() && !$group->isMember($currentUser)) {
+            throw new AccessDeniedException();
         }
     }
 
@@ -147,7 +153,7 @@ class GroupManager
         $user = $this->securityContext->getToken()->getUser();
         $isAdmin = $this->securityContext->isGranted('ROLE_ADMIN');
 
-        return $group->isOwner($user) || $isAdmin;
+        return $group->isOwner($user); //|| $isAdmin;
     }
 
     public function isCurrentUserMemberOfGroup($group)

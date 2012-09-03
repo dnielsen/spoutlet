@@ -6,10 +6,12 @@ use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
+use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Group controller.
@@ -22,6 +24,12 @@ class GroupController extends Controller
         ->getEntityManager()
         ->getRepository('SpoutletBundle:Group')
         ->find($id);
+    }
+
+    private function getGroupApplicationRepo() {
+        return $this
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:GroupApplication');
     }
 
     private function getCurrentUser() {
@@ -39,7 +47,7 @@ class GroupController extends Controller
 
         $site = $this->getCurrentSite();
 
-        $entities = $em->getRepository('SpoutletBundle:Group')->findAllGroupsRelevantToSiteAndUser($site, $this->getCurrentUser());
+        $entities = $em->getRepository('SpoutletBundle:Group')->findAllGroupsRelevantForSite($site);
 
         return $this->render('SpoutletBundle:Group:index.html.twig', array(
             'entities' => $entities
@@ -106,6 +114,51 @@ class GroupController extends Controller
         $this->setFlash('success', 'You have successfully joined this group!');
 
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+    }
+
+    public function applyAction($id)
+    {
+
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $mgr    = $this->getGroupManager();
+        $group  = $this->getGroup($id);
+        $user   = $this->getUser();
+
+        if (!$group) {
+            throw new NotFoundHttpException('The group does not exist');
+        }
+
+        if ($group->isMember($user)) {
+            $this->setFlash('error', 'You are already a member of this group!');
+            return $this->redirect($this->generateUrl('group'));
+        }
+
+        $applicationRepo  = $this->getGroupApplicationRepo();
+        $userApplications = $applicationRepo->findByApplicant($user->getId());
+
+        if ($userApplications) {
+            foreach ($userApplications as $app) {
+
+                if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
+                    $this->setFlash('error', 'You have already applied to this group!');
+                    return $this->redirect($this->generateUrl('group'));
+                }
+            }
+        }
+
+        $application = new GroupApplication();
+
+        $application->setApplicant($user);
+        $application->setGroup($group);
+
+        $em = $this->getEntityManager();
+        $em->persist($application);
+        $em->flush();
+
+        $this->setFlash('success', 'You have successfully applied to join this group!');
+
+        return $this->redirect($this->generateUrl('group'));
     }
 
     public function newsAction($id, Request $request)

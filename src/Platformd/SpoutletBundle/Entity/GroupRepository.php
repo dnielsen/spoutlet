@@ -35,16 +35,14 @@ class GroupRepository extends EntityRepository
         return $qb->andWhere('g.isPublic = true');
     }
 
-    public function findAllGroupsRelevantToSiteAndUser($site, $user) {
+    public function findAllGroupsRelevantForSite($site) {
 
         return $this->getEntityManager()->createQuery('
             SELECT g FROM SpoutletBundle:Group g
             LEFT JOIN g.sites s
             WHERE g.deleted = false
-            AND ((g.allLocales = true OR s = :site)
-                AND (g.isPublic = true OR g.owner = :user))')
+            AND (g.allLocales = true OR s = :site)')
             ->setParameter('site', $site)
-            ->setParameter('user', $user)
             ->execute();
     }
 
