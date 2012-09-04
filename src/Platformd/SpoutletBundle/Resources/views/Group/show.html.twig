@@ -97,7 +97,7 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
     <div class="left">
-        <div class="widget-66" id="featured-content">
+        <div class="widget-66" id="featured-content" style="min-height: 600px;">
             <div class="featured-content-header">
                 <a href="javascript:void(0);" id="group-news" class="active">News</a>
                 <a href="javascript:void(0);" id="group-photos">Image Gallery</a>
@@ -193,7 +193,6 @@
                                 method: 'get',
                                 success: function(data, textStatus, jqXHR) {
                                     content.html(data);
-                                    content.mCustomScrollbar();
                                 }
                             });
                             break;
@@ -203,7 +202,6 @@
                                 method: 'get',
                                 success: function(data, textStatus, jqXHR) {
                                     content.html(data);
-                                    //content.mCustomScrollbar();
                                 }
                             });
                             break;
@@ -213,7 +211,6 @@
                                 method: 'get',
                                 success: function(data, textStatus, jqXHR) {
                                     content.html(data);
-                                    content.mCustomScrollbar();
                                 }
                             });
                             break;
@@ -221,12 +218,8 @@
 
                     $(this).delay(500);
                     content.fadeIn();
-                    //content.resize();
-                    //content.mCustomScrollbar('update');
                 });
             });
-
-            //$('.featured-content-category').mCustomScrollbar();
         });
     </script>
 
