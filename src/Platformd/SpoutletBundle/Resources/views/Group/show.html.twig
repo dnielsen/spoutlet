@@ -161,7 +161,7 @@
             $('#group-invite').click(function () {
                 FB.ui({
                     method: 'send',
-                    name: "You are invited to the {{ group.name | raw }}",
+                    name: "You are invited to the {{ group.name | raw }}!",
                     link: '{{ path('group_show', { 'id': group.id })  | absolute_url }}',
                     description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
                     image: '{{ openGraphThumb }}'
