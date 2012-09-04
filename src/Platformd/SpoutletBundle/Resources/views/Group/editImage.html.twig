@@ -82,7 +82,21 @@
         {% endif %}
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
-    <div class="left">
+    <div class="left" id="group-image-form-wrapper">
+
+        <h1>Submit Image</h1>
+        <p>All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.</p>
+        <h2>Image Restrictions</h2>
+        <ul>
+            <li>Only group-related images, everything else will get deleted without notice.</li>
+            <li>No copyrighted material.</li>
+            <li>No photos of children ages 13 and under.</li>
+            <li>Max file size per image 5MB.</li>
+            <li>Files supported: JPG, GIF and PNG</li>
+            <li>By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</li>
+        </ul>
+        <h2>Image Submission</h2>
+
         <form action="{{ imageFormAction }}" method="post" {{ form_enctype(imageForm) }} class="form-horizontal">
 
             {% form_theme imageForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
@@ -100,7 +114,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" formnovalidate>Save Image</button>
+                <button type="submit" formnovalidate>Post Image</button>
             </div>
 
             {{ form_rest(imageForm) }}

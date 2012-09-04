@@ -39,11 +39,19 @@
     margin-bottom: 5px;
 }
 
-#video-form-wrapper h2 {
+#group-video-form-wrapper h2 {
     font-size: 12pt;
 }
 
-#video-form-wrapper ul {
+#group-video-form-wrapper ul {
+    margin-left: 25px;
+}
+
+#group-image-form-wrapper h2 {
+    font-size: 12pt;
+}
+
+#group-image-form-wrapper ul {
     margin-left: 25px;
 }
 
