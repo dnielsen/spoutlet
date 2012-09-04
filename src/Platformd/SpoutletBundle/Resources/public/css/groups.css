@@ -30,6 +30,13 @@
 
 #group-like-wrapper {
     padding: 5px 0 10px 0;
+    margin-left: 15px;
+}
+
+#group-invite-wrapper {
+    padding: 5px 0 10px 0;
+    margin-left: 15px;
+    margin-bottom: 5px;
 }
 
 .groups-sub-nav ul li {
@@ -111,19 +118,11 @@
     background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
 }
 
-#group-invite-wrapper {
-    margin: 10px auto;
-}
-
 #group-invite {
     padding: 0 0 0 20px;
     font-size: 14px;
     background: url('/bundles/spoutlet/images/icons/icon-fb-14.png') no-repeat left;
     width: auto;
-}
-
-#group-like-wrapper {
-    float: right;
 }
 
 #videos-wrapper {
@@ -195,6 +194,6 @@
 }
 
 .group-news-item {
-    height: 160px; 
+    height: 160px;
     overflow: hidden;
 }

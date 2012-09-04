@@ -38,16 +38,12 @@
                     <button id="join-group-button" type="submit" ></button>
                 {% endif %}
             </form>
-            <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
         </div>
     </div>
 </div>
 <div class="std_1col" style="padding: 0;">
     <div class="groups-sub-nav-wrapper">
         {% include 'SpoutletBundle:Group:_subNav.html.twig' %}
-        <div id="group-like-wrapper">
-            <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark"></div>
-        </div>
     </div>
 </div>
 <div class="std_2col">
@@ -59,6 +55,7 @@
                 </div>
             </div>
             <div class="widget-content">
+
                 <div id="group-member-count">
                     {{ group.members | length }}
                     <div>Members</div>
@@ -67,9 +64,12 @@
                     {{ commentTotal }}
                     <div>Comments</div>
                 </div>
-                <div id="group-blurb">
-                    <p>{{ group.name }} group is a place where you can discuss, and find news, videos, and information about xxxxxxx.</p>
+
+                <div id="group-like-wrapper">
+                    <div class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark"></div>
                 </div>
+
+                <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
 
                 {% if group.location and group.category == 'location' %}
                 <div id="group-location-address" class="location-info">
