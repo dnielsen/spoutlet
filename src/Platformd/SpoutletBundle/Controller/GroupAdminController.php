@@ -123,7 +123,12 @@ class GroupAdminController extends Controller
                 $data = $form->getData();
 
                 if($data['sites'] != '') {
-                    return $groupRepo->findGroupsByNameAndSite($data['groupName'], $data['sites']);
+
+                    $site = $this->getDoctrine()
+                        ->getRepository('SpoutletBundle:Site')
+                        ->findOneByDefaultLocale($data['sites']);
+
+                    return $groupRepo->findGroupsByNameAndSite($data['groupName'], $site);
                 }
 
                 return $groupRepo->findGroupsByName($data['groupName']);

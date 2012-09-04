@@ -11,9 +11,13 @@
             <tr>
                 <td>Region:</td>
                 <td>
-                    {% for locale in group.locales %}
-                        <span>[{{ locale }}]</span>
-                    {% endfor %}
+                    {% if group.allLocales %}
+                        <span>All Sites</span>
+                    {% else %}
+                        {% for site in group.sites %}
+                            <span>[{{ site.name }}]</span>
+                        {% endfor %}
+                    {% endif %}
                 </td>
             </tr>
             <tr>
