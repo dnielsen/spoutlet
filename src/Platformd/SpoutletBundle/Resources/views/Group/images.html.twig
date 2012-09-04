@@ -15,8 +15,8 @@
                 <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
             </div>
             <div class="group-image-image">
-                <a href="{{ media_path(image.image) }}" rel="lightbox" style="border:none;">
-                    <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ image.title }}" rel="lightbox" />
+                <a href="{{ media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" rel="lightbox" style="border:none;">
+                    <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
                 </a>
             </div>
         </div>

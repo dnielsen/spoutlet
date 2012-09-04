@@ -390,4 +390,14 @@ liip_imagine:
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
 
+        image_thumb_small:
+            quality: 100
+            filters:
+                thumbnail: { size: [135, 80], mode: inset }
+
+        lightbox_medium:
+            quality: 100
+            filters:
+                thumbnail: { size: [400, 400], mode: inset }
+
 knp_time: ~
