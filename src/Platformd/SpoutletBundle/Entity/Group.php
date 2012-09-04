@@ -120,14 +120,12 @@ class Group implements LinkableInterface
 
     /**
      * @var boolean $allLocales
-     * @Assert\NotNull
      * @ORM\Column(name="allLocales", type="boolean")
      */
-    private $allLocales;
+    private $allLocales = false;
 
     /**
      * @var boolean $deleted
-     * @Assert\NotNull
      * @ORM\Column(name="deleted", type="boolean")
      */
 
@@ -158,7 +156,7 @@ class Group implements LinkableInterface
 
     public function __construct()
     {
-        $this->groupLocales = new ArrayCollection();
+        $this->sites = new ArrayCollection();
         $this->members = new ArrayCollection();
     }
 

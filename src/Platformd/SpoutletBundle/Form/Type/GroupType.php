@@ -9,9 +9,17 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\LocationType;
+use Platformd\UserBundle\Entity\User;
 
 class GroupType extends AbstractType
 {
+
+    private $user;
+
+    public function __construct($user) {
+        $this->user = $user;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
@@ -43,14 +51,18 @@ class GroupType extends AbstractType
             ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
-            ))
-            ->add('sites', 'entity', array(
-                'class'    => 'SpoutletBundle:Site',
-                'multiple' => true,
-                'expanded' => true,
-                'property' => 'name'
-            ))
-            ->add('allLocales', 'checkbox', array('required' => true, 'label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
+            ));
+
+            if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
+
+                $builder->add('sites', 'entity', array(
+                    'class'    => 'SpoutletBundle:Site',
+                    'multiple' => true,
+                    'expanded' => true,
+                    'property' => 'name'
+                ))
+                ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
+            }
     }
 
     public function getName()

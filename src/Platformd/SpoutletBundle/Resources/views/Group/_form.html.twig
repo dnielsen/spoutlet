@@ -17,8 +17,12 @@
                 {{ form_row(form.description) }}
                 {{ form_row(form.howToJoin) }}
                 {{ form_row(form.isPublic) }}
-                {{ form_row(form.sites) }}
-                {{ form_row(form.allLocales) }}
+
+                {% if form.sites is defined %}
+                    {{ form_row(form.sites) }}
+                    {{ form_row(form.allLocales) }}
+                {% endif %}
+
                 {{ form_row(form.location) }}
             </div>
         </div>

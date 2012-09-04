@@ -821,7 +821,7 @@ class GroupController extends Controller
         $this->addGroupsBreadcrumb()->addChild('New Group');
 
         $group  = new Group();
-        $form    = $this->createForm(new GroupType(), $group);
+        $form    = $this->createForm(new GroupType($this->getUser()), $group);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
@@ -858,7 +858,7 @@ class GroupController extends Controller
 
         $mgr->ensureGroupIsVisible($group);
 
-        $editForm   = $this->createForm(new GroupType(), $group);
+        $editForm   = $this->createForm(new GroupType($this->getUser()), $group);
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {
@@ -919,6 +919,12 @@ class GroupController extends Controller
             if ($form->isValid()) {
                 /** @var $group \Platformd\SpoutletBundle\Entity\Group */
                 $group = $form->getData();
+
+                if (!$this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+                    $group->setAllLocales(false);
+                    $group->getSites()->clear();
+                    $group->getSites()->add($this->getCurrentSite());
+                }
 
                 $this->getGroupManager()->saveGroup($group);
 
