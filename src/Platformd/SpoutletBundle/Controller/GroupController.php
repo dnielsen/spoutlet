@@ -638,8 +638,8 @@ class GroupController extends Controller
         $groupVideo = new GroupVideo();
 
         $form = $this->createFormBuilder($groupVideo)
-            ->add('title', 'text', array('label' => 'Title'))
-            ->add('youTubeVideoId', 'text', array('label' => 'YouTube ID'))
+            ->add('title', 'text', array('label' => 'Video Name'))
+            ->add('youTubeVideoId', 'text', array('label' => 'YouTube ID', 'help'  => 'Paste Youtube ID (e.g. UN6ZT9lDIOk if the URL is something like http://www.youtube.com/watch?v=UN6ZT9lDIOk&feature=fvst'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -724,8 +724,8 @@ class GroupController extends Controller
         }
 
         $form = $this->createFormBuilder($videoArticle)
-            ->add('title', 'text')
-            ->add('youTubeVideoId', 'text')
+            ->add('title', 'text', array('label' => 'Video Name'))
+            ->add('youTubeVideoId', 'text', array('label' => 'YouTube ID', 'help'  => 'Paste Youtube ID (e.g. UN6ZT9lDIOk if the URL is something like http://www.youtube.com/watch?v=UN6ZT9lDIOk&feature=fvst'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {

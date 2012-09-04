@@ -2,11 +2,11 @@
     <ul>
         <li><a href="{{ path('group_show', {'id' : group.id }) }}">Group Home</a></li>
         {% if userIsAdminOrOwner %}
-            <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Edit this Group</a></li>
-            <li><a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">Delete this Group</a></li>
+            <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Edit Group</a></li>
+            <li><a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">Delete Group</a></li>
         {% endif %}
         {% if userIsMember %}
-            <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave this Group</a></li>
+            <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
         {% endif %}
         <li><a href="{{ path('group_new') }}">Create A New Group</a></li>
     </ul>
