@@ -17,8 +17,8 @@ class Controller extends BaseController
 
     protected function getCurrentSite() {
 
-        $currentHost = $this->getRequest()->getHost();
-        $subDomain = substr($currentHost, 0, stripos($currentHost, '.'));
+        $currentHost    = $this->getRequest()->getHost();
+        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
 
         return $this->getSiteFromSubDomain($subDomain);
     }
