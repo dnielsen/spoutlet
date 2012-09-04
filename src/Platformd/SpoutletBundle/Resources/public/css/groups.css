@@ -39,6 +39,14 @@
     margin-bottom: 5px;
 }
 
+#video-form-wrapper h2 {
+    font-size: 12pt;
+}
+
+#video-form-wrapper ul {
+    margin-left: 25px;
+}
+
 .groups-sub-nav ul li {
     float:none;
     background-repeat:no-repeat;

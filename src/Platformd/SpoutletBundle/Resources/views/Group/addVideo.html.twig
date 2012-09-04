@@ -82,7 +82,18 @@
         {% endif %}
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
-    <div class="left">
+    <div class="left" id="video-form-wrapper">
+
+    <h1>Submit Video</h1>
+    <p>Alienware Arena's AlienNetwork hosts only the best gaming movies and as such all submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your movie fulfills all the requirements.</p>
+    <h2>Video Restrictions</h2>
+    <ul>
+        <li>Only group-related videos, everything else will get deleted without notice.</li>
+        <li>No copyrighted material.</li>
+        <li>By submitting a movie, you also agree to our <a href="http://www.alienwarearena.com/legal/terms/" target="_blank">Terms of Service</a> and grant us and our affiliates a non-exclusive license to publish, redistribute, promote or modify the video or any information within the submission.</li>
+    </ul>
+    <h2>Video Submission</h2>
+
         <form action="{{ videoFormAction }}" method="post" {{ form_enctype(videoForm) }} class="form-horizontal">
 
             {% form_theme videoForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}

@@ -24,7 +24,6 @@ class Group implements LinkableInterface
 
     static private $validCategories = array(
         'location',
-        'product',
         'topic',
     );
 
