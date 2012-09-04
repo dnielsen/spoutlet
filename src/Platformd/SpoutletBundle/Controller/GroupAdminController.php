@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupRepository;
-use Platformd\SpoutletBundle\Entity\GroupLocaleRepository;
 use Platformd\SpoutletBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
@@ -74,24 +73,10 @@ class GroupAdminController extends Controller
 
     public function summaryAction(Request $request) {
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
-        $groupLocalRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupLocale');
 
-        $sites = MultitenancyManager::getSiteChoices();
-        $summary = array();
-
-        foreach($sites as $key => $value) {
-            $groupCount = $groupLocalRepo->getGroupCountForSite($key);
-            $memberCount = $this->getMembershipCountForGroup($groupRepo->findAllPublicAndPrivateGroupsForSite($key));
-            $summary[] = array('region' => $value, 'group_count' => $groupCount, 'member_count' => $memberCount);
-        }
+        $summary = $groupRepo->getGroupAndMemberCountByRegion();
 
         return $this->generateGroupsSummaryCsv($summary);
-
-        /*
-        return $this->render('SpoutletBundle:GroupAdmin:summary.html.twig', array(
-            'summary' => $summary,
-        ));
-        */
     }
 
     private function getMembershipCountForGroup($groups)
@@ -118,8 +103,8 @@ class GroupAdminController extends Controller
         foreach($groupsSummary as $summary) {
             $factory->addRow(array(
                 $summary['region'],
-                $summary['group_count'],
-                $summary['member_count'],
+                $summary['groups'],
+                $summary['members'],
             ));
         }
 

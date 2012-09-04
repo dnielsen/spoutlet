@@ -35,6 +35,17 @@ class GroupRepository extends EntityRepository
         return $qb->andWhere('g.isPublic = true');
     }
 
+    public function getGroupAndMemberCountByRegion() {
+
+        return $this->getEntityManager()->createQuery('
+            SELECT s.name region, COUNT(DISTINCT g.id) groups, COUNT(DISTINCT m.id) members FROM SpoutletBundle:Group g
+            LEFT JOIN g.sites s
+            LEFT JOIN g.members m
+            WHERE g.deleted = false
+            GROUP BY s.id')
+            ->execute();
+    }
+
     public function findAllGroupsRelevantForSite($site) {
 
         return $this->getEntityManager()->createQuery('
