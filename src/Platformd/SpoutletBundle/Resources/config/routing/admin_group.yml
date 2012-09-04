@@ -1,11 +1,3 @@
-admin_group:
-    pattern: /
-    defaults: { _controller: "SpoutletBundle:GroupAdmin:index" }
-
-admin_group_site:
-    pattern:  /list/{site}
-    defaults: { _controller: "SpoutletBundle:GroupAdmin:list", site: ~ }
-
 admin_group_find:
     pattern: /metrics/find-groups
     defaults: { _controller: "SpoutletBundle:GroupAdmin:find" }

@@ -17,24 +17,6 @@ use DateTime;
  */
 class GroupAdminController extends Controller
 {
-
-    /**
-     * Lists all locales - a gateway to the "list" action
-     */
-    public function indexAction()
-    {
-        $this->addGroupsBreadcrumb();
-
-        return $this->render('SpoutletBundle:GroupAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
-        ));
-    }
-
-    public function listAction()
-    {
-        return $this->render('SpoutletBundle:GroupAdmin:list.html.twig');
-    }
-
     public function findAction(Request $request) {
         $this->addFindGroupsBreadcrumb();
 
@@ -136,18 +118,6 @@ class GroupAdminController extends Controller
         }
 
         return null;
-    }
-
-    /**
-     * @return \Knp\Menu\ItemInterface
-     */
-    private function addGroupsBreadcrumb()
-    {
-        $this->getBreadcrumbs()->addChild('Groups', array(
-            'route' => 'admin_group'
-        ));
-
-        return $this->getBreadcrumbs();
     }
 
     /**
