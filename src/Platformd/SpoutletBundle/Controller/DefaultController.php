@@ -46,7 +46,7 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getLocale(), 50)
+            ->getCurrentSweepstakes($this->getLocale(), 10)
         ;
 
         $sweepstakes_list = array();
@@ -57,7 +57,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllForLocaleWithLimit($this->getLocale(), 50)
+            ->findAllForLocaleWithLimit($this->getLocale(), 10)
         ;
 
         $giveaways_list = array();
@@ -71,7 +71,7 @@ class DefaultController extends Controller
         $competitions = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($this->getLocale(), 50)
+            ->getCurrentEventsOnly($this->getLocale(), 10)
         ;
 
         $competitions_list = array();

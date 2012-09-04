@@ -6,7 +6,7 @@ umask(0000); // This will let the permissions be 0777
 if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
     '127.0.0.1',
     '192.168.1.81',
-    '192.168.3.15',
+    '192.168.3.14',
     '::1',
 ))) {
     header('HTTP/1.0 403 Forbidden');
