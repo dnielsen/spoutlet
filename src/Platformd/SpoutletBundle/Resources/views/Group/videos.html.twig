@@ -8,11 +8,11 @@
     {% if canAdd %}
         <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
     {% endif %}
-    {% if pages is defined %}
+    {% if pages | length > 0 %}
         <div id="theater-screen-wrapper">
             <div id="theater_screen" style="width:600px; height:350px;"></div>
         </div>
-        <div class="scrollable" id="scrollable" style="height: 140px; width: 450px; margin: 20px 0 0 87px;">
+        <div class="scrollable" id="scrollable-videos" style="height: 140px; width: 450px; margin: 20px 0 0 87px;">
             <div class="items">
 
                 {% set isFirstItem = true %}

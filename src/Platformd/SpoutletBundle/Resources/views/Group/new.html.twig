@@ -7,7 +7,7 @@
 <form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:Group:_form.html.twig' %}
 
-    <div class="form-actions">
+    <div class="form-actions" style="float: left;">
         <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
     </div>
 </form>

@@ -104,17 +104,13 @@
 
             {{ form_errors(imageForm) }}
 
-            <div class="row-fluid">
-                <div class="row-fluid first">
-                    <div class="pd_form">
-                        {{ form_row(imageForm.title) }}
-                        {{ form_row(imageForm.image) }}
-                    </div>
-                </div>
+            <div class="span7">
+                {{ form_row(imageForm.title) }}
+                {{ form_row(imageForm.image) }}
             </div>
 
             <div class="form-actions">
-                <button type="submit" formnovalidate>Post Image</button>
+                <button type="submit" formnovalidate>Save Image</button>
             </div>
 
             {{ form_rest(imageForm) }}

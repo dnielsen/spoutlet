@@ -13,7 +13,7 @@
         'form': edit_form
     } %}
 
-    <div class="form-actions">
+    <div class="form-actions" style="float: left;">
         <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
     </div>
 </form>
@@ -21,5 +21,4 @@
 {% block stylesheets %}
  {{ parent() }}
  <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-
 {% endblock %}

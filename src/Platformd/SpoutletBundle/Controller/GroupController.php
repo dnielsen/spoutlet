@@ -213,9 +213,7 @@ class GroupController extends Controller
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
-            ->add('article', 'textarea', array(
-                'attr' => array('style' => "width: 600px;height: 250px;")
-            ))
+            ->add('article', 'textarea')
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -256,9 +254,7 @@ class GroupController extends Controller
 
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
-            ->add('article', 'textarea', array(
-                'attr' => array('style' => "width: 600px;height: 250px;")
-            ))
+            ->add('article', 'textarea')
             ->getForm();
 
         if ($request->getMethod() == 'POST') {

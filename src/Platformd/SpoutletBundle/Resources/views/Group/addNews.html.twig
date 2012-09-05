@@ -90,13 +90,9 @@
 
             {{ form_errors(newsForm) }}
 
-            <div class="row-fluid">
-                <div class="row-fluid first">
-                    <div class="pd_form">
-                        {{ form_row(newsForm.title) }}
-                        {{ form_row(newsForm.article) }}
-                    </div>
-                </div>
+            <div class="span7">
+                {{ form_row(newsForm.title) }}
+                {{ form_row(newsForm.article) }}
             </div>
 
             <div class="form-actions">
