@@ -27,6 +27,10 @@
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>
             {% endif %}
 
+            {% if site_has_feature('GROUPS') %}
+                <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+            {% endif %}
+
             {% if app.session.locale != 'zh' %}
 
                 <li class="more">

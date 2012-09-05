@@ -26,9 +26,11 @@ class GroupController extends Controller
         }
     }
 
-    private function ensureAllowed($group, $action) {
+    private function ensureAllowed($group, $action, $forceUserLogin = true) {
 
-        $this->basicSecurityCheck(array('ROLE_USER'));
+        if ($forceUserLogin) {
+            $this->basicSecurityCheck(array('ROLE_USER'));
+        }
 
         $this->ensureGroupExists($group);
 
@@ -534,10 +536,9 @@ class GroupController extends Controller
 
         $group = $this->getGroup($id);
 
-
         $this->addGroupsBreadcrumb();
 
-        $this->ensureAllowed($group, 'ViewGroup');
+        $this->ensureAllowed($group, 'ViewGroup', false);
 
         $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
         $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
