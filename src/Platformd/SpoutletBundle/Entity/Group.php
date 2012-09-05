@@ -475,7 +475,7 @@ class Group implements LinkableInterface
             return false;
         }
 
-        if ($user && $user->hasRole('ROLE_USER')) {
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
 
             $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
             $isOwner        = $this->isOwner($user);
