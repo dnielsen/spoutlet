@@ -18,6 +18,9 @@
                 <a href="{{ media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" rel="lightbox" style="border:none;">
                     <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
                 </a>
+                <div>
+                    {{ image.title | slice(0, 25) ~ '…' }}
+                </div>
             </div>
         </div>
     {% else %}
