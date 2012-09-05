@@ -130,7 +130,7 @@ class GroupController extends Controller
 
         $user = $this->getUser();
 
-        if ($group->isMember($user)) {
+        if ($group->isMember($user) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl('groups'));
         }
@@ -156,7 +156,7 @@ class GroupController extends Controller
 
         $user = $this->getUser();
 
-        if ($group->isMember($user)) {
+        if ($group->isMember($user) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl('groups'));
         }

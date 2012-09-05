@@ -36,7 +36,7 @@
     <div class="right">
         <div class="join-group-options">
             <form action="{{ path('group_join', { 'id': group.id }) }}">
-                {% if not group.isMember(app.user) %}
+                {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
                     <button id="join-group-button" type="submit" ></button>
                 {% endif %}
             </form>
@@ -59,7 +59,7 @@
             <div class="widget-content">
 
                 <div id="group-member-count">
-                    {{ group.members | length }}
+                    {{ group.members.count }}
                     <div>Members</div>
                 </div>
                 <div id="group-comment-count">

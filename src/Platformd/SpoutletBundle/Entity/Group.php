@@ -492,6 +492,7 @@ class Group implements LinkableInterface
             if ($isMember) {
                 return in_array($action, self::$memberIsAllowedTo);
             }
+
         }
 
         if ($this->getIsPublic()) {
