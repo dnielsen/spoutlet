@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\UserBundle\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 
