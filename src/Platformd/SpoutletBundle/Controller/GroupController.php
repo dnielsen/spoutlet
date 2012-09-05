@@ -312,7 +312,17 @@ class GroupController extends Controller
 
         $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
+        // 20 images per page
+        $totalPageCount = ceil(count($groupImage) / 20);
+
+        $pages = array();
+        for($i = 0; $i < $totalPageCount; $i++)
+        {
+            $pages[] = array('page-'.$i => array_slice($groupImage, $i, 20));
+        }
+
         return $this->render('SpoutletBundle:Group:images.html.twig', array(
+            'pages' => $pages,
             'group' => $group,
             'groupImage' => $groupImage,
         ));
