@@ -208,3 +208,7 @@
 .file-upload img {
     width: 300px;
 }
+
+.group-image-item {
+    display: inline-table;
+}
