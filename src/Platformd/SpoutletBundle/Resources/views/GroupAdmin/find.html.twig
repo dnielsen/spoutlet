@@ -24,10 +24,12 @@
                     <th>Group Type</th>
                     <th>Organizer</th>
                     <th>Members</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 {% for group in results %}
+                    {% set isPublicLabel = group.isPublic ? 'Public' : 'Private' %}
                     <tr>
                         <td><a href="{{ path('admin_group_show', { id: group.id }) }}">{{ group.name }}</a></td>
                         <td>
@@ -43,6 +45,7 @@
                         <td>{{ group.category }}</td>
                         <td>{{ group.owner.username }}</td>
                         <td>{{ group.members | length }}</td>
+                        <td>{{ isPublicLabel}}</td>
                     </tr>
                 {% else %}
                     <tr>

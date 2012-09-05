@@ -36,6 +36,14 @@
                 <td>Members:</td>
                 <td>{{ group.members | length }}</td>
             </tr>
+            <tr>
+                <td>URL:</td>
+                <td>
+                    {% for site in group.sites %}
+                        <div><a href="http://{{ site.subdomain }}.alienwarearena.com{{ group | pd_link }}">{{ site.name }}</a></div>
+                    {% endfor %}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
