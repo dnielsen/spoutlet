@@ -1,4 +1,3 @@
-# shows a chooser for locales
 groups:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:Group:index" }
@@ -23,10 +22,6 @@ group_news:
     pattern: /{id}/news/
     defaults: { _controller: "SpoutletBundle:Group:news", site: ~ }
 
-group_view_news:
-    pattern:  /{id}/view-news/{newsId}
-    defaults: { _controller: "SpoutletBundle:Group:viewNews", site: ~ }
-
 group_add_news:
     pattern:  /{id}/add-news/
     defaults: { _controller: "SpoutletBundle:Group:addNews", site: ~ }
@@ -43,10 +38,6 @@ group_images:
     pattern: /{id}/images/
     defaults: { _controller: "SpoutletBundle:Group:image", site: ~ }
 
-group_view_image:
-    pattern:  /{id}/view-image/{imageId}
-    defaults: { _controller: "SpoutletBundle:Group:viewImage", site: ~ }
-
 group_add_image:
     pattern:  /{id}/add-image/
     defaults: { _controller: "SpoutletBundle:Group:addImage", site: ~ }
@@ -60,12 +51,8 @@ group_edit_image:
     defaults: { _controller: "SpoutletBundle:Group:editImage", site: ~ }
 
 group_videos:
-    pattern: /{id}/videos
+    pattern: /{id}/videos/
     defaults: { _controller: "SpoutletBundle:Group:videos", site: ~ }
-
-group_view_video:
-    pattern:  /{id}/view-video/{videoId}
-    defaults: { _controller: "SpoutletBundle:Group:viewVideo", site: ~ }
 
 group_add_video:
     pattern:  /{id}/add-video/

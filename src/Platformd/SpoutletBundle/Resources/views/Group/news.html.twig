@@ -1,17 +1,26 @@
+{% set reportContentType    = 'GroupNews' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddNews') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditNews') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteNews') %}
+
 <div id="news-content-scroll" style="height: 600px;">
-    {% if userIsAdminOrOwner %}
+
+    {% if canAdd %}
         <a href='{{ path('group_add_news', {'id' : group.id }) }}'>Add News</a>
     {% endif %}
-    {% set reportContentType = 'GroupNews' %}
+
     {% if groupNews is defined %}
 
         {% for article in groupNews %}
 
             <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
                 <div class="group-news-actions">
-                    {% if userIsAdminOrOwner %}
-                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
-                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a> |
+                    {% if canDelete %}
+                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a>
+                    {% endif %}
+                    {% if canEdit %}
+                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a>
                     {% endif %}
                     <a href="javascript:void(0);" class="report-content" report-data="{{ article.id }}">report</a>
                 </div>

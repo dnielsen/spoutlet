@@ -1,16 +1,23 @@
-{% if userIsAdminOrOwner %}
+{% set reportContentType    = 'GroupImage' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddImage') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
+
+{% if canAdd %}
     <a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a>
 {% endif %}
-{% set reportContentType = 'GroupImage' %}
 {% if groupImage is defined %}
 
     {% for image in groupImage %}
 
         <div class="group-image-item" style="margin: 20px;">
             <div class="group-image-actions">
-                {% if userIsAdminOrOwner %}
-                    <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a> |
-                    <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a> |
+                {% if canDelete %}
+                    <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a>
+                {% endif %}
+                {% if canEdit %}
+                    <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a>
                 {% endif %}
                 <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
             </div>

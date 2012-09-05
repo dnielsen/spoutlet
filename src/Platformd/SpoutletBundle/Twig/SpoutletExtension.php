@@ -52,6 +52,10 @@ class SpoutletExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
+            'get_current_site'                  => new Twig_Function_Method(
+                $this,
+                'getCurrentSite'
+                ),
             'has_user_applied_to_giveaway'  => new Twig_Function_Method(
                 $this,
                 'hasUserAppliedToGiveaway'
@@ -82,6 +86,31 @@ class SpoutletExtension extends Twig_Extension
                 'endsWith'
             ),
         );
+    }
+
+
+    public function getCurrentSite() {
+
+        $currentHost    = $this->getRequest()->getHost();
+        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
+
+        return $this->getSiteFromSubDomain($subDomain);
+    }
+
+    private function getRequest() {
+        return $this->container->get('request');
+    }
+
+    private function getEntityManager() {
+        return $this->container->get('doctrine.orm.entity_manager');
+    }
+
+    private function getSiteFromSubDomain($subDomain) {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
+    private function getSiteFromDefaultLocale($locale) {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 
     public function endsWith($haystack, $needle) {

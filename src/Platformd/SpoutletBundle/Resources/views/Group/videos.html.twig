@@ -1,8 +1,13 @@
+{% set reportContentType    = 'GroupVideo' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddVideo') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditVideo') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteVideo') %}
+
 <div>
-    {% if userIsAdminOrOwner %}
+    {% if canAdd %}
         <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
     {% endif %}
-    {% set reportContentType = 'GroupVideo' %}
     {% if groupVideos | length > 0 %}
         <div id="theater-screen-wrapper">
             <div id="theater_screen" style="width:600px; height:350px;"></div>
@@ -11,9 +16,11 @@
         {% for video in groupVideos %}
 
                 <li>
-                    {% if userIsAdminOrOwner %}
-                        <a href="{{ path('group_delete_video', { 'id' : group.id, 'videoId' : video.id })}}" onclick="return confirm('Are you sure you want to delete this video?');">delete</a> |
-                        <a href="{{ path('group_edit_video', { 'id' : group.id, 'videoId' : video.id })}}">edit</a> |
+                    {% if canDelete %}
+                        <a href="{{ path('group_delete_video', { 'id' : group.id, 'videoId' : video.id })}}" onclick="return confirm('Are you sure you want to delete this video?');">delete</a>
+                    {% endif %}
+                    {% if canEdit %}
+                        <a href="{{ path('group_edit_video', { 'id' : group.id, 'videoId' : video.id })}}">edit</a>
                     {% endif %}
                     <a href="javascript:void(0);" class="report-content" report-data="{{ video.id }}">report</a>
                     <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" style="border: none;" class="youtube-link">

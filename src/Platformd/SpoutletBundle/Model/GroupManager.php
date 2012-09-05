@@ -120,53 +120,6 @@ class GroupManager
         }
     }
 
-    public function ensureGroupIsVisible($group, $site = null)
-    {
-        if (!$group || $group->getDeleted()) {
-            throw new NotFoundHttpException('The group does not exist');
-        }
-
-        if ($site == null) {
-            $site = $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->session->getLocale());
-        }
-
-        $global                     = $group->getAllLocales();
-        $specificallyAllowedForSite = $group->getSites() && $group->getSites()->contains($site);
-
-        if (!$global && !$specificallyAllowedForSite) {
-            throw new NotFoundHttpException('The group does not exist');
-        }
-
-        $currentUser = $this->securityContext->getToken()->getUser();
-
-        if (!$group->getIsPublic() && !$group->isMember($currentUser)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    public function isCurrentUserAllowedToEditGroup($group)
-    {
-        if (!$group) {
-            throw new NotFoundHttpException('The group does not exist');
-        }
-
-        $user = $this->securityContext->getToken()->getUser();
-        $isAdmin = $this->securityContext->isGranted('ROLE_ADMIN');
-
-        return $group->isOwner($user); //|| $isAdmin;
-    }
-
-    public function isCurrentUserMemberOfGroup($group)
-    {
-        if (!$group) {
-            throw new NotFoundHttpException('The group does not exist');
-        }
-
-        $user = $this->securityContext->getToken()->getUser();
-
-        return $group->isMember($user);
-    }
-
     /**
      * Properly persists or unsets the media fields
      *

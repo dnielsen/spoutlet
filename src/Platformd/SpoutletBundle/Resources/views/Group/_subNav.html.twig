@@ -1,11 +1,14 @@
+{% set site = get_current_site() %}
 <div class="groups-sub-nav">
     <ul>
         <li><a href="{{ path('group_show', {'id' : group.id }) }}">Group Home</a></li>
-        {% if userIsAdminOrOwner %}
+        {% if group.isAllowedTo(app.user, site, 'EditGroup') %}
             <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Edit Group</a></li>
+        {% endif %}
+        {% if group.isAllowedTo(app.user, site, 'DeleteGroup') %}
             <li><a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">Delete Group</a></li>
         {% endif %}
-        {% if userIsMember %}
+        {% if group.isAllowedTo(app.user, site, 'LeaveGroup') %}
             <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
         {% endif %}
         <li><a href="{{ path('group_new') }}">Create A New Group</a></li>

@@ -27,6 +27,12 @@ class Group implements LinkableInterface
         'topic',
     );
 
+    static private $superAdminIsAllowedTo        = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo');
+    static private $ownerIsAllowedTo             = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo');
+    static private $memberIsAllowedTo            = array('ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroup', 'JoinGroup');
+    static private $nonMemberPrivateIsAllowedTo  = array('ApplyToGroup');
+
     const COMMENT_PREFIX = 'group-';
 
     /**
@@ -445,6 +451,58 @@ class Group implements LinkableInterface
     public function setNewsArticles($newsArticles)
     {
         $this->newsArticles = $newsArticles;
+    }
+
+    public function isVisibleOnSite($site) {
+
+        if (!$site) {
+            return false;
+        }
+
+        $isGlobal         = $this->getAllLocales();
+        $isAllowedForSite = $this->getSites() && $this->getSites()->contains($site);
+
+        return $isGlobal || $isAllowedForSite;
+    }
+
+    public function isAllowedTo($user, $site, $action) {
+
+        if ($this->getDeleted()) {
+            return false;
+        }
+
+        if (!$this->isVisibleOnSite($site)) {
+            return false;
+        }
+
+        if ($user && $user->hasRole('ROLE_USER')) {
+
+            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
+            $isOwner        = $this->isOwner($user);
+            $isMember       = $this->isMember($user);
+
+            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
+                return true;
+            }
+
+            if ($isOwner) {
+                return in_array($action, self::$ownerIsAllowedTo);
+            }
+
+            if ($isMember) {
+                return in_array($action, self::$memberIsAllowedTo);
+            }
+        }
+
+        if ($this->isPublic()) {
+            return in_array($action, self::$nonMemberPublicIsAllowedTo);
+        }
+
+        if (!$this->isPublic()) {
+            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
+        }
+
+        return false;
     }
 
     public function isMember($user)
