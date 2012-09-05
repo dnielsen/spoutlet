@@ -494,11 +494,11 @@ class Group implements LinkableInterface
             }
         }
 
-        if ($this->isPublic()) {
+        if ($this->getIsPublic()) {
             return in_array($action, self::$nonMemberPublicIsAllowedTo);
         }
 
-        if (!$this->isPublic()) {
+        if (!$this->getIsPublic()) {
             return in_array($action, self::$nonMemberPrivateIsAllowedTo);
         }
 

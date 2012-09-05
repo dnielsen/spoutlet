@@ -577,7 +577,7 @@ class GroupController extends Controller
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
-            return $this->redirect($this->generateUrl('group_edit', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
         }
 
         return $this->render('SpoutletBundle:Group:new.html.twig', array(
