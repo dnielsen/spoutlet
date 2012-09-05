@@ -537,7 +537,7 @@ class GroupController extends Controller
     public function deleteVideoAction($id, $videoId, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'EditVideo');
+        $this->ensureAllowed($group, 'DeleteVideo');
 
         $videoArticle = $this->getGroupVideoRepository()->find($videoId);
 
