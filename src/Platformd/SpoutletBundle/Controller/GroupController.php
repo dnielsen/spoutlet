@@ -311,12 +311,15 @@ class GroupController extends Controller
         $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 20 images per page
-        $totalPageCount = ceil(count($groupImage) / 20);
+        $itemsPerPage = 16;
+        $totalPageCount = ceil(count($groupImage) / $itemsPerPage);
 
         $pages = array();
+        $offset = 0;
         for($i = 0; $i < $totalPageCount; $i++)
         {
-            $pages[] = array('page-'.$i => array_slice($groupImage, $i, 20));
+            $pages[] = array(array_slice($groupImage, $offset, $itemsPerPage));
+            $offset += $itemsPerPage;
         }
 
         return $this->render('SpoutletBundle:Group:images.html.twig', array(
@@ -498,7 +501,7 @@ class GroupController extends Controller
 
                 $video->setGroup($group);
 
-                $video->setYouTubeThumb($this->getYoutubeThumb($groupVideo->getYouTubeVideoId()));
+                $video->setYouTubeThumb($this->getYoutubeThumb($video->getYouTubeVideoId()));
 
                 $this->getGroupManager()->saveGroupVideo($video);
 

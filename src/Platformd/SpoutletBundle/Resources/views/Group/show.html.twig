@@ -145,6 +145,7 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.expander.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
 
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
@@ -213,6 +214,7 @@
                                 method: 'get',
                                 success: function(data, textStatus, jqXHR) {
                                     content.html(data);
+                                    $(".scrollable").scrollable();
                                 }
                             });
                             break;

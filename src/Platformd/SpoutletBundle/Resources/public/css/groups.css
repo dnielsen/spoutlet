@@ -211,4 +211,30 @@
 
 .group-image-item {
     display: inline-table;
+    width: 135px;
+    margin: 5px;
+}
+
+.group-image-image img {
+    width: 135px;
+    height: 80px;
+}
+
+.scrollable {
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+    width: 600px;
+    height: 500px;
+}
+
+.scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position:absolute;
+}
+
+.items .items-wrapper {
+    width: 600px;
+    float: left;
 }
