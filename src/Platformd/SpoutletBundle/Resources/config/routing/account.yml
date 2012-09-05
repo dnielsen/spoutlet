@@ -18,6 +18,10 @@ accounts_deals:
     pattern: /profile/deals
     defaults: { _controller: SpoutletBundle:Account:deals }
 
+accounts_groups:
+    pattern: /profile/groups
+    defaults: { _controller: SpoutletBundle:Account:groups }
+
 videos_edit:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }

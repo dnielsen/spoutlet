@@ -96,6 +96,19 @@ class AccountController extends Controller
         ));
     }
 
+    public function groupsAction()
+    {
+        $this->checkSecurity();
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $groups = $em->getRepository('SpoutletBundle:Group')->getAllGroupsForUser($this->getUser());
+
+        return $this->render('SpoutletBundle:Account:groups.html.twig', array(
+            'groups' => $groups,
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

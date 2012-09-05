@@ -1,0 +1,59 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.user.account.deals" | trans }}{% endblock %}
+
+{% block content %}
+
+{% set site = get_current_site() %}
+
+<div class="control_panel">
+
+    <div class="widget-header">
+        <div class="widget-title">
+            <h2>My Groups</h2>
+        </div>
+    </div>
+    <div class="widget-content">
+        <div class="text">
+            <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
+            <tbody><tr>
+                <th style="width:33%;">Name</th>
+                <th style="width:33%;">Member Count</th>
+                <th style="width:33%;">Status</th>
+            </tr>
+            {% for group in groups %}
+                <tr class="eventListGroup_lan">
+                    <td>
+                        {% if group.isAllowedTo(app.user, site, 'ViewGroup') %}
+                            <a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a>
+                        {% else %}
+                            {{ group.name }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ group.members.count }}
+                    </td>
+                    <td>
+                        {% if group.isPublic %}
+                            <span class="label label-success">Public</span>
+                        {% else %}
+                            <span class="label label-warning">Private</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">
+                        <em>There are no groups!</em>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div class="widget-footer">
+        &nbsp;
+    </div>
+</div>
+{% endblock %}

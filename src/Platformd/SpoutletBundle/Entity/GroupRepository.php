@@ -16,6 +16,17 @@ use DateTimeZone;
  */
 class GroupRepository extends EntityRepository
 {
+    public function getAllGroupsForUser($user) {
+        return $this->getEntityManager()->createQuery('
+            SELECT g FROM SpoutletBundle:Group g
+            LEFT JOIN g.members m
+            WHERE g.deleted = false
+            AND m.id = :userId
+            ORDER BY g.name')
+            ->setParameter('userId', $user->getId())
+            ->execute();
+    }
+
     public function getGroupAndMemberCountByRegion() {
 
         return $this->getEntityManager()->createQuery('
