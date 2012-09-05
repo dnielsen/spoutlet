@@ -1,5 +1,5 @@
 # shows a chooser for locales
-group:
+groups:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:Group:index" }
 

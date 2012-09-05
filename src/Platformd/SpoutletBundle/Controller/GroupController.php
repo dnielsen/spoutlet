@@ -131,7 +131,7 @@ class GroupController extends Controller
 
         if ($group->isMember($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
-            return $this->redirect($this->generateUrl('group'));
+            return $this->redirect($this->generateUrl('groups'));
         }
 
         $applicationRepo  = $this->getGroupApplicationRepo();
@@ -142,7 +142,7 @@ class GroupController extends Controller
 
                 if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
                     $this->setFlash('error', 'You have already applied to this group!');
-                    return $this->redirect($this->generateUrl('group'));
+                    return $this->redirect($this->generateUrl('groups'));
                 }
             }
         }
@@ -158,7 +158,7 @@ class GroupController extends Controller
 
         $this->setFlash('success', 'You have successfully applied to join this group!');
 
-        return $this->redirect($this->generateUrl('group'));
+        return $this->redirect($this->generateUrl('groups'));
     }
 
     public function newsAction($id, Request $request)
@@ -905,7 +905,7 @@ class GroupController extends Controller
 
         $this->setFlash('success', 'The group was successfully deleted!');
 
-        return $this->redirect($this->generateUrl('group'));
+        return $this->redirect($this->generateUrl('groups'));
     }
 
     private function processForm(Form $form, Request $request)
@@ -947,7 +947,7 @@ class GroupController extends Controller
     private function addGroupsBreadcrumb()
     {
         $this->getBreadcrumbs()->addChild('Groups', array(
-            'route' => 'group'
+            'route' => 'groups'
         ));
 
         return $this->getBreadcrumbs();
