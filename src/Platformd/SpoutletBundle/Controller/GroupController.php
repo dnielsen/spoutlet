@@ -312,7 +312,7 @@ class GroupController extends Controller
 
         $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
-        // 20 images per page
+        // 16 images per page
         $itemsPerPage = 16;
         $totalPageCount = ceil(count($groupImage) / $itemsPerPage);
 
@@ -327,7 +327,6 @@ class GroupController extends Controller
         return $this->render('SpoutletBundle:Group:images.html.twig', array(
             'pages' => $pages,
             'group' => $group,
-            'groupImage' => $groupImage,
         ));
     }
 
@@ -436,9 +435,22 @@ class GroupController extends Controller
 
         $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 
+        // 3 images per page
+        $itemsPerPage = 3;
+        $totalPageCount = ceil(count($groupVideos) / $itemsPerPage);
+
+        $pages = array();
+        $offset = 0;
+        for($i = 0; $i < $totalPageCount; $i++)
+        {
+            $pages[] = array(array_slice($groupVideos, $offset, $itemsPerPage));
+            $offset += $itemsPerPage;
+        }
+
+
         return $this->render('SpoutletBundle:Group:videos.html.twig', array(
+            'pages' => $pages,
             'group' => $group,
-            'groupVideos' => $groupVideos,
         ));
     }
 

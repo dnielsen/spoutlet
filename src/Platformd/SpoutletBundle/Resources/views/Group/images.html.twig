@@ -7,8 +7,8 @@
 {% if canAdd %}
     <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
 {% endif %}
-{% if groupImage is defined %}
-    <div class="scrollable" id="scrollable">
+{% if pages is defined %}
+    <div class="scrollable" id="scrollable" style="height: 500px; width: 600px;">
         <div class="items">
             {% for page in pages %}
             <div class="items-wrapper">
@@ -43,8 +43,11 @@
         {% endfor %}
         </div>
     </div>
-    <a class="prev browse">Previous</a>
-    <a class="next browse">See More</a>
+    <div id="scroll-actions" style="margin-top: 10px;">
+        <a class="prev browse" style="float: left;">Previous</a>
+        <a class="next browse" style="float: right;">See More</a>
+    </div>
+
 {% else %}
     <p>No images yet... please come back later!</p>
 {% endif %}
