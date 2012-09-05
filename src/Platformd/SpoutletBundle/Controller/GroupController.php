@@ -194,7 +194,7 @@ class GroupController extends Controller
     public function newsAction($id, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewGroup');
+        $this->ensureAllowed($group, 'ViewGroup', false);
 
         $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
 
@@ -308,7 +308,7 @@ class GroupController extends Controller
     public function imageAction($id, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewGroup');
+        $this->ensureAllowed($group, 'ViewGroup', false);
 
         $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
@@ -432,7 +432,7 @@ class GroupController extends Controller
     {
         $group = $this->getGroup($id);
 
-        $this->ensureAllowed($group, 'ViewGroup');
+        $this->ensureAllowed($group, 'ViewGroup', false);
 
         $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 
