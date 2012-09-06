@@ -40,13 +40,11 @@ class GroupType extends AbstractType
                 'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
                 'with_remove_checkbox' => true
             ))
-            ->add('description', null, array(
+            ->add('description', 'textarea', array(
                 'label' => 'Information about Group',
-                'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('howToJoin', null, array(
+            ->add('howToJoin', 'textarea', array(
                 'label' => 'How to Join?',
-                'attr'  => array('class' => 'ckeditor')
             ))
             ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
             ->add('location', new LocationType(), array(

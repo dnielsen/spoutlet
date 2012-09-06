@@ -89,7 +89,6 @@ Feature: User Navigation
       | Profile                       | http://www.alienwarearena.com/in/member/55/                       |
       | Messages                      | http://alienwarearena.com/account/inbox/                          |
       | My Giveaways                  | http://www.alienwarearena.com/in/account/my-giveaway-keys/        |
-      | My Groups                     | /account/profile/groups                                           |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                         |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                   |
       | Sign out                      | /logout                                                           |
@@ -104,7 +103,6 @@ Feature: User Navigation
       | Profile                       | http://www.alienwarearena.com/sg/member/55/                   |
       | Messages                      | http://alienwarearena.com/account/inbox/                      |
       | My Giveaways                  | http://www.alienwarearena.com/sg/account/my-giveaway-keys/    |
-      | My Groups                     | /account/profile/groups                                       |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                     |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |
       | Sign out                      | /logout                                                       |

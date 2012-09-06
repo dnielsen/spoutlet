@@ -58,6 +58,10 @@
                     <li><a href="{{ path('deal_list') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
+                {% if site_has_feature('GROUPS') %}
+                    <li><a href="{{ path('groups') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>Groups</a></li>
+                {% endif %}
+
                 {% if site_has_feature('FORUMS') %}
                     <li><a href="/forums">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
                 {% endif %}

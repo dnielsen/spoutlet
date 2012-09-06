@@ -2729,3 +2729,8 @@ table .span24 {
     width: 400px;
     height: 300px;
 }
+
+.game-page-form textarea {
+  width: 690px;
+  height: 300px;
+}

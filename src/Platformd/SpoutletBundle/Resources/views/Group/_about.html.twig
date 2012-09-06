@@ -1,11 +1,6 @@
 <div>
-    <h2>Welcome</h2>
-    <div>{{ group.description | raw }}</div>
-    <h2>How to Join</h2>
-    <div>{{ group.howToJoin | raw }}</div>
+    <h4 style="font-size: 14px;">Welcome</h4>
+    <div><p>{{ group.description | nl2br }}</p></div>
+    <h4 style="font-size: 14px;">How to Join</h4>
+    <div><p>{{ group.howToJoin | nl2br }}</p></div>
 </div>
-<script type="text/javascript">
-    $(function () {
-       //$('#about-group-content').mCustomScrollbar();
-    });
-</script>

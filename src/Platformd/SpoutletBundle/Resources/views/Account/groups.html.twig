@@ -17,9 +17,10 @@
         <div class="text">
             <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
             <tbody><tr>
-                <th style="width:33%;">Name</th>
-                <th style="width:33%;">Member Count</th>
-                <th style="width:33%;">Status</th>
+                <th style="width:25%;">Name</th>
+                <th style="width:25%;">Member Count</th>
+                <th style="width:25%;">Status</th>
+                <th style="width:25%">Role</th>
             </tr>
             {% for group in groups %}
                 <tr class="eventListGroup_lan">
@@ -27,7 +28,7 @@
                         {% if group.isAllowedTo(app.user, site, 'ViewGroup') %}
                             <a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a>
                         {% else %}
-                            {{ group.name }}
+                            {{ group.name }} (Not available on this site)
                         {% endif %}
                     </td>
                     <td>
@@ -40,10 +41,17 @@
                             <span class="label label-warning">Private</span>
                         {% endif %}
                     </td>
+                    <td>
+                        {% if group.isOwner(app.user) %}
+                            Organizer
+                        {% else %}
+                            Member
+                        {% endif %}
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2">
+                    <td colspan="4">
                         <em>There are no groups!</em>
                     </td>
                 </tr>
