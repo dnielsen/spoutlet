@@ -24,7 +24,7 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name', null, array(
-                'label' => 'Group Name',
+                'label' => 'Group Name*',
             ))
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices(),
@@ -41,10 +41,10 @@ class GroupType extends AbstractType
                 'with_remove_checkbox' => true
             ))
             ->add('description', 'textarea', array(
-                'label' => 'Information about Group',
+                'label' => 'Information about Group*',
             ))
             ->add('howToJoin', 'textarea', array(
-                'label' => 'How to Join?',
+                'label' => 'How to Join?*',
             ))
             ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
             ->add('location', new LocationType(), array(

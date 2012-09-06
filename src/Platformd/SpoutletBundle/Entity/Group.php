@@ -47,28 +47,28 @@ class Group implements LinkableInterface
 
     /**
      * @var string $name
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string $category
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="category", type="string", length=50)
      */
     private $category;
 
     /**
      * @var text $description
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="description", type="text")
      */
     private $description;
 
     /**
      * @var text $howToJoin
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="howToJoin", type="text")
      */
     private $howToJoin;

@@ -61,7 +61,7 @@
                         {% endif %}
                         {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
                             {% if group.isApplicant(app.user) %}
-                                You will receive an email if you are admitted into this group.
+                                Waiting for Approval
                             {% else %}
                                 <a href="{{ path('group_apply', { 'id': group.id }) }}">Apply to Join Group</a>
                             {% endif %}

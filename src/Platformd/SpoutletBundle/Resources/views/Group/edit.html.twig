@@ -6,8 +6,9 @@
 <h1>
     <i class="icon-pencil"></i>
     Edit Group Page
-</h1>
 
+</h1>
+<span>* required fields</span>
 <form action="{{ path('group_update', { 'id': group.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {% include 'SpoutletBundle:Group:_form.html.twig' with {
         'form': edit_form

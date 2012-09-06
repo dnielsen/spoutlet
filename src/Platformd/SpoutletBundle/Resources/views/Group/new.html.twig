@@ -3,7 +3,7 @@
 {% block content %}
 
 <h1>Create Group</h1>
-
+<span>* required fields</span>
 <form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:Group:_form.html.twig' %}
 
