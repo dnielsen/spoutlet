@@ -52,7 +52,8 @@
                 {{ form_row(videoForm.title) }}
                 {{ form_row(videoForm.youTubeVideoId) }}
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary" formnovalidate>Post Video</button>
+                    <button type="submit" class="btn btn-primary" formnovalidate>Save Video</button>
+                    <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">Cancel</button>
                 </div>
             </div>
 
@@ -69,5 +70,16 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+        });
+    </script>
 {% endblock %}
 
