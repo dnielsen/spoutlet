@@ -15,4 +15,14 @@ use DateTimeZone;
  */
 class GroupApplicationRepository extends EntityRepository
 {
+    public function getApplicationsForGroup($group) {
+         return $this->getEntityManager()->createQuery('
+            SELECT app FROM SpoutletBundle:GroupApplication app
+            LEFT JOIN app.group group
+            LEFT JOIN app.applicant user
+            WHERE app.group = :group
+            ORDER BY app.createdAt')
+            ->setParameter('group', $group)
+            ->execute();
+    }
 }

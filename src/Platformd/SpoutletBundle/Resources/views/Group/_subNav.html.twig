@@ -5,6 +5,9 @@
         {% if group.isAllowedTo(app.user, site, 'EditGroup') %}
             <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Edit Group</a></li>
         {% endif %}
+        {% if group.isAllowedTo(app.user, site, 'ManageApplications') %}
+            <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Applications</a></li>
+        {% endif %}
         {% if group.isAllowedTo(app.user, site, 'DeleteGroup') %}
             <li><a href="{{ path('group_delete', { 'id' : group.id })}}" onclick="return confirm('Are you sure you want to delete this group?');">Delete Group</a></li>
         {% endif %}

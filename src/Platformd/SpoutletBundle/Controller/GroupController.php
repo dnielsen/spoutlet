@@ -80,6 +80,103 @@ class GroupController extends Controller
         return $this->get('security.context')->getToken()->getUser();
     }
 
+    public function acceptApplicationAction($id, $applicationId) {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ManageApplications');
+
+        $appRepo = $this->getGroupApplicationRepo();
+
+        $application = $appRepo->find($applicationId);
+
+        if (!$application) {
+            $this->setFlash('error', 'Application not found!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $user = $application->getApplicant();
+
+        if (!$user) {
+            $this->setFlash('error', 'User not found!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $em = $this->getEntityManager();
+
+        if ($group->isMember($user)) {
+
+            $em->remove($application);
+            $em->flush();
+
+            $this->setFlash('success', 'This user is already a member of this group - application removed!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $group->getMembers()->add($user);
+
+        $this->getGroupManager()->saveGroup($group);
+
+        $em->remove($application);
+        $em->flush();
+
+        $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
+
+        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+    }
+
+    public function rejectApplicationAction($id, $applicationId) {
+
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ManageApplications');
+
+        $appRepo = $this->getGroupApplicationRepo();
+
+        $application = $appRepo->find($applicationId);
+
+        if (!$application) {
+            $this->setFlash('error', 'Application not found!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $user = $application->getApplicant();
+
+        if (!$user) {
+            $this->setFlash('error', 'User not found!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $em = $this->getEntityManager();
+
+        if ($group->isMember($user)) {
+
+            $em->remove($application);
+            $em->flush();
+
+            $this->setFlash('error', 'This user is already a member of this group - application removed!');
+            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        }
+
+        $em->remove($application);
+        $em->flush();
+
+        $this->setFlash('success', sprintf('You have successfully rejected \'%s\' from joining your group!', $user->getUsername()));
+
+        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+    }
+
+    public function applicationsAction($id) {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ManageApplications');
+
+        $appRepo = $this->getGroupApplicationRepo();
+
+        $applications = $appRepo->getApplicationsForGroup($group);
+
+        return $this->render('SpoutletBundle:Group:applications.html.twig', array(
+            'applications' => $applications,
+            'group' => $group
+        ));
+    }
+
     public function indexAction()
     {
         $this->addGroupsBreadcrumb();

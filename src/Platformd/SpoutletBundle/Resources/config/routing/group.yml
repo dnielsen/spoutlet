@@ -91,3 +91,14 @@ group_update:
     defaults: { _controller: "SpoutletBundle:Group:edit", site: ~ }
     requirements: { _method: post }
 
+group_applications:
+    pattern:  /{id}/applications/
+    defaults: { _controller: "SpoutletBundle:Group:applications", site: ~ }
+
+group_accept_application:
+    pattern:  /{id}/applications/{applicationId}/accept
+    defaults: { _controller: "SpoutletBundle:Group:acceptApplication", site: ~ }
+
+group_reject_application:
+    pattern:  /{id}/applications/{applicationId}/reject
+    defaults: { _controller: "SpoutletBundle:Group:rejectApplication", site: ~ }

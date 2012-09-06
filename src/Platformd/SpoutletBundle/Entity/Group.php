@@ -27,8 +27,8 @@ class Group implements LinkableInterface
         'topic',
     );
 
-    static private $superAdminIsAllowedTo        = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo');
-    static private $ownerIsAllowedTo             = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo');
+    static private $superAdminIsAllowedTo        = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
+    static private $ownerIsAllowedTo             = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageApplications');
     static private $memberIsAllowedTo            = array('ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroup', 'JoinGroup');
     static private $nonMemberPrivateIsAllowedTo  = array('ApplyToGroup');
