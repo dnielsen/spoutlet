@@ -117,7 +117,7 @@
                 <div id="content-group-videos" class="featured-content-category">
 
                 </div>
-                <div id="content-group-about" class="featured-content-category">
+                <div id="content-group-about" class="featured-content-category" style="height: 500px;">
                     {% include 'SpoutletBundle:Group:_about.html.twig' %}
                 </div>
             </div>
@@ -219,12 +219,17 @@
                                 }
                             });
                             break;
+                        case 'group-about':
+                            content.resize();
+                            content.mCustomScrollbar('update');
+                            break;
                     }
 
                     $(this).delay(500);
                     content.fadeIn();
                 });
             });
+            $('#content-group-about').mCustomScrollbar();
         });
     </script>
 

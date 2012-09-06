@@ -21,13 +21,16 @@
         <div class="widget-title">Alienware Arena Groups</div>
     </div>
     <div class="widget-content">
-        <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
-            <tbody><tr>
-                <th style="width:25%;">Name</th>
-                <th style="width:25%;">Member Count</th>
-                <th style="width:25%;">Status</th>
-                <th style="width:25%;">Actions</th>
-            </tr>
+        <table style="width: 100%;" id="groups-table">
+            <thead>
+                <tr>
+                    <th style="width:25%; cursor: pointer" class="header">Name</th>
+                    <th style="width:25%; cursor: pointer" class="header">Member Count</th>
+                    <th style="width:25%; cursor: pointer" class="header">Status</th>
+                    <th style="width:25%; cursor: pointer" class="header">Actions</th>
+                </tr>
+            <thead>
+            <tbody>
             {% for group in entities %}
                 <tr class="eventListGroup_lan">
                     <td>
@@ -72,4 +75,14 @@
     <div class="widget-footer">&nbsp;</div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/admin/js/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#groups-table').tablesorter();
+        });
+    </script>
 {% endblock %}

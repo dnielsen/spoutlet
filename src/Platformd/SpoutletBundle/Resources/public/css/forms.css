@@ -889,7 +889,6 @@ select,
   line-height: 18px;
   color: #AAA;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
@@ -1860,7 +1859,7 @@ table .span24 {
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url('/bundles/spoutlet/css/bootstrap/img/glyphicons-halflings.png');
+  background-image: url('/bundles/spoutlet/css/bootstrap/img/glyphicons-halflings-white.png');
   background-position: 14px 14px;
   background-repeat: no-repeat;
 }
@@ -2726,3 +2725,7 @@ table .span24 {
   display: none !important;
 }
 
+.edit-news textarea {
+    width: 400px;
+    height: 300px;
+}
