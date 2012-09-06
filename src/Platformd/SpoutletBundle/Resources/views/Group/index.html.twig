@@ -60,7 +60,12 @@
                             <a href="{{ path('group_join', { 'id': group.id }) }}">Join Group</a>
                         {% endif %}
                         {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
-                            <a href="{{ path('group_apply', { 'id': group.id }) }}">Apply to Join Group</a>
+                            {% if group.isApplicant(app.user) %}
+                                You will receive an email if you are admitted into this group.
+                            {% else %}
+                                <a href="{{ path('group_apply', { 'id': group.id }) }}">Apply to Join Group</a>
+                            {% endif %}
+
                         {% endif %}
                     </td>
                 </tr>

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
+use Platformd\SpoutletBundle\Entity\GroupApplication;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -155,6 +156,12 @@ class Group implements LinkableInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupApplication", mappedBy="group")
+     */
+    private $applications;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupNews", mappedBy="group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -164,6 +171,7 @@ class Group implements LinkableInterface
     {
         $this->sites = new ArrayCollection();
         $this->members = new ArrayCollection();
+        $this->applications = new ArrayCollection();
     }
 
     /**
@@ -424,6 +432,22 @@ class Group implements LinkableInterface
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $applications
+     */
+    public function setApplications($applications)
+    {
+        $this->applications = $applications;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
     public function getSites()
     {
         return $this->sites;
@@ -522,6 +546,23 @@ class Group implements LinkableInterface
         }
 
         return $this->getOwner() === $user;
+    }
+
+    public function isApplicant($user)
+    {
+        if(!$user) {
+            return false;
+        }
+
+        foreach($this->getApplications() as $application)
+        {
+            if($application->getApplicant() == $user)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
