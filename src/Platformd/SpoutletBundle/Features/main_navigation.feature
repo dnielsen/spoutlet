@@ -23,6 +23,7 @@ Feature: Main Navigation
       | Alienware   | http://alienware.com.cn/  |
       | 活动        | /events/                  |
       | 新闻        | /news                     |
+      | 壁纸下载    | /wallpapers               |
       | 微软        | /microsoft                |
 
   Scenario: The "Latin America" site's main navigation menu has the correct items

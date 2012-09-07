@@ -537,6 +537,7 @@ class SpoutletExtension extends Twig_Extension
         $northAmerica = in_array($locale, array('en_US', 'en'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
         $demoOnly = in_array($locale, array('en'));
+        $china = in_array($locale, array('zh'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -550,7 +551,7 @@ class SpoutletExtension extends Twig_Extension
             case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
-            case 'WALLPAPERS':                  return !$chinaOrJapan;
+            case 'WALLPAPERS':                  return !$japan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
