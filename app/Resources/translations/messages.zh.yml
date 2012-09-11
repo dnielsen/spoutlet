@@ -66,6 +66,7 @@ platformd:
             news: 新闻
             microsoft: 微软
             media: Media
+            wallpapers: 壁纸下载
 
         page_content:
             featured: 专栏

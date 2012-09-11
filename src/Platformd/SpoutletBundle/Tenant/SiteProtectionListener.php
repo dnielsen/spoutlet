@@ -68,12 +68,20 @@ class SiteProtectionListener
         $session = $request->getSession();
         $locale = $session->getLocale();
 
+        $matcher = new RequestMatcher();
+
+        $matcher->matchPath('^/account/profile');
+
+        if ($matcher->matches($request) && ($locale == 'ja' || $locale == 'zh')) {
+            $this->forwardToCevo($event, $request);
+            return;
+        }
+
         // if we're on of the "allowed" sites, then we're totally good
         if (in_array($locale, $this->allowedSites)) {
             return;
         }
 
-        $matcher = new RequestMatcher();
         foreach (self::$allowedPatterns as $allowedPattern) {
             $matcher->matchPath($allowedPattern);
 
@@ -83,6 +91,10 @@ class SiteProtectionListener
             }
         }
 
+        $this->forwardToCevo($event, $request);
+    }
+
+    private function forwardToCevo(GetResponseEvent $event, $request) {
         // at this point, we don't match, so we need to redirect back to CEVO
         $url = $this->translateToCEVOUrl($request->getPathInfo());
 

@@ -30,10 +30,6 @@ class GiveawayController extends Controller
      */
     public function showAction($slug, $keyId)
     {
-        if ($slug == 'dota-2') {
-            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
-        }
-
         $giveaway = $this->findGiveaway($slug);
 
         $pool = $giveaway->getActivePool();

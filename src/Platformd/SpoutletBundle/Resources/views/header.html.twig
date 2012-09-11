@@ -1,5 +1,6 @@
 {% set facebookLink = site_link('FACEBOOK') %}
 {% set twitterLink = site_link('TWITTER') %}
+{% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
 <script type="text/javascript">
 //<![CDATA[
 $(document).ready(function() {
@@ -35,6 +36,14 @@ $(".featured-content-header a").click(function() {
                                 {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
                             </li>
                         {% endif %}
+
+                        {% if socialMediaStrip -%}
+
+                            <li class="separator">
+                               {{ socialMediaStrip | raw }}
+                            </li>
+
+                        {%- endif -%}
 
                         <li class="separator">
                             {% include 'SpoutletBundle::user.html.twig' %}

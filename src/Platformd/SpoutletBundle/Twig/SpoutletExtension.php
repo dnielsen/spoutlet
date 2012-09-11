@@ -296,6 +296,7 @@ class SpoutletExtension extends Twig_Extension
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
             case 'USER_PROFILE':                    return $this->GetUserProfileLink($locale);
             case 'USER_GIVEAWAY':                   return $this->GetUserGiveawayLink($locale);
+            case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -387,6 +388,24 @@ class SpoutletExtension extends Twig_Extension
 
                 return false;
         }
+    }
+
+    private function GetSocialMediaStripForHeaderAndFooter($locale) {
+
+        switch($locale) {
+            case 'zh':      return $this->GetSocialMediaStripForHeaderAndFooterChina();
+            default:        return false;
+        }
+    }
+
+    private function GetSocialMediaStripForHeaderAndFooterChina() {
+
+        $output  = ' <a href="http://myalienware.cn/" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/1_btn_jkgm_hover.png" style="height: 16px;" /></a> ';
+        $output .= '<a href="http://e.weibo.com/alienwareallpowerful" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/2_ico_sina.png" style="height: 16px;" /></a> ';
+        $output .= '<a href="http://t.qq.com/alienware" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/3_ico_tencent.png" style="height: 16px;" /></a> ';
+        $output .= '<a href="http://bbs.alienfans.net/" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/4_ico_aw.png" style="height: 16px;" /></a> ';
+
+        return $output;
     }
 
     private function GetFacebookLink($locale) {
@@ -567,6 +586,7 @@ class SpoutletExtension extends Twig_Extension
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
         $demoOnly = in_array($locale, array('en'));
         $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
+        $china = in_array($locale, array('zh'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -580,8 +600,8 @@ class SpoutletExtension extends Twig_Extension
             case 'GAMES':                       return !$chinaOrJapanOrLatam;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
             case 'MESSAGES':                    return !$chinaOrJapan;
-            case 'WALLPAPERS':                  return !$chinaOrJapan;
             case 'GROUPS':                      return $northAmericaEuropeAnzOnly;
+            case 'WALLPAPERS':                  return !$japan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
