@@ -70,7 +70,7 @@ class SiteProtectionListener
 
         $matcher = new RequestMatcher();
 
-        $matcher->matchPath('^/account/profile');
+        $matcher->matchPath('^/account/profile$');
 
         if ($matcher->matches($request) && ($locale == 'ja' || $locale == 'zh')) {
             $this->forwardToCevo($event, $request);
