@@ -80,6 +80,46 @@ class GroupController extends Controller
         return $this->get('security.context')->getToken()->getUser();
     }
 
+    private function sendApplicationAcceptedEmail($application) {
+
+        $currentHost        = $this->getRequest()->getHost();
+        $currentSubDomain   = substr($currentHost, 0, stripos($currentHost, '.'));
+        $applicantSubDomain = $application->getSite()->getSubDomain();
+
+        if (strpos($currentSubDomain, 'staging') !== false) {
+            $applicantSubDomain .= 'staging';
+        }
+
+        $baseHost          = $this->container->getParameter('base_host');
+
+        $groupName          = $application->getGroup()->getName();
+        $groupUrlRelative   = $this->generateUrl('group_show', array('id' => $application->getGroup()->getId()));
+        $groupUrlAbsolute   = sprintf('http://%s.%s%s', $applicantSubDomain, $baseHost, $groupUrlRelative);
+
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+
+        $subject            = "You’re approved to be in an Alienware Arena Group!";
+        $message            = sprintf("Congratulations!  You’re now a member of \"%s\" (Group Page: %s).
+
+Visit your group's page to join in on the conversation and share information with your group members.
+
+Note: You are receiving this message because you submitted a request to join a private group.
+
+Alienware Arena Team
+", $groupName, $groupUrlAbsolute);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($fromEmail, $fromName)
+            ->setTo($application->getApplicant()->getEmail())
+            ->setBody($message);
+
+        $mailer = $this->container->get('mailer');
+
+        $mailer->send($message);
+    }
+
     public function acceptApplicationAction($id, $applicationId) {
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ManageApplications');
@@ -114,6 +154,8 @@ class GroupController extends Controller
         $group->getMembers()->add($user);
 
         $this->getGroupManager()->saveGroup($group);
+
+        $this->sendApplicationAcceptedEmail($application);
 
         $em->remove($application);
         $em->flush();
@@ -278,6 +320,7 @@ class GroupController extends Controller
 
         $application->setApplicant($user);
         $application->setGroup($group);
+        $application->setSite($this->getCurrentSite());
 
         $em = $this->getEntityManager();
         $em->persist($application);

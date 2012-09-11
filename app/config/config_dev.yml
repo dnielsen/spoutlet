@@ -18,7 +18,7 @@ framework:
 
 web_profiler:
     toolbar: true
-    intercept_redirects: false
+    intercept_redirects: true
 
 monolog:
     handlers:
@@ -31,7 +31,10 @@ monolog:
             level: info
 
 swiftmailer:
-    delivery_address: weaverryan@gmail.com
+    delivery_address: chris.magee@gametheworld.com
+
+parameters:
+    sender_email_address: "noreply@alienwarearena.com"
 
 assetic:
     use_controller: false

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\Site;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -55,6 +56,14 @@ class GroupApplication
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group;
+
+     /**
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     */
+    private $site;
+
 
     public function __construct()
     {
@@ -122,5 +131,15 @@ class GroupApplication
     public function setGroup(Group $value)
     {
         $this->group = $value;
+    }
+
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    public function setSite($value)
+    {
+        $this->site = $value;
     }
 }
