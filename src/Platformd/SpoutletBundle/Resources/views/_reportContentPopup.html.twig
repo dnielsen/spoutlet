@@ -12,6 +12,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
+
         var reportDialog = $('#report-content-dialog-{{ reportContentType }}').dialog({
             autoOpen: false,
             modal: true,
@@ -43,7 +44,10 @@
                 success: function(data) {
                     if(!data.success) {
                         alert(data.messageForUser);
+                    } else {
+                        alert('We will review the content shortly.');
                     }
+
                 }
             })
             reportDialog.dialog('close');
@@ -52,8 +56,6 @@
         $('#close-dialog-{{ reportContentType }}').click(function () {
             reportDialog.dialog('close');
         });
-
-
     });
 </script>
 

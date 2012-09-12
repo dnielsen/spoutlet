@@ -25,22 +25,13 @@
 {% block page_background_image customPageBackgroundImage %}
 
 {% block content %}
-<div class="std_2col" style="padding: 0;">
-    <div class="left">
-        <div id="group-avatar">
-            {% if group.groupAvatar %}
-                <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
-            {% endif %}
-        </div>
-    </div>
-    <div class="right">
-        <div class="join-group-options">
-            <form action="{{ path('group_join', { 'id': group.id }) }}">
-                {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
-                    <button id="join-group-button" type="submit" ></button>
-                {% endif %}
-            </form>
-        </div>
+<div class="std_1col" style="padding: 0;">
+    <div id="group-avatar">
+        {% if group.groupAvatar %}
+            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
+        {% else %}
+            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" /></a>
+        {% endif %}
     </div>
 </div>
 <div class="std_1col" style="padding: 0;">
@@ -50,6 +41,13 @@
 </div>
 <div class="std_2col">
     <div class="right">
+        {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
+        <div class="join-group-options">
+            <form action="{{ path('group_join', { 'id': group.id }) }}">
+                <button id="join-group-button" type="submit" ></button>
+            </form>
+        </div>
+        {% endif %}
         <div class="widget-33" style="height: auto; margin-bottom: 10px;">
             <div class="widget-header">
                 <div class="widget-title">
@@ -102,7 +100,7 @@
         <div class="widget-66" id="featured-content" style="min-height: 500px;">
             <div class="featured-content-header">
                 <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                <a href="javascript:void(0);" id="group-photos">Image Gallery</a>
+                <a href="javascript:void(0);" id="group-photos">Images</a>
                 <a href="javascript:void(0);" id="group-videos">Videos</a>
                 <a href="javascript:void(0);" id="group-about">About</a>
                 <div style="clear: left;"></div>

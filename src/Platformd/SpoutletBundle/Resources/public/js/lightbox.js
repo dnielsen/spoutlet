@@ -9,7 +9,7 @@ http://lokeshdhakar.com/projects/lightbox2/
 Licensed under the Creative Commons Attribution 2.5 License - http://creativecommons.org/licenses/by/2.5/
 - free for use in both personal and commercial projects
 - attribution requires leaving author name, author link, and the license info intact
-	
+
 Thanks
 - Scott Upton(uptonic.com), Peter-Paul Koch(quirksmode.com), and Thomas Fuchs(mir.aculo.us) for ideas, libs, and snippets.
 - Artemy Tregubenko (arty.name) for cleanup and help in updating to latest proto-aculous in v2.05.
@@ -163,7 +163,8 @@ lightbox = new Lightbox options
       if ($link.attr('rel') === 'lightbox') {
         this.album.push({
           link: $link.attr('href'),
-          title: $link.attr('title')
+          title: $link.attr('title'),
+          imageId: $link.attr('img-data'),
         });
       } else {
         _ref = $($link.prop("tagName") + '[rel="' + $link.attr('rel') + '"]');
@@ -171,7 +172,8 @@ lightbox = new Lightbox options
           a = _ref[i];
           this.album.push({
             link: $(a).attr('href'),
-            title: $(a).attr('title')
+            title: $(a).attr('title'),
+            imageId: $(a).attr('img-data'),
           });
           if ($(a).attr('href') === $link.attr('href')) imageNumber = i;
         }
@@ -273,6 +275,9 @@ lightbox = new Lightbox options
     Lightbox.prototype.updateDetails = function() {
       var $lightbox,
         _this = this;
+
+      var imageId = this.album[this.currentImageIndex].imageId;
+
       $lightbox = $('#lightbox');
       if (typeof this.album[this.currentImageIndex].title !== 'undefined' && this.album[this.currentImageIndex].title !== "") {
         $lightbox.find('.lb-caption').html(this.album[this.currentImageIndex].title).fadeIn('fast');
@@ -282,6 +287,7 @@ lightbox = new Lightbox options
       } else {
         $lightbox.find('.lb-number').hide();
       }
+
       $lightbox.find('.lb-outerContainer').removeClass('animating');
       $lightbox.find('.lb-dataContainer').fadeIn(this.resizeDuration, function() {
         return _this.sizeOverlay();
