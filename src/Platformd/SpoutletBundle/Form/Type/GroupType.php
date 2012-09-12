@@ -35,12 +35,12 @@ class GroupType extends AbstractType
             ->add('groupAvatar', new MediaType(), array(
                 'image_label'   => 'Group Avatar',
                 'image_help'    => 'Recommended size: 636x120',
-                'with_remove_checkbox' => $group == null ? false : true;
+                'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
                 'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
-                'with_remove_checkbox' => $group == null ? false : true;
+                'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('description', 'textarea', array(
                 'label' => 'Information about Group*',
