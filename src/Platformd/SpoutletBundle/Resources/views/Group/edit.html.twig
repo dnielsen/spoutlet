@@ -28,9 +28,25 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+
+            var groupType = $('#platformd_spoutletbundle_grouptype_category').val();
+
+            if(groupType == 'topic') {
+                $('#group-location-controls').hide();
+            }
+
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
+            });
+
+            $('#platformd_spoutletbundle_grouptype_category').change(function () {
+                var groupType = $(this).val();
+                if(groupType == 'topic') {
+                    $('#group-location-controls').fadeOut();
+                } else {
+                    $('#group-location-controls').fadeIn();
+                }
             });
         });
     </script>

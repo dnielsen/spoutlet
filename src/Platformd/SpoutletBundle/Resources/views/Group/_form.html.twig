@@ -25,7 +25,9 @@
                 {{ form_row(form.allLocales) }}
             {% endif %}
 
-            {{ form_row(form.location) }}
+            <div id="group-location-controls">
+                {{ form_row(form.location) }}
+            </div>
         </div>
     {{ form_rest(form) }}
 </div>
