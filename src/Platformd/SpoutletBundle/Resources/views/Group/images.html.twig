@@ -15,27 +15,27 @@
             {% for imageList in page %}
                 {% for image in imageList %}
                     <div class="group-image-item">
-                        <div class="group-image-actions">
-                            {% if canDelete %}
-                                <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a> |
-                            {% endif %}
-                            {% if canEdit %}
-                                <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a>
-                            {% endif %}
-                        </div>
                         <div class="group-image-image">
                             <a href="{{ media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ group.name }}]" style="border:none;">
                                 <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
                             </a>
                         </div>
                         <div class="group-image-title">
-                            {% if image.title | length > 25  %}
-                                {{ image.title | slice(0, 25) ~ '…' }}
+                            {% if image.title | length > 20  %}
+                                {{ image.title | slice(0, 20) ~ '…' }}
                             {% else %}
                                 {{ image.title }}
                             {% endif %}
                         </div>
-                        <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}" style="font-size: 0.8em">report</a>
+                        <div class="group-image-actions">
+                            {% if canDelete %}
+                                <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a> |
+                            {% endif %}
+                            {% if canEdit %}
+                                <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a> |
+                            {% endif %}
+                            <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
+                        </div>
                     </div>
                 {% endfor %}
             {% endfor %}

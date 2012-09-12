@@ -11,15 +11,13 @@
 {% block page_background_image customPageBackgroundImage %}
 
 {% block content %}
-<div class="std_2col" style="padding: 0;">
-    <div class="left">
-        <div id="group-avatar">
-            {% if group.groupAvatar %}
-                <img src="{{ media_path(group.groupAvatar) }}" />
-            {% endif %}
-        </div>
-    </div>
-    <div class="right">
+<div class="std_1col" style="padding: 0;">
+    <div id="group-avatar">
+        {% if group.groupAvatar %}
+            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
+        {% else %}
+            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" /></a>
+        {% endif %}
     </div>
 </div>
 <div class="std_1col" style="padding: 0;">

@@ -213,7 +213,7 @@
 .group-image-item {
     display: inline-table;
     width: 135px;
-    height: 140px;
+    height: 100px;
     margin: 5px;
 }
 
@@ -224,7 +224,10 @@
 
 .group-image-title {
     width: 135px;
-    height: 30px;
+}
+
+.group-image-actions {
+    font-size: 0.8em;
 }
 
 .scrollable {
