@@ -6,6 +6,8 @@ parameters:
     # this allows us to fake CEVO's api right on our own site
     cevo_base_url: /cevo/api/stub
 
+    sender_email_address: "noreply@alienwarearena.com"
+
     # This determines whether to silently forward the user to the CEVO site if the current
     # site (japan, china, na, etc) isn't enabled to host the content for the requested page
     # or resource. If set this to false then a NotFoundHttpException will be thrown instead
@@ -32,9 +34,6 @@ monolog:
 
 swiftmailer:
     delivery_address: chris.magee@gametheworld.com
-
-parameters:
-    sender_email_address: "noreply@alienwarearena.com"
 
 assetic:
     use_controller: false
