@@ -210,10 +210,10 @@
 
             var loadContent = function(tab) {
                 if(tab == 'group-') {
-                    tab = 'group-news';
+                    loadNewsContent('group-news');
+                } else {
+                    $('#' + tab).click();
                 }
-
-                $('#' + tab).click();
             }
 
             $(".featured-content-header a").click(function() {
