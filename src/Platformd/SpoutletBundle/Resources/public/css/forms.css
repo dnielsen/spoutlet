@@ -34,6 +34,7 @@ textarea {
     border: 1px solid #3F3F3F;
     outline: none;
     color: #AAAAAA;
+    resize: none;
 }
 
 button {

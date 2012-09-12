@@ -12,8 +12,13 @@
             {{ form_widget(form.groupAvatar) }}
             {{ form_widget(form.backgroundImage) }}
             {{ form_row(form.description) }}
-            {{ form_row(form.howToJoin) }}
-            {{ form_row(form.isPublic) }}
+            <div class="control-group ">
+                {{ form_label(form.isPublic) }}
+                <div class="controls">
+                    {{ form_widget(form.isPublic) }}
+                    <span style="color: #AAA">Yes</span>
+                </div>
+            </div>
 
             {% if form.sites is defined %}
                 {{ form_row(form.sites) }}

@@ -69,8 +69,7 @@ class Group implements LinkableInterface
 
     /**
      * @var text $howToJoin
-     * @Assert\NotNull(message="Required")
-     * @ORM\Column(name="howToJoin", type="text")
+     * @ORM\Column(name="howToJoin", type="text", nullable=true)
      */
     private $howToJoin;
 

@@ -45,10 +45,10 @@ class GroupType extends AbstractType
             ->add('description', 'textarea', array(
                 'label' => 'Information about Group*',
             ))
-            ->add('howToJoin', 'textarea', array(
-                'label' => 'How to Join?*',
+            ->add('isPublic', 'checkbox', array(
+                'required' => true,
+                'label' => 'Make this Group Public?',
             ))
-            ->add('isPublic', 'checkbox', array('required' => true, 'label' => 'Make this Group Public?'))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
             ));
