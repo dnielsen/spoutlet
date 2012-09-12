@@ -100,7 +100,7 @@
         <div class="widget-66" id="featured-content" style="min-height: 500px;">
             <div class="featured-content-header">
                 <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                <a href="javascript:void(0);" id="group-photos">Images</a>
+                <a href="javascript:void(0);" id="group-images">Images</a>
                 <a href="javascript:void(0);" id="group-videos">Videos</a>
                 <a href="javascript:void(0);" id="group-about">About</a>
                 <div style="clear: left;"></div>
@@ -109,7 +109,7 @@
                 <div id="content-group-news" class="featured-content-category active">
 
                 </div>
-                <div id="content-group-photos" class="featured-content-category">
+                <div id="content-group-images" class="featured-content-category">
 
                 </div>
                 <div id="content-group-videos" class="featured-content-category">
@@ -169,17 +169,60 @@
                 });
             });
 
-            $.ajax({
-                url: '{{ path('group_news', { 'id' : group.id }) }}',
-                method: 'get',
-                success: function(data, textStatus, jqXHR) {
-                    $('#content-group-news').html(data);
+            var hash = window.location.hash.replace('#','');
+
+            var tab = 'group-' + hash;
+
+            var loadVideoContent = function(id) {
+                var content = $('.featured-content-category#content-'+id);
+                $.ajax({
+                    url: '{{ path('group_videos', { 'id' : group.id }) }}',
+                    method: 'get',
+                    success: function(data, textStatus, jqXHR) {
+                        content.html(data);
+                        $("#scrollable-videos").scrollable();
+                    }
+                });
+            }
+
+            var loadNewsContent = function(id) {
+                var content = $('.featured-content-category#content-'+id);
+                $.ajax({
+                    url: '{{ path('group_news', { 'id' : group.id }) }}',
+                    method: 'get',
+                    success: function(data, textStatus, jqXHR) {
+                        content.html(data);
+                    }
+                });
+            }
+
+            var loadImageContent = function(id) {
+                var content = $('.featured-content-category#content-'+id);
+                $.ajax({
+                    url: '{{ path('group_images', { 'id' : group.id }) }}',
+                    method: 'get',
+                    success: function(data, textStatus, jqXHR) {
+                        content.html(data);
+                        $("#scrollable-images").scrollable();
+                    }
+                });
+            }
+
+            var loadContent = function(tab) {
+                if(tab == 'group-') {
+                    tab = 'group-news';
                 }
-            });
+
+                $('#' + tab).click();
+            }
 
             $(".featured-content-header a").click(function() {
+
                 var current = $('.featured-content-header a.active').attr('id');
                 var id = $(this).attr('id');
+
+                window.location.hash = id.replace('group-', '');
+
                 $('.featured-content-header a.active').removeClass('active');
                 $(this).addClass('active');
                 $('.featured-content-category#content-'+current).fadeOut('fast', function () {
@@ -189,33 +232,13 @@
 
                     switch(id) {
                         case 'group-videos':
-                            $.ajax({
-                                url: '{{ path('group_videos', { 'id' : group.id }) }}',
-                                method: 'get',
-                                success: function(data, textStatus, jqXHR) {
-                                    content.html(data);
-                                    $("#scrollable-videos").scrollable();
-                                }
-                            });
+                            loadVideoContent(id);
                             break;
                         case 'group-news':
-                            $.ajax({
-                                url: '{{ path('group_news', { 'id' : group.id }) }}',
-                                method: 'get',
-                                success: function(data, textStatus, jqXHR) {
-                                    content.html(data);
-                                }
-                            });
+                            loadNewsContent(id);
                             break;
-                        case 'group-photos':
-                            $.ajax({
-                                url: '{{ path('group_images', { 'id' : group.id }) }}',
-                                method: 'get',
-                                success: function(data, textStatus, jqXHR) {
-                                    content.html(data);
-                                    $("#scrollable-images").scrollable();
-                                }
-                            });
+                        case 'group-images':
+                            loadImageContent(id);
                             break;
                         case 'group-about':
                             content.resize();
@@ -228,6 +251,7 @@
                 });
             });
             $('#content-group-about').mCustomScrollbar();
+            loadContent(tab);
         });
     </script>
 
