@@ -734,7 +734,7 @@ Alienware Arena Team
         $this->addGroupsBreadcrumb()->addChild('New Group');
 
         $group  = new Group();
-        $form    = $this->createForm(new GroupType($this->getUser()), $group);
+        $form   = $this->createForm(new GroupType($this->getUser(), $group), $group);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
@@ -755,7 +755,7 @@ Alienware Arena Team
 
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
 
-        $editForm = $this->createForm(new GroupType($this->getUser()), $group);
+        $editForm = $this->createForm(new GroupType($this->getUser(), $group), $group);
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The group was saved!');
