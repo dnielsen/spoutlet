@@ -213,12 +213,18 @@
 .group-image-item {
     display: inline-table;
     width: 135px;
+    height: 140px;
     margin: 5px;
 }
 
 .group-image-image img {
     width: 135px;
     height: 80px;
+}
+
+.group-image-title {
+    width: 135px;
+    height: 30px;
 }
 
 .scrollable {

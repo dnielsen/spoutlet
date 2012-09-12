@@ -28,7 +28,7 @@
                                 <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
                             </a>
                         </div>
-                        <div>
+                        <div class="group-image-title">
                             {% if image.title | length > 25  %}
                                 {{ image.title | slice(0, 25) ~ '…' }}
                             {% else %}
