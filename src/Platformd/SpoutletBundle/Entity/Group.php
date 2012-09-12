@@ -9,6 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
+use Symfony\Component\Validator\ExecutionContext;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -17,10 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
+ * @Assert\Callback(methods={"locationRequiredCallBack"})
  */
 class Group implements LinkableInterface
 {
-
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
 
     static private $validCategories = array(
@@ -623,5 +624,27 @@ class Group implements LinkableInterface
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    public function locationRequiredCallBack(ExecutionContext $executionContext)
+    {
+        if ($this->getCategory() != 'location') {
+            return;
+        }
+
+        $location = $this->getLocation();
+
+        if ($location && $location->getCity() && strlen($location->getCity()) > 1) {
+            return;
+        }
+
+        $propertyPath = $executionContext->getPropertyPath().'.location.city';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            'If you are creating a "location" group you must at least enter your City.',
+            array(),
+            null
+        );
     }
 }

@@ -18,8 +18,7 @@ class LocationType extends AbstractType
             'label' => 'Address Line 2',
         ))
         ->add('city', null, array(
-            'label' => 'City*',
-            'required' => true,
+            'label' => 'City*'
         ))
         ->add('state_province', null, array(
             'label' => 'State/Province'

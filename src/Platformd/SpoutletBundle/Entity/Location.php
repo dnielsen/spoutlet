@@ -36,8 +36,7 @@ class Location
 
     /**
      * @var string $city
-     * @Assert\NotNull(message="Required")
-     * @ORM\Column(name="city", type="string", length=255)
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
