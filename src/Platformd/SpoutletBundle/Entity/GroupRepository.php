@@ -71,4 +71,67 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function findGroupsByCategoryAndSite($category, $site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->where('g.category = :category')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
+            ->setParameter('category', $category)
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findMostRecentlyCreatedGroupsForSite($site, $limit=10)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
+            ->addOrderBy('g.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findMostPopularGroupsForSite($site, $limit=10)
+    {
+        $query = '
+        SELECT
+            pd_groups.`id` AS group_id,
+            pd_groups.`name` AS group_name,
+            pd_group_site.group_id,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    pd_groups_members
+                WHERE
+                    pd_groups.id = group_id
+            ) AS member_count
+        FROM
+            pd_groups
+        INNER JOIN pd_group_site ON pd_group_site.group_id = pd_groups.id
+        WHERE
+            pd_group_site.site_id = :site
+        AND pd_groups.deleted = 0
+        ORDER BY
+            member_count DESC
+        LIMIT 10';
+
+        $stmt = $this->getEntityManager()
+                     ->getConnection()
+                     ->prepare($query);
+
+        $stmt->bindValue('site', $site->getId());
+
+        $stmt->execute();
+
+
+        return $stmt->fetchAll();
+    }
 }

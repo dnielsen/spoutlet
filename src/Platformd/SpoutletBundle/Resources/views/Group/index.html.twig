@@ -8,8 +8,8 @@
 {% block content %}
 
 {% set site = get_current_site() %}
-<div class="std_2col" style="padding: 0;">
-    <img src="" alt="Alienware Arena Groups" style="width: 950px; height: 270px; border: none;" />
+<div class="std_1col" style="padding: 0;">
+    <img src="" alt="Alienware Arena Groups" style="width: 950px; height: 120px; border: none;" />
 </div>
 <div class="groups-sub-nav">
     <ul>
@@ -17,79 +17,57 @@
         <li><a href="{{ path('group_new') }}">Create Group</a></li>
     </ul>
 </div>
-
-<div class="widget-100">
-    <div class="widget-header">
-        <div class="widget-title">Alienware Arena Groups</div>
+<div class="std_2col">
+    <div class="left">
+        <h3 style="margin: 0; color: #fff;">Recommended ALIENWARE Groups</h3>
+        <div class="scrollable" id="scrollable-location-groups">
+            <div class="items">
+                {% for page in locationGroups %}
+                    <div class="groups-wrapper">
+                    {% for groupList in page %}
+                        {% for group in groupList %}
+                            <div>{{ group.name }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="widget-content">
-        <table style="width: 100%;" id="groups-table">
-            <thead>
-                <tr>
-                    <th style="width:25%; cursor: pointer" class="header">Name</th>
-                    <th style="width:25%; cursor: pointer" class="header">Member Count</th>
-                    <th style="width:25%; cursor: pointer" class="header">Status</th>
-                    <th style="width:25%; cursor: pointer" class="header">Actions</th>
-                </tr>
-            <thead>
-            <tbody>
-            {% for group in entities %}
-                <tr class="eventListGroup_lan">
-                    <td>
-                        {% if group.isAllowedTo(app.user, site, 'ViewGroup') %}
-                            <a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a>
-                        {% else %}
-                            {{ group.name }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{ group.members.count }}
-                    </td>
-                    <td>
-                        {% if group.isPublic %}
-                            <span class="label label-success">Public</span>
-                        {% else %}
-                            <span class="label label-warning">Private</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if group.isAllowedTo(app.user, site, 'LeaveGroup') %}
-                            <a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a>
-                        {% endif %}
-                        {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
-                            <a href="{{ path('group_join', { 'id': group.id }) }}">Join Group</a>
-                        {% endif %}
-                        {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
-                            {% if group.isApplicant(app.user) %}
-                                Waiting for Approval
-                            {% else %}
-                                <a href="{{ path('group_apply', { 'id': group.id }) }}">Apply to Join Group</a>
-                            {% endif %}
-
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="2">
-                        <em>There are no groups!</em>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        <div class="widget-33">
+            <div class="widget-header">
+                <div class="widget-title">
+                    Welcome New Groups
+                </div>
+            </div>
+            <div class="widget-content">
+                {% for recentGroup in recentGroups %}
+                <div class="widget-item">
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'id': recentGroup.id }) }}">{{ recentGroup.name }}</a>
+                </div>
+                {% else %}
+                    <p>No groups found. Check back soon!</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="widget-33">
+            <div class="widget-header">
+                <div class="widget-title">
+                    Most Popular Groups
+                </div>
+            </div>
+            <div class="widget-content">
+                {% for popularGroup in popularGroups %}
+                <div class="widget-item">
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'id': popularGroup['group_id'] }) }}">{{ popularGroup['group_name'] }}</a>
+                </div>
+                {% else %}
+                    <p>No groups found. Check back soon!</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-    <div class="widget-footer">&nbsp;</div>
 </div>
-
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/admin/js/jquery.tablesorter.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('#groups-table').tablesorter();
-        });
-    </script>
 {% endblock %}

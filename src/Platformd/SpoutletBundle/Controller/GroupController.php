@@ -222,15 +222,39 @@ Alienware Arena Team
     public function indexAction()
     {
         $this->addGroupsBreadcrumb();
-        $em = $this->getEntityManager();
+        $em     = $this->getEntityManager();
+        $repo   = $em->getRepository('SpoutletBundle:Group');
+        $site   = $this->getCurrentSite();
 
-        $site = $this->getCurrentSite();
+        $locationGroups = $repo->findGroupsByCategoryAndSite('location', $site);
+        $topicGroups    = $repo->findGroupsByCategoryAndSite('topic', $site);
+        $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
+        $popularGroups  = $repo->findMostPopularGroupsForSite($site);
 
-        $entities = $em->getRepository('SpoutletBundle:Group')->findAllGroupsRelevantForSite($site);
+
 
         return $this->render('SpoutletBundle:Group:index.html.twig', array(
-            'entities' => $entities
+            'locationGroups' => $this->getGroupPages($locationGroups),
+            'topicGroups'    => $this->getGroupPages($topicGroups),
+            'recentGroups'   => $recentGroups,
+            'popularGroups'  => $popularGroups,
         ));
+    }
+
+    private function getGroupPages($groups)
+    {
+        $groupsPerPage = 8;
+        $pageCount = ceil(count($groups) / $groupsPerPage);
+
+        $pages = array();
+        $offset = 0;
+        for($i = 0; $i < $pageCount; $i++)
+        {
+            $pages[] = array(array_slice($groups, $offset, $groupsPerPage));
+            $offset += $groupsPerPage;
+        }
+
+        return $pages;
     }
 
     public function leaveAction($id)
