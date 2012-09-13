@@ -214,6 +214,10 @@
                 } else {
                     $('#' + tab).click();
                 }
+
+                window.setTimeout(function() {
+                    $('.xnotices').fadeOut();
+                }, 10000);
             }
 
             $(".featured-content-header a").click(function() {
