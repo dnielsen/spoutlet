@@ -109,15 +109,9 @@ Note: You are receiving this message because you submitted a request to join a p
 Alienware Arena Team
 ", $groupName, $groupUrlAbsolute);
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($fromEmail, $fromName)
-            ->setTo($application->getApplicant()->getEmail())
-            ->setBody($message);
+        $emailTo = $application->getApplicant()->getEmail();
 
-        $mailer = $this->container->get('mailer');
-
-        $mailer->send($message);
+        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Group Application Approved", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
 
     public function acceptApplicationAction($id, $applicationId) {
@@ -836,6 +830,11 @@ Alienware Arena Team
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
+    }
+
+     private function getEmailManager()
+    {
+        return $this->get('platformd.model.email_manager');
     }
 
     private function getEntityManager() {

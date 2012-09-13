@@ -13,7 +13,6 @@ parameters:
     # or resource. If set this to false then a NotFoundHttpException will be thrown instead
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: false
-    sender_email_address: "noreply@alienwarearena.com"
     email_destination_override: true
     email_destination_override_with: chris.magee@gametheworld.com
 
