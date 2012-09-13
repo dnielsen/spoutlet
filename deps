@@ -116,8 +116,13 @@
     git=git@github.com:KnpLabs/Gaufrette.git
     target=/gaufrette
 
-[aws-sdk]
-    git=https://github.com/amazonwebservices/aws-sdk-for-php
+[aws-sdk-for-php]
+    git=http://github.com/amazonwebservices/aws-sdk-for-php.git
+    target=/amazonwebservices/aws-sdk-for-php
+
+[AmazonWebServicesBundle]
+    git=http://github.com/Cybernox/AmazonWebServicesBundle.git
+    target=/bundles/Cybernox/AmazonWebServicesBundle
 
 [KnpGaufretteBundle]
     git=git@github.com:KnpLabs/KnpGaufretteBundle.git

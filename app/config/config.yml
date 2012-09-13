@@ -28,6 +28,9 @@ framework:
         domain:         .%base_host%
         storage_id:     session.storage.pdo
 
+cybernox_amazon_web_services:
+    key:                        %s3.access_key%
+    secret:                     %s3.secret_key%
 
 # Twig Configuration
 twig:

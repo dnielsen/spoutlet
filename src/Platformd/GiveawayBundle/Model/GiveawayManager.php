@@ -8,9 +8,9 @@ use Platformd\GiveawayBundle\Model\GiveawayKeyRequest;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Platformd\GiveawayBundle\Entity\Giveaway;
-use \Swift_Mailer;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Platformd\SpoutletBundle\Model\EmailManager;
 
 /**
  * Service class for dealing with the giveaway system
@@ -18,8 +18,6 @@ use Symfony\Component\Routing\RouterInterface;
 class GiveawayManager
 {
     private $em;
-
-    private $mailer;
 
     private $router;
 
@@ -32,12 +30,14 @@ class GiveawayManager
 
     private $fromName;
 
-    public function __construct(ObjectManager $em, Swift_Mailer $mailer, TranslatorInterface $translator, RouterInterface $router, $fromAddress, $fromName)
+    private $emailManager;
+
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName)
     {
         $this->em = $em;
-        $this->mailer = $mailer;
         $this->translator = $translator;
         $this->router = $router;
+        $this->emailManager = $emailManager;
         $this->fromAddress = $fromAddress;
         $this->fromName = $fromName;
     }
@@ -217,18 +217,19 @@ class GiveawayManager
             '%giveawayName%'  => $giveaway->getName(),
         ), 'messages', $giveaway->getLocale());
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->fromAddress, $this->fromName)
-            ->setTo($user->getEmail())
-            ->setBody($message)
-        ;
-        $this->mailer->send($message);
+        $emailTo = $user->getEmail();
 
-        // mark the notification email as sent
+        if (!$emailTo) {
+            return;
+        }
+
+        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Approved", $user->getLocale(), $this->fromName, $this->fromAddress);
+
+        if (!$result || !$result->getSendStatus()) {
+            return;
+        }
+
         $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
-
-        return $message;
     }
 
     /**
@@ -265,17 +266,19 @@ class GiveawayManager
             '%giveawayName%'  => $giveaway->getName(),
         ), 'messages', $giveaway->getLocale());
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($this->fromAddress, $this->fromName)
-            ->setTo($user->getEmail())
-            ->setBody($message)
-        ;
-        $this->mailer->send($message);
+        $emailTo = $user->getEmail();
+
+        if (!$emailTo) {
+            return;
+        }
+
+        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Denied", $user->getLocale(), $this->fromName, $this->fromAddress);
+
+        if (!$result || !$result->getSendStatus()) {
+            return;
+        }
 
         // mark the notification email as sent
         $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
-
-        return $message;
     }
 }
