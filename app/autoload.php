@@ -3,7 +3,7 @@
 use Symfony\Component\ClassLoader\UniversalClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
+require_once __DIR__.'/../vendor/amazonwebservices/aws-sdk-for-php/sdk.class.php';
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
@@ -33,6 +33,7 @@ $loader->registerNamespaces(array(
     'Knp\Menu'                      => __DIR__.'/../vendor/KnpMenu/src',
     'Liip'                          => __DIR__.'/../vendor/bundles',
     'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
+    'Cybernox'                      => __DIR__.'/../vendor/bundles',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',

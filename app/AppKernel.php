@@ -28,6 +28,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             new JMS\TranslationBundle\JMSTranslationBundle(),
             new \Liip\ImagineBundle\LiipImagineBundle(),
+            new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
