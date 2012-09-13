@@ -421,6 +421,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.user.account.deals: My Deals
+platformd.user.account.tournaments: 比赛
+platformd.user.account.gameids: 游戏IDs
 
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
