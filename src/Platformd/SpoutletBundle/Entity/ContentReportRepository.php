@@ -6,6 +6,21 @@ use Doctrine\ORM\EntityRepository;
 
 class ContentReportRepository extends EntityRepository
 {
+
+    public function getContentReportForAllSites()
+    {
+
+        return $this->getEntityManager()->createQuery('
+            SELECT report, i, v, n FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupImage i
+            LEFT JOIN report.groupVideo v
+            LEFT JOIN report.groupNews n
+            WHERE report.deleted = false
+            ORDER BY report.reportedAt
+            ')
+            ->execute();
+    }
+
     public function getContentReportForSite($site)
     {
 
