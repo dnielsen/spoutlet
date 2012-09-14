@@ -225,6 +225,7 @@ platformd:
             registered_events: Registered Events
             my_giveaways: My Giveaways
             my_videos: My Videos
+            my_events: My Events
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
