@@ -270,13 +270,19 @@
 }
 
 #scrollable-location-groups {
-    height: 500px;
+    height: 300px;
+    width: 600px;
+}
+
+#scrollable-topic-groups {
+    height: 300px;
+    width: 600px;
 }
 
 .group-list-item {
     display: inline-table;
     width: 135px;
-    height: 100px;
+    height: 120px;
     margin: 5px;
 }
 
