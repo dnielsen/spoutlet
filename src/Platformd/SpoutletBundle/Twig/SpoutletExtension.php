@@ -357,7 +357,7 @@ class SpoutletExtension extends Twig_Extension
             return false;
         }
 
-        return sprintf('<a href="%s" target="_blank">Alienware</a>', $link);
+        return sprintf('<a href="%s" target="_blank">'.$this->trans('platformd.alienware').'</a>', $link);
     }
 
     private function GetAlienwareLinkAddress($locale) {

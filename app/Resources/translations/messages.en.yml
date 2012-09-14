@@ -1,7 +1,10 @@
 edit: Edit
 
 platformd:
+
     create_account_or_login: Create or login to an Alienware Arena account.
+
+    alienware: Alienware
 
     not_found:
         title: Page not found
