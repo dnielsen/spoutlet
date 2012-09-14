@@ -23,8 +23,8 @@
                     <div><img src="{{ media_path(report.groupImage.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ report.groupImage.title }}" /></div>
                 </td>
                 <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
                 </td>
 
             {% elseif report.groupNews is not null %}
@@ -37,8 +37,8 @@
                     <div>{{ report.groupNews.article }}</div>
                 </td>
                 <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
                 </td>
 
             {% elseif report.groupVideo is not null %}
@@ -53,8 +53,8 @@
 
                 </td>
                 <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "site" : site, "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "site" : site, "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
+                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
+                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
                 </td>
 
             {% else %}

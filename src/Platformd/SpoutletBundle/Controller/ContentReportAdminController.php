@@ -10,47 +10,25 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class ContentReportAdminController extends Controller
 {
-    public function indexAction()
+
+    public function listAction()
     {
         $this->addReportedContentsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
-
-        return $this->render('SpoutletBundle:ContentReportAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
-        ));
-    }
-
-    public function listAction($site)
-    {
-        $this->addReportedContentsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->getSiteFromDefaultLocale($site);
-
-        if (!$site) {
-            $this->setFlash('error', 'Could not find site with that locale.');
-            return $this->redirect($this->generateUrl('admin_content_reports'));
-        }
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
-        $reports = $repo->getContentReportForSite($site);
+        $reports = $repo->getContentReportForAllSites();
 
         return $this->render('SpoutletBundle:ContentReportAdmin:list.html.twig', array(
-            'site' => $site->getDefaultLocale(),
             'reports' => $reports
         ));
     }
 
-    public function hideComplaintAction($site, $contentReportId)
+    public function hideComplaintAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->getSiteFromDefaultLocale($site);
-
-        if (!$site) {
-            $this->setFlash('error', 'Could not find site with that locale.');
-            return $this->redirect($this->generateUrl('admin_content_reports'));
-        }
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
@@ -62,19 +40,13 @@ class ContentReportAdminController extends Controller
         $em->flush();
 
         $this->setFlash('success', 'Complaint has been hidden.');
-        return $this->redirect($this->generateUrl('admin_content_reports_site', array('site' => $site->getDefaultLocale())));
+        return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 
-    public function removeContentAction($site, $contentReportId)
+    public function removeContentAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->getSiteFromDefaultLocale($site);
-
-        if (!$site) {
-            $this->setFlash('error', 'Could not find site with that locale.');
-            return $this->redirect($this->generateUrl('admin_content_reports'));
-        }
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
@@ -108,13 +80,13 @@ class ContentReportAdminController extends Controller
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
-            return $this->redirect($this->generateUrl('admin_content_reports_site', array('site' => $site->getDefaultLocale())));
+            return $this->redirect($this->generateUrl('admin_content_reports'));
         }
 
         $em->flush();
 
         $this->setFlash('success', 'Content has been removed successfully.');
-        return $this->redirect($this->generateUrl('admin_content_reports_site', array('site' => $site->getDefaultLocale())));
+        return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 
     private function addReportedContentsBreadcrumb()
