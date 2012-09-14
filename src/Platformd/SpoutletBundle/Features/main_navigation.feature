@@ -18,13 +18,13 @@ Feature: Main Navigation
     Given I am on the "China" site
     When I go to "/games"
     Then the main navigation menu should be:
-      | Link       | Target                    |
-      | 首页        | /                         |
-      | Alienware   | http://alienware.com.cn/  |
-      | 活动        | /events/                  |
-      | 新闻        | /news                     |
-      | 壁纸下载    | /wallpapers               |
-      | 微软        | /microsoft                |
+      | Link           | Target                    |
+      | 首页            | /                         |
+      | 关于ALIENWARE   | http://alienware.com.cn/  |
+      | 活动            | /events/                  |
+      | 新闻            | /news                     |
+      | 壁纸下载        | /wallpapers               |
+      | 微软            | /microsoft                |
 
   Scenario: The "Latin America" site's main navigation menu has the correct items
     Given I am on the "Latin America" site

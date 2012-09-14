@@ -1,6 +1,9 @@
 edit: 编辑
 
 platformd:
+
+    alienware: 关于ALIENWARE
+
     create_account_or_login: 创建或登陆Alienware Arena账户
 
     not_found:
