@@ -265,3 +265,23 @@
     cursor: pointer;
 }
 
+.disabled {
+    display: none;
+}
+
+#scrollable-location-groups {
+    height: 500px;
+}
+
+.group-list-item {
+    display: inline-table;
+    width: 135px;
+    height: 100px;
+    margin: 5px;
+}
+
+.groups-category-header {
+    font-weight: bold;
+    padding: 10px 0 10px 0;
+    text-shadow:1px 1px 8px #009CDA;
+}

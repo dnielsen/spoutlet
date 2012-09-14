@@ -20,18 +20,53 @@
 <div class="std_2col">
     <div class="left">
         <h3 style="margin: 0; color: #fff;">Recommended ALIENWARE Groups</h3>
+
+        <h4 class="groups-category-header">Topic Groups</h4>
+        <div class="scrollable" id="scrollable-location-groups">
+            <div class="items">
+                {% for page in topicGroups %}
+                    <div class="groups-wrapper">
+                    {% for groupList in page %}
+                        {% for group in groupList %}
+                            <div class="group-list-item">
+                                <a href="{{ path('group_show', { id: group.id}) }}">
+                                    <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" style="border:none;" />
+                                </a>
+                                <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="scroll-actions" style="margin-top: 10px;">
+            <a class="prev browse" style="float: left;">Previous</a>
+            <a class="next browse" style="float: right;">See More</a>
+        </div>
+
+        <h4 class="groups-category-header">Location Groups</h4>
         <div class="scrollable" id="scrollable-location-groups">
             <div class="items">
                 {% for page in locationGroups %}
                     <div class="groups-wrapper">
                     {% for groupList in page %}
                         {% for group in groupList %}
-                            <div>{{ group.name }}</div>
+                            <div class="group-list-item">
+                                <a href="{{ path('group_show', { id: group.id}) }}">
+                                    <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" style="border:none;" />
+                                </a>
+                                <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
+                            </div>
                         {% endfor %}
                     {% endfor %}
                     </div>
                 {% endfor %}
             </div>
+        </div>
+        <div id="scroll-actions" style="margin-top: 10px;">
+            <a class="prev browse" style="float: left;">Previous</a>
+            <a class="next browse" style="float: right;">See More</a>
         </div>
     </div>
     <div class="right">
@@ -70,4 +105,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#scrollable-location-groups').scrollable();
+        });
+    </script>
+
 {% endblock %}

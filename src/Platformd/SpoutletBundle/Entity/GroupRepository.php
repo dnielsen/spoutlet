@@ -131,7 +131,6 @@ class GroupRepository extends EntityRepository
 
         $stmt->execute();
 
-
         return $stmt->fetchAll();
     }
 }

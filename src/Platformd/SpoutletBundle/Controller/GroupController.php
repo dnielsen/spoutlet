@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Group controller.
@@ -35,7 +36,7 @@ class GroupController extends Controller
         $this->ensureGroupExists($group);
 
         if (!$group->isAllowedTo($this->getCurrentUser(), $this->getCurrentSite(), $action)) {
-            throw new AccessDeniedException('You are not allowed/eligible to do that.');
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
     }
 
@@ -56,7 +57,13 @@ class GroupController extends Controller
 
         $result = json_decode(curl_exec($curl), true);
 
-        if(array_key_exists('error', $result)) {
+        if(isset($result))
+        {
+            if(array_key_exists('error', $result))
+            {
+                return '';
+            }
+        } else {
             return '';
         }
 

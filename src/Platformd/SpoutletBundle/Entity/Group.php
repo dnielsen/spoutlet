@@ -111,6 +111,13 @@ class Group implements LinkableInterface
     private $groupAvatar;
 
     /**
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $thumbNail;
+
+    /**
      * @var \Platformd\SpoutletBundle\Entity\Location
      * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Location", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -363,6 +370,22 @@ class Group implements LinkableInterface
     public function setGroupAvatar(Media $groupAvatar = null)
     {
         $this->groupAvatar = $groupAvatar;
+    }
+
+    /**
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getThumbNail()
+    {
+        return $this->thumbNail;
+    }
+
+    /**
+     * @param \Platformd\MediaBundle\Entity\Media $thumbNail
+     */
+    public function setThumbNail(Media $thumbNail = null)
+    {
+        $this->thumbNail = $thumbNail;
     }
 
     /**

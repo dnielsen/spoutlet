@@ -136,6 +136,10 @@ class GroupManager
         if (!$mUtil->persistRelatedMedia($group->getGroupAvatar())) {
             $group->setGroupAvatar(null);
         }
+
+        if (!$mUtil->persistRelatedMedia($group->getThumbNail())) {
+            $group->setThumbNail(null);
+        }
     }
 
     /**

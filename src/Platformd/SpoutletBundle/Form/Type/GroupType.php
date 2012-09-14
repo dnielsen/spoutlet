@@ -42,8 +42,14 @@ class GroupType extends AbstractType
                 'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('description', 'textarea', array(
+            ->add('thumbNail', new MediaType(), array(
+                'image_label'   => 'Thumbnail Image',
+                'image_help'    => 'Recommended size: 135x80',
+                'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
+            ))
+            ->add('description', null, array(
                 'label' => 'Information about Group*',
+                'attr'  => array('class' => 'ckeditor')
             ))
             ->add('isPublic', 'checkbox', array(
                 'required' => true,
