@@ -14,6 +14,7 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+
 /**
  * Group controller.
  *
@@ -828,7 +829,10 @@ Alienware Arena Team
 
                 $group = $form->getData();
 
-                if (!$this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+                $userIsAdmin  = $this->getUser()->hasRole('ROLE_SUPER_ADMIN');
+                $noSitePicked = !$group->getAllLocales() && $group->getSites()->count() < 1;
+
+                if (!$userIsAdmin || $noSitePicked) {
                     $group->setAllLocales(false);
                     $group->getSites()->clear();
                     $group->getSites()->add($this->getCurrentSite());
