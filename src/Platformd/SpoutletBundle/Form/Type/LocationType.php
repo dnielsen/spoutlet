@@ -14,8 +14,8 @@ class LocationType extends AbstractType
         ->add('address1', null, array(
             'label' => 'Address Line 1',
         ))
-        ->add('address2', null, array(
-            'label' => 'Address Line 2',
+        ->add('metroArea', null, array(
+            'label' => 'Metro Area',
         ))
         ->add('city', null, array(
             'label' => 'City*'

@@ -73,7 +73,10 @@
 
                 {% if group.location and group.category == 'location' %}
                 <div id="group-location-address" class="location-info">
-                    <div>ADDRESS:</div>
+                    <div>LOCATION:</div>
+                    <div id="metro-area">
+                        {{ group.location.metroArea }}
+                    </div>
                     <div id="street-address1">
                         {{ group.location.address1 }}
                     </div>

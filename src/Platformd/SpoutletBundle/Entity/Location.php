@@ -47,6 +47,12 @@ class Location
     private $state_province;
 
     /**
+     * @var string $metro_area
+     * @ORM\Column(name="metro_area", type="string", length=255, nullable=true)
+     */
+    private $metro_area;
+
+    /**
      * Get id
      *
      * @return integer
@@ -134,6 +140,26 @@ class Location
     public function getStateProvince()
     {
         return $this->state_province;
+    }
+
+    /**
+     * Set metro_area
+     *
+     * @param string $metro_area
+     */
+    public function setMetroArea($metro_area)
+    {
+        $this->metro_area = $metro_area;
+    }
+
+    /**
+     * Get metro_area
+     *
+     * @return string
+     */
+    public function getMetroArea()
+    {
+        return $this->metro_area;
     }
 
     /**
