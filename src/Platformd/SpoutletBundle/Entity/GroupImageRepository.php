@@ -25,4 +25,25 @@ class GroupImageRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getImageCountForGroup($group, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('gi');
+
+        $qb->where('gi.group = :groupId');
+        $qb->setParameter('groupId', $group->getId());
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('gi.createdAt >= :fromDate')
+               ->andWhere('gi.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+
+        $total = $qb->getQuery()
+                    ->getResult();
+
+        return count($total);
+    }
 }

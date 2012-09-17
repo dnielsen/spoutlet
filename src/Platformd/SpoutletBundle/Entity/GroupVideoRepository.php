@@ -25,4 +25,25 @@ class GroupVideoRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getVideoCountForGroup($group, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('gv');
+
+        $qb->where('gv.group = :groupId');
+        $qb->setParameter('groupId', $group->getId());
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('gv.createdAt >= :fromDate')
+               ->andWhere('gv.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+
+        $total = $qb->getQuery()
+                    ->getResult();
+
+        return count($total);
+    }
 }

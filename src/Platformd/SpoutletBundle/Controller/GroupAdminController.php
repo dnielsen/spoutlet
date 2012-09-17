@@ -4,10 +4,14 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupRepository;
+use Platformd\SpoutletBundle\Entity\GroupVideoRepository;
+use Platformd\SpoutletBundle\Entity\GroupImageRepository;
+use Platformd\SpoutletBundle\Entity\GroupNewsRepository;
 use Platformd\SpoutletBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use DateTime;
 
@@ -59,6 +63,109 @@ class GroupAdminController extends Controller
         $summary = $groupRepo->getGroupAndMemberCountByRegion();
 
         return $this->generateGroupsSummaryCsv($summary);
+    }
+
+    public function contentReportAction($id, Request $request)
+    {
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+
+        $group = $groupRepo->findOneById($id);
+
+        if(!$group)
+        {
+            return new Response(json_encode(array('success' => false)));
+        }
+
+        $from = $request->get('from') == null ? null : new DateTime($request->get('from'));
+        $thru = $request->get('thru') == null ? null : new DateTime($request->get('thru'));
+
+        $result = array();
+        $result[] = array(
+            'success' => true,
+            'results' => array(
+                'videos'    => $this->getGroupVideoCount($group, $from, $thru),
+                'images'    => $this->getGroupImageCount($group, $from, $thru),
+                'news'      => $this->getGroupNewsCount($group, $from, $thru),
+                'comments'  => $this->getGroupCommentTotal('group-' . $group->getId()),
+                'likes'     => $this->getGroupLikeCount($group),
+        ));
+        return new Response(json_encode($result));
+    }
+
+    private function getGroupVideoCount($group, $fromDate, $thruDate)
+    {
+        $repo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupVideo');
+        return $repo->getVideoCountForGroup($group, $fromDate, $thruDate);
+    }
+
+    private function getGroupImageCount($group, $fromDate, $thruDate)
+    {
+        $repo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupImage');
+        return $repo->getImageCountForGroup($group, $fromDate, $thruDate);
+    }
+
+    private function getGroupNewsCount($group, $fromDate, $thruDate)
+    {
+        $repo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupNews');
+        return $repo->getNewsCountForGroup($group, $fromDate, $thruDate);
+    }
+
+    private function getGroupCommentTotal($groupId)
+    {
+        $total = $this->getDoctrine()
+            ->getRepository('CommentBundle:Thread')
+            ->getTotalCommentsByThreadId($groupId);
+
+        if ($total && isset($total[0]) && isset($total[0]['numComments'])) {
+            $total = $total[0]['numComments'];
+        } else {
+            $total = 0;
+        }
+
+        return $total;
+    }
+
+    private function getGroupLikeCount($group)
+    {
+        /*
+        format for getting open graph data:
+        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
+        */
+
+        $total = 0;
+
+        $url = 'http://graph.facebook.com/?ids=';
+
+        $sites = $group->getSites();
+
+        foreach($sites as $site)
+        {
+            $url .= sprintf('http://%s.alienwarearena.com/groups/%s/show/,', $site->getSubDomain(), $group->getId());
+        }
+
+        $url = substr($url, 0, -1);
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
+
+        $results = json_decode(curl_exec($curl), true);
+
+        foreach($results as $result)
+        {
+            if(isset($result))
+            {
+                if(array_key_exists('likes', $result))
+                {
+                    $total += $result['likes'];
+                }
+            }
+        }
+
+        return $total;
     }
 
     private function getMembershipCountForGroup($groups)

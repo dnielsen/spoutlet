@@ -9,3 +9,7 @@ admin_group_show:
 admin_group_summary:
     pattern: /metrics/group-summary
     defaults: { _controller: "SpoutletBundle:GroupAdmin:summary" }
+
+admin_group_content_report:
+    pattern: /metrics/group-content-report/{id}
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:contentReport" }

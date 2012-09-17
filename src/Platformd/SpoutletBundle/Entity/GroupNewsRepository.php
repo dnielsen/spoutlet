@@ -25,4 +25,25 @@ class GroupNewsRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getNewsCountForGroup($group, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('gn');
+
+        $qb->where('gn.group = :groupId');
+        $qb->setParameter('groupId', $group->getId());
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('gn.createdAt >= :fromDate')
+               ->andWhere('gn.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+
+        $total = $qb->getQuery()
+                    ->getResult();
+
+        return count($total);
+    }
 }
