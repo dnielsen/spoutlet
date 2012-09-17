@@ -703,7 +703,7 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
 
     public function isArchived()
     {
-        return $this->status = self::STATUS_ARCHIVED;
+        return $this->status == self::STATUS_ARCHIVED;
     }
 
     /**
