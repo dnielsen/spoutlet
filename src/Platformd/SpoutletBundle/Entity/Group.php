@@ -174,11 +174,18 @@ class Group implements LinkableInterface
      */
     private $newsArticles;
 
+    /**
+    * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="group", cascade={"persist"})
+    * @ORM\JoinColumn(onDelete="SET NULL")
+    */
+    private $userMembershipActions;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->applications = new ArrayCollection();
+        $this->userMembershipActions = new ArrayCollection();
     }
 
     /**
@@ -569,6 +576,14 @@ class Group implements LinkableInterface
         }
 
         return $this->getOwner() === $user;
+    }
+
+    public function getUserMembershipActions() {
+        return $this->userMembershipActions;
+    }
+
+    public function setUserMembershipActions($value) {
+        $this->userMembershipActions = $value;
     }
 
     public function isApplicant($user)
