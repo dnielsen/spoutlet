@@ -225,6 +225,7 @@ platformd:
             registered_events: 参加済みイベント
             my_giveaways: 参加済みキャンペーン
             my_videos: マイビデオ
+            my_events: 参加済みイベント
             help: お問い合わせ
             game_ids: ゲームID
             tournaments: トーナメント

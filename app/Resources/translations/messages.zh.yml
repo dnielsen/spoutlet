@@ -1,6 +1,9 @@
 edit: 编辑
 
 platformd:
+
+    alienware: 关于ALIENWARE
+
     create_account_or_login: 创建或登陆Alienware Arena账户
 
     not_found:
@@ -219,6 +222,7 @@ platformd:
             registered_events:     我的活动
             my_giveaways:     获取赠品
             my_videos: My Videos
+            my_events: 我的活动
             help: 帮助？
             game_ids: Game IDs
 
