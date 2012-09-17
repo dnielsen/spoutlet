@@ -86,7 +86,7 @@ class GroupAdminController extends Controller
                 'videos'    => $this->getGroupVideoCount($group, $from, $thru),
                 'images'    => $this->getGroupImageCount($group, $from, $thru),
                 'news'      => $this->getGroupNewsCount($group, $from, $thru),
-                'comments'  => $this->getGroupCommentTotal('group-' . $group->getId()),
+                'comments'  => $this->getGroupCommentTotal('group-' . $group->getId(), $from, $thru),
                 'likes'     => $this->getGroupLikeCount($group),
         ));
         return new Response(json_encode($result));
@@ -110,17 +110,15 @@ class GroupAdminController extends Controller
         return $repo->getNewsCountForGroup($group, $fromDate, $thruDate);
     }
 
-    private function getGroupCommentTotal($groupId)
+    private function getGroupCommentTotal($groupId, $fromDate, $thruDate)
     {
-        $total = $this->getDoctrine()
+        $thread = $this->getDoctrine()
             ->getRepository('CommentBundle:Thread')
-            ->getTotalCommentsByThreadId($groupId);
+            ->findOneById($groupId);
 
-        if ($total && isset($total[0]) && isset($total[0]['numComments'])) {
-            $total = $total[0]['numComments'];
-        } else {
-            $total = 0;
-        }
+        $total = $this->getDoctrine()
+            ->getRepository('CommentBundle:Comment')
+            ->getCommentCountByThread($thread, $fromDate, $thruDate);
 
         return $total;
     }

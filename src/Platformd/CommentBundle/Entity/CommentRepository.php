@@ -29,4 +29,23 @@ class CommentRepository extends EntityRepository
             ->execute()
         ;
     }
+
+    public function getCommentCountByThread($thread, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->where('c.thread = :thread');
+        $qb->setParameter('thread', $thread);
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('c.createdAt >= :fromDate')
+               ->andWhere('c.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+
+        $total = $qb->getQuery()->getResult();
+
+        return count($total);
+    }
 }
