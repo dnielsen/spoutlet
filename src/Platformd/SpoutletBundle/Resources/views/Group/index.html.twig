@@ -24,8 +24,6 @@
 <div class="std_2col">
     <div class="left">
         <h3 style="margin: 0; color: #fff;">Recommended ALIENWARE Groups</h3>
-
-
         <div>
             <h4 class="groups-category-header">Topic Groups</h4>
             <div class="scrollable" id="scrollable-topic-groups">
@@ -42,7 +40,13 @@
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
+                                    <a href="{{ path('group_show', { id: group.id}) }}" title="{{ group.name }}">
+                                    {% if group.name | length > 20  %}
+                                        {{ group.name | slice(0, 20) ~ '…' }}
+                                    {% else %}
+                                        {{ group.name }}
+                                    {% endif %}
+                                    </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.username }}</div>
@@ -59,8 +63,6 @@
                 <a id="topic-next" class="next browse" style="float: right;">See More</a>
             </div>
         </div>
-
-
         <div style="margin-top: 20px;">
             <h4 class="groups-category-header">Location Groups</h4>
             <div class="scrollable" id="scrollable-location-groups">
@@ -77,7 +79,13 @@
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
+                                    <a href="{{ path('group_show', { id: group.id}) }}" title="{{ group.name }}">
+                                    {% if group.name | length > 20  %}
+                                        {{ group.name | slice(0, 20) ~ '…' }}
+                                    {% else %}
+                                        {{ group.name }}
+                                    {% endif %}
+                                    </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.username }}</div>
