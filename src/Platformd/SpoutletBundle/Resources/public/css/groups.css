@@ -282,12 +282,27 @@
 .group-list-item {
     display: inline-table;
     width: 135px;
-    height: 120px;
+    height: 130px;
     margin: 5px;
 }
 
+.group-list-item .details {
+    margin-top: 10px;
+}
+
+.group-list-item .item-detail {
+    font-size: 10px;
+}
+
+.group-list-item img {
+    width: 135px;
+    height: 80px;
+    border: 1px solid #4A4A4A;
+}
+
 .groups-category-header {
+    width: 100%;
     font-weight: bold;
-    padding: 10px 0 10px 0;
+    margin: 10px 0 10px 0;
     text-shadow:1px 1px 8px #009CDA;
 }

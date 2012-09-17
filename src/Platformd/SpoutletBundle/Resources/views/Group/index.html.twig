@@ -36,10 +36,17 @@
                             {% for group in groupList %}
                                 <div class="group-list-item">
                                     <a href="{{ path('group_show', { id: group.id}) }}">
-                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" style="border:none;" />
+                                        {% if group.thumbNail %}
+                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% else %}
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
-                                    <div>Members: {{ group.members.count }}</div>
+                                    <div class="details">
+                                        <div class="item-detail">Members: {{ group.members.count }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.username }}</div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         {% endfor %}
@@ -47,9 +54,9 @@
                     {% endfor %}
                 </div>
             </div>
-            <div id="scroll-actions" style="margin-top: 10px;">
-                <a class="prev browse" style="float: left;">Previous</a>
-                <a class="next browse" style="float: right;">See More</a>
+            <div id="scroll-actions" style="margin-top: 0px;">
+                <a id="topic-prev" class="prev browse" style="float: left;">Previous</a>
+                <a id="topic-next" class="next browse" style="float: right;">See More</a>
             </div>
         </div>
 
@@ -64,20 +71,28 @@
                             {% for group in groupList %}
                                 <div class="group-list-item">
                                     <a href="{{ path('group_show', { id: group.id}) }}">
-                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" style="border:none;" />
+                                        {% if group.thumbNail %}
+                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% else %}
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { id: group.id}) }}">{{ group.name }}</a>
-                                    <div>Members: {{ group.members.count }}</div>
+                                    <div class="details">
+                                        <div class="item-detail">Members: {{ group.members.count }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.username }}</div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         {% endfor %}
                         </div>
                     {% endfor %}
                 </div>
+
             </div>
             <div id="scroll-actions" style="margin-top: 10px;">
-                <a class="prev browse" style="float: left;">Previous</a>
-                <a class="next browse" style="float: right;">See More</a>
+                <a id="location-prev" class="prev browse" style="float: left;">Previous</a>
+                <a id="location-next" class="next browse" style="float: right;">See More</a>
             </div>
         </div>
     </div>
@@ -123,8 +138,14 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            //$('#scrollable-location-groups').scrollable();
-            $('#scrollable-topic-groups').scrollable();
+            $('#scrollable-location-groups').scrollable({
+                next: '#location-next',
+                prev: '#location-prev',
+            });
+            $('#scrollable-topic-groups').scrollable({
+                next: '#topic-next',
+                prev: '#topic-prev',
+            });
         });
     </script>
 
