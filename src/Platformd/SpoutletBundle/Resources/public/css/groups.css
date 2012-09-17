@@ -303,6 +303,7 @@
 .groups-category-header {
     width: 100%;
     font-weight: bold;
+    font-size: 14px;
     margin: 10px 0 10px 0;
     text-shadow:1px 1px 8px #009CDA;
 }
