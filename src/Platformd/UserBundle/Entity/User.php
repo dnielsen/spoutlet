@@ -300,11 +300,18 @@ class User extends BaseUser
      */
     private $cevoUserId;
 
+     /**
+    * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
+    * @ORM\JoinColumn(onDelete="SET NULL")
+    */
+    private $groupMembershipActions;
+
     public function __construct()
     {
         parent::__construct();
         $this->events = new ArrayCollection();
         $this->giveawayKeys = new ArrayCollection();
+        $this->groupMembershipActions = new ArrayCollection();
     }
 
     /**
@@ -1049,5 +1056,15 @@ class User extends BaseUser
     public function setCevoAvatarUrl($cevoAvatarUrl)
     {
         $this->cevoAvatarUrl = $cevoAvatarUrl;
+    }
+
+    public function getGroupMembershipActions()
+    {
+        return $this->groupMembershipActions;
+    }
+
+    public function setGroupMembershipActions($value)
+    {
+        $this->groupMembershipActions = $value;
     }
 }

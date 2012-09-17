@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
+use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
@@ -153,7 +154,13 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
         }
 
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
+
         $group->getMembers()->add($user);
+        $group->getUserMembershipActions()->add($joinAction);
 
         $this->getGroupManager()->saveGroup($group);
 
@@ -233,8 +240,6 @@ Alienware Arena Team
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
         $popularGroups  = $repo->findMostPopularGroupsForSite($site);
 
-
-
         return $this->render('SpoutletBundle:Group:index.html.twig', array(
             'locationGroups' => $this->getGroupPages($locationGroups),
             'topicGroups'    => $this->getGroupPages($topicGroups),
@@ -278,7 +283,13 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'LeaveGroup');
 
+        $leaveAction = new GroupMembershipAction();
+        $leaveAction->setGroup($group);
+        $leaveAction->setUser($user);
+        $leaveAction->setAction(GroupMembershipAction::ACTION_LEFT);
+
         $group->getMembers()->removeElement($user);
+        $group->getUserMembershipActions()->add($leaveAction);
 
         $this->getGroupManager()->saveGroup($group);
 
@@ -304,7 +315,13 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'JoinGroup');
 
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
         $group->getMembers()->add($user);
+        $group->getUserMembershipActions()->add($joinAction);
 
         $this->getGroupManager()->saveGroup($group);
 
