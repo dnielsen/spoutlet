@@ -116,6 +116,10 @@ parameters:
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: true
 
+    # this allows config_dev.yml to override where emails that are sent from the system (instead of the "real" recipient)... do not change this in config.yml though
+    email_destination_override: false
+    email_destination_override_with: chris.magee@gametheworld.com
+
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
