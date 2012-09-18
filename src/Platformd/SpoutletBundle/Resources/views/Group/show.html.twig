@@ -51,7 +51,10 @@
         </div>
         {% endif %}
         {% if group.isApplicant(app.user) %}
-            Application Pending...
+            <p class="alert alert-info help">
+                <i class="icon-info-sign"></i>
+                Application Pending
+            </p>
         {% endif %}
         <div class="widget-33" style="height: auto; margin-bottom: 10px;">
             <div class="widget-header">

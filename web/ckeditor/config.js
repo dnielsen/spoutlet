@@ -14,8 +14,8 @@ CKEDITOR.editorConfig = function( config )
         return;
     }
 
-    config.toolbar_Basic[0].push('Source');
-    config.toolbar_Basic[0].push('PasteFromWord');
+    //config.toolbar_Basic[0].push('Source');
+    //config.toolbar_Basic[0].push('PasteFromWord');
 
     ckeditorInitialized = true;
 };

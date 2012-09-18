@@ -34,6 +34,11 @@
                     $('#group-location-controls').fadeIn();
                 }
             });
+
+            var groupType = $('#platformd_spoutletbundle_grouptype_category').val();
+            if(groupType == 'topic') {
+                $('#group-location-controls').fadeOut();
+            }
         });
     </script>
 {% endblock %}
