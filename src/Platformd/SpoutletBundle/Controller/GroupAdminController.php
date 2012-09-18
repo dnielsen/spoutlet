@@ -88,6 +88,7 @@ class GroupAdminController extends Controller
                 'news'      => $this->getGroupNewsCount($group, $from, $thru),
                 'comments'  => $this->getGroupCommentTotal('group-' . $group->getId(), $from, $thru),
                 'likes'     => $this->getGroupLikeCount($group),
+                'users_left'=> $this->getGroupMembersLeftCount($group, $from, $thru),
         ));
         return new Response(json_encode($result));
     }
@@ -121,6 +122,13 @@ class GroupAdminController extends Controller
             ->getCommentCountByThread($thread, $fromDate, $thruDate);
 
         return $total;
+    }
+
+    private function getGroupMembersLeftCount($group, $fromDate, $thruDate)
+    {
+        $repo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupMembershipAction');
+
+        return $repo->getMembersLeftCountByGroup($group, $fromDate, $thruDate);
     }
 
     private function getGroupLikeCount($group)

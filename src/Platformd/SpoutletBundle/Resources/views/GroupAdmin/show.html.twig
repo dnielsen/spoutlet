@@ -82,6 +82,10 @@
                 <td style="width: 100px;">Likes:</td>
                 <td><span id="like-results"></span></td>
             </tr>
+            <tr>
+                <td style="width: 100px;">Left Group:</td>
+                <td><span id="left-results"></span></td>
+            </tr>
         </table>
     </div>
 </div>
@@ -105,6 +109,7 @@
                             $('#news-results').text(data[0].results.news);
                             $('#comment-results').text(data[0].results.comments);
                             $('#like-results').text(data[0].results.likes);
+                            $('#left-results').text(data[0].results.users_left);
                             $('#results').fadeIn();
                         } else {
                             $('#results').text('An error occured fetching the results');
