@@ -10,6 +10,7 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
+ * @UniqueEntity("name")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
  */
 class Group implements LinkableInterface
@@ -50,7 +52,7 @@ class Group implements LinkableInterface
     /**
      * @var string $name
      * @Assert\NotNull(message="Required")
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
