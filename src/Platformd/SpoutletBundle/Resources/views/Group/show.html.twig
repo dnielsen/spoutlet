@@ -2,8 +2,10 @@
 
 {% block title 'Groups - ' ~ group.name %}
 
-{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
-{% set site = get_current_site() %}
+{% set openGraphThumb               = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% set site                         = get_current_site() %}
+{% set isAllowedToViewGroupContent  = group.isAllowedTo(app.user, site, "ViewGroupContent") %}
+{% set isAllowedToViewGroup         = group.isAllowedTo(app.user, site, "ViewGroup") %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -105,30 +107,40 @@
     <div class="left">
         <div class="widget-66" id="featured-content" style="min-height: 500px;">
             <div class="featured-content-header">
-                <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                <a href="javascript:void(0);" id="group-images">Images</a>
-                <a href="javascript:void(0);" id="group-videos">Videos</a>
-                <a href="javascript:void(0);" id="group-about">About</a>
+                {% if isAllowedToViewGroupContent %}
+                    <a href="javascript:void(0);" id="group-news" class="active">News</a>
+                    <a href="javascript:void(0);" id="group-images">Images</a>
+                    <a href="javascript:void(0);" id="group-videos">Videos</a>
+                    <a href="javascript:void(0);" id="group-about">About</a>
+                {% elseif isAllowedToViewGroup %}
+                    <a href="javascript:void(0);" id="group-about" class="active">About</a>
+                {% endif %}
                 <div style="clear: left;"></div>
             </div>
             <div class="widget-content">
-                <div id="content-group-news" class="featured-content-category active">
-
-                </div>
-                <div id="content-group-images" class="featured-content-category">
-
-                </div>
-                <div id="content-group-videos" class="featured-content-category">
-
-                </div>
-                <div id="content-group-about" class="featured-content-category" style="height: 500px;">
-                    {% include 'SpoutletBundle:Group:_about.html.twig' %}
-                </div>
+                {% if isAllowedToViewGroupContent %}
+                    <div id="content-group-news" class="featured-content-category active"></div>
+                    <div id="content-group-images" class="featured-content-category"></div>
+                    <div id="content-group-videos" class="featured-content-category"></div>
+                    <div id="content-group-about" class="featured-content-category" style="height: 500px;">
+                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
+                    </div>
+                {% elseif isAllowedToViewGroup %}
+                    <div id="content-group-about" class="featured-content-category active" style="height: 500px;">
+                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
+                    </div>
+                {% endif %}
             </div>
         </div>
-        <div id="group-comments">
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.threadId } %}
-        </div>
+        {% if isAllowedToViewGroupContent %}
+            <div id="group-comments">
+                {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.threadId } %}
+            </div>
+        {% else %}
+            <div id="group-comments">
+                <p>You must be a member of a private group before you can see or post comments.</p>
+            </div>
+        {% endif %}
     </div>
 
 </div>

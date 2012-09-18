@@ -394,7 +394,7 @@ Alienware Arena Team
     public function newsAction($id, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewGroup', false);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
 
         $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
 
@@ -504,7 +504,7 @@ Alienware Arena Team
     public function imageAction($id, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewGroup', false);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
 
         $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
@@ -627,7 +627,7 @@ Alienware Arena Team
     {
         $group = $this->getGroup($id);
 
-        $this->ensureAllowed($group, 'ViewGroup', false);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
 
         $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 

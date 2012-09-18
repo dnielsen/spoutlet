@@ -29,12 +29,12 @@ class Group implements LinkableInterface
         'topic',
     );
 
-    static private $superAdminIsAllowedTo        = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
-    static private $ownerIsAllowedTo             = array('ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageApplications');
-    static private $memberIsAllowedTo            = array('ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
-    static private $nonMemberPublicIsAllowedTo   = array('ViewGroup', 'JoinGroup');
-    static private $nonMemberPrivateIsAllowedTo  = array('ApplyToGroup');
-    static private $applicantIsAllowedTo         = array();
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageApplications');
+    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
+    static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
+    static private $applicantIsAllowedTo         = array('ViewGroup');
 
     const COMMENT_PREFIX = 'group-';
 
