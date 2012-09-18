@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
- * @UniqueEntity("name")
+ * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
  */
 class Group implements LinkableInterface
