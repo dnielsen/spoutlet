@@ -50,6 +50,11 @@ body { background: url('/bundles/spoutlet/images/body-bg-gradient.png') repeat-x
 
 /** GENERAL STYLES */
 
+ul, ol {
+    padding-left: 40px;
+    margin: 10px 0 10px 0;
+}
+
 .clear { clear:both; font-size: 1px; display: block; height: 1px; }
 .right { float: right; }
 .left { float: left; }

@@ -46,7 +46,7 @@
         {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
         <div class="join-group-options">
             <form action="{{ path('group_join', { 'id': group.id }) }}">
-                <button id="join-group-button" type="submit" ></button>
+                <button id="join-group-button" type="submit"></button>
             </form>
         </div>
         {% endif %}

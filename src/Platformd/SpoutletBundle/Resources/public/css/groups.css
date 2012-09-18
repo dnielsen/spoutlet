@@ -55,6 +55,11 @@
     margin-left: 25px;
 }
 
+.groups-sub-nav ul {
+    padding: 0;
+    margin: 0;
+}
+
 .groups-sub-nav ul li {
     float:none;
     background-repeat:no-repeat;
@@ -121,17 +126,19 @@
     text-align: center;
 }
 
-#join-group-button {
+button#join-group-button {
     background: url('/bundles/spoutlet/images/groups/join_group_off.png') no-repeat;
     width: 230px;
     height: 62px;
     margin: 0px auto;
     border: none;
     cursor: pointer;
+    filter: none;
 }
 
-#join-group-button:hover {
+button#join-group-button:hover {
     background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
+    filter: none;
 }
 
 #group-invite {
@@ -191,6 +198,8 @@
 
 #content-group-videos {
     height: 550px;
+}
+
 }
 
 #theater-screen-wrapper {
