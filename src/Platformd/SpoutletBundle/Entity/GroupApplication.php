@@ -64,6 +64,12 @@ class GroupApplication
      */
     private $site;
 
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     * @Assert\NotNull
+     */
+    private $reason;
+
 
     public function __construct()
     {
@@ -141,5 +147,15 @@ class GroupApplication
     public function setSite($value)
     {
         $this->site = $value;
+    }
+
+    public function getReason()
+    {
+        return $this->reason;
+    }
+
+    public function setReason($value)
+    {
+        $this->reason = $value;
     }
 }

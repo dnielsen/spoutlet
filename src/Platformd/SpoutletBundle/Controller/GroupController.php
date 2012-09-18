@@ -330,7 +330,7 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
 
-    public function applyAction($id)
+    public function applyToGroupAction($id, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
@@ -342,7 +342,7 @@ Alienware Arena Team
 
         if ($group->isMember($user) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
-            return $this->redirect($this->generateUrl('groups'));
+            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
         }
 
         $userApplications = $this->getGroupApplicationRepo()->findByApplicant($user->getId());
@@ -352,7 +352,7 @@ Alienware Arena Team
 
                 if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
                     $this->setFlash('error', 'You have already applied to this group!');
-                    return $this->redirect($this->generateUrl('groups'));
+                    return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
                 }
             }
         }
@@ -361,17 +361,34 @@ Alienware Arena Team
 
         $application = new GroupApplication();
 
-        $application->setApplicant($user);
-        $application->setGroup($group);
-        $application->setSite($this->getCurrentSite());
+        $form = $this->createFormBuilder($application)
+            ->add('reason', 'text', array("required" => true, "max_length" => 254))
+            ->getForm();
 
-        $em = $this->getEntityManager();
-        $em->persist($application);
-        $em->flush();
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
 
-        $this->setFlash('success', 'You have successfully applied to join this group!');
+                $application->setGroup($group);
+                $application->setApplicant($user);
+                $application->setSite($this->getCurrentSite());
 
-        return $this->redirect($this->generateUrl('groups'));
+                $em = $this->getEntityManager();
+
+                $em->persist($application);
+                $em->flush();
+
+                $this->setFlash('success', 'You have successfully applied to join this group!');
+
+                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:applyToGroup.html.twig', array(
+            'group' => $group,
+            'form' => $form->createView()));
     }
 
     public function newsAction($id, Request $request)

@@ -48,6 +48,9 @@
             </form>
         </div>
         {% endif %}
+        {% if group.isApplicant(app.user) %}
+            Application Pending...
+        {% endif %}
         <div class="widget-33" style="height: auto; margin-bottom: 10px;">
             <div class="widget-header">
                 <div class="widget-title">

@@ -30,12 +30,17 @@
     <div class="widget-content">
         <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
             <tbody><tr>
-                <th style="width:25%;">Username</th>
-                <th style="width:25%;">Date</th>
-                <th style="width:25%;">Action</th>
+                <th style="width:15%;">Action</th>
+                <th style="width:15%;">Username</th>
+                <th style="width:15%;">Date</th>
+                <th style="width:55%;">Reason</th>
             </tr>
             {% for application in applications %}
                 <tr class="eventListGroup_lan">
+                    <td>
+                        <a href="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to accept \'{{ application.applicant.username }}\' to join your group?');">Accept</a> |
+                        <a href="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to reject \'{{ application.applicant.username }}\' from joining your group?');">Reject</a>
+                    </td>
                     <td>
                         {{ application.applicant.username }}
                     </td>
@@ -43,8 +48,7 @@
                         {{ application.createdAt | date('F d, Y') }}
                     </td>
                     <td>
-                        <a href="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to accept \'{{ application.applicant.username }}\' to join your group?');">Accept</a> |
-                        <a href="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to reject \'{{ application.applicant.username }}\' from joining your group?');">Reject</a>
+                        {{ application.reason }}
                     </td>
                 </tr>
             {% else %}

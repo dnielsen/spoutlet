@@ -34,6 +34,7 @@ class Group implements LinkableInterface
     static private $memberIsAllowedTo            = array('ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroup', 'JoinGroup');
     static private $nonMemberPrivateIsAllowedTo  = array('ApplyToGroup');
+    static private $applicantIsAllowedTo         = array();
 
     const COMMENT_PREFIX = 'group-';
 
@@ -534,6 +535,7 @@ class Group implements LinkableInterface
             $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
             $isOwner        = $this->isOwner($user);
             $isMember       = $this->isMember($user);
+            $isApplicant    = $this->isApplicant($user);
 
             if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
                 return true;
@@ -547,6 +549,9 @@ class Group implements LinkableInterface
                 return in_array($action, self::$memberIsAllowedTo);
             }
 
+            if ($isApplicant) {
+                return in_array($action, self::$applicantIsAllowedTo);
+            }
         }
 
         if ($this->getIsPublic()) {

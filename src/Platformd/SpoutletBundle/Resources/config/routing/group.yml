@@ -76,7 +76,7 @@ group_join:
 
 group_apply:
     pattern:  /{id}/apply/
-    defaults: { _controller: "SpoutletBundle:Group:apply", site: ~ }
+    defaults: { _controller: "SpoutletBundle:Group:applyToGroup", site: ~ }
 
 group_delete:
     pattern:  /{id}/delete/
