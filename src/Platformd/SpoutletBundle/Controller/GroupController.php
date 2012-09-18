@@ -325,7 +325,8 @@ Alienware Arena Team
 
         $this->getGroupManager()->saveGroup($group);
 
-        $this->setFlash('success', 'You have successfully joined this group!');
+        //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
+         $this->setFlash('success', 'You have successfully joined this group!');
 
         return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
     }
@@ -378,7 +379,7 @@ Alienware Arena Team
                 $em->persist($application);
                 $em->flush();
 
-                $this->setFlash('success', 'You have successfully applied to join this group!');
+                $this->setFlash('success', 'You will receive an email if you are admitted into this group.');
 
                 return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
             }

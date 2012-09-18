@@ -686,7 +686,7 @@ class Group implements LinkableInterface
         $executionContext->setPropertyPath($propertyPath);
 
         $executionContext->addViolation(
-            'If you are creating a "location" group you must at least enter your City.',
+            'Required',
             array(),
             null
         );

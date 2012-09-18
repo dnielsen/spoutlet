@@ -50,10 +50,17 @@
             </form>
         </div>
         {% endif %}
+
+        {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
+        <div class="join-group-options">
+            <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+        </div>
+        {% endif %}
+
         {% if group.isApplicant(app.user) %}
             <p class="alert alert-info help">
                 <i class="icon-info-sign"></i>
-                Application Pending
+                Waiting on Approval
             </p>
         {% endif %}
         <div class="widget-33" style="height: auto; margin-bottom: 10px;">

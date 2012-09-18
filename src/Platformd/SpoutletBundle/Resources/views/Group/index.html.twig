@@ -41,8 +41,8 @@
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { id: group.id}) }}" title="{{ group.name }}">
-                                    {% if group.name | length > 20  %}
-                                        {{ group.name | slice(0, 20) ~ '…' }}
+                                    {% if group.name | length > 18  %}
+                                        {{ group.name | slice(0, 18) ~ '…' }}
                                     {% else %}
                                         {{ group.name }}
                                     {% endif %}

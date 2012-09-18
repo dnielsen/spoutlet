@@ -53,7 +53,7 @@ class GroupType extends AbstractType
             ))
             ->add('isPublic', 'checkbox', array(
                 'required' => true,
-                'label' => 'Make this Group Public?',
+                'label' => 'Is this a public group?',
             ))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
