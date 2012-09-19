@@ -224,7 +224,7 @@ platformd:
             my_videos: My Videos
             my_events: 我的活动
             help: 帮助？
-            game_ids: Game IDs
+            game_ids: 游戏IDs
 
     giveaway:
         giveaway: 邀请码
@@ -425,6 +425,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.user.account.deals: My Deals
+platformd.user.account.tournaments: 比赛
+platformd.user.account.gameids: 游戏IDs
 
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
