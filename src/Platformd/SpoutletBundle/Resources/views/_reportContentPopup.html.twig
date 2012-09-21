@@ -28,6 +28,9 @@
         $('.report-content').click(function () {
             var reportId = $(this).attr('report-data');
             $('#report-id-{{ reportContentType }}').val(reportId);
+
+            $('.report-option').prop('checked', false);
+
             reportDialog.dialog('open');
         });
 
