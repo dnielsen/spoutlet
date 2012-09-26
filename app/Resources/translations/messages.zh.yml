@@ -2,6 +2,9 @@ edit: 编辑
 
 platformd:
 
+    homepage:
+        news_title: 新闻
+
     alienware: 关于ALIENWARE
 
     create_account_or_login: 创建或登陆Alienware Arena账户
