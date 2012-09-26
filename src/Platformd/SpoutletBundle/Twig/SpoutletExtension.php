@@ -284,6 +284,7 @@ class SpoutletExtension extends Twig_Extension
             case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
             case 'EVENTS':                          return $this->GetEventsLink($locale);
             case 'VIDEOS':                          return $this->GetVideosLink($locale);
+            case 'WALLPAPERS':                      return $this->GetWallpapersLink($locale);
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
@@ -480,10 +481,25 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetWallpapersLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.wallpapers').'</a>';
+
+        switch($locale) {
+
+            case 'zh':
+
+                return sprintf($format, '/wallpapers');
+
+            default:
+
+                return sprintf($format, '/pages/wallpapers');
+        }
+    }
+
     private function GetVideosLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.video').'</a>';
-        $defaultUrl     = 'http://video.alienwarearena.com/';
 
         switch($locale) {
 
@@ -494,7 +510,7 @@ class SpoutletExtension extends Twig_Extension
 
             default:
 
-                return sprintf($format, $defaultUrl);
+                return sprintf($format, 'http://video.alienwarearena.com/');
         }
     }
 
@@ -598,7 +614,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
-            case 'VIDEO':                       return !$china;
+            case 'VIDEO':                       return true;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'FORUMS':                      return !$chinaOrJapan;

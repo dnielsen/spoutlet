@@ -24,7 +24,8 @@ Feature: Main Navigation
       | 关于ALIENWARE   | http://alienware.com.cn/  |
       | 活动            | /events/                  |
       | 新闻            | /news                     |
-      | 壁纸下载        | /wallpapers               |
+      | 媒体 >> 视频      | /video                    |
+      | 媒体 >> 壁纸下载   | /wallpapers               |
       | 微软            | /microsoft                |
 
   Scenario: The "Latin America" site's main navigation menu has the correct items
