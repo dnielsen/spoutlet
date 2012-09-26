@@ -198,9 +198,9 @@ class DefaultController extends Controller
         switch($locale)
         {
             case 'zh':
-                return 'http://chinastaging.alienwarearena.com/video/ajax/apjxml';
+                return 'http://china.alienwarearena.com/video/ajax/apjxml';
             case 'ja':
-                return 'http://japanstaging.alienwarearena.com/video/ajax/apjxml';
+                return 'http://japan.alienwarearena.com/video/ajax/apjxml';
             default:
                 return 'http://video.alienwarearena.com/ajax/moviexml';
         }
