@@ -1,6 +1,10 @@
 edit: 編集
 
 platformd:
+
+    homepage:
+        news_title: ホットニュース
+
     create_account_or_login: Alienware Arenaアカウントを作成しログインします。
 
     not_found:
