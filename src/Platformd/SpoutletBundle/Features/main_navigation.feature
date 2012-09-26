@@ -39,7 +39,7 @@ Feature: Main Navigation
       | Novedades >> Articles       | http://www.alienwarearena.com/articles/     |
       | Novedades >> Announcements  | http://www.alienwarearena.com/news/         |
       | Medios >> Vídeos            | http://video.alienwarearena.com/            |
-      | Medios >> Explorar          | /pages/wallpapers                           |
+      | Medios >> Explorar          | /wallpapers                                 |
       | Foros                       | /forums                                     |
       | ARP                         | /arp                                        |
       | Microsoft                   | /microsoft                                  |
@@ -61,7 +61,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
-      | Media >> Wallpapers         | /pages/wallpapers                               |
+      | Media >> Wallpapers         | /wallpapers                                     |
       | NewDeals                    | /deal/                                          |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
@@ -83,7 +83,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
-      | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
+      | Media >> Wallpapers         | /wallpapers                                                                                       |
       | NewDeals                    | /deal/                                                                                            |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
@@ -105,7 +105,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -126,7 +126,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -147,7 +147,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |

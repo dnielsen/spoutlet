@@ -487,13 +487,9 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
 
-            case 'zh':
-
-                return sprintf($format, '/wallpapers');
-
             default:
 
-                return sprintf($format, '/pages/wallpapers');
+                return sprintf($format, '/wallpapers');
         }
     }
 
