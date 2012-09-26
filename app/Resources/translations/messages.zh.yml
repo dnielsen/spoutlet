@@ -1,6 +1,9 @@
 edit: 编辑
 
 platformd:
+
+    alienware: 关于ALIENWARE
+
     create_account_or_login: 创建或登陆Alienware Arena账户
 
     not_found:
@@ -66,6 +69,7 @@ platformd:
             news: 新闻
             microsoft: 微软
             media: Media
+            wallpapers: 壁纸下载
 
         page_content:
             featured: 最新亮点
@@ -225,8 +229,9 @@ platformd:
             registered_events:     我的活动
             my_giveaways:     获取赠品
             my_videos: My Videos
+            my_events: 我的活动
             help: 帮助？
-            game_ids: Game IDs
+            game_ids: 游戏IDs
 
     giveaway:
         giveaway: 邀请码
@@ -236,9 +241,9 @@ platformd:
         max_ip_limit: 您的IP地址已不能领取更多的激活码，如果你认为这是一个错误，请联系 china@alienwarearena.com。
         already_assigned: 您已经为该赠送品指定了一个账号
         view_giveaway_site: 查看邀请码站点
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
-        in_process_2: please allow at least 10 days for it to be posted into your account.
-        in_process_3: If after 10 days it has not been posted, please email
+        in_process_1: ""
+        in_process_2: ""
+        in_process_3: ""
         admin:
             title: 管理邀请码
             edit_giveaway: 编辑邀请码 | %giveaway_title%
@@ -427,6 +432,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.user.account.deals: My Deals
+platformd.user.account.tournaments: 比赛
+platformd.user.account.gameids: 游戏IDs
 
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code

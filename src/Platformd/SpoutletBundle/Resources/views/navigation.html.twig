@@ -40,18 +40,17 @@
                     <li><a href="/sweepstakes">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('VIDEO') or site_has_feature('WALLPAPERS') %}
+                {% if site_has_feature('VIDEO') and site_has_feature('WALLPAPERS') %}
+
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
-                            {% if site_has_feature('VIDEO') %}
-                                <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
-                            {% endif %}
-                            {% if site_has_feature('WALLPAPERS') %}
-                                <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
-                            {% endif %}
+                            <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
+                            <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
                         </ul>
                     </li>
+                {% elseif site_has_feature('WALLPAPERS') %}
+                     <li><a href="/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}

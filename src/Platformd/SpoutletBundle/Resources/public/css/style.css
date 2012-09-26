@@ -158,7 +158,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 }
 
-#selectRegion ul { list-style: none; }
+#selectRegion ul { list-style: none; margin: 0px; padding: 0px; }
 #selectRegion li { padding-bottom: 3px; }
 #selectRegion p { margin: 6px 0 6px 0; }
 
