@@ -12,6 +12,7 @@ Feature: Main Navigation
       | Alienware   | http://alienware.jp/  |
       | イベント       | /events/              |
       | ニュース       | /news                 |
+      | ビデオ         | /video                |
       | Microsoft   | /microsoft            |
 
   Scenario: The "China" site's main navigation menu has the correct items

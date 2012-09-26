@@ -283,6 +283,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ALIENWARE_LINK_ADDRESS':          return $this->GetAlienwareLinkAddress($locale);
             case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
             case 'EVENTS':                          return $this->GetEventsLink($locale);
+            case 'VIDEOS':                          return $this->GetVideosLink($locale);
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
@@ -479,6 +480,24 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetVideosLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.video').'</a>';
+        $defaultUrl     = 'http://video.alienwarearena.com/';
+
+        switch($locale) {
+
+            case 'ja':
+            case 'zh':
+
+                return sprintf($format, '/video');
+
+            default:
+
+                return sprintf($format, $defaultUrl);
+        }
+    }
+
     private function GetEventsLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
@@ -579,7 +598,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
-            case 'VIDEO':                       return !$chinaOrJapan;
+            case 'VIDEO':                       return !$china;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'FORUMS':                      return !$chinaOrJapan;
