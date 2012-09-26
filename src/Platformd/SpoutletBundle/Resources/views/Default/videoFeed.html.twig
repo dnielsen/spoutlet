@@ -9,7 +9,7 @@
                     <div class="movie-thumb">
                         <a href="http://{{ host }}/video/movie/{{ video.id }}/">
                             {% if app.session.locale == 'ja' %}
-                                <img border="0" src="http://japanstaging.alienwarearena.com{{ video.thumb }}"
+                                <img border="0" src="http://japan.alienwarearena.com{{ video.thumb }}"
                             {% else %}
                                 <img border="0" src="{{ video.thumb }}">
                             {% endif %}
@@ -23,7 +23,11 @@
         {% endif %}
     </div>
     <div class="widget-footer">
-        <a class="aw-link" href="http://{{ host }}.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
+        {% if app.session.locale == 'ja' %}
+            <a class="aw-link" href="http://japan.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
+        {% elseif app.session.locale == 'zh' %}
+            <a class="aw-link" href="http://china.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
+        {% endif %}
         <div class="clear"></div>
     </div>
 </div>
