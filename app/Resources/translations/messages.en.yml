@@ -2,6 +2,9 @@ edit: Edit
 
 platformd:
 
+    homepage:
+        news_title: News
+
     create_account_or_login: Create or login to an Alienware Arena account.
 
     alienware: Alienware
