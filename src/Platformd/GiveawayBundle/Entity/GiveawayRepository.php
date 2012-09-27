@@ -40,13 +40,9 @@ class GiveawayRepository extends AbstractEventRepository
         ;
     }
 
-    /**
-     * @param $locale
-     * @return array
-     */
-    public function findAllForLocaleWithLimit($locale, $limit)
-    {
-        return $this->createBaseQueryBuilder($locale)
+    public function findAllActiveForLocaleWithLimit($locale, $limit) {
+
+         return $this->createActiveQueryBuilder($locale)
             ->orderBy('g.created', 'DESC')
             ->getQuery()
             ->setMaxResults($limit)

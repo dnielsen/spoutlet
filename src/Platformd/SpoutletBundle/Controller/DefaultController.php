@@ -57,7 +57,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllForLocaleWithLimit($this->getLocale(), 10)
+            ->findAllActiveForLocaleWithLimit($this->getLocale(), 10)
         ;
 
         $giveaways_list = array();
