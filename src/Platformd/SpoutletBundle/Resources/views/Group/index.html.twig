@@ -23,7 +23,7 @@
 </div>
 <div class="std_2col">
     <div class="left">
-        <h3 style="margin: 0; color: #fff;">Recommended ALIENWARE Groups</h3>
+        <h3 style="margin: 0; color: #fff;font-weight: bold">Recommended Alienware Arena Groups</h3>
         <div>
             <h4 class="groups-category-header">Topic Groups</h4>
             <div class="scrollable" id="scrollable-topic-groups">
@@ -40,12 +40,8 @@
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}" title="{{ group.name }}">
-                                    {% if group.name | length > 18  %}
-                                        {{ group.name | slice(0, 18) ~ '…' }}
-                                    {% else %}
+                                    <a href="{{ path('group_show', { id: group.id}) }}" class="group-index-link" title="{{ group.name }}">
                                         {{ group.name }}
-                                    {% endif %}
                                     </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
@@ -79,12 +75,8 @@
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}" title="{{ group.name }}">
-                                    {% if group.name | length > 20  %}
-                                        {{ group.name | slice(0, 20) ~ '…' }}
-                                    {% else %}
+                                    <a href="{{ path('group_show', { id: group.id}) }}" class="group-index-link" title="{{ group.name }}">
                                         {{ group.name }}
-                                    {% endif %}
                                     </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
@@ -144,6 +136,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#scrollable-location-groups').scrollable({
@@ -154,6 +147,8 @@
                 next: '#topic-next',
                 prev: '#topic-prev',
             });
+
+            $('.group-index-link').truncate();
         });
     </script>
 

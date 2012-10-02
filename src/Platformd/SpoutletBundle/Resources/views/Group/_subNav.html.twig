@@ -11,8 +11,6 @@
         {% if group.isAllowedTo(app.user, site, 'LeaveGroup') %}
             <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
         {% endif %}
-        <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-        <li><a href="{{ path('group_new') }}">Create Group</a></li>
-        <li><a href="{{ path('groups') }}">Find Group</a></li>
+        <li><a href="{{ path('groups') }}">See All Groups</a></li>
     </ul>
 </div>

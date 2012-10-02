@@ -202,7 +202,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #header .right { float:right; width:720px; height:24px; }
 /* header links */
 #header .links { height:16px; }
-#header .links ul { list-style:none; float:right; }
+#header .links ul { list-style:none; float:right; margin: 0; padding: 0; }
 #header .links ul li { float:left; color:#6C6C6C; padding:0 6px; line-height:15px; }
 #header .links ul li.separator { border-right-color:#6C6C6C; border-right-style:solid; border-right-width:1px; }
 #header .links a { color:#6C6C6C; }
@@ -464,7 +464,7 @@ html body .lastBlurb { margin-bottom:0; }
 
 /** footer **/
 #footer { clear:both; padding-top:40px; padding-bottom:20px; background:url(/bundles/spoutlet/images/footer-bg.gif) top left repeat-x; }
-#footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 20px; }
+#footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 20px; margin: 0; padding: 0;}
 #footer .nav a { color:#b3b3b3; }
 #footer .nav li { float:left; margin-left:5px; padding-right:5px; border-right:#575757 solid 1px; }
 #footer .nav li.noborder { border:none; }

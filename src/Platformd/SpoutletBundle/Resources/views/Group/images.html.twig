@@ -21,11 +21,7 @@
                             </a>
                         </div>
                         <div class="group-image-title">
-                            {% if image.title | length > 20  %}
-                                {{ image.title | slice(0, 20) ~ '…' }}
-                            {% else %}
-                                {{ image.title }}
-                            {% endif %}
+                            {{ image.title }}
                         </div>
                         <div class="group-image-actions">
                             {% if canDelete %}

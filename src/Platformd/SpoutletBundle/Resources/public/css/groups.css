@@ -122,8 +122,23 @@
 }
 
 .join-group-options {
-    padding-top: 30px;
     text-align: center;
+}
+
+.join-group-options a {
+    background: url('/bundles/spoutlet/images/groups/join_group_off.png') no-repeat;
+    width: 230px;
+    height: 62px;
+    margin: 0px auto;
+    border: none;
+}
+
+.join-group-options a:hover {
+    background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
+    width: 230px;
+    height: 62px;
+    margin: 0px auto;
+    border: none;
 }
 
 button#join-group-button {

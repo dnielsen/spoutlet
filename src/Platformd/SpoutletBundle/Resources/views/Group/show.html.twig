@@ -30,9 +30,9 @@
 <div class="std_1col" style="padding: 0;">
     <div id="group-avatar">
         {% if group.groupAvatar %}
-            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
+            <img src="{{ media_path(group.groupAvatar) }}" />
         {% else %}
-            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" /></a>
+            <img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" />
         {% endif %}
     </div>
 </div>
@@ -172,6 +172,7 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.expander.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
 
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
@@ -186,7 +187,6 @@
     {% endif %}
     <script type="text/javascript">
         $(function () {
-
             $('#group-invite').click(function () {
                 FB.ui({
                     method: 'send',
@@ -209,6 +209,7 @@
                     success: function(data, textStatus, jqXHR) {
                         content.html(data);
                         $("#scrollable-videos").scrollable();
+                        $('.youtube-link').truncate();
                     }
                 });
             }
@@ -232,6 +233,7 @@
                     success: function(data, textStatus, jqXHR) {
                         content.html(data);
                         $("#scrollable-images").scrollable();
+                        $('.group-image-title').truncate();
                     }
                 });
             }
