@@ -330,7 +330,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
             case 'ja':       $text = 'ALIENWARE.JPへ移動する'; break;
-            case 'zh':       $text = '需要一个牛逼的装备? 请看看 Alienware'; break;
+            case 'zh':       $text = '需要一个牛逼的装备? 请看看 ALIENWARE'; break;
             case 'es':       $text = '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!'; break;
 
             case 'en_SG':
