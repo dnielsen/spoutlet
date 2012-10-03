@@ -1,7 +1,7 @@
 {% set site = get_current_site() %}
 <div class="groups-sub-nav">
     <ul>
-        <li><a href="{{ path('group_show', {'id' : group.id }) }}">Group Home</a></li>
+        <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
         {% if group.isAllowedTo(app.user, site, 'EditGroup') %}
             <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Group Settings</a></li>
         {% endif %}

@@ -6,6 +6,7 @@ use Platformd\MediaBundle\Entity\Media;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
@@ -48,6 +49,13 @@ class Group implements LinkableInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @var string $slug
+     *
+     * @ORM\Column(name="slug", type="string", length=255)
+     */
+    private $slug;
 
     /**
      * @var string $name
@@ -202,12 +210,43 @@ class Group implements LinkableInterface
     }
 
     /**
+     * Set slug
+     *
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        # this allows slug to be left blank and set elsewhere without it getting overridden here
+        if (!$slug) {
+            return;
+        }
+
+        $this->slug = $slug;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
      */
     public function setName($name)
     {
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($name);
+
+            $this->setSlug($slug);
+        }
+
         $this->name = $name;
     }
 
@@ -638,7 +677,8 @@ class Group implements LinkableInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getId()
+            'id' => $this->getId(),
+            'slug' => $this->getSlug(),
         );
     }
 

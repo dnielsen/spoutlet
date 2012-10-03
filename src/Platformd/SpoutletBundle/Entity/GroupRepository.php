@@ -105,6 +105,7 @@ class GroupRepository extends EntityRepository
             pd_groups.`id` AS group_id,
             pd_groups.`name` AS group_name,
             pd_group_site.group_id,
+            pd_groups.slug,
             (
                 SELECT
                     COUNT(*)

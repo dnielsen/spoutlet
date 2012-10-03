@@ -79,6 +79,13 @@ class GroupController extends Controller
         ->find($id);
     }
 
+    private function getGroupBySlug($slug) {
+        return $this
+        ->getEntityManager()
+        ->getRepository('SpoutletBundle:Group')
+        ->findOneBy(array('slug' => $slug));
+    }
+
     private function getGroupApplicationRepo() {
         return $this
             ->getEntityManager()
@@ -102,7 +109,7 @@ class GroupController extends Controller
         $baseHost          = $this->container->getParameter('base_host');
 
         $groupName          = $application->getGroup()->getName();
-        $groupUrlRelative   = $this->generateUrl('group_show', array('id' => $application->getGroup()->getId()));
+        $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $application->getGroup()->getSlug()));
         $groupUrlAbsolute   = sprintf('http://%s.%s%s', $applicantSubDomain, $baseHost, $groupUrlRelative);
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
@@ -273,12 +280,12 @@ Alienware Arena Team
 
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group owner, you are not allowed to leave the group!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
         if (!$group->isMember($user)) {
             $this->setFlash('error', 'You are not a member of this group!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
         $this->ensureAllowed($group, 'LeaveGroup');
@@ -295,7 +302,7 @@ Alienware Arena Team
 
         $this->setFlash('success', 'You have successfully left this group!');
 
-        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
     public function joinAction($id)
@@ -328,7 +335,7 @@ Alienware Arena Team
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
          $this->setFlash('success', 'You have successfully joined this group!');
 
-        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
     public function applyToGroupAction($id, Request $request)
@@ -343,7 +350,7 @@ Alienware Arena Team
 
         if ($group->isMember($user) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
         $userApplications = $this->getGroupApplicationRepo()->findByApplicant($user->getId());
@@ -353,7 +360,7 @@ Alienware Arena Team
 
                 if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
                     $this->setFlash('error', 'You have already applied to this group!');
-                    return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+                    return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
                 }
             }
         }
@@ -381,7 +388,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'You will receive an email if you are admitted into this group.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -476,7 +483,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'New article posted successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#news');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -498,7 +505,7 @@ Alienware Arena Team
 
         if (!$newsArticle) {
             $this->setFlash('error', 'News article does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#news');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
         }
 
         $form = $this->createFormBuilder($newsArticle)
@@ -516,7 +523,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'New article updated successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#news');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -538,7 +545,7 @@ Alienware Arena Team
 
         if (!$newsArticle) {
             $this->setFlash('error', 'News article does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#news');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
         }
 
         $newsArticle->setDeleted(true);
@@ -547,7 +554,7 @@ Alienware Arena Team
 
         $this->setFlash('success', 'News article was deleted successfully!');
 
-        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#news');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
     }
 
     public function imageAction($id, Request $request)
@@ -598,7 +605,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Image posted successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#images');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -620,7 +627,7 @@ Alienware Arena Team
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#images');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
         }
 
         $form = $this->createFormBuilder($image)
@@ -638,7 +645,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Image updated successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#images');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -660,7 +667,7 @@ Alienware Arena Team
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#images');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
         }
 
         $image->setDeleted(true);
@@ -669,7 +676,7 @@ Alienware Arena Team
 
         $this->setFlash('success', 'Image was deleted successfully!');
 
-        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#images');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
     }
 
     public function videosAction($id, Request $request)
@@ -724,7 +731,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'New video posted successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#videos');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -746,7 +753,7 @@ Alienware Arena Team
 
         if (!$video) {
             $this->setFlash('error', 'Video does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#videos');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
         }
 
         $form = $this->createFormBuilder($video)
@@ -766,7 +773,7 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Video updated successfully.');
 
-                return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#videos');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -788,7 +795,7 @@ Alienware Arena Team
 
         if (!$videoArticle) {
             $this->setFlash('error', 'Video does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#videos');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
         }
 
         $em = $this->getEntityManager();
@@ -797,14 +804,14 @@ Alienware Arena Team
 
         $this->setFlash('success', 'Video was deleted successfully!');
 
-        return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())) . '#videos');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
     }
 
-    public function showAction($id)
+    public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
 
-        $group = $this->getGroup($id);
+        $group = $this->getGroupBySlug($slug);
 
         $this->addGroupsBreadcrumb();
 
@@ -848,7 +855,7 @@ Alienware Arena Team
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
-            return $this->redirect($this->generateUrl('group_show', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
         return $this->render('SpoutletBundle:Group:new.html.twig', array(
@@ -869,7 +876,7 @@ Alienware Arena Team
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The group was saved!');
 
-            return $this->redirect($this->generateUrl('group_show', array('id' => $id)));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
         return $this->render('SpoutletBundle:Group:edit.html.twig', array(

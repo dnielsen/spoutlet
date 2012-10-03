@@ -83,7 +83,11 @@ group_delete:
     defaults: { _controller: "SpoutletBundle:Group:delete", site: ~ }
 
 group_show:
-    pattern:  /{id}/show/
+    pattern:  /{slug}/
+    defaults: { _controller: "SpoutletBundle:Group:show", site: ~ }
+
+group_slug_show:
+    pattern:  /{slug}/
     defaults: { _controller: "SpoutletBundle:Group:show", site: ~ }
 
 group_update:

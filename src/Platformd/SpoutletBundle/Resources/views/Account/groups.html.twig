@@ -25,7 +25,7 @@
             {% for group in groups %}
                 <tr class="eventListGroup_lan">
                     <td>
-                        <a href="{{ path('group_show', { 'id': group.id }) }}">{{ group.name }}</a>
+                        <a href="{{ path('group_show', { 'slug': group.slug }) }}">{{ group.name }}</a>
                     </td>
                     <td>
                         {{group.owner.username}}

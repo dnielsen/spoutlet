@@ -33,14 +33,14 @@
                         {% for groupList in page %}
                             {% for group in groupList %}
                                 <div class="group-list-item">
-                                    <a href="{{ path('group_show', { id: group.id}) }}">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}" class="group-index-link" title="{{ group.name }}">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
                                         {{ group.name }}
                                     </a>
                                     <div class="details">
@@ -68,14 +68,14 @@
                         {% for groupList in page %}
                             {% for group in groupList %}
                                 <div class="group-list-item">
-                                    <a href="{{ path('group_show', { id: group.id}) }}">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { id: group.id}) }}" class="group-index-link" title="{{ group.name }}">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
                                         {{ group.name }}
                                     </a>
                                     <div class="details">
@@ -107,7 +107,7 @@
             <div class="widget-content">
                 {% for recentGroup in recentGroups %}
                 <div class="widget-item">
-                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'id': recentGroup.id }) }}">{{ recentGroup.name }}</a>
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a>
                 </div>
                 {% else %}
                     <p>No groups found. Check back soon!</p>
@@ -123,7 +123,7 @@
             <div class="widget-content">
                 {% for popularGroup in popularGroups %}
                 <div class="widget-item">
-                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'id': popularGroup['group_id'] }) }}">{{ popularGroup['group_name'] }}</a>
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a>
                 </div>
                 {% else %}
                     <p>No groups found. Check back soon!</p>
