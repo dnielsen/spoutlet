@@ -61,7 +61,9 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/                |
       | Media >> Wallpapers         | /pages/wallpapers                               |
       | NewDeals                    | /deal/                                          |
-      | NewGroups                   | /groups/                                        |
+      | NewGroups >> All Groups     | /groups/                                        |
+      | NewGroups >> My Groups      | /account/profile/groups                         |
+      | NewGroups >> Create Group   | /groups/new/                                    |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
       | Microsoft                   | /microsoft                                      |
@@ -84,7 +86,9 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
       | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
       | NewDeals                    | /deal/                                                                                            |
-      | NewGroups                   | /groups/                                                                                          |
+      | NewGroups >> All Groups     | /groups/                                                                                          |
+      | NewGroups >> My Groups      | /account/profile/groups                                                                           |
+      | NewGroups >> Create Group   | /groups/new/                                                                                      |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
       | Microsoft                   | /microsoft                                                                                        |
@@ -148,7 +152,9 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
       | Media >> Wallpapers         | /pages/wallpapers                         |
-      | NewGroups                   | /groups/                                  |
+      | NewGroups >> All Groups     | /groups/                                  |
+      | NewGroups >> My Groups      | /account/profile/groups                   |
+      | NewGroups >> Create Group   | /groups/new/                              |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |

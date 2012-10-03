@@ -261,7 +261,7 @@ class AbstractFeatureContext extends MinkContext
             ->getParent()
             ->findAll('css', 'a');
 
-        return $aTags[0]->getHtml();
+        return $aTags[0]->getText();
     }
 
     private function isNavHeading($item) {

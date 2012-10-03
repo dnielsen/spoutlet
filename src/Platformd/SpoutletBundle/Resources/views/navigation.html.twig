@@ -58,7 +58,22 @@
                 {% endif %}
 
                 {% if site_has_feature('GROUPS') %}
-                    <li><a href="{{ path('groups') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>Groups</a></li>
+                    <li class="more">
+                        <a class="blue">
+                            <span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>Groups
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ path('groups') }}">All Groups</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('accounts_groups') }}">My Groups</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('group_new') }}">Create Group</a>
+                            </li>
+                        </ul>
+                    </li>
                 {% endif %}
 
                 {% if site_has_feature('FORUMS') %}
