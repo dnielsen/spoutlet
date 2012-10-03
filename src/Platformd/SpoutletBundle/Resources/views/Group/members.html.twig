@@ -1,0 +1,61 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'Groups - ' ~ group.name %}
+
+{% block content %}
+
+    <div class="std_1col" style="padding: 0;">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                <img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" />
+            {% endif %}
+        </div>
+    </div>
+    <div class="std_1col" style="padding: 0;">
+        <div class="groups-sub-nav-wrapper">
+            {% include 'SpoutletBundle:Group:_subNav.html.twig' %}
+        </div>
+    </div>
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">Members</div>
+        </div>
+        <div class="widget-content">
+            <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
+                <tbody>
+                <tr>
+                    <th style="width:15%;">Username</th>
+                    <th style="width:15%;">Joined</th>
+                    <th style="width:15%;">Action</th>
+                </tr>
+                {% for member in group.members %}
+                    <tr class="eventListGroup_lan">
+                        <td>
+                            <a href="javascript:void(0);">{{ member.username }}</a>
+                        </td>
+                        <td>
+                            {{ member.created|date('M j, Y') }}
+                        </td>
+                        <td>
+                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : member.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ member.username }}\' from the group?');">Remove from Group</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">
+                            <em>There are no members!</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="widget-footer">&nbsp;</div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+{% endblock %}

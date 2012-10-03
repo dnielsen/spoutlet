@@ -70,16 +70,29 @@
                 </div>
             </div>
             <div class="widget-content">
-
-                <div id="group-member-count">
-                    {{ group.members.count }}
-                    <div>Members</div>
-                </div>
-                <div id="group-comment-count">
-                    {{ commentTotal }}
-                    <div>Comments</div>
-                </div>
-
+                <table class="group-details-table">
+                    <tr>
+                        <td>Founded</td>
+                        <td>{{ group.createdAt|date('M j, Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Organizer</td>
+                        <td><a href="javascript:void(0);">{{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'AWA Staff' : group.owner.username }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Members</td>
+                        <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ group.members.count }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Comments</td>
+                        <td>{{ commentTotal }}</td>
+                    </tr>
+                    <tr>
+                        <td>Group</td>
+                        <td>{{ group.isPublic ? "Public" : "Private" }}</td>
+                    </tr>
+                </table>
+                <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
                 <div id="group-like-wrapper">
                     <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
                 </div>

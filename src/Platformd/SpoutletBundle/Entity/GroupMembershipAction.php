@@ -17,11 +17,13 @@ class GroupMembershipAction
     const ACTION_JOINED                         = 'JOINED';
     const ACTION_JOINED_APPLICATION_ACCEPTED    = 'JOINED_APPLICATION_ACCEPTED';
     const ACTION_LEFT                           = 'LEFT';
+    const ACTION_REMOVED                        = 'REMOVED';
 
     private static $validActions = array(
         self::ACTION_JOINED,
         self::ACTION_JOINED_APPLICATION_ACCEPTED,
         self::ACTION_LEFT,
+        self::ACTION_REMOVED,
     );
 
     /**

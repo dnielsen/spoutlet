@@ -102,3 +102,11 @@ group_accept_application:
 group_reject_application:
     pattern:  /{id}/applications/{applicationId}/reject
     defaults: { _controller: "SpoutletBundle:Group:rejectApplication", site: ~ }
+
+group_members:
+    pattern: /{id}/members
+    defaults: { _controller: "SpoutletBundle:Group:members", site: ~ }
+
+group_remove_member:
+    pattern: /{id}/remove/{uid}
+    defaults: { _controller: "SpoutletBundle:Group:remove", site: ~ }

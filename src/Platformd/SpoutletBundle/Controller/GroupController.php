@@ -392,6 +392,54 @@ Alienware Arena Team
             'form' => $form->createView()));
     }
 
+    public function removeAction($id, $uid)
+    {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $group = $this->getGroup($id);
+        $user = null;
+
+        foreach($group->getMembers() as $member)
+        {
+            if($member->getId() == $uid)
+            {
+                $user = $member;
+                break;
+            }
+        }
+
+        if($user == null) {
+            $this->setFlash('error', 'The user you are trying to remove could not be found!');
+            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+        }
+
+        if ($group->isOwner($user)) {
+            $this->setFlash('error', 'You are the group owner, you are not allowed to remove yourself the group!');
+            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+        }
+
+        if (!$group->isMember($user)) {
+            $this->setFlash('error', 'You cannot remove someone who is not a member of this group!');
+            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+        }
+
+        //$this->ensureAllowed($group, 'LeaveGroup');
+
+        $removeAction = new GroupMembershipAction();
+        $removeAction->setGroup($group);
+        $removeAction->setUser($user);
+        $removeAction->setAction(GroupMembershipAction::ACTION_REMOVED);
+
+        $group->getMembers()->removeElement($user);
+        $group->getUserMembershipActions()->add($removeAction);
+
+        $this->getGroupManager()->saveGroup($group);
+
+        $this->setFlash('success', sprintf('%s is no longer in this group.', $user->getUsername()));
+
+        return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+    }
+
     public function newsAction($id, Request $request)
     {
         $group = $this->getGroup($id);
@@ -850,6 +898,14 @@ Alienware Arena Team
         $this->setFlash('success', 'The group was successfully deleted!');
 
         return $this->redirect($this->generateUrl('groups'));
+    }
+
+    public function membersAction($id) {
+        $group = $this->getGroup($id);
+
+        return $this->render('SpoutletBundle:Group:members.html.twig', array(
+            'group' => $group,
+        ));
     }
 
     private function processForm(Form $form, Request $request)

@@ -331,3 +331,11 @@ button#join-group-button:hover {
     margin: 10px 0 10px 0;
     text-shadow:1px 1px 8px #009CDA;
 }
+
+.group-details-table {
+    width: 100%;
+}
+
+.group-details-table td {
+    padding: 0 0 5px 0;
+}
