@@ -902,9 +902,16 @@ Alienware Arena Team
 
     public function membersAction($id) {
         $group = $this->getGroup($id);
+        $currentUser = $this->getCurrentUser();
+        $canRemove = $group->isOwner($currentUser) && $currentUser != 'anon.';
+
+        if($currentUser != 'anon.') {
+            $canRemove = $currentUser->getAdminLevel() == 'ROLE_SUPER_ADMIN';
+        }
 
         return $this->render('SpoutletBundle:Group:members.html.twig', array(
             'group' => $group,
+            'canRemove' => $canRemove,
         ));
     }
 
