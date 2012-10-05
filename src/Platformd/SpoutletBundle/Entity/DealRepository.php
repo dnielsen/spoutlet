@@ -149,13 +149,14 @@ class DealRepository extends EntityRepository
      * @param string $site
      * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
-    public function findExpiredDealsForSite($site)
+    public function findExpiredDealsForSite($site, $maxResults = 4)
     {
         $qb = $this->createSiteQueryBuilder($site);
         $this->addExpiredQueryBuilder($qb);
         $this->addOrderByQuery($qb);
 
         return $qb->getQuery()
+            ->setMaxResults($maxResults)
             ->execute()
         ;
     }

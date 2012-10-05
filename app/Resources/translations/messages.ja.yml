@@ -1,7 +1,11 @@
 edit: 編集
 
 platformd:
-    create_account_or_login: Alienware Arenaアカウントを作成しログインします。
+
+    homepage:
+        news_title: ホットニュース
+
+    create_account_or_login: ALIENWARE ARENAアカウントを作成しログインします。
 
     not_found:
         title: ページが見つかりません
@@ -13,11 +17,11 @@ platformd:
 
     layout:
         # title used by default (if not overridden)
-        default_title: Alienware Arena - ゲーマー募集中
+        default_title: ALIENWARE ARENA - ゲーマー募集中
         # title user by default in Admin area (if not overridden)
         default_admin_title: 管理者
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
-        title_suffix: Alienware Arena
+        title_suffix: ALIENWARE ARENA
 
         #translations that are not used yet
         region:
@@ -44,7 +48,7 @@ platformd:
             sign_in: ログイン
             sign_out: ログアウト
             join: アカント作成
-            about: Alienware Arenaについて
+            about: ALIENWARE ARENAについて
             contact: "お問い合わせ"
             search: 検索
             logged_in_as: <strong><a href="%route%">%username%</a></strong>としてログイン済み
@@ -60,7 +64,7 @@ platformd:
 
         main_menu:
             home: ホーム
-            alienware: Alienware
+            alienware: ALIENWARE
             events: イベント
             video: ビデオ
             news: ニュース
@@ -68,12 +72,19 @@ platformd:
             media: Media
 
         page_content:
-            featured: トピックス
+            featured: 新着
             giveaways: キャンペーン
             all: すべて
             see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
+            competitions: トーナメント・イベント
+            hot_stories: Hot Stories
+            videos: ビデオ
+            view_more: もっと見る
+            views: ビュー
+            rating: レートする
+            all_news: すべてのニュース
 
         bottom_menu:
             contact_us: "お問い合わせ"
@@ -81,7 +92,7 @@ platformd:
             terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
+            copyright_2012: "Copyright 2012 ALIENWARE Corporation. All Rights Reserved."
 
     help:
         actions: 操作
@@ -143,11 +154,11 @@ platformd:
             welcome_to_control: 管理画面へようこそ
             hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
             ready_to_game: |
-                このAlienware Arena管理画面はArenaに参加する際の主要ツールが準備されています。 現在、イベントサインア
-                ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもArenaサポートチームへコンタ
+                このALIENWARE ARENA管理画面はARENAに参加する際の主要ツールが準備されています。 現在、イベントサインア
+                ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもARENAサポートチームへコンタ
                 クトしてください。
-            warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。Alienware Arenaはその責任を負うことができません。
-            under_construction: "注：Alienware Arenaは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
+            warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。ALIENWARE ARENAはその責任を負うことができません。
+            under_construction: "注：ALIENWARE ARENAは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
             change_your_password: パスワードの変更
         giveaway:
             your_giveaway_keys: 取得済みキー
@@ -174,7 +185,7 @@ platformd:
                 a totally black background.
 
     about:
-        title: Alienware Arenaについて
+        title: ALIENWARE ARENAについて
 
     # used only in the admin area
     navigation:
@@ -190,13 +201,13 @@ platformd:
         change_password_header: パスワードの変更
         edit_account_header: アカウント情報の編集
 
-        register_title: Arenaアカウントの作成
+        register_title: ARENAアカウントの作成
 
         name_fields_order: %last_name% %first_name%
 
         register:
-            requirements: Alienware Arena に参加するためには Arenaアカウントの登録が必要です
-            already: "Arenaアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
+            requirements: ALIENWARE ARENA に参加するためには ARENAアカウントの登録が必要です
+            already: "ARENAアカウントをすでにお持ちですか？　その場合は<こちらでログイン>して下さい。"
             terms_label: サービス規約
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
@@ -263,7 +274,7 @@ platformd:
             giveaways: キャンペーン
         assigned:
             message: |
-                キーが割り当てられました。Alienware Arenaコントロールパネルの取得済みキーでいつでもキーを確認できます。
+                キーが割り当てられました。ALIENWARE ARENAコントロールパネルの取得済みキーでいつでもキーを確認できます。
             may_require_activation: アクティベーションが必要な場合もあります。詳細は、プレゼントページをご覧ください。
             key: キー
             assigned_at: 日付
@@ -302,7 +313,7 @@ platformd:
 
 # registration drop-down choices
 "Select one": "----お選びください ----"
-source_alienware: Alienware 公式サイト
+source_alienware: ALIENWARE 公式サイト
 CEVO: "ゲーム系ニュースサイト"
 "Tech News Site": IT系ニュースサイト
 "Email": Eメール
@@ -360,7 +371,7 @@ status:
 
 # More frontend things
 no_news_currently: 投稿がありません
-news_and_announcements: Alienware Arena ニュース
+news_and_announcements: ALIENWARE ARENA ニュース
 announced_date: 発表 %posted_date%
 read_more: 詳細
 go_to_website: サイトへ移動

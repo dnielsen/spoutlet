@@ -2,9 +2,12 @@ edit: 编辑
 
 platformd:
 
+    homepage:
+        news_title: 新闻
+
     alienware: 关于ALIENWARE
 
-    create_account_or_login: 创建或登陆Alienware Arena账户
+    create_account_or_login: 创建或登陆ALIENWARE竞技场账户
 
     not_found:
         title: 页面未找到
@@ -16,11 +19,11 @@ platformd:
 
     layout:
         # title used by default (if not overriden)
-        default_title: Alienware Arena - 玩家所求
+        default_title: ALIENWARE竞技场 - 玩家所求
         # title user by default in Admin area (if not overridden)
         default_admin_title: 管理员
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
-        title_suffix: Alienware Arena
+        title_suffix: ALIENWARE竞技场
 
         #translations that are not used yet
         region:
@@ -68,16 +71,23 @@ platformd:
             video: 视频
             news: 新闻
             microsoft: 微软
-            media: Media
+            media: 媒体
             wallpapers: 壁纸下载
 
         page_content:
-            featured: 专栏
-            giveaways: 邀请码
+            featured: 最新亮点
+            giveaways: 兑换码
             all: 所有
             see_more: 更多
             photo_gallery: 照片库
             view_all: 查看所有
+            competitions: 近期赛事
+            hot_stories: Hot Stories
+            videos: 视频
+            view_more: 观看更多
+            views: 观看人数
+            rating: 评估中
+            all_news: 全部
 
         bottom_menu:
             contact_us: 联系我们
@@ -85,7 +95,7 @@ platformd:
             terms_and_conditions: 服务条款
             steam_community: Steam社区
             xfire_community: Xfire社区
-            copyright_2012: "&copy;2012版权所有，Alienware公司"
+            copyright_2012: "&copy;2012版权所有，ALIENWARE公司"
 
     help:
         actions: 操作
@@ -143,9 +153,9 @@ platformd:
         account:
             welcome_to_control: 欢迎来到管理中心
             hello_user: "%firstname% 你好! 你正在用 %username% 帐号登录。"
-            ready_to_game: 准备开始玩游戏吗？Alienware竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
-            warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！Alienware 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
-            under_construction: "注：Alienware Arena建设中，如某项功能无法启用，请稍后访问。"
+            ready_to_game: 准备开始玩游戏吗？ALIENWARE竞技场管理中心是你和竞技场互动的主要方式。现在，你可以注册一个活动并进行评论。我们每个月会增加一些新功能，请拭目以待。如果你有任何问题，请联系竞技场支持团队。
+            warning: 注意：请勿将密码告诉任何人！他们可能会对活动发表评论，代表你说一些愚蠢的话！ALIENWARE 竞技场概不负责，也可能无法解决因他人用你的密码所带来的问题，请保护自己并保存好自己的账户密码。
+            under_construction: "注：ALIENWARE竞技场建设中，如某项功能无法启用，请稍后访问。"
             change_your_password: 修改密码
         giveaway:
             your_giveaway_keys: 我的赠品码
@@ -172,7 +182,7 @@ platformd:
                 a totally black background.
 
     about:
-        title: 关于Alienware Arena
+        title: 关于ALIENWARE竞技场
 
     # used only in the admin area
     navigation:
@@ -192,8 +202,8 @@ platformd:
         name_fields_order: %first_name% %last_name%
 
         register:
-            requirements: Participation in the Alienware Arena requires an account.
-            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
+            requirements: Participation in the ALIENWARE竞技场 requires an account.
+            already: "Already have an ALIENWARE竞技场 Account? Skip this step and <login now>."
             terms_label: 服务条款
             dell_privacy_label: 隐私条款
             country_label: 选择国家
@@ -224,7 +234,7 @@ platformd:
             my_videos: My Videos
             my_events: 我的活动
             help: 帮助？
-            game_ids: Game IDs
+            game_ids: 游戏IDs
 
     giveaway:
         giveaway: 邀请码
@@ -258,7 +268,7 @@ platformd:
             giveaways: 邀请码
         assigned:
             message: |
-                已经为您分配激活码。您可以随时访问你的邀请码激活码页面在Alienware Arena用户管理面板查看该激活码。
+                已经为您分配激活码。您可以随时访问你的邀请码激活码页面在ALIENWARE竞技场用户管理面板查看该激活码。
             may_require_activation: 你需要激活你的激活码！详情请查看邀请码页面。
             key: 激活码
             assigned_at: 已分配
@@ -296,7 +306,7 @@ platformd:
 
 # registration drop-down choices
 "Select one": "选择一个"
-source_alienware: Alienware
+source_alienware: ALIENWARE
 CEVO: CEVO
 "Tech News Site": 技术新闻页面
 "Email": 邮箱
@@ -350,7 +360,7 @@ status:
 
 # More frontend things
 no_news_currently: 没有找到新闻文章
-news_and_announcements: Alienware竞技场新闻及通告
+news_and_announcements: ALIENWARE竞技场新闻及通告
 announced_date: 发表于 %posted_date%
 read_more: 了解更多
 go_to_website: 前往站点
@@ -425,6 +435,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.user.account.deals: My Deals
+platformd.user.account.tournaments: 比赛
+platformd.user.account.gameids: 游戏IDs
 
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code

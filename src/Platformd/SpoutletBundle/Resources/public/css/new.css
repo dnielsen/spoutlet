@@ -23,6 +23,7 @@ a.button:hover {
 /* should be applied whenever we want text to respect spaces and line breaks */
 .controlled-spacing {
     white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 ul.normal-margin, ol.normal-margin {

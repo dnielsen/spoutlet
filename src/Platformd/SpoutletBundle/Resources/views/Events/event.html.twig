@@ -47,7 +47,9 @@
                             <label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>
                             <div id="starts_at">
                                 {{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}
-                                {{ event.timezoneString }}
+                                {% if event.displayTimezone %}
+                                    {{ event.timezoneString }}
+                                {% endif %}
                             </div>
                         {% endif %}
 
@@ -55,7 +57,9 @@
                             <label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>
                             <div id="ends_at">
                                 {{ 'sweepstakes_datetime_format' | trans(event.endsAtInTimezoneTranslationArray) }}
-                                {{ event.timezoneString }}
+                                {% if event.displayTimezone %}
+                                    {{ event.timezoneString }}
+                                {% endif %}
                             </div>
                         {% endif %}
 

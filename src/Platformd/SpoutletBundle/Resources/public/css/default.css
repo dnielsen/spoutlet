@@ -21,8 +21,8 @@ html { overflow-y: scroll; }
     margin: 0 0 5px 0;
 }
 .movie-section-title.latest { letter-spacing: 71px; }
-.movie-thumb { border: 1px solid #4A4A4A; }
-.movie-thumb img { width: 135px; height: 80px; border: 1px solid black; }
+.movie-thumb { border: none; }
+.movie-thumb img { width: 135px; height: 80px; border: 1px solid #4A4A4A; }
 .movie-title { padding: 5px 0 0 0; text-transform: capitalize; }
 .movie { float: left; width: 139px; margin: 0 8px 0 8px; }
 .movie p { margin: 0; }
