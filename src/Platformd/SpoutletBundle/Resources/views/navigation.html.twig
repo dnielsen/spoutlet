@@ -45,12 +45,14 @@
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
-                            <li><a href="http://video.alienwarearena.com/">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
-                            <li><a href="/pages/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
+                            <li>{{ site_link('VIDEOS') }}</li>
+                            <li>{{ site_link('WALLPAPERS') }}</li>
                         </ul>
                     </li>
+                {% elseif site_has_feature('VIDEO') %}
+                    <li>{{ site_link('VIDEOS') }}</li>
                 {% elseif site_has_feature('WALLPAPERS') %}
-                     <li><a href="/wallpapers">{{ 'platformd.layout.main_menu.wallpapers' | trans }}</a></li>
+                     <li>{{ site_link('WALLPAPERS') }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}

@@ -2,6 +2,9 @@ edit: Edit
 
 platformd:
 
+    homepage:
+        news_title: News
+
     create_account_or_login: Create or login to an Alienware Arena account.
 
     alienware: Alienware
@@ -82,6 +85,13 @@ platformd:
             see_more: See More
             photo_gallery: Photo Gallery
             view_all: View All
+            competitions: Competitions
+            hot_stories: Hot Stories
+            videos: Videos
+            view_more: View More
+            views: Views
+            rating: Rating
+            all_news: All
 
         bottom_menu:
             contact_us: Contact Us

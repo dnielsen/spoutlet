@@ -312,6 +312,8 @@ class SpoutletExtension extends Twig_Extension
             case 'ALIENWARE_LINK_ADDRESS':          return $this->GetAlienwareLinkAddress($locale);
             case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
             case 'EVENTS':                          return $this->GetEventsLink($locale);
+            case 'VIDEOS':                          return $this->GetVideosLink($locale);
+            case 'WALLPAPERS':                      return $this->GetWallpapersLink($locale);
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
@@ -357,7 +359,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
             case 'ja':       $text = 'ALIENWARE.JPへ移動する'; break;
-            case 'zh':       $text = '需要一个牛逼的装备? 请看看 Alienware'; break;
+            case 'zh':       $text = '需要一个牛逼的装备? 请看看 ALIENWARE'; break;
             case 'es':       $text = '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!'; break;
 
             case 'en_SG':
@@ -508,6 +510,35 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetWallpapersLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.wallpapers').'</a>';
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, '/wallpapers');
+        }
+    }
+
+    private function GetVideosLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.video').'</a>';
+
+        switch($locale) {
+
+            case 'ja':
+            case 'zh':
+
+                return sprintf($format, '/video');
+
+            default:
+
+                return sprintf($format, 'http://video.alienwarearena.com/');
+        }
+    }
+
     private function GetEventsLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
@@ -577,6 +608,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
             case 'ja':      return sprintf($format, 'japan');
+            case 'zh':      return sprintf($format, 'china');
 
             default:        return false;
         }
@@ -608,7 +640,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
-            case 'VIDEO':                       return !$chinaOrJapan;
+            case 'VIDEO':                       return true;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'FORUMS':                      return !$chinaOrJapan;

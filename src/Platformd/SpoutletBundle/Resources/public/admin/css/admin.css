@@ -111,6 +111,7 @@ table#content-reports {
     border: 1px solid #CCCCCC;
     text-align: left;
     min-width: 500px;
+    width: 100%;
 }
 
 table#content-reports tr {
@@ -158,7 +159,7 @@ table#content-reports th#content-report-type {
 }
 
 table#content-reports th#content-report-content {
-    min-width: 500px;
+    min-width: 400px;
 }
 
 table#content-reports th#content-report-action {

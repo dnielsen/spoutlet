@@ -1,0 +1,34 @@
+<div class="widget-66" id="videos" style="margin-top: 15px;">
+    <div class="widget-header">
+        <div class="widget-title">{{ 'platformd.layout.page_content.videos' | trans}}</div>
+    </div>
+    <div class="widget-content">
+        {% if videos %}
+            {% for video in videos %}
+                <div class="movie" {% if loop.index > 4 %} style="margin-top: 5px" {% endif %}>
+                    <div class="movie-thumb">
+                        <a href="http://{{ host }}/video/movie/{{ video.id }}/">
+                            {% if app.session.locale == 'ja' %}
+                                <img border="0" src="http://japan.alienwarearena.com{{ video.thumb }}"
+                            {% else %}
+                                <img border="0" src="{{ video.thumb }}">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <p class="movie-title"><a class="ellipse tooltip" title="{{ video.name }}" href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
+                    <p class="movie-views">{{ 'platformd.layout.page_content.views' | trans }}: {{ video.views }}</p>
+                    <p class="movie-rating">{{ 'platformd.layout.page_content.rating' | trans }}: {{ video.rating }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="widget-footer">
+        {% if app.session.locale == 'ja' %}
+            <a class="aw-link" href="http://japan.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
+        {% elseif app.session.locale == 'zh' %}
+            <a class="aw-link" href="http://china.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
+        {% endif %}
+        <div class="clear"></div>
+    </div>
+</div>
+

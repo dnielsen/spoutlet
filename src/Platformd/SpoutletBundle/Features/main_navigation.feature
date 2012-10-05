@@ -12,6 +12,7 @@ Feature: Main Navigation
       | Alienware   | http://alienware.jp/  |
       | イベント       | /events/              |
       | ニュース       | /news                 |
+      | ビデオ         | /video                |
       | Microsoft   | /microsoft            |
 
   Scenario: The "China" site's main navigation menu has the correct items
@@ -23,7 +24,8 @@ Feature: Main Navigation
       | 关于ALIENWARE   | http://alienware.com.cn/  |
       | 活动            | /events/                  |
       | 新闻            | /news                     |
-      | 壁纸下载        | /wallpapers               |
+      | 媒体 >> 视频      | /video                    |
+      | 媒体 >> 壁纸下载   | /wallpapers               |
       | 微软            | /microsoft                |
 
   Scenario: The "Latin America" site's main navigation menu has the correct items
@@ -37,7 +39,7 @@ Feature: Main Navigation
       | Novedades >> Articles       | http://www.alienwarearena.com/articles/     |
       | Novedades >> Announcements  | http://www.alienwarearena.com/news/         |
       | Medios >> Vídeos            | http://video.alienwarearena.com/            |
-      | Medios >> Explorar          | /pages/wallpapers                           |
+      | Medios >> Explorar          | /wallpapers                                 |
       | Foros                       | /forums                                     |
       | ARP                         | /arp                                        |
       | Microsoft                   | /microsoft                                  |
@@ -59,7 +61,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
-      | Media >> Wallpapers         | /pages/wallpapers                               |
+      | Media >> Wallpapers         | /wallpapers                                     |
       | NewDeals                    | /deal/                                          |
       | NewGroups >> All Groups     | /groups/                                        |
       | NewGroups >> My Groups      | /account/profile/groups                         |
@@ -84,7 +86,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
-      | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
+      | Media >> Wallpapers         | /wallpapers                                                                                       |
       | NewDeals                    | /deal/                                                                                            |
       | NewGroups >> All Groups     | /groups/                                                                                          |
       | NewGroups >> My Groups      | /account/profile/groups                                                                           |
@@ -109,7 +111,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -130,7 +132,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -151,7 +153,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | NewGroups >> All Groups     | /groups/                                  |
       | NewGroups >> My Groups      | /account/profile/groups                   |
       | NewGroups >> Create Group   | /groups/new/                              |

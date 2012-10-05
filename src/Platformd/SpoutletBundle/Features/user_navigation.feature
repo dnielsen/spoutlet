@@ -24,13 +24,14 @@ Feature: User Navigation
     Given I am on the "China" site
     When I go to "/account"
     Then the user navigation menu should be:
-      | Link       | Target                                                 |
-      | 账户首页    | http://alienwarearena.com/account/                     |
-      | 修改密码    | http://alienwarearena.com/account/password/            |
-      | 个人形象    | /account/profile                                       |
-      | 我的活动    | http://www.alienwarearena.com/china/account/events/    |
-      | 获取赠品    | /account/profile/giveaways                             |
-      | 退出       | /logout                                                |
+      | Link             | Target                                                 |
+      | 账户首页          | http://alienwarearena.com/account/                     |
+      | 修改密码          | http://alienwarearena.com/account/password/            |
+      | 个人形象          | /account/profile                                       |
+      | 我的活动          | http://www.alienwarearena.com/china/account/events/    |
+      | 获取赠品          | /account/profile/giveaways                             |
+      | 比赛 >> 游戏IDs   | http://www.alienwarearena.com/china/account/ids/             |
+      | 退出              | /logout                                                |
 
   Scenario: The "Latin America" site's user navigation menu has the correct items
     Given I am on the "Latin America" site

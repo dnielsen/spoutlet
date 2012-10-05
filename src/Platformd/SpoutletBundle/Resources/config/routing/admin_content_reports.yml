@@ -1,6 +1,10 @@
+admin_content_reports_with_mode:
+    pattern:  /list/{mode}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list" }
+
 admin_content_reports:
     pattern:  /list/
-    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list" }
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", mode: "manage" }
 
 admin_content_reports_hide_complaint:
     pattern:  /list/hideComplaint/{contentReportId}

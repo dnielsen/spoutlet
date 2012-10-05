@@ -11,17 +11,39 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 class ContentReportAdminController extends Controller
 {
 
-    public function listAction()
+    public function listAction($mode)
     {
+
+        if ($mode != "manage" && $mode != "archived" && $mode != "deletedContent") {
+            throw new \Exception(sprintf("Unknown mode = '%s'.", $mode));
+        }
+
         $this->addReportedContentsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
-        $reports = $repo->getContentReportForAllSites();
+        $allowArchived = $mode == "archived";
+
+        if ($mode == "archived") {
+            $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
+            $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
+            $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
+        } elseif ($mode == "deletedContent") {
+            $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
+            $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
+            $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
+        } elseif ($mode == "manage") {
+            $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
+            $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
+            $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
+        }
 
         return $this->render('SpoutletBundle:ContentReportAdmin:list.html.twig', array(
-            'reports' => $reports
+            'groupNews' => $groupNews,
+            'groupVideos' => $groupVideos,
+            'groupImages' => $groupImages,
+            'mode' => $mode
         ));
     }
 
@@ -34,7 +56,20 @@ class ContentReportAdminController extends Controller
 
         $report = $repo->find($contentReportId);
 
-        $report->setDeleted(true);
+        $groupVideo = $report->getGroupVideo();
+        $groupNews = $report->getGroupNews();
+        $groupImage = $report->getGroupImage();
+
+        if ($groupVideo) {
+            $repo->deleteAllContentReportsForGroupVideo($groupVideo);
+        } else if ($groupNews) {
+            $repo->deleteAllContentReportsForGroupNews($groupNews);
+        } else if ($groupImage) {
+            $repo->deleteAllContentReportsForGroupImage($groupImage);
+        } else {
+            $this->setFlash('error', 'Unknown content type.');
+            return $this->redirect($this->generateUrl('admin_content_reports'));
+        }
 
         $em->persist($report);
         $em->flush();

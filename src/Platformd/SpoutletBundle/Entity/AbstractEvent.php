@@ -53,6 +53,7 @@ abstract class AbstractEvent implements LinkableInterface
      */
     static private $timzoneCommonNames = array(
         32400 => 'JST',
+        28800 => 'CST',
     );
 
     const PREFIX_PATH_BANNER = 'banner/';
@@ -194,6 +195,14 @@ abstract class AbstractEvent implements LinkableInterface
      * @ORM\Column(name="external_url", length="255", nullable=true)
      */
     private $externalUrl;
+
+    /**
+     *
+     * @var boolean $displayTimezone
+     * @ORM\Column(name="display_timezone", type="boolean")
+     *
+     */
+    protected $display_timezone = true;
 
     /**
      * Get id
@@ -605,6 +614,20 @@ abstract class AbstractEvent implements LinkableInterface
      */
     public function getExternalUrl() {
         return $this->externalUrl;
+    }
+
+    /**
+     * @param boolean $display_timezone
+     */
+    public function setDisplayTimezone($display_timezone) {
+        $this->display_timezone = $display_timezone;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDisplayTimezone() {
+        return $this->display_timezone;
     }
 
     /**

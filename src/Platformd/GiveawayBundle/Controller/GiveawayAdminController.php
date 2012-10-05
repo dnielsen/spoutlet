@@ -373,6 +373,8 @@ class GiveawayAdminController extends Controller
     {
         // save to db
         $giveaway = $giveawayForm->getData();
+        $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
+        $giveaway->setStartsAt($startsAt);
 
         $this
             ->get('platformd.events_manager')
