@@ -2,73 +2,122 @@
 
 {% block title 'Content Report Admin' %}
 
+{% macro getContentReportTable(items, type, manage) %}
+
+    <table id="content-reports">
+
+        <tr><th id="content-report-content">Content</th><th>Statistics</th><th id="content-report-action">Reporters</th>
+            {% if manage %}
+                <th id="content-report-action">Action</th>
+            {% endif %}
+        </tr>
+
+        {% for item in items %}
+
+            <tr>
+                <td>
+                    {% if type == 'GroupVideo' %}
+
+                        <h1>Group</h1>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <h1>Title</h1>
+                        <div>{{ item[0].title }}</div>
+                        <h1>Video (external YouTube link)</h1>
+                        <div><a href="http://www.youtube.com/watch?v={{ item[0].youTubeVideoId }}" target='_blank'>Watch Video</a></div>
+
+                    {% elseif type == 'GroupImage' %}
+
+                        <h1>Group</h1>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <h1>Title</h1>
+                        <div>{{ item[0].title }}</div>
+                        <h1>Image</h1>
+                        <div><img src="{{ media_path(item[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
+
+                    {% elseif type == 'GroupNews' %}
+
+                        <h1>Group</h1>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <h1>Title</h1>
+                        <div>{{ item[0].title }}</div>
+                        <h1>Article</h1>
+                        <div>{{ item[0].article }}</div>
+
+                    {% endif %}
+                </td>
+                <td>
+                    {% if manage %}
+                        <h1>New Complaints</h1>
+                        <div>{{ item['reportCount'] }}</div>
+                    {% endif %}
+                    <h1>Total Complaints</h1>
+                    <div>{{ item[0].contentReports.count }}</div>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th>Username</th><th>Reason</th><th>Date</th><th>Status</th>
+                        </tr>
+                        {% for report in item[0].contentReports %}
+                            <tr>
+                                <td>{{ report.reporter.username }}</td>
+                                <td>{{ report.reason }}</td>
+                                <td>{{ report.reportedAt | date }}</td>
+                                <td>{{ report.deleted ? "Archived" : "New" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+                {% if manage and item[0].contentReports.count > 0 %}
+                    <td>
+                        <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : item[0].contentReports[0].id }) }}">Remove Content</a></div>
+                        <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : item[0].contentReports[0].id }) }}">Archive These Complaints</a></div>
+                    </td>
+                {% endif %}
+            </tr>
+
+        {% else %}
+            <tr>
+                <td colspan="4">No new reports.</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% endmacro %}
+
 {% block content %}
+
 <h1>Content Reports</h1>
 
-<table id="content-reports">
+<h2>Options</h2>
 
-    <tr><th id="content-report-type">Type</th><th id="content-report-content">Content</th><th id="content-report-action">Action</th></tr>
+<p>
+    {% if mode == "manage" %}
+        <ul>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View archived complaints</a></li>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "deletedContent" }) }}">View removed content</a></li>
+        </ul>
+    {% elseif mode == "archived" %}
+         <ul>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "manage" }) }}">View new complaints</a></li>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "deletedContent" }) }}">View removed content</a></li>
+        </ul>
+    {% elseif mode == "deletedContent" %}
+         <ul>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "manage" }) }}">View new complaints</a></li>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View archived complaints</a></li>
+        </ul>
+    {% endif %}
+</p>
 
-    {% for report in reports %}
+<h2>Group News</h2>
+<p>{{ _self.getContentReportTable(groupNews, 'GroupNews', mode == "manage") }}</p>
 
-        <tr>
+<h2>Group Images</h2>
+<p>{{ _self.getContentReportTable(groupImages, 'GroupImage', mode == "manage") }}</p>
 
-            {% if report.groupImage is not null %}
-
-                <td>Group Image</td>
-                <td>
-                    <h1>Title</h1>
-                    <div>{{ report.groupImage.title }}</div>
-                    <h1>Image</h1>
-                    <div><img src="{{ media_path(report.groupImage.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ report.groupImage.title }}" /></div>
-                </td>
-                <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
-                </td>
-
-            {% elseif report.groupNews is not null %}
-
-                <td>Group News</td>
-                <td>
-                    <h1>Title</h1>
-                    <div>{{ report.groupNews.title }}</div>
-                    <h1>Article</h1>
-                    <div>{{ report.groupNews.article }}</div>
-                </td>
-                <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
-                </td>
-
-            {% elseif report.groupVideo is not null %}
-
-                <td>Group Video</td>
-                <td>
-
-                <h1>Title</h1>
-                    <div>{{ report.groupVideo.title }}</div>
-                    <h1>Video (external YouTube link)</h1>
-                    <div><a href="http://www.youtube.com/watch?v={{ report.groupVideo.youTubeVideoId }}" target='_blank'>Watch Video</a></div>
-
-                </td>
-                <td>
-                    <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : report.id }) }}">Remove Content</a></div>
-                    <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : report.id }) }}">Hide This Complaint</a></div>
-                </td>
-
-            {% else %}
-                UNKNOWN TYPE!
-            {% endif %}
-
-        </tr>
-
-    {% else %}
-        <tr>
-            <td colspan="3">There are no Reports for this site.</td>
-        </tr>
-    {% endfor %}
-
-</table>
+<h2>Group Videos</h2>
+<p>{{ _self.getContentReportTable(groupVideos, 'GroupVideo', mode == "manage") }}</p>
 
 {% endblock %}

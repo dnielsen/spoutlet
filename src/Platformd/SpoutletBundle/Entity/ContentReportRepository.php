@@ -7,6 +7,61 @@ use Doctrine\ORM\EntityRepository;
 class ContentReportRepository extends EntityRepository
 {
 
+    public function getContentReportTypeForAllSites($type)
+    {
+
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+            throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
+        }
+
+        return $this->getEntityManager()->createQuery(sprintf('
+            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            LEFT JOIN item.contentReports report
+            WHERE item.deleted = false
+            AND report.deleted = false
+            GROUP BY item
+            ORDER BY reportCount DESC, report.reportedAt
+            ',
+            $type))
+            ->execute();
+    }
+
+    public function getContentReportTypeForAllSitesArchived($type) {
+
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+            throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
+        }
+
+        return $this->getEntityManager()->createQuery(sprintf('
+            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            LEFT JOIN item.contentReports report
+            WHERE item.deleted = false
+            GROUP BY item
+            HAVING reportCount > 0
+            ORDER BY reportCount DESC, report.reportedAt
+            ',
+            $type))
+            ->execute();
+    }
+
+    public function getContentReportTypeForAllSitesDeletedContent($type) {
+
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+            throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
+        }
+
+        return $this->getEntityManager()->createQuery(sprintf('
+            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            LEFT JOIN item.contentReports report
+            WHERE item.deleted = true
+            GROUP BY item
+            HAVING reportCount > 0
+            ORDER BY reportCount DESC, report.reportedAt
+            ',
+            $type))
+            ->execute();
+    }
+
     public function getContentReportForAllSites()
     {
 
