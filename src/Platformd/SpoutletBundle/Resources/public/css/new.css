@@ -564,6 +564,8 @@ ul.list-normal {
 .game-show-page .split-ad {
     position: relative;
     margin-bottom: 20px;
+    width:300px;
+    height:90px;
 }
 .game-show-page .split-ad a {
     position: absolute;
