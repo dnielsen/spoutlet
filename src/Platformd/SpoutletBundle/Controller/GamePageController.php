@@ -70,6 +70,10 @@ class GamePageController extends Controller
 
         $hasFeedItems = count($deals) > 0 && count($feedNewsItems) > 0 && count($feedEvents) > 0;
 
+        $hasFeatures = $gamePage->getKeyFeature1() != ''
+            && $gamePage->getKeyFeature2() != ''
+            && $gamePage->getKeyFeature3() != '';
+
         return array(
             'gamePage' => $gamePage,
             'feedEvents' => $feedEvents,
@@ -77,6 +81,7 @@ class GamePageController extends Controller
             'feedDeals' => $deals,
             'hasVideos' => $hasVideos,
             'hasFeedItems' => $hasFeedItems,
+            'hasFeatures' => $hasFeatures,
         );
     }
 
