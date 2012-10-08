@@ -194,13 +194,10 @@
 
                 <div class="player-left">
                     <div id="theater_screen" class="align_center" style="width:950px; height:393px;">
-                        <video id="example_video_1" class="video-js vjs-default-skin"
-                          controls preload="auto" width="640" height="393"
-                          poster="http://video-js.zencoder.com/oceans-clip.png"
-                          data-setup='{"example_option":true}'>
-                         <source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />
-                         <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
-                         <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
+                        <video id="game_page_video" class="video-js vjs-default-skin"
+                            controls preload="auto" width="650" height="500"
+                            data-setup='{"example_option":true}'>
+
                         </video>
                     </div>
                 </div>
@@ -277,9 +274,10 @@
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
     <script type="text/javascript">
-      _V_.options.flash.swf = "http://{{ app.request.getHttpHost() }}/bundles/spoutlet/js/video-js-3.2.0/video-js.swf";
+
     </script>
     <script type="text/javascript">
         var GamePage = {
@@ -309,22 +307,12 @@
         };
 
         GamePage.initializeMovie = function(youtubeVideoId) {
-            var par = {};
-            par.flashvars = "startMovie="+youtubeVideoId;
-            par.flashvars += "&startCue=none";
-            par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
-            par.flashvars += "&videoTitle=";
-            par.flashvars += "&displayWelcome=no";
-            par.flashvars += "&displayAlert=no";
-            par.flashvars += "&alertText=";
-            par.flashvars += "&muteOnStart=yes";
-            par.allowScriptAccess = "always";
-            par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"840", height:"593", id:"theater_screen", name:"theater_screen"};
-            var id = "theater_screen";
 
-            // temporarily disable, because the autostart is annoying
-            var myytplayer = swfobject.createSWF(att, par, id);
+            _V_.options.flash.swf = '{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.swf') }}';
+            _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                this.play();
+            });
         };
 
         /**
@@ -345,14 +333,24 @@
                     }
                 });
 
-                GamePage.initializeMovie(youtubeVideoId);
+                _V_("game_page_video").ready(function(){
+
+                    var myPlayer = this;
+
+                      // EXAMPLE: Start playing the video.
+                    myPlayer.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                    myPlayer.play();
+
+                });
             });
         };
 
         jQuery(document).ready(function() {
-            //GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
+            GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
             GamePage.initializeMediaGallery();
             GamePage.initializeVideoLinks();
+            _V_.options.flash.swf = "http://{{ app.request.getHttpHost() }}/bundles/spoutlet/js/video-js-3.2.0/video-js.swf";
+
         });
     </script>
 {% endblock %}
