@@ -55,7 +55,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/             |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |
       | Games >> Rift               | http://alienwarearena.com/game/rift/            |
-      | Games >> More Games         | /games/                                         |
+      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                         |
       | Events                      | http://www.alienwarearena.com/event/            |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
@@ -78,7 +78,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/                                                               |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/                                                               |
       | Games >> Rift               | http://alienwarearena.com/game/rift/                                                              |
-      | Games >> More Games         | /games/                                                                                           |
+      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                                                                           |
       | Events                      | http://www.alienwarearena.com/europe/event/                                                       |
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
@@ -100,7 +100,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | /games/                                   |
+      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                   |
       | Events                      | http://www.alienwarearena.com/in/event/   |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
@@ -121,7 +121,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | /games/                                   |
+      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                   |
       | Events                      | http://www.alienwarearena.com/sg/event/   |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
@@ -142,7 +142,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | /games/                                   |
+      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                  |
       | Events                      | http://www.alienwarearena.com/anz/event/  |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
