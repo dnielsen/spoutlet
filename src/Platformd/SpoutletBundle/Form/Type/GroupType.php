@@ -54,6 +54,7 @@ class GroupType extends AbstractType
             ->add('isPublic', 'checkbox', array(
                 'required' => true,
                 'label' => 'Is this a public group?',
+                'help' => 'Yes (If left unchecked, you will need to approve users in order to give them access to your group page.)',
             ))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',

@@ -85,7 +85,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findMostRecentlyCreatedGroupsForSite($site, $limit=10)
+    public function findMostRecentlyCreatedGroupsForSite($site, $limit=8)
     {
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.sites', 's')
@@ -98,7 +98,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findMostPopularGroupsForSite($site, $limit=10)
+    public function findMostPopularGroupsForSite($site, $limit=8)
     {
         $query = '
         SELECT
@@ -122,7 +122,7 @@ class GroupRepository extends EntityRepository
         AND pd_groups.deleted = 0
         ORDER BY
             member_count DESC
-        LIMIT 10';
+        LIMIT 8';
 
         $stmt = $this->getEntityManager()
                      ->getConnection()

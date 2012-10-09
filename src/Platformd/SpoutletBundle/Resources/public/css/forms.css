@@ -911,8 +911,8 @@ input[type="checkbox"],
 input[type="radio"] {
   width: auto;
   height: auto;
-  padding: 0;
-  margin: 3px 0;
+  padding:  0;
+  margin: 8px 0;
   *margin-top: 0;
   /* IE7 */
 
@@ -998,7 +998,7 @@ input[type="hidden"] {
 .radio input[type="radio"],
 .checkbox input[type="checkbox"] {
   float: left;
-  margin-left: -18px;
+  margin: 3px 0 0 -18px;
 }
 
 .controls > .radio:first-child,
