@@ -14,12 +14,12 @@
                             <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
                             <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
                             {% if site_has_feature('GAMES') -%}
-                                <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
+                                <li><a href="http://www.alienwarearena.com/games-and-trailers/">{{ 'more_games' | trans }}</a></li>
                             {%- endif %}
                         </ul>
                     </li>
                 {% elseif site_has_feature('GAMES') %}
-                    <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
+                    <li><a href="http://www.alienwarearena.com/games-and-trailers/">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
                 <li>{{ site_link('EVENTS') | raw }}</a></li>

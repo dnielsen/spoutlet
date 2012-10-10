@@ -63,15 +63,15 @@
         <div class="std_2col">
             <div class="right">
                 {% if gamePage.recommendedLaptopUrl and gamePage.recommendedDesktopUrl %}
-                <div class="split-ad">
+                <div class="split-ad" style="background: url('{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}');">
                     <a href="{{ gamePage.recommendedLaptopUrl }}" target="_blank" class="split-left"
                         onClick="recordOutboundLink(this, 'Recommended Laptop', 'alienware.com')return false;"></a>
                     <a href="{{ gamePage.recommendedDesktopUrl }}" target="_blank" class="split-right"
                         onClick="recordOutboundLink(this, 'Recommended Desktop', 'alienware.com')return false;"></a>
-                    <img src="{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}" alt="{{ 'recommended_rig' | trans }}" />
                 </div>
                 {% endif %}
 
+                {% if hasFeedItems %}
                 <div class="game-feed widget-33">
                     <div class="widget-header">
                         <div class="widget-title">
@@ -142,6 +142,7 @@
                         </ul>
                     </div>
                 </div>
+                {% endif %}
 
                 {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
@@ -170,12 +171,14 @@
                 <div class="content">
                     {{ gamePage.aboutGame | raw }}
 
+                    {% if hasFeatures %}
                     <h1>{{ gamePage.game.name }} Key Features</h1>
                     <div>
                         {{ gamePage.keyFeature1 | raw }}
                         {{ gamePage.keyFeature2 | raw }}
                         {{ gamePage.keyFeature3 | raw }}
                     </div>
+                    {% endif %}
                 </div>
 
                 {% if gamePage.game.publisherLogos %}
@@ -188,6 +191,7 @@
         </div>
 
         <div class="std_1col">
+            {% if hasVideos %}
             <div class="video-player">
                 <a name="videos"></a>
                 <h3>{{ 'videos' | trans }}</h3>
@@ -214,6 +218,7 @@
                 </div>
                 <div class="clear">&nbsp;</div>
             </div>
+            {% endif %}
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
             <div class="media-gallery ad-gallery game-media-gallery">

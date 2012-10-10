@@ -39,7 +39,8 @@
                 <ul class="games">
                     {% for actionPage in actionPages %}
                     {% set url = actionPage | pd_link %}
-                    {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+
+                    {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first  %}
 
                     <li{{ isFirstInRow ? ' class="first"' : ''}}>
                         <a href="{{ url }}"{{ target_blank(actionPage) }}>
@@ -62,7 +63,8 @@
                             </span>
                         {% endif %}
                     </li>
-                     {% endfor %}
+
+                    {% endfor %}
                 </ul>
                 <div class="clear"></div>
         </div>
@@ -74,7 +76,7 @@
             <ul class="games">
                 {% for rpgPage in rpgPages %}
                 {% set url = rpgPage | pd_link %}
-                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+                {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first %}
 
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(rpgPage) }}>
@@ -109,7 +111,7 @@
             <ul class="games">
                 {% for strategyPage in strategyPages %}
                 {% set url = strategyPage | pd_link %}
-                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+                {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first %}
 
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(strategyPage) }}>
@@ -144,7 +146,7 @@
             <ul class="games">
                 {% for otherPage in otherPages %}
                 {% set url = otherPage | pd_link %}
-                {% set isFirstInRow = loop.index is divisibleby(4) or loop.first %}
+                {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first %}
 
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(otherPage) }}>

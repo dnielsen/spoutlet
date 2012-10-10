@@ -61,11 +61,11 @@ ul.normal-margin, ol.normal-margin {
     margin: -0.3em 0 0.5em;
     margin-left: 110px;
     padding-left: 27px;
-   	font-size:0.9em;
-   	border-bottom: 1px solid #ccc;
+    font-size:0.9em;
+    border-bottom: 1px solid #ccc;
     background: #fad0d0 url(../images/form-ic-error.png) no-repeat 5px 4px;
-   	border-color:#f6abab;
-   	color:#b01717;
+    border-color:#f6abab;
+    color:#b01717;
     width: 170px;
 }
 
@@ -490,6 +490,8 @@ ul.list-normal {
 }
 .games-list-page .left, .games-list-page .right {
     float: left;
+    position: relative;
+    behavior: url(/PIE.htc);
     background: url('../images/games-pages/background_content.jpg') top left repeat-x;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -523,7 +525,8 @@ ul.list-normal {
     color: #b2b2b2;
 }
 .games-list-page .left ul.games {
-    margin-bottom: 10px;
+    padding: 0;
+    margin: 0 0 10px 0;
 }
 .games-list-page .left ul.games li {
     list-style-type: none;
@@ -542,6 +545,11 @@ ul.list-normal {
 .games-list-page .left ul.games li span {
     font-size: 0.8em;
     color: #b2b2b2;
+}
+
+.games-list-page .right ul.games {
+    padding: 0;
+    margin: 0 0 10px 0;
 }
 
 .games-list-page .right ul.games li {
@@ -564,6 +572,8 @@ ul.list-normal {
 .game-show-page .split-ad {
     position: relative;
     margin-bottom: 20px;
+    width:300px;
+    height:90px;
 }
 .game-show-page .split-ad a {
     position: absolute;
@@ -721,6 +731,8 @@ ul.list-normal {
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
     border-radius: 20px;
+    position: relative;
+    behavior: url(/PIE.htc);
 }
 
 .game-show-page .game-media-gallery {
@@ -731,6 +743,8 @@ ul.list-normal {
     -moz-border-radius: 5px 5px 0px 0px;
     -khtml-border-radius: 5px 5px 0px 0px;
     -webkit-border-radius: 5px 5px 0px 0px;
+    position: relative;
+    behavior: url(/PIE.htc);
 }
 
 .game-show-page .media-gallery .ad-back, .game-show-page .media-gallery .ad-forward {
