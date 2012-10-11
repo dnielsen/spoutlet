@@ -32,17 +32,19 @@ Feature: Main Navigation
     Given I am on the "Latin America" site
     When I go to "/games"
     Then the main navigation menu should be:
-      | Link                        | Target                                      |
-      | Inicio                      | /                                           |
-      | Alienware                   | http://www.alienware.com/mx/                |
-      | Eventos                     | http://www.alienwarearena.com/latam/event/  |
-      | Novedades >> Articles       | http://www.alienwarearena.com/articles/     |
-      | Novedades >> Announcements  | http://www.alienwarearena.com/news/         |
-      | Medios >> Vídeos            | http://video.alienwarearena.com/            |
-      | Medios >> Explorar          | /wallpapers                                 |
-      | Foros                       | /forums                                     |
-      | ARP                         | /arp                                        |
-      | Microsoft                   | /microsoft                                  |
+      | Link                        | Target                                         |
+      | Inicio                      | /                                              |
+      | Alienware                   | http://www.alienware.com/mx/                   |
+      | Juegos >> Starcraft II      | http://www.alienwarearena.com/latam/game/sc2/  |
+      | Juegos >> Más Juegos        | /games/                                        |
+      | Eventos                     | http://www.alienwarearena.com/latam/event/     |
+      | Novedades >> Articles       | http://www.alienwarearena.com/articles/        |
+      | Novedades >> Announcements  | http://www.alienwarearena.com/news/            |
+      | Medios >> Vídeos            | http://video.alienwarearena.com/               |
+      | Medios >> Explorar          | /wallpapers                                    |
+      | Foros                       | /forums                                        |
+      | ARP                         | /arp                                           |
+      | Microsoft                   | /microsoft                                     |
 
   Scenario: The "North America" site's main navigation menu has the correct items
     Given I am on the "North America" site
@@ -55,7 +57,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/             |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |
       | Games >> Rift               | http://alienwarearena.com/game/rift/            |
-      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                         |
+      | Games >> More Games         | /games/                                         |
       | Events                      | http://www.alienwarearena.com/event/            |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
@@ -78,7 +80,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/                                                               |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/                                                               |
       | Games >> Rift               | http://alienwarearena.com/game/rift/                                                              |
-      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                                                                           |
+      | Games >> More Games         | /games/                                                                                           |
       | Events                      | http://www.alienwarearena.com/europe/event/                                                       |
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
@@ -100,7 +102,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                   |
+      | Games >> More Games         | /games/                                   |
       | Events                      | http://www.alienwarearena.com/in/event/   |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
@@ -121,7 +123,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                   |
+      | Games >> More Games         | /games/                                   |
       | Events                      | http://www.alienwarearena.com/sg/event/   |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
@@ -142,7 +144,7 @@ Feature: Main Navigation
       | Games >> League of Legends  | http://alienwarearena.com/game/lol/       |
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/       |
       | Games >> Rift               | http://alienwarearena.com/game/rift/      |
-      | Games >> More Games         | http://www.alienwarearena.com/games-and-trailers/                                  |
+      | Games >> More Games         | /games/                                   |
       | Events                      | http://www.alienwarearena.com/anz/event/  |
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
