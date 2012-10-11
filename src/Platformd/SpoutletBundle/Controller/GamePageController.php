@@ -21,10 +21,10 @@ class GamePageController extends Controller
         $firstGame      = $mgr->findMostRecentGamePageForAge($this->getAgeManager()->getUsersAge());
         $archives       = $mgr->findArchives();
 
-        $actionPages    = $mgr->findAllByGamePagesByCategory('action', 3);
-        $rpgPages       = $mgr->findAllByGamePagesByCategory('rpg', 3);
-        $strategyPages  = $mgr->findAllByGamePagesByCategory('strategy', 3);
-        $otherPages     = $mgr->findAllByGamePagesByCategory('other', 3);
+        $actionPages    = $mgr->findAllByGamePagesByCategory('action', 9);
+        $rpgPages       = $mgr->findAllByGamePagesByCategory('rpg', 9);
+        $strategyPages  = $mgr->findAllByGamePagesByCategory('strategy', 9);
+        $otherPages     = $mgr->findAllByGamePagesByCategory('other', 9);
 
         $displayedGamePages     = array($actionPages, $rpgPages, $strategyPages, $otherPages);
         $displayedGamePageIds   = array();
