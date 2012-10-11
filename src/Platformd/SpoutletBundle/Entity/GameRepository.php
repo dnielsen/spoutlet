@@ -12,4 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class GameRepository extends EntityRepository
 {
+    public function getAllGamesOrderedByName() {
+
+        return $this->createQueryBuilder('g')
+                    ->addOrderBy('g.name')
+                    ->getQuery()
+                    ->execute();
+    }
 }

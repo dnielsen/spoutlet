@@ -22,7 +22,7 @@ class GameAdminController extends Controller
         $this->addGamesBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('SpoutletBundle:Game')->findAll();
+        $entities = $em->getRepository('SpoutletBundle:Game')->getAllGamesOrderedByName();
 
         return $this->render('SpoutletBundle:GameAdmin:index.html.twig', array(
             'entities' => $entities

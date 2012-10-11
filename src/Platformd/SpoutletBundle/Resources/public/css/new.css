@@ -531,6 +531,7 @@ ul.list-normal {
 .games-list-page .left ul.games li {
     list-style-type: none;
     width: 195px;
+    height: 110px;
     float: left;
     margin: 8px 0 8px 14px;
     text-align: center;
