@@ -115,7 +115,7 @@ class GamePageRepository extends EntityRepository
             ->andWhere('gp.status = :status')
             ->addOrderBy('gp.createdAt', 'DESC')
             ->setParameter('status', GamePage::STATUS_PUBLISHED)
-            ->setParameter('inArray', implode(', ', $inArray));
+            ->setParameter('inArray', $inArray);
 
         return $qb->getQuery()->execute();
     }
