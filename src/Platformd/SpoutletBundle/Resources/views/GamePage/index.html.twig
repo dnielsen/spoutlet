@@ -6,7 +6,16 @@
 
     {% if firstGame %}
         <div class="right">
-            <div id="theater_screen" class="align_center" style="width:500px; height:393px;"></div>
+            <div id="theater_screen" class="align_center" style="width:500px; height:393px;">
+                <input type="hidden" id="youtube-trailer" value="{{ firstGame.youtubeIdTrailer1 }}" />
+                <div style="border: 2px solid #4a4a4a;width:480px;height:350px;">
+                    <video id="game_page_video" class="video-js vjs-default-skin"
+                        controls preload="auto" width="480" height="350"
+                        data-setup='{"example_option":true}'>
+                    </video>
+                </div>
+
+            </div>
         </div>
         <div class="left">
             <div id="first-game-info" style="width: 450px; height: 393px; text-align: center;">
@@ -191,29 +200,26 @@
 </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.min.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     {# temporarily disabled because the auto-play is annoying #}
     {% if firstGame %}
         <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
-
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
         <script type="text/javascript">
-            jQuery(document).ready(function() {
-                var par = {};
-                par.flashvars = "startMovie={{ firstGame.youtubeIdTrailer1 }}";
-                par.flashvars += "&startCue=none";
-                par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
-                par.flashvars += "&videoTitle=";
-                par.flashvars += "&displayWelcome=no";
-                par.flashvars += "&displayAlert=no";
-                par.flashvars += "&alertText=";
-                par.allowScriptAccess = "always";
-                par.wmode = "transparent";
-                var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"500", height:"393", id:"theater_screen", name:"theater_screen"};
-                var id = "theater_screen";
-                myytplayer = swfobject.createSWF(att, par, id);
 
-                var obj = swfobject.getObjectById('theater_screen');
+            jQuery(document).ready(function() {
+                _V_.options.flash.swf = '{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.swf') }}';
+                _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                    this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + $('#youtube-trailer').val() });
+                    this.play();
+                });
             });
         </script>
     {% endif %}

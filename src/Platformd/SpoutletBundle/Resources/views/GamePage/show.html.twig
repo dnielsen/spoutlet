@@ -197,7 +197,15 @@
                 <h3>{{ 'videos' | trans }}</h3>
 
                 <div class="player-left">
-                    <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+                    <div id="theater_screen" class="align_center" style="width:950px; height:560px;">
+                        <div style="border: 2px solid #4a4a4a;width:680px;height:550px">
+                            <video id="game_page_video" class="video-js vjs-default-skin"
+                                controls preload="auto" width="680" height="550"
+                                data-setup='{"example_option":true}'>
+                            </video>
+                        </div>
+
+                    </div>
                 </div>
                 <div class="thumbnails-right">
                     {% if gamePage.youtubeIdTrailer1 %}
@@ -265,14 +273,19 @@
     {% block stylesheets %}
         {{ parent() }}
 
-        <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.min.css') }}" />
     {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
+    <script type="text/javascript">
 
+    </script>
     <script type="text/javascript">
         var GamePage = {
 
@@ -301,22 +314,12 @@
         };
 
         GamePage.initializeMovie = function(youtubeVideoId) {
-            var par = {};
-            par.flashvars = "startMovie="+youtubeVideoId;
-            par.flashvars += "&startCue=none";
-            par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
-            par.flashvars += "&videoTitle=";
-            par.flashvars += "&displayWelcome=no";
-            par.flashvars += "&displayAlert=no";
-            par.flashvars += "&alertText=";
-            par.flashvars += "&muteOnStart=yes";
-            par.allowScriptAccess = "always";
-            par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"840", height:"593", id:"theater_screen", name:"theater_screen"};
-            var id = "theater_screen";
 
-            // temporarily disable, because the autostart is annoying
-            var myytplayer = swfobject.createSWF(att, par, id);
+            _V_.options.flash.swf = '{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.swf') }}';
+            _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                this.play();
+            });
         };
 
         /**
@@ -337,7 +340,15 @@
                     }
                 });
 
-                GamePage.initializeMovie(youtubeVideoId);
+                _V_("game_page_video").ready(function(){
+
+                    var myPlayer = this;
+
+                      // EXAMPLE: Start playing the video.
+                    myPlayer.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                    myPlayer.play();
+
+                });
             });
         };
 
@@ -345,6 +356,8 @@
             GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
             GamePage.initializeMediaGallery();
             GamePage.initializeVideoLinks();
+            _V_.options.flash.swf = "http://{{ app.request.getHttpHost() }}/bundles/spoutlet/js/video-js-3.2.0/video-js.swf";
+
         });
     </script>
 {% endblock %}
