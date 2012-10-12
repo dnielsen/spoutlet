@@ -25,8 +25,8 @@
     </a>
 {% endmacro %}
 
-{% macro _renderYoutubeThumbnail(youtubeVideoId, headline) %}
-    <div>
+{% macro _renderYoutubeThumbnail(youtubeVideoId, headline, active) %}
+    <div class="{{ active ? 'active' : '' }}">
         <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play">
             <img src="http://img.youtube.com/vi/{{ youtubeVideoId }}/0.jpg" alt="video preview" />
         </a>
@@ -200,8 +200,7 @@
                     <div id="theater_screen" class="align_center" style="width:950px; height:560px;">
                         <div style="border: 2px solid #4a4a4a;width:680px;height:550px">
                             <video id="game_page_video" class="video-js vjs-default-skin"
-                                controls preload="auto" width="680" height="550"
-                                data-setup='{"example_option":true}'>
+                                controls preload="auto" width="680" height="550">
                             </video>
                         </div>
 
@@ -209,19 +208,19 @@
                 </div>
                 <div class="thumbnails-right">
                     {% if gamePage.youtubeIdTrailer1 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline, true) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer2 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline, false) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer3 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline, false) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer4 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline, false) }}
                     {% endif %}
                 </div>
                 <div class="clear">&nbsp;</div>
@@ -313,15 +312,6 @@
             mediaGalleryAnchors.unbind('click');
         };
 
-        GamePage.initializeMovie = function(youtubeVideoId) {
-
-            _V_.options.flash.swf = '{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.swf') }}';
-            _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
-                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
-                this.play();
-            });
-        };
-
         /**
          * Makes .youtube-play links play their video in the main window
          */
@@ -340,20 +330,19 @@
                     }
                 });
 
-                _V_("game_page_video").ready(function(){
-
-                    var myPlayer = this;
-
-                      // EXAMPLE: Start playing the video.
-                    myPlayer.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
-                    myPlayer.play();
-
-                });
+                _V_("game_page_video").src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                _V_("game_page_video").play();
             });
         };
 
         jQuery(document).ready(function() {
-            GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
+
+            _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
+            _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v={{ gamePage.youtubeIdTrailer1 }}' });
+                this.play();
+            });
+
             GamePage.initializeMediaGallery();
             GamePage.initializeVideoLinks();
             _V_.options.flash.swf = "http://{{ app.request.getHttpHost() }}/bundles/spoutlet/js/video-js-3.2.0/video-js.swf";
