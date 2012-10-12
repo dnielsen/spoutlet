@@ -29,7 +29,7 @@
                                 <td>{{ keyRequest.giveaway.name }}</td>
                                 <td class="{{ keyRequest.value ? 'nowrap' : '' }}">
                                     {% if keyRequest.value %}
-                                        {{ keyRequest.value }}
+                                        {{ keyRequest.value | nl2br }}
                                     {% else %}
                                         <em>
                                             {{ keyRequest.status | trans }}
