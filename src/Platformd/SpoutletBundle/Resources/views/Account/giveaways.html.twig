@@ -26,7 +26,7 @@
                             </tr>
                             {% for keyRequest in keyRequests %}
                             <tr>
-                                <td>{{ keyRequest.giveaway.name }}</td>
+                                <td>{{ keyRequest.giveaway.name | nl2br }}</td>
                                 <td class="{{ keyRequest.value ? 'nowrap' : '' }}">
                                     {% if keyRequest.value %}
                                         {{ keyRequest.value | nl2br }}
