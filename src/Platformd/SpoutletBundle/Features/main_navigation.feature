@@ -32,17 +32,19 @@ Feature: Main Navigation
     Given I am on the "Latin America" site
     When I go to "/games"
     Then the main navigation menu should be:
-      | Link                        | Target                                      |
-      | Inicio                      | /                                           |
-      | Alienware                   | http://www.alienware.com/mx/                |
-      | Eventos                     | http://www.alienwarearena.com/latam/event/  |
-      | Novedades >> Articles       | http://www.alienwarearena.com/articles/     |
-      | Novedades >> Announcements  | http://www.alienwarearena.com/news/         |
-      | Medios >> Vídeos            | http://video.alienwarearena.com/            |
-      | Medios >> Explorar          | /wallpapers                                 |
-      | Foros                       | /forums                                     |
-      | ARP                         | /arp                                        |
-      | Microsoft                   | /microsoft                                  |
+      | Link                        | Target                                         |
+      | Inicio                      | /                                              |
+      | Alienware                   | http://www.alienware.com/mx/                   |
+      | Juegos >> Starcraft II      | http://www.alienwarearena.com/latam/game/sc2/  |
+      | Juegos >> Más Juegos        | /games/                                        |
+      | Eventos                     | http://www.alienwarearena.com/latam/event/     |
+      | Novedades >> Articles       | http://www.alienwarearena.com/articles/        |
+      | Novedades >> Announcements  | http://www.alienwarearena.com/news/            |
+      | Medios >> Vídeos            | http://video.alienwarearena.com/               |
+      | Medios >> Explorar          | /wallpapers                                    |
+      | Foros                       | /forums                                        |
+      | ARP                         | /arp                                           |
+      | Microsoft                   | /microsoft                                     |
 
   Scenario: The "North America" site's main navigation menu has the correct items
     Given I am on the "North America" site

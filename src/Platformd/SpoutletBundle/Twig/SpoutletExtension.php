@@ -647,8 +647,8 @@ class SpoutletExtension extends Twig_Extension
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
             case 'DEALS':                       return $northAmericaOrEurope;
-            case 'GAMES':                       return !$chinaOrJapanOrLatam;
-            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
+            case 'GAMES':                       return !$chinaOrJapan;
+            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapan;
             case 'MESSAGES':                    return !$chinaOrJapan;
             case 'GROUPS':                      return $northAmericaEuropeAnzOnly;
             case 'WALLPAPERS':                  return !$japan;

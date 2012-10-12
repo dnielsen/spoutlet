@@ -55,22 +55,6 @@ class DealController extends Controller
 
         $dealPools  = $deal->getDealPools();
 
-        # I'm so behind and I put this here as a place holder... I really hope it gets removed before I am forced to commit push...
-        # this needs converted into a nice single sql statement repo function - this will not scale but I simply don't have time right now :(
-        # [N+1 problem] - chris
-
-        $allowedCountries = array();
-
-        foreach ($dealPools as $pool) {
-            foreach ($pool->getAllowedCountries() as $country) {
-                $allowedCountries[$country->getCode()] = $country->getName();
-            }
-        }
-
-        if (count($allowedCountries) > 1) {
-            asort($allowedCountries);
-        }
-
         $loggedIn   = $this->get('security.context')->isGranted('ROLE_USER');
 
         $hasKeys = $dealCodeRepo->getTotalAvailableForDeal($deal);
@@ -87,13 +71,13 @@ class DealController extends Controller
         }
 
         $instructions = $deal->getCleanedRedemptionInstructionsArray();
+
         return array(
             'deal' => $deal,
             'userAlreadyRedeemed' => $userAlreadyRedeemed,
             'dealCode' => $dealCode,
             'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
-            'allowedCountries' => $allowedCountries,
             'hasKeys' => $hasKeys > 0,
         );
     }

@@ -9,6 +9,8 @@ default_run_options[:pty] = true
 
 set :app1,        "ec2-184-73-162-139.compute-1.amazonaws.com"
 set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
+set :app3,        "ec2-23-20-160-63.compute-1.amazonaws.com"
+set :app4,        "ec2-50-16-44-162.compute-1.amazonaws.com"
 
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
@@ -18,8 +20,8 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. beta)
 set :branch,      "master"
 
-role :web,        app1, app2                         # Your HTTP server, Apache/etc
-role :app,        app1, app2                         # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4                         # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4                         # This may be the same as your `Web` server
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 
 set  :keep_releases,  3

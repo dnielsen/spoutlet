@@ -120,8 +120,8 @@
 	</head>
 	<body class="site-{{ app.session.locale }}">
         {% if facebook_app_id %}
-        <script src="http://connect.facebook.net/en_US/all.js"></script>
         <div id="fb-root"></div>
+        <script src="http://connect.facebook.net/en_US/all.js"></script>
         <script>
           // assume we are already logged in
           FB.init({appId: '{{ facebook_app_id }}', xfbml: true, cookie: true});

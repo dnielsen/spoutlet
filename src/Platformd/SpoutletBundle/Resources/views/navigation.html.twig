@@ -9,10 +9,19 @@
                     <li class="more">
                         <a class="blue">{{ 'games' | trans }}</a>
                         <ul>
-                            <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
-                            <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
-                            <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
-                            <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
+                            {% if app.session.locale == 'es' %}
+
+                                <li><a href="http://www.alienwarearena.com/latam/game/sc2/">Starcraft II</a></li>
+
+                            {% else %}
+
+                                <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
+                                <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
+                                <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
+                                <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
+
+                            {% endif %}
+
                             {% if site_has_feature('GAMES') -%}
                                 <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
                             {%- endif %}
