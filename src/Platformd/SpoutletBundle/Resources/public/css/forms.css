@@ -64,7 +64,7 @@ button {
 
 button:hover {
     text-decoration: none;
-    background: #F0F7FA;
+    background: #00596E;
     background: -moz-linear-gradient(#00596e,#0094B4);
     background: -webkit-linear-gradient(#00596e,#0094B4);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
