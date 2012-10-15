@@ -94,6 +94,7 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupImage")
      * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
      */
     protected $contentReports;
 
@@ -218,6 +219,10 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
     public function setDeletedReason($deletedReason)
     {
         $this->deletedReason = $deletedReason;
+    }
+
+    public function getContentType() {
+        return "GroupImage";
     }
 
     public function getContentReports()

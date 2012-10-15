@@ -2,21 +2,20 @@
 
 {% block title 'Content Report Admin' %}
 
-{% macro getContentReportTable(items, type, manage) %}
+{% macro getContentReportTable(items, manage) %}
 
     <table id="content-reports">
 
-        <tr><th id="content-report-content">Content</th><th>Statistics</th><th id="content-report-action">Reporters</th>
+        <tr><th id="content-report-content">Content</th><th>Complaints</th><th id="content-report-action">Reporters</th>
             {% if manage %}
                 <th id="content-report-action">Action</th>
             {% endif %}
         </tr>
 
         {% for item in items %}
-
             <tr>
                 <td>
-                    {% if type == 'GroupVideo' %}
+                    {% if item[0].getContentType == 'GroupVideo' %}
 
                         <h1>Group</h1>
                         <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
@@ -25,7 +24,7 @@
                         <h1>Video (external YouTube link)</h1>
                         <div><a href="http://www.youtube.com/watch?v={{ item[0].youTubeVideoId }}" target='_blank'>Watch Video</a></div>
 
-                    {% elseif type == 'GroupImage' %}
+                    {% elseif item[0].getContentType == 'GroupImage' %}
 
                         <h1>Group</h1>
                         <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
@@ -34,7 +33,7 @@
                         <h1>Image</h1>
                         <div><img src="{{ media_path(item[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
 
-                    {% elseif type == 'GroupNews' %}
+                    {% elseif item[0].getContentType == 'GroupNews' %}
 
                         <h1>Group</h1>
                         <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
@@ -46,24 +45,18 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if manage %}
-                        <h1>New Complaints</h1>
-                        <div>{{ item['reportCount'] }}</div>
-                    {% endif %}
-                    <h1>Total Complaints</h1>
-                    <div>{{ item[0].contentReports.count }}</div>
+                    <div style="color: red; font-weight: bold;">{{ item[0].contentReports.count }}</div>
                 </td>
                 <td>
                     <table>
                         <tr>
-                            <th>Username</th><th>Reason</th><th>Date</th><th>Status</th>
+                            <th>Username</th><th>Reason</th><th>Date</th>
                         </tr>
                         {% for report in item[0].contentReports %}
                             <tr>
                                 <td>{{ report.reporter.username }}</td>
                                 <td>{{ report.reason }}</td>
                                 <td>{{ report.reportedAt | date }}</td>
-                                <td>{{ report.deleted ? "Archived" : "New" }}</td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -111,13 +104,6 @@
     {% endif %}
 </p>
 
-<h2>Group News</h2>
-<p>{{ _self.getContentReportTable(groupNews, 'GroupNews', mode == "manage") }}</p>
-
-<h2>Group Images</h2>
-<p>{{ _self.getContentReportTable(groupImages, 'GroupImage', mode == "manage") }}</p>
-
-<h2>Group Videos</h2>
-<p>{{ _self.getContentReportTable(groupVideos, 'GroupVideo', mode == "manage") }}</p>
+<p>{{ _self.getContentReportTable(allReports, mode == "manage") }}</p>
 
 {% endblock %}

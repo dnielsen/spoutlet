@@ -94,6 +94,7 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupNews")
      * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
      */
     protected $contentReports;
 
@@ -228,6 +229,10 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
     public function setDeletedReason($deletedReason)
     {
         $this->deletedReason = $deletedReason;
+    }
+
+    public function getContentType() {
+        return "GroupNews";
     }
 
     public function getContentReports()

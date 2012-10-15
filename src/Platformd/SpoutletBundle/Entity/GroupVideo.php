@@ -101,6 +101,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupVideo")
      * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
      */
 
     protected $contentReports;
@@ -256,6 +257,10 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
     public function setDeletedReason($deletedReason)
     {
         $this->deletedReason = $deletedReason;
+    }
+
+    public function getContentType() {
+        return "GroupVideo";
     }
 
     public function getContentReports()
