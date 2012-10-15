@@ -214,7 +214,7 @@ class GiveawayManager
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
-            '%giveawayName%'  => $giveaway->getName(),
+            '%giveawayName%'  => str_replace(array("\r\n"), ' ', $giveaway->getName()),
         ), 'messages', $giveaway->getLocale());
 
         $message = \Swift_Message::newInstance()
@@ -262,7 +262,7 @@ class GiveawayManager
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_deny', array(
-            '%giveawayName%'  => $giveaway->getName(),
+            '%giveawayName%'  => str_replace(array("\r\n"), ' ', $giveaway->getName()),
         ), 'messages', $giveaway->getLocale());
 
         $message = \Swift_Message::newInstance()
