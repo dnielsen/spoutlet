@@ -15,12 +15,12 @@ class ContentReportRepository extends EntityRepository
         }
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, report FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
             WHERE item.deleted = false
             AND report.deleted = false
             GROUP BY item
-            ORDER BY report.reportedAt
+            ORDER BY reportCount DESC, report.reportedAt
             ',
             $type))
             ->execute();

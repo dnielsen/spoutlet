@@ -43,23 +43,24 @@ class ContentReportAdminController extends Controller
 
         usort($allReports, function($a, $b) {
 
-            $aReports       = $a->getContentReports();
-            $bReports       = $b->getContentReports();
+            $aReports       = $a[0]->getContentReports();
+            $bReports       = $b[0]->getContentReports();
 
             $aReportCount   = $aReports->count();
             $bReportCount   = $bReports->count();
 
             if ($aReportCount == $bReportCount) {
-
-                echo "$aReportCount == $bReportCount<br />";
-
                 $aMostRecent  = $aReports[0]->getReportedAt();
                 $bMostRecent  = $bReports[0]->getReportedAt();
 
-                return $aMostRecent > $bMostRecent ? 1 : $aMostRecent == $bMostRecent ? 0 : -1;
+                if ($aMostRecent == $bMostRecent) {
+                    return 0;
+                }
+
+                return $aMostRecent > $bMostRecent ? -1 : 1;
             }
 
-            return $aReportCount > $bReportCount ? -1 : 0;
+            return $aReportCount > $bReportCount ? -1 : 1;
         });
 
         return $this->render('SpoutletBundle:ContentReportAdmin:list.html.twig', array(
