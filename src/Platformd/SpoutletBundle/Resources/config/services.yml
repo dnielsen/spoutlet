@@ -29,13 +29,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    platformd.spoutlet_extension:
-        class: Platformd\SpoutletBundle\Twig\SpoutletExtension
-        arguments:
-            - "@service_container"
-        tags:
-            - { name: twig.extension }
-
     platformd.breadcrumbs_renderer:
         class: Platformd\SpoutletBundle\Menu\BreadcrumbsRenderer
         tags:

@@ -12,35 +12,39 @@ Feature: Main Navigation
       | Alienware   | http://alienware.jp/  |
       | イベント       | /events/              |
       | ニュース       | /news                 |
+      | ビデオ         | /video                |
       | Microsoft   | /microsoft            |
 
   Scenario: The "China" site's main navigation menu has the correct items
     Given I am on the "China" site
     When I go to "/games"
     Then the main navigation menu should be:
-      | Link       | Target                    |
-      | 首页        | /                         |
-      | Alienware   | http://alienware.com.cn/  |
-      | 活动        | /events/                  |
-      | 新闻        | /news                     |
-      | 壁纸下载    | /wallpapers               |
-      | 微软        | /microsoft                |
+      | Link           | Target                    |
+      | 首页            | /                         |
+      | 关于ALIENWARE   | http://alienware.com.cn/  |
+      | 活动            | /events/                  |
+      | 新闻            | /news                     |
+      | 媒体 >> 视频      | /video                    |
+      | 媒体 >> 壁纸下载   | /wallpapers               |
+      | 微软            | /microsoft                |
 
   Scenario: The "Latin America" site's main navigation menu has the correct items
     Given I am on the "Latin America" site
     When I go to "/games"
     Then the main navigation menu should be:
-      | Link                        | Target                                      |
-      | Inicio                      | /                                           |
-      | Alienware                   | http://www.alienware.com/mx/                |
-      | Eventos                     | http://www.alienwarearena.com/latam/event/  |
-      | Novedades >> Articles       | http://www.alienwarearena.com/articles/     |
-      | Novedades >> Announcements  | http://www.alienwarearena.com/news/         |
-      | Medios >> Vídeos            | http://video.alienwarearena.com/            |
-      | Medios >> Explorar          | /pages/wallpapers                           |
-      | Foros                       | /forums                                     |
-      | ARP                         | /arp                                        |
-      | Microsoft                   | /microsoft                                  |
+      | Link                        | Target                                         |
+      | Inicio                      | /                                              |
+      | Alienware                   | http://www.alienware.com/mx/                   |
+      | Juegos >> Starcraft II      | http://www.alienwarearena.com/latam/game/sc2/  |
+      | Juegos >> Más Juegos        | /games/                                        |
+      | Eventos                     | http://www.alienwarearena.com/latam/event/     |
+      | Novedades >> Articles       | http://www.alienwarearena.com/articles/        |
+      | Novedades >> Announcements  | http://www.alienwarearena.com/news/            |
+      | Medios >> Vídeos            | http://video.alienwarearena.com/               |
+      | Medios >> Explorar          | /wallpapers                                    |
+      | Foros                       | /forums                                        |
+      | ARP                         | /arp                                           |
+      | Microsoft                   | /microsoft                                     |
 
   Scenario: The "North America" site's main navigation menu has the correct items
     Given I am on the "North America" site
@@ -59,7 +63,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
-      | Media >> Wallpapers         | /pages/wallpapers                               |
+      | Media >> Wallpapers         | /wallpapers                                     |
       | NewDeals                    | /deal/                                          |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
@@ -81,7 +85,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
-      | Media >> Wallpapers         | /pages/wallpapers                                                                                 |
+      | Media >> Wallpapers         | /wallpapers                                                                                       |
       | NewDeals                    | /deal/                                                                                            |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
@@ -103,7 +107,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -124,7 +128,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |
@@ -145,7 +149,7 @@ Feature: Main Navigation
       | News >> Articles            | http://www.alienwarearena.com/articles/   |
       | News >> Announcements       | http://www.alienwarearena.com/news/       |
       | Media >> Videos             | http://video.alienwarearena.com/          |
-      | Media >> Wallpapers         | /pages/wallpapers                         |
+      | Media >> Wallpapers         | /wallpapers                               |
       | Forums                      | /forums                                   |
       | ARP                         | /arp                                      |
       | Microsoft                   | /microsoft                                |

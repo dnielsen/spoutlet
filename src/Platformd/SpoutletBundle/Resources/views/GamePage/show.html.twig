@@ -25,8 +25,8 @@
     </a>
 {% endmacro %}
 
-{% macro _renderYoutubeThumbnail(youtubeVideoId, headline) %}
-    <div>
+{% macro _renderYoutubeThumbnail(youtubeVideoId, headline, active) %}
+    <div class="{{ active ? 'active' : '' }}">
         <a href="#videos" data-youtube-id="{{ youtubeVideoId }}" class="youtube-play">
             <img src="http://img.youtube.com/vi/{{ youtubeVideoId }}/0.jpg" alt="video preview" />
         </a>
@@ -63,15 +63,15 @@
         <div class="std_2col">
             <div class="right">
                 {% if gamePage.recommendedLaptopUrl and gamePage.recommendedDesktopUrl %}
-                <div class="split-ad">
+                <div class="split-ad" style="background: url('{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}');">
                     <a href="{{ gamePage.recommendedLaptopUrl }}" target="_blank" class="split-left"
                         onClick="recordOutboundLink(this, 'Recommended Laptop', 'alienware.com')return false;"></a>
                     <a href="{{ gamePage.recommendedDesktopUrl }}" target="_blank" class="split-right"
                         onClick="recordOutboundLink(this, 'Recommended Desktop', 'alienware.com')return false;"></a>
-                    <img src="{{ asset('bundles/spoutlet/images/recommended-rig.jpg') }}" alt="{{ 'recommended_rig' | trans }}" />
                 </div>
                 {% endif %}
 
+                {% if hasFeedItems %}
                 <div class="game-feed widget-33">
                     <div class="widget-header">
                         <div class="widget-title">
@@ -142,6 +142,7 @@
                         </ul>
                     </div>
                 </div>
+                {% endif %}
 
                 {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
@@ -170,12 +171,14 @@
                 <div class="content">
                     {{ gamePage.aboutGame | raw }}
 
+                    {% if hasFeatures %}
                     <h1>{{ gamePage.game.name }} Key Features</h1>
                     <div>
                         {{ gamePage.keyFeature1 | raw }}
                         {{ gamePage.keyFeature2 | raw }}
                         {{ gamePage.keyFeature3 | raw }}
                     </div>
+                    {% endif %}
                 </div>
 
                 {% if gamePage.game.publisherLogos %}
@@ -188,32 +191,41 @@
         </div>
 
         <div class="std_1col">
+            {% if hasVideos %}
             <div class="video-player">
                 <a name="videos"></a>
                 <h3>{{ 'videos' | trans }}</h3>
 
                 <div class="player-left">
-                    <div id="theater_screen" class="align_center" style="width:950px; height:393px;"></div>
+                    <div id="theater_screen" class="align_center" style="width:950px; height:560px;">
+                        <div style="border: 2px solid #4a4a4a;width:680px;height:550px">
+                            <video id="game_page_video" class="video-js vjs-default-skin"
+                                controls preload="auto" width="680" height="550">
+                            </video>
+                        </div>
+
+                    </div>
                 </div>
                 <div class="thumbnails-right">
                     {% if gamePage.youtubeIdTrailer1 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer1, gamePage.youtubeIdTrailer1Headline, true) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer2 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer2, gamePage.youtubeIdTrailer2Headline, false) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer3 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer3, gamePage.youtubeIdTrailer3Headline, false) }}
                     {% endif %}
 
                     {% if gamePage.youtubeIdTrailer4 %}
-                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
+                        {{ _self._renderYoutubeThumbnail(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline, false) }}
                     {% endif %}
                 </div>
                 <div class="clear">&nbsp;</div>
             </div>
+            {% endif %}
 
             {% if (gamePage.mediaGalleryMedias | length) > 0 %}
             <div class="media-gallery ad-gallery game-media-gallery">
@@ -260,14 +272,19 @@
     {% block stylesheets %}
         {{ parent() }}
 
-        <link rel="stylesheet" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.min.css') }}" />
     {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
+    <script type="text/javascript">
 
+    </script>
     <script type="text/javascript">
         var GamePage = {
 
@@ -295,25 +312,6 @@
             mediaGalleryAnchors.unbind('click');
         };
 
-        GamePage.initializeMovie = function(youtubeVideoId) {
-            var par = {};
-            par.flashvars = "startMovie="+youtubeVideoId;
-            par.flashvars += "&startCue=none";
-            par.flashvars += "&startParameterMovie="; // + getMovieFromURL();
-            par.flashvars += "&videoTitle=";
-            par.flashvars += "&displayWelcome=no";
-            par.flashvars += "&displayAlert=no";
-            par.flashvars += "&alertText=";
-            par.flashvars += "&muteOnStart=yes";
-            par.allowScriptAccess = "always";
-            par.wmode = "transparent";
-            var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"840", height:"593", id:"theater_screen", name:"theater_screen"};
-            var id = "theater_screen";
-
-            // temporarily disable, because the autostart is annoying
-            var myytplayer = swfobject.createSWF(att, par, id);
-        };
-
         /**
          * Makes .youtube-play links play their video in the main window
          */
@@ -332,14 +330,23 @@
                     }
                 });
 
-                GamePage.initializeMovie(youtubeVideoId);
+                _V_("game_page_video").src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeVideoId});
+                _V_("game_page_video").play();
             });
         };
 
         jQuery(document).ready(function() {
-            GamePage.initializeMovie('{{ gamePage.youtubeIdTrailer1 }}');
+
+            _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
+            _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v={{ gamePage.youtubeIdTrailer1 }}' });
+                this.play();
+            });
+
             GamePage.initializeMediaGallery();
             GamePage.initializeVideoLinks();
+            _V_.options.flash.swf = "http://{{ app.request.getHttpHost() }}/bundles/spoutlet/js/video-js-3.2.0/video-js.swf";
+
         });
     </script>
 {% endblock %}

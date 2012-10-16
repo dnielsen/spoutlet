@@ -107,16 +107,37 @@ class GamePageRepository extends EntityRepository
         ;
     }
 
-    public function findAllByGamePagesByCategory($category, $site)
+    public function findAllGamePagesWhereIdNotIn($inArray, $site) {
+
+        $qb = $this->createSiteQueryBuilder($site)
+            ->leftJoin('gp.game', 'g')
+            ->andWhere('gp.status = :status');
+
+        if (!empty($inArray)) {
+            $qb->andWhere('gp.id NOT IN (:inArray)')
+                ->setParameter('inArray', $inArray);
+        }
+
+        $qb->addOrderBy('gp.createdAt', 'DESC')
+            ->setParameter('status', GamePage::STATUS_PUBLISHED);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllByGamePagesByCategory($category, $site, $limit = null)
     {
-        return $this->createSiteQueryBuilder($site)
+        $qb = $this->createSiteQueryBuilder($site)
             ->leftJoin('gp.game', 'g')
             ->andWhere('g.category = :category')
             ->andWhere('gp.status = :status')
             ->setParameter('category', $category)
-            ->setParameter('status', GamePage::STATUS_PUBLISHED)
-            ->getQuery()
-            ->execute();
+            ->setParameter('status', GamePage::STATUS_PUBLISHED);
+
+        if ($limit != null) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->addOrderBy('gp.createdAt', 'DESC')->getQuery()->execute();
     }
 
     /**

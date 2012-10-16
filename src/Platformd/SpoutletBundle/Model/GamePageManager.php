@@ -52,22 +52,18 @@ class GamePageManager
         $this->em->flush();
     }
 
-    /**
-     * Finds all the GamePage objects that are related to the given site.
-     *
-     * Orders them by newest first
-     *
-     * @param string $site The site/locale
-     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
-     */
+    public function findAllGamePagesWhereIdNotIn($inArray) {
+        return $this->getRepository()->findAllGamePagesWhereIdNotIn($inArray, $this->getDatabaseSiteKey());
+    }
+
     public function findAllForSiteNewestFirst($site)
     {
         return $this->getRepository()->findAllForSiteNewestFirst($site);
     }
 
-    public function findAllByGamePagesByCategory($category)
+    public function findAllByGamePagesByCategory($category, $limit = null)
     {
-        $pages = $this->getRepository()->findAllByGamePagesByCategory($category, $this->getDatabaseSiteKey());
+        $pages = $this->getRepository()->findAllByGamePagesByCategory($category, $this->getDatabaseSiteKey(), $limit);
 
         return $pages;
     }

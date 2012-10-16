@@ -15,12 +15,28 @@
 <div id="row-2" class="std_2col">
     <div class="right">
         {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+        {% render 'SpoutletBundle:Default:hotStories' %}
     </div>
     <div class="left">
         {% render 'SpoutletBundle:Default:featuredContent' %}
+        {% if app.session.locale == 'zh' or app.session.locale == 'ja' %}
+            {% render 'SpoutletBundle:Default:videoFeed' %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+           $('.ellipse').truncate({
+                width: '160'
+           });
+           $('.news-ellipse').truncate();
+           $('.ellipse').qtip();
+        });
+    </script>
+{% endblock %}
 

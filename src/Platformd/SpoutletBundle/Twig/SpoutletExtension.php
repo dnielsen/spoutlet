@@ -12,7 +12,9 @@ use Platformd\SpoutletBundle\Util\HttpUtil;
 use Twig_Function_Method;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Symfony\Component\Translation\TranslatorInterface;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Session;
 
 /**
  * Twig extension for generic things
@@ -20,6 +22,8 @@ use Platformd\UserBundle\Entity\User;
 class SpoutletExtension extends Twig_Extension
 {
     private $container;
+    private $translator;
+    private $session;
 
     public function __construct(ContainerInterface $container)
     {
@@ -43,6 +47,23 @@ class SpoutletExtension extends Twig_Extension
         return array(
             'external' => new Twig_Test_Method($this, 'testExternal'),
         );
+    }
+
+    private function trans($key) {
+
+        if (!$this->translator) {
+            $this->translator = $this->container->get('translator');
+        }
+
+        if (!$this->session) {
+            $this->session = $this->container->get('session');
+        }
+
+        if (!$this->translator || !$this->session) {
+            return $key;
+        }
+
+        return $this->translator->trans($key, array(), 'messages', $this->session->getLocale());
     }
 
     public function wrap($obj, $length = 75, $breakWith = '<br />', $cut = true) {
@@ -262,6 +283,8 @@ class SpoutletExtension extends Twig_Extension
             case 'ALIENWARE_LINK_ADDRESS':          return $this->GetAlienwareLinkAddress($locale);
             case 'FACEBOOK':                        return $this->GetFacebookLink($locale);
             case 'EVENTS':                          return $this->GetEventsLink($locale);
+            case 'VIDEOS':                          return $this->GetVideosLink($locale);
+            case 'WALLPAPERS':                      return $this->GetWallpapersLink($locale);
             case 'TWITTER':                         return $this->GetTwitterLink($locale);
             case 'USER_EVENT':                      return $this->GetUserEventLink($locale);
             case 'USER_GAME_ID':                    return $this->GetUserGameIdLink($locale);
@@ -307,7 +330,7 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
             case 'ja':       $text = 'ALIENWARE.JPへ移動する'; break;
-            case 'zh':       $text = '需要一个牛逼的装备? 请看看 Alienware'; break;
+            case 'zh':       $text = '需要一个牛逼的装备? 请看看 ALIENWARE'; break;
             case 'es':       $text = '¿Busca un equipo poderoso?<br />¡Encuéntrelo en Alienware!'; break;
 
             case 'en_SG':
@@ -336,7 +359,7 @@ class SpoutletExtension extends Twig_Extension
             return false;
         }
 
-        return sprintf('<a href="%s" target="_blank">Alienware</a>', $link);
+        return sprintf('<a href="%s" target="_blank">'.$this->trans('platformd.alienware').'</a>', $link);
     }
 
     private function GetAlienwareLinkAddress($locale) {
@@ -409,13 +432,12 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserEventLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com%s/account/events/">%s</a>';
-        $enLinkText = 'My Events';
+        $format = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.user.account.my_events').'</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, '/japan', '参加済みイベント');
-            case 'zh':      return sprintf($format, '/china', '我的活动');
-            case 'en_US':   return sprintf($format, '', $enLinkText);
+            case 'ja':      return sprintf($format, '/japan');
+            case 'zh':      return sprintf($format, '/china');
+            case 'en_US':   return sprintf($format, '');
 
             default:        return false;
         }
@@ -439,7 +461,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetUserProfileLink($locale) {
 
-        $format         = '<a href="%s">%s</a>';
+        $format         = '<a href="%s">'.$this->trans('platformd.user.account.profile').'</a>';
         $internalUrl    = $this->container->get('router')->generate('accounts_profile');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -452,16 +474,45 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
 
-            case 'ja':      return sprintf($format, $internalUrl, 'プロファイル');
-            case 'zh':      return sprintf($format, $internalUrl, '个人形象');
+            case 'ja':      return sprintf($format, $internalUrl);
+            case 'zh':      return sprintf($format, $internalUrl);
 
-            default:        return sprintf($format, $externalUrl, 'Profile');
+            default:        return sprintf($format, $externalUrl);
+        }
+    }
+
+    private function GetWallpapersLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.wallpapers').'</a>';
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, '/wallpapers');
+        }
+    }
+
+    private function GetVideosLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.video').'</a>';
+
+        switch($locale) {
+
+            case 'ja':
+            case 'zh':
+
+                return sprintf($format, '/video');
+
+            default:
+
+                return sprintf($format, 'http://video.alienwarearena.com/');
         }
     }
 
     private function GetEventsLink($locale) {
 
-        $format         = '<a href="%s">%s</a>';
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
         $internalUrl    = $this->container->get('router')->generate('events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -474,10 +525,10 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
 
-            case 'ja':      return sprintf($format, $internalUrl, 'イベント');
-            case 'zh':      return sprintf($format, $internalUrl, '活动');
+            case 'ja':      return sprintf($format, $internalUrl);
+            case 'zh':      return sprintf($format, $internalUrl);
 
-            case 'es':      return sprintf($format, $externalUrl, 'Eventos');
+            case 'es':      return sprintf($format, $externalUrl);
             case 'en_SG':
             case 'en_AU':
             case 'en_GB':
@@ -485,7 +536,7 @@ class SpoutletExtension extends Twig_Extension
             case 'en_US':
             case 'en':
 
-                return sprintf($format, $externalUrl, 'Events');
+                return sprintf($format, $externalUrl);
 
             default:        return false;
         }
@@ -493,7 +544,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetUserGiveawayLink($locale) {
 
-        $format         = '<a href="%s">%s</a>';
+        $format         = '<a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a>';
         $internalUrl    = $this->container->get('router')->generate('accounts_giveaways');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -503,12 +554,11 @@ class SpoutletExtension extends Twig_Extension
         }
 
         $externalUrl .= 'account/my-giveaway-keys/';
-        $enLinkText = 'My Giveaways';
 
         switch($locale) {
 
-            case 'ja':      return sprintf($format, $internalUrl, '参加済みキャンペーン');
-            case 'zh':      return sprintf($format, $internalUrl, '获取赠品');
+            case 'ja':      return sprintf($format, $internalUrl);
+            case 'zh':      return sprintf($format, $internalUrl);
 
             case 'es':
             case 'en_SG':
@@ -518,18 +568,18 @@ class SpoutletExtension extends Twig_Extension
             case 'en_US':
             case 'en':
 
-                return sprintf($format, $externalUrl, 'My Giveaways');
+                return sprintf($format, $externalUrl);
 
             default:        return false;
         }
     }
 
     private function GetUserGameIdLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">%s</a>';
+        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'japan', 'ゲームID');
-            //case 'zh':      return sprintf($format, 'china', 'Game IDs');
+            case 'ja':      return sprintf($format, 'japan');
+            case 'zh':      return sprintf($format, 'china');
 
             default:        return false;
         }
@@ -560,15 +610,15 @@ class SpoutletExtension extends Twig_Extension
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
-            case 'VIDEO':                       return !$chinaOrJapan;
+            case 'VIDEO':                       return true;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
             case 'SWEEPSTAKES':                 return $northAmerica;
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
             case 'DEALS':                       return $northAmericaOrEurope;
-            case 'GAMES':                       return !$chinaOrJapanOrLatam;
-            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapanOrLatam;
+            case 'GAMES':                       return !$chinaOrJapan;
+            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapan;
             case 'MESSAGES':                    return !$chinaOrJapan;
             case 'WALLPAPERS':                  return !$japan;
         }

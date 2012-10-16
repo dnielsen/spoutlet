@@ -12,7 +12,7 @@ $(".featured-content-header a").click(function() {
         $(".featured-content-category#featured-content-"+id).addClass('active');
 
         // show the widget footer
-        $('.widget-footer a').hide();
+        $('.widget-footer a.featured-footer-link').hide();
         $(".widget-footer #featured-footer-"+id).show();
 });
 });

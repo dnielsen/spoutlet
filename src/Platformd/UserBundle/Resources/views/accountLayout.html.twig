@@ -27,8 +27,14 @@
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>
             {% endif %}
 
-            {% if app.session.locale != 'zh' %}
-
+            {% if app.session.locale == 'zh' %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.tournaments' | trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        {% if game_id_link %}<li>{{ game_id_link | raw }}</li>{% endif %}
+                    </ul>
+                </li>
+            {% else %}
                 <li class="more">
                     <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.tournaments' | trans }}</a>
                     <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
