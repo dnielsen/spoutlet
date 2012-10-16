@@ -10,7 +10,11 @@
     {% endif %}
     {% if pages | length > 0 %}
         <div id="theater-screen-wrapper">
-            <div id="theater_screen" style="width:600px; height:350px;"></div>
+            <div id="theater_screen" style="width:600px; height:350px;margin-left: 12px;">
+                <video id="group_video"class="video-js vjs-default-skin"
+                    controls preload="none" width="600" height="350">
+                </video>
+            </div>
         </div>
         <div class="scrollable" id="scrollable-videos" style="height: 140px; width: 450px; margin: 20px 0 0 87px;">
             <div class="items">
@@ -21,7 +25,7 @@
                         {% for videoList in page %}
                             {% for video in videoList %}
                                 <div class="group-image-item">
-                                    
+
                                     <div class="group-image-image">
                                         <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" style="border: none;" class="youtube-link">
                                             {% if isFirstItem %}
@@ -61,46 +65,25 @@
     {% endif %}
 </div>
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
-<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
 <script type="text/javascript">
-    var GamePage = {
-
-    };
-
-    GamePage.initializeMovie = function(youtubeVideoId) {
-        var par = {};
-        par.flashvars = "startMovie="+youtubeVideoId;
-        par.flashvars += "&startCue=none";
-        par.flashvars += "&startParameterMovie=";
-        par.flashvars += "&videoTitle=";
-        par.flashvars += "&displayWelcome=no";
-        par.flashvars += "&displayAlert=no";
-        par.flashvars += "&alertText=";
-        par.flashvars += "&muteOnStart=yes";
-        par.allowScriptAccess = "always";
-        par.wmode = "transparent";
-        var att = { data:"{{ asset('bundles/spoutlet/swf/games_trailers_player.swf') }}", width:"600", height:"350", id:"theater_screen", name:"theater_screen"};
-        var id = "theater_screen";
-
-        // temporarily disable, because the autostart is annoying
-        var myytplayer = swfobject.createSWF(att, par, id);
-    };
-
-    GamePage.initializeMediaGallery = function() {
-
-    };
 
     jQuery(document).ready(function() {
-
+        _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
         $('.youtube-link').click(function () {
            var youtubeId = $(this).attr('youtube-data');
            $('.youtube-link').find('img').removeClass('active-video');
            $(this).find('img').addClass('active-video');
-           GamePage.initializeMovie(youtubeId);
+           _V_("group_video").src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeId});
+           _V_("group_video").play();
         });
 
         if($('.youtube-link').length > 0) {
-            GamePage.initializeMovie($('.youtube-link').first().attr('youtube-data'));
+            _V_("group_video", {techOrder: ["html5","flash","youtube"]}, function() {
+                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + $('.youtube-link').first().attr('youtube-data') });
+                this.play();
+            });
         }
     });
 
