@@ -32,18 +32,33 @@
                     <th style="width:15%;">Username</th>
                     <th style="width:15%;">Joined</th>
                 </tr>
-                {% for member in group.members %}
+                <tr>
                     <tr class="eventListGroup_lan">
                         {% if canRemove %}
                         <td>
-                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : member.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ member.username }}\' from the group?');">Remove from Group</a>
+                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : group.owner.username }) }}" onclick="return confirm('Are you sure you want to remove \'{{ group.owner.username }}\' from the group?');">Remove from Group</a>
                         </td>
                         {% endif %}
                         <td>
-                            <a href="javascript:void(0);">{{ member.username }}</a>
+                            <a href="javascript:void(0);">{{ group.owner.username }}</a>
                         </td>
                         <td>
-                            {{ member.created|date('M j, Y') }}
+                            {{ group.createdAt|date('M j, Y') }}
+                        </td>
+                    </tr>
+                </tr>
+                {% for member in members %}
+                    <tr class="eventListGroup_lan">
+                        {% if canRemove %}
+                        <td>
+                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : member['id'] }) }}" onclick="return confirm('Are you sure you want to remove \'{{ member['username'] }}\' from the group?');">Remove from Group</a>
+                        </td>
+                        {% endif %}
+                        <td>
+                            <a href="javascript:void(0);">{{ member['username'] }}</a>
+                        </td>
+                        <td>
+                            {{ member['created_at']|date('M j, Y') }}
                         </td>
                     </tr>
                 {% else %}

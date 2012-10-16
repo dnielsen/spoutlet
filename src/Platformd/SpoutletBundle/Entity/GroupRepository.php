@@ -134,4 +134,32 @@ class GroupRepository extends EntityRepository
 
         return $stmt->fetchAll();
     }
+
+    public function getGroupMembers($id)
+    {
+        $query = '
+        SELECT DISTINCT
+            fos_user.username,
+            pd_group_membership_actions.action,
+            Max(
+                pd_group_membership_actions.created_at
+            ) AS created_at,
+            fos_user.id
+        FROM
+            pd_groups
+        INNER JOIN pd_group_membership_actions ON pd_groups.id = pd_group_membership_actions.group_id
+        INNER JOIN fos_user ON fos_user.id = pd_group_membership_actions.user_id
+        WHERE
+            pd_group_membership_actions.group_id = :id';
+
+        $stmt = $this->getEntityManager()
+                     ->getConnection()
+                     ->prepare($query);
+
+        $stmt->bindValue('id', $id);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

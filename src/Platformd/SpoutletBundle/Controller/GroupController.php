@@ -912,6 +912,10 @@ Alienware Arena Team
         $currentUser = $this->getCurrentUser();
         $canRemove = $group->isOwner($currentUser) && $currentUser != 'anon.';
 
+        $repo = $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+
+        $members = $repo->getGroupMembers($id);
+
         if($currentUser != 'anon.') {
             $canRemove = $currentUser->getAdminLevel() == 'ROLE_SUPER_ADMIN';
         }
@@ -919,6 +923,7 @@ Alienware Arena Team
         return $this->render('SpoutletBundle:Group:members.html.twig', array(
             'group' => $group,
             'canRemove' => $canRemove,
+            'members' => $members,
         ));
     }
 
