@@ -10,8 +10,7 @@
                 <input type="hidden" id="youtube-trailer" value="{{ firstGame.youtubeIdTrailer1 }}" />
                 <div style="border: 2px solid #4a4a4a;width:480px;height:350px;">
                     <video id="game_page_video" class="video-js vjs-default-skin"
-                        controls preload="auto" width="480" height="350"
-                        data-setup='{"example_option":true}'>
+                        controls preload="auto" width="480" height="350">
                     </video>
                 </div>
 
@@ -207,7 +206,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {# temporarily disabled because the auto-play is annoying #}
     {% if firstGame %}
         <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/swfobject.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video.js') }}"></script>
@@ -215,7 +213,7 @@
         <script type="text/javascript">
 
             jQuery(document).ready(function() {
-                _V_.options.flash.swf = '{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.swf') }}';
+                _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
                 _V_("game_page_video", {techOrder: ["html5","flash","youtube"]}, function() {
                     this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + $('#youtube-trailer').val() });
                     this.play();

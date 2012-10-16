@@ -111,11 +111,15 @@ class GamePageRepository extends EntityRepository
 
         $qb = $this->createSiteQueryBuilder($site)
             ->leftJoin('gp.game', 'g')
-            ->andWhere('gp.id NOT IN (:inArray)')
-            ->andWhere('gp.status = :status')
-            ->addOrderBy('gp.createdAt', 'DESC')
-            ->setParameter('status', GamePage::STATUS_PUBLISHED)
-            ->setParameter('inArray', $inArray);
+            ->andWhere('gp.status = :status');
+
+        if (!empty($inArray)) {
+            $qb->andWhere('gp.id NOT IN (:inArray)')
+                ->setParameter('inArray', $inArray);
+        }
+
+        $qb->addOrderBy('gp.createdAt', 'DESC')
+            ->setParameter('status', GamePage::STATUS_PUBLISHED);
 
         return $qb->getQuery()->execute();
     }

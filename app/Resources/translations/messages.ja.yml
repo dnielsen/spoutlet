@@ -406,7 +406,7 @@ email:
         ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
         japan@alienwarearena.com.
 
-        - ALIENWARE ARENA TEAM
+        - ALIENWARE ARENA チーム
 
     giveaway_machine_code_deny: |
         こんにちは%userLastName%様,
@@ -426,11 +426,11 @@ email:
         万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
         japan@alienwarearena.com.
 
-         - ALIENWARE ARENA チーム
+        - ALIENWARE ARENA チーム
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ
-        giveaway_machine_code_deny:  %giveawayName%のお知らせ
+        giveaway_machine_code_deny:     %giveawayName%のお知らせ
 
 username: ユーザー名
 
