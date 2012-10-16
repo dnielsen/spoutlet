@@ -394,7 +394,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetSocialMediaStripForHeaderAndFooterChina() {
 
-        $output  = ' <a href="http://myalienware.cn/" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/1_btn_jkgm_hover.png" style="height: 16px;" /></a> ';
+        $output  = ' <a href="http://www.dell.com.cn/aw" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/1_btn_jkgm_hover.png" style="height: 16px;" /></a> ';
         $output .= '<a href="http://e.weibo.com/alienwareallpowerful" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/2_ico_sina.png" style="height: 16px;" /></a> ';
         $output .= '<a href="http://t.qq.com/alienware" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/3_ico_tencent.png" style="height: 16px;" /></a> ';
         $output .= '<a href="http://bbs.alienfans.net/" target="_blank"><img src="/bundles/spoutlet/images/china-social-media/4_ico_aw.png" style="height: 16px;" /></a> ';
