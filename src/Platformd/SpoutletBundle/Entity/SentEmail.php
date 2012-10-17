@@ -58,7 +58,13 @@ class SentEmail
      * @ORM\Column(type="boolean", nullable=false)
      * @Assert\NotNull
      */
-    private $sendStatus;
+    private $sendStatusOk;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\NotNull
+     */
+    private $sendStatusCode;
 
     /**
      * @ORM\Column(type="string", nullable=false)
@@ -133,14 +139,24 @@ class SentEmail
         return $this->sesMessageId;
     }
 
-    public function setSendStatus($value)
+    public function setSendStatusOk($value)
     {
-        $this->sendStatus = $value;
+        $this->sendStatusOk = $value;
     }
 
-    public function getSendStatus()
+    public function getSendStatusOk()
     {
-        return $this->sendStatus;
+        return $this->sendStatusOk;
+    }
+
+    public function setSendStatusCode($value)
+    {
+        $this->sendStatusCode = $value;
+    }
+
+    public function getSendStatusCode()
+    {
+        return $this->sendStatusCode;
     }
 
     public function setSiteEmailSentFrom($value)

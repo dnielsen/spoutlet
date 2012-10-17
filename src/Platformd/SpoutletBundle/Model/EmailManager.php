@@ -38,7 +38,7 @@ class EmailManager
         }
 
         if ($site == null) {
-            $site = "No Specified";
+            $site = "Not Specified";
         }
 
         if (!$emailType) {
@@ -62,6 +62,7 @@ class EmailManager
         $finalTo        = array('ToAddresses'  => array($to));
 
         $response       = $this->ses->send_email($finalFrom, $finalTo, $finalEmail);
+
         $messageId      = $response->body->SendEmailResult->MessageId;
         $status         = $response->isOk();
 
@@ -72,7 +73,8 @@ class EmailManager
         $sentEmail->setSubject($subject);
         $sentEmail->setBody($body);
         $sentEmail->setSesMessageId($messageId);
-        $sentEmail->setSendStatus($status);
+        $sentEmail->setSendStatusCode((int)$response->status);
+        $sentEmail->setSendStatusOk($status);
         $sentEmail->setSiteEmailSentFrom($site);
         $sentEmail->setEmailType($emailType);
 
