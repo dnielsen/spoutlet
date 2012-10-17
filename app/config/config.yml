@@ -168,6 +168,9 @@ parameters:
     # important to setup the translation DB loader to load things for these domains
     available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
 
+    email_destination_override: false
+    email_destination_override_with: ""
+
     sender_email_address: "noreply@%base_host%"
     sender_email_name: Alienware Arena
     platformd.news_source:
