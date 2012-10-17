@@ -702,7 +702,7 @@ ul.list-normal {
 
 .game-show-page .media-gallery h3 {
     text-shadow: 2px 2px 2px #000000;
-    filter: dropshadow(color=#000000, offx=2, offy=2);
+
 }
 
 .game-show-page .media-gallery .widget-title {
