@@ -38,8 +38,8 @@
             {% for application in applications %}
                 <tr class="eventListGroup_lan">
                     <td>
-                        <a href="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to accept \'{{ application.applicant.username }}\' to join your group?');">Accept</a> |
-                        <a href="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}" onclick="return confirm('Are you sure you want to reject \'{{ application.applicant.username }}\' from joining your group?');">Reject</a>
+                        <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Accept</a> |
+                        <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Reject</a>
                     </td>
                     <td>
                         {{ application.applicant.username }}
@@ -63,6 +63,12 @@
     </div>
     <div class="widget-footer">&nbsp;</div>
 </div>
+<div id="accept-member-dialog" title="Accept Member" style="display:none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="accept-text">Are you sure you want to accept '{0}' to join your group?</span></p>
+</div>
+<div id="reject-member-dialog" title="Reject Member" style="display:none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="reject-text">Are you sure you want to reject '{0}' from joining your group?</span></p>
+</div>
 
 {% endblock %}
 {% block javascripts %}
@@ -72,6 +78,50 @@
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
+            });
+
+            $('.accept-member').click(function () {
+                var username = $(this).attr('user-name');
+                var path = $(this).attr('data-path');
+                var text = $('#accept-text').text().replace('{0}', username);
+
+                $('#accept-text').text(text);
+                $('#accept-member-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 150,
+                    buttons: {
+                        "Yes": function() {
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+
+            $('.reject-member').click(function () {
+                var username = $(this).attr('user-name');
+                var path = $(this).attr('data-path');
+                var text = $('#reject-text').text().replace('{0}', username);
+
+                $('#reject-text').text(text);
+                $('#reject-member-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 150,
+                    buttons: {
+                        "Yes": function() {
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
             });
         });
     </script>
