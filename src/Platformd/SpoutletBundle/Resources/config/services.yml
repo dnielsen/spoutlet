@@ -2,8 +2,7 @@ services:
     platformd.s3:
         class: AmazonS3
         arguments:
-            - %s3.access_key%
-            - %s3.secret_key%
+            - { key: %s3.access_key%, secret: %s3.secret_key% }
 
     # adapters for Gaufrette filesystems
     platformd.avatar.s3.adapter:
@@ -94,6 +93,13 @@ services:
             - "@session"
             - "@knp_media.util.media_util"
             - "@platformd.locale.locales_relationship_helper"
+
+    platformd.model.email_manager:
+        class: Platformd\SpoutletBundle\Model\EmailManager
+        arguments:
+            - "@service_container"
+            - "@doctrine.orm.entity_manager"
+            - "@aws_ses"
 
     platformd.model.deal_manager:
         class: Platformd\SpoutletBundle\Model\DealManager
