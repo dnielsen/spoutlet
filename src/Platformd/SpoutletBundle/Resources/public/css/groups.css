@@ -126,7 +126,7 @@
 }
 
 .join-group-options a {
-    background: url('/bundles/spoutlet/images/groups/join_group_off.png') no-repeat;
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
     width: 230px;
     height: 62px;
     margin: 0px auto;
@@ -134,7 +134,7 @@
 }
 
 .join-group-options a:hover {
-    background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 -62px;
     width: 230px;
     height: 62px;
     margin: 0px auto;
@@ -142,7 +142,7 @@
 }
 
 button#join-group-button {
-    background: url('/bundles/spoutlet/images/groups/join_group_off.png') no-repeat;
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
     width: 230px;
     height: 62px;
     margin: 0px auto;
@@ -152,7 +152,7 @@ button#join-group-button {
 }
 
 button#join-group-button:hover {
-    background: url('/bundles/spoutlet/images/groups/join_group_on.png') no-repeat;
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 -62px;
     filter: none;
 }
 
