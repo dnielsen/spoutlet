@@ -32,26 +32,25 @@
                     <th style="width:15%;">Username</th>
                     <th style="width:15%;">Joined</th>
                 </tr>
-                <tr>
-                    <tr class="eventListGroup_lan">
-                        {% if canRemove %}
-                        <td>
-                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : group.owner.username }) }}" onclick="return confirm('Are you sure you want to remove \'{{ group.owner.username }}\' from the group?');">Remove from Group</a>
-                        </td>
-                        {% endif %}
-                        <td>
-                            <a href="javascript:void(0);">{{ group.owner.username }}</a>
-                        </td>
-                        <td>
-                            {{ group.createdAt|date('M j, Y') }}
-                        </td>
-                    </tr>
+                <tr class="eventListGroup_lan">
+                    {% if canRemove %}
+                    <td>
+                        <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : group.owner.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ group.owner.username }}\' from the group?');">Remove from Group</a>
+                    </td>
+                    {% endif %}
+                    <td>
+                        <a href="javascript:void(0);">{{ group.owner.username }}</a>
+                    </td>
+                    <td>
+                        {{ group.createdAt|date('M j, Y') }}
+                    </td>
                 </tr>
                 {% for member in members %}
+                    {% if member['username'] is not null %}
                     <tr class="eventListGroup_lan">
                         {% if canRemove %}
                         <td>
-                            <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : member['id'] }) }}" onclick="return confirm('Are you sure you want to remove \'{{ member['username'] }}\' from the group?');">Remove from Group</a>
+                            <a href="javascript:void(0);" class="remove-member" data-path="{{ path('group_remove_member', { 'id': group.id, 'uid' : member['id'] }) }}">Remove from Group</a>
                         </td>
                         {% endif %}
                         <td>
@@ -61,6 +60,7 @@
                             {{ member['created_at']|date('M j, Y') }}
                         </td>
                     </tr>
+                    {% endif %}
                 {% else %}
                     <tr>
                         <td colspan="2">
@@ -73,8 +73,37 @@
         </div>
         <div class="widget-footer">&nbsp;</div>
     </div>
+    <div id="remove-member-dialog" title="Remove Member" style="display:none;">
+        <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you want to remove this user?</p>
+    </div>
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('.remove-member').click(function () {
+                var path = $(this).attr('data-path');
+                $('#remove-member-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 150,
+                    buttons: {
+                        "Yes": function() {
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
 {% endblock %}

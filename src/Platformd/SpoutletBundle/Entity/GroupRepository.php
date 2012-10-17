@@ -146,11 +146,14 @@ class GroupRepository extends EntityRepository
             ) AS created_at,
             fos_user.id
         FROM
-            pd_groups
+        pd_groups
         INNER JOIN pd_group_membership_actions ON pd_groups.id = pd_group_membership_actions.group_id
         INNER JOIN fos_user ON fos_user.id = pd_group_membership_actions.user_id
+        INNER JOIN pd_groups_members ON pd_group_membership_actions.user_id = pd_groups_members.user_id
         WHERE
-            pd_group_membership_actions.group_id = :id';
+            pd_group_membership_actions.group_id = :id
+        AND
+            pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)';
 
         $stmt = $this->getEntityManager()
                      ->getConnection()
