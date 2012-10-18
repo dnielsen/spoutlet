@@ -5,7 +5,7 @@
         {% if group.isAllowedTo(app.user, site, 'EditGroup') %}
             <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Group Settings</a></li>
         {% endif %}
-        {% if group.isAllowedTo(app.user, site, 'ManageApplications') %}
+        {% if group.isAllowedTo(app.user, site, 'ManageApplications') and not group.isPublic %}
             <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
         {% endif %}
         {% if group.isAllowedTo(app.user, site, 'LeaveGroup') %}

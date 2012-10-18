@@ -6,11 +6,11 @@
 
 <div>
     {% if canAdd %}
-        <a href='{{ path('group_add_video', {'id' : group.id }) }}'>Add Video</a>
+        <a href="{{ path('group_add_video', {'id' : group.id }) }}" style="margin-left: 15px;">Add Video</a>
     {% endif %}
     {% if pages | length > 0 %}
         <div id="theater-screen-wrapper">
-            <div id="theater_screen" style="width:600px; height:350px;margin-left: 12px;">
+            <div id="theater_screen" style="width:600px; height:350px;margin: 10px 0 0 12px;">
                 <video id="group_video"class="video-js vjs-default-skin"
                     controls preload="none" width="600" height="350">
                 </video>
