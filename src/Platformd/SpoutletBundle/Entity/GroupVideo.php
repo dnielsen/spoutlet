@@ -9,7 +9,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Platformd\SpoutletBundle\Validator as CustomAssert;
 
 /**
  * Platformd\SpoutletBundle\Entity\GroupVideo
@@ -51,6 +51,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
      *
      * @ORM\Column(name="you_tube_video_id", type="string")
      * @Assert\NotNull
+     * @CustomAssert\YouTube(message = "Please provide a valid YouTube video ID.")
      */
     private $youTubeVideoId;
 
