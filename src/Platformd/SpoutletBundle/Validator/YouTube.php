@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
 */
 class YouTube extends Constraint
 {
-    public $message = 'Please provide a valid YouTube video ID.';
+    public $message = 'The YouTube ID you entered is invalid.';
 }

@@ -51,7 +51,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
      *
      * @ORM\Column(name="you_tube_video_id", type="string")
      * @Assert\NotNull
-     * @CustomAssert\YouTube(message = "Please provide a valid YouTube video ID.")
+     * @CustomAssert\YouTube(message = "The YouTube ID you entered is invalid.")
      */
     private $youTubeVideoId;
 
