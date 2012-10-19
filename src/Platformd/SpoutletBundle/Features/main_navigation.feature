@@ -64,7 +64,7 @@ Feature: Main Navigation
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
       | Media >> Wallpapers         | /wallpapers                                     |
-      | NewDeals                    | /deal/                                          |
+      | Deals                       | /deal/                                          |
       | Forums                      | /forums                                         |
       | ARP                         | /arp                                            |
       | Microsoft                   | /microsoft                                      |
@@ -86,7 +86,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
       | Media >> Wallpapers         | /wallpapers                                                                                       |
-      | NewDeals                    | /deal/                                                                                            |
+      | Deals                       | /deal/                                                                                            |
       | Forums                      | /forums                                                                                           |
       | ARP                         | /arp                                                                                              |
       | Microsoft                   | /microsoft                                                                                        |
