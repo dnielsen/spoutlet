@@ -284,10 +284,13 @@ class Game
             return;
         }
 
+        $propertyPath = $executionContext->getPropertyPath() . '.category';
+        $executionContext->setPropertyPath($propertyPath);
+
         $executionContext->addViolation(
             "Please select a valid category for this game",
             array(),
-            null
+            "category"
         );
     }
 }
