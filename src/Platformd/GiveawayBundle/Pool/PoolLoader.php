@@ -29,33 +29,33 @@ class PoolLoader
      */
     public function loadKeysFromFile(File $file, $pool, $type = 'GIVEAWAY')
     {
-        $content = $file->openFile();
-        $limit = 1000;
+        $batchCount     = 250;
+        $formatString   = '(%s, '.$pool->getId().')';
+        $i              = 0;
+        $formattedKeys  = array();
+        $openFile       = $file->openFile();
 
-        $valuesString = array();
-        $i = 0;
-        $formatString = '("%s", '.$pool->getId().')';
+        while (!$openFile->eof()) {
 
-        while (!$content->eof()) {
+            $csvRow = $openFile->fgetcsv();
 
-            $value = $content->fgets();
-
-            if (!$value || empty($value)) {
+            if (!$csvRow || empty($csvRow) || trim($csvRow[0]) == "") {
                 continue;
             }
 
-            $valuesString[] = sprintf($formatString, $this->conn->quote(trim($value)));
-
+            $formattedKeys[] = sprintf($formatString, $this->conn->quote(trim($csvRow[0])));
             $i++;
 
-            if (0 == ($i % $limit)) {
-                $this->executeLoadQuery($valuesString, $type);
-                $valuesString = array();
+            if ($i >= $batchCount) {
+                $this->executeLoadQuery($formattedKeys, $type);
+                $formattedKeys = array();
+                $i = 0;
             }
         }
 
-        // execute everything else
-        $this->executeLoadQuery($valuesString, $type);
+        if (!empty($formattedKeys)) {
+            $this->executeLoadQuery($formattedKeys, $type);
+        }
     }
 
     private function executeLoadQuery(array $valuesString, $type)
