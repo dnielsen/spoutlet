@@ -21,6 +21,10 @@
                 {{ form_row(form.allLocales) }}
             {% endif %}
 
+            {% if form.deleted is defined %}
+                {{ form_row(form.deleted) }}
+            {% endif %}
+
             <div id="group-location-controls">
                 {{ form_row(form.location) }}
             </div>

@@ -813,7 +813,10 @@ Alienware Arena Team
 
         $group = $this->getGroupBySlug($slug);
 
-        $this->addGroupsBreadcrumb();
+        if ($group->getDeleted()) {
+            $this->setFlash('error', $group->getDeletedReason() == "by_admin" ? 'Group disabled.' : 'Sorry, this group does not exist.');
+            return $this->redirect($this->generateUrl('groups'));
+        }
 
         $this->ensureAllowed($group, 'ViewGroup', false);
 
@@ -946,6 +949,16 @@ Alienware Arena Team
                     $group->setAllLocales(false);
                     $group->getSites()->clear();
                     $group->getSites()->add($this->getCurrentSite());
+                }
+
+                $deleted = $group->getDeleted();
+
+                if (!$userIsAdmin && $deleted) {
+                    return false;
+                }
+
+                if ($deleted) {
+                    $group->setDeletedReason(GROUP::DELETED_BY_ADMIN);
                 }
 
                 $this->getGroupManager()->saveGroup($group);

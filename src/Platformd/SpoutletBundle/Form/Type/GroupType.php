@@ -69,6 +69,13 @@ class GroupType extends AbstractType
                     'property' => 'name'
                 ))
                 ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
+
+
+                if ($this->group->getId() > 0) {
+                    $builder->add('deleted', 'checkbox', array(
+                        'label' => 'Disable Group', 'help' => 'Use this to administratively disable this group.',
+                    ));
+                }
             }
     }
 

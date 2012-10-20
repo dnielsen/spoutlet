@@ -26,10 +26,17 @@ use Doctrine\ORM\Mapping as ORM;
 class Group implements LinkableInterface
 {
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
+    const DELETED_BY_OWNER = 'by_owner';
+    const DELETED_BY_ADMIN = 'by_admin';
 
     static private $validCategories = array(
         'location',
         'topic',
+    );
+
+    static private $validDeletedReasons = array(
+        self::DELETED_BY_OWNER,
+        self::DELETED_BY_ADMIN,
     );
 
     static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
@@ -77,6 +84,11 @@ class Group implements LinkableInterface
      * @ORM\Column(name="description", type="text")
      */
     private $description;
+
+    /**
+     * @ORM\Column(name="deletedReason", type="string", length=50, nullable=true)
+     */
+    private $deletedReason;
 
     /**
      * @var text $howToJoin
@@ -260,11 +272,6 @@ class Group implements LinkableInterface
         return $this->name;
     }
 
-    /**
-     * Set category
-     *
-     * @param string $category
-     */
     public function setCategory($category)
     {
         if (!in_array($category, self::$validCategories)) {
@@ -274,14 +281,24 @@ class Group implements LinkableInterface
         $this->category = $category;
     }
 
-    /**
-     * Get category
-     *
-     * @return string
-     */
     public function getCategory()
     {
         return $this->category;
+    }
+
+    public function setDeletedReason($value)
+    {
+
+        if (!in_array($value, self::$validDeletedReasons)) {
+            throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
+        }
+
+        $this->deletedReason = $value;
+    }
+
+    public function getDeletedReason()
+    {
+        return $this->deletedReason;
     }
 
     public static function getValidCategories()
