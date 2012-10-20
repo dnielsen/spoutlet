@@ -225,7 +225,7 @@ class GiveawayManager
 
         $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Approved", $user->getLocale(), $this->fromName, $this->fromAddress);
 
-        if (!$result || !$result->getSendStatus()) {
+        if (!$result || !$result->getSendStatusOk()) {
             return;
         }
 
@@ -274,7 +274,7 @@ class GiveawayManager
 
         $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Denied", $user->getLocale(), $this->fromName, $this->fromAddress);
 
-        if (!$result || !$result->getSendStatus()) {
+        if (!$result || !$result->getSendStatusOk()) {
             return;
         }
 

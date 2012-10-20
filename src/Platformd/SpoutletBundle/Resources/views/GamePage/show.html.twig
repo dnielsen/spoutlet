@@ -9,7 +9,7 @@
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
     {% if gamePage.openGraphOverride %}
-        {% if gamePage.openGraphOverride.thumbnail %}
+        {% if gamePage.openGraphOverride.thumbnail.fileName is not null %}
             {% set thumbUrl = media_path(gamePage.openGraphOverride.thumbnail) %}
             <meta property="og:image" content="{{ thumbUrl }}" />
         {% endif %}
