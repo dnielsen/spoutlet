@@ -421,7 +421,7 @@ Alienware Arena Team
         }
 
         if ($group->isOwner($user)) {
-            $this->setFlash('error', 'You are the group owner, you are not allowed to remove yourself the group!');
+            $this->setFlash('error', 'You are the group organizer. Please email contact@alienwarearena.com if you want to be removed from this group.');
             return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
         }
 
