@@ -64,7 +64,7 @@ Feature: Main Navigation
       | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
       | Media >> Wallpapers         | /wallpapers                                     |
-      | NewDeals                    | /deal/                                          |
+      | Deals                       | /deal/                                          |
       | NewGroups >> All Groups     | /groups/                                        |
       | NewGroups >> My Groups      | /account/profile/groups                         |
       | NewGroups >> Create Group   | /groups/new/                                    |
@@ -89,7 +89,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |
       | Media >> Wallpapers         | /wallpapers                                                                                       |
-      | NewDeals                    | /deal/                                                                                            |
+      | Deals                       | /deal/                                                                                            |
       | NewGroups >> All Groups     | /groups/                                                                                          |
       | NewGroups >> My Groups      | /account/profile/groups                                                                           |
       | NewGroups >> Create Group   | /groups/new/                                                                                      |

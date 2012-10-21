@@ -65,7 +65,7 @@
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}
-                    <li><a href="{{ path('deal_list') }}"><span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>{{ 'deals' | trans }}</a></li>
+                    <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('GROUPS') %}
