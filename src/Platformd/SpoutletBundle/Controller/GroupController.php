@@ -814,7 +814,7 @@ Alienware Arena Team
         $group = $this->getGroupBySlug($slug);
 
         if ($group->getDeleted()) {
-            $this->setFlash('error', $group->getDeletedReason() == "by_admin" ? 'Group disabled.' : 'Sorry, this group does not exist.');
+            $this->setFlash('error', 'Sorry, this group does not exist.');
             return $this->redirect($this->generateUrl('groups'));
         }
 
