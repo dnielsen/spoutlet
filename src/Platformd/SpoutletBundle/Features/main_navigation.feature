@@ -61,7 +61,6 @@ Feature: Main Navigation
       | Events                      | http://www.alienwarearena.com/event/            |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |
-      | SWEEPS                      | /sweepstakes                                    |
       | Media >> Videos             | http://video.alienwarearena.com/                |
       | Media >> Wallpapers         | /wallpapers                                     |
       | NewDeals                    | /deal/                                          |

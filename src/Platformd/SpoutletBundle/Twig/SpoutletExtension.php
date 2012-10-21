@@ -612,7 +612,7 @@ class SpoutletExtension extends Twig_Extension
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
             case 'VIDEO':                       return true;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
-            case 'SWEEPSTAKES':                 return $northAmerica;
+            case 'SWEEPSTAKES':                 return false;
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
