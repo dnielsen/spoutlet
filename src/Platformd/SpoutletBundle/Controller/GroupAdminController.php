@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Entity\GroupRepository;
 use Platformd\SpoutletBundle\Entity\GroupVideoRepository;
 use Platformd\SpoutletBundle\Entity\GroupImageRepository;
 use Platformd\SpoutletBundle\Entity\GroupNewsRepository;
+use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
@@ -27,16 +28,64 @@ class GroupAdminController extends Controller
         $form = $this->createForm(new GroupFindType());
         $results = $this->processFindForm($form, $request);
 
+        $resultTable = array();
+
         if($results) {
 
-            return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
-                'results' => $results,
-                'form' => $form->createView()
-            ));
+            $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+            $results = $groupRepo->findGroupStats($results);
+
+            foreach ($results as $group) {
+
+                $row = array();
+
+                $row['GroupId']             = $group->getId();
+                $row['GroupName']           = $group->getName();
+                $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
+                $row['Category']            = $group->getCategory();
+                $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
+
+                $row['Region']              = "";
+
+                if ($group->getAllLocales()) {
+                    $row['Region']          = 'All Sites';
+                } else {
+                    foreach ($group->getSites() as $site) {
+                        $row['Region'] .=  '['.$site->getName().']';
+                    }
+                }
+
+                $row['CreatedAt']           = $group->getCreatedAt();
+                $row['Status']              = $group->getDeleted() ? 'Inactive' : 'Active';
+                $row['Organizer']           = $group->getOwner()->getUsername();
+                $row['MemberCount']         = $group->getMembers()->count();
+                $row['VideoCount']          = $group->getVideos()->count();
+                $row['ImageCount']          = $group->getImages()->count();
+                $row['NewsArticleCount']    = $group->getNewsArticles()->count();
+
+                $row['NewMemberCount'] = $group->getMembershipActions()
+                    ->filter(function($x) {
+                        return
+                        $x->getCreatedAt() >= new DateTime('-30 days') &&
+                        ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
+                        $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
+                    ->count();
+
+                $row['LeftMemberCount'] = $group->getMembershipActions()
+                    ->filter(function($x) {
+                        return
+                        $x->getCreatedAt() >= new DateTime('-30 days') &&
+                        $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
+                    ->count();
+
+                $row['FacebookLikes'] = $this->getGroupLikeCount($group);
+
+                $resultTable[] = $row;
+            }
         }
 
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
-            'results' => $results,
+            'results' => $resultTable,
             'form' => $form->createView()
         ));
     }
@@ -206,6 +255,147 @@ class GroupAdminController extends Controller
         return $factory->createResponse('Groups_Summary.csv');
     }
 
+    public function generateExportCsvAction($type, $groupId)
+    {
+        $factory = new CsvResponseFactory();
+
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+
+        switch ($type) {
+            case 'members':
+
+                $result = $groupRepo->getGroupMemberListForExport($groupId);
+
+                $factory->addRow(array(
+                    'Username',
+                    'First Name',
+                    'Last Name',
+                    'User ID',
+                    'Group Name',
+                    //'Date Joined',
+                    'Country Registered',
+                ));
+
+                foreach($result as $member) {
+                    $factory->addRow(array(
+                        $member['username'],
+                        $member['firstname'],
+                        $member['lastname'],
+                        $member['id'],
+                        $member['name'],
+                        //$member['createdAt'],
+                        $member['country'],
+                    ));
+                }
+
+                break;
+
+            case 'videos':
+
+                $result = $groupRepo->getGroupVideosForExport($groupId);
+
+                $factory->addRow(array(
+                    'Username',
+                    'First Name',
+                    'Last Name',
+                    'User ID',
+                    'Group Name',
+                    //'Date Joined',
+                    'Country Registered',
+                    'Title',
+                    'Number of Times Reported'
+                ));
+
+                foreach($result as $video) {
+                    $factory->addRow(array(
+                        $video['username'],
+                        $video['firstname'],
+                        $video['lastname'],
+                        $video['id'],
+                        $video['name'],
+                        //$video['createdAt'],
+                        $video['country'],
+                        $video['title'],
+                        $video[1],
+                    ));
+                }
+
+                break;
+
+            case 'images':
+
+                $result = $groupRepo->getGroupImagesForExport($groupId);
+
+                $factory->addRow(array(
+                    'Username',
+                    'First Name',
+                    'Last Name',
+                    'User ID',
+                    'Group Name',
+                    //'Date Joined',
+                    'Country Registered',
+                    'Title',
+                    'Number of Times Reported'
+                ));
+
+                foreach($result as $image) {
+                    $factory->addRow(array(
+                        $image['username'],
+                        $image['firstname'],
+                        $image['lastname'],
+                        $image['id'],
+                        $image['name'],
+                        //$image['createdAt'],
+                        $image['country'],
+                        $image['title'],
+                        $image[1],
+                    ));
+                }
+
+                break;
+
+            case 'newsArticles':
+
+                $result = $groupRepo->getGroupNewsArticlesForExport($groupId);
+
+                $factory->addRow(array(
+                    'Username',
+                    'First Name',
+                    'Last Name',
+                    'User ID',
+                    'Group Name',
+                    //'Date Joined',
+                    'Country Registered',
+                    'Title',
+                    'Number of Times Reported'
+                ));
+var_dump($result);exit;
+                foreach($result as $newsArticle) {
+                    $factory->addRow(array(
+                        $newsArticle['username'],
+                        $newsArticle['firstname'],
+                        $newsArticle['lastname'],
+                        $newsArticle['id'],
+                        $newsArticle['name'],
+                        //$video['createdAt'],
+                        $newsArticle['country'],
+                        $newsArticle['title'],
+                        $newsArticle[1],
+                    ));
+                }
+
+                break;
+
+            default:
+
+                break;
+        }
+
+
+
+        return $factory->createResponse('Group_Member_Export.csv');
+    }
+
     private function processFindForm(Form $form, Request $request)
     {
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
@@ -217,16 +407,10 @@ class GroupAdminController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                if($data['sites'] != '') {
+                $startDate = $form->get('startDate')->getData();
+                $endDate = $form->get('endDate')->getData();
 
-                    $site = $this->getDoctrine()
-                        ->getRepository('SpoutletBundle:Site')
-                        ->findOneByDefaultLocale($data['sites']);
-
-                    return $groupRepo->findGroupsByNameAndSite($data['groupName'], $site);
-                }
-
-                return $groupRepo->findGroupsByName($data['groupName']);
+                return $groupRepo->findGroups($data['groupName'], $data['category'], $data['deleted'], $data['sites'], $startDate, $endDate);
             }
         }
 

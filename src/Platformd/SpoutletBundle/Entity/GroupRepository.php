@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
@@ -81,6 +82,129 @@ class GroupRepository extends EntityRepository
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
             ->setParameter('site', $site);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroups($groupName, $category, $status, $sites, $startDate="", $endDate="")
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's');
+
+        if (count($sites) > 0) {
+
+            $qb->andWhere('(s.defaultLocale IN (:siteList) OR g.allLocales = true)');
+            $qb->setParameter('siteList', $sites);
+
+        }
+
+        if ($groupName) {
+            $qb->andWhere('g.name like :groupName');
+            $qb->setParameter('groupName', '%'.$groupName.'%');
+        }
+
+        if ($category != "") {
+            $qb->andWhere('g.category = :category');
+            $qb->setParameter('category', $category);
+        }
+
+        if ($status != "") {
+            $qb->andWhere('g.deleted = :status');
+            $qb->setParameter('status', $status);
+        }
+
+        if ($startDate != "") {
+
+            $startDate->setTime(0, 0, 0);
+            $qb->andWhere('g.createdAt >= :startDate');
+            $qb->setParameter('startDate', $startDate);
+        }
+
+        if ($endDate != "") {
+
+            $endDate->setTime(23, 59, 59);
+            $qb->andWhere('g.createdAt <= :endDate');
+            $qb->setParameter('endDate', $endDate);
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getGroupMemberListForExport($groupId)
+    {
+
+/*SELECT MAX(a.createdAt) FROM g.membershipActions a WHERE a.group = g AND a.user = m.user) afg
+
+SELECT MAX(aa.Created_At) FROM `pd_group_membership_actions` `aa` WHERE `group_id` = `p1_`.`id` AND `user_id` = `f0_`.`id`) AS sclr6
+
+
+SELECT f0_.username AS username0, f0_.id AS id1, f0_.firstname AS firstname2, f0_.lastname AS lastname3, p1_.name AS name4, f0_.country AS country5, (SELECT MAX(aa.Created_At) FROM `pd_group_membership_actions` `aa` WHERE `group_id` = `p1_`.`id` AND `user_id` = `f0_`.`id`) AS sclr6
+FROM pd_groups p1_
+LEFT JOIN pd_groups_members p3_ ON p1_.id = p3_.group_id
+LEFT JOIN fos_user f0_ ON f0_.id = p3_.user_id
+WHERE p1_.id = 1
+
+, '(SELECT MAX(a.createdAt) FROM SpoutletBundle:GroupMembershipAction a WHERE a.group = g AND a.user = m.user)'
+*/
+
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.members', 'm')
+            ->select('m.username', 'm.id', 'm.firstname', 'm.lastname', 'g.name', 'm.country')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getGroupVideosForExport($groupId)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.videos', 'v')
+            ->leftJoin('v.author', 'a')
+            ->leftJoin('v.contentReports', 'c')
+            ->select('g','a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'v', 'v.title', 'COUNT(DISTINCT c.id)')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getGroupImagesForExport($groupId)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.images', 'i')
+            ->leftJoin('i.author', 'a')
+            ->leftJoin('i.contentReports', 'c')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'i', 'i.title', 'COUNT(DISTINCT c.id)')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getGroupNewsArticlesForExport($groupId)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.newsArticles', 'n')
+            ->leftJoin('n.author', 'a')
+            //->leftJoin('n.contentReports', 'c')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'n', 'n.title')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroupStats($results)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->select('g', 'n', 'v', 'i', 'm')
+            ->leftJoin('g.newsArticles', 'n')
+            ->leftJoin('g.videos', 'v')
+            ->leftJoin('g.images', 'i')
+            ->leftJoin('g.membershipActions', 'm')
+            ->where('g IN (:results)')
+            ->setParameter('results', $results);
 
         return $qb->getQuery()->execute();
     }
