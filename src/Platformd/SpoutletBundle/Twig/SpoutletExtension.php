@@ -38,7 +38,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
-            'wrap' => new Twig_Filter_Method($this, 'wrap'),
+            'wrap' => new Twig_Filter_Method($this, 'wrap')
         );
     }
 
@@ -102,7 +102,21 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'endsWith'
             ),
+            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice')
         );
+    }
+
+    public function mediaPathNice($media) {
+
+        $bucketName = $this->container->getParameter('s3_bucket_name');
+
+        if ($bucketName == "platformd") {
+            $cf = "http://media.alienwarearena.com";
+        } else {
+            $cf = "http://mediastaging.alienwarearena.com";
+        }
+
+        return sprintf('%s\\media\\%s', $cf, $media->getFilename());
     }
 
     public function endsWith($haystack, $needle) {

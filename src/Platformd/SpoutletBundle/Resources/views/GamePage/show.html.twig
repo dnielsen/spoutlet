@@ -250,7 +250,7 @@
                             <ul class="ad-thumb-list" style="height: 120px;">
                                 {% for media in gamePage.mediaGalleryMedias %}
                                 <li{{ loop.last ? ' class="last"' : '' }}>
-                                    {% set url = media_path(media) %}
+                                    {% set url = media_path_nice(media) %}
                                     <div style="min-height: 120px;">
                                         <a href="{{ url }}" target="_blank">
                                             <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
