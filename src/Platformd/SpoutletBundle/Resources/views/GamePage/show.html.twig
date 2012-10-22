@@ -251,9 +251,11 @@
                                 {% for media in gamePage.mediaGalleryMedias %}
                                 <li{{ loop.last ? ' class="last"' : '' }}>
                                     {% set url = media_path(media) %}
-                                    <a href="{{ url }}" target="_blank">
-                                        <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
-                                    </a>
+                                    <div style="min-height: 120px;">
+                                        <a href="{{ url }}" target="_blank">
+                                            <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                        </a>
+                                    </div>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -293,6 +295,7 @@
         GamePage.initializeMediaGallery = function() {
             var galleries = $('.media-gallery').adGallery({
                 loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+
                 display_next_and_prev: false,
                 display_back_and_forward: true,
                 slideshow: {
