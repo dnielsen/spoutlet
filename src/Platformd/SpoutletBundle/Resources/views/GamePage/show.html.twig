@@ -247,7 +247,7 @@
                 <div class="media-content">
                     <div class="ad-nav{{ ((gamePage.mediaGalleryMedias | length) <= 4) ? ' no-scroll' : '' }}">
                         <div class="ad-thumbs">
-                            <ul class="ad-thumb-list">
+                            <ul class="ad-thumb-list" style="height: 120px;">
                                 {% for media in gamePage.mediaGalleryMedias %}
                                 <li{{ loop.last ? ' class="last"' : '' }}>
                                     {% set url = media_path(media) %}
