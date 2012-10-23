@@ -80,6 +80,10 @@ SpoutletBundle_group:
     resource: "@SpoutletBundle/Resources/config/routing/group.yml"
     prefix:   /groups
 
+SpoutletBundle_gallery:
+    resource: "@SpoutletBundle/Resources/config/routing/gallery.yml"
+    prefix:   /galleries
+
 SpoutletBundle_admin_group:
     resource: "@SpoutletBundle/Resources/config/routing/admin_group.yml"
     prefix:   /admin/groups
@@ -87,3 +91,7 @@ SpoutletBundle_admin_group:
 SpoutletBundle_admin_wallpapers:
     resource: "@SpoutletBundle/Resources/config/routing/admin_wallpaper.yml"
     prefix:   /admin/wallpapers
+
+SpoutletBundle_admin_gallery:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_gallery.yml"
+    prefix:   /admin/galleries
