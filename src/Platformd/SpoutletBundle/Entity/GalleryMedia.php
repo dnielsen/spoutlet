@@ -88,7 +88,7 @@ class GalleryMedia
         return $this->image;
     }
 
-    public function setGImage($image)
+    public function setImage($image)
     {
         $this->image = $image;
     }
