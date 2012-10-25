@@ -110,28 +110,22 @@ class GroupAdminController extends Controller
 
     private function bindFormValues(Form $form)
     {
-        if ($form->isValid()) {
-            $data = $form->getData();
+        $data = $form->getData();
 
-            $startDate = $form->get('startDate')->getData();
-            $endDate = $form->get('endDate')->getData();
+        $startDate = $form->get('startDate')->getData();
+        $endDate = $form->get('endDate')->getData();
 
-            $formValues = array(
-                'groupName' => $data['groupName'],
-                'category' => $data['category'],
-                'deleted' => $data['deleted'],
-                'sites' => $data['sites'],
-                'startDate' => $startDate,
-                'endDate' => $endDate,
-            );
+        $formValues = array(
+            'groupName' => $data['groupName'],
+            'category' => $data['category'],
+            'deleted' => $data['deleted'],
+            'sites' => $data['sites'],
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        );
 
-            $session = $this->getRequest()->getSession();
-            $session->set('formValues', $formValues);
-
-            return true;
-        }
-
-        return null;
+        $session = $this->getRequest()->getSession();
+        $session->set('formValues', $formValues);
     }
 
     public function summaryAction() {
