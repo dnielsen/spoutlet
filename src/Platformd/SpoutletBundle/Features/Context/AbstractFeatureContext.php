@@ -176,6 +176,7 @@ class AbstractFeatureContext extends MinkContext
 
         $expectedText           = $expected['Link'];
         $expectedDestination    = $expected['Target'];
+        $expectedFinal          = trim($expected['Destination']) == "" ? $expectedDestination : $expected['Destination'];
 
         if (!$actual) {
             throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
@@ -202,6 +203,48 @@ class AbstractFeatureContext extends MinkContext
         if ($actualDestination !== $expectedDestination) {
             throw new \Exception(sprintf('Navigation menu item mismatch.  Expected link destination "%s" but got "%s" on item number "%d". Link text was "%s".', $expectedDestination, $actualDestination, $counter + 1, $actualText));
         }
+
+        if ($actualDestination && $expectedFinal && (
+                strpos($actualDestination, 'http://www.alienware') === 0 ||
+                strpos($actualDestination, 'http://alienware') === 0 ||
+                strpos($actualDestination, 'http://www1.euro') === 0 ||
+                strpos($actualDestination, 'http://allpowerful.com') === 0
+                )) {
+            #echo "Didn't check $actualDestination\n";
+            echo ".";
+            return;
+        }
+
+        if ($actualDestination && strpos($actualDestination, 'http') === false) {
+            $actualDestination = 'http://'.$this->getBaseUrlFromSiteKey($this->currentSite).$actualDestination;
+        }
+
+        $session = $this->getSession();
+        $lastUrl = $session->getCurrentUrl();
+
+        $session->visit($actualDestination);
+        $currentUrl = $session->getCurrentUrl();
+
+        if ($currentUrl != $expectedFinal) {
+            throw new \Exception(sprintf('Navigation menu item mismatch.  The expected ultimate destination was "%s" but was navigated to "%s" on item number "%d". Link text was "%s".', $expectedFinal, $currentUrl, $counter + 1, $actualText));
+        }
+
+        $session->visit($lastUrl);
+
+        #echo "** Did check $actualDestination\n";
+        echo ".";
+    }
+
+    private function getNewGoutteSession() {
+        $zendOptions    = array();
+        $serverOptions  = array();
+        $client         = new \Goutte\Client($zendOptions, $serverOptions);
+        $driver         = new \Behat\Mink\Driver\GoutteDriver($client);
+        $newSession     = new \Behat\Mink\Session($driver);
+
+        $client->followRedirects(true);
+
+        return $newSession;
     }
 
      /**

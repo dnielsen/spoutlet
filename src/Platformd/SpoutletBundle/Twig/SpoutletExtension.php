@@ -498,12 +498,13 @@ class SpoutletExtension extends Twig_Extension
     private function GetWallpapersLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.wallpapers').'</a>';
+        $url            = $this->container->get('router')->generate('wallpapers');
 
         switch($locale) {
 
             default:
 
-                return sprintf($format, '/wallpapers');
+                return sprintf($format, $url);
         }
     }
 

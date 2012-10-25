@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Tenant;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\CEVOBundle\CEVOAuthManager;
@@ -42,7 +43,7 @@ class SiteProtectionListener
         // we have to "ok" comments, since they're used on some features for everyone
         '^/comments',
         '^/groups',
-        '^/wallpapers'
+        '^/wallpapers',
     );
 
     static private $urlMap = array(
@@ -74,6 +75,7 @@ class SiteProtectionListener
         }
 
         $matcher = new RequestMatcher();
+
         foreach (self::$allowedPatterns as $allowedPattern) {
             $matcher->matchPath($allowedPattern);
 
@@ -83,18 +85,16 @@ class SiteProtectionListener
             }
         }
 
+        $path = $request->getPathInfo();
+
         // at this point, we don't match, so we need to redirect back to CEVO
-        $url = $this->translateToCEVOUrl($request->getPathInfo());
+        $url = $this->translateToCEVOUrl($path);
 
         if ($this->allowCevoForwarding == false) {
             throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "<a href="http://www.alienwarearena.com%s">http://www.alienwarearena.com%s</a>"', $url, $url));
         }
 
-        $absoluteUrl = $this->cevoAuthManager->generateCevoUrl(
-            $url,
-            null,
-            false
-        );
+        $absoluteUrl = sprintf('%s%s', "http://www.alienwarearena.com", $url);
 
         $response = new RedirectResponse($absoluteUrl);
         $event->setResponse($response);

@@ -29,7 +29,7 @@ swiftmailer:
 
 mink:
     base_url:   %mink_base_url%
-    sahi: ~
+    goutte: ~
 
 doctrine:
     dbal:

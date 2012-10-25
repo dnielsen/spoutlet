@@ -22,6 +22,14 @@ microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
 
+forums:
+    pattern: /forums
+    defaults: { _controller: SpoutletBundle:Default:forums }
+
+arp:
+    pattern: /arp
+    defaults: { _controller: SpoutletBundle:Default:arp }
+
 _spoutlet_admin:
     resource: routing/admin.yml
 

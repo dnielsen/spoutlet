@@ -37,6 +37,18 @@ class DefaultController extends Controller
         ));
     }
 
+    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
+    public function forumsAction()
+    {
+        throw $this->createNotFoundException();
+    }
+
+    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
+    public function arpAction()
+    {
+        throw $this->createNotFoundException();
+    }
+
     /**
      * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
