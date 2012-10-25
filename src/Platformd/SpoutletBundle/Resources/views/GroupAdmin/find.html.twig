@@ -13,7 +13,7 @@
         </div>
     </form>
     <div>
-        <p>Search Results: {{ results | length }}</p>
+        <p>Search Results: {{ results | length }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_summary') }}">Export</a></span></p>
 
         <table class="table table-striped table-bordered tablesorter">
             <thead>

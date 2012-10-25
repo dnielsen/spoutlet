@@ -84,6 +84,8 @@ class GroupAdminController extends Controller
             }
         }
 
+        $this->bindFormValues($form);
+
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
             'results' => $resultTable,
             'form' => $form->createView()
@@ -106,12 +108,35 @@ class GroupAdminController extends Controller
         ));
     }
 
-    public function summaryAction(Request $request) {
-        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+    private function bindFormValues(Form $form)
+    {
+        if ($form->isValid()) {
+            $data = $form->getData();
 
-        $summary = $groupRepo->getGroupAndMemberCountByRegion();
+            $startDate = $form->get('startDate')->getData();
+            $endDate = $form->get('endDate')->getData();
 
-        return $this->generateGroupsSummaryCsv($summary);
+            $formValues = array(
+                'groupName' => $data['groupName'],
+                'category' => $data['category'],
+                'deleted' => $data['deleted'],
+                'sites' => $data['sites'],
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            );
+
+            $session = $this->getRequest()->getSession();
+            $session->set('formValues', $formValues);
+
+            return true;
+        }
+
+        return null;
+    }
+
+    public function summaryAction() {
+
+        return $this->generateGroupsSummaryCsv();
     }
 
     public function contentReportAction($id, Request $request)
@@ -234,21 +259,77 @@ class GroupAdminController extends Controller
         return $total;
     }
 
-    private function generateGroupsSummaryCsv($groupsSummary)
+    private function generateGroupsSummaryCsv()
     {
         $factory = new CsvResponseFactory();
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+
+        $session = $this->getRequest()->getSession();
+        $formValues = $session->get('formValues');
 
         $factory->addRow(array(
+            'Group Name',
+            'Category',
+            'Type',
             'Region',
-            'Total Groups',
+            'Created',
+            'Status',
+            'Organizer',
             'Total Members',
+            'New Members',
+            'Video',
+            'Photo',
+            'News',
+            'Likes',
+            'Leaves',
         ));
 
-        foreach($groupsSummary as $summary) {
+        $results = $groupRepo->findGroups($formValues['groupName'], $formValues['category'], $formValues['deleted'], $formValues['sites'], $formValues['startDate'], $formValues['endDate']);
+
+        foreach ($results as $group) {
+
+            $type = $group->getIsPublic() ? 'Public' : 'Private';
+
+            if ($group->getAllLocales()) {
+                $region          = 'All Sites';
+            } else {
+                foreach ($group->getSites() as $site) {
+                   $region .=  '['.$site->getName().']';
+                }
+            }
+
+            $status = $group->getDeleted() ? 'Inactive' : 'Active';
+
+            $newMemberCount = $group->getMembershipActions()
+                ->filter(function($x) {
+                    return
+                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
+                    $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
+                ->count();
+
+            $leftMemberCount = $group->getMembershipActions()
+                ->filter(function($x) {
+                    return
+                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
+                ->count();
+
             $factory->addRow(array(
-                $summary['region'],
-                $summary['groups'],
-                $summary['members'],
+                $group->getName(),
+                $group->getCategory(),
+                $type,
+                $region,
+                $group->getCreatedAt()->format('Y-m-d H:i:s'),
+                $status,
+                $group->getOwner()->getUsername(),
+                $group->getMembers()->count(),
+                $newMemberCount,
+                $group->getVideos()->count(),
+                $group->getImages()->count(),
+                $group->getNewsArticles()->count(),
+                $this->getGroupLikeCount($group),
+                $leftMemberCount,
             ));
         }
 
