@@ -6,7 +6,7 @@
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  */
- 
+
 /* The Nivo Slider styles */
 .nivoSlider {
 	position:relative;
@@ -22,7 +22,7 @@
 }
 .nivo-main-image {
 	display: block !important;
-	position: relative !important; 
+	position: relative !important;
 	width: 100% !important;
 }
 
@@ -91,12 +91,7 @@
 	z-index:9;
 	cursor:pointer;
 }
-.nivo-prevNav {
-	left:0px;
-}
-.nivo-nextNav {
-	right:0px;
-}
+
 /* Control nav styles (e.g. 1,2,3...) */
 .nivo-controlNav {
 	text-align:center;
