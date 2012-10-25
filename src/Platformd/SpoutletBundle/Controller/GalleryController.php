@@ -19,4 +19,9 @@ class GalleryController extends Controller
     {
         return $this->render('SpoutletBundle:Gallery:index.html.twig');
     }
+
+    public function submitAction()
+    {
+        return $this->render('SpoutletBundle:Gallery:submit.html.twig');
+    }
 }

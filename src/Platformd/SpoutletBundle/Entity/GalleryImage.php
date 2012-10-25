@@ -40,6 +40,14 @@ class GalleryImage implements LinkableInterface
     private $title;
 
     /**
+     * @var string $description
+     *
+     * @ORM\Column(name="description", type="string", length=512)
+     * @Assert\NotNull
+     */
+    private $description;
+
+    /**
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -110,6 +118,26 @@ class GalleryImage implements LinkableInterface
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $title
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     public function setImage($image)

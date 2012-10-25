@@ -522,3 +522,9 @@ exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download
 platformd.groups.category.location: Location
 platformd.groups.category.topic: Topic
+
+galleries:
+    index_page_title: Galleries
+    index_page_header: ALIENWARE ARENA PHOTOS
+    submit_photo_page_title: Submit Image
+    submit_photo_page_header: Submit Image

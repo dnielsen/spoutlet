@@ -171,7 +171,7 @@ parameters:
         es: Spanish
 
     # important to setup the translation DB loader to load things for these domains
-    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
+    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators, galleries]
 
     email_destination_override: false
     email_destination_override_with: ""
