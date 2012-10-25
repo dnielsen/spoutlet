@@ -132,24 +132,9 @@ class GroupRepository extends EntityRepository
 
     public function getGroupMemberListForExport($groupId)
     {
-
-/*SELECT MAX(a.createdAt) FROM g.membershipActions a WHERE a.group = g AND a.user = m.user) afg
-
-SELECT MAX(aa.Created_At) FROM `pd_group_membership_actions` `aa` WHERE `group_id` = `p1_`.`id` AND `user_id` = `f0_`.`id`) AS sclr6
-
-
-SELECT f0_.username AS username0, f0_.id AS id1, f0_.firstname AS firstname2, f0_.lastname AS lastname3, p1_.name AS name4, f0_.country AS country5, (SELECT MAX(aa.Created_At) FROM `pd_group_membership_actions` `aa` WHERE `group_id` = `p1_`.`id` AND `user_id` = `f0_`.`id`) AS sclr6
-FROM pd_groups p1_
-LEFT JOIN pd_groups_members p3_ ON p1_.id = p3_.group_id
-LEFT JOIN fos_user f0_ ON f0_.id = p3_.user_id
-WHERE p1_.id = 1
-
-, '(SELECT MAX(a.createdAt) FROM SpoutletBundle:GroupMembershipAction a WHERE a.group = g AND a.user = m.user)'
-*/
-
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.members', 'm')
-            ->select('m.username', 'm.id', 'm.firstname', 'm.lastname', 'g.name', 'm.country')
+            ->select('m.username', 'm.id', 'm.firstname', 'm.lastname', 'g.name', 'm.country', '(SELECT MAX(a.createdAt) FROM SpoutletBundle:GroupMembershipAction a WHERE a.group = g AND a.user = m.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
@@ -162,11 +147,21 @@ WHERE p1_.id = 1
             ->leftJoin('g.videos', 'v')
             ->leftJoin('v.author', 'a')
             ->leftJoin('v.contentReports', 'c')
-            ->select('g','a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'v', 'v.title', 'COUNT(DISTINCT c.id)')
+            ->select('g','a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'v', 'v.title', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
-        return $qb->getQuery()->execute();
+        $result = $qb->getQuery()->execute();
+
+        if (!$result || count($result) < 1) {
+            return null;
+        }
+
+        if (!$result[0][0] || $result[0][0]->getId() < 1) {
+            return null;
+        }
+
+        return $result[0];
     }
 
     public function getGroupImagesForExport($groupId)
@@ -175,11 +170,21 @@ WHERE p1_.id = 1
             ->leftJoin('g.images', 'i')
             ->leftJoin('i.author', 'a')
             ->leftJoin('i.contentReports', 'c')
-            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'i', 'i.title', 'COUNT(DISTINCT c.id)')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'i.title', 'c', 'i', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
-        return $qb->getQuery()->execute();
+        $result = $qb->getQuery()->execute();
+
+        if (!$result || count($result) < 1) {
+            return null;
+        }
+
+        if (!$result[0][0] || $result[0][0]->getId() < 1) {
+            return null;
+        }
+
+        return $result[0];
     }
 
     public function getGroupNewsArticlesForExport($groupId)
@@ -187,12 +192,22 @@ WHERE p1_.id = 1
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('n.author', 'a')
-            //->leftJoin('n.contentReports', 'c')
-            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'n', 'n.title')
+            ->leftJoin('n.contentReports', 'c')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'n', 'n.title', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
-        return $qb->getQuery()->execute();
+        $result = $qb->getQuery()->execute();
+
+        if (!$result || count($result) < 1) {
+            return null;
+        }
+
+        if (!$result[0][0] || $result[0][0]->getId() < 1) {
+            return null;
+        }
+
+        return $result;
     }
 
     public function findGroupStats($results)

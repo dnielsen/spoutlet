@@ -272,7 +272,7 @@ class GroupAdminController extends Controller
                     'Last Name',
                     'User ID',
                     'Group Name',
-                    //'Date Joined',
+                    'Date Joined',
                     'Country Registered',
                 ));
 
@@ -283,16 +283,19 @@ class GroupAdminController extends Controller
                         $member['lastname'],
                         $member['id'],
                         $member['name'],
-                        //$member['createdAt'],
+                        $member[1],
                         $member['country'],
                     ));
                 }
+
+                $exportFilename = 'Group_Member_Export.csv';
 
                 break;
 
             case 'videos':
 
                 $result = $groupRepo->getGroupVideosForExport($groupId);
+                $videos = $result[0]->getVideos();
 
                 $factory->addRow(array(
                     'Username',
@@ -300,31 +303,38 @@ class GroupAdminController extends Controller
                     'Last Name',
                     'User ID',
                     'Group Name',
-                    //'Date Joined',
+                    'Date Joined',
                     'Country Registered',
                     'Title',
                     'Number of Times Reported'
                 ));
 
-                foreach($result as $video) {
+                foreach($videos as $video) {
+
+                    $author = $video->getAuthor();
+                    $group = $video->getGroup();
+
                     $factory->addRow(array(
-                        $video['username'],
-                        $video['firstname'],
-                        $video['lastname'],
-                        $video['id'],
-                        $video['name'],
-                        //$video['createdAt'],
-                        $video['country'],
-                        $video['title'],
-                        $video[1],
+                        $author->getUsername(),
+                        $author->getFirstName(),
+                        $author->getLastName(),
+                        $author->getId(),
+                        $group->getName(),
+                        $result[1],
+                        $author->getCountry(),
+                        $video->getTitle(),
+                        $video->getContentReports()->count(),
                     ));
                 }
+
+                $exportFilename = 'Group_Video_Export.csv';
 
                 break;
 
             case 'images':
 
                 $result = $groupRepo->getGroupImagesForExport($groupId);
+                $images = $result[0]->getImages();
 
                 $factory->addRow(array(
                     'Username',
@@ -332,31 +342,45 @@ class GroupAdminController extends Controller
                     'Last Name',
                     'User ID',
                     'Group Name',
-                    //'Date Joined',
+                    'Date Joined',
                     'Country Registered',
                     'Title',
                     'Number of Times Reported'
                 ));
 
-                foreach($result as $image) {
+                foreach($images as $image) {
+
+                    $author = $image->getAuthor();
+                    $group = $image->getGroup();
+
                     $factory->addRow(array(
-                        $image['username'],
-                        $image['firstname'],
-                        $image['lastname'],
-                        $image['id'],
-                        $image['name'],
-                        //$image['createdAt'],
-                        $image['country'],
-                        $image['title'],
-                        $image[1],
+                        $author->getUsername(),
+                        $author->getFirstName(),
+                        $author->getLastName(),
+                        $author->getId(),
+                        $group->getName(),
+                        $result[1],
+                        $author->getCountry(),
+                        $image->getTitle(),
+                        $image->getContentReports()->count(),
                     ));
                 }
+
+                $exportFilename = 'Group_Images_Export.csv';
 
                 break;
 
             case 'newsArticles':
 
                 $result = $groupRepo->getGroupNewsArticlesForExport($groupId);
+                $newsArticles = $result[0][0]->getNewsArticles();
+
+                $actionsDates = $group->getMembershipActions()->filter(function($x) { return $x->getAction() == GroupMembershipAction::ACTION_JOINED || $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED })->map(function($x) {
+                    return array($x->getUser()->getId() => $x->getCreatedAt());
+                })
+                ->toArray();
+
+                $maxDate = max($actionsDates);
 
                 $factory->addRow(array(
                     'Username',
@@ -364,25 +388,35 @@ class GroupAdminController extends Controller
                     'Last Name',
                     'User ID',
                     'Group Name',
-                    //'Date Joined',
+                    'Date Joined',
                     'Country Registered',
                     'Title',
                     'Number of Times Reported'
                 ));
-var_dump($result);exit;
-                foreach($result as $newsArticle) {
+
+                $groupCounter = 0;
+
+                foreach($newsArticles as $newsArticle) {
+
+                    $groupCounter++;
+
+                    $author = $newsArticle->getAuthor();
+                    $group = $newsArticle->getGroup();
+
                     $factory->addRow(array(
-                        $newsArticle['username'],
-                        $newsArticle['firstname'],
-                        $newsArticle['lastname'],
-                        $newsArticle['id'],
-                        $newsArticle['name'],
-                        //$video['createdAt'],
-                        $newsArticle['country'],
-                        $newsArticle['title'],
-                        $newsArticle[1],
+                        $author->getUsername(),
+                        $author->getFirstName(),
+                        $author->getLastName(),
+                        $author->getId(),
+                        $group->getName(),
+                        $result[$groupCounter][1],
+                        $author->getCountry(),
+                        $newsArticle->getTitle(),
+                        $newsArticle->getContentReports()->count(),
                     ));
                 }
+
+                $exportFilename = 'Group_News_Export.csv';
 
                 break;
 
@@ -391,9 +425,7 @@ var_dump($result);exit;
                 break;
         }
 
-
-
-        return $factory->createResponse('Group_Member_Export.csv');
+        return $factory->createResponse($exportFilename);
     }
 
     private function processFindForm(Form $form, Request $request)
