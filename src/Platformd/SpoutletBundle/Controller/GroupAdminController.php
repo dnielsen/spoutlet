@@ -257,12 +257,14 @@ class GroupAdminController extends Controller
 
     public function generateExportCsvAction($type, $groupId)
     {
-        $factory = new CsvResponseFactory();
+
 
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
 
         switch ($type) {
             case 'members':
+
+                $factory = new CsvResponseFactory();
 
                 $result = $groupRepo->getGroupMemberListForExport($groupId);
 
@@ -294,38 +296,9 @@ class GroupAdminController extends Controller
 
             case 'videos':
 
-                $result = $groupRepo->getGroupVideosForExport($groupId);
-                $videos = $result[0]->getVideos();
-
-                $factory->addRow(array(
-                    'Username',
-                    'First Name',
-                    'Last Name',
-                    'User ID',
-                    'Group Name',
-                    'Date Joined',
-                    'Country Registered',
-                    'Title',
-                    'Number of Times Reported'
-                ));
-
-                foreach($videos as $video) {
-
-                    $author = $video->getAuthor();
-                    $group = $video->getGroup();
-
-                    $factory->addRow(array(
-                        $author->getUsername(),
-                        $author->getFirstName(),
-                        $author->getLastName(),
-                        $author->getId(),
-                        $group->getName(),
-                        $result[1],
-                        $author->getCountry(),
-                        $video->getTitle(),
-                        $video->getContentReports()->count(),
-                    ));
-                }
+                $group          = $groupRepo->getGroupVideosForExport($groupId);
+                $itemCollection = $group->getVideos();
+                $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
 
                 $exportFilename = 'Group_Video_Export.csv';
 
@@ -333,89 +306,19 @@ class GroupAdminController extends Controller
 
             case 'images':
 
-                $result = $groupRepo->getGroupImagesForExport($groupId);
-                $images = $result[0]->getImages();
+                $group          = $groupRepo->getGroupImagesForExport($groupId);
+                $itemCollection = $group->getImages();
+                $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
 
-                $factory->addRow(array(
-                    'Username',
-                    'First Name',
-                    'Last Name',
-                    'User ID',
-                    'Group Name',
-                    'Date Joined',
-                    'Country Registered',
-                    'Title',
-                    'Number of Times Reported'
-                ));
-
-                foreach($images as $image) {
-
-                    $author = $image->getAuthor();
-                    $group = $image->getGroup();
-
-                    $factory->addRow(array(
-                        $author->getUsername(),
-                        $author->getFirstName(),
-                        $author->getLastName(),
-                        $author->getId(),
-                        $group->getName(),
-                        $result[1],
-                        $author->getCountry(),
-                        $image->getTitle(),
-                        $image->getContentReports()->count(),
-                    ));
-                }
-
-                $exportFilename = 'Group_Images_Export.csv';
+                $exportFilename = 'Group_News_Export.csv';
 
                 break;
 
             case 'newsArticles':
 
-                $result = $groupRepo->getGroupNewsArticlesForExport($groupId);
-                $newsArticles = $result[0][0]->getNewsArticles();
-
-                $actionsDates = $group->getMembershipActions()->filter(function($x) { return $x->getAction() == GroupMembershipAction::ACTION_JOINED || $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED })->map(function($x) {
-                    return array($x->getUser()->getId() => $x->getCreatedAt());
-                })
-                ->toArray();
-
-                $maxDate = max($actionsDates);
-
-                $factory->addRow(array(
-                    'Username',
-                    'First Name',
-                    'Last Name',
-                    'User ID',
-                    'Group Name',
-                    'Date Joined',
-                    'Country Registered',
-                    'Title',
-                    'Number of Times Reported'
-                ));
-
-                $groupCounter = 0;
-
-                foreach($newsArticles as $newsArticle) {
-
-                    $groupCounter++;
-
-                    $author = $newsArticle->getAuthor();
-                    $group = $newsArticle->getGroup();
-
-                    $factory->addRow(array(
-                        $author->getUsername(),
-                        $author->getFirstName(),
-                        $author->getLastName(),
-                        $author->getId(),
-                        $group->getName(),
-                        $result[$groupCounter][1],
-                        $author->getCountry(),
-                        $newsArticle->getTitle(),
-                        $newsArticle->getContentReports()->count(),
-                    ));
-                }
-
+                $group          = $groupRepo->getGroupNewsArticlesForExport($groupId);
+                $itemCollection = $group->getNewsArticles();
+                $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
                 $exportFilename = 'Group_News_Export.csv';
 
                 break;
@@ -426,6 +329,62 @@ class GroupAdminController extends Controller
         }
 
         return $factory->createResponse($exportFilename);
+    }
+
+    private function buildGroupMediaExportCsv($group, $itemCollection) {
+
+        $factory = new CsvResponseFactory();
+
+        $joinActions = $group->getMembershipActions()->filter(function($x) {
+            return $x->getAction() == GroupMembershipAction::ACTION_JOINED || $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED;
+        });
+
+        $arr = array();
+
+        foreach ($joinActions as $action) {
+
+            $userId = $action->getUser()->getId();
+            $date = $action->getCreatedAt();
+
+            if (array_key_exists($userId, $arr)) {
+                if ($arr[$userId] < $date) {
+                    $arr[$userId] = $date;
+                }
+            } else {
+                $arr[$userId] = $date;
+            }
+        }
+
+        $factory->addRow(array(
+            'Username',
+            'First Name',
+            'Last Name',
+            'User ID',
+            'Group Name',
+            'Date Joined',
+            'Country Registered',
+            'Title',
+            'Number of Times Reported'
+        ));
+
+        foreach($itemCollection as $item) {
+
+            $author = $item->getAuthor();
+
+            $factory->addRow(array(
+                $author->getUsername(),
+                $author->getFirstName(),
+                $author->getLastName(),
+                $author->getId(),
+                $group->getName(),
+                $arr[$author->getId()]->format('Y-m-d H:i:s'),
+                $author->getCountry(),
+                $item->getTitle(),
+                $item->getContentReports()->count(),
+            ));
+        }
+
+        return $factory;
     }
 
     private function processFindForm(Form $form, Request $request)

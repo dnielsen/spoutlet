@@ -161,7 +161,7 @@ class GroupRepository extends EntityRepository
             return null;
         }
 
-        return $result[0];
+        return $result[0][0];
     }
 
     public function getGroupImagesForExport($groupId)
@@ -184,7 +184,7 @@ class GroupRepository extends EntityRepository
             return null;
         }
 
-        return $result[0];
+        return $result[0][0];
     }
 
     public function getGroupNewsArticlesForExport($groupId)
@@ -207,7 +207,7 @@ class GroupRepository extends EntityRepository
             return null;
         }
 
-        return $result;
+        return $result[0][0];
     }
 
     public function findGroupStats($results)

@@ -44,7 +44,7 @@
                         <td>{{ group.Type }}</td>
                         <td>{{ group.Region }}</td>
                         <td>{{ group.CreatedAt | date('m/d/Y') }}</td>
-                        <td>{{ group.Status ? 'Active' : 'Inactive' }}</td>
+                        <td>{{ group.Status }}</td>
                         <td>{{ group.Organizer }}</td>
                         <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.GroupId })  }}">{{ group.MemberCount }}</a></td>
                         <td>{{ group.NewMemberCount }}</td>
@@ -57,7 +57,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="6">
+                        <td colspan="14">
                             No groups found.
                         </td>
                     </tr>
