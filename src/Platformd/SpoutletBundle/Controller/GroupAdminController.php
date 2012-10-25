@@ -308,6 +308,7 @@ class GroupAdminController extends Controller
 
                 $group          = $groupRepo->getGroupImagesForExport($groupId);
                 $itemCollection = $group->getImages();
+
                 $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
 
                 $exportFilename = 'Group_News_Export.csv';
@@ -371,13 +372,19 @@ class GroupAdminController extends Controller
 
             $author = $item->getAuthor();
 
+            if ($author->getId() == $group->getOwner()->getId()) {
+                $createdAt = $group->getCreatedAt()->format('Y-m-d H:i:s');
+            } else {
+                $createdAt = $arr[$author->getId()] ? $arr[$author->getId()]->format('Y-m-d H:i:s') : 'n/a';
+            }
+
             $factory->addRow(array(
                 $author->getUsername(),
                 $author->getFirstName(),
                 $author->getLastName(),
                 $author->getId(),
                 $group->getName(),
-                $arr[$author->getId()]->format('Y-m-d H:i:s'),
+                $createdAt,
                 $author->getCountry(),
                 $item->getTitle(),
                 $item->getContentReports()->count(),
