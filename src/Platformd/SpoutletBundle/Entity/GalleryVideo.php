@@ -12,15 +12,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
- * Platformd\MediaBundle\Entity\GalleryImage
+ * Platformd\MediaBundle\Entity\GalleryVideo
  *
- * @ORM\Table(name="pd_gallery_image")
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryImageRepository")
+ * @ORM\Table(name="pd_gallery_video")
+ * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryVideoRepository")
  */
-class GalleryImage implements LinkableInterface
+class GalleryVideo implements LinkableInterface
 {
 
-    const COMMENT_PREFIX = 'gallery_image-';
+    const COMMENT_PREFIX = 'gallery_video-';
 
     /**
      * @var integer $id
@@ -40,11 +40,12 @@ class GalleryImage implements LinkableInterface
     private $title;
 
     /**
-     * @var \Platformd\MediaBundle\Entity\Media
-     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @var string $youtubeId
+     *
+     * @ORM\Column(name="youtubeId", type="string", length=255)
+     * @Assert\NotNull
      */
-    private $image;
+    private $youtubeId;
 
     /**
      * The person who created this gallery image
@@ -112,14 +113,14 @@ class GalleryImage implements LinkableInterface
         return $this->title;
     }
 
-    public function setImage($image)
+    public function setYoutubeId($youtubeId)
     {
-        $this->image = $image;
+        $this->youtubeId = $youtubeId;
     }
 
-    public function getImage()
+    public function getYoutubeId()
     {
-        return $this->image;
+        return $this->youtubeId;
     }
 
     /**
@@ -221,7 +222,7 @@ class GalleryImage implements LinkableInterface
      */
     public function  getLinkableRouteName()
     {
-        return 'gallery_view_image';
+        return 'gallery_view_video';
     }
 
     /**
@@ -242,7 +243,7 @@ class GalleryImage implements LinkableInterface
     public function getThreadId()
     {
         if (!$this->getId()) {
-            throw new \LogicException('A gallery image needs an id before it can have a comment thread');
+            throw new \LogicException('A gallery video needs an id before it can have a comment thread');
         }
 
         return self::COMMENT_PREFIX.$this->getId();
