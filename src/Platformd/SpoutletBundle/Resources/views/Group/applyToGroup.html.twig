@@ -14,9 +14,9 @@
 <div class="std_1col" style="padding: 0;">
     <div id="group-avatar">
         {% if group.groupAvatar %}
-            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
+            <a href="{{ path('group_show', {'slug' : group.slug }) }}"><img src="{{ media_path(group.groupAvatar) }}" /></a>
         {% else %}
-            <a href="{{ path('group_show', {'id' : group.id }) }}"><img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" /></a>
+            <a href="{{ path('group_show', {'slug' : group.slug }) }}"><img src="/bundles/spoutlet/images/groups/group_default_avatar.jpg" /></a>
         {% endif %}
     </div>
 </div>
