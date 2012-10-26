@@ -102,4 +102,9 @@ class GalleryMedia
     {
         $this->galleries = $galleries;
     }
+
+    public static function getValidCategories()
+    {
+        return self::$validCategories;
+    }
 }
