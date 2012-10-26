@@ -10,6 +10,10 @@ class AccountController extends Controller
     {
         $context = $this->get('security.context');
 
+        if (in_array($this->getLocale(), array('zh', 'ja'))) {
+            return $this->redirect('http://www.alienwarearena.com/account/profile');
+        }
+
         if ($username) {
             $manager = $this->get('fos_user.user_manager');
             if (!$user = $manager->findUserByUsername($username)) {

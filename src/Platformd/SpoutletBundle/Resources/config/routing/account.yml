@@ -24,6 +24,6 @@ videos_edit:
 
 # profile page - null username means *this* user
 accounts_profile:
-    pattern: /profile/{username}
+    pattern: /profile/view/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 

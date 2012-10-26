@@ -172,11 +172,55 @@ class AbstractFeatureContext extends MinkContext
         return strpos($classes, 'more') !== false;
     }
 
+    public function canIntercept()
+    {
+        $driver = $this->getSession()->getDriver();
+        if (!$driver instanceof GoutteDriver) {
+            throw new UnsupportedDriverActionException(
+                'You need to tag the scenario with '.
+                '"@mink:goutte" or "@mink:symfony". '.
+                'Intercepting the redirections is not '.
+                'supported by %s', $driver
+            );
+        }
+    }
+
+    /**
+     * @Given /^(.*) without redirection$/
+     */
+    public function theRedirectionsAreIntercepted($step)
+    {
+        $this->canIntercept();
+        $this->getSession()->getDriver()->getClient()->followRedirects(false);
+
+        return new Step\Given($step);
+    }
+
+    /**
+     * @When /^I follow the redirection$/
+     * @Then /^I should be redirected$/
+     */
+    public function iFollowTheRedirection()
+    {
+        $this->canIntercept();
+        $client = $this->getSession()->getDriver()->getClient();
+        $client->followRedirects(true);
+        $client->followRedirect();
+    }
+
+    private function isExternalUrl($url) {
+        return strpos($url, 'http://www.alienware') === 0 ||
+                strpos($url, 'http://alienware') === 0 ||
+                strpos($url, 'http://www1.euro') === 0 ||
+                strpos($url, 'http://allpowerful.com') === 0;
+    }
+
     private function ensureNavItemsMatch($actual, $expected, $counter) {
 
         $expectedText           = $expected['Link'];
         $expectedDestination    = $expected['Target'];
         $expectedFinal          = trim($expected['Destination']) == "" ? $expectedDestination : $expected['Destination'];
+        $compareWithRedirects   = array_key_exists("CompareWithRedirects", $expected) ? $expected['CompareWithRedirects'] == "yes" : false;
 
         if (!$actual) {
             throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
@@ -204,12 +248,7 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception(sprintf('Navigation menu item mismatch.  Expected link destination "%s" but got "%s" on item number "%d". Link text was "%s".', $expectedDestination, $actualDestination, $counter + 1, $actualText));
         }
 
-        if ($actualDestination && $expectedFinal && (
-                strpos($actualDestination, 'http://www.alienware') === 0 ||
-                strpos($actualDestination, 'http://alienware') === 0 ||
-                strpos($actualDestination, 'http://www1.euro') === 0 ||
-                strpos($actualDestination, 'http://allpowerful.com') === 0
-                )) {
+        if ($actualDestination && $expectedFinal && ($this->isExternalUrl($actualDestination))) {
             #echo "Didn't check $actualDestination\n";
             echo ".";
             return;
@@ -222,7 +261,39 @@ class AbstractFeatureContext extends MinkContext
         $session = $this->getSession();
         $lastUrl = $session->getCurrentUrl();
 
-        $session->visit($actualDestination);
+        if ($compareWithRedirects) {
+            $goutte = $session->getDriver()->getClient();
+            $goutte->followRedirects(false);
+
+            $session->visit($actualDestination);
+
+            $currentUrl = "";
+
+            while (true) {
+
+                $lastStep = $currentUrl;
+                $currentUrl = $session->getCurrentUrl();
+
+                if ($currentUrl == $lastStep) { # reached the end of a redirection trail
+                    #echo "REACHED END with $currentUrl<br />";
+                    break;
+                }
+
+                if ($this->isExternalUrl($currentUrl) && $currentUrl == $expectedFinal) { # if the link is external and we matched with the expected, just stop, its not our system to troubleshoot past this
+                    #echo "EXTERNAL MATCHES, dont need to continue $currentUrl<br />";
+                    break;
+                }
+
+                #echo "following, current = '".$session->getCurrentUrl()."'.<br />";
+
+                $goutte->followRedirect();
+            }
+
+            $goutte->followRedirects(true);
+        } else {
+            $session->visit($actualDestination);
+        }
+
         $currentUrl = $session->getCurrentUrl();
 
         if ($currentUrl != $expectedFinal) {
