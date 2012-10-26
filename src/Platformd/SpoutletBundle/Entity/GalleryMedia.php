@@ -21,9 +21,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 class GalleryMedia implements LinkableInterface
 {
 
+    const IMAGE = 'image';
+    const VIDEO = 'video';
+
     static private $validCategories = array(
-        'image',
-        'video',
+        self::IMAGE,
+        self::VIDEO,
     );
 
     /**
