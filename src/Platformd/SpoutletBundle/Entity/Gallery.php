@@ -3,7 +3,9 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\Site;
+use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -22,6 +24,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Gallery implements LinkableInterface
 {
+    static private $validCategories = array(
+        'image',
+        'video',
+    );
 
     const COMMENT_PREFIX = 'gallery-';
     const DELETED_BY_OWNER = 'by_owner';
@@ -63,6 +69,13 @@ class Gallery implements LinkableInterface
     private $sites;
 
     /**
+     * @var string $categories
+     *
+     * @ORM\Column(name="categories", type="array")
+     */
+    private $categories = array();
+
+    /**
      * The person who created this gallery
      *
      * @var \Platformd\UserBundle\Entity\User
@@ -100,7 +113,7 @@ class Gallery implements LinkableInterface
 
     public function __construct()
     {
-
+        $this->sites = new ArrayCollection();
     }
 
     /**
@@ -145,12 +158,7 @@ class Gallery implements LinkableInterface
      */
     public function setName($name)
     {
-        if (!$this->getSlug()) {
-            $slug = Urlizer::urlize($name);
-
-            $this->setSlug($slug);
-        }
-
+        $this->setSlug(Urlizer::urlize($name));
         $this->name = $name;
     }
 
@@ -179,6 +187,23 @@ class Gallery implements LinkableInterface
     {
         return $this->sites;
     }
+
+    public function setcategories($categories)
+    {
+        foreach ($categories as $category) {
+            if (!in_array($category, self::$validCategories)) {
+                throw new \InvalidArgumentException(sprintf('Invalid gallery category "%s" given', $category));
+            }
+        }
+
+        $this->categories = $categories;
+    }
+
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
 
     /**
      * @param \Platformd\UserBundle\Entity\User $owner
@@ -295,4 +320,10 @@ class Gallery implements LinkableInterface
             'slug' => $this->getSlug(),
         );
     }
+
+    public static function getValidCategories()
+    {
+        return self::$validCategories;
+    }
 }
+
