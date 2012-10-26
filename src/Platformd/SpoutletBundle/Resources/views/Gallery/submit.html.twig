@@ -4,38 +4,30 @@
 
 {% block content %}
 <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
-{% include "PunkAveFileUploaderBundle:Default:templates.html.twig" %}
 
-<form class="edit-form" action="{{ path('gallery_upload', { id: posting.id, editId: editId }) }}" method="post" {{ form_enctype(form) }}>
+<form class="edit-form" action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
     {{ form_widget(form) }}
 
-    {# Hydrated by javascript #}
-    <div class="file-uploader"></div>
-
-    <button class="btn btn-primary" type="submit">{{ isNew ? "Save New Listing" : "Save Changes" }}</button>
-    <a class="btn" href="{{ path('gallery_index') }}">Cancel</a>
-    {% if not isNew %}
-        <a class="btn btn-danger" href="{{ path('gallery_index') }}">Delete</a>
-    {% endif %}
-
+    <button class="btn btn-primary" type="submit">Save Photos</button>
+    <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">Cancel</button>
 </form>
 
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/spoutlet/js/underscore-min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-
-        // Enable the file uploader
-
         $(function() {
-            new PunkAveFileUploader({
-                'uploadUrl': {{ path('gallery_upload', { editId: editId }) | json_encode | raw }},
-                'viewUrl': "{{ '/uploads/tmp/attachments/' ~ editId | json_encode | raw }}",
-                'el': '.file-uploader',
-                'existingFiles': {{ existingFiles | json_encode | raw }},
-                'delaySubmitWhileUploading': '.edit-form'
+
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
             });
         });
     </script>

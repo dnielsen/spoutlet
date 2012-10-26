@@ -170,7 +170,3 @@
 [KnpTimeBundle]
     git=http://github.com/KnpLabs/KnpTimeBundle.git
     target=bundles/Knp/Bundle/TimeBundle
-
-[FileUploaderBundle]
-    git=http://github.com/punkave/symfony2-file-uploader-bundle.git
-    target=bundles/PunkAve/FileUploaderBundle

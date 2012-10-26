@@ -29,7 +29,6 @@ class AppKernel extends Kernel
             new JMS\TranslationBundle\JMSTranslationBundle(),
             new \Liip\ImagineBundle\LiipImagineBundle(),
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
-            new PunkAve\FileUploaderBundle\PunkAveFileUploaderBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),

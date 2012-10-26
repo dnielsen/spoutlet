@@ -20,7 +20,17 @@ class SubmitImageType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-
+        $builder
+            ->add('galleryImages', 'collection', array(
+                'allow_add' => true,
+                'allow_delete' => true,
+                'type'      => new MediaType(),
+                'options'   => array(
+                    'image_label' => 'Gallery Image',
+                    'image_help'  => 'Only jpg, png and gif images allowed',
+                )
+            ))
+        ;
     }
 
     public function getName()
