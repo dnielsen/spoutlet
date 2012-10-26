@@ -262,6 +262,9 @@ class AbstractFeatureContext extends MinkContext
         $lastUrl = $session->getCurrentUrl();
 
         if ($compareWithRedirects) {
+
+            #echo "comparing with redirects...\n";
+
             $goutte = $session->getDriver()->getClient();
             $goutte->followRedirects(false);
 
@@ -275,18 +278,22 @@ class AbstractFeatureContext extends MinkContext
                 $currentUrl = $session->getCurrentUrl();
 
                 if ($currentUrl == $lastStep) { # reached the end of a redirection trail
-                    #echo "REACHED END with $currentUrl<br />";
+                    #echo "REACHED END with $currentUrl\n";
                     break;
                 }
 
                 if ($this->isExternalUrl($currentUrl) && $currentUrl == $expectedFinal) { # if the link is external and we matched with the expected, just stop, its not our system to troubleshoot past this
-                    #echo "EXTERNAL MATCHES, dont need to continue $currentUrl<br />";
+                    #echo "EXTERNAL MATCHES, dont need to continue $currentUrl\n";
                     break;
                 }
 
-                #echo "following, current = '".$session->getCurrentUrl()."'.<br />";
+                #echo "following, current = '".$session->getCurrentUrl()."'.\n";
 
-                $goutte->followRedirect();
+                try {
+                    $goutte->followRedirect();
+                } catch (\LogicException $e) {
+                    throw new \Exception(sprintf('Navigation menu item mismatch. [CompareWithRedirects] The expected ultimate destination was "%s" but was navigated to "%s" on item number "%d". Link text was "%s".', $expectedFinal, $currentUrl, $counter + 1, $actualText));
+                }
             }
 
             $goutte->followRedirects(true);

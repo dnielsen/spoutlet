@@ -15,7 +15,7 @@ Feature: User Navigation
       | Link                | Target                                                | Destination                                                                | CompareWithRedirects |
       | アカウントホーム          | http://alienwarearena.com/account/                    |                                                                           |                       |
       | パスワード変更          | http://alienwarearena.com/account/password/            |                                                                           |                      |
-      | プロファイル             | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/account/profile                             | yes                  |
+      | プロファイル             | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/japan/member/55                            | yes                  |
       | 参加済みイベント         | http://www.alienwarearena.com/japan/account/events/   |                                                                           |                       |
       | 参加済みキャンペーン      | /app_test.php/account/profile/giveaways                | http://japan.alienwarearena.local/app_test.php/account/profile/giveaways |                       |
       | トーナメント >> ゲームID   | http://www.alienwarearena.com/japan/account/ids/      |                                                                           |                       |
@@ -28,7 +28,7 @@ Feature: User Navigation
       | Link             | Target                                                 | Destination                                                                            | CompareWithRedirects |
       | 账户首页          | http://alienwarearena.com/account/                     |                                                                                        |                      |
       | 修改密码          | http://alienwarearena.com/account/password/            |                                                                                        |                      |
-      | 个人形象          | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/account/profile                                          | yes                  |
+      | 个人形象          | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/china/member/55                                          | yes                  |
       | 我的活动          | http://www.alienwarearena.com/china/account/events/    |                                                                                        |                      |
       | 获取赠品          | /app_test.php/account/profile/giveaways                | http://china.alienwarearena.local/app_test.php/account/profile/giveaways               |                      |
       | 比赛 >> 游戏IDs   | http://www.alienwarearena.com/china/account/ids/       |                                                                                        |                      |
