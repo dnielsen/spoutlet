@@ -13,14 +13,27 @@ class AccountController extends Controller
         if ($username) {
             $manager = $this->get('fos_user.user_manager');
             if (!$user = $manager->findUserByUsername($username)) {
-
                 throw $this->createNotFoundException(sprintf('Unable to find an user with username "%s"', $username));
             }
         } else if ($context->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->get('security.context')->getToken()->getUser();
         } else {
-
             throw $this->createNotFoundException();
+        }
+
+        $locale = $this->getLocale();
+
+        if (in_array($locale, array('zh', 'ja'))) {
+
+            if ($user) {
+                $cevoUserId = $user->getCevoUserId();
+
+                if ($cevoUserId && $cevoUserId > 0) {
+                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $locale == "ja" ? "japan" : "china" , $cevoUserId));
+                }
+            }
+
+            return $this->redirect('http://www.alienwarearena.com/account/profile');
         }
 
 		return $this->render('FOSUserBundle:Profile:show.html.twig', array('user' => $user));

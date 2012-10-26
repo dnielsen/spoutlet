@@ -7,12 +7,14 @@ use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\SpoutletBundle\Entity\Game
  *
  * @ORM\Table(name="pd_game")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GameRepository")
+ * @Assert\Callback(methods={"validateGameCategory"})
  */
 class Game
 {
@@ -150,10 +152,6 @@ class Game
      */
     public function setCategory($category)
     {
-        if (!in_array($category, self::$validCategories)) {
-            throw new \InvalidArgumentException(sprintf('Invalid game category "%s" given', $category));
-        }
-
         $this->category = $category;
     }
 
@@ -270,5 +268,29 @@ class Game
     public function setLogoThumbnail(Media $logoThumbnail = null)
     {
         $this->logoThumbnail = $logoThumbnail;
+    }
+
+    /**
+     * Category/Genre is a required field so ensure that it is present and valid in order to add game
+     *
+     *
+     * @param \Symfony\Component\Validator\ExecutionContext $executionContext
+     */
+    public function validateGameCategory(ExecutionContext $executionContext)
+    {
+        // error if invalid or no category is specified
+
+        if (in_array($this->category, self::$validCategories)) {
+            return;
+        }
+
+        $propertyPath = $executionContext->getPropertyPath() . '.category';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            "Please select a valid category for this game",
+            array(),
+            "category"
+        );
     }
 }
