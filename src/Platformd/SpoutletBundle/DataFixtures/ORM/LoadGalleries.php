@@ -15,10 +15,10 @@ class LoadGallery extends AbstractFixture implements OrderedFixtureInterface
 
     public function load($manager)
     {
-        $gallery1 = new Gallery();
+        /*$gallery1 = new Gallery();
         $gallery1->setName('Events');
         $manager->persist($gallery1);
-        $manager->flush();
+        $manager->flush();*/
     }
 
     public function getOrder()

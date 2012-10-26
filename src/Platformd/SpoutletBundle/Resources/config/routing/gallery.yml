@@ -9,3 +9,7 @@ gallery_submit:
 gallery_upload:
     pattern: /upload
     defaults: { _controller: SpoutletBundle:Gallery:upload, site: ~ }
+
+gallery_edit_photos:
+    pattern: /photos
+    defaults: { _controller: SpoutletBundle:Gallery:editPhotos, site: ~ }

@@ -87,13 +87,17 @@ class GalleryMedia implements LinkableInterface
     /**
      * @ORM\Column(type="boolean")
      */
-
     private $deleted = false;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $deletedReason = null;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $published = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
@@ -215,6 +219,16 @@ class GalleryMedia implements LinkableInterface
     public function setDeletedReason($deletedReason)
     {
         $this->deletedReason = $deletedReason;
+    }
+
+    public function getPublished()
+    {
+        return $this->getPublished();
+    }
+
+    public function setPulished($published)
+    {
+        $this->published = $published;
     }
 
     public function getImage()

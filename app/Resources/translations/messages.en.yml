@@ -528,3 +528,18 @@ galleries:
     index_page_header: ALIENWARE ARENA PHOTOS
     submit_photo_page_title: Submit Image
     submit_photo_page_header: Submit Image
+
+    submit_photo_step1: Step 1:
+    submit_photo_step1_detail: Submit Image
+    submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
+    submit_photo_file_restrictions: File Restrictions
+    submit_photo_restriction1: Only gaming related images. Everything else will get deleted without notice.
+    submit_photo_restriction2: No copyrighted material.
+    submit_photo_restriction3: No images of children ages 13 and under.
+    submit_photo_restriction4: Max file size per image is 5MB.
+    submit_photo_restriction5: Files supported: JPG, GIF and PNG.
+
+    submit_photo_add: Add
+
+    submit_photo_step2: Step 2:
+    submit_photo_step2_detail: Click on an image to provide details.

@@ -22,29 +22,47 @@ class GalleryController extends Controller
         return $this->render('SpoutletBundle:Gallery:index.html.twig');
     }
 
-    public function submitAction()
+    public function submitAction(Request $request)
     {
         $user = $this->getCurrentUser();
 
-        $form = $this->createFormBuilder()
-            ->add('title', 'text')
-            ->add('galleryImages', 'collection', array(
-                'allow_add'     => true,
-                'allow_delete'  => true,
-                'type'          => new MediaType(),
-                'options'       => array(
-                    'image_label' => 'Gallery Image',
-                    'image_help'  => 'Only jpg, png and gif images allowed',
-                )
-            ))
-            ->getForm();
+        $form = $this->createForm(new SubmitImageType($user));
+
+        if ($request->getMethod() == 'POST')
+        {
+            $form->bindRequest($request);
+            $images = $form->getData();
+
+            foreach ($images as $image)
+            {
+                $media = new GalleryMedia();
+                $media->setImage($image);
+                $media->setOwner($user);
+                $media->setCategory('image');
+            }
+
+            $this->setFlash('success', 'Your images were uploaded successfully.');
+            return $this->redirect('')
+        }
+
 
         return $this->render('SpoutletBundle:Gallery:submit.html.twig', array(
             'form' => $form->createView(),
         ));
     }
 
-    private function getCurrentUser() {
+    public function editPhotosAction()
+    {
+        return null;
+    }
+
+    private function getEntityManager()
+    {
+        return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getCurrentUser()
+    {
         return $this->get('security.context')->getToken()->getUser();
     }
 }

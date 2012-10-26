@@ -5,14 +5,21 @@
 {% block content %}
 <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
 
-<form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
-    {{ form_errors(form) }}
-    {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
-    <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Save Photos</button>
-        <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">Cancel</button>
+<div class="std_2col">
+    <div class="left">
+        <form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
+            {{ form_errors(form) }}
+            {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Save Photos</button>
+                <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">Cancel</button>
+            </div>
+        </form>
     </div>
-</form>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
 
 {% endblock %}
 
