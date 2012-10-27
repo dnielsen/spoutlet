@@ -12,7 +12,7 @@ try {
 
     $sqlFormat = 'SELECT `id` FROM `alienware_production`.`fos_user` WHERE `cevoUserId` = %d LIMIT 1';
 
-    if (($handle = fopen("/home/ubuntu/scripts/china_tournament_user_key_mass_assign/users.csv", "r")) !== FALSE) {
+    if (($handle = fopen("/home/ubuntu/scripts/china_tournament_user_key_mass_update/users.csv", "r")) !== FALSE) {
 
         $row = 0;
 

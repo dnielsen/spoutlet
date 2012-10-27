@@ -10,7 +10,7 @@ try {
 
     $keyArray = array();
 
-    $sql = 'SELECT `id` FROM `alienware_production`.`giveaway_key` where `pool` = 40 and `user` is null limit 1000';
+    $sql = 'SELECT `id` FROM `alienware_production`.`giveaway_key` where `pool` = 41 and `user` is null limit 1000';
     foreach ($dbh->query($sql) as $row) {
         $keyArray[] = $row['id'];
     }
