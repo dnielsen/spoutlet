@@ -42,7 +42,7 @@ class GalleryController extends Controller
             }
 
             $this->setFlash('success', 'Your images were uploaded successfully.');
-            return $this->redirect('')
+            return $this->redirect('');
         }
 
 
