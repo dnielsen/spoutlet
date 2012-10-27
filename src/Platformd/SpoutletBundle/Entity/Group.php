@@ -198,6 +198,24 @@ class Group implements LinkableInterface
     private $newsArticles;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupVideo", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $videos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupImage", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $images;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $membershipActions;
+
+    /**
     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="group", cascade={"persist"})
     * @ORM\JoinColumn(onDelete="SET NULL")
     */
@@ -565,6 +583,37 @@ class Group implements LinkableInterface
     {
         $this->newsArticles = $newsArticles;
     }
+
+    public function getVideos()
+    {
+        return $this->videos;
+    }
+
+    public function setVideos($value)
+    {
+        $this->videos = $value;
+    }
+
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    public function setImages($value)
+    {
+        $this->images = $value;
+    }
+
+    public function getMembershipActions()
+    {
+        return $this->membershipActions;
+    }
+
+    public function setMembershipActions($value)
+    {
+        $this->membershipActions = $value;
+    }
+
 
     public function isVisibleOnSite($site) {
 

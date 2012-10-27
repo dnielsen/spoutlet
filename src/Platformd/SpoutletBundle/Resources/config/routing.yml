@@ -29,6 +29,14 @@ content_reporting:
         _format: json
         _method: POST
 
+forums:
+    pattern: /forums
+    defaults: { _controller: SpoutletBundle:Default:forums }
+
+arp:
+    pattern: /arp
+    defaults: { _controller: SpoutletBundle:Default:arp }
+
 _spoutlet_admin:
     resource: routing/admin.yml
 

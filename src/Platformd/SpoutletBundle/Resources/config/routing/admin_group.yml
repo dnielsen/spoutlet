@@ -10,6 +10,10 @@ admin_group_summary:
     pattern: /metrics/group-summary
     defaults: { _controller: "SpoutletBundle:GroupAdmin:summary" }
 
+admin_group_export:
+    pattern: /{groupId}/metrics/group-export/{type}
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:generateExportCsv" }
+
 admin_group_content_report:
     pattern: /metrics/group-content-report/{id}
     defaults: { _controller: "SpoutletBundle:GroupAdmin:contentReport" }

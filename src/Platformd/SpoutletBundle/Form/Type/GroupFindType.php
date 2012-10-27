@@ -16,13 +16,49 @@ class GroupFindType extends AbstractType
     {
         $builder
             ->add('groupName', 'text', array(
-                'label' => 'Find Group:'
+                'label' => 'Name:'
             ))
-            ->add('sites', 'choice', array(
-                'label' => 'Select Region:',
-                'choices' => MultitenancyManager::getSiteChoices(),
+            ->add('deleted', 'choice', array(
+                'label' => 'Status:',
+                'choices' => array(
+                    '0' => 'Active',
+                    '1' => 'Inactive'
+                ),
                 'empty_value' => 'Select All',
                 'required' => false,
+            ))
+            ->add('category', 'choice', array(
+                'label' => 'Category:',
+                'choices' => array(
+                    'location' => 'Location',
+                    'topic' => 'Topic'
+                ),
+                'empty_value' => 'Select All',
+                'required' => false,
+            ))
+            ->add('sites', 'choice', array(
+                'label' => 'Region:',
+                'expanded' => 'true',
+                'multiple' => 'true',
+                'choices' => MultitenancyManager::getSiteChoices(),
+            ))
+            ->add('startDate', 'date', array(
+                'label' => 'Start Date:',
+                'property_path' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr'   => array(
+                    'class' => 'date-picker'
+                )
+            ))
+            ->add('endDate', 'date', array(
+                'label' => 'End Date:',
+                'property_path' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr'   => array(
+                    'class' => 'date-picker'
+                )
             ));
     }
 

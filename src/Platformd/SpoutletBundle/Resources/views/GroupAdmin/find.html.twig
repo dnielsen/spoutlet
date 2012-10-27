@@ -12,44 +12,52 @@
             <a href="{{ path('admin_group_find') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
-    <div class="row-fluid" style="margin-left: 160px;">
-        <p>Search Results: {{ results | length }}</p>
+    <div>
+        <p>Search Results: {{ results | length }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_summary') }}">Export</a></span></p>
 
         <table class="table table-striped table-bordered tablesorter">
             <thead>
                 <tr>
                     <th>Group Name</th>
+                    <th>Category</th>
+                    <th>Type</th>
                     <th>Region</th>
-                    <th>Created At</th>
-                    <th>Group Type</th>
-                    <th>Organizer</th>
-                    <th>Members</th>
+                    <th>Created</th>
                     <th>Status</th>
+                    <th>Organizer</th>
+                    <th>Total Members</th>
+
+                    <th>New members</th>
+                    <th>Video</th>
+                    <th>Photo</th>
+                    <th>News</th>
+                    <th>Likes</th>
+                    <th>Leave Group</th>
+
                 </tr>
             </thead>
             <tbody>
                 {% for group in results %}
-                    {% set isPublicLabel = group.isPublic ? 'Public' : 'Private' %}
                     <tr>
-                        <td><a href="{{ path('admin_group_show', { id: group.id }) }}">{{ group.name }}</a></td>
-                        <td>
-                            {% if group.allLocales %}
-                                <span>All Sites</span>
-                            {% else %}
-                                {% for site in group.sites %}
-                                    <span>[{{ site.name }}]</span>
-                                {% endfor %}
-                            {% endif %}
-                        </td>
-                        <td>{{ group.createdAt | date('m/d/Y') }}</td>
-                        <td>{{ group.category }}</td>
-                        <td>{{ group.owner.username }}</td>
-                        <td>{{ group.members | length }}</td>
-                        <td>{{ isPublicLabel}}</td>
+                        <td><a href="{{ group.GroupLink }}" target="_blank">{{ group.GroupName }}</a></td>
+                        <td>{{ group.Category }}</td>
+                        <td>{{ group.Type }}</td>
+                        <td>{{ group.Region }}</td>
+                        <td>{{ group.CreatedAt | date('m/d/Y') }}</td>
+                        <td>{{ group.Status }}</td>
+                        <td>{{ group.Organizer }}</td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.GroupId })  }}">{{ group.MemberCount }}</a></td>
+                        <td>{{ group.NewMemberCount }}</td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.GroupId })  }}">{{ group.VideoCount }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.GroupId })  }}">{{ group.ImageCount }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.GroupId })  }}">{{ group.NewsArticleCount }}</a></td>
+                        <td>{{ group.FacebookLikes }}</td>
+                        <td>{{ group.LeftMemberCount }}</td>
+
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="6">
+                        <td colspan="14">
                             No groups found.
                         </td>
                     </tr>
