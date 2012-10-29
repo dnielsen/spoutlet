@@ -85,7 +85,7 @@ class SpoutletExtension extends Twig_Extension
                 ),
             'has_user_applied_to_giveaway'  => new Twig_Function_Method(
                 $this,
-                'hasUserAppliedToGiveaway'
+                'hasUserApplyToGiveaway'
             ),
             'target_blank'                  => new Twig_Function_Method(
                 $this,
@@ -281,13 +281,13 @@ class SpoutletExtension extends Twig_Extension
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      * @return bool
      */
-    public function hasUserAppliedToGiveaway(Giveaway $giveaway)
+    public function hasUserApplyToGiveaway(Giveaway $giveaway)
     {
         if (!$user = $this->getCurrentUser()) {
             return false;
         }
 
-        return $this->getGiveawayManager()->hasUserAppliedToGiveaway($user, $giveaway);
+        return $this->getGiveawayManager()->hasUserApplyToGiveaway($user, $giveaway);
     }
 
     /**

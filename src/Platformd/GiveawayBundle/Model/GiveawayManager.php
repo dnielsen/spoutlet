@@ -129,6 +129,13 @@ class GiveawayManager
         return (count($entries) > 0);
     }
 
+    public function canUserApplyToGiveaway(User $user, Giveaway $giveaway)
+    {
+        $entries = $this->getMachineCodeEntryRepository()->findAllActiveOrPendingForUserAndGiveaway($user, $giveaway);
+
+        return (count($entries) < 1);
+    }
+
     /**
      * @param \Platformd\GiveawayBundle\Entity\GiveawayKey[] $keys
      * @return \Platformd\GiveawayBundle\Entity\GiveawayKeyRequest[]

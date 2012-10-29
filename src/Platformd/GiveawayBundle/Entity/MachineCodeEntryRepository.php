@@ -54,6 +54,21 @@ class MachineCodeEntryRepository extends EntityRepository
         ;
     }
 
+    public function findPendingUserEntriesForGiveaway(User $user, Giveaway $giveaway)
+    {
+        $qb = $this->createQueryBuilder('mce');
+        $this->addUserQueryBuilder($user, $qb);
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        return $qb
+            ->andWhere('mce.status = :statusPending')
+            ->setParameter('statusPending', MachineCodeEntry::STATUS_PENDING)
+            ->andWhere('mce.key IS NULL')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
     /**
      * Returns all the entries this user has for this giveaway.
      *
@@ -72,10 +87,19 @@ class MachineCodeEntryRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    /**
-     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
-     * @return \Platformd\GiveawayBundle\Entity\MachineCodeEntry[]
-     */
+    public function findAllActiveOrPendingForUserAndGiveaway(User $user, Giveaway $giveaway)
+    {
+        $qb = $this->createQueryBuilder('mce');
+        $this->addUserQueryBuilder($user, $qb);
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        $qb->andWhere('mce.status = :statusApproved OR mce.status = :statusPending')
+            ->setParameter('statusApproved', MachineCodeEntry::STATUS_APPROVED)
+            ->setParameter('statusPending', MachineCodeEntry::STATUS_PENDING);
+
+        return $qb->getQuery()->execute();
+    }
+
     public function findPendingForGiveaway(Giveaway $giveaway)
     {
         $qb = $this->createQueryBuilder('mce');
@@ -84,6 +108,21 @@ class MachineCodeEntryRepository extends EntityRepository
         return $qb
             ->andWhere('mce.status = :status')
             ->setParameter('status', MachineCodeEntry::STATUS_PENDING)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    public function findApprovedAndDeniedForGiveaway(Giveaway $giveaway)
+    {
+        $qb = $this->createQueryBuilder('mce');
+        $this->addGiveawayQueryBuilder($giveaway, $qb);
+
+        return $qb
+            ->andWhere('mce.status = :statusDenied OR mce.status = :statusApproved')
+            ->setParameter('statusDenied', MachineCodeEntry::STATUS_DENIED)
+            ->setParameter('statusApproved', MachineCodeEntry::STATUS_APPROVED)
+            ->orderBy('mce.created')
             ->getQuery()
             ->execute()
         ;
