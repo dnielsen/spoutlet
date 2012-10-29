@@ -304,4 +304,18 @@ class GroupRepository extends EntityRepository
 
         return $stmt->fetchAll();
     }
+
+    public function findAllFeaturedGroupsForSite($site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->where('g.featured = true')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
+            ->addOrderBy('g.featuredAt', 'DESC')
+            ->setMaxResults(4)
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->execute();
+    }
 }

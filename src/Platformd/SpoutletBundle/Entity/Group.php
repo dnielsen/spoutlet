@@ -228,6 +228,14 @@ class Group implements LinkableInterface
 
     private $featured = false;
 
+    /**
+     * @var \DateTime $featuredAt
+     *
+     * @ORM\Column(name="featured_at", type="datetime")
+     * @Gedmo\Timestampable(on="change", field="featured", value="true")
+     */
+    protected $featuredAt;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -713,6 +721,16 @@ class Group implements LinkableInterface
     public function setFeatured($featured)
     {
         $this->featured = $featured;
+    }
+
+    public function getFeaturedAt()
+    {
+        return $this->featuredAt;
+    }
+
+    public function setFeaturedAt($featuredAt)
+    {
+        $this->featuredAt = $featuredAt;
     }
 
     public function isApplicant($user)
