@@ -103,13 +103,12 @@ class GalleryMedia implements LinkableInterface
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $image = null;
+    private $image;
 
     /**
      * @var string $youtubeId
      *
      * @ORM\Column(name="youtubeId", type="string", length=255)
-     * @Assert\NotNull
      */
     private $youtubeId;
 

@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class GalleryMediaRepository extends EntityRepository
 {
+    public function findAllUnpublishedByUser($user)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.author = :user')
+            ->andWhere('gm.published = :published')
+            ->setParameter('user', $user)
+            ->setParameter('published', false)
+            ->getQuery()
+            ->execute();
+    }
 }

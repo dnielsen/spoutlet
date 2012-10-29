@@ -1,0 +1,40 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+<h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
+
+<div class="std_2col">
+    <div class="left">
+
+    </div>
+    <div class="right">
+        {% for media in medias %}
+            <div class="gallery-media-wrapper"><img class="gallery-media" data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" /></div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('.gallery-media').hover(
+                function () {
+                    $(this).addClass('active');
+                },
+                function () {
+                    $(this).removeClass('active');
+                }
+            );
+        });
+    </script>
+{% endblock %}

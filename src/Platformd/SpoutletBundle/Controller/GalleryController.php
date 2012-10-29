@@ -3,7 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
-use Platformd\SpoutletBundle\Entity\GalleryImage;
+use Platformd\SpoutletBundle\Entity\GalleryMedia;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,19 +30,28 @@ class GalleryController extends Controller
 
         if ($request->getMethod() == 'POST')
         {
+            $em = $this->getEntityManager();
             $form->bindRequest($request);
             $images = $form->getData();
 
-            foreach ($images as $image)
+            foreach ($images['galleryImages'] as $image)
             {
+                $image->setOwner($user);
+
+                $em->persist($image);
+
                 $media = new GalleryMedia();
                 $media->setImage($image);
-                $media->setOwner($user);
+                $media->setAuthor($user);
                 $media->setCategory('image');
+                $media->setTitle($image->getFileName());
+                $em->persist($media);
             }
 
+            $em->flush();
+
             $this->setFlash('success', 'Your images were uploaded successfully.');
-            return $this->redirect('');
+            return $this->redirect($this->generateUrl('gallery_edit_photos'));
         }
 
 
@@ -53,12 +62,22 @@ class GalleryController extends Controller
 
     public function editPhotosAction()
     {
-        return null;
+        $user = $this->getCurrentUser();
+        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+
+        return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
+            'medias' => $medias,
+        ));
     }
 
     private function getEntityManager()
     {
         return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGalleryMediaRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia');
     }
 
     private function getCurrentUser()
