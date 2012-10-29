@@ -39,6 +39,8 @@
                     |
                     <a href="{{ path('admin_giveaway_export_machine_codes', {'id' : giveaway.id}) }}">{{ 'export_pending_machine_codes' | trans({}, 'admin')  }}</a>
                     |
+                    <a href="{{ path('admin_giveaway_export_approved_and_denied_machine_codes', {'id' : giveaway.id}) }}">{{ 'export_approved_and_denied_machine_codes' | trans({}, 'admin')  }}</a>
+                    |
                     <a href="{{ path('admin_giveaway_machine_codes', {'id' : giveaway.id}) }}">{{ "approve_machine_codes" | trans  }}</a>
                     |
                     <a href="{{ path('admin_giveaway_machine_deny_codes', {'id' : giveaway.id}) }}">{{ "deny_machine_codes" | trans  }}</a>
