@@ -12,11 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class ContestRepository extends EntityRepository
 {
-    public function findAllAlphabetically() {
+    public function findAllForSiteAlphabetically($site) {
 
-        return $this->createQueryBuilder('c')
+        return $this->createSiteQueryBuilder($site)
             ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->execute();
+    }
+
+    private function createSiteQueryBuilder($site)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.sites', 's')
+            ->where('s.defaultLocale = :site')
+            ->setParameter('site', $site)
+        ;
+
+        return $qb;
     }
 }

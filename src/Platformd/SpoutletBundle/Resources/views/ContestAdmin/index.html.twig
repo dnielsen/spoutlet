@@ -1,36 +1,16 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block content %}
-<h1>Contests</h1>
+{% block title 'Contest Regions' %}
 
-<table class="table table-striped table-bordered tablesorter">
-    <thead>
-        <tr>
-            <th>Contest Name</th>
-            <th>Type</th>
-            <th>Sites</th>
-            <th>URL</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for contest in contests %}
-        <tr>
-            <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
-            <td>{{ contest.name }}</td>
-            <td>
-                 {% for site in contest.sites %}
-                    [ {{ site.name }} ]
-                {% endfor %}
-            </td>
-            <td><a href="{{ path('contest_show', { 'slug': contest.slug }) }}">{{ path('contest_show', { 'slug': contest.slug }) }}</a></td>
-            <td>{{ contest.status }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<h1>Contest Regions</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_contest_list'
+}%}
 
 <a class="btn btn-primary" href="{{ path('admin_contest_new') }}">
-    Create a new entry
+    Create a new contest
 </a>
 {% endblock %}

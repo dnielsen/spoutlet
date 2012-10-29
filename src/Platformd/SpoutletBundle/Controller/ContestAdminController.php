@@ -16,11 +16,20 @@ class ContestAdminController extends Controller
     public function indexAction()
     {
         $this->addContestsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllAlphabetically();
 
         return $this->render('SpoutletBundle:ContestAdmin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        $this->addContestsBreadcrumb();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($site);
+
+        return $this->render('SpoutletBundle:ContestAdmin:list.html.twig', array(
             'contests' => $contests
         ));
     }
@@ -44,30 +53,30 @@ class ContestAdminController extends Controller
         ));
     }
 
-    /*public function editAction($slug, Request $request)
+    public function editAction($slug, Request $request)
     {
         $this->addContestsBreadcrumb()->addChild('Edit Contest');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $gallery = $em->getRepository('SpoutletBundle:Gallery')->findOneBy(array('slug' => $slug));
+        $contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('slug' => $slug));
 
-        if (!$gallery) {
-            throw $this->createNotFoundException('Unable to find gallery.');
+        if (!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
         }
 
-        $editForm   = $this->createForm(new GalleryType(), $gallery);
+        $editForm   = $this->createForm(new ContestType(), $contest);
 
         if ($this->processForm($editForm, $request)) {
-            $this->setFlash('success', 'The gallery was saved!');
+            $this->setFlash('success', 'The contest was saved!');
 
-            return $this->redirect($this->generateUrl('admin_gallery_index'));
+            return $this->redirect($this->generateUrl('admin_contest_index'));
         }
 
-        return $this->render('SpoutletBundle:GalleryAdmin:edit.html.twig', array(
-            'gallery'      => $gallery,
-            'edit_form'   => $editForm->createView(),
+        return $this->render('SpoutletBundle:ContestAdmin:edit.html.twig', array(
+            'contest'       => $contest,
+            'edit_form'     => $editForm->createView(),
         ));
-    }*/
+    }
 
     private function processForm(Form $form, Request $request)
     {

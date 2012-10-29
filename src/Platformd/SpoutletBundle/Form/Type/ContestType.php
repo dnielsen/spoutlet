@@ -65,7 +65,7 @@ class ContestType extends AbstractType
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950px x 160px with 40px on bottom of banner for submenu overlay.',
-                'with_remove_checkbox' => false,
+                'with_remove_checkbox' => true,
             ))
             ->add('rules', 'textarea', array(
                 'attr'  => array('class' => 'ckeditor'),
