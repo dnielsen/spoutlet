@@ -3,13 +3,21 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Gedmo\Sluggable\Util\Urlizer;
+
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\ExecutionContext;
+
 use DateTime;
 use DateTimezone;
+
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
 
 /**
  * Platformd\SpoutletBundle\Entity\Contest
@@ -24,9 +32,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * )
  * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing deal is already using this deal name.")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\ContestRepository")
+ * @Assert\Callback(methods={"validateDateRanges"})
  */
 class Contest implements LinkableInterface
 {
+    const REDEMPTION_LINE_PREFIX = '* ';
+
     const STATUS_PUBLISHED       = 'published';
     const STATUS_UNPUBLISHED     = 'unpublished';
     const STATUS_ARCHIVED        = 'archived';
@@ -92,28 +103,28 @@ class Contest implements LinkableInterface
      *
      * @ORM\Column(name="submission_start", type="datetime")
      */
-    private $submission_start;
+    private $submissionStart;
 
     /**
      * @var datetime $submission_end
      *
      * @ORM\Column(name="submission_end", type="datetime")
      */
-    private $submission_end;
+    private $submissionEnd;
 
     /**
      * @var datetime $voting_start
      *
      * @ORM\Column(name="voting_start", type="datetime")
      */
-    private $voting_start;
+    private $votingStart;
 
     /**
      * @var datetime $voting_end
      *
      * @ORM\Column(name="voting_end", type="datetime")
      */
-    private $voting_end;
+    private $votingEnd;
 
     /**
      * @var string $timezone
@@ -142,35 +153,35 @@ class Contest implements LinkableInterface
      *
      * @ORM\Column(name="entry_instructions", type="text")
      */
-    private $entry_instructions;
+    private $entryInstructions;
 
     /**
      * @var text $vote_instructions
      *
      * @ORM\Column(name="vote_instructions", type="text")
      */
-    private $vote_instructions;
+    private $voteInstructions;
 
     /**
      * @var text $redemption_instructions
      *
      * @ORM\Column(name="redemption_instructions", type="text")
      */
-    private $redemption_instructions;
+    private $redemptionInstructions;
 
     /**
      * @var integer $max_entries
      *
      * @ORM\Column(name="max_entries", type="integer")
      */
-    private $max_entries;
+    private $maxEntries;
 
     /**
      *
-     * @var OpenGraphOverride
+     * @var openGraphOverride
      * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
      */
-    private $openGraphOverRide;
+    private $openGraphOverride;
 
     /**
      * The published/unpublished/archived field
@@ -202,6 +213,12 @@ class Contest implements LinkableInterface
      */
     public function setName($name)
     {
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($name);
+
+            $this->setSlug($slug);
+        }
+
         $this->name = $name;
     }
 
@@ -222,9 +239,8 @@ class Contest implements LinkableInterface
      */
     public function setSlug($slug)
     {
-        if ($slug == "" || !$slug) {
-            $slug = Urlizer::urlize($this->getName());
-            $this->setSlug($slug);
+        if (!$slug) {
+            return;
         }
 
         $this->slug = $slug;
@@ -243,7 +259,7 @@ class Contest implements LinkableInterface
     public function setCategory($category)
     {
         if (!in_array($category, self::$validCategories)) {
-            throw new \InvalidArgumentException(sprintf('Invalid gallery category "%s" given', $category));
+            throw new \InvalidArgumentException(sprintf('Invalid category "%s" given', $category));
         }
 
         $this->category = $category;
@@ -254,24 +270,14 @@ class Contest implements LinkableInterface
         return $this->category;
     }
 
-    /**
-     * Set game_id
-     *
-     * @param integer $gameId
-     */
-    public function setGameId($gameId)
+    public function setGame($game)
     {
-        $this->game_id = $gameId;
+        $this->game = $game;
     }
 
-    /**
-     * Get game_id
-     *
-     * @return integer
-     */
-    public function getGameId()
+    public function getGame()
     {
-        return $this->game_id;
+        return $this->game;
     }
 
     /**
@@ -295,83 +301,83 @@ class Contest implements LinkableInterface
     }
 
     /**
-     * Set submission_start
+     * Set submissionStart
      *
      * @param datetime $submissionStart
      */
     public function setSubmissionStart($submissionStart)
     {
-        $this->submission_start = $submissionStart;
+        $this->submissionStart = $submissionStart;
     }
 
     /**
-     * Get submission_start
+     * Get submissionStart
      *
      * @return datetime
      */
     public function getSubmissionStart()
     {
-        return $this->submission_start;
+        return $this->submissionStart;
     }
 
     /**
-     * Set submission_end
+     * Set submissionEnd
      *
      * @param datetime $submissionEnd
      */
     public function setSubmissionEnd($submissionEnd)
     {
-        $this->submission_end = $submissionEnd;
+        $this->submissionEnd = $submissionEnd;
     }
 
     /**
-     * Get submission_end
+     * Get submissionEnd
      *
      * @return datetime
      */
     public function getSubmissionEnd()
     {
-        return $this->submission_end;
+        return $this->submissionEnd;
     }
 
     /**
-     * Set voting_start
+     * Set votingStart
      *
      * @param datetime $votingStart
      */
     public function setVotingStart($votingStart)
     {
-        $this->voting_start = $votingStart;
+        $this->votingStart = $votingStart;
     }
 
     /**
-     * Get voting_start
+     * Get votingStart
      *
      * @return datetime
      */
     public function getVotingStart()
     {
-        return $this->voting_start;
+        return $this->votingStart;
     }
 
     /**
-     * Set voting_end
+     * Set votingEnd
      *
      * @param datetime $votingEnd
      */
     public function setVotingEnd($votingEnd)
     {
-        $this->voting_end = $votingEnd;
+        $this->votingEnd = $votingEnd;
     }
 
     /**
-     * Get voting_end
+     * Get votingEnd
      *
      * @return datetime
      */
     public function getVotingEnd()
     {
-        return $this->voting_end;
+        return $this->votingEnd;
     }
 
     /**
@@ -412,21 +418,11 @@ class Contest implements LinkableInterface
         return DateTime::createFromFormat('U', $timestamp, $userTimezone);
     }
 
-    /**
-     * Set banner
-     *
-     * @param string $banner
-     */
     public function setBanner($banner)
     {
         $this->banner = $banner;
     }
 
-    /**
-     * Get banner
-     *
-     * @return string
-     */
     public function getBanner()
     {
         return $this->banner;
@@ -453,89 +449,89 @@ class Contest implements LinkableInterface
     }
 
     /**
-     * Set entry_instructions
+     * Set entryInstructions
      *
      * @param text $entryInstructions
      */
     public function setEntryInstructions($entryInstructions)
     {
-        $this->entry_instructions = $entryInstructions;
+        $this->entryInstructions = $entryInstructions;
     }
 
     /**
-     * Get entry_instructions
+     * Get entryInstructions
      *
      * @return text
      */
     public function getEntryInstructions()
     {
-        return $this->entry_instructions;
+        return $this->entryInstructions;
     }
 
     /**
-     * Set vote_instructions
+     * Set voteInstructions
      *
      * @param text $voteInstructions
      */
     public function setVoteInstructions($voteInstructions)
     {
-        $this->vote_instructions = $voteInstructions;
+        $this->voteInstructions = $voteInstructions;
     }
 
     /**
-     * Get vote_instructions
+     * Get voteInstructions
      *
      * @return text
      */
     public function getVoteInstructions()
     {
-        return $this->vote_instructions;
+        return $this->voteInstructions;
     }
 
     /**
-     * Set redemption_instructions
+     * Set redemptionInstructions
      *
      * @param text $redemptionInstructions
      */
     public function setRedemptionInstructions($redemptionInstructions)
     {
-        $this->redemption_instructions = $redemptionInstructions;
+        $this->redemptionInstructions = $redemptionInstructions;
     }
 
     /**
-     * Get redemption_instructions
+     * Get redemptionInstructions
      *
      * @return text
      */
     public function getRedemptionInstructions()
     {
-        return $this->redemption_instructions;
+        return $this->redemptionInstructions;
     }
 
     /**
-     * Set max_entries
+     * Set maxEntries
      *
      * @param integer $maxEntries
      */
     public function setMaxEntries($maxEntries)
     {
-        $this->max_entries = $maxEntries;
+        $this->maxEntries = $maxEntries;
     }
 
     /**
-     * Get max_entries
+     * Get maxEntries
      *
      * @return integer
      */
     public function getMaxEntries()
     {
-        return $this->max_entries;
+        return $this->maxEntries;
     }
 
     /**
-     * @return OpenGraphOverride
+     * @return openGraphOverride
      */
-    public function getOpenGraphOverride()
+    public function getopenGraphOverride()
     {
         return $this->openGraphOverride;
     }
@@ -543,7 +539,7 @@ class Contest implements LinkableInterface
     /**
      * @param OpenGraphOverride $openGraphOverride
      */
-    public function setOpenGraphOverride(OpenGraphOverride $openGraphOverride = null)
+    public function setopenGraphOverride(OpenGraphOverride $openGraphOverride = null)
     {
         $this->openGraphOverride = $openGraphOverride;
     }
@@ -555,7 +551,7 @@ class Contest implements LinkableInterface
      */
     public function setStatus($status)
     {
-        if ($status && !in_array($status, self::$validStatuses)) {
+        if (!in_array($status, self::$validStatuses)) {
             throw new \InvalidArgumentException(sprintf('Invalid status passed: "%s"', $status));
         }
 
@@ -633,13 +629,15 @@ class Contest implements LinkableInterface
         return $cleaned;
     }
 
-    /**
-     * @static
-     * @return array
-     */
-    static public function getValidStatuses()
+
+    public static function getValidStatuses()
     {
         return self::$validStatuses;
+    }
+
+    public static function getValidCategories()
+    {
+        return self::$validCategories;
     }
 
     /**
@@ -673,5 +671,39 @@ class Contest implements LinkableInterface
             'id' => $this->getId(),
             'slug' => $this->getSlug(),
         );
+    }
+
+    public function validateDateRanges(ExecutionContext $executionContext)
+    {
+        // error if submissionEnd or votingEnd datetime values are before their respective start datetimes
+
+        if ($this->submissionEnd > $this->submissionStart && $this->votingEnd > $this->votingStart) {
+            return;
+        }
+
+        if ($this->submissionEnd < $this->submissionStart) {
+            $propertyPath = $executionContext->getPropertyPath() . '.submissionEnd';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $executionContext->addViolation(
+                "The submission end date/time must be after the start date/time",
+                array(),
+                "submissionEnd"
+            );
+
+            return;
+        }
+
+        if ($this->votingEnd < $this->votingStart) {
+            $propertyPath = $executionContext->getPropertyPath() . '.votingEnd';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $executionContext->addViolation(
+                "The voting end date/time must be after the start date/time",
+                array(),
+                "votingEnd"
+            );
+        }
+
     }
 }

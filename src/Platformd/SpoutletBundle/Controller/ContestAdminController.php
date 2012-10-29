@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
+use Knp\MediaBundle\Util\MediaUtil;
 
 class ContestAdminController extends Controller
 {
@@ -28,17 +29,17 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('New Contest');
 
-        $gallery  = new Gallery();
-        $form    = $this->createForm(new GalleryType(), $gallery);
+        $contest  = new Contest();
+        $form    = $this->createForm(new ContestType(), $contest);
 
         if ($this->processForm($form, $request)) {
-            $this->setFlash('success', 'The gallery was created!');
+            $this->setFlash('success', 'The contest was created!');
 
-            return $this->redirect($this->generateUrl('admin_gallery_index'));
+            return $this->redirect($this->generateUrl('admin_contest_index'));
         }
 
-        return $this->render('SpoutletBundle:GalleryAdmin:new.html.twig', array(
-            'gallery' => $gallery,
+        return $this->render('SpoutletBundle:ContestAdmin:new.html.twig', array(
+            'contest' => $contest,
             'form'   => $form->createView()
         ));
     }
@@ -77,13 +78,15 @@ class ContestAdminController extends Controller
 
             if ($form->isValid()) {
 
-                $gallery = $form->getData();
+                $contest = $form->getData();
 
-                if (!$gallery->getOwner()) {
-                    $gallery->setOwner($this->getUser());
+                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+
+                if (!$mUtil->persistRelatedMedia($contest->getBanner())) {
+                    $contest->setBanner(null);
                 }
 
-                $em->persist($gallery);
+                $em->persist($contest);
 
                 $em->flush();
 

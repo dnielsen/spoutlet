@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class ContestRepository extends EntityRepository
 {
     public function findAllAlphabetically() {
+
         return $this->createQueryBuilder('c')
             ->orderBy('c.name', 'ASC')
             ->getQuery()

@@ -14,12 +14,16 @@
         </tr>
     </thead>
     <tbody>
-    {% for contest in contest %}
+    {% for contest in contests %}
         <tr>
             <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
             <td>{{ contest.name }}</td>
-            <td>{{ contest.sites }}</td>
-            <td><a href="{{ contest.url }}">{{ contest.url }}</a></td>
+            <td>
+                 {% for site in contest.sites %}
+                    [ {{ site.name }} ]
+                {% endfor %}
+            </td>
+            <td><a href="{{ path('contest_show', { 'slug': contest.slug }) }}">{{ path('contest_show', { 'slug': contest.slug }) }}</a></td>
             <td>{{ contest.status }}</td>
         </tr>
     {% endfor %}

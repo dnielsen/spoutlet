@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<!-- <h1>
+<h1>
     <i class="icon-pencil"></i>
-    Gallery edit
+    Contest edit
 </h1>
 
-<form action="{{ path('admin_gallery_update', { 'slug': gallery.slug }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {% include 'SpoutletBundle:GalleryAdmin:_form.html.twig' with {
+<form action="{{ path('admin_contest_update', { 'slug': contest.slug }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {% include 'SpoutletBundle:ContestAdmin:_form.html.twig' with {
         'form': edit_form
     } %}
 
@@ -17,7 +17,7 @@
     </div>
 </form>
 
-<a href="{{ path('admin_gallery_index') }}">
+<a href="{{ path('admin_contest_index') }}">
     Back to the list
-</a> -->
+</a>
 {% endblock %}
