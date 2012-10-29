@@ -188,7 +188,7 @@ class Gallery implements LinkableInterface
         return $this->sites;
     }
 
-    public function setcategories($categories)
+    public function setCategories($categories)
     {
         foreach ($categories as $category) {
             if (!in_array($category, self::$validCategories)) {

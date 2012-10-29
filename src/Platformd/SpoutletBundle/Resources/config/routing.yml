@@ -103,3 +103,7 @@ SpoutletBundle_admin_wallpapers:
 SpoutletBundle_admin_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/admin_gallery.yml"
     prefix:   /admin/galleries
+
+SpoutletBundle_admin_contest:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_contest.yml"
+    prefix:   /admin/contests
