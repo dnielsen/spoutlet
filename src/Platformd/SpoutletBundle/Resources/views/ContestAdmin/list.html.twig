@@ -17,7 +17,7 @@
     {% for contest in contests %}
         <tr>
             <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
-            <td>{{ contest.name }}</td>
+            <td>{{ contest.category }}</td>
             <td>
                  {% for site in contest.sites %}
                     [ {{ site.name }} ]
