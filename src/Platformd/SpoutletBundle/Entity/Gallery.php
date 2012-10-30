@@ -24,11 +24,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Gallery implements LinkableInterface
 {
-    static private $validCategories = array(
-        'image',
-        'video',
-    );
-
     const COMMENT_PREFIX = 'gallery-';
     const DELETED_BY_OWNER = 'by_owner';
     const DELETED_BY_ADMIN = 'by_admin';
@@ -69,11 +64,10 @@ class Gallery implements LinkableInterface
     private $sites;
 
     /**
-     * @var string $categories
-     *
-     * @ORM\Column(name="categories", type="array")
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\GalleryCategory")
+     * @ORM\JoinTable(name="pd_gallery_gallery_category")
      */
-    private $categories = array();
+    private $categories;
 
     /**
      * The person who created this gallery
@@ -113,7 +107,8 @@ class Gallery implements LinkableInterface
 
     public function __construct()
     {
-        $this->sites = new ArrayCollection();
+        $this->sites        = new ArrayCollection();
+        $this->categories   = new ArrayCollection();
     }
 
     /**
@@ -190,12 +185,6 @@ class Gallery implements LinkableInterface
 
     public function setCategories($categories)
     {
-        foreach ($categories as $category) {
-            if (!in_array($category, self::$validCategories)) {
-                throw new \InvalidArgumentException(sprintf('Invalid gallery category "%s" given', $category));
-            }
-        }
-
         $this->categories = $categories;
     }
 
@@ -319,11 +308,6 @@ class Gallery implements LinkableInterface
             'id' => $this->getId(),
             'slug' => $this->getSlug(),
         );
-    }
-
-    public static function getValidCategories()
-    {
-        return self::$validCategories;
     }
 }
 
