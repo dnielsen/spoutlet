@@ -55,7 +55,7 @@ class GalleryMedia implements LinkableInterface
     /**
      * @var string $description
      *
-     * @ORM\Column(name="description", type="string", length=512)
+     * @ORM\Column(name="description", type="string", length=512, nullable=true)
      */
     private $description;
 
@@ -113,7 +113,7 @@ class GalleryMedia implements LinkableInterface
     /**
      * @var string $youtubeId
      *
-     * @ORM\Column(name="youtubeId", type="string", length=255)
+     * @ORM\Column(name="youtubeId", type="string", length=255, nullable=true)
      */
     private $youtubeId;
 

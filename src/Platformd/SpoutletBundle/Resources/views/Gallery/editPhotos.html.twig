@@ -5,11 +5,16 @@
 
 <div class="std_2col">
     <div class="left">
-
+        <form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
+            {{ form_errors(form) }}
+            {{ form_rest(form) }}
+        </form>
     </div>
     <div class="right">
         {% for media in medias %}
-            <div class="gallery-media-wrapper"><img class="gallery-media" data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" /></div>
+            <div class="gallery-media-wrapper">
+                <img title="{{ media.title }}" class="gallery-media" data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+            </div>
         {% endfor %}
     </div>
 </div>
@@ -27,6 +32,28 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+
+            $('.gallery-media').click(function () {
+
+            });
+
+            $('.gallery-media').qtip({
+                style: {
+                    border: {
+                        width: 2,
+                        radius: 5 },
+                        padding: 10,
+                        tip: true,
+                        name: 'dark'
+                    },
+                    position: {
+                        corner: {
+                            tooltip: 'leftMiddle',
+                            target: 'rightMiddle'
+                    }
+                }
+            });
+
             $('.gallery-media').hover(
                 function () {
                     $(this).addClass('active');
