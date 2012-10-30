@@ -90,7 +90,8 @@ class ContestType extends AbstractType
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
             ->add('status', 'choice', array(
                 'choices'   =>  $this->getStatusChoices()
-            ));
+            ))
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 
     public function getName()

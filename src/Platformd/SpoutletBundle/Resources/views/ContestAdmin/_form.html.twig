@@ -46,6 +46,10 @@
             </ol>
 
             {{ form_row(form.maxEntries) }}
+            <div>
+                {{ form_label(form.ruleset) }}
+                <ul class="rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}"></ul>
+            </div>
         </div>
 
     </fieldset>

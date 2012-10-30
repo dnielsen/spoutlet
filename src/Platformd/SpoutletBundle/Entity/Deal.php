@@ -254,6 +254,11 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
      */
     protected $updatedAt;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    private $ruleset;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
@@ -876,6 +881,16 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
     }
 
     /**

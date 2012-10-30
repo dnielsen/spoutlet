@@ -47,6 +47,11 @@ class Sweepstakes extends AbstractEvent
      */
     protected $entries;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    private $ruleset;
+
     public function __construct()
     {
         $this->entries = new ArrayCollection();
@@ -171,6 +176,16 @@ class Sweepstakes extends AbstractEvent
     public function setOfficialRules($officialRules)
     {
         $this->officialRules = $officialRules;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
     }
 
     /**
