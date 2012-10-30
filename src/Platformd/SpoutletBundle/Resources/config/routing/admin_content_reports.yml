@@ -13,3 +13,7 @@ admin_content_reports_hide_complaint:
 admin_content_reports_remove_content:
     pattern:  /list/removeContent/{contentReportId}
     defaults: { _controller: "SpoutletBundle:ContentReportAdmin:removeContent" }
+
+admin_content_reports_reinstate_content:
+    pattern:  /list/reinstateContent/{contentReportId}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:reinstateContent" }

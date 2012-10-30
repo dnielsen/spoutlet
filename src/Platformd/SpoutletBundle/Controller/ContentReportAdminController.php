@@ -146,6 +146,50 @@ class ContentReportAdminController extends Controller
         return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 
+    public function reinstateContentAction($contentReportId)
+    {
+        $this->addReportedContentsBreadcrumb();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $repo = $em->getRepository('SpoutletBundle:ContentReport');
+
+        $report = $repo->find($contentReportId);
+
+        $groupVideo = $report->getGroupVideo();
+        $groupNews = $report->getGroupNews();
+        $groupImage = $report->getGroupImage();
+
+        if ($groupVideo) {
+
+            $groupVideo->setDeleted(false);
+            $groupVideo->setDeletedReason(null);
+            $em->persist($groupVideo);
+
+        } else if ($groupNews) {
+
+            $groupNews->setDeleted(false);
+            $groupNews->setDeletedReason(null);
+            $em->persist($groupNews);
+
+        } else if ($groupImage) {
+
+            $groupImage->setDeleted(false);
+            $groupImage->setDeletedReason(null);
+            $em->persist($groupImage);
+
+        } else {
+
+            $this->setFlash('error', 'Unknown content type.');
+            return $this->redirect($this->generateUrl('admin_content_reports'));
+        }
+
+        $em->flush();
+
+        $this->setFlash('success', 'Content has been reinstated successfully.');
+
+        return $this->redirect($this->generateUrl('admin_content_reports_with_mode', array('mode' => 'deletedContent')));
+    }
+
     private function addReportedContentsBreadcrumb()
     {
         $this->getBreadcrumbs()->addChild('Content Reports', array(
