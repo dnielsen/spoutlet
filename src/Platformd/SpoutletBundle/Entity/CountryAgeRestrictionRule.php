@@ -39,7 +39,7 @@ class CountryAgeRestrictionRule
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", inversedBy="rules")
-     * @ORM\JoinColumn(onDelete="CASCADE", name="id")
+     * @ORM\JoinColumn(onDelete="CASCADE", name="ruleset_id")
      */
     private $ruleset;
 
@@ -59,8 +59,6 @@ class CountryAgeRestrictionRule
 
     /**
      * @var string $ruleType
-     *
-     * Value 1 = "Allow rule", value 0 = "Deny rule"
      *
      * @ORM\Column(name="rule_type", type="string", length="50")
      */

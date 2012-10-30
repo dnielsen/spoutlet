@@ -40,7 +40,7 @@ class CountryAgeRestrictionRuleset
     private $parentType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule",orphanRemoval=true, mappedBy="ruleset")
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule",orphanRemoval=true, mappedBy="ruleset", cascade={"persist"})
      */
     private $rules;
 
@@ -65,7 +65,7 @@ class CountryAgeRestrictionRuleset
     public function setParentType($parentType)
     {
         if (!in_array($parentType, self::$validParentTypes)) {
-            throw new \InvalidArgumentException(sprintf('Invalid parent type "%s" given', $ruleType));
+            throw new \InvalidArgumentException(sprintf('Invalid parent type "%s" given', $parentType));
         }
 
         $this->parentType = $parentType;

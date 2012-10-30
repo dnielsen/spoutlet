@@ -4,6 +4,8 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\ContestRepository;
+use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
+use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,6 +91,29 @@ class ContestAdminController extends Controller
 
                 $contest = $form->getData();
 
+                $formRules = $contest->getRuleset();
+                $formRules = $formRules['rules'];
+
+                $ruleset = new CountryAgeRestrictionRuleset();
+
+                $ruleset->setParentType("contest");
+                $ruleset->setDefaultAllow(true);
+                $rules = $ruleset->getRules();
+
+                foreach ($formRules as $rule) {
+
+                    $r = new CountryAgeRestrictionRule();
+                    $r->setCountry($rule['country']);
+                    $r->setRuleset($ruleset);
+                    $r->setMinAge($rule['minAge']);
+                    $r->setMaxAge($rule['maxAge']);
+                    $r->setRuleType($rule['ruleType']);
+
+                    $rules->add($r);
+                }
+
+                $contest->setRuleset($ruleset);
+var_dump($contest->getRuleset());exit;
                 $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
 
                 if (!$mUtil->persistRelatedMedia($contest->getBanner())) {
