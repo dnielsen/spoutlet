@@ -231,7 +231,7 @@ class Group implements LinkableInterface
     /**
      * @var \DateTime $featuredAt
      *
-     * @ORM\Column(name="featured_at", type="datetime")
+     * @ORM\Column(name="featured_at", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="change", field="featured", value="true")
      */
     protected $featuredAt;
