@@ -1,6 +1,7 @@
 {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 <div>
+    {{ form_errors(form) }}
     <p>
         <div>
             <span style="font-weight:bold;">{{ 'galleries.submit_photo_step1' | trans }}</span>

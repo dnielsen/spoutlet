@@ -309,5 +309,10 @@ class Gallery implements LinkableInterface
             'slug' => $this->getSlug(),
         );
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
 

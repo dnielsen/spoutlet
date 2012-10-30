@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
+use Platformd\SpoutletBundle\Form\Type\GalleryMediaType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
@@ -65,7 +66,7 @@ class GalleryController extends Controller
     {
         $user = $this->getCurrentUser();
         $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $form = $this->createForm(new GalleryChoiceType());
+        $form = $this->createForm(new GalleryMediaType());
 
         return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
             'medias' => $medias,

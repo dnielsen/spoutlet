@@ -1,0 +1,13 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+<div>
+    {{ form_errors(form) }}
+    <div class="span11">
+        {{ form_row(form.title) }}
+        {{ form_row(form.description) }}
+        {{ form_widget(form.galleries) }}
+    </div>
+
+    {{ form_rest(form) }}
+</div>

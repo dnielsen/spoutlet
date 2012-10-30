@@ -17,8 +17,14 @@ class GalleryChoiceType extends AbstractType
         $builder->add('galleries', 'entity', array(
             'class' => 'SpoutletBundle:Gallery',
             'property' => 'name',
+            'multiple' => true,
+            'expanded' => true,
             'query_builder' => function(EntityRepository $er) {
-                $qb = $er->createQueryBuilder('ga')->orderBy('ga.name', 'ASC');
+                $qb = $er->createQueryBuilder('ga')
+                    ->leftJoin('ga.categories', 'cat')
+                    ->where('cat.name = :category')
+                    ->orderBy('ga.name', 'ASC')
+                    ->setParameter('category', 'image');
                 return $qb;
             },
         ));

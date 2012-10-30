@@ -8,7 +8,6 @@
 <div class="std_2col">
     <div class="left">
         <form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
-            {{ form_errors(form) }}
             {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">Save Photos</button>
