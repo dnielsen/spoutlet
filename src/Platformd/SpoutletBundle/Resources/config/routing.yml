@@ -92,6 +92,10 @@ SpoutletBundle_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/gallery.yml"
     prefix:   /galleries
 
+SpoutletBundle_contest:
+    resource: "@SpoutletBundle/Resources/config/routing/contest.yml"
+    prefix:   /contests
+
 SpoutletBundle_admin_group:
     resource: "@SpoutletBundle/Resources/config/routing/admin_group.yml"
     prefix:   /admin/groups
@@ -103,3 +107,7 @@ SpoutletBundle_admin_wallpapers:
 SpoutletBundle_admin_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/admin_gallery.yml"
     prefix:   /admin/galleries
+
+SpoutletBundle_admin_contest:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_contest.yml"
+    prefix:   /admin/contests

@@ -1,0 +1,74 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>a) Contest Information</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_row(form.name) }}
+                {{ form_row(form.game) }}
+                {{ form_row(form.slug) }}
+                {{ form_row(form.category) }}
+                {{ form_row(form.banner) }}
+            </div>
+
+            <div class="span6">
+                {{ form_row(form.submissionStart) }}
+                {{ form_row(form.submissionEnd) }}
+                {{ form_row(form.votingStart) }}
+                {{ form_row(form.votingEnd) }}
+                {{ form_row(form.timezone) }}
+                {{ form_row(form.sites) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>b) Rules and Instructions</legend>
+        <div class="row-fluid first">
+            {{ form_row(form.rules) }}
+            {{ form_row(form.entryInstructions) }}
+            {{ form_row(form.voteInstructions) }}
+
+            {{ form_label(form.redemptionInstructionsArray) }}
+            {{ form_errors(form.redemptionInstructionsArray) }}
+
+            <ol class="input">
+                {% include 'SpoutletBundle:Contest:_steps.html.twig' with {'contest': contest} %}
+                {% for redemptionForm in form.redemptionInstructionsArray %}
+                    <li>
+                        {{ form_widget(redemptionForm) }}
+                    </li>
+                {% endfor %}
+            </ol>
+
+            {{ form_row(form.maxEntries) }}
+        </div>
+
+    </fieldset>
+
+    <fieldset>
+        <legend>c) Facebook Info</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_row(form.openGraphOverride.description) }}
+                {{ form_row(form.openGraphOverride.thumbnail) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>d) Status</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_row(form.status) }}
+            </div>
+        </div>
+    </fieldset>
+
+</div>
+
+{{ form_rest(form) }}

@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Contest Regions' %}
+
+{% block content %}
+<h1>Contest Regions</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_contest_list'
+}%}
+
+<a class="btn btn-primary" href="{{ path('admin_contest_new') }}">
+    Create a new contest
+</a>
+{% endblock %}

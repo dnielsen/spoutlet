@@ -100,6 +100,11 @@ class GalleryMedia implements LinkableInterface
     private $published = false;
 
     /**
+     * @ORM\Column(name="featured", type="boolean", nullable=true)
+     */
+    protected $featured;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -228,6 +233,16 @@ class GalleryMedia implements LinkableInterface
     public function setPulished($published)
     {
         $this->published = $published;
+    }
+
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+
+    public function setFeatured($featured)
+    {
+        $this->featured = $featured;
     }
 
     public function getImage()

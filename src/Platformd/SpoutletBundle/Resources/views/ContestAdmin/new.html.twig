@@ -1,0 +1,18 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>New Contest</h1>
+
+<form action="{{ path('admin_contest_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'SpoutletBundle:ContestAdmin:_form.html.twig' %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_contest_index') }}">
+    Back to the list
+</a>
+{% endblock %}
