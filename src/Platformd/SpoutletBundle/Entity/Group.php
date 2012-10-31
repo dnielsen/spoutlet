@@ -644,7 +644,7 @@ class Group implements LinkableInterface
 
     public function isAllowedTo($user, $site, $action) {
 
-        if ($this->getDeleted()) {
+        if ($this->getDeleted() && $action != "EditGroup") {
             return false;
         }
 
