@@ -39,9 +39,14 @@ class GroupAdminController extends Controller
 
                 $row = array();
 
+                if ($group->getDeleted()) {
+                    $row['GroupLink']           = $this->container->get('router')->generate('group_edit', array('id' => $group->getId()));;
+                } else {
+                    $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
+                }
+
                 $row['GroupId']             = $group->getId();
                 $row['GroupName']           = $group->getName();
-                $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
                 $row['Category']            = $group->getCategory();
                 $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
 
