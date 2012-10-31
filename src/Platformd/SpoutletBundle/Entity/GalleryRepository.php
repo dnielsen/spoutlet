@@ -18,4 +18,15 @@ class GalleryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findAllGalleriesByCategory($category)
+    {
+        return $this->createQueryBuilder('ga')
+            ->leftJoin('ga.categories', 'cat')
+            ->where('cat.name = :category')
+            ->orderBy('ga.name', 'ASC')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->execute();
+    }
 }

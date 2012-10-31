@@ -13,12 +13,13 @@ class GalleryMediaType extends AbstractType
     {
         $builder->add('title', 'text', array(
             'max_length' => 255,
-            'label' => 'Image Name'
+            'label'      => 'Image Name',
+            'attr'       => array('class' => 'photo-title')
         ));
         $builder->add('description', 'textarea', array(
             'max_length' => 512,
-            'label' => 'Description',
-            'attr' => array('col' => 10, 'row' => 7)
+            'label'      => 'Description',
+            'attr'       => array('class' => 'photo-description')
         ));
         $builder->add('galleries', new GalleryChoiceType(), array(
             'label' => 'Galleries'

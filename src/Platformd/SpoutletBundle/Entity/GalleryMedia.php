@@ -230,7 +230,7 @@ class GalleryMedia implements LinkableInterface
         return $this->getPublished();
     }
 
-    public function setPulished($published)
+    public function setPublished($published)
     {
         $this->published = $published;
     }

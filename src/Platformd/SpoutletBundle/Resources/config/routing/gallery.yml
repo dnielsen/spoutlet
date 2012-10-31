@@ -13,3 +13,10 @@ gallery_upload:
 gallery_edit_photos:
     pattern: /photos
     defaults: { _controller: SpoutletBundle:Gallery:editPhotos, site: ~ }
+
+gallery_publish_photo:
+    pattern: /publish
+    defaults: { _controller: SpoutletBundle:Gallery:publish, site: ~ }
+    requirements:
+        _format: json
+        _method: POST

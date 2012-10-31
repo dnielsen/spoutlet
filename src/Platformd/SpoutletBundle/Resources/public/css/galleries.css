@@ -10,3 +10,12 @@
 .active {
     border: 1px solid #009CDA;
 }
+
+.photo-description {
+    width: 350px;
+    height: 150px;
+}
+
+.photo-title {
+    width: 350px;
+}

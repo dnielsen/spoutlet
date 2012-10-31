@@ -5,9 +5,40 @@
 
 <div class="std_2col">
     <div class="left">
-        <form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-            {% include 'SpoutletBundle:Gallery:_editImageForm.html.twig' %}
-        </form>
+        <div class="form-horizontal">
+            <div class="span11">
+                <div class="control-group ">
+                    <label class="control-label" for="media-title">Image Name</label>
+                    <div class="controls">
+                        <input type="text" id="media-title" name="media-title" required="required" maxlength="255" class="photo-title form-txt">
+                    </div>
+                </div>
+                <div class="control-group ">
+                    <label class="control-label" for="media-description">Description</label>
+                    <div class="controls">
+                        <textarea id="media-description" name="media-description" required="required" maxlength="512" class="photo-description"></textarea>
+                    </div>
+                </div>
+                <div id="platformd_spoutletbundle_gallery_media_galleries">
+                    <div class="control-group ">
+                        <label class="control-label">Galleries</label>
+                        <div class="controls">
+                            {% for gallery in galleries %}
+                                <label class="checkbox">
+                                    <input type="checkbox" id="gallery-{{ gallery.id }}" name="gallery-{{ gallery.id }}" value="gallery.id" />
+                                    {{ gallery.name }}
+                                </label>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="media-id" name="media-id" />
+            </div>
+        </div>
+        <div class="form-actions">
+            <button id="publish-photo" class="btn btn-primary" formnovalidate>Publish</button>
+        </div>
     </div>
     <div class="right">
         {% for media in medias %}
@@ -32,13 +63,31 @@
     <script type="text/javascript">
         $(function () {
 
+            $('#publish-photo').click(function () {
+                var url = '{{ path('gallery_publish_photo') }}';
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify({
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val()
+                    }),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        alert(data.message);
+                    }
+                });
+            });
+
             $('.gallery-media').click(function () {
                 $('.gallery-media').removeClass('active');
                 $(this).addClass('active');
                 var title = $(this).attr('data-title');
                 var id = $(this).attr('data-id');
-                $('#platformd_spoutletbundle_gallery_media_title').val(title);
-                $('#platformd_spoutletbundle_gallery_media_mediaId').val(id);
+                $('#media-title').val(title);
+                $('#media-id').val(id);
             });
 
             $('.gallery-media').qtip({
@@ -64,7 +113,7 @@
                     $(this).addClass('active');
                 },
                 function () {
-                    var selected = $('#platformd_spoutletbundle_gallery_media_mediaId').val();
+                    var selected = $('#media-id').val();
                     var current = $(this).attr('data-id');
 
                     if(current == selected) {
