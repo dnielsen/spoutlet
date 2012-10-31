@@ -347,6 +347,7 @@ class GroupAdminController extends Controller
                     'Username',
                     'First Name',
                     'Last Name',
+                    'Email',
                     'User ID',
                     'Group Name',
                     'Date Joined',
@@ -358,6 +359,7 @@ class GroupAdminController extends Controller
                         $member['username'],
                         $member['firstname'],
                         $member['lastname'],
+                        $member['email'],
                         $member['id'],
                         $member['name'],
                         $member[1],
@@ -386,7 +388,7 @@ class GroupAdminController extends Controller
 
                 $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
 
-                $exportFilename = 'Group_News_Export.csv';
+                $exportFilename = 'Group_Image_Export.csv';
 
                 break;
 
@@ -435,11 +437,13 @@ class GroupAdminController extends Controller
             'Username',
             'First Name',
             'Last Name',
+            'Email',
             'User ID',
             'Group Name',
             'Date Joined',
             'Country Registered',
             'Title',
+            'Date Added',
             'Number of Times Reported'
         ));
 
@@ -457,11 +461,13 @@ class GroupAdminController extends Controller
                 $author->getUsername(),
                 $author->getFirstName(),
                 $author->getLastName(),
+                $author->getEmail(),
                 $author->getId(),
                 $group->getName(),
                 $createdAt,
                 $author->getCountry(),
                 $item->getTitle(),
+                $item->getCreatedAt()->format('Y-m-d H:i:s'),
                 $item->getContentReports()->count(),
             ));
         }
