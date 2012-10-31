@@ -143,7 +143,7 @@ class GalleryMedia implements LinkableInterface
     public function setCategory($category)
     {
         if (!in_array($category, self::$validCategories)) {
-            throw new \InvalidArgumentException(sprintf('Invalid group category "%s" given', $category));
+            throw new \InvalidArgumentException(sprintf('Invalid category "%s" given', $category));
         }
 
         $this->category = $category;
@@ -253,6 +253,16 @@ class GalleryMedia implements LinkableInterface
     public function setImage($image)
     {
         $this->image = $image;
+    }
+
+    public function getYoutubeId()
+    {
+        return $this->youtubeId;
+    }
+
+    public function setYoutubeId($youtubeId)
+    {
+        $this->youtubeId = $youtubeId;
     }
 
     public function getGalleries()
