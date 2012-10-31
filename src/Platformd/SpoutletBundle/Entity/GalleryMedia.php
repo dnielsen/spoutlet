@@ -125,6 +125,15 @@ class GalleryMedia implements LinkableInterface
      */
     private $galleries;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="galleryMedia")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+
+    protected $contentReports;
+
     public function __construct()
     {
         $this->galleries = new ArrayCollection();
@@ -273,6 +282,20 @@ class GalleryMedia implements LinkableInterface
     public function setGalleries($galleries)
     {
         $this->galleries = $galleries;
+    }
+
+    public function getContentType() {
+        return "GalleryMedia";
+    }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
     }
 
     public static function getValidCategories()
