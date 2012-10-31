@@ -22,4 +22,15 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findAllFeaturedForCategory($category)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.featured = :featured')
+            ->andWhere('gm.category = :category')
+            ->setParameter('category', $category)
+            ->setParameter('featured', true)
+            ->getQuery()
+            ->execute();
+    }
 }

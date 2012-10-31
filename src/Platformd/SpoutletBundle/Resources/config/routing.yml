@@ -111,3 +111,7 @@ SpoutletBundle_admin_gallery:
 SpoutletBundle_admin_contest:
     resource: "@SpoutletBundle/Resources/config/routing/admin_contest.yml"
     prefix:   /admin/contests
+
+SpoutletBundle_admin_featured_media:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
+    prefix:   /admin/featured-media

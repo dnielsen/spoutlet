@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryCategoryRepository")
  * @ORM\Table(name="pd_gallery_category")
  * @UniqueEntity(fields={"name"}, message="This category name is already used.")
  */

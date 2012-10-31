@@ -4,6 +4,8 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Gallery;
 use Platformd\SpoutletBundle\Entity\GalleryRepository;
+use Platformd\SpoutletBundle\Entity\GalleryCategory;
+use Platformd\SpoutletBundle\Entity\GalleryCategoryRepository;
 use Platformd\SpoutletBundle\Form\Type\GalleryType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,6 +74,50 @@ class GalleryAdminController extends Controller
         ));
     }
 
+    public function featuredIndexAction()
+    {
+        $this->addFeaturedMediaBreadcrumb();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $categories = $em->getRepository('SpoutletBundle:GalleryCategory')->findAllAlphabetically();
+
+         return $this->render('SpoutletBundle:GalleryAdmin:featureIndex.html.twig', array(
+            'categories' => $categories
+        ));
+    }
+
+    public function featuredListAction($category)
+    {
+        $this->addFeaturedMediaBreadcrumb();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $items = $em->getRepository('SpoutletBundle:GalleryMedia')->findAllFeaturedForCategory($category);
+
+        return $this->render('SpoutletBundle:GalleryAdmin:featureList.html.twig', array(
+            'items'     => $items,
+            'category'  => $category,
+        ));
+    }
+
+    public function unfeatureAction($item)
+    {
+        $this->addFeaturedMediaBreadcrumb();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $item = $em->getRepository('SpoutletBundle:GalleryMedia')->find($item);
+
+        if (!$item) {
+            throw $this->createNotFoundException('Unable to find media item.');
+        }
+
+        $item->setFeatured(false);
+        $em->persist($item);
+        $em->flush();
+
+        $this->setFlash('success', 'The item is now unfeatured!');
+        return $this->redirect($this->generateUrl('admin_featured_index'));
+    }
+
     private function processForm(Form $form, Request $request)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -102,6 +148,15 @@ class GalleryAdminController extends Controller
     {
         $this->getBreadcrumbs()->addChild('Galleries', array(
             'route' => 'admin_gallery_index'
+        ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    private function addFeaturedMediaBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Featured Media', array(
+            'route' => 'admin_featured_index'
         ));
 
         return $this->getBreadcrumbs();

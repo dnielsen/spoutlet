@@ -134,7 +134,7 @@ class GroupRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.members', 'm')
-            ->select('m.username', 'm.id', 'm.firstname', 'm.lastname', 'g.name', 'm.country', '(SELECT MAX(a.createdAt) FROM SpoutletBundle:GroupMembershipAction a WHERE a.group = g AND a.user = m.id)')
+            ->select('m.username', 'm.id', 'm.firstname', 'm.lastname', 'm.email', 'g.name', 'm.country', '(SELECT MAX(a.createdAt) FROM SpoutletBundle:GroupMembershipAction a WHERE a.group = g AND a.user = m.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
@@ -147,7 +147,7 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.videos', 'v')
             ->leftJoin('v.author', 'a')
             ->leftJoin('v.contentReports', 'c')
-            ->select('g','a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'v', 'v.title', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
+            ->select('g','a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'v', 'v.title', 'v.createdAt', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
@@ -170,7 +170,7 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.images', 'i')
             ->leftJoin('i.author', 'a')
             ->leftJoin('i.contentReports', 'c')
-            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'i.title', 'c', 'i', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'i.title', 'i.createdAt', 'c', 'i', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
@@ -193,7 +193,7 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('n.author', 'a')
             ->leftJoin('n.contentReports', 'c')
-            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'g.name', 'a.country', 'n', 'n.title', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'n', 'n.title', 'n.createdAt', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
