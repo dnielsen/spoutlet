@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Featured Media' %}
+
+{% block content %}
+
+<div class="row-fluid">
+    <div class="well span4" style="padding: 8px 0;">
+        <ul class="nav nav-list">
+            <li class="nav-header">
+                Choose a Media Category
+            </li>
+            {% for category in categories %}
+            <li>
+                <a href="{{ path('admin_featured_list', {'category': category.name}) }}">{{ category.name | capitalize }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
