@@ -2,12 +2,12 @@
 
 {% block title 'Content Report Admin' %}
 
-{% macro getContentReportTable(items, manage) %}
+{% macro getContentReportTable(items, manage, deletedContent) %}
 
     <table id="content-reports">
 
         <tr><th id="content-report-content">Content</th><th>Complaints</th><th id="content-report-action">Reporters</th>
-            {% if manage %}
+            {% if manage or deletedContent %}
                 <th id="content-report-action">Action</th>
             {% endif %}
         </tr>
@@ -66,6 +66,10 @@
                         <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : item[0].contentReports[0].id }) }}">Remove Content</a></div>
                         <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : item[0].contentReports[0].id }) }}">Archive These Complaints</a></div>
                     </td>
+                {% elseif deletedContent %}
+                    <td>
+                        <div><a href="{{ path('admin_content_reports_reinstate_content', { "contentReportId" : item[0].contentReports[0].id }) }}">Reinstate Content</a></div>
+                    </td>
                 {% endif %}
             </tr>
 
@@ -104,6 +108,6 @@
     {% endif %}
 </p>
 
-<p>{{ _self.getContentReportTable(allReports, mode == "manage") }}</p>
+<p>{{ _self.getContentReportTable(allReports, mode == "manage", mode == "deletedContent") }}</p>
 
 {% endblock %}

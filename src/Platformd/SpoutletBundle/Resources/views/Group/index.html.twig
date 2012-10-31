@@ -24,6 +24,31 @@
 <div class="std_2col">
     <div class="left">
         <h3 style="margin: 0; color: #fff;font-weight: bold">Recommended Alienware Arena Groups</h3>
+        {% if featuredGroups|length > 0 %}
+        <div>
+            <h4 class="groups-category-header">Featured Groups</h4>
+                <div id="featured-groups">
+                    {% for group in featuredGroups %}
+                        <div class="group-list-item">
+                            <a href="{{ path('group_show', { slug: group.slug}) }}">
+                                {% if group.thumbNail %}
+                                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                {% else %}
+                                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                {% endif %}
+                            </a>
+                            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+                                {{ group.name }}
+                            </a>
+                            <div class="details">
+                                <div class="item-detail">Members: {{ group.members.count }}</div>
+                                <div class="item-detail">Organizer: {{ group.owner.username }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
         <div>
             <h4 class="groups-category-header">Topic Groups</h4>
             <div class="scrollable" id="scrollable-topic-groups">

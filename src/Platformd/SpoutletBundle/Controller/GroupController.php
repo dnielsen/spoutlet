@@ -238,10 +238,12 @@ Alienware Arena Team
     public function indexAction()
     {
         $this->addGroupsBreadcrumb();
+
         $em     = $this->getEntityManager();
         $repo   = $em->getRepository('SpoutletBundle:Group');
         $site   = $this->getCurrentSite();
 
+        $featuredGroups = $repo->findAllFeaturedGroupsForSite($site);
         $locationGroups = $repo->findGroupsByCategoryAndSite('location', $site);
         $topicGroups    = $repo->findGroupsByCategoryAndSite('topic', $site);
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
@@ -252,6 +254,7 @@ Alienware Arena Team
             'topicGroups'    => $this->getGroupPages($topicGroups),
             'recentGroups'   => $recentGroups,
             'popularGroups'  => $popularGroups,
+            'featuredGroups' => $featuredGroups,
         ));
     }
 

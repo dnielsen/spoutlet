@@ -264,8 +264,12 @@
                 }, 10000);
             }
 
-            $(".featured-content-header a").click(function() {
+            var killVideoContent = function() {
+                $('#content-group-videos').html('');
+            }
 
+            $(".featured-content-header a").click(function() {
+                killVideoContent();
                 var current = $('.featured-content-header a.active').attr('id');
                 var id = $(this).attr('id');
 

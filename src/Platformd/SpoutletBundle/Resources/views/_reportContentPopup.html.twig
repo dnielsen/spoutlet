@@ -35,7 +35,10 @@
             $('#report-id-{{ reportContentType }}').val(reportId);
 
             $('.report-option').prop('checked', false);
-
+            $('#report-response').hide();
+            $('#report-options').show();
+            $('#close-dialog-{{ reportContentType }}').text('Cancel');
+            $('#submit-report-{{ reportContentType }}').show();
             reportDialog.dialog('open');
         });
 

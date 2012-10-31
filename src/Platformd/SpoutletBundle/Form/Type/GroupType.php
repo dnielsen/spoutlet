@@ -76,6 +76,11 @@ class GroupType extends AbstractType
                         'label' => 'Disable Group', 'help' => 'Use this to administratively disable this group.',
                     ));
                 }
+
+                $builder->add('featured', 'checkbox', array(
+                    'label' => 'Featured',
+                    'help'  => 'Check this checkbox to make this group featured on the groups homepage.',
+                ));
             }
     }
 

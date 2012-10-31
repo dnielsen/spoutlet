@@ -221,6 +221,21 @@ class Group implements LinkableInterface
     */
     private $userMembershipActions;
 
+    /**
+     * @var boolean $featured
+     * @ORM\Column(name="featured", type="boolean")
+     */
+
+    private $featured = false;
+
+    /**
+     * @var \DateTime $featuredAt
+     *
+     * @ORM\Column(name="featured_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="change", field="featured", value="true")
+     */
+    protected $featuredAt;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -696,6 +711,26 @@ class Group implements LinkableInterface
 
     public function setUserMembershipActions($value) {
         $this->userMembershipActions = $value;
+    }
+
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+
+    public function setFeatured($featured)
+    {
+        $this->featured = $featured;
+    }
+
+    public function getFeaturedAt()
+    {
+        return $this->featuredAt;
+    }
+
+    public function setFeaturedAt($featuredAt)
+    {
+        $this->featuredAt = $featuredAt;
     }
 
     public function isApplicant($user)
