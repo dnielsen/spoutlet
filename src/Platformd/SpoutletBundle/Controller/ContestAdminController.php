@@ -89,31 +89,17 @@ class ContestAdminController extends Controller
 
             if ($form->isValid()) {
 
-                $contest = $form->getData();
+                $contest    = $form->getData();
+                $ruleset    = $contest->getRuleset()
+                $rules      = $ruleset->getRules()
 
-                $formRules = $contest->getRuleset();
-                $formRules = $formRules['rules'];
-
-                $ruleset = new CountryAgeRestrictionRuleset();
-
-                $ruleset->setParentType("contest");
-                $ruleset->setDefaultAllow(true);
-                $rules = $ruleset->getRules();
-
-                foreach ($formRules as $rule) {
-
-                    $r = new CountryAgeRestrictionRule();
-                    $r->setCountry($rule['country']);
-                    $r->setRuleset($ruleset);
-                    $r->setMinAge($rule['minAge']);
-                    $r->setMaxAge($rule['maxAge']);
-                    $r->setRuleType($rule['ruleType']);
-
-                    $rules->add($r);
+                foreach ($rules as $rule) {
+                    $rule->setRuleset($ruleset);
                 }
 
-                $contest->setRuleset($ruleset);
-var_dump($contest->getRuleset());exit;
+                $contest->getRuleset()->setParentType('contest');
+                $contest->getRuleset()->setDefaultAllow(true);
+
                 $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
 
                 if (!$mUtil->persistRelatedMedia($contest->getBanner())) {

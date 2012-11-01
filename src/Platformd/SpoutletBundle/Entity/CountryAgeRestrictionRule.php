@@ -39,7 +39,7 @@ class CountryAgeRestrictionRule
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", inversedBy="rules")
-     * @ORM\JoinColumn(onDelete="CASCADE", name="ruleset_id")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $ruleset;
 
@@ -111,14 +111,14 @@ class CountryAgeRestrictionRule
         return $this->country;
     }
 
-    public function setRuleSet($ruleSet)
+    public function setRuleset($ruleset)
     {
-        $this->ruleSet = $ruleSet;
+        $this->ruleset = $ruleset;
     }
 
-    public function getRuleSet()
+    public function getRuleset()
     {
-        return $this->ruleSet;
+        return $this->ruleset;
     }
 
     /**

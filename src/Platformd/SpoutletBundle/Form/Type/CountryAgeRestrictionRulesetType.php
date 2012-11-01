@@ -26,7 +26,14 @@ class CountryAgeRestrictionRulesetType extends AbstractType
         return 'platformd_spoutletbundle_countryagerestrictionruletype';
     }
 
-    private static function getTypeChoices()
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'data_class' => 'Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset',
+        );
+    }
+
+    private static function getParentTypeChoices()
     {
         foreach (CountryAgeRestrictionRuleset::getValidParentTypes() as $type) {
             $choices[$type] = $type;

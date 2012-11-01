@@ -40,7 +40,8 @@ class CountryAgeRestrictionRuleset
     private $parentType;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule",orphanRemoval=true, mappedBy="ruleset", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule", mappedBy="ruleset", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $rules;
 

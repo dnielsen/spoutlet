@@ -24,7 +24,16 @@
                 {% endfor %}
             </td>
             <td><a href="{{ path('contest_show', { 'slug': contest.slug }) }}">{{ path('contest_show', { 'slug': contest.slug }) }}</a></td>
-            <td>{{ contest.status }}</td>
+            <td>
+                {% if contest.status == "published" %}
+                    <span class="label label-success">
+                {% else %}
+                    <span class="label label-warning">
+                {% endif %}
+
+                {{ contest.status | capitalize }}</span>
+
+            </td>
         </tr>
     {% endfor %}
     </tbody>
