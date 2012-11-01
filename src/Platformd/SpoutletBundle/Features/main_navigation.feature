@@ -69,9 +69,6 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
       | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers              |
       | Deals                       | /app_test.php/deal/                             | http://na.alienwarearena.local/app_test.php/deal/                   |
-      | NewGroups >> All Groups     | /app_test.php/groups/                           | http://na.alienwarearena.local/app_test.php/groups/                 |
-      | NewGroups >> My Groups      | /app_test.php/account/profile/groups            | http://na.alienwarearena.local/app_test.php/account/profile/groups  |
-      | NewGroups >> Create Group   | /app_test.php/groups/new/                       | http://na.alienwarearena.local/app_test.php/groups/new/             |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
       | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
@@ -94,9 +91,6 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                                                                          | http://eu.alienwarearena.local/app_test.php/wallpapers  |
       | Deals                       | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
-      | NewGroups >> All Groups     | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
-      | NewGroups >> My Groups      | /app_test.php/account/profile/groups                                                              | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
-      | NewGroups >> Create Group   | /app_test.php/groups/new/                                                                         | http://eu.alienwarearena.local/app_test.php/groups/new/ |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                                                                           | http://www.alienwarearena.com/microsoft                 |
@@ -160,9 +154,6 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://anz.alienwarearena.local/app_test.php/wallpapers |
-      | NewGroups >> All Groups     | /app_test.php/groups/                     | http://anz.alienwarearena.local/app_test.php/groups/     |
-      | NewGroups >> My Groups      | /app_test.php/account/profile/groups      | http://anz.alienwarearena.local/app_test.php/account/profile/groups |
-      | NewGroups >> Create Group   | /app_test.php/groups/new/                 | http://anz.alienwarearena.local/app_test.php/groups/new/ |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                 |
