@@ -14,19 +14,19 @@ class CountryAgeRestrictionRuleType extends AbstractType
     {
         $builder
             ->add('country', 'entity', array(
-                'label'     => '',
+                'label'     => 'Country',
                 'class'     => 'SpoutletBundle:Country',
                 'property'  => 'name',
             ))
             ->add('ruleType', 'choice', array(
                 'choices'   => $this->getValidRuleTypes(),
-                'label'     => '',
+                'label'     => 'Allow/Deny',
             ))
             ->add('minAge', null, array(
-                'label'     => '',
+                'label'     => 'Min Age',
             ))
             ->add('maxAge', null, array(
-                'label'     => '',
+                'label'     => 'Max Age',
             ));
     }
 

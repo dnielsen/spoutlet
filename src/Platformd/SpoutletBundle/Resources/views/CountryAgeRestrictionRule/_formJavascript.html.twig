@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-    function addRestrictionForm(collectionHolder, $newLinkTr) {
+    function addRestrictionForm(collectionHolder, $newLinkLi) {
         // Get the data-prototype we explained earlier
         var prototype = collectionHolder.attr('data-prototype');
 
@@ -9,21 +9,21 @@
         var newForm = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
 
 
-        var $newFormTr = $('<tr class="span5 image-tr"></tr>').append(newForm);
-        $newFormTr.hide();
-        $newLinkTr.before($newFormTr);
-        $newFormTr.fadeIn();
+        var $newFormLi = $('<li class="span5 restriction-li"></li>').append(newForm);
+        $newFormLi.hide();
+        $newLinkLi.before($newFormLi);
+        $newFormLi.fadeIn();
 
-        addRestrictionFormDeleteLink($newFormTr);
+        addRestrictionFormDeleteLink($newFormLi);
 
         // a bit ugly, but we need a clear after each "row"
-        if ((collectionHolder.find('.image-tr').length % 2) == 0) {
-            $newLinkTr.before($('<tr class="clear"></tr>'));
+        if ((collectionHolder.find('.restriction-li').length % 2) == 0) {
+            $newLinkLi.before($('<li class="clear"></li>'));
         }
     }
 
-    function addRestrictionFormDeleteLink($tagFormTr) {
-        var $removeFormA = $('<a href="#" class="close">&times;</a>');
+    function addRestrictionFormDeleteLink($tagFormLi) {
+        var $removeFormA = $('<a href="#" class="remove">&times;</a>');
         $tagFormLi.append($removeFormA);
 
         $removeFormA.on('click', function(e) {
@@ -43,23 +43,23 @@
 
         // setup an "add a tag" link
         var $addTagLink = $('<div class="wrap"><a href="#" class="add_tag_link btn btn-primary"><i class="icon-plus icon-white"></i> Add another</a></div>');
-        var $newLinkTr = $('<tr class="span5 new-link"></tr>').append($addTagLink);
+        var $newLinkLi = $('<li class="span5 new-link"></li>').append($addTagLink);
 
         // add delete links to existing elements
-        collectionHolder.find('tr.existing-element').each(function() {
+        collectionHolder.find('li.existing-restriction').each(function() {
             addRestrictionFormDeleteLink($(this));
         });
 
         jQuery(document).ready(function() {
 
-            collectionHolder.append($newLinkTr);
+            collectionHolder.append($newLinkLi);
 
             $addTagLink.on('click', function(e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
 
                 // add a new tag form (see next code block)
-                addRestrictionForm(collectionHolder, $newLinkTr);
+                addRestrictionForm(collectionHolder, $newLinkLi);
             });
         });
     });

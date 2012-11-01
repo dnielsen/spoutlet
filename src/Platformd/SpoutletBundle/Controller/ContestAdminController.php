@@ -90,11 +90,24 @@ class ContestAdminController extends Controller
             if ($form->isValid()) {
 
                 $contest    = $form->getData();
-                $ruleset    = $contest->getRuleset()
-                $rules      = $ruleset->getRules()
+                $ruleset    = $contest->getRuleset();
+                $rules      = $ruleset->getRules();
+
+                $newRulesArray = array();
 
                 foreach ($rules as $rule) {
                     $rule->setRuleset($ruleset);
+                    $newRulesArray[] = $rule;
+                }
+
+                $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+                if ($oldRules) {
+                    foreach ($oldRules as $oldRule) {
+                        if (!in_array($oldRule, $newRulesArray)) {
+                            $oldRule->setRuleset(null);
+                        }
+                    }
                 }
 
                 $contest->getRuleset()->setParentType('contest');
