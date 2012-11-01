@@ -191,6 +191,11 @@ class Contest implements LinkableInterface
      */
     private $status;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    private $ruleset;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -566,6 +571,16 @@ class Contest implements LinkableInterface
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
     }
 
     public function getRedemptionInstructionsArray()

@@ -2,6 +2,11 @@ admin_contest_new:
     pattern: /new
     defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
 
+admin_contest_create:
+    pattern: /create
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
+    requirements: { _method: post }
+
 admin_contest_index:
     pattern: /
     defaults: { _controller: "SpoutletBundle:ContestAdmin:index" }
@@ -13,11 +18,6 @@ admin_contest_list:
 admin_contest_edit:
     pattern: /{slug}/edit
     defaults: { _controller: "SpoutletBundle:ContestAdmin:edit" }
-
-admin_contest_create:
-    pattern: /create
-    defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
-    requirements: { _method: post }
 
 admin_contest_update:
     pattern:  /{slug}/update
