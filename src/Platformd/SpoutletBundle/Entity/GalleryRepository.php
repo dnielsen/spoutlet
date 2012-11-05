@@ -45,6 +45,6 @@ class GalleryRepository extends EntityRepository
             ->where('g.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->execute();
+            ->getOneOrNullResult();
     }
 }

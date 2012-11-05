@@ -400,7 +400,7 @@ liip_imagine:
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
                 relative_resize: { widen: 204 }
-                crop: { start: [10, 10], size: [204, 114] }
+                crop: { start: [0, 0], size: [204, 114] }
 
         image_thumb_small:
             quality: 100
@@ -416,7 +416,13 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [636, 295], mode: inset }
-                crop: { start: [5, 5], size: [636, 295] }
+                crop: { start: [0, 0], size: [636, 295] }
+
+        media_photo_thumb:
+            quality: 100
+            filters:
+                relative_resize: { widen: 135, heighten: 80 }
+                crop: { start: [0, 0], size: [135, 80] }
 
         media_photo_show:
             quality: 100

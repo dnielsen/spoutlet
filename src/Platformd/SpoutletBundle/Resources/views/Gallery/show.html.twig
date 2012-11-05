@@ -15,7 +15,7 @@
 {% block content %}
 <div class="std_2col">
     <div class="left">
-        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="" />
+        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
     </div>
     <div class="right">
         <div class="widget-33">
@@ -29,7 +29,7 @@
                     <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
                     <div><a href="javascript:void(0);">{{ media.author.username }}</a></div>
                 </div>
-                <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('M j, Y')}}</div>
+                <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('d/m/Y')}}</div>
                 <p>
                     {{ media.description }}
                 </p>

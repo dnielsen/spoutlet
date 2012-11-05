@@ -150,17 +150,18 @@ class GalleryController extends Controller
 
     public function galleryAction($slug)
     {
-        $repo = $this->getGalleryRepository();
-
-        $gallery = $repo->findOneBySlug($slug);
+        $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
 
         if(!$gallery)
         {
             throw $this->createNotFoundException('Gallery not found.');
         }
 
+        $medias = $this->getGalleryMediaRepository()->findMediaForGalleryByGalleryId($gallery->getId());
+
         return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
             'gallery' => $gallery,
+            'medias'  => $medias,
         ));
     }
 
