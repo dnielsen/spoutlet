@@ -1,6 +1,22 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
+
+<div class="xnotices" id="flash-publish-success" style="display:none;">
+    <div class="successNotice notice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3>{{ 'galleries.submit_photo_publish_success' | trans }}</h3>
+                        <p>{{ 'galleries.submit_photo_publish_message' | trans }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
 
 <div class="std_2col">
@@ -8,24 +24,24 @@
         <div class="form-horizontal">
             <div class="span11">
                 <div class="control-group ">
-                    <label class="control-label" for="media-title">Image Name</label>
+                    <label class="control-label" for="media-title">{{ 'galleries.submit_photo_image_name' | trans }}</label>
                     <div class="controls">
                         <input type="text" id="media-title" name="media-title" required="required" maxlength="255" class="photo-title form-txt">
                     </div>
                 </div>
                 <div class="control-group ">
-                    <label class="control-label" for="media-description">Description</label>
+                    <label class="control-label" for="media-description">{{ 'galleries.submit_photo_image_desc' | trans }}</label>
                     <div class="controls">
                         <textarea id="media-description" name="media-description" required="required" maxlength="512" class="photo-description"></textarea>
                     </div>
                 </div>
                 <div id="platformd_spoutletbundle_gallery_media_galleries">
                     <div class="control-group ">
-                        <label class="control-label">Galleries</label>
+                        <label class="control-label">{{ 'galleries.submit_photo_image_galleries' | trans }}</label>
                         <div class="controls">
                             {% for gallery in galleries %}
                                 <label class="checkbox">
-                                    <input type="checkbox" id="gallery-{{ gallery.id }}" name="gallery-{{ gallery.id }}" value="gallery.id" />
+                                    <input class="gallery-checkbox" type="checkbox" id="gallery-{{ gallery.id }}" name="gallery-{{ gallery.id }}" value="{{ gallery.id }}" />
                                     {{ gallery.name }}
                                 </label>
                             {% endfor %}
@@ -37,13 +53,13 @@
             </div>
         </div>
         <div class="form-actions">
-            <button id="publish-photo" class="btn btn-primary" formnovalidate>Publish</button>
+            <button id="publish-photo" class="btn btn-primary" formnovalidate>{{ 'galleries.submit_photo_button_publish' | trans}}</button>
         </div>
     </div>
     <div class="right">
         {% for media in medias %}
             <div class="gallery-media-wrapper">
-                <img title="{{ media.title }}" class="gallery-media" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
             </div>
         {% endfor %}
     </div>
@@ -63,20 +79,50 @@
     <script type="text/javascript">
         $(function () {
 
+            var clearForm = function() {
+                $('#media-title').val('');
+                $('#media-description').val('');
+                $('input:checkbox').removeAttr('checked');
+            }
+
+            var hideFlash = function () {
+                window.setTimeout(function() {
+                    $('.xnotices').fadeOut();
+                }, 10000);
+            }
+
             $('#publish-photo').click(function () {
                 var url = '{{ path('gallery_publish_photo') }}';
+
+                var galleries = [];
+
+                $('.gallery-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        galleries.push($(this).val());
+                    }
+                });
+
+                var media = {
+                    'id' : $('#media-id').val(),
+                    'title' : $('#media-title').val(),
+                    'description' : $('#media-description').val(),
+                    'galleries' : galleries,
+                };
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: JSON.stringify({
-                        'id' : $('#media-id').val(),
-                        'title' : $('#media-title').val(),
-                        'description' : $('#media-description').val()
-                    }),
+                    data: JSON.stringify(media),
                     contentType: 'application/json',
                     success: function(data) {
-                        alert(data.message);
+                        if(data.success) {
+                            $('#flash-publish-success').fadeIn();
+                            $('#media-' + $('#media-id').val()).parent().fadeOut();
+                            clearForm();
+                            hideFlash();
+                        } else {
+
+                        }
                     }
                 });
             });
@@ -122,6 +168,8 @@
                     $(this).removeClass('active');
                 }
             );
+
+            hideFlash();
         });
     </script>
 {% endblock %}

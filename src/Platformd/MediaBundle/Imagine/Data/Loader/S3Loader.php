@@ -47,6 +47,7 @@ class S3Loader implements LoaderInterface
      */
     public function find($path)
     {
+
         if (false !== strpos($path, '/../') || 0 === strpos($path, '../')) {
             throw new NotFoundHttpException(sprintf("Source image was searched with '%s' out side of the defined root path", $path));
         }

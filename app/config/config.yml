@@ -410,4 +410,9 @@ liip_imagine:
             filters:
                 thumbnail: { size: [400, 400], mode: inset }
 
+        nivo_slider:
+            quality: 100
+            filters:
+                thumbnail: { size: [636, 295], mode: inset }
+
 knp_time: ~

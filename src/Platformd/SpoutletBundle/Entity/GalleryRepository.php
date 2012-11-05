@@ -29,4 +29,13 @@ class GalleryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findAllGalleries($galleryIds)
+    {
+        $qb = $this->createQueryBuilder('g');
+
+        return $qb->where($qb->expr()->in('g.id', $galleryIds))
+            ->getQuery()
+            ->execute();
+    }
 }

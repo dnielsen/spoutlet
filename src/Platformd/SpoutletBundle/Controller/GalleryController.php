@@ -22,7 +22,10 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('SpoutletBundle:Gallery:index.html.twig');
+        $medias = $this->getGalleryMediaRepository()->findMediaForIndexPage();
+        return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
+            'medias' => $medias,
+        ));
     }
 
     public function submitAction(Request $request)
@@ -90,7 +93,7 @@ class GalleryController extends Controller
 
         $params = json_decode($content, true);
 
-        if (!isset($params['id']) || !isset($params['title']) || !isset($params['description'])) {
+        if (!isset($params['id']) || !isset($params['title']) || !isset($params['description']) || !isset($params['galleries'])) {
             $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
             return $response;
         }
@@ -98,19 +101,22 @@ class GalleryController extends Controller
         $id          = (int) $params['id'];
         $title       = $params['title'];
         $description = $params['description'];
+        $gals        = $params['galleries'];
 
+        $galleries = $this->getGalleryRepository()->findAllGalleries($gals);
 
         $media = $this->getGalleryMediaRepository()->find($id);
 
         if(!$media)
         {
-            $response->setContent(json_encode(array("success" => false, "message" => "Unable to find photo.".$id)));
+            $response->setContent(json_encode(array("success" => false, "message" => "Unable to find photo.")));
             return $response;
         }
 
         $media->setTitle($title);
         $media->setDescription($description);
         $media->setPublished(true);
+        $media->setGalleries($galleries);
 
         $em = $this->getEntityManager();
         $em->persist($media);
