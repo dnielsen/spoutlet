@@ -22,7 +22,7 @@ gallery_publish_photo:
         _method: POST
 
 gallery_media_show:
-    pattern: /{gallery}/{id}
+    pattern: /photo/{id}
     defaults: { _controller: SpoutletBundle:Gallery:show, site: ~ }
 
 gallery_gallery_show:

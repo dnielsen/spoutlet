@@ -19,3 +19,18 @@
 .photo-title {
     width: 350px;
 }
+
+#media-social {
+    margin-top: 10px;
+}
+
+.photo-author {
+
+}
+
+.photo-author img {
+    width: 84px;
+    height: 84px;
+}
+
+

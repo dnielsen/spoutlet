@@ -418,4 +418,10 @@ liip_imagine:
                 thumbnail: { size: [636, 295], mode: inset }
                 crop: { start: [5, 5], size: [636, 295] }
 
+        media_photo_show:
+            quality: 100
+            filters:
+                relative_resize: { widen: 636 }
+
+
 knp_time: ~
