@@ -125,6 +125,11 @@ class GalleryMedia implements LinkableInterface
      */
     private $galleries;
 
+    /**
+     * @ORM\Column(name="views", type="integer")
+     */
+    private $views;
+
     public function __construct()
     {
         $this->galleries = new ArrayCollection();
@@ -178,7 +183,6 @@ class GalleryMedia implements LinkableInterface
     {
         return $this->author;
     }
-
 
     public function setAuthor(User $author)
     {
@@ -273,6 +277,16 @@ class GalleryMedia implements LinkableInterface
     public function setGalleries($galleries)
     {
         $this->galleries = $galleries;
+    }
+
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    public function setViews($views)
+    {
+        $this->views = $views;
     }
 
     public static function getValidCategories()

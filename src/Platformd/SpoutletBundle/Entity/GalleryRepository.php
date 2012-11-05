@@ -38,4 +38,13 @@ class GalleryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findOneBySlug($slug)
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->execute();
+    }
 }

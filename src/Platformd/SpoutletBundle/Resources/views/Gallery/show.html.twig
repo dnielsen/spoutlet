@@ -1,0 +1,30 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title media.title %}
+
+{% block content %}
+<div class="std_2col">
+    <div class="left">
+        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" />
+    </div>
+    <div class="right">
+        <div class="widget-33">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'galleries.show_photo_details_label' | trans }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('M j, Y')}}</div>
+                <p>
+                    {{ media.description }}
+                </p>
+                <div>Social Media Stuff Goes Here</div>
+                <div>
+                    {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -399,6 +399,8 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
+                relative_resize: { widen: 204 }
+                crop: { start: [10, 10], size: [204, 114] }
 
         image_thumb_small:
             quality: 100
@@ -414,5 +416,6 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [636, 295], mode: inset }
+                crop: { start: [5, 5], size: [636, 295] }
 
 knp_time: ~

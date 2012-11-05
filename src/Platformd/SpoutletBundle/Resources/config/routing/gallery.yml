@@ -20,3 +20,11 @@ gallery_publish_photo:
     requirements:
         _format: json
         _method: POST
+
+gallery_media_show:
+    pattern: /{gallery}/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:show, site: ~ }
+
+gallery_gallery_show:
+    pattern: /{slug}
+    defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~ }

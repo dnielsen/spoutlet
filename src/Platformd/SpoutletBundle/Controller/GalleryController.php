@@ -126,6 +126,44 @@ class GalleryController extends Controller
         return $response;
     }
 
+    public function showAction($id)
+    {
+        $media = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media)
+        {
+            throw $this->createNotFoundException('No media found.');
+        }
+
+        $views = $media->getViews();
+        $views += 1;
+        $media->setViews($views);
+
+        $em = $this->getEntityManager();
+        $em->persist($media);
+        $em->flush();
+
+        return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
+            'media' => $media,
+        ));
+    }
+
+    public function galleryAction($slug)
+    {
+        $repo = $this->getGalleryRepository();
+
+        $gallery = $repo->findOneBySlug($slug);
+
+        if(!$gallery)
+        {
+            throw $this->createNotFoundException('Gallery not found.');
+        }
+
+        return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
+            'gallery' => $gallery,
+        ));
+    }
+
     private function getEntityManager()
     {
         return $this->getDoctrine()->getEntityManager();

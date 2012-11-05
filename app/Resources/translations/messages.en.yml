@@ -549,3 +549,7 @@ galleries:
     submit_photo_button_publish: Publish
     submit_photo_publish_success: Success!
     submit_photo_publish_message: Your photos were published successfully.
+
+    show_photo_details_label: Photo Details
+    show_photo_details_upload_on: Uploaded On
+    show_photo_details_views: Views:
