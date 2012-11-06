@@ -19,7 +19,12 @@
         {% for item in news %}
         <tr>
             <td><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ item.title }}</a></td>
-            <td>{{ item.locale | site_name }}</td>
+            <td>
+                {% for site in item.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
             <td>
                 {{ item | pd_link_full }}
             </td>

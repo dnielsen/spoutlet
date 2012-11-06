@@ -6,14 +6,14 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
-* 
+*
 */
 class DefaultController extends Controller
 {
-    
+
     public function indexAction(Request $request)
     {
-        $news = $this->getNewsRepo()->findAllForLocale($this->getLocale());
+        $news = $this->getNewsRepo()->findAllForSite($this->getCurrentSite());
 
         // allows us to preview how this feature would really work
         $template = 'index.html.twig';

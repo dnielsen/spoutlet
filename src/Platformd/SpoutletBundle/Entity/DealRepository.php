@@ -168,10 +168,15 @@ class DealRepository extends EntityRepository
     private function createSiteQueryBuilder($site, $returnOnlyPublished = true)
     {
         $qb = $this->createQueryBuilder('d')
-            ->leftJoin('d.dealLocales', 'dl')
-            ->andWhere('dl.locale = :site')
-            ->setParameter('site', $site)
-        ;
+            ->leftJoin('d.sites', 's');
+
+        if (is_string($site)) {
+            $qb->andWhere('s.name = :site')
+                ->setParameter('site', $site);
+        } else {
+            $qb->andWhere('s = :site')
+            ->setParameter('site', $site);
+        }
 
         if ($returnOnlyPublished) {
             $this->addPublishedQueryBuilder($qb);

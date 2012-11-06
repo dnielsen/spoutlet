@@ -3,6 +3,7 @@
 namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
@@ -63,10 +64,17 @@ class News implements LinkableInterface
     /**
      * @var string $locale
      *
-     * @Assert\NotBlank
-     * @ORM\Column(name="locale", type="string", length="2", nullable=false)
+     * @ORM\Column(name="locale", type="string", length="2", nullable=true)
      */
     protected $locale;
+
+    /**
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="pd_news_site")
+     */
+     private $sites;
 
     /**
      * @var boolean $published
@@ -118,6 +126,11 @@ class News implements LinkableInterface
      * @var Game
      */
     protected $game;
+
+    public function __construct()
+    {
+        $this->sites = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -200,6 +213,23 @@ class News implements LinkableInterface
     {
         $this->locale = $locale;
     }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $sites
+     */
+    public function setSites($sites)
+    {
+        $this->sites = $sites;
+    }
+
 
     /**
      * @return boolean

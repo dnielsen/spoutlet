@@ -27,10 +27,6 @@ class Controller extends BaseController
         return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
     }
 
-    protected function getSiteFromDefaultLocale($locale) {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
-    }
-
     /**
      * @return string
      */

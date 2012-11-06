@@ -13,7 +13,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 
 /**
@@ -31,7 +30,7 @@ use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\DealRepository")
  */
 
-class Deal implements LinkableInterface, LocalesRelationshipInterface
+class Deal implements LinkableInterface
 {
 
     const REDEMPTION_LINE_PREFIX = '* ';
@@ -239,6 +238,14 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     private $locales;
 
     /**
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="pd_deal_site")
+     */
+    private $sites;
+
+    /**
      * @var \DateTime $created
      *
      * @ORM\Column(name="created_at", type="datetime")
@@ -259,6 +266,7 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
         $this->mediaGalleryMedias = new ArrayCollection();
         $this->dealPools = new ArrayCollection();
         $this->dealLocales = new ArrayCollection();
+        $this->sites = new ArrayCollection();
     }
 
     /**
@@ -804,47 +812,21 @@ class Deal implements LinkableInterface, LocalesRelationshipInterface
     }
 
     /**
-     * Returns true if setLocales as already been called and the locales are set
-     *
-     * e.g.
-     *      return is_array($this->locales);
-     *
-     * @return boolean
-     */
-    public function areLocalesInitialized()
-    {
-        return is_array($this->locales);
-    }
-
-    /**
-     * Returns the ArrayCollection of
-     *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getJoinedLocales()
+    public function getSites()
     {
-        return $this->getDealLocales();
+        return $this->sites;
     }
 
     /**
-     * A funny function where you create a new Instance of whatever the
-     * entities actual JoinedLocaleInterface is. You'll typically also
-     * need to set the relationship on that new object back to this object:
-     *
-     *     $newGamePageLocale = new GamePageLocale();
-     *     $newGamePageLocale->setGamePage($this);
-     *
-     *     return $newGamePageLocale;
-     *
-     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
+     * @param \Doctrine\Common\Collections\ArrayCollection $sites
      */
-    public function createJoinedLocale()
+    public function setSites($sites)
     {
-        $newDealLocale = new DealLocale();
-        $newDealLocale->setDeal($this);
-
-        return $newDealLocale;
+        $this->sites = $sites;
     }
+
 
     /**
      * @return \DateTime

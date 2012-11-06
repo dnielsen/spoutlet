@@ -12,7 +12,7 @@ Feature: Event Admin
         When I click to add new "Events"
             And I fill in the following:
                 | Name  | My Events |
-                | Site  | en        |
             And I select "Skyrim" from "Game"
+            And I check the "Demo" option for "Sites"
             And I press "Save"
         Then I should see "Event has been saved"

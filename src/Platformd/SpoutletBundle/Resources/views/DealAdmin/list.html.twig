@@ -19,12 +19,12 @@
             <td><a href="{{ path('admin_deal_edit', { 'id': deal.id }) }}">{{ deal.name }}</a></td>
             <td>
                 {# todo - should use linkable, but linkable doesn't support passing in which site/locale you're targeting #}
-                {% set url = deal.externalUrl ? deal.externalUrl : url('deal_show', {'slug': deal.slug, '_locale': site }) %}
+                {% set url = deal.externalUrl ? deal.externalUrl : url('deal_show', {'slug': deal.slug }) %}
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
             <td>
-                {% for locale in deal.locales %}
-                    {{ locale | site_name -}}
+                {% for site in deal.sites %}
+                    {{ site.name -}}
                     {{- loop.last ? '' : ',' }}
                 {% endfor %}
             </td>

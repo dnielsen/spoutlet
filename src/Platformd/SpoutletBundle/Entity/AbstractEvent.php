@@ -113,10 +113,18 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="10", nullable=false)
-     * @Assert\NotBlank
+     * @ORM\Column(name="locale", type="string", length="10", nullable=true)
      */
     protected $locale;
+
+    /**
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="pd_event_site")
+     */
+     private $sites;
+
 
     /**
      * @ORM\Column(name="bannerImage", type="string", length=255, nullable=true)
@@ -203,6 +211,11 @@ abstract class AbstractEvent implements LinkableInterface
      *
      */
     protected $display_timezone = true;
+
+    public function __construct()
+    {
+        $this->sites = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -345,6 +358,23 @@ abstract class AbstractEvent implements LinkableInterface
     {
         $this->locale = $locale;
     }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $sites
+     */
+    public function setSites($sites)
+    {
+        $this->sites = $sites;
+    }
+
 
     public function getBannerImage()
     {

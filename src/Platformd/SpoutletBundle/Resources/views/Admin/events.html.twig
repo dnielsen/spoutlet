@@ -23,7 +23,12 @@
         {% for event in events %}
         <tr class="eventListGroup_online">
             <td><a href="{{ path('admin_events_edit', { 'id' : event.id }) }}">{{ event.name }}</a></td>
-            <td>{{ event.locale | site_name }}</td>
+            <td>
+                {% for site in event.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
             <td>
                 {{ event | pd_link_full }}
             </td>

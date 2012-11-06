@@ -26,7 +26,7 @@ Feature: Deal Admin
         Then I should see "deal was created"
 
     Scenario: List existing deals
-        Given there is a deal called "Buy Diablog 3 and Get a Bonus Upgrade" in "en"
+        Given there is a deal called "Buy Diablo 3 and Get a Bonus Upgrade" in "en"
             And there is a deal called "Free Swag" in "en"
             And there is a deal called "Deal for China!" in "zh"
         When I click on "Deals"

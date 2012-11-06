@@ -15,7 +15,7 @@ class GiveawayController extends Controller
 
     public function indexAction()
     {
-        $giveaways = $this->getRepository()->findActives($this->getLocale());
+        $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
 
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
             'giveaways' => $giveaways
@@ -170,7 +170,7 @@ class GiveawayController extends Controller
      */
     protected function findGiveaway($slug)
     {
-        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getLocale())) {
+        if (!$giveaway = $this->getRepository()->findOneBySlug($slug, $this->getCurrentSite())) {
             throw $this->createNotFoundException();
         }
 

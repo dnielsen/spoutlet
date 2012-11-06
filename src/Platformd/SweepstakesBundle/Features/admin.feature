@@ -12,7 +12,6 @@ Feature: Sweepstake Admin
         When I click to add new "Sweepstakes"
             And I fill in the following:
                 | Name                  | My sweepstakes        |
-                | Site                  | en                    |
                 | External URL          | http://www.google.com |
                 | Starts at             | 06/05/2012            |
                 | Ends at               | 06/15/2012            |
@@ -20,6 +19,7 @@ Feature: Sweepstake Admin
                 | Official Rules        | the rules!            |
                 | Content               | the release!          |
             And I select "Skyrim" from "Game"
+            And I check the "Demo" option for "Sites"
             And I press "Save"
         Then I should see "Sweepstakes Saved"
 

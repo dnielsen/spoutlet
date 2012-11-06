@@ -5,33 +5,17 @@ namespace Platformd\SpoutletBundle\Model;
 use Platformd\SpoutletBundle\Entity\GamePage;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
-use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 
-/**
- * Manager for GamePage:
- *
- *  * Handles our special logic for locales
- *  * Saves the media fields
- *  * saves the media gallery
- */
 class GamePageManager
 {
     private $em;
-
-    private $session;
-
     private $mediaUtil;
 
-    private $localesHelper;
-
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper)
+    public function __construct(EntityManager $em, MediaUtil $mediaUtil)
     {
         $this->em = $em;
-        $this->session = $session;
         $this->mediaUtil = $mediaUtil;
-        $this->localesHelper = $localesHelper;
     }
 
     /**
@@ -45,15 +29,14 @@ class GamePageManager
     {
         $this->em->persist($gamePage);
 
-        $this->localesHelper->processLocalesSave($gamePage);
         $this->handleMediaFields($gamePage);
         $this->handleMediaGallery($gamePage);
 
         $this->em->flush();
     }
 
-    public function findAllGamePagesWhereIdNotIn($inArray) {
-        return $this->getRepository()->findAllGamePagesWhereIdNotIn($inArray, $this->getDatabaseSiteKey());
+    public function findAllGamePagesWhereIdNotIn($inArray, $site) {
+        return $this->getRepository()->findAllGamePagesWhereIdNotIn($inArray, $site);
     }
 
     public function findAllForSiteNewestFirst($site)
@@ -61,9 +44,9 @@ class GamePageManager
         return $this->getRepository()->findAllForSiteNewestFirst($site);
     }
 
-    public function findAllByGamePagesByCategory($category, $limit = null)
+    public function findAllByGamePagesByCategory($category, $site, $limit = null)
     {
-        $pages = $this->getRepository()->findAllByGamePagesByCategory($category, $this->getDatabaseSiteKey(), $limit);
+        $pages = $this->getRepository()->findAllByGamePagesByCategory($category, $site, $limit);
 
         return $pages;
     }
@@ -79,9 +62,9 @@ class GamePageManager
      * @param integer $age
      * @return array
      */
-    public function findActiveGamesInCategoriesForAge($age)
+    public function findActiveGamesInCategoriesForAge($age, $site)
     {
-        $activeGames = $this->getRepository()->findActiveGamesForAge($age, $this->getDatabaseSiteKey());
+        $activeGames = $this->getRepository()->findActiveGamesForAge($age, $site);
 
         $categorized = array();
         foreach ($activeGames as $activeGame) {
@@ -103,26 +86,26 @@ class GamePageManager
      * @param $age
      * @return \Platformd\SpoutletBundle\Entity\GamePAge
      */
-    public function findMostRecentGamePageForAge($age)
+    public function findMostRecentGamePageForAge($age, $site)
     {
-        return $this->getRepository()->findMostRecentGameForAge($age, $this->getDatabaseSiteKey());
+        return $this->getRepository()->findMostRecentGameForAge($age, $site);
     }
 
     /**
      * @return \Platformd\SpoutletBundle\Entity\GamePage[]
      */
-    public function findArchives()
+    public function findArchives($site)
     {
-        return $this->getRepository()->findArchivesForSite($this->getDatabaseSiteKey());
+        return $this->getRepository()->findArchivesForSite($site);
     }
 
     /**
      * @param string $slug
      * @return \Platformd\SpoutletBundle\Entity\GamePage
      */
-    public function findOneBySlug($slug)
+    public function findOneBySlug($slug, $site)
     {
-        return $this->getRepository()->findOneBySlugForSite($slug, $this->getDatabaseSiteKey());
+        return $this->getRepository()->findOneBySlugForSite($slug, $site);
     }
 
     /**
@@ -171,8 +154,5 @@ class GamePageManager
         return $this->em->getRepository('SpoutletBundle:GamePage');
     }
 
-    private function getDatabaseSiteKey()
-    {
-        return $this->session->getLocale();
-    }
+
 }
