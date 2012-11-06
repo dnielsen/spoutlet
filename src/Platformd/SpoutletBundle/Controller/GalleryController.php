@@ -22,9 +22,12 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        $medias = $this->getGalleryMediaRepository()->findMediaForIndexPage();
+        $nivoSliderMedia = $this->getGalleryMediaRepository()->findMediaForNivoSlider();
+        $options = $this->getFilterOptions();
+
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
-            'medias' => $medias,
+            'nivoSliderMedia'   => $nivoSliderMedia,
+            'filterOptions'     => $options,
         ));
     }
 
@@ -68,18 +71,6 @@ class GalleryController extends Controller
             'form'      => $form->createView(),
             'medias'    => $medias,
             'galleries' => $galleries,
-        ));
-    }
-
-    public function editPhotosAction()
-    {
-        $user = $this->getCurrentUser();
-        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
-
-        return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
-            'medias' => $medias,
-            'galleries' => $galleries
         ));
     }
 
@@ -168,6 +159,59 @@ class GalleryController extends Controller
             'gallery' => $gallery,
             'medias'  => $medias,
         ));
+    }
+
+    public function galleryDataAction(Request $request)
+    {
+        $type = $request->get('type');
+        $repo = $this->getGalleryMediaRepository();
+
+        switch ($type) {
+            case 'featured':
+                # get featured media
+                $medias = $repo->findFeaturedMedia();
+                return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
+                    'medias' => $medias,
+                ));
+
+            case 'latest':
+                # get latest media
+                $medias = $repo->findLatestMedia();
+                return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
+                    'medias' => $medias,
+                ));
+
+            case 'popular':
+                # get popular media (based on views but will need to be based on ratings when those are implemented)
+                $medias = $repo->findPopularMedia();
+                return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
+                    'medias' => $medias,
+                ));
+
+            default:
+                # if its none of the above, we'll assume its a gallery id
+                $medias = $repo->findMediaForGalleryByGalleryId($type);
+                return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
+                    'medias' => $medias,
+                ));
+        }
+    }
+
+    private function getFilterOptions()
+    {
+        $filterOptions  = array();
+        $site           = $this->getCurrentSite();
+        $galleries      = $this->getGalleryRepository()->findAllGalleriesForSite($site);
+
+        $filterOptions[] = array('value' => 'featured', 'name' => 'galleries.gallery_filter_option_featured');
+        $filterOptions[] = array('value' => 'latest', 'name' => 'galleries.gallery_filter_option_latest');
+        $filterOptions[] = array('value' => 'popular', 'name' => 'galleries.gallery_filter_option_popular');
+
+        foreach ($galleries as $gallery) {
+            $filterOptions[] = array('value' => $gallery->getId(), 'name' => $gallery->getName());
+        }
+
+        return $filterOptions;
     }
 
     private function getEntityManager()

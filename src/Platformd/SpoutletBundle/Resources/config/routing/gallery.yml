@@ -2,6 +2,10 @@ gallery_index:
     pattern: /
     defaults: { _controller: SpoutletBundle:Gallery:index }
 
+gallery_index_data:
+    pattern: /gallery-data
+    defaults: { _controller: SpoutletBundle:Gallery:galleryData, site: ~ }
+
 gallery_submit:
     pattern: /submit-photo
     defaults: { _controller: SpoutletBundle:Gallery:submit, site: ~ }

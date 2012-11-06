@@ -8,10 +8,15 @@
     <div class="left">
         <div class="gallery-items">
             {% for media in medias %}
-                <div class="gallery-media-thumb">
-                    <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                    <img title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                    </a>
+                <div class="gallery-media-thumb-wrapper">
+                    <div class="gallery-media-thumb">
+                        <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                            <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                        </a>
+                    </div>
+                    <div>
+                        <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -22,4 +27,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}

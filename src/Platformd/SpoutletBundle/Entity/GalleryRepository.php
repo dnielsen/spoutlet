@@ -30,6 +30,17 @@ class GalleryRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllGalleriesForSite($site)
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->where('g.deleted = false')
+            ->andWhere('s = :site')
+            ->setParameter('site', $site)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findAllGalleries($galleryIds)
     {
         $qb = $this->createQueryBuilder('g');

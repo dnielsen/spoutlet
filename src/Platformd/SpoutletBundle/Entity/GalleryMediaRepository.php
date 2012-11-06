@@ -34,7 +34,7 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
-    public function findMediaForIndexPage($limit=5)
+    public function findMediaForNivoSlider($limit=5)
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.published = true')
@@ -44,12 +44,44 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
-    public function findMediaForGalleryByGalleryId($galleryId)
+    public function findFeaturedMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.featured = true')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findLatestMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findPopularMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->orderBy('gm.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findMediaForGalleryByGalleryId($galleryId, $limit=12)
     {
         return $this->createQueryBuilder('gm')
             ->leftJoin('gm.galleries', 'gmg')
             ->where('gmg.id = :galleryId')
             ->setParameter('galleryId', $galleryId)
+            ->setMaxResults($limit)
             ->getQuery()
             ->execute();
     }
