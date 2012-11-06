@@ -6,6 +6,12 @@
 <h3>{{ gallery.name }}</h3>
 <div class="std_2col">
     <div class="left">
+        <p>
+            <select id="media-filter-options">
+                <option value="latest">{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
+                <option value="popular">{{ 'galleries.gallery_filter_option_popular' | trans }}</option>
+            </select>
+        </p>
         <div class="gallery-items">
             {% for media in medias %}
                 <div class="gallery-media-thumb-wrapper">
@@ -14,12 +20,18 @@
                             <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                         </a>
                     </div>
-                    <div>
+                    <div style="width:135px;">
                         <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                        <div>by: {{ media.author.username }}</div>
                     </div>
+                    <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
+                    <input type="hidden" value="{{ media.views }}" class="media-popular" />
                 </div>
             {% endfor %}
         </div>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
 {% endblock %}
@@ -31,4 +43,41 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var dateSort = function (a, b) {
+                var date1 = $(a).find('.media-date').val();
+                date1 = date1.split('-');
+                date1 = new Date(date1[2], date1[1] - 1, date1[0]);
+                var date2 = $(b).find('.media-date').val();
+                date2 = date2.split('-');
+                date2 = new Date(date2[2], date2[1] - 1, date2[0]);
+
+                return date1 < date2;
+            }
+
+            var popularSort = function (a, b) {
+                var rating1 = $(a).find('.media-popular').val();
+                var rating2 = $(b).find('.media-popular').val();
+
+                return rating1 < rating2;
+            }
+
+            $('#media-filter-options').change(function () {
+                var option = $(this).val();
+                switch(option) {
+                    case 'latest':
+                        $('.gallery-media-thumb-wrapper').sort(dateSort).appendTo('.gallery-items');
+                        break;
+                    case 'popular':
+                        $('.gallery-media-thumb-wrapper').sort(popularSort).appendTo('.gallery-items');
+                        break;
+                }
+            });
+
+            $('.media-title').truncate();
+        });
+    </script>
 {% endblock %}
