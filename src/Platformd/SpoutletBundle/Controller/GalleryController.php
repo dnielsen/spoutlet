@@ -140,6 +140,11 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('No media found.');
         }
 
+        if ($media->getDeleted()) {
+            $this->setFlash('error', 'Sorry, this media item does not exist.');
+            return $this->redirect($this->generateUrl('gallery_index'));
+        }
+
         $views = $media->getViews();
         $views += 1;
         $media->setViews($views);

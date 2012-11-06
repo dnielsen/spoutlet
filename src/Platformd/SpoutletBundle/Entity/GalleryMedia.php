@@ -300,6 +300,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setContentReports($contentReports)
     {
         $this->contentReports = $contentReports;
+    }
 
     public function getViews()
     {
