@@ -34,6 +34,9 @@ class GalleryController extends Controller
 
         $form = $this->createForm(new SubmitImageType($user));
 
+        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+
         if ($request->getMethod() == 'POST')
         {
             $em = $this->getEntityManager();
@@ -57,12 +60,14 @@ class GalleryController extends Controller
             $em->flush();
 
             $this->setFlash('success', 'Your images were uploaded successfully.');
-            return $this->redirect($this->generateUrl('gallery_edit_photos'));
+            return $this->redirect($this->generateUrl('gallery_submit'));
         }
 
 
         return $this->render('SpoutletBundle:Gallery:submit.html.twig', array(
-            'form' => $form->createView(),
+            'form'      => $form->createView(),
+            'medias'    => $medias,
+            'galleries' => $galleries,
         ));
     }
 
