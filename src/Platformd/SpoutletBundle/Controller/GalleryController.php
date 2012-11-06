@@ -148,7 +148,7 @@ class GalleryController extends Controller
     {
         $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
 
-        if(!$gallery)
+        if(!$gallery || $gallery->getDeleted())
         {
             throw $this->createNotFoundException('Gallery not found.');
         }
