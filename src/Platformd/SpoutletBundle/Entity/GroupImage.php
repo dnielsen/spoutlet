@@ -9,12 +9,14 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\SpoutletBundle\Entity\GroupImage
  *
  * @ORM\Table(name="pd_group_image")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupImageRepository")
+ * @Assert\Callback(methods={"doesImageExist"})
  */
 class GroupImage implements LinkableInterface, ReportableContentInterface
 {
@@ -278,5 +280,23 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    public function doesImageExist(ExecutionContext $executionContext)
+    {
+        // error if invalid or no image is specified
+
+        if ($this->getImage()->getFileObject()) {
+            return;
+        }
+var_dump($this->getImage());exit;
+        $propertyPath = $executionContext->getPropertyPath() . '.image';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            "Please select an image to upload",
+            array(),
+            "image"
+        );
     }
 }
