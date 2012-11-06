@@ -1,0 +1,69 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+<<<<<<< HEAD
+{% set reportContentType    = 'GalleryMedia' %}
+
+=======
+>>>>>>> feature/media_gallery
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ media.title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="{{ media_path(media.image) | imagine_filter('image_thumb_small') }}" />
+    <meta property="og:description" content="{{ media.description }}" />
+{% endblock %}
+
+{% block title media.title %}
+
+{% block content %}
+<div class="std_2col">
+    <div class="left">
+        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
+    </div>
+    <div class="right">
+        <div class="widget-33">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'galleries.show_photo_details_label' | trans }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div class="photo-author">
+                    <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
+                    <div><a href="javascript:void(0);">{{ media.author.username }}</a></div>
+                </div>
+                <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('d/m/Y')}}</div>
+                <p>
+                    {{ media.description }}
+                </p>
+                <div>
+                    {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
+                </div>
+                <div id="media-social">
+                    <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                    <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                </div>
+                <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
+                 <div id="widget-footer">
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Flag as inappropriate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+
+{% endblock %}

@@ -46,12 +46,30 @@
             </ol>
 
             {{ form_row(form.maxEntries) }}
+
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>c) Restrictions</legend>
+        <div class="game-page-form">
+            <ul class="medias-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+                {# see the CSS file this explanation #}
+                <li class="dummy"></li>
+                {% for rule in form.ruleset.rules %}
+                    <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
+
+                    {% if loop.index is even %}
+                        <li class="clear"></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
 
     </fieldset>
 
     <fieldset>
-        <legend>c) Facebook Info</legend>
+        <legend>d) Facebook Info</legend>
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.openGraphOverride.description) }}
@@ -61,7 +79,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>d) Status</legend>
+        <legend>e) Status</legend>
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.status) }}

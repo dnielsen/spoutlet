@@ -7,17 +7,17 @@
 <h3 style="font-weight:bold;font-size:17px;padding:0 0 10px 0;">{{ 'galleries.index_page_header' | trans }}</h3>
 <div class="std_2col">
     <div class="left">
+        {% if medias | length > 0 %}
         <div style="width: 636px; height: 295px;background-color: #4e4e4e">
             <div class="slider-wrapper theme-nivo">
                 <div id="slider" class="nivoSlider">
-                    <img src="http://img181.poco.cn/mypoco/myphoto/20110419/20/5596465420110419204210015.jpg" alt="" />
-                    <img src="http://i.dailymail.co.uk/i/pix/2009/09/21/article-1215067-0687982F000005DC-42_634x295.jpg" alt="" />
-                    <img src="http://tech.mthai.com/wp-content/uploads/2011/11/article-2067262-0EF832D000000578-41_634x312.jpg" alt="" />
-                    <img src="http://img181.poco.cn/mypoco/myphoto/20110419/20/5596465420110419204210015.jpg" alt="" />
-                    <img src="http://reefbuilders.com/files/2010/10/paul.jpg" alt="" />
+                    {% for media in medias %}
+                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" />
+                    {% endfor %}
                 </div>
             </div>
         </div>
+        {% endif %}
 
         <div class="widget-66" style="margin: 15px auto;">
             <div class="widget-header">

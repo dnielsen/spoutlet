@@ -33,4 +33,24 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findMediaForIndexPage($limit=5)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findMediaForGalleryByGalleryId($galleryId)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->where('gmg.id = :galleryId')
+            ->setParameter('galleryId', $galleryId)
+            ->getQuery()
+            ->execute();
+    }
 }

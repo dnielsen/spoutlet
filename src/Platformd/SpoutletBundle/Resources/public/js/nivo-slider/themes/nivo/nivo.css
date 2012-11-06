@@ -78,14 +78,14 @@ Author URI: http://dev7studios.com
 .theme-nivo a.nivo-nextNav {
     background-position:-43px 0;
     left:370px;
-    top:237px;
+    top:236px;
 }
 .theme-nivo a.nivo-nextNav:hover {
     background-position:-43px -43px;
 }
 .theme-nivo a.nivo-prevNav {
     right:370px;
-    top:237px;
+    top:236px;
 }
 .theme-nivo a.nivo-prevNav:hover {
     background-position:0 -43px;

@@ -1,0 +1,25 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title gallery.name %}
+
+{% block content %}
+<h3>{{ gallery.name }}</h3>
+<div class="std_2col">
+    <div class="left">
+        <div class="gallery-items">
+            {% for media in medias %}
+                <div class="gallery-media-thumb">
+                    <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                    <img title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}

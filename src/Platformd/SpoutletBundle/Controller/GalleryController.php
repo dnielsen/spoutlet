@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
 use Platformd\SpoutletBundle\Form\Type\GalleryMediaType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -21,7 +22,10 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('SpoutletBundle:Gallery:index.html.twig');
+        $medias = $this->getGalleryMediaRepository()->findMediaForIndexPage();
+        return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
+            'medias' => $medias,
+        ));
     }
 
     public function submitAction(Request $request)
@@ -29,6 +33,9 @@ class GalleryController extends Controller
         $user = $this->getCurrentUser();
 
         $form = $this->createForm(new SubmitImageType($user));
+
+        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
 
         if ($request->getMethod() == 'POST')
         {
@@ -53,12 +60,14 @@ class GalleryController extends Controller
             $em->flush();
 
             $this->setFlash('success', 'Your images were uploaded successfully.');
-            return $this->redirect($this->generateUrl('gallery_edit_photos'));
+            return $this->redirect($this->generateUrl('gallery_submit'));
         }
 
 
         return $this->render('SpoutletBundle:Gallery:submit.html.twig', array(
-            'form' => $form->createView(),
+            'form'      => $form->createView(),
+            'medias'    => $medias,
+            'galleries' => $galleries,
         ));
     }
 
@@ -66,11 +75,98 @@ class GalleryController extends Controller
     {
         $user = $this->getCurrentUser();
         $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $form = $this->createForm(new GalleryMediaType());
+        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
 
         return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
             'medias' => $medias,
-            'form' => $form->createView()
+            'galleries' => $galleries
+        ));
+    }
+
+    public function publishAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['id']) || !isset($params['title']) || !isset($params['description']) || !isset($params['galleries'])) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $id          = (int) $params['id'];
+        $title       = $params['title'];
+        $description = $params['description'];
+        $gals        = $params['galleries'];
+
+        $galleries = $this->getGalleryRepository()->findAllGalleries($gals);
+
+        $media = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media)
+        {
+            $response->setContent(json_encode(array("success" => false, "message" => "Unable to find photo.")));
+            return $response;
+        }
+
+        $media->setTitle($title);
+        $media->setDescription($description);
+        $media->setPublished(true);
+        $media->setGalleries($galleries);
+
+        $em = $this->getEntityManager();
+        $em->persist($media);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true, 'message' => 'Photo published successfully')));
+        return $response;
+    }
+
+    public function showAction($id)
+    {
+        $media = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media)
+        {
+            throw $this->createNotFoundException('No media found.');
+        }
+
+        $views = $media->getViews();
+        $views += 1;
+        $media->setViews($views);
+
+        $em = $this->getEntityManager();
+        $em->persist($media);
+        $em->flush();
+
+        return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
+            'media' => $media,
+        ));
+    }
+
+    public function galleryAction($slug)
+    {
+        $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
+
+        if(!$gallery)
+        {
+            throw $this->createNotFoundException('Gallery not found.');
+        }
+
+        $medias = $this->getGalleryMediaRepository()->findMediaForGalleryByGalleryId($gallery->getId());
+
+        return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
+            'gallery' => $gallery,
+            'medias'  => $medias,
         ));
     }
 
@@ -82,6 +178,11 @@ class GalleryController extends Controller
     private function getGalleryMediaRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia');
+    }
+
+    private function getGalleryRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Gallery');
     }
 
     private function getCurrentUser()

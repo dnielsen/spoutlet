@@ -1,0 +1,67 @@
+<script type="text/javascript">
+
+    function addRestrictionForm(collectionHolder, $newLinkLi) {
+        // Get the data-prototype we explained earlier
+        var prototype = collectionHolder.attr('data-prototype');
+
+        // Replace '$$name$$' in the prototype's HTML to
+        // instead be a number based on the current collection's length.
+        var newForm = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+
+
+        var $newFormLi = $('<li class="span5 restriction-li"></li>').append(newForm);
+        $newFormLi.hide();
+        $newLinkLi.before($newFormLi);
+        $newFormLi.fadeIn();
+
+        addRestrictionFormDeleteLink($newFormLi);
+
+        // a bit ugly, but we need a clear after each "row"
+        if ((collectionHolder.find('.restriction-li').length % 2) == 0) {
+            $newLinkLi.before($('<li class="clear"></li>'));
+        }
+    }
+
+    function addRestrictionFormDeleteLink($tagFormLi) {
+        var $removeFormA = $('<a href="#" class="remove">&times;</a>');
+        $tagFormLi.append($removeFormA);
+
+        $removeFormA.on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+
+
+            $tagFormLi.fadeOut('normal', function() {
+                $tagFormLi.remove();
+            });
+        });
+    }
+
+    jQuery(document).ready(function() {
+        // Get the div that holds the collection of tags
+        var collectionHolder = $('ul.rules');
+
+        // setup an "add a tag" link
+        var $addTagLink = $('<div class="wrap"><a href="#" class="add_tag_link btn btn-primary"><i class="icon-plus icon-white"></i> Add another</a></div>');
+        var $newLinkLi = $('<li class="span5 new-link"></li>').append($addTagLink);
+
+        // add delete links to existing elements
+        collectionHolder.find('li.existing-restriction').each(function() {
+            addRestrictionFormDeleteLink($(this));
+        });
+
+        jQuery(document).ready(function() {
+
+            collectionHolder.append($newLinkLi);
+
+            $addTagLink.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag form (see next code block)
+                addRestrictionForm(collectionHolder, $newLinkLi);
+            });
+        });
+    });
+
+</script>

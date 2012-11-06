@@ -11,14 +11,13 @@ use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Platformd\MediaBundle\Entity\GalleryMedia
  *
  * @ORM\Table(name="pd_gallery_media")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryMediaRepository")
  */
-class GalleryMedia implements LinkableInterface
+class GalleryMedia implements LinkableInterface, ReportableContentInterface
 {
 
     const IMAGE = 'image';
@@ -134,6 +133,11 @@ class GalleryMedia implements LinkableInterface
 
     protected $contentReports;
 
+    /*
+     * @ORM\Column(name="views", type="integer")
+     */
+    private $views = 0;
+
     public function __construct()
     {
         $this->galleries = new ArrayCollection();
@@ -188,7 +192,6 @@ class GalleryMedia implements LinkableInterface
         return $this->author;
     }
 
-
     public function setAuthor(User $author)
     {
         $this->author = $author;
@@ -239,7 +242,7 @@ class GalleryMedia implements LinkableInterface
         return $this->getPublished();
     }
 
-    public function setPulished($published)
+    public function setPublished($published)
     {
         $this->published = $published;
     }
@@ -284,6 +287,7 @@ class GalleryMedia implements LinkableInterface
         $this->galleries = $galleries;
     }
 
+
     public function getContentType() {
         return "GalleryMedia";
     }
@@ -296,6 +300,16 @@ class GalleryMedia implements LinkableInterface
     public function setContentReports($contentReports)
     {
         $this->contentReports = $contentReports;
+
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    public function setViews($views)
+    {
+        $this->views = $views;
+
     }
 
     public static function getValidCategories()

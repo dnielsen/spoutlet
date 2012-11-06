@@ -10,3 +10,44 @@
 .active {
     border: 1px solid #009CDA;
 }
+
+.photo-description {
+    width: 350px;
+    height: 150px;
+}
+
+.photo-title {
+    width: 350px;
+}
+
+#media-social {
+    margin-top: 10px;
+}
+
+.photo-author {
+
+}
+
+.photo-author img {
+    width: 84px;
+    height: 84px;
+}
+
+.gallery-media-thumb {
+    border: 1px solid #e3e3e3;
+    width: 135px;
+    height: 80px;
+    display: inline-table;
+    margin-left: 5px;
+}
+
+.gallery-media-thumb a {
+    border: none;
+}
+
+.gallery-media-thumb img {
+    cursor: pointer;
+    width: 135px;
+    height: 80px;
+}
+
