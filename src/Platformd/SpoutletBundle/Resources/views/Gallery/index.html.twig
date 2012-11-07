@@ -26,7 +26,7 @@
                     <div style="float: right;">
                         <select id="media-filter-options">
                         {% for option in filterOptions %}
-                        <option value="{{ option['value'] }}">{{ option['name'] | trans }}</option>
+                        <option value="{{ option['value'] }}" data-slug="{{ option['slug'] }}">{{ option['name'] | trans }}</option>
                         {% endfor %}
                     </select>
                     </div>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div class="widget-footer">
-                <a href="#" class="aw-link featured-footer-link">{{ 'galleries.gallery_see_all' | trans }}</a>
+                <a href="{{ path('gallery_index') }}" id="media-gallery-link" class="aw-link featured-footer-link">{{ 'galleries.gallery_see_all' | trans }}</a>
                 <div class="clear"></div>
             </div>
         </div>
@@ -69,6 +69,7 @@
             var updateMedia = function() {
                 var type = $('#media-filter-options').val();
                 var url = "{{ path('gallery_index_data') }}" + '?type=' + type;
+                var href = $('#media-gallery-link').attr('href') + $("#media-filter-options option:selected").attr('data-slug');
 
                 $.ajax({
                     url: url,
@@ -76,6 +77,7 @@
                     success: function (html) {
                         $('#media-wrapper').html(html);
                         $('.media-title').truncate();
+                        $('#media-gallery-link').attr('href', href);
                     }
                 });
             }

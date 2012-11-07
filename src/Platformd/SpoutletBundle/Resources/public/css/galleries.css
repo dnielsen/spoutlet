@@ -4,7 +4,7 @@
 
 .gallery-media {
     cursor: pointer;
-    border: 1px solid #e3e3e3;
+    border: 1px solid #4A4A4A;
 }
 
 .active {
@@ -39,7 +39,7 @@
 }
 
 .gallery-media-thumb {
-    border: 1px solid #e3e3e3;
+    border: 1px solid #4A4A4A;
     width: 135px;
     height: 80px;
 }

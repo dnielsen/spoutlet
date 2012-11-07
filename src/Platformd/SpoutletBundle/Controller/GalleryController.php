@@ -235,12 +235,12 @@ class GalleryController extends Controller
         $site           = $this->getCurrentSite();
         $galleries      = $this->getGalleryRepository()->findAllGalleriesForSite($site);
 
-        $filterOptions[] = array('value' => 'featured', 'name' => 'galleries.gallery_filter_option_featured');
-        $filterOptions[] = array('value' => 'latest', 'name' => 'galleries.gallery_filter_option_latest');
-        $filterOptions[] = array('value' => 'popular', 'name' => 'galleries.gallery_filter_option_popular');
+        $filterOptions[] = array('value' => 'featured', 'name' => 'galleries.gallery_filter_option_featured', 'slug' => '');
+        $filterOptions[] = array('value' => 'latest', 'name' => 'galleries.gallery_filter_option_latest', 'slug' => '');
+        $filterOptions[] = array('value' => 'popular', 'name' => 'galleries.gallery_filter_option_popular', 'slug' => '');
 
         foreach ($galleries as $gallery) {
-            $filterOptions[] = array('value' => $gallery->getId(), 'name' => $gallery->getName());
+            $filterOptions[] = array('value' => $gallery->getId(), 'name' => $gallery->getName(), 'slug' => $gallery->getSlug());
         }
 
         return $filterOptions;

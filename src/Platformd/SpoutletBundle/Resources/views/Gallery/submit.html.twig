@@ -151,7 +151,7 @@
                     success: function(data) {
                         if(data.success) {
                             $('#flash-publish-success').fadeIn();
-                            $('#media-' + $('#media-id').val()).parent().fadeOut();
+                            $('#media-' + $('#media-id').val()).parent().remove();
                             clearForm();
                             hideFlash();
                         } else {
