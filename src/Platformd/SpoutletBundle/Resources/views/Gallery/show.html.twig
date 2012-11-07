@@ -1,13 +1,11 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% set reportContentType    = 'GalleryMedia' %}
-<<<<<<< HEAD
+
 {% set site                 = get_current_site() %}
 {% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
 {% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
-=======
->>>>>>> feature/media_gallery
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -82,8 +80,6 @@
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
 {% endblock %}
-
-{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
