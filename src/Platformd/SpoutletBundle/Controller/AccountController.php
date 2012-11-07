@@ -122,6 +122,34 @@ class AccountController extends Controller
         ));
     }
 
+    public function photosAction()
+    {
+        $this->checkSecurity();
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $images = $em->getRepository('SpoutletBundle:GalleryMedia')
+            ->findAllPublishedByUserNewestFirst($this->getUser())
+        ;
+
+        // 16 images per page
+        $itemsPerPage = 20;
+        $totalPageCount = ceil(count($images) / $itemsPerPage);
+
+        $pages = array();
+        $offset = 0;
+        for($i = 0; $i < $totalPageCount; $i++)
+        {
+            $pages[] = array(array_slice($images, $offset, $itemsPerPage));
+            $offset += $itemsPerPage;
+        }
+
+        return $this->render('SpoutletBundle:Account:photos.html.twig', array(
+            'images'    => $images,
+            'pages'     => $pages,
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
