@@ -28,10 +28,11 @@ class GalleryMediaType extends AbstractType
             'label'      => 'Description',
             'attr'       => array('class' => 'photo-description')
         ));
-        $builder->add('galleries', new GalleryChoiceType(), array(
-            'label' => 'Galleries'
+        $builder->add('galleries', null, array(
+            'label' => 'Galleries',
+            'expanded' => true,
+            'multiple' => true,
         ));
-        $builder->add('mediaId', 'hidden');
 
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
                 $builder->add('featured', 'checkbox', array(

@@ -176,6 +176,40 @@ class GalleryController extends Controller
         ));
     }
 
+    public function editMediaAction($id, Request $request)
+    {
+        $user   = $this->getCurrentUser();
+        $media  = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media)
+        {
+            throw $this->createNotFoundException('Media not found.');
+        }
+
+        $form = $this->createForm(new GalleryMediaType($user), $media);
+
+        if($request->getMethod() == 'POST')
+        {
+            $form->bindRequest($request);
+
+            if($form->isValid())
+            {
+                $em = $this->getEntityManager();
+                $media = $form->getData();
+                $em->persist($media);
+                $em->flush();
+
+                $this->setFlash('success', 'Your changes are saved.');
+                return $this->redirect($this->generateUrl('gallery_edit_media', array('id' => $media->getId())));
+            }
+        }
+
+        return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
+            'media' => $media,
+            'form'  => $form->createView(),
+        ));
+    }
+
     public function galleryAction($slug)
     {
         $gallery = $this->getGalleryRepository()->findOneBySlug($slug);

@@ -20,7 +20,7 @@
 {% block title media.title %}
 
 {% block content %}
-<div class="std_2col">
+<div class="std_2col" style="min-height: 500px;">
     <div class="left">
         <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
     </div>
