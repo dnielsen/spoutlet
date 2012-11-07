@@ -496,6 +496,7 @@ platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
 platformd.user.account.photos: My Photos
 platformd.account_page.photos.my_photos: My Photos
+platformd.account_page.photos.submit: Submit Photo
 
 wallpapers: Wallpapers
 exclusive_designs: EXCLUSIVE DESIGNS

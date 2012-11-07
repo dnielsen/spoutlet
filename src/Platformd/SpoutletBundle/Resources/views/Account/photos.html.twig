@@ -10,6 +10,7 @@
             <h2>{{ "platformd.account_page.photos.my_photos" | trans }}</h2>
         </div>
     </div>
+    <a class="btn btn-primary" href="{{ path('gallery_submit') }}" style="margin-bottom:10px;">{{ "platformd.account_page.photos.submit" | trans }}</a>
     <div class="widget-content">
         {% if pages | length > 0 %}
             <div class="scrollable" id="scrollable-images" style="height: 800px; background: #191919;">
@@ -25,7 +26,7 @@
                                         </a>
                                     </div>
                                     <div class="account-image-title">
-                                        <a href="{{ media_path_nice(image.image) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox" style="border:none;">
+                                        <a href="{{ path('gallery_edit_media', { 'id': image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
                                             {{ image.title }}
                                         </a>
                                     </div>

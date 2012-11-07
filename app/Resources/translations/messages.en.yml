@@ -517,6 +517,7 @@ platformd.user.account.match_lobby: Match Lobby
 
 platformd.user.account.photos: My Photos
 platformd.account_page.photos.my_photos: My Photos
+platformd.account_page.photos.submit: Submit Photo
 
 groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
 groups.opengraph.title: Alienware Arena Groups - Join Now!
