@@ -10,7 +10,7 @@ class ContentReportRepository extends EntityRepository
     public function getContentReportTypeForAllSites($type)
     {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -28,7 +28,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesArchived($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -47,7 +47,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesDeletedContent($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -67,10 +67,11 @@ class ContentReportRepository extends EntityRepository
     {
 
         return $this->getEntityManager()->createQuery('
-            SELECT report, i, v, n FROM SpoutletBundle:ContentReport report
+            SELECT report, i, v, n, g FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.groupImage i
             LEFT JOIN report.groupVideo v
             LEFT JOIN report.groupNews n
+            LEFT JOIN report.galleryMedia g
             WHERE report.deleted = false
             ORDER BY report.reportedAt
             ')
@@ -81,10 +82,11 @@ class ContentReportRepository extends EntityRepository
     {
 
         return $this->getEntityManager()->createQuery('
-            SELECT report, i, v, n FROM SpoutletBundle:ContentReport report
+            SELECT report, i, v, n, g FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.groupImage i
             LEFT JOIN report.groupVideo v
             LEFT JOIN report.groupNews n
+            LEFT JOIN report.galleryMedia g
             JOIN report.site site
             WHERE report.deleted = false
             AND site = :site
@@ -139,6 +141,25 @@ class ContentReportRepository extends EntityRepository
         $reports = $em->createQuery('
             SELECT report, c FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.groupVideo c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForGalleryMedia($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.galleryMedia c
             WHERE report.deleted = false
             AND c = :content
             ')

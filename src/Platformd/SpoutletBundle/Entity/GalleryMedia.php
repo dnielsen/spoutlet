@@ -11,14 +11,13 @@ use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 /**
  * Platformd\MediaBundle\Entity\GalleryMedia
  *
  * @ORM\Table(name="pd_gallery_media")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryMediaRepository")
  */
-class GalleryMedia implements LinkableInterface
+class GalleryMedia implements LinkableInterface, ReportableContentInterface
 {
 
     const IMAGE = 'image';
@@ -129,6 +128,16 @@ class GalleryMedia implements LinkableInterface
     private $galleries;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="galleryMedia")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+
+    protected $contentReports;
+
+    /*
+
      * @ORM\Column(name="views", type="integer")
      */
     private $views = 0;
@@ -280,6 +289,20 @@ class GalleryMedia implements LinkableInterface
     public function setGalleries($galleries)
     {
         $this->galleries = $galleries;
+    }
+
+    public function getContentType() {
+        return "GalleryMedia";
+    }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
     }
 
     public function getViews()
