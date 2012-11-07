@@ -26,10 +26,68 @@ class GalleryMediaRepository extends EntityRepository
     public function findAllFeaturedForCategory($category)
     {
         return $this->createQueryBuilder('gm')
-            ->where('gm.featured = :featured')
+            ->where('gm.featured = true')
             ->andWhere('gm.category = :category')
             ->setParameter('category', $category)
-            ->setParameter('featured', true)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findMediaForNivoSlider($limit=5)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findFeaturedMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.featured = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findLatestMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findPopularMedia($limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.views', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findMediaForGalleryByGalleryId($galleryId, $limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->where('gmg.id = :galleryId')
+            ->andWhere('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('galleryId', $galleryId)
+            ->setMaxResults($limit)
             ->getQuery()
             ->execute();
     }

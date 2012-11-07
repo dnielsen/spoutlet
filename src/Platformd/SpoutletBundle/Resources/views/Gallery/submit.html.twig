@@ -18,8 +18,6 @@
     </div>
 </div>
 
-
-
 <div class="std_2col">
     <div class="left">
         <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
@@ -37,7 +35,7 @@
 </div>
 
 {% if medias | length > 0 %}
-<div class="std_2col">
+<div class="std_2col" id="publish-media">
     <div class="left">
         <p>
             <span style="font-weight:bold;">{{ 'galleries.submit_photo_step2' | trans }}</span>
@@ -103,14 +101,26 @@
     <script type="text/javascript">
         $(function() {
 
+            var t;
+
             var clearForm = function() {
                 $('#media-title').val('');
                 $('#media-description').val('');
                 $('input:checkbox').removeAttr('checked');
+
+                var mediaCount = $('.gallery-media').length;
+
+                if(mediaCount == 0) {
+                    $('#publish-media').fadeOut();
+                }
             }
 
             var hideFlash = function () {
-                window.setTimeout(function() {
+
+                clearTimout(t);
+
+                t = window.setTimeout(function() {
+
                     $('.xnotices').fadeOut();
                 }, 10000);
             }

@@ -134,6 +134,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     protected $contentReports;
 
     /*
+
      * @ORM\Column(name="views", type="integer")
      */
     private $views = 0;
@@ -287,7 +288,6 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
         $this->galleries = $galleries;
     }
 
-
     public function getContentType() {
         return "GalleryMedia";
     }
@@ -310,7 +310,6 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setViews($views)
     {
         $this->views = $views;
-
     }
 
     public static function getValidCategories()
