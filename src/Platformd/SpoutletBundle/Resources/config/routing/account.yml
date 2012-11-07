@@ -31,3 +31,7 @@ accounts_profile:
     pattern: /profile/view/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 
+accounts_photos:
+    pattern: /profile/photos
+    defaults: { _controller: SpoutletBundle:Account:photos }
+

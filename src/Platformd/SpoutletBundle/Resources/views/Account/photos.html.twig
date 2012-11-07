@@ -1,0 +1,81 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.user.account.photos" | trans }}{% endblock %}
+
+{% block content %}
+<div class="control_panel">
+
+    <div class="widget-header">
+        <div class="widget-title">
+            <h2>{{ "platformd.account_page.photos.my_photos" | trans }}</h2>
+        </div>
+    </div>
+    <div class="widget-content">
+        {% if pages | length > 0 %}
+            <div class="scrollable" id="scrollable-images" style="height: 800px; background: #191919;">
+                <div class="items">
+                    {% for pageNumber,page in pages %}
+                        <div class="items-wrapper">
+                        {% for images in page %}
+                            {% for image in images %}
+                                <div class="account-image-item">
+                                    <div class="account-image-image">
+                                        <a href="{{ media_path_nice(image.image) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox" style="border:none;">
+                                            <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
+                                        </a>
+                                    </div>
+                                    <div class="account-image-title">
+                                        <a href="{{ media_path_nice(image.image) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox" style="border:none;">
+                                            {{ image.title }}
+                                        </a>
+                                    </div>
+                                    <div>
+                                        Uploaded: {{ image.createdAt | date('m/d/Y') }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        <div class="account-image-pagination">
+                            Page {{ pageNumber + 1 }} of {{ pages | length}}
+                        </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="scroll-actions" style="margin-top: 10px;">
+                <a class="prev browse image-scroll-prev">Previous</a>
+                <a class="next browse image-scroll-next">See More</a>
+            </div>
+
+        {% else %}
+        <div style="height: 500px; width: 600px;">
+            <p>No images yet... please come back later!</p>
+        </div>
+        {% endif %}
+    </div>
+    <div class="widget-footer">
+        &nbsp;
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+<link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+
+    <script type="text/javascript">
+
+    $(function() {
+        // initialize scrollable
+        $(".scrollable").scrollable();
+    });
+
+    </script>
+
+{% endblock %}

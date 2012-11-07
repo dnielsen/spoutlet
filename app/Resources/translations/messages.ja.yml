@@ -494,6 +494,9 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
+platformd.user.account.photos: My Photos
+platformd.account_page.photos.my_photos: My Photos
+
 wallpapers: Wallpapers
 exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download

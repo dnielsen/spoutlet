@@ -23,6 +23,18 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllPublishedByUserNewestFirst($user)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.author = :user')
+            ->andWhere('gm.published = :published')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('user', $user)
+            ->setParameter('published', true)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findAllFeaturedForCategory($category)
     {
         return $this->createQueryBuilder('gm')
