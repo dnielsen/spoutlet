@@ -29,6 +29,9 @@ class GalleryMedia implements LinkableInterface
         self::VIDEO,
     );
 
+    static private $superAdminIsAllowedTo        = array('FeatureMedia', 'EditMedia', 'DeleteMedia');
+    static private $ownerIsAllowedTo             = array('EditMedia', 'DeleteMedia');
+
     /**
      * @var integer $id
      *
@@ -338,5 +341,61 @@ class GalleryMedia implements LinkableInterface
         $commentPrefix = $this->getCategory() == 'image' ? 'gallery_image-' : 'gallery_video-';
 
         return $commentPrefix.$this->getId();
+    }
+
+    public function isVisibleOnSite($site) {
+
+        if (!$site) {
+            return false;
+        }
+
+        $galleries = $this->getGalleries();
+
+        foreach ($galleries as $gallery) {
+
+            $isAllowedForSite = $gallery->getSites()->contains($site);
+
+            if ($isAllowedForSite) {
+                break;
+            }
+        }
+
+        return $isAllowedForSite;
+    }
+
+    public function isAllowedTo($user, $site, $action) {
+
+        if ($this->getDeleted() && $action != "EditMedia") {
+            return false;
+        }
+
+        if (!$this->isVisibleOnSite($site)) {
+            return false;
+        }
+
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
+
+            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
+            $isOwner        = $this->isOwner($user);
+
+            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
+                return true;
+            }
+
+            if ($isOwner) {
+                return in_array($action, self::$ownerIsAllowedTo);
+            }
+        }
+
+        return false;
+    }
+
+    public function isOwner($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->getAuthor() === $user;
     }
 }

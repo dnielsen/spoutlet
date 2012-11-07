@@ -32,3 +32,15 @@ gallery_media_show:
 gallery_gallery_show:
     pattern: /{slug}
     defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~ }
+
+gallery_delete_media:
+    pattern: /delete-media/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:deleteMedia, site: ~ }
+
+gallery_edit_media:
+    pattern: /edit-media/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:deleteMedia, site: ~ }
+
+gallery_feature_media:
+    pattern: /feature-media/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:feature, site: ~ }

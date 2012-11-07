@@ -74,6 +74,38 @@ class GalleryController extends Controller
         ));
     }
 
+    public function editPhotosAction()
+    {
+        $user = $this->getCurrentUser();
+        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+
+        return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
+            'medias' => $medias,
+            'galleries' => $galleries
+        ));
+    }
+
+    public function featureAction($id)
+    {
+        $em     = $this->getEntityManager();
+        $media  = $this->getGalleryMediaRepository()->find($id);
+
+        if (!$media->isAllowedTo($this->getCurrentUser(), $this->getCurrentSite(), 'FeatureMedia')) {
+            $this->setFlash('error', 'Sorry, You are not allowed to do this.');
+            return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
+        }
+
+        $media->setFeatured(!$media->getFeatured());
+        $em->persist($media);
+        $em->flush();
+
+        $flashString = $media->getFeatured() ? 'Media was featured successfully!' : 'Media was unfeatured successfully!';
+
+        $this->setFlash('success', $flashString);
+        return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
+    }
+
     public function publishAction(Request $request)
     {
         $response = new Response();
