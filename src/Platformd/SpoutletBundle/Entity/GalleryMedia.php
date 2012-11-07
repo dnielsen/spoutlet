@@ -102,6 +102,14 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     private $published = false;
 
     /**
+     * @var \DateTime $updated
+     *
+     * @ORM\Column(name="published_at", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="change", field="published", value="true")
+     */
+    protected $publishedAt;
+
+    /**
      * @ORM\Column(name="featured", type="boolean", nullable=true)
      */
     protected $featured;
@@ -137,10 +145,9 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     protected $contentReports;
 
     /*
-
      * @ORM\Column(name="views", type="integer")
      */
-    private $views = 0;
+    private $views;
 
     public function __construct()
     {
@@ -249,6 +256,16 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    public function getPublishedAt()
+    {
+        return $this->getPublishedAt();
+    }
+
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
     }
 
     public function getFeatured()

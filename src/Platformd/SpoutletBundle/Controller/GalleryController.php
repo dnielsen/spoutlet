@@ -164,7 +164,9 @@ class GalleryController extends Controller
         }
 
         $views = $media->getViews();
-        $views += 1;
+
+        $views++;
+
         $media->setViews($views);
 
         $em = $this->getEntityManager();
@@ -207,6 +209,23 @@ class GalleryController extends Controller
         return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
             'media' => $media,
             'form'  => $form->createView(),
+        ));
+    }
+
+    public function sharePhotoAction()
+    {
+        $user = $this->getCurrentUser();
+        $repo = $this->getGalleryMediaRepository();
+
+        $media = $repo->findMostRecentPublishedByUser($user);
+
+        if(!$media)
+        {
+            throw $this->createNotFoundException('No media found.');
+        }
+
+        return $this->render('SpoutletBundle:Gallery:share.html.twig', array(
+            'media' => $media,
         ));
     }
 

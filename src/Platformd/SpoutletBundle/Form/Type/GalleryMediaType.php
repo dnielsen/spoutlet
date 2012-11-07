@@ -36,8 +36,9 @@ class GalleryMediaType extends AbstractType
 
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
                 $builder->add('featured', 'checkbox', array(
-                    'label' => 'Featured',
-                    'help'  => 'Check this checkbox to make this media item featured on the gallery front page.',
+                    'label'     => 'Featured',
+                    'help'      => 'Check this checkbox to make this media item featured on the gallery front page.',
+                    'required'  => false,
                 ));
             }
     }

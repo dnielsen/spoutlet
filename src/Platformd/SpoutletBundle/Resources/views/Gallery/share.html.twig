@@ -1,0 +1,12 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'galleries.submit_photo_share' | trans %}
+
+{% block content %}
+<p>{{ 'galleries.submit_photo_publish_share' | trans }}</p>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}
