@@ -101,14 +101,4 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
-    public function findMediaForGalleryByGalleryId($galleryId)
-    {
-        return $this->createQueryBuilder('gm')
-            ->leftJoin('gm.galleries', 'gmg')
-            ->where('gmg.id = :galleryId')
-            ->setParameter('galleryId', $galleryId)
-            ->getQuery()
-            ->execute();
-    }
 }
