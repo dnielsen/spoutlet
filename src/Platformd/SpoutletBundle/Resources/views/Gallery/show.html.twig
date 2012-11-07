@@ -24,6 +24,48 @@
     <div class="left">
         <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
     </div>
+
+
+    {% if (otherMedia | length) > 0 %}
+        <div class="media-gallery ad-gallery game-media-gallery">
+            <a name="media"></a>
+            <h3>
+                {{ 'media_gallery' | trans }}
+            </h3>
+
+            {#
+                Left off because we don't need the big image
+                <div class="ad-image-wrapper">
+                </div>
+
+                # left off because we don't need the controls
+                <div class="ad-controls">
+                </div>
+            #}
+
+            <div class="media-content">
+                <div class="ad-nav{{ ((otherMedia | length) <= 3) ? ' no-scroll' : '' }}">
+                    <div class="ad-thumbs">
+                        <ul class="ad-thumb-list" style="height: 120px;">
+                            {% for media in otherMedia %}
+                            <li{{ loop.last ? ' class="last"' : '' }}>
+                                {% set url = media_path_nice(media.image) %}
+                                <div style="min-height: 120px;">
+                                    <a href="{{ url }}" target="_blank">
+                                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                    </a>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+
     <div class="right">
         <div class="widget-33">
             <div class="widget-header">
@@ -83,7 +125,46 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+            var GalleryMediaPage = {
+
+            };
+
+            GalleryMediaPage.initializeMediaGallery = function() {
+                var galleries = $('.media-gallery').adGallery({
+                    loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+
+                    display_next_and_prev: false,
+                    display_back_and_forward: true,
+                    slideshow: {
+                        enable: false,
+                        autostart: false,
+                        speed: 5000,
+                        stop_on_scroll: false
+                    },
+                    effect: 'fade'
+                });
+
+                // we actually grab the thumbnails, and remove the adgallery behavior
+                // this allows them to be clean, and we can do whatever next
+                // this is done because adgallery normally loads the image in the larger view
+                // but we don't even have the larger view
+                var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
+                mediaGalleryAnchors.unbind('click');
+            };
+            jQuery(document).ready(function() {
+
+                GalleryMediaPage.initializeMediaGallery();
+                GalleryMediaPage.initializeVideoLinks();
+            });
+    </script>
 {% endblock %}

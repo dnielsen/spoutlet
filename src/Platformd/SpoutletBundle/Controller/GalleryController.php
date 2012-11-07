@@ -156,7 +156,8 @@ class GalleryController extends Controller
 
     public function showAction($id)
     {
-        $media = $this->getGalleryMediaRepository()->find($id);
+        $media          = $this->getGalleryMediaRepository()->find($id);
+        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($this->getCurrentUser(), $id);
 
         if(!$media)
         {
@@ -173,6 +174,7 @@ class GalleryController extends Controller
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media' => $media,
+            'otherMedia' => $otherMedia,
         ));
     }
 
