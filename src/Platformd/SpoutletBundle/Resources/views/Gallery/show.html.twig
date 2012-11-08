@@ -20,99 +20,101 @@
 {% block title media.title %}
 
 {% block content %}
-<div class="std_2col" style="min-height: 500px;">
-    <div class="left">
-        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
-    </div>
+<div class="media-show-page">
+    <div class="std_2col" style="min-height: 500px;">
+        <div class="left">
+            <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
+        </div>
 
 
-    {% if (otherMedia | length) > 0 %}
-        <div class="media-gallery ad-gallery game-media-gallery">
-            <a name="media"></a>
-            <h3>
-                {{ 'media_gallery' | trans }}
-            </h3>
+        {% if (otherMedia | length) > 0 %}
+            <div class="media-gallery ad-gallery user-media-gallery">
+                <a name="media"></a>
+                <h3>
+                    {{ 'media_gallery' | trans }}
+                </h3>
 
-            {#
-                Left off because we don't need the big image
-                <div class="ad-image-wrapper">
-                </div>
+                {#
+                    Left off because we don't need the big image
+                    <div class="ad-image-wrapper">
+                    </div>
 
-                # left off because we don't need the controls
-                <div class="ad-controls">
-                </div>
-            #}
+                    # left off because we don't need the controls
+                    <div class="ad-controls">
+                    </div>
+                #}
 
-            <div class="media-content">
-                <div class="ad-nav{{ ((otherMedia | length) <= 3) ? ' no-scroll' : '' }}">
-                    <div class="ad-thumbs">
-                        <ul class="ad-thumb-list" style="height: 120px;">
-                            {% for media in otherMedia %}
-                            <li{{ loop.last ? ' class="last"' : '' }}>
-                                {% set url = media_path_nice(media.image) %}
-                                <div style="min-height: 120px;">
-                                    <a href="{{ url }}" target="_blank">
-                                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
-                                    </a>
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                <div class="media-content">
+                    <div class="ad-nav{{ ((otherMedia | length) <= 3) ? ' no-scroll' : '' }}">
+                        <div class="ad-thumbs">
+                            <ul class="ad-thumb-list" style="height: 120px;">
+                                {% for media in otherMedia %}
+                                <li{{ loop.last ? ' class="last"' : '' }}>
+                                    {% set url = media_path_nice(media.image) %}
+                                    <div style="min-height: 120px;">
+                                        <a href="{{ url }}" target="_blank">
+                                            <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                        </a>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
 
 
 
-    <div class="right">
-        <div class="widget-33">
-            <div class="widget-header">
-                <div class="widget-title">
-                    {{ 'galleries.show_photo_details_label' | trans }}
+        <div class="right">
+            <div class="widget-33">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'galleries.show_photo_details_label' | trans }}
+                    </div>
                 </div>
-            </div>
-            <div class="widget-content">
-                <div class="photo-author">
-                    <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
-                    <div><a href="javascript:void(0);">{{ media.author.username }}</a></div>
-                </div>
-                <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('d/m/Y')}}</div>
-                <p>
-                    {{ media.description }}
-                </p>
-                <div>
-                    {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
-                </div>
-                <div id="media-social">
-                    <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                    <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                        <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
-                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-                </div>
-                <div id="widget-footer">
+                <div class="widget-content">
+                    <div class="photo-author">
+                        <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
+                        <div><a href="javascript:void(0);">{{ media.author.username }}</a></div>
+                    </div>
+                    <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('d/m/Y')}}</div>
                     <p>
-                        {% if canDelete %}
-                            <a href="{{ path('gallery_delete_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a> |
-                        {% endif %}
-                        {% if canEdit %}
-                            <a href="{{ path('gallery_edit_media', { 'id' : media.id })}}">edit</a> |
-                        {% endif %}
-                        {% if canFeature %}
-                            <a href="{{ path('gallery_feature_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to feature this item?');">
-                            {% if media.featured == false %}
-                                feature
-                            {% else %}
-                                unfeature
+                        {{ media.description }}
+                    </p>
+                    <div>
+                        {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
+                    </div>
+                    <div id="media-social">
+                        <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+                    </div>
+                    <div id="widget-footer">
+                        <p>
+                            {% if canDelete %}
+                                <a href="{{ path('gallery_delete_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a> |
                             {% endif %}
-                            </a>
-                        {% endif %}
-                    </p>
-                    <p>
-                        <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Flag as inappropriate</a>
-                    </p>
+                            {% if canEdit %}
+                                <a href="{{ path('gallery_edit_media', { 'id' : media.id })}}">edit</a> |
+                            {% endif %}
+                            {% if canFeature %}
+                                <a href="{{ path('gallery_feature_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to feature this item?');">
+                                {% if media.featured == false %}
+                                    feature
+                                {% else %}
+                                    unfeature
+                                {% endif %}
+                                </a>
+                            {% endif %}
+                        </p>
+                        <p>
+                            <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Flag as inappropriate</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,7 +166,6 @@
             jQuery(document).ready(function() {
 
                 GalleryMediaPage.initializeMediaGallery();
-                GalleryMediaPage.initializeVideoLinks();
             });
     </script>
 {% endblock %}
