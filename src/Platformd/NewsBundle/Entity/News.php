@@ -127,9 +127,24 @@ class News implements LinkableInterface
      */
     protected $game;
 
+    /**
+     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     */
+    protected $sitifiedAt;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
+    }
+
+    public function setSitifiedAt($sitifiedAt)
+    {
+        $this->sitifiedAt = $sitifiedAt;
+    }
+
+    public function getSitifiedAt()
+    {
+        return $this->sitifiedAt;
     }
 
     /**

@@ -261,12 +261,27 @@ class Deal implements LinkableInterface
      */
     protected $updatedAt;
 
+    /**
+     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     */
+    protected $sitifiedAt;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
         $this->dealPools = new ArrayCollection();
         $this->dealLocales = new ArrayCollection();
         $this->sites = new ArrayCollection();
+    }
+
+    public function setSitifiedAt($sitifiedAt)
+    {
+        $this->sitifiedAt = $sitifiedAt;
+    }
+
+    public function getSitifiedAt()
+    {
+        return $this->sitifiedAt;
     }
 
     /**
@@ -787,7 +802,7 @@ class Deal implements LinkableInterface
 
     public function getLocales()
     {
-        return $this->areLocalesInitialized() ? $this->locales : array();
+        $this->locales;
     }
 
     public function setLocales(array $locales)

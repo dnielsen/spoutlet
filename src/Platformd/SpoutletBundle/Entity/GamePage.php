@@ -282,11 +282,26 @@ class GamePage implements LinkableInterface
      */
     private $openGraphOverride;
 
+    /**
+     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     */
+    protected $sitifiedAt;
+
     public function __construct()
     {
         $this->gamePageLocales = new ArrayCollection();
         $this->mediaGalleryMedias = new ArrayCollection();
         $this->sites = new ArrayCollection();
+    }
+
+    public function setSitifiedAt($sitifiedAt)
+    {
+        $this->sitifiedAt = $sitifiedAt;
+    }
+
+    public function getSitifiedAt()
+    {
+        return $this->sitifiedAt;
     }
 
     /**
@@ -673,6 +688,16 @@ class GamePage implements LinkableInterface
 
         // force Doctrine to see this as dirty
         $this->updatedAt = new \DateTime();
+    }
+
+    public function getGamePageLocales()
+    {
+        return $this->gamePageLocales;
+    }
+
+    public function setGamePageLocales($gamePageLocales)
+    {
+        $this->gamePageLocales = $gamePageLocales;
     }
 
     /**
