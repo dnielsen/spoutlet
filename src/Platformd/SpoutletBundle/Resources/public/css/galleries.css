@@ -57,3 +57,11 @@
 #media-filter-options {
     width: 200px;
 }
+
+#facebook-share {
+    display: inline-table;
+}
+
+#twitter-share {
+    display: inline-table;
+}

@@ -77,6 +77,7 @@ platformd:
             sweeps: SWEEPS
             wallpapers: Wallpapers
             microsoft: Microsoft
+            photos: Photo Gallery
 
         page_content:
             featured: Featured
@@ -528,6 +529,7 @@ platformd.groups.category.location: Location
 platformd.groups.category.topic: Topic
 
 galleries:
+    navigation_label: Photo Gallery
     index_page_title: Galleries
     index_page_header: ALIENWARE ARENA PHOTOS
     submit_photo_page_title: Submit Image
@@ -544,6 +546,8 @@ galleries:
     submit_photo_restriction5: Files supported: JPG, GIF and PNG.
 
     submit_photo_add: Add
+    submit_photo_publish_share: Your photos are published. Share these awesome photos with your friends!
+    submit_photo_share: Share Photos
 
     submit_photo_step2: Step 2:
     submit_photo_step2_detail: Click on an image to provide details.

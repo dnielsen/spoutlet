@@ -17,7 +17,7 @@ Feature: Main Navigation
       | Alienware   | http://alienware.jp/     |                                                            |
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
-      | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
+      | ビデオ         | /video                  | http://japan.alienwarearena.local/video/                    |
       | Microsoft   | /app_test.php/microsoft  |  http://japan.alienwarearena.local/app_test.php/microsoft  |
 
   Scenario: The "China" site's main navigation menu has the correct items
@@ -29,7 +29,7 @@ Feature: Main Navigation
       | 关于ALIENWARE     | http://alienware.com.cn/     |                                                               |
       | 活动              | /app_test.php/events/        | http://china.alienwarearena.local/app_test.php/events/        |
       | 新闻              | /app_test.php/news           | http://china.alienwarearena.local/app_test.php/news           |
-      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video                       |
+      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video/                       |
       | 媒体 >> 壁纸下载    | /app_test.php/wallpapers    | http://china.alienwarearena.local/app_test.php/wallpapers      |
       | 微软              | /app_test.php/microsoft      | http://china.alienwarearena.local/app_test.php/microsoft      |
 
@@ -68,12 +68,13 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                                     |
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
       | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers              |
+      | Media >> Photo Gallery      | /app_test.php/galleries/                        | http://na.alienwarearena.local/app_test.php/galleries/               |
       | Deals                       | /app_test.php/deal/                             | http://na.alienwarearena.local/app_test.php/deal/                   |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
       | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
 
-  Scenario: The "Europe" site's main navigatdfion menu has the correct items
+  Scenario: The "Europe" site's main navigation menu has the correct items
     Given I am on the "Europe" site
     When I go to "/app_test.php/games/"
     Then the main navigation menu should be:
@@ -90,6 +91,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                                                                          | http://eu.alienwarearena.local/app_test.php/wallpapers  |
+      | Media >> Photo Gallery      | /app_test.php/galleries/                                                                          | http://eu.alienwarearena.local/app_test.php/galleries/  |
       | Deals                       | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
@@ -112,6 +114,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                          |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                          |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://in.alienwarearena.local/app_test.php/wallpapers   |
+      | Media >> Photo Gallery      | /app_test.php/galleries/                  | http://in.alienwarearena.local/app_test.php/galleries/    |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
       | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                  |
@@ -133,6 +136,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                          |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                          |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://mysg.alienwarearena.local/app_test.php/wallpapers |
+      | Media >> Photo Gallery      | /app_test.php/galleries/                  | http://mysg.alienwarearena.local/app_test.php/galleries/  |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
       | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                  |
@@ -154,6 +158,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://anz.alienwarearena.local/app_test.php/wallpapers |
+      | Media >> Photo Gallery      | /app_test.php/galleries/                  | http://anz.alienwarearena.local/app_test.php/galleries/  |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                 |

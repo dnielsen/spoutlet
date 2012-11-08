@@ -127,4 +127,17 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findMostRecentPublishedByUser($user)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->andWhere('gm.author = :user')
+            ->orderBy('gm.publishedAt', 'DESC')
+            ->setParameter('user', $user)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

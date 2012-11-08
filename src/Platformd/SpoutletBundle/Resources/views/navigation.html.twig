@@ -49,19 +49,24 @@
                     <li><a href="{{ path('sweepstakes_index') }}">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('VIDEO') and site_has_feature('WALLPAPERS') %}
+                {% if site_has_feature('VIDEO') and not site_has_feature('WALLPAPERS') and not site_has_feature('PHOTOS') %}
+                    <li>{{ site_link('VIDEOS') }}</li>
 
+                {% elseif site_has_feature('VIDEO') or site_has_feature('WALLPAPERS') or site_has_feature('PHOTOS') %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
+                            {% if site_has_feature('VIDEO') %}
                             <li>{{ site_link('VIDEOS') }}</li>
+                            {% endif %}
+                            {% if site_has_feature('WALLPAPERS') %}
                             <li>{{ site_link('WALLPAPERS') }}</li>
+                            {% endif %}
+                            {% if site_has_feature('PHOTOS') %}
+                            <li>{{ site_link('PHOTOS') }}</li>
+                            {% endif %}
                         </ul>
                     </li>
-                {% elseif site_has_feature('VIDEO') %}
-                    <li>{{ site_link('VIDEOS') }}</li>
-                {% elseif site_has_feature('WALLPAPERS') %}
-                     <li>{{ site_link('WALLPAPERS') }}</a></li>
                 {% endif %}
 
                 {% if site_has_feature('DEALS') %}
