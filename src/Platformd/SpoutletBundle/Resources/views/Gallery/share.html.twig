@@ -65,15 +65,15 @@
 
             $('#twitter-share-button').click(function () {
                 var url = "http://twitter.com/share?url={{ path('gallery_media_show', { id : media.id }) | absolute_url | url_encode() }}";
-                 var width  = 575,
-                     height = 400,
-                     left   = ($(window).width()  - width)  / 2,
-                     top    = ($(window).height() - height) / 2,
-                     opts   = 'status=1' +
-                              ',width='  + width  +
-                              ',height=' + height +
-                              ',top='    + top    +
-                              ',left='   + left;
+                var width  = 575,
+                    height = 400,
+                    left   = ($(window).width()  - width)  / 2,
+                    top    = ($(window).height() - height) / 2,
+                    opts   = 'status=1' +
+                             ',width='  + width  +
+                             ',height=' + height +
+                             ',top='    + top    +
+                             ',left='   + left;
 
                 window.open(url, 'twitter', opts);
 
