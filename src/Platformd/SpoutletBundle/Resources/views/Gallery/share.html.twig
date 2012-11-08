@@ -45,7 +45,7 @@
                 // calling the API ...
                 var obj = {
                   method: 'feed',
-                  link: 'http://www.alienwarearena.com/',
+                  link: "{{ path('gallery_media_show', { id: media.id }) | absolute_url }}",
                   picture: '{{ openGraphThumb }}',
                   name: 'Alienware Arena Photos',
                   caption: '{{ media.title }}',
