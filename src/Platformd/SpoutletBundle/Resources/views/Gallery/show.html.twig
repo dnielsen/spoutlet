@@ -24,48 +24,34 @@
     <div class="std_2col" style="min-height: 500px;">
         <div class="left">
             <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
-        </div>
 
-
-        {% if (otherMedia | length) > 0 %}
-            <div class="media-gallery ad-gallery user-media-gallery">
-                <a name="media"></a>
-                <h3>
-                    {{ 'media_gallery' | trans }}
-                </h3>
-
-                {#
-                    Left off because we don't need the big image
-                    <div class="ad-image-wrapper">
-                    </div>
-
-                    # left off because we don't need the controls
-                    <div class="ad-controls">
-                    </div>
-                #}
-
-                <div class="media-content">
-                    <div class="ad-nav{{ ((otherMedia | length) <= 3) ? ' no-scroll' : '' }}">
-                        <div class="ad-thumbs">
-                            <ul class="ad-thumb-list" style="height: 120px;">
-                                {% for media in otherMedia %}
-                                <li{{ loop.last ? ' class="last"' : '' }}>
-                                    {% set url = media_path_nice(media.image) %}
-                                    <div style="min-height: 120px;">
-                                        <a href="{{ url }}" target="_blank">
-                                            <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
-                                        </a>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                            </ul>
+            {% if (otherMedia | length) > 0 %}
+                <div class="media-gallery ad-gallery user-media-gallery">
+                    <a name="media"></a>
+                    <h3>
+                        More images from {{ media.author.username | capitalize }}
+                    </h3>
+                    <div class="media-content">
+                        <div class="ad-nav{{ ((otherMedia | length) <= 2) ? ' no-scroll' : '' }}">
+                            <div class="ad-thumbs">
+                                <ul class="ad-thumb-list" style="height: 150px;">
+                                    {% for media in otherMedia %}
+                                    <li{{ loop.last ? ' class="last"' : '' }}>
+                                        {% set url = media_path_nice(media.image) %}
+                                        <div style="min-height: 150px;">
+                                            <a href="{{ url }}" target="_blank"  rel="lightbox">
+                                                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                            </a>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
-
-
+            {% endif %}
+        </div>
 
         <div class="right">
             <div class="widget-33">
@@ -130,11 +116,13 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
 
     <script type="text/javascript">
             var GalleryMediaPage = {
