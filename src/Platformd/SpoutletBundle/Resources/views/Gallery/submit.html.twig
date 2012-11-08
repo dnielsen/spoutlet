@@ -111,7 +111,8 @@
                 var mediaCount = $('.gallery-media').length;
 
                 if(mediaCount == 0) {
-                    $('#publish-media').fadeOut();
+                    var url = "{{ path('gallery_share_photo') }}";
+                    window.location = url;
                 }
             }
 

@@ -147,7 +147,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     /*
      * @ORM\Column(name="views", type="integer")
      */
-    private $views;
+    private $views = 0;
 
     public function __construct()
     {

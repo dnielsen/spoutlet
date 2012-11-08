@@ -2,11 +2,66 @@
 
 {% block title 'galleries.submit_photo_share' | trans %}
 
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ media.title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="{{ openGraphThumb }}" />
+    <meta property="og:description" content="{{ media.description }}" />
+{% endblock %}
+
 {% block content %}
-<p>{{ 'galleries.submit_photo_publish_share' | trans }}</p>
+<div style="min-height:400px;">
+    <h3>{{ 'galleries.submit_photo_share' | trans }}</h3>
+    <p>{{ 'galleries.submit_photo_publish_share' | trans }}</p>
+    <div id="facebook-share">
+        <a href="javascript:void(0);" id="facebook-share-button" style="border: none;">
+            <img src="{{ asset('bundles/spoutlet/images/icons/share_facebook_button.png') }}" alt="Share on Facebook" />
+        </a>
+    </div>
+    <div id="twitter-share">
+        <a href="javascript:void(0);" id="twitter-share-button" style="border: none;">
+            <img src="{{ asset('bundles/spoutlet/images/icons/share_twitter_button.png') }}" alt="Share on Twitter" />
+        </a>
+    </div>
+</div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            var postToFeed = function() {
+
+                // calling the API ...
+                var obj = {
+                  method: 'feed',
+                  link: 'http://www.alienwarearena.com/',
+                  picture: '{{ openGraphThumb }}',
+                  name: 'Alienware Arena Photos',
+                  caption: '{{ media.title }}',
+                  description: '{{ media.description }}'
+                };
+
+                function callback(response) {
+                  document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+                }
+
+                FB.ui(obj, callback);
+            }
+
+            $('#facebook-share-button').click(function () {
+                postToFeed();
+            });
+        });
+    </script>
 {% endblock %}

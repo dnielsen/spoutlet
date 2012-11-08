@@ -33,6 +33,8 @@ class GalleryController extends Controller
 
     public function submitAction(Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
 
         $form = $this->createForm(new SubmitImageType($user));
@@ -76,6 +78,8 @@ class GalleryController extends Controller
 
     public function editPhotosAction()
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
         $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
         $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
@@ -108,6 +112,8 @@ class GalleryController extends Controller
 
     public function publishAction(Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
@@ -180,6 +186,8 @@ class GalleryController extends Controller
 
     public function editMediaAction($id, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user   = $this->getCurrentUser();
         $media  = $this->getGalleryMediaRepository()->find($id);
 
@@ -214,6 +222,8 @@ class GalleryController extends Controller
 
     public function sharePhotoAction()
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
         $repo = $this->getGalleryMediaRepository();
 
@@ -288,12 +298,28 @@ class GalleryController extends Controller
         $site           = $this->getCurrentSite();
         $galleries      = $this->getGalleryRepository()->findAllGalleriesForSite($site);
 
-        $filterOptions[] = array('value' => 'featured', 'name' => 'galleries.gallery_filter_option_featured', 'slug' => '');
-        $filterOptions[] = array('value' => 'latest', 'name' => 'galleries.gallery_filter_option_latest', 'slug' => '');
-        $filterOptions[] = array('value' => 'popular', 'name' => 'galleries.gallery_filter_option_popular', 'slug' => '');
+        $filterOptions[] = array(
+            'value' => 'featured',
+            'name'  => 'galleries.gallery_filter_option_featured',
+            'slug'  => ''
+        );
+        $filterOptions[] = array(
+            'value' => 'latest',
+            'name'  => 'galleries.gallery_filter_option_latest',
+            'slug'  => ''
+        );
+        $filterOptions[] = array(
+            'value' => 'popular',
+            'name'  => 'galleries.gallery_filter_option_popular',
+            'slug'  => ''
+        );
 
         foreach ($galleries as $gallery) {
-            $filterOptions[] = array('value' => $gallery->getId(), 'name' => $gallery->getName(), 'slug' => $gallery->getSlug());
+            $filterOptions[] = array(
+                'value' => $gallery->getId(),
+                'name'  => $gallery->getName(),
+                'slug'  => $gallery->getSlug()
+            );
         }
 
         return $filterOptions;

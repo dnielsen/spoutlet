@@ -6,6 +6,7 @@
 {% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
 {% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
+{% set openGraphThumb       = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -13,7 +14,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    <meta property="og:image" content="{{ media_path(media.image) | imagine_filter('image_thumb_small') }}" />
+    <meta property="og:image" content="{{ openGraphThumb }}" />
     <meta property="og:description" content="{{ media.description }}" />
 {% endblock %}
 
