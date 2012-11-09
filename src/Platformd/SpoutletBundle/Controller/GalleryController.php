@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Platformd\SpoutletBundle\Util\StringUtil;
 
 /**
  * Gallery controller.
@@ -112,8 +113,6 @@ class GalleryController extends Controller
 
     public function publishAction(Request $request)
     {
-        $this->basicSecurityCheck(array('ROLE_USER'));
-
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
@@ -128,7 +127,11 @@ class GalleryController extends Controller
         $params = json_decode($content, true);
 
         if (!isset($params['id']) || !isset($params['title']) || !isset($params['description']) || !isset($params['galleries'])) {
-            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+
+            $response->setContent(json_encode(array(
+                "success" => false,
+                "message" => "Some required information was not passed."
+            )));
             return $response;
         }
 
@@ -136,6 +139,18 @@ class GalleryController extends Controller
         $title       = $params['title'];
         $description = $params['description'];
         $gals        = $params['galleries'];
+
+        $errors = $this->validateMediaPublish($id, $title, $description, $gals);
+
+        if(count($errors) > 0)
+        {
+            $response->setContent(json_encode(array(
+                "success" => false,
+                "message" => "Some required information was not passed.",
+                "errors"  => $errors
+            )));
+            return $response;
+        }
 
         $galleries = $this->getGalleryRepository()->findAllGalleries($gals);
 
@@ -158,6 +173,32 @@ class GalleryController extends Controller
 
         $response->setContent(json_encode(array("success" => true, 'message' => 'Photo published successfully')));
         return $response;
+    }
+
+    private function validateMediaPublish($id, $title, $desc, $galleries)
+    {
+        $errors = array();
+        if($id == 0)
+        {
+            $errors[] = "Media ID is missing.";
+        }
+
+        if(StringUtil::IsNullOrEmptyString($title))
+        {
+            $errors[] = "Please provide a title.";
+        }
+
+        if(StringUtil::IsNullOrEmptyString($desc))
+        {
+            $errors[] = "Please provide a description.";
+        }
+
+        if(count($galleries) == 0)
+        {
+            $errors[] = "You must select at least one gallery.";
+        }
+
+        return $errors;
     }
 
     public function showAction($id)
