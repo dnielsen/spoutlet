@@ -3,6 +3,16 @@
 {% block title media.title %}
 
 {% block content %}
+<div class="form-horizontal">
+    <div class="span11">
+        <div class="control-group">
+            <label class="control-label">Image File</label>
+            <div class="controls">
+                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" alt="{{ media.title }}" />
+            </div>
+        </div>
+    </div>
+</div>
 <form action="{{ path('gallery_edit_media', {id: media.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:Gallery:_editImageForm.html.twig' %}
     <div class="form-actions">

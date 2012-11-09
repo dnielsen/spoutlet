@@ -1,5 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% set hasPhotos = nivoSliderMedia | length > 0 %}
+
 {% block title 'galleries.index_page_title' | trans %}
 
 {% block content %}
@@ -7,7 +9,7 @@
 <h3 style="font-weight:bold;font-size:17px;padding:0 0 10px 0;">{{ 'galleries.index_page_header' | trans }}</h3>
 <div class="std_2col">
     <div class="left">
-        {% if nivoSliderMedia | length > 0 %}
+        {% if hasPhotos %}
         <div style="width: 636px; height: 295px;background-color: #4e4e4e">
             <div class="slider-wrapper theme-nivo">
                 <div id="slider" class="nivoSlider">
@@ -19,7 +21,7 @@
         </div>
         {% endif %}
 
-        <div class="widget-66" style="margin: 15px auto;">
+        <div class="widget-66" {% if hasPhotos %}style="margin: 15px auto;"{% endif %}>
             <div class="widget-header">
                 <div class="widget-title">
                     Featured

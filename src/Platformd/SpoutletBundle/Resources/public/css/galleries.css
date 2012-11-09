@@ -65,3 +65,7 @@
 #twitter-share {
     display: inline-table;
 }
+
+.media-publish-error {
+    color: #ff0000;
+}
