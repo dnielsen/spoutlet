@@ -35,8 +35,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * @ORM\DiscriminatorMap({
  *      "event"     = "Platformd\SpoutletBundle\Entity\Event",
  *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
- *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes",
- *      "media_contest" = "Platformd\SpoutletBundle\Entity\MediaContest"
+ *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  *
  * Special validation on our slug field
