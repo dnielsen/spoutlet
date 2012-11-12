@@ -268,6 +268,8 @@ class GalleryController extends Controller
 
     public function voteAction($contestId, $id, $upDown)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $galleryMediaRepo   = $this->getGalleryMediaRepository();
         $contestRepo        = $this->getContestRepository();
         $voteRepo           = $this->getVoteRepository();
