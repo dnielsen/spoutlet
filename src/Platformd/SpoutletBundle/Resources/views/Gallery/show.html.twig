@@ -40,7 +40,14 @@
                                     <li{{ loop.last ? ' class="last"' : '' }}>
                                         {% set url = media_path_nice(media.image) %}
                                         <div style="min-height: 150px;">
+
+                                            <!-- This link would be much nicer from a user experience (preview in lightbox, have link in caption to full image page), but LB doesn't enjoy this implementation without some fiddling
+
                                             <a href="{{ url }}" rel="lightbox[{{ media.author.username }}]" title="View this image in full &lt;a href=&quot;{{ path('gallery_media_show', { 'id' : media.id }) }}&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;">
+                                                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" title="{{ media.title }}" />
+                                            </a> -->
+
+                                            <a href="{{ path('gallery_media_show', { 'id' : media.id }) }}" target=_"blank">
                                                 <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" title="{{ media.title }}" />
                                             </a>
                                         </div>
