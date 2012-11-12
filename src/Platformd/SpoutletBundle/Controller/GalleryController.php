@@ -204,7 +204,7 @@ class GalleryController extends Controller
     public function showAction($id)
     {
         $media          = $this->getGalleryMediaRepository()->find($id);
-        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($this->getCurrentUser(), $id);
+        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
 
         if(!$media)
         {
