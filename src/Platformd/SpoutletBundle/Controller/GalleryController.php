@@ -15,6 +15,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * Gallery controller.
@@ -266,9 +267,46 @@ class GalleryController extends Controller
         ));
     }
 
-    public function voteAction($contestId, $id, $upDown)
+    public function voteAction(Request $request)
     {
-        $this->basicSecurityCheck(array('ROLE_USER'));
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['contestId']) || !isset($params['id']) || !isset($params['voteType'])) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        if (!$this->roleCheck(array('ROLE_USER'))) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to vote.")));
+            return $response;
+        }
+
+        $id         = (int) $params['id'];
+        $voteType   = $params['voteType'];
+        $contestId  = (int) $params['contestId'];
+        $vote       = new Vote();
+        $user       = $this->getCurrentUser();
+
+        if (!in_array($voteType, $vote->getValidVoteTypes())) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid vote type (up/down) not given.")));
+            return $response;
+        }
+
+        if (!($user instanceof User)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to vote.")));
+            return $response;
+        }
 
         $galleryMediaRepo   = $this->getGalleryMediaRepository();
         $contestRepo        = $this->getContestRepository();
@@ -276,26 +314,29 @@ class GalleryController extends Controller
 
         $media              = $galleryMediaRepo->find($id);
         $contest            = $contestId > 0 ? $contestRepo->find($contestId) : null;
-        $user               = $this->getUser();
 
-        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
-            $this->setFlash('error', 'You have already voted on this item!');
-            return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
+        if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
+            return $response;
         }
 
-        $vote = new Vote();
+        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You have already voted on this item.")));
+            return $response;
+        }
+
         $vote->setContest($contest);
         $vote->setUser($user);
         $vote->setGalleryMedia($media);
-        $vote->setVoteType($upDown);
+        $vote->setVoteType($voteType);
 
         $em = $this->getEntityManager();
 
         $em->persist($vote);
         $em->flush();
 
-        $this->setFlash('success', 'You have successfully voted on this item!');
-        return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $id)));
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
     }
 
     public function sharePhotoAction()
@@ -431,5 +472,10 @@ class GalleryController extends Controller
     private function getCurrentUser()
     {
         return $this->get('security.context')->getToken()->getUser();
+    }
+
+    private function roleCheck($roles)
+    {
+        return $this->container->get('security.context')->isGranted($roles);
     }
 }

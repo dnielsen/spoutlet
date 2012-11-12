@@ -32,6 +32,8 @@ class VoteRepository extends EntityRepository
         if ($contest) {
             $qb->andWhere('v.contest = :contest')
                 ->setParameter('contest', $contest);
+        } else {
+            $qb->andWhere('v.contest IS NULL');
         }
 
         return $qb->getQuery()->execute();

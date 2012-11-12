@@ -30,4 +30,16 @@ class ContestRepository extends EntityRepository
 
         return $qb;
     }
+
+    public function canUserVoteBasedOnSite($user, $contest)
+    {
+        $result = $this->createQueryBuilder('c')
+            ->leftJoin('c.sites', 's')
+            ->andWhere('s.defaultLocale = :locale')
+            ->setParameter('locale', $user->getLocale())
+            ->getQuery()
+            ->execute();
+
+        return $result ? true : false;
+    }
 }

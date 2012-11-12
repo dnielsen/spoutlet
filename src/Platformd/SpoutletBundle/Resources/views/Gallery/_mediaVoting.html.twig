@@ -1,0 +1,80 @@
+<div class="widget-33" style="height: 120px; margin-bottom: 15px;">
+    <div class="widget-header">
+        <div class="widget-title">
+            {{ 'galleries.show_photo_vote_label' | trans }}
+        </div>
+    </div>
+    <div class="widget-content">
+        <div class="media-voting">
+            <span class=media-voting-label>Rate this image:</span>
+            <!-- <a class="media-voting-button" id="media-voting-vote-up" href="{{ path('gallery_media_vote', { 'contestId': 0, 'id' : media.id, 'upDown' : 'up' }) }}">
+                 <img src="{{ asset('bundles/spoutlet/images/thumbs_up.gif') }}" alt="Vote Up!" style="height: 30px; width: 30px;" />
+            </a>
+            <a class="media-voting-button" id="media-voting-vote-up" href="{{ path('gallery_media_vote', { 'contestId': 0, 'id' : media.id, 'upDown' : 'down' }) }}">
+                <img src="{{ asset('bundles/spoutlet/images/thumbs_down.gif') }}" alt="Vote Down!" style="height: 30px; width: 30px;" />
+            </a> -->
+
+            <a class="media-voting-button" id="media-voting-vote-up" href="javascript:void(0);">
+                <img src="{{ asset('bundles/spoutlet/images/thumbs_up.gif') }}" alt="Vote Up!" style="height: 30px; width: 30px;" />
+            </a>
+            <a class="media-voting-button" id="media-voting-vote-down" href="javascript:void(0);">
+                <img src="{{ asset('bundles/spoutlet/images/thumbs_down.gif') }}" alt="Vote Down!" style="height: 30px; width: 30px;" />
+            </a>
+        </div>
+        <div id="media-voting-vote-response" style="display: none;">
+            Your vote has been placed successfully!
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#media-voting-vote-up').click(function () {
+            $('.media-voting').fadeOut();
+            $.ajax({
+                url: '{{ path('gallery_media_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'contestId' : 0,
+                    'id' : '{{ media.id }}',
+                    'voteType' : 'up'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        $('#media-voting-vote-response').text(data.messageForUser);
+                        $('#media-voting-vote-response').fadeIn();
+                    } else {
+                        $('#media-voting').hide();
+                        $('#media-voting-vote-response').fadeIn();
+                    }
+                }
+            })
+
+        });
+
+        $('#media-voting-vote-down').click(function () {
+            $('.media-voting').fadeOut();
+            $.ajax({
+                url: '{{ path('gallery_media_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'contestId' : 0,
+                    'id' : '{{ media.id }}',
+                    'voteType' : 'down'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        $('#media-voting-vote-response').text(data.messageForUser);
+                        $('#media-voting-vote-response').fadeIn();
+                    } else {
+                        $('#media-voting-vote-response').fadeIn();
+                    }
+                }
+            })
+
+        });
+    });
+</script>

@@ -25,6 +25,13 @@ gallery_publish_photo:
         _format: json
         _method: POST
 
+gallery_media_vote:
+    pattern:  /vote
+    defaults: { _controller: "SpoutletBundle:Gallery:vote" }
+    requirements:
+        _format: json
+        _method: POST
+
 gallery_media_show:
     pattern: /photo/{id}
     defaults: { _controller: SpoutletBundle:Gallery:show, site: ~ }
@@ -48,7 +55,3 @@ gallery_feature_media:
 gallery_share_photo:
     pattern: /share/photo
     defaults: { _controller: SpoutletBundle:Gallery:sharePhoto, site: ~ }
-
-gallery_media_vote:
-    pattern: /vote/{contestId}/{id}/{upDown}
-    defaults: { _controller: SpoutletBundle:Gallery:vote, site: ~ }

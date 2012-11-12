@@ -79,3 +79,8 @@
     padding-left: 10px;
     padding-right: 5px;
 }
+
+#media-voting-vote-response {
+    text-align: center;
+    padding-top: 20px;
+}
