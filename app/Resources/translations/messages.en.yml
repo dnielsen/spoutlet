@@ -567,3 +567,11 @@ galleries:
     gallery_filter_option_featured: Featured
 
     gallery_see_all: See All
+
+contests:
+    index_page_title: Contests
+    show_page_overview: Overview
+    show_page_instructions: Instructions
+    show_page_enter_contest: Enter Contest
+    show_page_vote_now: Vote Now
+    vote_page_instruction: Voting Instructions

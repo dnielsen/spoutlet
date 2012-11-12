@@ -1,0 +1,11 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'contests.index_page_title' | trans %}
+
+{% block content %}
+{% for contest in contests %}
+<div><a href="{{ path('contest_show', {slug: contest.slug}) }}">{{ contest.name }}</a></div>
+{% else %}
+<p>There are no contests.</p>
+{% endfor %}
+{% endblock %}

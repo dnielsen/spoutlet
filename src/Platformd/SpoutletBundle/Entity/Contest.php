@@ -196,9 +196,16 @@ class Contest implements LinkableInterface
      */
     private $ruleset;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContestEntry", mappedBy="contest")
+     */
+    protected $entries;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
+        $this->entries = new ArrayCollection();
     }
 
     /**
@@ -581,6 +588,16 @@ class Contest implements LinkableInterface
     public function setRuleset($ruleset)
     {
         $this->ruleset = $ruleset;
+    }
+
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    public function setEntries($entries)
+    {
+        $this->entries = $entries;
     }
 
     public function getRedemptionInstructionsArray()

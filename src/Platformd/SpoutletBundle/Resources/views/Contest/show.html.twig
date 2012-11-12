@@ -1,0 +1,56 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+<h3 class="contest-header">{{ contest.name }}</h3>
+{% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
+<div class="std_1col" style="text-align: center;">
+    <img src="{{ media_path(contest.banner) }}" alt="{{ contest.name }}" />
+</div>
+<div class="std_2col">
+    <div class="left">
+        <div class="widget-66">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'contests.show_page_overview' | trans }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div>
+                    {{ contest.entryInstructions | raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div class="widget-33">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'contests.show_page_instructions' | trans }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="contest-instructions">
+                    <ul>
+                        {% include 'SpoutletBundle:Contest:_steps.html.twig' with { 'contest' : contest } %}
+                        {% if (instructions is not empty)  %}
+                            {% for instruction in instructions %}
+                            <li>
+                                <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
+                                <span class="item controlled-spacing">{{ instruction | raw }}</span>
+                            </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+{% endblock %}

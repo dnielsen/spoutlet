@@ -1,0 +1,32 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+<h3 class="contest-header">{{ contest.name }}</h3>
+{% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
+<div class="std_2col">
+    <div class="left">
+        <div class="widget-66">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'contests.vote_page_instruction' | trans }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div>
+                    {{ contest.voteInstructions | raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+{% endblock %}
