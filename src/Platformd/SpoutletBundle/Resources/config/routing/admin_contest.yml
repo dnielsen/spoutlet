@@ -7,6 +7,11 @@ admin_contest_create:
     defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
     requirements: { _method: post }
 
+# metrics
+admin_contest_metrics:
+    pattern: /metrics
+    defaults: { _controller: SpoutletBundle:ContestAdmin:metrics }
+
 admin_contest_index:
     pattern: /
     defaults: { _controller: "SpoutletBundle:ContestAdmin:index" }

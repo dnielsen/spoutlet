@@ -80,6 +80,18 @@ class ContestAdminController extends Controller
         ));
     }
 
+    public function metricsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForMetrics();
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Contests');
+
+        return $this->render('SpoutletBundle:ContestAdmin:metrics.html.twig', array(
+            'contests' => $contests,
+        ));
+    }
+
     private function processForm(Form $form, Request $request)
     {
         $em = $this->getDoctrine()->getEntityManager();
