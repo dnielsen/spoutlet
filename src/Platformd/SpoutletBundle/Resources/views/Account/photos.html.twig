@@ -21,7 +21,7 @@
                             {% for image in images %}
                                 <div class="account-image-item">
                                     <div class="account-image-image">
-                                        <a href="{{ media_path_nice(image.image) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox" style="border:none;">
+                                        <a href="{{  media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox" style="border:none;">
                                             <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
                                         </a>
                                     </div>
@@ -62,7 +62,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
 {% endblock %}
 
 {% block javascripts %}

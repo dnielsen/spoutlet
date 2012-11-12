@@ -42,6 +42,8 @@
             {{ 'galleries.submit_photo_step2_detail' | trans }}
         </p>
         <div id="media-form" class="form-horizontal">
+            <ul id="media-form-errors">
+            </ul>
             <div class="span11">
                 <div class="control-group ">
                     <label class="control-label" for="media-title">{{ 'galleries.submit_photo_image_name' | trans }}</label>
@@ -107,7 +109,7 @@
                 $('#media-title').val('');
                 $('#media-description').val('');
                 $('input:checkbox').removeAttr('checked');
-
+                $('#media-form-errors').empty();
                 var mediaCount = $('.gallery-media').length;
 
                 if(mediaCount == 0) {
@@ -156,7 +158,12 @@
                             clearForm();
                             hideFlash();
                         } else {
-
+                            $('#media-form-errors').empty();
+                            if(data.errors.length > 0) {
+                                $.each(data.errors, function(i, item) {
+                                    $('#media-form-errors').append('<li class="media-publish-error">' + item + '</li>');
+                                });
+                            }
                         }
                     }
                 });
