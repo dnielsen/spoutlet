@@ -10,6 +10,10 @@ contest_enter:
     pattern: /enter/{slug}
     defaults: { _controller: SpoutletBundle:Contest:enter }
 
+contest_submit:
+    pattern: /submit/{slug}
+    defaults: { _controller: SpoutletBundle:Contest:submit }
+
 contest_vote:
     pattern: /vote/{slug}
     defaults: { _controller: SpoutletBundle:Contest:vote }

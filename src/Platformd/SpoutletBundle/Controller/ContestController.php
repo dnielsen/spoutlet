@@ -65,7 +65,7 @@ class ContestController extends Controller
 
         if($entry)
         {
-            $this->setFlash('error', 'You have already entered this contest.');
+            $this->setFlash('error', $this->trans('contests.enter_page_already_entered'));
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
@@ -80,8 +80,25 @@ class ContestController extends Controller
         $em->persist($entry);
         $em->flush();
 
-        $this->setFlash('success', sprintf('You have now entered into %s. Please submit your media for this contest', $contest->getName()));
+        $this->setFlash('success', sprintf($this->trans('contests.enter_page_success'), $contest->getName(), $contest->getCategory()));
         return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+    }
+
+    public function submitAction($slug, Request $request)
+    {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
+
+        $this->ensureContestIsValid($contest);
+
+        $form = $this->createForm(new SubmitImageType($user));
+
+        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+
+        return $this->render('SpoutletBundle:Contest:submit.html.twig', array(
+            'contest' => $contest
+        ));
     }
 
     public function voteAction($slug)

@@ -575,3 +575,5 @@ contests:
     show_page_enter_contest: Enter Contest
     show_page_vote_now: Vote Now
     vote_page_instruction: Voting Instructions
+    enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
+    enter_page_already_entered: You have already entered this contest.
