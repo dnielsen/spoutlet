@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
+use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
 use Platformd\SpoutletBundle\Form\Type\GalleryMediaType;
@@ -205,6 +206,7 @@ class GalleryController extends Controller
     {
         $media          = $this->getGalleryMediaRepository()->find($id);
         $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($this->getCurrentUser(), $id);
+        $upVotes        = $this->getVoteRepository()->findUpVotes($id);
 
         if(!$media)
         {
@@ -222,8 +224,9 @@ class GalleryController extends Controller
         $em->flush();
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
-            'media' => $media,
-            'otherMedia' => $otherMedia,
+            'media'         => $media,
+            'otherMedia'    => $otherMedia,
+            'upVotes'       => $upVotes,
         ));
     }
 
@@ -261,6 +264,36 @@ class GalleryController extends Controller
             'media' => $media,
             'form'  => $form->createView(),
         ));
+    }
+
+    public function voteAction($contestId, $id, $upDown)
+    {
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $contestRepo        = $this->getContestRepository();
+        $voteRepo           = $this->getVoteRepository();
+
+        $media              = $galleryMediaRepo->find($id);
+        $contest            = $contestId > 0 ? $contestRepo->find($contestId) : null;
+        $user               = $this->getUser();
+
+        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
+            $this->setFlash('error', 'You have already voted on this item!');
+            return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
+        }
+
+        $vote = new Vote();
+        $vote->setContest($contest);
+        $vote->setUser($user);
+        $vote->setGalleryMedia($media);
+        $vote->setVoteType($upDown);
+
+        $em = $this->getEntityManager();
+
+        $em->persist($vote);
+        $em->flush();
+
+        $this->setFlash('success', 'You have successfully voted on this item!');
+        return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $id)));
     }
 
     public function sharePhotoAction()
@@ -381,6 +414,16 @@ class GalleryController extends Controller
     private function getGalleryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+    }
+
+    private function getContestRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Contest');
+    }
+
+    private function getVoteRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Vote');
     }
 
     private function getCurrentUser()

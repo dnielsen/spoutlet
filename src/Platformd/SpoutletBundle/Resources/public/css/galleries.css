@@ -69,3 +69,8 @@
 .media-publish-error {
     color: #ff0000;
 }
+
+.media-voting {
+    text-align: center;
+    padding-top: 20px;
+}

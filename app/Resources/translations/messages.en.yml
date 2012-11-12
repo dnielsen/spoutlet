@@ -562,6 +562,8 @@ galleries:
     show_photo_details_upload_on: Uploaded On
     show_photo_details_views: Views:
 
+    show_photo_vote_label: Vote
+
     gallery_filter_option_latest: Latest
     gallery_filter_option_popular: Popular
     gallery_filter_option_featured: Featured

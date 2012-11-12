@@ -9,10 +9,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\VoteRepository")
- * @ORM\Table(name="pd_vote", uniqueConstraints={@UniqueConstraint(name="media_user_idx", columns={"media_id", "user_id"})})
+ * @ORM\Table(name="pd_vote", uniqueConstraints={@ORM\UniqueConstraint(name="media_user_idx", columns={"gallerymedia_id", "user_id", "contest_id"})})
  */
 class Vote
 {
+    const VOTE_TYPE_UP = 'up';
+    const VOTE_TYPE_DOWN = 'down';
+
+    private static $validVoteTypes = array(
+        self::VOTE_TYPE_UP,
+        self::VOTE_TYPE_DOWN,
+    );
 
     /**
      * @ORM\Column(name="id", type="integer")
@@ -22,21 +29,32 @@ class Vote
     private $id;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Contest", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="cascade", nullable="true")
+     */
+    private $contest;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
-     * @ORM\JoinColumn(onDelete="cascade")
+     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     private $galleryMedia;
 
     /**
-     * The person who created this gallery
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
-     * @ORM\JoinColumn(onDelete="cascade")
+     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     protected $user;
 
     /**
-     * @var \DateTime $created
+     * e.g. "up", "down" to denote how the vote was placed
      *
+     * @ORM\Column(name="vote_type", type="string", length="255")
+     */
+
+    private $voteType = false;
+
+    /**
      * @ORM\Column(name="voted_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
@@ -47,7 +65,7 @@ class Vote
         return $this->id;
     }
 
-    public function setGallerymedia(UserInterface $galleryMedia)
+    public function setGallerymedia($galleryMedia)
     {
         $this->galleryMedia = $galleryMedia;
     }
@@ -67,6 +85,31 @@ class Vote
         return $this->user;
     }
 
+    public function setContest($contest)
+    {
+        $this->contest = $contest;
+    }
+
+    public function getContest()
+    {
+        return $this->contest;
+    }
+
+    public function setVoteType($voteType)
+    {
+        if (!in_array($voteType, self::$validVoteTypes)) {
+            throw new \InvalidArgumentException(sprintf('Invalid vote type "%s" given', $voteType));
+        }
+
+        $this->voteType = $voteType;
+    }
+
+    public function getVoteType()
+    {
+        return $this->voteType;
+    }
+
+
     public function setVotedAt($votedAt)
     {
         $this->votedAt = $votedAt;
@@ -76,5 +119,11 @@ class Vote
     {
         return $this->votedAt;
     }
+
+    public static function getValidVoteTypes()
+    {
+        return self::$validVoteTypes;
+    }
 }
+
 
