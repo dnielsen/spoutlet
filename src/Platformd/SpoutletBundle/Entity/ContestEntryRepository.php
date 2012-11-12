@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class ContestEntryRepository extends EntityRepository
 {
+    public function findOneByUserAndContest($user, $contest)
+    {
+        return $this->createQueryBuilder('ce')
+            ->where('ce.user = :user')
+            ->andWhere('ce.contest = :contest')
+            ->setParameter('user', $user)
+            ->setParameter('contest', $contest)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

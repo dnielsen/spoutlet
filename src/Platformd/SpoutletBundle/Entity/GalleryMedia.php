@@ -145,6 +145,12 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     protected $contentReports;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\ContestEntry")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $contestEntry;
+
+    /**
      * @ORM\Column(name="views", type="integer")
      */
     private $views = 0;
@@ -330,6 +336,16 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setViews($views)
     {
         $this->views = $views;
+    }
+
+    public function getContestEntry()
+    {
+        return $this->contestEntry;
+    }
+
+    public function setContestEntry($contestEntry)
+    {
+        $this->contestEntry = $contestEntry;
     }
 
     public static function getValidCategories()

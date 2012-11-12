@@ -4,8 +4,10 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\Sweepstakes;
+use Platformd\SpoutletBundle\Entity\Contest;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * Platformd\SpoutletBundle\Entity\Contest
@@ -60,6 +62,19 @@ class ContestEntry
      * @Gedmo\Timestampable(on="update")
      */
     protected $updated;
+
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia", mappedBy="contestEntry")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $medias;
+
+    public function __construct()
+    {
+        $this->medias = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -153,5 +168,15 @@ class ContestEntry
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    public function getMedias()
+    {
+        return $this->medias;
+    }
+
+    public function setMedias($medias)
+    {
+        $this->medias = $medias;
     }
 }

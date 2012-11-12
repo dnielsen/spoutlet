@@ -43,6 +43,13 @@
                             {% endfor %}
                         {% endif %}
                     </ul>
+                    {% if isEligible %}
+                    <p>
+                        <form method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
+                            <button type="submit" formnovalidate>Enter Contest</button>
+                        </form>
+                    </p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -53,4 +60,5 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}
