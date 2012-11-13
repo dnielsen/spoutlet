@@ -95,13 +95,16 @@ class GalleryMediaRepository extends EntityRepository
 
     public function findPopularMedia($limit=12)
     {
-        return $this->createQueryBuilder('gm')
-            ->where('gm.published = true')
-            ->andWhere('gm.deleted = false')
-            ->orderBy('gm.views', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->execute();
+        $results = $this->getEntityManager()->createQuery('
+            SELECT
+                gm, COUNT(gmv.id) as vote_count
+            FROM
+                SpoutletBundle:GalleryMedia gm
+            LEFT JOIN gm.votes gmv
+            GROUP BY gm.id
+            ORDER BY vote_count DESC')->execute();
+
+        return $results;
     }
 
     public function findMediaForGalleryByGalleryId($galleryId, $limit=12)
