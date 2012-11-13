@@ -101,6 +101,8 @@ class GalleryMediaRepository extends EntityRepository
             FROM
                 SpoutletBundle:GalleryMedia gm
             LEFT JOIN gm.votes gmv
+            WHERE gm.deleted = 0
+            AND gm.published = 1
             GROUP BY gm.id
             ORDER BY vote_count DESC')->execute();
 
