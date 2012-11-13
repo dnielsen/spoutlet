@@ -348,7 +348,8 @@ span.required {
     border-radius: 5px;
     width: 600px;
     height: 400px;
-    overflow: scroll;
+    overflow-y: visible;
+    overflow-x: hidden;
 }
 .modal-content h3 {
     color: #fff;

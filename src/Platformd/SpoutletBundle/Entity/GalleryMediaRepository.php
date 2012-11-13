@@ -104,7 +104,8 @@ class GalleryMediaRepository extends EntityRepository
             WHERE gm.deleted = 0
             AND gm.published = 1
             GROUP BY gm.id
-            ORDER BY vote_count DESC')->execute();
+            ORDER BY vote_count DESC'
+        )->setMaxResults($limit)->execute();
 
         return $results;
     }

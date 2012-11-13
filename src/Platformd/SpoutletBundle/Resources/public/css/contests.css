@@ -5,11 +5,9 @@
 #contest-instructions ul li span.step-number { color: #BFBFBF; padding-right: 3px;}
 
 .contest-header {
-    text-align: center;
     padding: 5px 0 5px 0;
 }
 
 .contest-enter-vote {
     padding: 10px 0 10px 0;
-    text-align: center;
 }

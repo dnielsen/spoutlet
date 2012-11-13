@@ -18,3 +18,7 @@ contest_vote:
     pattern: /vote/{slug}
     defaults: { _controller: SpoutletBundle:Contest:vote }
 
+contest_rules_show:
+    pattern: /rules/{slug}
+    defaults: { _controller: SpoutletBundle:Contest:rules }
+

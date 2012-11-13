@@ -179,4 +179,9 @@ class ContestEntry
     {
         $this->medias = $medias;
     }
+
+    public function addMedia(GalleryMedia $value)
+    {
+        $this->medias->add($value);
+    }
 }

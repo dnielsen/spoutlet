@@ -6,9 +6,12 @@ use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\ContestRepository;
 use Platformd\SpoutletBundle\Entity\ContestEntry;
 use Platformd\SpoutletBundle\Entity\ContestEntryRepository;
+use Platformd\SpoutletBundle\Entity\GalleryMedia;
+use Platformd\SpoutletBundle\Entity\GalleryMediaRepository;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
+use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +30,7 @@ class ContestController extends Controller
         ));
     }
 
-    public function showAction($slug)
+    public function showAction($slug, Request $request)
     {
         $user = $this->getCurrentUser();
 
@@ -46,10 +49,13 @@ class ContestController extends Controller
             $isEligible = true;
         }
 
+        $agreeText = $this->trans('contests.show_page_agree_text');
+
         return $this->render('SpoutletBundle:Contest:show.html.twig', array(
             'contest'       => $contest,
             'instructions'  => $instructions,
             'isEligible'    => $isEligible,
+            'agreeText'     => $agreeText,
         ));
     }
 
@@ -69,24 +75,34 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
-        // user has not entered yet so we process the entry
-        $em = $this->getEntityManager();
+        if ($request->getMethod() == 'POST') {
+            $agreed = $request->get('contest-agree');
+            if(!$agreed) {
+                $this->setFlash('error', $this->trans('contests.enter_page_you_must_agree'));
+                return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+            }
 
-        $entry = new ContestEntry();
-        $entry->setUser($user);
-        $entry->setContest($contest);
-        $entry->setIpAddress($request->getClientIp());
+            // user has not entered yet so we process the entry
+            $em = $this->getEntityManager();
 
-        $em->persist($entry);
-        $em->flush();
+            $entry = new ContestEntry();
+            $entry->setUser($user);
+            $entry->setContest($contest);
+            $entry->setIpAddress($request->getClientIp());
 
-        $this->setFlash('success', sprintf($this->trans('contests.enter_page_success'), $contest->getName(), $contest->getCategory()));
-        return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+            $em->persist($entry);
+            $em->flush();
+
+            $this->setFlash('success', sprintf($this->trans('contests.enter_page_success'), $contest->getName(), $contest->getCategory()));
+            return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+        }
     }
 
     public function submitAction($slug, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $user = $this->getCurrentUser();
 
         $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
 
@@ -94,10 +110,50 @@ class ContestController extends Controller
 
         $form = $this->createForm(new SubmitImageType($user));
 
+        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
         $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
 
+        $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
+
+        if(!$entry)
+        {
+            $this->setFlash('error', sprintf($this->trans('contests.submit_page_no_entry', $contest->getCategory())));
+            return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+        }
+
+        if ($request->getMethod() == 'POST')
+        {
+            $em = $this->getEntityManager();
+            $form->bindRequest($request);
+            $images = $form->getData();
+
+            foreach ($images['galleryImages'] as $image)
+            {
+                $image->setOwner($user);
+
+                $em->persist($image);
+
+                $media = new GalleryMedia();
+                $media->setImage($image);
+                $media->setAuthor($user);
+                $media->setCategory('image');
+                $media->setTitle($image->getFileName());
+                $media->setContestEntry($entry);
+                $em->persist($media);
+            }
+
+            $em->flush();
+
+            $this->setFlash('success', 'Your images were uploaded successfully.');
+            return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
+        }
+
         return $this->render('SpoutletBundle:Contest:submit.html.twig', array(
-            'contest' => $contest
+            'form'      => $form->createView(),
+            'contest'   => $contest,
+            'medias'    => $medias,
+            'galleries' => $galleries,
+
         ));
     }
 
@@ -108,6 +164,17 @@ class ContestController extends Controller
         $this->ensureContestIsValid($contest);
 
         return $this->render('SpoutletBundle:Contest:vote.html.twig', array(
+            'contest' => $contest,
+        ));
+    }
+
+    public function rulesAction($slug)
+    {
+        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
+
+        $this->ensureContestIsValid($contest);
+
+        return $this->render('SpoutletBundle:Contest:rules.html.twig', array(
             'contest' => $contest,
         ));
     }
