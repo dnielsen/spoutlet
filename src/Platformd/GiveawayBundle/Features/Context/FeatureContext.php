@@ -134,7 +134,10 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode);
+        $em = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->getCurrentSite());
+
+        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $site);
     }
 
     /**
