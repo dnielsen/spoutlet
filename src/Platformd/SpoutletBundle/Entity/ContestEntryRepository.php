@@ -23,4 +23,13 @@ class ContestEntryRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForContest($contest)
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.contest = :contest')
+            ->setParameter('contest', $contest)
+            ->getQuery()
+            ->execute();
+    }
 }

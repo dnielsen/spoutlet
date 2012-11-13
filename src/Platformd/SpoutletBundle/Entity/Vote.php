@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\VoteRepository")
- * @ORM\Table(name="pd_vote", uniqueConstraints={@ORM\UniqueConstraint(name="media_user_idx", columns={"gallerymedia_id", "user_id", "contest_id"})})
+ * @ORM\Table(name="pd_vote", uniqueConstraints={@ORM\UniqueConstraint(name="media_user_idx", columns={"galleryMedia_id", "user_id"})})
  */
 class Vote
 {
@@ -29,19 +29,13 @@ class Vote
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Contest", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="cascade", nullable="true")
-     */
-    private $contest;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
      * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     private $galleryMedia;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     protected $user;

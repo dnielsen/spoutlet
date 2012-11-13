@@ -283,14 +283,13 @@ class GalleryController extends Controller
 
         $params = json_decode($content, true);
 
-        if (!isset($params['contestId']) || !isset($params['id']) || !isset($params['voteType'])) {
+        if (!isset($params['id']) || !isset($params['voteType'])) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
             return $response;
         }
 
         $id         = (int) $params['id'];
         $voteType   = $params['voteType'];
-        $contestId  = (int) $params['contestId'];
         $vote       = new Vote();
         $user       = $this->getCurrentUser();
 
@@ -309,19 +308,18 @@ class GalleryController extends Controller
         $voteRepo           = $this->getVoteRepository();
 
         $media              = $galleryMediaRepo->find($id);
-        $contest            = $contestId > 0 ? $contestRepo->find($contestId) : null;
+        $contest            = $contestRepo->find($media->getContestEntry()->getId());
 
         if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
             return $response;
         }
 
-        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
+        if (!$voteRepo->canVoteOnMedia($media, $user)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You have already voted on this item.")));
             return $response;
         }
 
-        $vote->setContest($contest);
         $vote->setUser($user);
         $vote->setGalleryMedia($media);
         $vote->setVoteType($voteType);

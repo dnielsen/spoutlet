@@ -204,3 +204,23 @@ table#content-reports th#content-report-action {
     min-width: 200px;
 }
 
+table#content-reports th#content-report-action {
+    min-width: 200px;
+}
+
+.admin-contest-remove-entry,
+.admin-contest-delete-media {
+    width: 160px;
+    text-align: right;
+}
+
+.admin-contest-remove-entry label,
+.admin-contest-delete-media label {
+    display: inline;
+    width: 140px;
+}
+
+.admin-contest-remove-entry input,
+.admin-contest-delete-media input {
+    margin: 0;
+}

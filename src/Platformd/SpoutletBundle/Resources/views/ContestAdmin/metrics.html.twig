@@ -23,9 +23,11 @@
                 {% endfor %}
             </td>
             <td>
+                <a href="{{ path('admin_contest_entries', { 'slug' : contest[0].slug }) }}">{{ contest[0].entries | length }}</a>
+            </td>
+            <td>
                 {{ contest[1] }}
             </td>
-            <td>1543</td>
         </tr>
     {% endfor %}
     </tbody>

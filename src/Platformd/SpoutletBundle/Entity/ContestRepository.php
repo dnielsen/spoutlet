@@ -24,9 +24,9 @@ class ContestRepository extends EntityRepository
 
         return $this->createQueryBuilder('c')
             ->leftJoin('c.entries', 'e')
-            /*->leftJoin('e.votes', 'v')
-            ->select('c', 'COUNT(e)', 'COUNT(v)')*/
-            ->select('c', 'COUNT(e)')
+            ->leftJoin('e.medias', 'm')
+            ->leftJoin('m.votes', 'v')
+            ->select('c', 'COUNT(v)')
             ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->execute();
