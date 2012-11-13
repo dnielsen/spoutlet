@@ -151,6 +151,14 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     protected $contestEntry;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\Vote", mappedBy="galleryMedia")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $votes;
+
+    /**
      * @ORM\Column(name="views", type="integer")
      */
     private $views = 0;
@@ -158,6 +166,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function __construct()
     {
         $this->galleries = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     /**
@@ -326,6 +335,16 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setContentReports($contentReports)
     {
         $this->contentReports = $contentReports;
+    }
+
+    public function getVotes()
+    {
+        return $this->votes;
+    }
+
+    public function setVotes($votes)
+    {
+        $this->votes = $votes;
     }
 
     public function getViews()

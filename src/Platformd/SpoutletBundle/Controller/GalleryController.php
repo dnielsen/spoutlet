@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
+use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
 use Platformd\SpoutletBundle\Form\Type\GalleryMediaType;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * Gallery controller.
@@ -204,7 +206,9 @@ class GalleryController extends Controller
     public function showAction($id)
     {
         $media          = $this->getGalleryMediaRepository()->find($id);
+
         $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
+        $upVotes        = $this->getVoteRepository()->findUpVotes($id);
 
         if(!$media)
         {
@@ -222,8 +226,9 @@ class GalleryController extends Controller
         $em->flush();
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
-            'media' => $media,
-            'otherMedia' => $otherMedia,
+            'media'         => $media,
+            'otherMedia'    => $otherMedia,
+            'upVotes'       => $upVotes,
         ));
     }
 
@@ -261,6 +266,75 @@ class GalleryController extends Controller
             'media' => $media,
             'form'  => $form->createView(),
         ));
+    }
+
+    public function voteAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['contestId']) || !isset($params['id']) || !isset($params['voteType'])) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $id         = (int) $params['id'];
+        $voteType   = $params['voteType'];
+        $contestId  = (int) $params['contestId'];
+        $vote       = new Vote();
+        $user       = $this->getCurrentUser();
+
+        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => 'FORCE_LOGIN_TO_VOTE')));
+            return $response;
+        }
+
+        if (!in_array($voteType, $vote->getValidVoteTypes())) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid vote type (up/down) not given.")));
+            return $response;
+        }
+
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $contestRepo        = $this->getContestRepository();
+        $voteRepo           = $this->getVoteRepository();
+
+        $media              = $galleryMediaRepo->find($id);
+        $contest            = $contestId > 0 ? $contestRepo->find($contestId) : null;
+
+        if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
+            return $response;
+        }
+
+        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You have already voted on this item.")));
+            return $response;
+        }
+
+        $vote->setContest($contest);
+        $vote->setUser($user);
+        $vote->setGalleryMedia($media);
+        $vote->setVoteType($voteType);
+
+        $em = $this->getEntityManager();
+
+        $em->persist($vote);
+        $em->flush();
+
+        $upvotes = $voteRepo->findUpVotes($media);
+
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upvotes)));
+        return $response;
     }
 
     public function sharePhotoAction()
@@ -381,6 +455,16 @@ class GalleryController extends Controller
     private function getGalleryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+    }
+
+    private function getContestRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Contest');
+    }
+
+    private function getVoteRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Vote');
     }
 
     private function getCurrentUser()
