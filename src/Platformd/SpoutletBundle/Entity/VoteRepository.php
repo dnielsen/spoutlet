@@ -26,6 +26,7 @@ class VoteRepository extends EntityRepository
         $qb = $this->createQueryBuilder('v')
             ->andWhere('v.galleryMedia = :media')
             ->andWhere('v.voteType = :voteType')
+            ->select('COUNT(v)')
             ->setParameter('media', $media)
             ->setParameter('voteType', 'up');
 
@@ -36,7 +37,9 @@ class VoteRepository extends EntityRepository
             $qb->andWhere('v.contest IS NULL');
         }
 
-        return $qb->getQuery()->execute();
+        $result = $qb->getQuery()->execute();
+
+        return $result[0][1];
     }
 
     public function canVoteOnMedia($media, $contest, $user)

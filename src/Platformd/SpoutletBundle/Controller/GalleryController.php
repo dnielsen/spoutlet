@@ -287,24 +287,19 @@ class GalleryController extends Controller
             return $response;
         }
 
-        if (!$this->roleCheck(array('ROLE_USER'))) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to vote.")));
-            return $response;
-        }
-
         $id         = (int) $params['id'];
         $voteType   = $params['voteType'];
         $contestId  = (int) $params['contestId'];
         $vote       = new Vote();
         $user       = $this->getCurrentUser();
 
-        if (!in_array($voteType, $vote->getValidVoteTypes())) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid vote type (up/down) not given.")));
+        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => 'FORCE_LOGIN_TO_VOTE')));
             return $response;
         }
 
-        if (!($user instanceof User)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to vote.")));
+        if (!in_array($voteType, $vote->getValidVoteTypes())) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid vote type (up/down) not given.")));
             return $response;
         }
 
@@ -335,7 +330,9 @@ class GalleryController extends Controller
         $em->persist($vote);
         $em->flush();
 
-        $response->setContent(json_encode(array("success" => true)));
+        $upvotes = $voteRepo->findUpVotes($media);
+
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upvotes)));
         return $response;
     }
 
@@ -472,10 +469,5 @@ class GalleryController extends Controller
     private function getCurrentUser()
     {
         return $this->get('security.context')->getToken()->getUser();
-    }
-
-    private function roleCheck($roles)
-    {
-        return $this->container->get('security.context')->isGranted($roles);
     }
 }

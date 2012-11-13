@@ -24,6 +24,9 @@
         <div id="media-voting-vote-response" style="display: none;">
             Your vote has been placed successfully!
         </div>
+        <div id="media-voting-login-required" style="display: none;">
+            You must be <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">logged in</a> to vote.
+        </div>
     </div>
 </div>
 
@@ -43,11 +46,17 @@
                 contentType: 'json',
                 success: function(data) {
                     if(!data.success) {
-                        $('#media-voting-vote-response').text(data.messageForUser);
-                        $('#media-voting-vote-response').fadeIn();
+                        if (data.messageForUser == 'FORCE_LOGIN_TO_VOTE') {
+                            $('#media-voting-login-required').fadeIn();
+                        } else {
+                            $('#media-voting-vote-response').text(data.messageForUser);
+                            $('#media-voting-vote-response').fadeIn();
+                        }
                     } else {
-                        $('#media-voting').hide();
                         $('#media-voting-vote-response').fadeIn();
+                        $('#media-upvotes').hide();
+                        $('#media-upvotes').text(data.messageForUser);
+                        $('#media-upvotes').fadeIn();
                     }
                 }
             })
@@ -67,10 +76,17 @@
                 contentType: 'json',
                 success: function(data) {
                     if(!data.success) {
-                        $('#media-voting-vote-response').text(data.messageForUser);
-                        $('#media-voting-vote-response').fadeIn();
+                        if (data.messageForUser == 'FORCE_LOGIN_TO_VOTE') {
+                            $('#media-voting-login-required').fadeIn();
+                        } else {
+                            $('#media-voting-vote-response').text(data.messageForUser);
+                            $('#media-voting-vote-response').fadeIn();
+                        }
                     } else {
                         $('#media-voting-vote-response').fadeIn();
+                        $('#media-upvotes').hide();
+                        $('#media-upvotes').text(data.messageForUser);
+                        $('#media-upvotes').fadeIn();
                     }
                 }
             })

@@ -80,7 +80,9 @@
     padding-right: 5px;
 }
 
-#media-voting-vote-response {
+#media-voting-vote-response,
+#media-voting-login-required {
     text-align: center;
     padding-top: 20px;
 }
+
