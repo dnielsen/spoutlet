@@ -101,4 +101,23 @@ class CountryAgeRestrictionRuleset
     {
         return self::$validParentTypes;
     }
+
+    public function doesUserPassRules($user, $country) {
+
+        $age            = $user->getAge();
+
+        foreach ($this->getRules() as $rule) {
+            $isAllowed = $rule->isAllowed($age, $country) ;
+
+            if ($isAllowed == null) {
+                continue;
+            }
+
+            if ($isAllowed === false) return $isAllowed;
+        }
+
+        $allowed = $isAllowed ? : $this->getDefaultAllow() === null ? true : $this->getDefaultAllow();
+
+        return $allowed;
+     }
 }

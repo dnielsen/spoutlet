@@ -61,7 +61,6 @@
                 url: '{{ path('gallery_media_vote')}}',
                 type: 'post',
                 data: JSON.stringify({
-                    'contestId' : 0,
                     'id' : '{{ media.id }}',
                     'voteType' : 'down'
                 }),

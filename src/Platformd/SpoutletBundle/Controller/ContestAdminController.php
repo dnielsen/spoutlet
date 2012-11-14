@@ -298,9 +298,13 @@ class ContestAdminController extends Controller
 
                 $newRulesArray = array();
 
+                $defaultAllow = true;
+
                 foreach ($rules as $rule) {
                     $rule->setRuleset($ruleset);
                     $newRulesArray[] = $rule;
+
+                    $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
                 }
 
                 $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
@@ -314,7 +318,7 @@ class ContestAdminController extends Controller
                 }
 
                 $contest->getRuleset()->setParentType('contest');
-                $contest->getRuleset()->setDefaultAllow(true);
+                $contest->getRuleset()->setDefaultAllow($defaultAllow);
 
                 $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
 
