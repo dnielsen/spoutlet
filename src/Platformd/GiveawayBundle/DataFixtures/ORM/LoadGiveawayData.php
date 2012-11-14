@@ -11,8 +11,10 @@ class LoadGiveawayData extends AbstractFixture implements OrderedFixtureInterfac
 {
     public function load($manager)
     {
+        $siteRepo   = $manager->getRepository('SpoutletBundle:Site');
+
         $machineGiveaway = new Giveaway();
-        $machineGiveaway->setLocale('en');
+        $machineGiveaway->setSites($siteRepo->find(1));
         $machineGiveaway->setName('My machine giveaway');
         $machineGiveaway->setStatus('active');
 
@@ -25,3 +27,5 @@ class LoadGiveawayData extends AbstractFixture implements OrderedFixtureInterfac
         return 2;
     }
 }
+
+?>

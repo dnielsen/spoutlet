@@ -4,7 +4,6 @@ namespace Platformd\NewsBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 
@@ -35,7 +34,12 @@ class CreateNewsFormType extends AbstractType
             ))
             ->add('blurb', 'textarea')
             ->add('body')
-            ->add('locale', new SiteChoiceType())
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
+            ))
             ->add('published', 'choice', array(
                 'choices' => array(0 => 'Unpublished', 1 => 'Published'),
                 'label'   => 'published_status',

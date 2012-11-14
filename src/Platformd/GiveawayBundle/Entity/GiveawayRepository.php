@@ -15,32 +15,32 @@ class GiveawayRepository extends AbstractEventRepository
     /**
      * Find actives giveaways
      *
-     * @param $locale
+     * @param $site
      * @return array
      */
-    public function findActives($locale)
+    public function findActives($site)
     {
 
         return $this
-            ->createActiveQueryBuilder($locale)
+            ->createActiveQueryBuilder($site)
             ->orderBy('g.created', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * @param $locale
+     * @param $site
      * @return array
      */
-    public function findAllForLocale($locale)
+    public function findAllForSite($site)
     {
-        return $this->createBaseQueryBuilder($locale)
+        return $this->createBaseQueryBuilder($site)
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function findAllActiveForLocaleWithLimit($locale, $limit) {
+    public function findAllActiveForSiteWithLimit($locale, $limit) {
 
          return $this->createActiveQueryBuilder($locale)
             ->orderBy('g.created', 'DESC')
@@ -54,15 +54,15 @@ class GiveawayRepository extends AbstractEventRepository
      * Retrieve a Giveaway using a slug
      *
      * @param string $slug
-     * @param string $locale
+     * @param string $site
      * @return \Platformd\GiveawayBundle\Entity\Giveway|null
      */
-    public function findOneBySlug($slug, $locale)
+    public function findOneBySlug($slug, $site)
     {
         try {
 
             return $this
-                ->createBaseQueryBuilder($locale)
+                ->createBaseQueryBuilder($site)
                 ->andWhere('g.slug = :slug')
                 ->setParameter('slug', $slug)
                 ->getQuery()
@@ -88,21 +88,21 @@ class GiveawayRepository extends AbstractEventRepository
     }
 
     /**
-     * Creates a base query builder that's locale-aware
+     * Creates a base query builder that's site-aware
      *
-     * @param $locale
+     * @param $site
      * @param \Doctrine\ORM\QueryBuilder|null $qb
      * @return \Doctrine\ORM\QueryBuilder|null
      */
-    protected function createBaseQueryBuilder($locale, QueryBuilder $qb = null)
+    protected function createBaseQueryBuilder($site, QueryBuilder $qb = null)
     {
         if ($qb === null) {
             $qb = $this->createQueryBuilder('g');
         }
 
-        $qb->andWhere('g.locale = :locale')
-            ->setParameter('locale', $locale)
-        ;
+        $qb->leftJoin('g.sites', 's');
+        $qb->andWhere(is_string($site) ? 's.name = :site' : 's = :site');
+        $qb->setParameter('site', $site);
 
         return $qb;
     }
@@ -110,12 +110,12 @@ class GiveawayRepository extends AbstractEventRepository
     /**
      * Create a QueryBuilder instance with base criterias
      *
-     * @param string $locale The locale we're working in
+     * @param string $site The site we're working in
      * @return Doctrine\ORM\QueryBuilder
      */
-    protected function createActiveQueryBuilder($locale)
+    protected function createActiveQueryBuilder($site)
     {
-        $qb = $this->createBaseQueryBuilder($locale);
+        $qb = $this->createBaseQueryBuilder($site);
 
         $qb->andWhere('g.status != :flag')
             ->setParameter('flag', 'disabled')

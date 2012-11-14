@@ -11,12 +11,12 @@ class EventsController extends Controller
     public function indexAction()
     {
         $current_events = $this->getAbstractEventsRepo()
-            ->getCurrentEventsAndSweepstakes($this->getLocale(), 50);
+            ->getCurrentEventsAndSweepstakes($this->getCurrentSite(), 50);
         $past_events    = $this->getAbstractEventsRepo()
-            ->getPastEventsAndSweepstakes($this->getLocale(), 50);
+            ->getPastEventsAndSweepstakes($this->getCurrentSite(), 50);
 
         $allGiveaways = $this->getGiveawayRepo()
-            ->findActives($this->getLocale())
+            ->findActives($this->getCurrentSite())
         ;
 
         return $this->render('SpoutletBundle:Events:index.html.twig',
@@ -30,14 +30,14 @@ class EventsController extends Controller
     public function currentAction()
     {
         return $this->render('SpoutletBundle:Events:current.html.twig', array(
-            'events' => $this->getEventsRepo()->getCurrentEvents($this->getLocale()),
+            'events' => $this->getEventsRepo()->getCurrentEvents($this->getCurrentSite()),
         ));
     }
 
     public function pastAction()
     {
         return $this->render('SpoutletBundle:Events:past.html.twig', array(
-            'events' => $this->getEventsRepo()->getPastEvents($this->getLocale()),
+            'events' => $this->getEventsRepo()->getPastEvents($this->getCurrentSite()),
         ));
     }
 
@@ -54,10 +54,7 @@ class EventsController extends Controller
          * Notice that this does *not* respect "published". This is on purpose,
          * because the client wants to be able to preview events to the client
          */
-        $event = $this->getEventsRepo()->findOneBy(array(
-            'locale' => $this->getLocale(),
-            'slug'   => $slug
-        ));
+        $event = $this->getEventsRepo()->findOneBySlug($slug, $this->getCurrentSite());
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
@@ -73,10 +70,7 @@ class EventsController extends Controller
 
     public function unregisterAction($slug)
     {
-        $event = $this->getEventsRepo()->findOneBy(array(
-            'locale' => $this->getLocale(),
-            'slug'   => $slug,
-        ));
+        $event = $this->getEventsRepo()->findOneBySlug($slug, $this->getCurrentSite());
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
@@ -102,10 +96,7 @@ class EventsController extends Controller
      */
     public function registerAction($slug)
     {
-        $event = $this->getEventsRepo()->findOneBy(array(
-            'locale' => $this->getLocale(),
-            'slug'   => $slug
-        ));
+        $event = $this->getEventsRepo()->findOneBySlug($slug, $this->getCurrentSite());
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
@@ -123,7 +114,7 @@ class EventsController extends Controller
 
         return $this->redirect($this->generateUrl('events_detail', array('slug' => $event->getSlug())));
     }
-    
+
     /**
      * @return \Platformd\SpoutletBundle\Entity\EventRepository
      */

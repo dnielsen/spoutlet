@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class EventType extends AbstractType
@@ -46,7 +45,13 @@ class EventType extends AbstractType
         $builder->add('game', null, array('empty_value' => 'N/A'));
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');
-        $builder->add('locale', new SiteChoiceType());
+        $builder->add('sites', 'entity', array(
+            'class'    => 'SpoutletBundle:Site',
+            'multiple' => true,
+            'expanded' => true,
+            'property' => 'name',
+        ));
+
 
         $this->unrequireFields($builder);
     }

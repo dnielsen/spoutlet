@@ -146,10 +146,20 @@ class GamePageRepository extends EntityRepository
      */
     private function createSiteQueryBuilder($site)
     {
-        return $this->createQueryBuilder('gp')
-            ->leftJoin('gp.gamePageLocales', 'gpl')
-            ->andWhere('gpl.locale = :site')
+        $qb = $this->createQueryBuilder('gp')
+            ->leftJoin('gp.sites', 's');
+
+        if (is_string($site)) {
+            $qb->andWhere('s.name = :site')
+                ->setParameter('site', $site);
+
+            return $qb;
+        }
+
+        $qb->andWhere('s = :site')
             ->setParameter('site', $site);
+
+        return $qb;
     }
 
     private function addPublishedQueryBuilder(QueryBuilder $qb)

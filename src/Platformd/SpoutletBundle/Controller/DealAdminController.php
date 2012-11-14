@@ -35,6 +35,10 @@ class DealAdminController extends Controller
         $this->addDealsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
         return $this->render('SpoutletBundle:DealAdmin:list.html.twig', array(

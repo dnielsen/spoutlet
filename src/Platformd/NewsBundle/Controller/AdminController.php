@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
-    
+
     public function indexAction()
     {
         $this->addNewsBreadcrumb();
@@ -24,10 +24,10 @@ class AdminController extends Controller
             ->getEntityManager()
             ->getRepository('NewsBundle:News');
         $query = $manager->getFindNewsQuery();
-        
+
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
-        
+
         return $this->render('NewsBundle:Admin:index.html.twig', array(
             'news' => $pager
         ));
@@ -42,7 +42,7 @@ class AdminController extends Controller
         $request = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
-                
+
             $request
                 ->getSession()
                 ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
@@ -52,7 +52,7 @@ class AdminController extends Controller
 
         return $this->render('NewsBundle:Admin:new.html.twig', array(
             'form' => $form->createView()
-        ));   
+        ));
     }
 
     public function editAction($id)
@@ -78,11 +78,11 @@ class AdminController extends Controller
 
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
-        
+
         return $this->render('NewsBundle:Admin:edit.html.twig', array(
             'form' => $form->createView(),
             'news' => $news
-        ));   
+        ));
     }
 
     public function deleteAction($id)
@@ -91,7 +91,7 @@ class AdminController extends Controller
         $news = $em
             ->getRepository('NewsBundle:News')
             ->findOneBy(array('id' => $id));
-        
+
         if (!$news) {
 
             throw $this->createNotFoundException('Unable to retrieve news item #'.$id);
@@ -104,7 +104,7 @@ class AdminController extends Controller
             ->getRequest()
             ->getSession()
             ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.deleted'));
-                
+
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
     }
 

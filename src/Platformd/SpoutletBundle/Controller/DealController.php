@@ -16,10 +16,12 @@ class DealController extends Controller
      */
     public function indexAction()
     {
-        $featuredDeals = $this->getDealManager()->findFeaturedDeals();
+        $site = $this->getCurrentSite();
+
+        $featuredDeals = $this->getDealManager()->findFeaturedDeals($site);
         $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
-        $allDeals = $this->getDealManager()->findActiveDeals($featuredDeals);
-        $expiredDeals = $this->getDealManager()->findExpiredDeals();
+        $allDeals = $this->getDealManager()->findActiveDeals($site);
+        $expiredDeals = $this->getDealManager()->findExpiredDeals($site);
         $commentsArr = $this->getCommentManager()
             ->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5)
         ;
@@ -40,7 +42,8 @@ class DealController extends Controller
     public function showAction($slug, Request $request)
     {
         $em                     = $this->getDoctrine()->getEntityManager();
-        $deal                   = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug);
+        $site                   = $this->getCurrentSite();
+        $deal                   = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug, $site);
         $dealCodeRepo           = $em->getRepository('SpoutletBundle:DealCode');
         $countries              = Locale::getDisplayCountries('en');
 
@@ -93,9 +96,10 @@ class DealController extends Controller
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $em             = $this->getDoctrine()->getEntityManager();
+        $site           = $this->getCurrentSite();
         $dealCodeRepo   = $em->getRepository('SpoutletBundle:DealCode');
         $dealPoolRepo   = $em->getRepository('SpoutletBundle:DealPool');
-        $deal           = $this->getDealManager()->findOneBySlug($slug);
+        $deal           = $this->getDealManager()->findOneBySlug($slug, $site);
         $clientIp       = $request->getClientIp(true);
         $user           = $this->getUser();
         $locale         = $this->getLocale();

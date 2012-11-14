@@ -726,9 +726,13 @@ class AbstractFeatureContext extends MinkContext
     {
         $game = $this->thereIsAGameCalled($gameName);
 
+        $em = $this->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $siteName));
+
         $page = new GamePage();
         $page->setGame($game);
-        $page->setLocales(array($siteName));
+        $page->setSites(array($site));
         $page->setStatus(GamePage::STATUS_PUBLISHED);
 
         $this->getContainer()->get('platformd.model.game_page_manager')
@@ -783,6 +787,8 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception('Could not find game in the database');
         }
 
+        $siteName = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($siteName);
+
         $gamePage = $em->getRepository('SpoutletBundle:GamePage')->findOneByGame($game, $siteName);
 
         if (!$gamePage) {
@@ -811,8 +817,13 @@ class AbstractFeatureContext extends MinkContext
     public function iShouldBeOnTheDealCalledIn($dealName, $locale)
     {
         $em     = $this->getEntityManager();
-        /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
-        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $locale);
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+
+        if (!$site) {
+            throw new \Exception(sprintf('Site not found for locale "%s"', $locale));
+        }
+
+        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $site);
 
         if (!$deal) {
             throw new \Exception('Could not find the deal in the database');
@@ -886,11 +897,16 @@ class AbstractFeatureContext extends MinkContext
 
             $category = isset($row['category']) ? $row['category'] : 'rpg';
             $status = isset($row['status']) ? $row['status'] : GamePage::STATUS_PUBLISHED;
-            $sites = isset($row['sites']) ? $row['sites'] : 'en';
 
             $game->setCategory($category);
             $gamePage->setStatus($status);
-            $gamePage->setLocales(explode(',', $sites));
+
+            $siteArray = isset($row['sites']) ? explode(',', $row['sites']) : array('en');
+            $siteRepo = $em->getRepository('SpoutletBundle:Site');
+
+            foreach ($siteArray as $site) {
+                $gamePage->getSites()->add($siteRepo->findOneByDefaultLocale($site));
+            }
 
             $em->persist($game);
             $em->flush();
@@ -1003,14 +1019,18 @@ class AbstractFeatureContext extends MinkContext
      */
     public function thereIsADealCalledIn($dealName, $locale)
     {
-        if ($deal = $this->getEntityManager()->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
-            $this->getEntityManager()->remove($deal);
-            $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+
+        if ($deal = $em->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
+            $em->remove($deal);
+            $em->flush();
         }
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $locale));
 
         $deal = new Deal();
         $deal->setName($dealName);
-        $deal->setLocales(array($locale));
+        $deal->setSites(array($site));
         $deal->setStatus(Deal::STATUS_PUBLISHED);
         $deal->setRedemptionInstructionsArray(array('Do something'));
 

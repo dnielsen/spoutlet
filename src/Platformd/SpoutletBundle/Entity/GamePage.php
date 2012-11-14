@@ -11,7 +11,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipInterface;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
@@ -30,7 +29,7 @@ use Symfony\Component\Validator\ExecutionContext;
  * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
  * @Assert\Callback(methods={"validateExternalArchivedGamePage", "validatePossibilityOfSlug"})
  */
-class GamePage implements LinkableInterface, LocalesRelationshipInterface
+class GamePage implements LinkableInterface
 {
     const STATUS_PUBLISHED      = 'published';
     const STATUS_UNPUBLISHED    = 'unpublished';
@@ -249,6 +248,14 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
     private $locales;
 
     /**
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="pd_game_page_site")
+     */
+     private $sites;
+
+    /**
      * The published/unpublished/archived field
      *
      * @var string
@@ -275,10 +282,26 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
      */
     private $openGraphOverride;
 
+    /**
+     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     */
+    protected $sitifiedAt;
+
     public function __construct()
     {
         $this->gamePageLocales = new ArrayCollection();
         $this->mediaGalleryMedias = new ArrayCollection();
+        $this->sites = new ArrayCollection();
+    }
+
+    public function setSitifiedAt($sitifiedAt)
+    {
+        $this->sitifiedAt = $sitifiedAt;
+    }
+
+    public function getSitifiedAt()
+    {
+        return $this->sitifiedAt;
     }
 
     /**
@@ -656,23 +679,10 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
 
     public function getLocales()
     {
-        return $this->areLocalesInitialized() ? $this->locales : array();
+        $this->locales;
     }
 
-    /**
-     * The locales are null until someone actually sets them
-     *
-     * This allows us to set them on load of the entity based on the relationship,
-     * but by checking this, we can be careful not to run over real values
-     *
-     * @return bool
-     */
-    public function areLocalesInitialized()
-    {
-        return is_array($this->locales);
-    }
-
-    public function setLocales(array $locales)
+        public function setLocales(array $locales)
     {
         $this->locales = $locales;
 
@@ -680,13 +690,32 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
         $this->updatedAt = new \DateTime();
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
     public function getGamePageLocales()
     {
         return $this->gamePageLocales;
     }
+
+    public function setGamePageLocales($gamePageLocales)
+    {
+        $this->gamePageLocales = $gamePageLocales;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $sites
+     */
+    public function setSites($sites)
+    {
+        $this->sites = $sites;
+    }
+
 
     /**
      * @return string
@@ -931,31 +960,6 @@ class GamePage implements LinkableInterface, LocalesRelationshipInterface
             array(),
             null
         );
-    }
-
-    public function getJoinedLocales()
-    {
-        return $this->getGamePageLocales();
-    }
-
-    /**
-     * A funny function where you create a new Instance of whatever the
-     * entities actual JoinedLocaleInterface is. You'll typically also
-     * need to set the relationship on that new object back to this object:
-     *
-     *     $newGamePageLocale = new GamePageLocale();
-     *     $newGamePageLocale->setGamePage($this);
-     *
-     *     return $newGamePageLocale;
-     *
-     * @return \Platformd\SpoutletBundle\Locale\JoinedLocaleInterface
-     */
-    public function createJoinedLocale()
-    {
-        $newGamePageLocale = new GamePageLocale();
-        $newGamePageLocale->setGamePage($this);
-
-        return $newGamePageLocale;
     }
 
     /**

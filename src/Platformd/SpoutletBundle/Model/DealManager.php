@@ -6,9 +6,7 @@ use Platformd\SpoutletBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Deal;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
-use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 
 /**
  * Manager for GamePage:
@@ -20,19 +18,12 @@ use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 class DealManager
 {
     private $em;
-
-    private $session;
-
     private $mediaUtil;
 
-    private $localesHelper;
-
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, LocalesRelationshipHelper $localesHelper)
+    public function __construct(EntityManager $em, MediaUtil $mediaUtil)
     {
         $this->em = $em;
-        $this->session = $session;
         $this->mediaUtil = $mediaUtil;
-        $this->localesHelper = $localesHelper;
     }
 
     /**
@@ -47,7 +38,6 @@ class DealManager
     {
         $this->em->persist($deal);
 
-        $this->localesHelper->processLocalesSave($deal);
         $this->handleMediaFields($deal);
         $this->handleMediaGallery($deal);
 
@@ -78,43 +68,43 @@ class DealManager
      * @param string $slug
      * @return \Platformd\SpoutletBundle\Entity\Deal
      */
-    public function findOneBySlug($slug)
+    public function findOneBySlug($slug, $site)
     {
-        return $this->getRepository()->findOneBySlugForSite($slug, $this->getDatabaseSiteKey());
+        return $this->getRepository()->findOneBySlugForSite($slug, $site);
     }
 
     /**
      * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
-    public function findFeaturedDeals()
+    public function findFeaturedDeals($site)
     {
-        return $this->getRepository()->findFeaturedDealsForSite($this->getDatabaseSiteKey());
-    }
-
-    /**
-     * @param array $featuredDeals
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
-    public function findActiveNonFeaturedDeals(array $featuredDeals)
-    {
-        return $this->getRepository()->findAllActiveNonFeatureDealsForSite($this->getDatabaseSiteKey(), $featuredDeals);
+        return $this->getRepository()->findFeaturedDealsForSite($site);
     }
 
     /**
      * @param array $featuredDeals
      * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
-    public function findActiveDeals()
+    public function findActiveNonFeaturedDeals(array $featuredDeals, $site)
     {
-        return $this->getRepository()->findAllActiveDealsForSite($this->getDatabaseSiteKey());
+        return $this->getRepository()->findAllActiveNonFeatureDealsForSite($site, $featuredDeals);
+    }
+
+    /**
+     * @param array $featuredDeals
+     * @return \Platformd\SpoutletBundle\Entity\Deal[]
+     */
+    public function findActiveDeals($site)
+    {
+        return $this->getRepository()->findAllActiveDealsForSite($site);
     }
 
     /**
      * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
-    public function findExpiredDeals()
+    public function findExpiredDeals($site)
     {
-        return $this->getRepository()->findExpiredDealsForSite($this->getDatabaseSiteKey());
+        return $this->getRepository()->findExpiredDealsForSite($site);
     }
 
     /**
@@ -165,10 +155,5 @@ class DealManager
     private function getRepository()
     {
         return $this->em->getRepository('SpoutletBundle:Deal');
-    }
-
-    private function getDatabaseSiteKey()
-    {
-        return $this->session->getLocale();
     }
 }

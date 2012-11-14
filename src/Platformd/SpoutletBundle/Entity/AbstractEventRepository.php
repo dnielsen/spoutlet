@@ -20,9 +20,9 @@ class AbstractEventRepository extends EntityRepository
      * @param integer $limit
      * @return array
      */
-    public function getCurrentEvents($locale, $limit = null)
+    public function getCurrentEvents($site, $limit = null)
     {
-        $qb = $this->getBaseQueryBuilder($locale);
+        $qb = $this->getBaseQueryBuilder($site);
         $query = $this->addActiveQuery($qb)
             ->orderBy('e.starts_at', 'DESC')
             ->getQuery()
@@ -37,13 +37,13 @@ class AbstractEventRepository extends EntityRepository
     /**
      * The same as getCurrentEvents(), but ordered by created
      *
-     * @param $locale
+     * @param $site
      * @param null $limit
      * @return array|mixed
      */
-    public function getCurrentEventsOrderedByCreated($locale, $limit = null)
+    public function getCurrentEventsOrderedByCreated($site, $limit = null)
     {
-        $qb = $this->getBaseQueryBuilder($locale);
+        $qb = $this->getBaseQueryBuilder($site);
         $query = $this->addActiveQuery($qb)
             ->orderBy('e.created', 'DESC')
             ->getQuery()
@@ -58,13 +58,13 @@ class AbstractEventRepository extends EntityRepository
     /**
      * A funky little function that only return Events and Sweepstakes
      *
-     * @param string $locale
+     * @param string $site
      * @param integer $limit
      * @return array
      */
-    public function getCurrentEventsAndSweepstakes($locale, $limit = null)
+    public function getCurrentEventsAndSweepstakes($site, $limit = null)
     {
-        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+        $abstractEvents = $this->getCurrentEvents($site, $limit);
 
         foreach ($abstractEvents as $key => $value) {
             // unset if it's not an event or sweepstakes
@@ -79,13 +79,13 @@ class AbstractEventRepository extends EntityRepository
     /**
      * A funky little function that only return Events and Sweepstakes
      *
-     * @param string $locale
+     * @param string $site
      * @param integer $limit
      * @return array
      */
-    public function getCurrentSweepstakes($locale, $limit = null)
+    public function getCurrentSweepstakes($site, $limit = null)
     {
-        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+        $abstractEvents = $this->getCurrentEvents($site, $limit);
 
         foreach ($abstractEvents as $key => $value) {
             // unset if it's not an event or sweepstakes
@@ -101,13 +101,13 @@ class AbstractEventRepository extends EntityRepository
     /**
      * A funky little function that only return Events and Sweepstakes
      *
-     * @param string $locale
+     * @param string $site
      * @param integer $limit
      * @return array
      */
-    public function getCurrentEventsOnly($locale, $limit = null)
+    public function getCurrentEventsOnly($site, $limit = null)
     {
-        $abstractEvents = $this->getCurrentEvents($locale, $limit);
+        $abstractEvents = $this->getCurrentEvents($site, $limit);
 
         foreach ($abstractEvents as $key => $value) {
             // unset if it's not an event or sweepstakes
@@ -125,9 +125,9 @@ class AbstractEventRepository extends EntityRepository
      * @param integer $limit
      * @return array
      */
-    public function getPastEvents($locale, $limit = null)
+    public function getPastEvents($site, $limit = null)
     {
-        $query = $this->getBaseQueryBuilder($locale)
+        $query = $this->getBaseQueryBuilder($site)
             ->andWhere('e.ends_at < :cut_off')
             ->setParameter('cut_off', new \DateTime())
             ->orderBy('e.ends_at', 'DESC')
@@ -139,13 +139,13 @@ class AbstractEventRepository extends EntityRepository
     /**
      * A funky little function that only return Events and Sweepstakes
      *
-     * @param string $locale
+     * @param string $site
      * @param integer $limit
      * @return array
      */
-    public function getPastEventsAndSweepstakes($locale, $limit = null)
+    public function getPastEventsAndSweepstakes($site, $limit = null)
     {
-        $abstractEvents = $this->getPastEvents($locale, $limit);
+        $abstractEvents = $this->getPastEvents($site, $limit);
 
         foreach ($abstractEvents as $key => $value) {
             // unset if it's not an event or sweepstakes
@@ -162,13 +162,13 @@ class AbstractEventRepository extends EntityRepository
      *
      * @return array
      */
-    public function findPublished($locale)
+    public function findPublished($site)
     {
         $items = $this->createQueryBuilder('e')
-            ->andWhere('e.locale = :locale')
+            ->andWhere(':site IN e.sites')
             ->andWhere('e.published = :published')
             ->setParameters(array(
-                'locale'    => $locale,
+                'site'    => $site,
                 'published' => true,
             ))
             ->orderBy('e.starts_at', 'DESC')
@@ -181,21 +181,29 @@ class AbstractEventRepository extends EntityRepository
         return $items;
     }
 
-    public function findOnePublishedBySlug($slug, $locale)
+    public function findOnePublishedBySlug($slug, $site)
     {
-        return $this->findOneBy(array(
-            'locale' => $locale,
-            'slug'   => $slug,
-            'published' => true,
-        ));
+        $result = $this->getBaseQueryBuilder($site)
+            ->andWhere("e.slug = :slug")
+            ->andWhere("e.published = true")
+            ->setParameter('slug', $slug)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        return $result && count($result) > 0 ? $result[0] : null;
     }
 
-    public function findOneBySlug($slug, $locale)
+    public function findOneBySlug($slug, $site)
     {
-        return $this->findOneBy(array(
-            'locale' => $locale,
-            'slug'   => $slug,
-        ));
+        $result = $this->getBaseQueryBuilder($site)
+            ->andWhere("e.slug = :slug")
+            ->setParameter('slug', $slug)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        return $result && count($result) > 0 ? $result[0] : null;
     }
 
     public function findAllWithoutLocaleOrderedByNewest()
@@ -212,9 +220,9 @@ class AbstractEventRepository extends EntityRepository
      * @param $siteKey
      * @return \Platformd\SpoutletBundle\Entity\AbstractEvent[]
      */
-    public function findActivesForGame(Game $game, $siteKey)
+    public function findActivesForGame(Game $game, $site)
     {
-        $qb = $this->getBaseQueryBuilder($siteKey);
+        $qb = $this->getBaseQueryBuilder($site);
         $query = $this->addActiveQuery($qb)
             ->orderBy('e.created', 'DESC')
             ->andWhere('e.game = :game')
@@ -253,13 +261,23 @@ class AbstractEventRepository extends EntityRepository
      * @param String $alias
      * @return Doctrine\ORM\QueryBuilder
      */
-    private function getBaseQueryBuilder($locale, $alias = 'e')
+    private function getBaseQueryBuilder($site, $alias = 'e')
     {
+        $qb = $this->createQueryBuilder($alias)
+            ->leftJoin($alias.'.sites', 's')
+            ->andWhere($alias.'.published = 1');
 
-        return $this->createQueryBuilder($alias)
-            ->where($alias.'.published = 1')
-            ->andWhere($alias.'.locale = :locale')
-            ->setParameter('locale', $locale);
+        if (is_string($site)) {
+            $qb->andWhere('s.name = :site')
+                ->setParameter('site', $site);
+
+            return $qb;
+        }
+
+        $qb->andWhere('s = :site')
+            ->setParameter('site', $site);
+
+        return $qb;
     }
 
     private function addQueryLimit(Query $query, $limit)
