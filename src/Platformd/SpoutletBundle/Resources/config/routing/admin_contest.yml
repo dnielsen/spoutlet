@@ -7,6 +7,28 @@ admin_contest_create:
     defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
     requirements: { _method: post }
 
+# metrics
+admin_contest_metrics:
+    pattern: /metrics
+    defaults: { _controller: SpoutletBundle:ContestAdmin:metrics }
+
+admin_contest_entries:
+    pattern: /metrics/{slug}/entries
+    defaults: { _controller: SpoutletBundle:ContestAdmin:entryMetrics }
+
+admin_contest_entries_update:
+    pattern: /metrics/{slug}/entries/update
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:updateEntries" }
+    requirements: { _method: post }
+
+admin_contest_entries_export:
+    pattern: /metrics/{slug}/entries/export
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:generateContestEntriesCsv" }
+
+admin_contest_votes_export:
+    pattern: /metrics/{slug}/entries/{id}/votes
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:generateEntryVotesCsv" }
+
 admin_contest_index:
     pattern: /
     defaults: { _controller: "SpoutletBundle:ContestAdmin:index" }

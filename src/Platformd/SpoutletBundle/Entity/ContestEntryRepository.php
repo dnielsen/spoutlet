@@ -23,4 +23,14 @@ class ContestEntryRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllNotDeletedForContest($contest)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.contest = :contest')
+            ->andWhere('e.deleted <> 1')
+            ->setParameter('contest', $contest)
+            ->getQuery()
+            ->execute();
+    }
 }

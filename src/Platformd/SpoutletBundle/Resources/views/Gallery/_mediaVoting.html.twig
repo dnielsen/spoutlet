@@ -6,14 +6,7 @@
     </div>
     <div class="widget-content">
         <div class="media-voting">
-            <span class=media-voting-label>Rate this image:</span>
-            <!-- <a class="media-voting-button" id="media-voting-vote-up" href="{{ path('gallery_media_vote', { 'contestId': 0, 'id' : media.id, 'upDown' : 'up' }) }}">
-                 <img src="{{ asset('bundles/spoutlet/images/thumbs_up.gif') }}" alt="Vote Up!" style="height: 30px; width: 30px;" />
-            </a>
-            <a class="media-voting-button" id="media-voting-vote-up" href="{{ path('gallery_media_vote', { 'contestId': 0, 'id' : media.id, 'upDown' : 'down' }) }}">
-                <img src="{{ asset('bundles/spoutlet/images/thumbs_down.gif') }}" alt="Vote Down!" style="height: 30px; width: 30px;" />
-            </a> -->
-
+            <span class="media-voting-label">Rate this image:</span>
             <a class="media-voting-button" id="media-voting-vote-up" href="javascript:void(0);">
                 <img src="{{ asset('bundles/spoutlet/images/thumbs_up.gif') }}" alt="Vote Up!" style="height: 30px; width: 30px;" />
             </a>
@@ -39,7 +32,6 @@
                 url: '{{ path('gallery_media_vote')}}',
                 type: 'post',
                 data: JSON.stringify({
-                    'contestId' : 0,
                     'id' : '{{ media.id }}',
                     'voteType' : 'up'
                 }),
@@ -69,7 +61,6 @@
                 url: '{{ path('gallery_media_vote')}}',
                 type: 'post',
                 data: JSON.stringify({
-                    'contestId' : 0,
                     'id' : '{{ media.id }}',
                     'voteType' : 'down'
                 }),

@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\VoteRepository")
- * @ORM\Table(name="pd_vote", uniqueConstraints={@ORM\UniqueConstraint(name="media_user_idx", columns={"gallerymedia_id", "user_id", "contest_id"})})
+ * @ORM\Table(name="pd_vote", uniqueConstraints={@ORM\UniqueConstraint(name="media_user_idx", columns={"galleryMedia_id", "user_id"})})
  */
 class Vote
 {
@@ -29,22 +29,21 @@ class Vote
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Contest", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="cascade", nullable="true")
-     */
-    private $contest;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
      * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     private $galleryMedia;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="cascade", nullable="false")
      */
     protected $user;
+
+    /**
+     * @ORM\Column(name="ip_address", type="string", length="20")
+     */
+    protected $ipAddress;
 
     /**
      * e.g. "up", "down" to denote how the vote was placed
@@ -83,6 +82,16 @@ class Vote
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function setIpAddress($ipAddress)
+    {
+        $this->ipAddress = $ipAddress;
+    }
+
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
     }
 
     public function setContest($contest)

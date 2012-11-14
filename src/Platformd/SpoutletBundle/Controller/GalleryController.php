@@ -309,14 +309,13 @@ class GalleryController extends Controller
 
         $params = json_decode($content, true);
 
-        if (!isset($params['contestId']) || !isset($params['id']) || !isset($params['voteType'])) {
+        if (!isset($params['id']) || !isset($params['voteType'])) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Some required information was not passed.")));
             return $response;
         }
 
         $id         = (int) $params['id'];
         $voteType   = $params['voteType'];
-        $contestId  = (int) $params['contestId'];
         $vote       = new Vote();
         $user       = $this->getCurrentUser();
 
@@ -333,24 +332,33 @@ class GalleryController extends Controller
         $galleryMediaRepo   = $this->getGalleryMediaRepository();
         $contestRepo        = $this->getContestRepository();
         $voteRepo           = $this->getVoteRepository();
+        $countryRepo        = $this->getCountryRepository();
 
         $media              = $galleryMediaRepo->find($id);
-        $contest            = $contestId > 0 ? $contestRepo->find($contestId) : null;
+
+        $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
+        $country            = $countryRepo->findOneByCode($user->getCountry());
+
+        if ($contest && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
+            return $response;
+        }
+
 
         if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
             return $response;
         }
 
-        if (!$voteRepo->canVoteOnMedia($media, $contest, $user)) {
+        if (!$voteRepo->canVoteOnMedia($media, $user)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You have already voted on this item.")));
             return $response;
         }
 
-        $vote->setContest($contest);
         $vote->setUser($user);
         $vote->setGalleryMedia($media);
         $vote->setVoteType($voteType);
+        $vote->setIpAddress($request->getClientIp(true));
 
         $em = $this->getEntityManager();
 
@@ -497,6 +505,12 @@ class GalleryController extends Controller
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Vote');
     }
+
+    private function getCountryRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Country');
+    }
+
 
     private function getCurrentUser()
     {

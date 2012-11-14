@@ -1,0 +1,36 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>Contests</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Contest Name</th>
+            <th>Sites</th>
+            <th>Entries</th>
+            <th>Votes</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for contest in contests %}
+        <tr>
+            <td>{{ contest[0].name }}</td>
+            <td>
+                {% for site in contest[0].sites %}
+                    [ {{ site.name }} ]
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{{ path('admin_contest_entries', { 'slug' : contest[0].slug }) }}">{{ entryCounts[contest[0].id] }}</a>
+            </td>
+            <td>
+                {{ contest[1] }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

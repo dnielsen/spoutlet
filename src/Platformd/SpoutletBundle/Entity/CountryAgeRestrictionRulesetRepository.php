@@ -12,29 +12,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class CountryAgeRestrictionRulesetRepository extends EntityRepository
 {
-    public function doesCurrentUserPassRules($user = null) {
 
-        $currentUser    = $user ?: $this->getUser();
-
-        $em             = $this->getDoctrine()->getEntityManager();
-        $countryRepo    = $em->getRepository('SpoutletBundle:Country');
-
-        $country        = $countryRepo->findByName($currentUser->getCountry());
-        $age            = $currentUser->getAge();
-
-        foreach ($this->getRules() as $rule) {
-            $isAllowed = $rule->isAllowed($age, $country) ;
-
-            if ($isAllowed == null) {
-                continue;
-            }
-
-            return $isAllowed;
-        }
-
-        $defaultAllow = $this->getDefaultAllow() == null ? true : $this->getDefaultAllow();
-
-        return $defaultAllow;
-     }
 
 }
