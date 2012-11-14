@@ -47,6 +47,11 @@ class Vote
     protected $user;
 
     /**
+     * @ORM\Column(name="ip_address", type="string", length="20")
+     */
+    protected $ipAddress;
+
+    /**
      * e.g. "up", "down" to denote how the vote was placed
      *
      * @ORM\Column(name="vote_type", type="string", length="255")
@@ -83,6 +88,16 @@ class Vote
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function setIpAddress($ipAddress)
+    {
+        $this->ipAddress = $ipAddress;
+    }
+
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
     }
 
     public function setContest($contest)

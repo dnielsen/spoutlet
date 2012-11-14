@@ -12,18 +12,5 @@ use Doctrine\ORM\EntityRepository;
  */
 class CountryAgeRestrictionRuleRepository extends EntityRepository
 {
-    public function isAllowed($age, $country)
-    {
-        if ($country->getId() == $this->getCountry()){
 
-            if ($age > $this->getMinAge() && $age < $this->getMaxAge()) {
-                return $this->getRuleType();
-            }
-
-            return !$this->getRuleType();
-
-        }
-
-        return null;
-    }
 }

@@ -33,7 +33,8 @@ class CountryAgeRestrictionRule
     /**
      * @var integer $country
      *
-     *  @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $country;
 
@@ -46,14 +47,14 @@ class CountryAgeRestrictionRule
     /**
      * @var integer $minAge
      *
-     * @ORM\Column(name="min_age", type="integer")
+     * @ORM\Column(name="min_age", type="integer", nullable="true")
      */
     private $minAge;
 
     /**
      * @var integer $maxAge
      *
-     * @ORM\Column(name="max_age", type="integer")
+     * @ORM\Column(name="max_age", type="integer", nullable="true")
      */
     private $maxAge;
 
@@ -210,5 +211,20 @@ class CountryAgeRestrictionRule
     public static function getValidRuleTypes()
     {
         return self::$validRuleTypes;
+    }
+
+    public function isAllowed($age, $country)
+    {
+        if ($country == $this->getCountry() || !$country){
+
+            if (!$age || ($age > $this->getMinAge() && $age < $this->getMaxAge())) {
+                return $this->getRuleType();
+            }
+
+            return !$this->getRuleType();
+
+        }
+
+        return null;
     }
 }
