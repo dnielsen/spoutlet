@@ -63,6 +63,16 @@ class ContestEntry
      */
     protected $updated;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $deleted;
+
+    /**
+     * @ORM\Column(name="deleted_at", type="datetime")
+     */
+    protected $deletedAt;
+
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -178,6 +188,26 @@ class ContestEntry
     public function setMedias($medias)
     {
         $this->medias = $medias;
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
     }
 
     public function addMedia(GalleryMedia $value)

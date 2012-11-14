@@ -88,8 +88,17 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
+        foreach ($contests as $contest) {
+            $entryCounts[$contest[0]->getId()] = $contest[0]->getEntries()
+                        ->filter(function($x) {
+                            return
+                            $x->getDeleted() != 1 ; })
+                        ->count();
+        }
+
         return $this->render('SpoutletBundle:ContestAdmin:metrics.html.twig', array(
-            'contests' => $contests,
+            'contests'      => $contests,
+            'entryCounts'   => $entryCounts,
         ));
     }
 
@@ -103,7 +112,7 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
-        $entries            = $contestEntryRepo->findAllForContest($contest);
+        $entries            = $contestEntryRepo->findAllNotDeletedForContest($contest);
 
         foreach ($entries as $entry) {
             foreach ($entry->getMedias() as $media) {
@@ -123,6 +132,61 @@ class ContestAdminController extends Controller
             'slug'      => $slug,
             'likes'     => $likes,
         ));
+    }
+
+    public function updateEntriesAction($slug, Request $request)
+    {
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+
+        if ($request->getMethod() == 'POST') {
+
+            $entriesToDelete    = $request->request->get('contest_entry_delete');
+            $mediaToDelete      = $request->request->get('site_media_delete');
+
+            if (count($entriesToDelete) > 0) {
+                foreach ($entriesToDelete as $galleryMediaId => $value) {
+                    $galleryMedia = $galleryMediaRepo->find($galleryMediaId);
+
+                    if ($galleryMedia && $value == "on") {
+                        $contestEntry = $galleryMedia->getContestEntry();
+                        $contestEntry->setDeleted(true);
+                        $contestEntry->setDeletedAt(new \DateTime('now'));
+
+                        $em->persist($contestEntry);
+                    }
+                }
+            }
+
+            if (count($mediaToDelete) > 0) {
+                foreach ($mediaToDelete as $galleryMediaId => $value) {
+                    $galleryMedia = $galleryMediaRepo->find($galleryMediaId);
+
+                    if ($galleryMedia && $value == "on") {
+                        $contestEntry = $galleryMedia->getContestEntry();
+                        $contestEntry->setDeleted(true);
+                        $contestEntry->setDeletedAt(new \DateTime('now'));
+
+                        $em->persist($contestEntry);
+
+                        $galleryMedia->setDeleted(true);
+                        $galleryMedia->setDeletedReason('REMOVED_BY_ADMIN');
+
+                        $em->persist($galleryMedia);
+                    }
+                }
+            }
+
+
+            $em->flush();
+
+            $this->setFlash('success', 'Entries updated successfully!');
+            return $this->redirect($this->generateUrl('admin_contest_entries', array('slug' => $slug)));
+        }
+
+        $this->setFlash('error', 'Something went wrong!');
+        return $this->redirect($this->generateUrl('admin_contest_entries', array('slug' => $slug)));
     }
 
     public function generateContestEntriesCsvAction($slug)
@@ -320,13 +384,15 @@ class ContestAdminController extends Controller
 
         $results = json_decode(curl_exec($curl), true);
 
-        foreach($results as $result)
-        {
-            if(isset($result))
+        if ($results) {
+           foreach($results as $result)
             {
-                if(array_key_exists('likes', $result))
+                if(isset($result))
                 {
-                    $total += $result['likes'];
+                    if(array_key_exists('likes', $result))
+                    {
+                        $total += $result['likes'];
+                    }
                 }
             }
         }

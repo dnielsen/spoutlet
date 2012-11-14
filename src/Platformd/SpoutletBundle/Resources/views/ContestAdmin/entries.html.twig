@@ -44,7 +44,7 @@
                             <input type="checkbox" id="contest_entry_delete[{{ media.id }}]" name="contest_entry_delete[{{ media.id }}]" />
                         </div>
                         <div class="admin-contest-delete-media">
-                            <label for "site_media_delete[{{ media.id }}]">Remove from Site</label>
+                            <label for "site_media_delete[{{ media.id }}]" style="color: #FF0000;">Remove from Site</label>
                             <input type="checkbox" id="site_media_delete[{{ media.id }}]" name="site_media_delete[{{ media.id }}]" />
                         </div>
                     </td>
@@ -54,8 +54,27 @@
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-primary" formnovalidate>Submit</button>
+    <button type="submit" class="btn btn-primary update-entries" formnovalidate>Submit</button>
     <a href="{{ path('admin_contest_entries', { 'slug' : slug }) }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
 </form>
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $("button.update-entries").bind("click", function(event) {
+            if (!confirm("Are you sure you wish to remove the selected entries?")) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                return false;
+            }
+
+            $("<form />", { "method":"post", "action":$(this).attr("href")})
+                .appendTo(jQuery('body'))
+                .submit()
+                .remove()
+            ;
+        })
+    });
+</script>
 
 {% endblock %}
