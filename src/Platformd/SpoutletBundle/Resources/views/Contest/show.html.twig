@@ -3,8 +3,10 @@
 {% block title contest.name %}
 
 {% block content %}
-<h3 class="contest-header">{{ contest.name }}</h3>
-{% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
+<h3 class="contest-header" style="text-align:center;">{{ contest.name }}</h3>
+<div style="text-align:center;">
+    {% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
+</div>
 <div class="std_1col" style="text-align: center;">
     <img src="{{ media_path(contest.banner) }}" alt="{{ contest.name }}" />
 </div>
@@ -44,16 +46,23 @@
                         {% endif %}
                     </ul>
                     {% if isEligible %}
-                    <p>
+                    <div style="padding-top: 10px;">
                         <form method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
-                            <button type="submit" formnovalidate>Enter Contest</button>
+                            <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
+                            <div style="text-align:center;">
+                                <button type="submit" formnovalidate style="margin-top: 10px;">Enter Contest</button>
+                            </div>
                         </form>
-                    </p>
+                    </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+</div>
+<div id="contest-terms-modal-content" class="modal-content" style="display: none">
+    <h3>{{ 'contests.show_page_official_rules' | trans }}</h3>
+    {{ contest.rules | raw }}
 </div>
 {% endblock %}
 
@@ -61,4 +70,19 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#contest-official-rules').click(function() {
+                $.modal($('#contest-terms-modal-content'), {
+                    overlayClose: true
+                });
+
+                return false;
+            });
+        });
+    </script>
 {% endblock %}

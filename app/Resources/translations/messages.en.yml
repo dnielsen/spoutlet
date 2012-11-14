@@ -528,6 +528,9 @@ click_to_download: Click to Download
 platformd.groups.category.location: Location
 platformd.groups.category.topic: Topic
 
+platformd.show_more: Show More
+platformd.show_less: Show Less
+
 galleries:
     navigation_label: Photo Gallery
     index_page_title: Galleries
@@ -575,7 +578,11 @@ contests:
     show_page_overview: Overview
     show_page_instructions: Instructions
     show_page_enter_contest: Enter Contest
+    show_page_official_rules: Official Rules
     show_page_vote_now: Vote Now
+    show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
     vote_page_instruction: Voting Instructions
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
     enter_page_already_entered: You have already entered this contest.
+    enter_page_you_must_agree: You must agree to the rules before you can enter the contest.
+    submit_page_no_entry: You must enter the contest before you can submit %s(s).

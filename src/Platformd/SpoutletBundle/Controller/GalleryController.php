@@ -382,6 +382,7 @@ class GalleryController extends Controller
                 $medias = $repo->findFeaturedMedia();
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
+                    'type'   => $type,
                 ));
 
             case 'latest':
@@ -389,13 +390,16 @@ class GalleryController extends Controller
                 $medias = $repo->findLatestMedia();
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
+                    'type'   => $type,
                 ));
 
             case 'popular':
                 # get popular media (based on views but will need to be based on ratings when those are implemented)
                 $medias = $repo->findPopularMedia();
+
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
+                    'type'   => $type,
                 ));
 
             default:
@@ -403,6 +407,7 @@ class GalleryController extends Controller
                 $medias = $repo->findMediaForGalleryByGalleryId($type);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
+                    'type'   => $type,
                 ));
         }
     }

@@ -64,14 +64,17 @@
     <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+
             $('#slider').nivoSlider({
                 pauseTime: 5000,
             });
 
+            var baseGalleryUrl = $('#media-gallery-link').attr('href');
+
             var updateMedia = function() {
                 var type = $('#media-filter-options').val();
                 var url = "{{ path('gallery_index_data') }}" + '?type=' + type;
-                var href = $('#media-gallery-link').attr('href') + $("#media-filter-options option:selected").attr('data-slug');
+                var href = baseGalleryUrl + $("#media-filter-options option:selected").attr('data-slug');
 
                 $.ajax({
                     url: url,

@@ -1,0 +1,7 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+{{ contest.rules | raw }}
+{% endblock %}

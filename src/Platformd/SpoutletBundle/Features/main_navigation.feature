@@ -17,7 +17,7 @@ Feature: Main Navigation
       | Alienware   | http://alienware.jp/     |                                                            |
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
-      | ビデオ         | /video                  | http://japan.alienwarearena.local/video/                    |
+      | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
       | Microsoft   | /app_test.php/microsoft  |  http://japan.alienwarearena.local/app_test.php/microsoft  |
 
   Scenario: The "China" site's main navigation menu has the correct items
@@ -29,7 +29,7 @@ Feature: Main Navigation
       | 关于ALIENWARE     | http://alienware.com.cn/     |                                                               |
       | 活动              | /app_test.php/events/        | http://china.alienwarearena.local/app_test.php/events/        |
       | 新闻              | /app_test.php/news           | http://china.alienwarearena.local/app_test.php/news           |
-      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video/                       |
+      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video                       |
       | 媒体 >> 壁纸下载    | /app_test.php/wallpapers    | http://china.alienwarearena.local/app_test.php/wallpapers      |
       | 微软              | /app_test.php/microsoft      | http://china.alienwarearena.local/app_test.php/microsoft      |
 

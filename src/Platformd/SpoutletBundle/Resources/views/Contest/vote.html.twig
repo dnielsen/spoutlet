@@ -7,17 +7,8 @@
 {% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
 <div class="std_2col">
     <div class="left">
-        <div class="widget-66">
-            <div class="widget-header">
-                <div class="widget-title">
-                    {{ 'contests.vote_page_instruction' | trans }}
-                </div>
-            </div>
-            <div class="widget-content">
-                <div>
-                    {{ contest.voteInstructions | raw }}
-                </div>
-            </div>
+        <div id="contest-voting-rules">
+            {{ contest.voteInstructions | raw }}
         </div>
     </div>
     <div class="right">
@@ -29,4 +20,18 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.expander.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#contest-voting-rules').expander({
+                slicePoint:       600,
+                expandText:       "{{ 'platformd.show_more' | trans }}",
+                userCollapseText: "{{ 'platformd.show_less' | trans }}",
+            });
+        });
+    </script>
 {% endblock %}
