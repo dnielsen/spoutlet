@@ -259,7 +259,7 @@ class ContestAdminController extends Controller
             'Date of Birth',
             'IP Address',
             'Vote Date',
-            //'IP Address',
+            'IP Address',
             'Country Registered',
         ));
 
@@ -273,7 +273,7 @@ class ContestAdminController extends Controller
                 $vote->getUser()->getFirstname(),
                 $vote->getUser()->getLastname(),
                 $birthDate,
-                //$vote->getIpAddress(),
+                $vote->getIpAddress(),
                 $vote->getVotedAt()->format('Y-m-d H:i:s'),
                 $vote->getUser()->getCountry(),
             ));
