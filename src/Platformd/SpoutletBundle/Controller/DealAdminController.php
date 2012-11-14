@@ -181,6 +181,33 @@ class DealAdminController extends Controller
                 /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
                 $deal = $form->getData();
 
+                $ruleset    = $deal->getRuleset();
+                $rules      = $ruleset->getRules();
+
+                $newRulesArray = array();
+
+                $defaultAllow = true;
+
+                foreach ($rules as $rule) {
+                    $rule->setRuleset($ruleset);
+                    $newRulesArray[] = $rule;
+
+                    $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+                }
+
+                $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+                if ($oldRules) {
+                    foreach ($oldRules as $oldRule) {
+                        if (!in_array($oldRule, $newRulesArray)) {
+                            $oldRule->setRuleset(null);
+                        }
+                    }
+                }
+
+                $deal->getRuleset()->setParentType('deal');
+                $deal->getRuleset()->setDefaultAllow($defaultAllow);
+
                 $this->getDealManager()->saveDeal($deal);
 
                 return true;

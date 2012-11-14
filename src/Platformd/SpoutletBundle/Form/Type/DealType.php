@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Deal;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 
 class DealType extends AbstractType
 {
@@ -102,6 +103,7 @@ class DealType extends AbstractType
                 'label' => 'Bottom background color',
                 'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
             ))
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
         ;
     }
 

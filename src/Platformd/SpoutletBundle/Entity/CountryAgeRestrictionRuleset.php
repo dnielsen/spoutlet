@@ -104,7 +104,7 @@ class CountryAgeRestrictionRuleset
 
     public function doesUserPassRules($user, $country) {
 
-        $age            = $user->getAge();
+        $age = $user->getAge();
 
         foreach ($this->getRules() as $rule) {
             $isAllowed = $rule->isAllowed($age, $country) ;
@@ -119,5 +119,46 @@ class CountryAgeRestrictionRuleset
         $allowed = $isAllowed ? : $this->getDefaultAllow() === null ? true : $this->getDefaultAllow();
 
         return $allowed;
+     }
+
+     public function getAllowedCountries()
+     {
+        $allowedCountries = array();
+        $disallowedCountries = array();
+
+        foreach ($this->getRules() as $rule) {
+            if ($rule->getCountry()) {
+                if ($rule->getRuleType() == 'allow') {
+                    $allowedCountries[] = $rule->getCountry()->getName();
+                } else {
+                    $disallowedCountries[] = $rule->getCountry()->getName();
+                }
+            }
+        }
+
+        if (count($allowedCountries) > 0) {
+            sort($allowedCountries);
+            return implode(', ', $allowedCountries);
+        }
+
+        if (count($disallowedCountries) > 0) {
+            sort($disallowedCountries);
+            return 'all countries except '.implode(', ', $disallowedCountries);
+        }
+
+        return 'all countries';
+     }
+
+     public function areThereAgeRestrictions()
+     {
+        $restrictions = false;
+
+        foreach ($this->getRules() as $rule) {
+            if ($rule->getMinAge() || $rule->getMaxAge()) {
+                $restrictions = true;
+            }
+        }
+
+        return $restrictions;
      }
 }

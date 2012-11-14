@@ -164,13 +164,7 @@ class AbstractEventRepository extends EntityRepository
      */
     public function findPublished($site)
     {
-        $items = $this->createQueryBuilder('e')
-            ->andWhere(':site IN e.sites')
-            ->andWhere('e.published = :published')
-            ->setParameters(array(
-                'site'    => $site,
-                'published' => true,
-            ))
+        $items = $this->getBaseQueryBuilder($site)
             ->orderBy('e.starts_at', 'DESC')
             ->getQuery()
             ->execute()
@@ -185,7 +179,6 @@ class AbstractEventRepository extends EntityRepository
     {
         $result = $this->getBaseQueryBuilder($site)
             ->andWhere("e.slug = :slug")
-            ->andWhere("e.published = true")
             ->setParameter('slug', $slug)
             ->setMaxResults(1)
             ->getQuery()
@@ -265,7 +258,7 @@ class AbstractEventRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder($alias)
             ->leftJoin($alias.'.sites', 's')
-            ->andWhere($alias.'.published = 1');
+            ->andWhere($alias.'.published = true');
 
         if (is_string($site)) {
             $qb->andWhere('s.name = :site')
