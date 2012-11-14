@@ -146,4 +146,16 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findMediaForContest($contest)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->where('ce.contest = :contest')
+            ->andWhere('gm.deleted = false')
+            ->andWhere('gm.published = true')
+            ->setParameter('contest', $contest)
+            ->getQuery()
+            ->execute();
+    }
 }

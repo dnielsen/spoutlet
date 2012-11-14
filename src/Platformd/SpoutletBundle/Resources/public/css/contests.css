@@ -11,3 +11,7 @@
 .contest-enter-vote {
     padding: 10px 0 10px 0;
 }
+
+#contest-voting-rules {
+    padding-bottom: 10px;
+}

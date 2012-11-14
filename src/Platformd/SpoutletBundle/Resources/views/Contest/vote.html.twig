@@ -10,6 +10,23 @@
         <div id="contest-voting-rules">
             {{ contest.voteInstructions | raw }}
         </div>
+        <div id="contest-entries">
+            {% if medias | length > 0 %}
+                {% for media in medias %}
+                    <div class="gallery-media-thumb-wrapper">
+                        <div class="gallery-media-thumb">
+                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                            </a>
+                        </div>
+                        <div style="width:135px;">
+                            <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                            <div>by: {{ media.author.username }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
@@ -19,14 +36,17 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.expander.min.js') }}"></script>
+    <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+            $('.media-title').truncate();
             $('#contest-voting-rules').expander({
                 slicePoint:       600,
                 expandText:       "{{ 'platformd.show_more' | trans }}",

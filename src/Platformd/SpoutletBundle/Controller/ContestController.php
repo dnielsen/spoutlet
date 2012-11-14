@@ -41,12 +41,14 @@ class ContestController extends Controller
         $instructions = $contest->getCleanedRedemptionInstructionsArray();
 
         $isEligible = false;
+        $isEntered = true;
 
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
         if(!$entry)
         {
             $isEligible = true;
+            $isEntered = false;
         }
 
         $agreeText = $this->trans('contests.show_page_agree_text');
@@ -56,11 +58,14 @@ class ContestController extends Controller
             'instructions'  => $instructions,
             'isEligible'    => $isEligible,
             'agreeText'     => $agreeText,
+            'isEntered'     => $isEntered,
         ));
     }
 
     public function enterAction($slug, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
 
         $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
@@ -163,8 +168,11 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
+        $medias = $this->getGalleryMediaRepository()->findMediaForContest($contest);
+
         return $this->render('SpoutletBundle:Contest:vote.html.twig', array(
             'contest' => $contest,
+            'medias'  => $medias,
         ));
     }
 

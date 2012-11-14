@@ -268,6 +268,32 @@ class GalleryController extends Controller
         ));
     }
 
+    public function deleteMediaAction($id, Request $request)
+    {
+        $user = $this->getCurrentUser();
+
+        $media = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media)
+        {
+            throw $this->createNotFoundException('Media not found');
+        }
+
+        if($media->getAuthor()->getId() != $user->getId())
+        {
+            $this->setFlash('error', $this->trans('galleries.delete_photo_error_message'));
+            return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $id)));
+        }
+
+        $em = $this->getEntityManager();
+        $media->setDeleted(true);
+        $em->persist($media);
+        $em->flush();
+
+        $this->setFlash('success', $this->trans('galleries.delete_photo_success_message'));
+        return $this->redirect($this->generateUrl('gallery_index'));
+    }
+
     public function voteAction(Request $request)
     {
         $response = new Response();
