@@ -25,7 +25,7 @@
             {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">Save Photos</button>
-                <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">Cancel</button>
+                <button id="cancel" class="btn btn-primary" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">Cancel</button>
             </div>
         </form>
     </div>
@@ -99,7 +99,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% include 'SpoutletBundle:GamePageAdmin:_formJavascript.html.twig' %}
+    {% include 'SpoutletBundle:Gallery:_formJavascript.html.twig' %}
     <script type="text/javascript">
         $(function() {
 

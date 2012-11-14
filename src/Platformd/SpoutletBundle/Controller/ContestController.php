@@ -154,11 +154,11 @@ class ContestController extends Controller
         }
 
         return $this->render('SpoutletBundle:Contest:submit.html.twig', array(
-            'form'      => $form->createView(),
-            'contest'   => $contest,
-            'medias'    => $medias,
-            'galleries' => $galleries,
-
+            'form'          => $form->createView(),
+            'contest'       => $contest,
+            'medias'        => $medias,
+            'galleries'     => $galleries,
+            'maxEntries'    => $contest->getMaxEntries(),
         ));
     }
 

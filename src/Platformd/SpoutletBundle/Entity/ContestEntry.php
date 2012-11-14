@@ -66,10 +66,10 @@ class ContestEntry
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $deleted;
+    protected $deleted = false;
 
     /**
-     * @ORM\Column(name="deleted_at", type="datetime")
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     protected $deletedAt;
 

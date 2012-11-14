@@ -24,7 +24,9 @@
         <div class="widget-66" {% if hasPhotos %}style="margin: 15px auto;"{% endif %}>
             <div class="widget-header">
                 <div class="widget-title">
-                    Featured
+                    <div id="media-gallery-name" style="float: left;">
+                        {{ 'galleries.gallery_filter_option_featured' | trans }}
+                    </div>
                     <div style="float: right;">
                         <select id="media-filter-options">
                         {% for option in filterOptions %}
@@ -47,6 +49,9 @@
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        <div class="submit-media">
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">Submit Photos</a>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -56,6 +61,7 @@
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/js/nivo-slider/nivo-slider.css') }}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/js/nivo-slider/themes/nivo/nivo.css') }}" type="text/css" media="screen" />
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" type="text/css" media="screen" />
 {% endblock %}
 
 {% block javascripts %}
@@ -72,10 +78,10 @@
             var baseGalleryUrl = $('#media-gallery-link').attr('href');
 
             var updateMedia = function() {
-                var type = $('#media-filter-options').val();
-                var url = "{{ path('gallery_index_data') }}" + '?type=' + type;
-                var href = baseGalleryUrl + $("#media-filter-options option:selected").attr('data-slug');
-
+                var type        = $('#media-filter-options').val();
+                var url         = "{{ path('gallery_index_data') }}" + '?type=' + type;
+                var href        = baseGalleryUrl + $("#media-filter-options option:selected").attr('data-slug');
+                var galleryName = $('#media-filter-options option:selected').text();
                 $.ajax({
                     url: url,
                     type: 'get',
@@ -85,6 +91,8 @@
                         $('#media-gallery-link').attr('href', href);
                     }
                 });
+
+                $('#media-gallery-name').text(galleryName);
             }
 
             $('#media-filter-options').change(function() {
