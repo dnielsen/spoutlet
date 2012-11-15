@@ -95,7 +95,10 @@
                     <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                 {% endif %}
 
+                {% if site_has_feature('MICROSOFT') %}
                 <li><a href="{{ path('microsoft') }}">{{ 'platformd.layout.main_menu.microsoft' | trans }}</a></li>
+                {% endif %}
+
                 <li class="last"><a>&nbsp;</a></li>
             </ul>
             <div class="clear"></div>
