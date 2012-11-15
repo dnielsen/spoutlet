@@ -27,7 +27,6 @@ class ContestRepository extends EntityRepository
             ->leftJoin('e.medias', 'm')
             ->leftJoin('m.votes', 'v')
             ->select('c', 'COUNT(v)')
-            ->andWhere('e.deleted <> 1')
             ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->execute();

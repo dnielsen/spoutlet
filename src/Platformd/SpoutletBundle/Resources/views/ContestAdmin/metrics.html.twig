@@ -14,22 +14,34 @@
         </tr>
     </thead>
     <tbody>
-    {% for contest in contests %}
-        <tr>
-            <td>{{ contest[0].name }}</td>
-            <td>
-                {% for site in contest[0].sites %}
-                    [ {{ site.name }} ]
-                {% endfor %}
-            </td>
-            <td>
-                <a href="{{ path('admin_contest_entries', { 'slug' : contest[0].slug }) }}">{{ entryCounts[contest[0].id] }}</a>
-            </td>
-            <td>
-                {{ contest[1] }}
-            </td>
-        </tr>
-    {% endfor %}
+
+    {% if contests[0][0] == null %}
+
+    <tr>
+        <td colspan=4>No contests found!</td>
+    </tr>
+
+    {% else %}
+
+        {% for contest in contests %}
+            <tr>
+                <td>{{ contest[0].name }}</td>
+                <td>
+                    {% for site in contest[0].sites %}
+                        [ {{ site.name }} ]
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ path('admin_contest_entries', { 'slug' : contest[0].slug }) }}">{{ entryCounts[contest[0].id] }}</a>
+                </td>
+                <td>
+                    {{ contest[1] }}
+                </td>
+            </tr>
+        {% endfor %}
+
+    {% endif %}
+
     </tbody>
 </table>
 
