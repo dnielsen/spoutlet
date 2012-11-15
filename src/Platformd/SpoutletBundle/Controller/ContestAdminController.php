@@ -81,6 +81,25 @@ class ContestAdminController extends Controller
         ));
     }
 
+    public function chooseWinnerAction($slug)
+    {
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
+        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+
+        if (!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        $this->addContestsBreadcrumb()->addChild($contest->getSlug());
+        $this->getBreadcrumbs()->addChild('Select Winner');
+
+        $entries = $contestEntryRepo->findTopEntriesForContest($contest);
+
+        var_dump($entries);exit;
+    }
+
     public function metricsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -88,7 +107,13 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
+        $entryCounts = array();
+
         foreach ($contests as $contest) {
+            if ($contest[0] === null) {
+                break;
+            }
+
             $entryCounts[$contest[0]->getId()] = $contest[0]->getEntries()
                         ->filter(function($x) {
                             return
@@ -107,6 +132,7 @@ class ContestAdminController extends Controller
         $contestEntryRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
+        $likes              = array();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -128,6 +154,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Entries');
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
+            'contest'   => $contest,
             'entries'   => $entries,
             'slug'      => $slug,
             'likes'     => $likes,
