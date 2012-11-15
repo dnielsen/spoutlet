@@ -90,3 +90,7 @@
     text-align: center;
     padding: 10px 0 10px 0;
 }
+
+.gallery-items {
+    float: left;
+}

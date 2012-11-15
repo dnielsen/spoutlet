@@ -6,12 +6,15 @@
 <h3>{{ gallery.name }}</h3>
 <div class="std_2col">
     <div class="left">
-        <p>
+        <div style="float: left">
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">Submit Photos</a>
+        </div>
+        <div style="float: right;" class="styled-select">
             <select id="media-filter-options">
                 <option value="latest">{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
                 <option value="popular">{{ 'galleries.gallery_filter_option_popular' | trans }}</option>
             </select>
-        </p>
+        </div>
         <div class="gallery-items">
             {% for media in medias %}
                 <div class="gallery-media-thumb-wrapper">
@@ -39,6 +42,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" type="text/css" media="screen" />
 {% endblock %}
 
 {% block javascripts %}

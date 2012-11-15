@@ -591,3 +591,5 @@ contests:
     enter_page_already_entered: You have already entered this contest.
     enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
     submit_page_no_entry: You must enter the contest before you can submit %s(s).
+    submit_page_entry_max_reached: You have entered the maximum number of photos for this entry.
+    submit_page_submission_ended: Submissions are no longer being accepted.

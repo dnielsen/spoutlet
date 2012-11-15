@@ -21,13 +21,22 @@
 <div class="std_2col">
     <div class="left">
         <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
-        <form action="{{ path('contest_submit', {slug: contest.slug}) }}" method="post" {{ form_enctype(form) }}>
-            {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Save Photos</button>
-                <button id="cancel" class="btn btn-primary" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">Cancel</button>
-            </div>
-        </form>
+        {% if entriesLeft > 0 %}
+            {% if not submissionEnded %}
+                <form action="{{ path('contest_submit', {slug: contest.slug}) }}" method="post" {{ form_enctype(form) }}>
+                    {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
+                    <input type="hidden" id="entries-left" value="{{ entriesLeft }}" />
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit">Save Photos</button>
+                        <button id="cancel" class="btn btn-primary" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">Cancel</button>
+                    </div>
+                </form>
+            {% else %}
+                <p>{{ 'contests.submit_page_submission_ended' | trans }}</p>
+            {% endif %}
+        {% else %}
+        <p>{{ 'contests.submit_page_entry_max_reached' | trans }}</p>
+        {% endif %}
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
@@ -99,7 +108,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% include 'SpoutletBundle:Gallery:_formJavascript.html.twig' %}
+    {% include 'SpoutletBundle:Contest:_formJavascript.html.twig' %}
     <script type="text/javascript">
         $(function() {
 

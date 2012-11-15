@@ -1,5 +1,7 @@
 <script type="text/javascript">
     $(function() {
+        var max = $('#entries-left').val();
+        var count = 0;
         // Get the div that holds the collection of tags
         var collectionHolder = $('ul.medias-list');
 
@@ -19,6 +21,9 @@
             $removeFormA.on('click', function(e) {
                 // prevent the link from creating a "#" on the URL
                 e.preventDefault();
+
+                count--;
+
                 // remove the li for the tag form
                 $tagFormLi.fadeOut('normal', function() {
                     $tagFormLi.remove();
@@ -55,6 +60,9 @@
         $addTagLink.on('click', function(e) {
             // prevent the link from creating a "#" on the URL
             e.preventDefault();
+
+            count++;
+
             addMediaForm(collectionHolder, $newLinkLi);
         });
 

@@ -153,12 +153,16 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
 
+        $entriesLeft = $contest->getMaxEntries() - count($entry->getMedias());
+        $submissionEnded = new \DateTime("now") > $contest->getSubmissionEnd();
+
         return $this->render('SpoutletBundle:Contest:submit.html.twig', array(
-            'form'          => $form->createView(),
-            'contest'       => $contest,
-            'medias'        => $medias,
-            'galleries'     => $galleries,
-            'maxEntries'    => $contest->getMaxEntries(),
+            'form'              => $form->createView(),
+            'contest'           => $contest,
+            'medias'            => $medias,
+            'galleries'         => $galleries,
+            'entriesLeft'       => $entriesLeft,
+            'submissionEnded'   => $submissionEnded,
         ));
     }
 

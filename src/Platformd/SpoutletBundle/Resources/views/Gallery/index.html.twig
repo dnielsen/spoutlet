@@ -27,7 +27,7 @@
                     <div id="media-gallery-name" style="float: left;">
                         {{ 'galleries.gallery_filter_option_featured' | trans }}
                     </div>
-                    <div style="float: right;">
+                    <div style="float: right;" class="styled-select">
                         <select id="media-filter-options">
                         {% for option in filterOptions %}
                         <option value="{{ option['value'] }}" data-slug="{{ option['slug'] }}">{{ option['name'] | trans }}</option>
@@ -73,6 +73,7 @@
 
             $('#slider').nivoSlider({
                 pauseTime: 5000,
+                effect: 'fold,fade'
             });
 
             var baseGalleryUrl = $('#media-gallery-link').attr('href');

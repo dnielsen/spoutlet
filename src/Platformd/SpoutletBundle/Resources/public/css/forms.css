@@ -179,14 +179,14 @@ fieldset .row-fluid.first div[class*="span"] {
     margin: -20px 0 10px 160px;
     width: 200px;
 }
-.game-page-form .medias-list {
+.page-form .medias-list {
     margin-left: 0;
 }
-.game-page-form .medias-list li {
+.page-form .medias-list li {
     list-style-type: none;
     position: relative;
 }
-.game-page-form .medias-list li a.close {
+.page-form .medias-list li a.close {
     position: absolute;
     top: 0;
     right: 0;
