@@ -92,20 +92,6 @@ class FrontendController extends Controller
             return $this->redirectToShow($sweepstakes);
         }
 
-        // check that they're old enough
-        /*if (!$sweepstakes->isUserOldEnough($this->getUser()->getBirthdate())) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
-
-            return $this->redirectToShow($sweepstakes);
-        }*/
-
-        // check that they're from an approved country
-        /*if (!$sweepstakes->isCountryAllowed($this->getUser()->getCountry())) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
-
-            return $this->redirectToShow($sweepstakes);
-        }*/
-
         // make sure that the sweepstakes is active right now
         if (!$sweepstakes->isCurrentlyOpen()) {
             $this->setFlash('error', 'sweeps_not_open');

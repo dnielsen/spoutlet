@@ -102,9 +102,9 @@ class DealType extends AbstractType
             ->add('bottomColor', 'hidden', array(
                 'label' => 'Bottom background color',
                 'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
-            ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
-        ;
+            ));
+
+            //$builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 
     public function getStatusChoices()

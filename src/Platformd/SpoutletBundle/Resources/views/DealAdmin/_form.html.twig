@@ -54,23 +54,7 @@
             {{ form_row(form.bottomColor) }}
     </fieldset>
     <fieldset>
-            <legend>d) Restrictions</legend>
-            <div class="game-page-form">
-                <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
-                    {# see the CSS file this explanation #}
-                    <li class="dummy"></li>
-                    {% for rule in form.ruleset.rules %}
-                        <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
-
-                        {% if loop.index is even %}
-                            <li class="clear"></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-    </fieldset>
-    <fieldset>
-            <legend>e) Screenshots</legend>
+            <legend>d) Screenshots</legend>
             <div class="game-page-form">
                 <ul class="medias-list clearfix row-fluid" data-prototype="{{ form_widget(form.mediaGalleryMedias.get('prototype')) | e }}">
                     {# see the CSS file this explanation #}
@@ -92,13 +76,9 @@
             </p>
     </fieldset>
     <fieldset>
-        <legend>f) Facebook Info</legend>
+        <legend>e) Facebook Info</legend>
         {{ form_row(form.openGraphOverride.description) }}
         {{ form_row(form.openGraphOverride.thumbnail) }}
     </fieldset>
-    <div style="display: none;">
-        {{ form_row(form.ruleset) }}
-        {{ form_label(form.ruleset.rules) }}
-    </div>
     {{ form_rest(form) }}
 </div>

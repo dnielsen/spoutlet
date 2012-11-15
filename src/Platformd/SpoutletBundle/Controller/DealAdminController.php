@@ -181,7 +181,7 @@ class DealAdminController extends Controller
                 /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
                 $deal = $form->getData();
 
-                $ruleset    = $deal->getRuleset();
+                /*$ruleset    = $deal->getRuleset();
                 $rules      = $ruleset->getRules();
 
                 $newRulesArray = array();
@@ -206,7 +206,7 @@ class DealAdminController extends Controller
                 }
 
                 $deal->getRuleset()->setParentType('deal');
-                $deal->getRuleset()->setDefaultAllow($defaultAllow);
+                $deal->getRuleset()->setDefaultAllow($defaultAllow);*/
 
                 $this->getDealManager()->saveDeal($deal);
 
