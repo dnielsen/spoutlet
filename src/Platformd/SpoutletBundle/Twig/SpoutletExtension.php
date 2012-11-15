@@ -145,7 +145,7 @@ class SpoutletExtension extends Twig_Extension
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s\\media\\%s', $cf, $media->getFilename());
+        return sprintf('%s/media/%s', $cf, $media->getFilename());
     }
 
     public function endsWith($haystack, $needle) {
