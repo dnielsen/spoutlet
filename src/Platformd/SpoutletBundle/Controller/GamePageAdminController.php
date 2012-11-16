@@ -35,7 +35,9 @@ class GamePageAdminController extends Controller
         $this->addGamePagesBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($site);
+        $siteName = MultitenancyManager::getSiteName($site);
+
+        $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($siteName);
 
         return $this->render('SpoutletBundle:GamePageAdmin:list.html.twig', array(
             'entities' => $gamePages,

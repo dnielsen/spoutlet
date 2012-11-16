@@ -47,3 +47,7 @@ admin_homepage_banner_delete:
     defaults: { _controller: SpoutletBundle:HomepageBanner:delete }
     requirements:
         id: \d+
+
+admin_locale_to_sites_migration:
+    pattern: /admin/migrate-locales-to-sites
+    defaults: { _controller: SpoutletBundle:SiteMigration:migrate }

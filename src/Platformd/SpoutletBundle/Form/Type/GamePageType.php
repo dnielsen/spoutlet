@@ -99,9 +99,11 @@ class GamePageType extends AbstractType
                 'label' => 'Legal Verbiage',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('locales', new SiteChoiceType(), array(
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
+                'property' => 'name',
             ))
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),

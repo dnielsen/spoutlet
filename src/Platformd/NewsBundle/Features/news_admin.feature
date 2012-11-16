@@ -12,11 +12,11 @@ Feature: News Administration
         When I click to add new "News"
             And I fill in the following:
                 | Title     | My new event  |
-                | Site      | en            |
                 | Post Date | 2012-05-18    |
                 | Blurb     | My cool blurb |
                 | Body      | Lorem ipsum   |
             And I attach the file "foo.jpg" to "Upload an image"
+            And I check the "Demo" option for "Sites"
             And I select "Skyrim" from "Game"
             And I press "Save news"
         Then I should see "news item has been created"

@@ -18,13 +18,16 @@ class GamePageController extends Controller
 
         $mgr = $this->getGamePageManager();
 
-        $firstGame      = $mgr->findMostRecentGamePageForAge($this->getAgeManager()->getUsersAge());
-        $archives       = $mgr->findArchives();
+        $site           = $this->getCurrentSite();
 
-        $actionPages    = $mgr->findAllByGamePagesByCategory('action', 9);
-        $rpgPages       = $mgr->findAllByGamePagesByCategory('rpg', 9);
-        $strategyPages  = $mgr->findAllByGamePagesByCategory('strategy', 9);
-        $otherPages     = $mgr->findAllByGamePagesByCategory('other', 9);
+        $firstGame      = $mgr->findMostRecentGamePageForAge($this->getAgeManager()->getUsersAge(), $site);
+        $archives       = $mgr->findArchives($site);
+
+        $actionPages    = $mgr->findAllByGamePagesByCategory('action', $site, 9);
+        $rpgPages       = $mgr->findAllByGamePagesByCategory('rpg', $site, 9);
+        $strategyPages  = $mgr->findAllByGamePagesByCategory('strategy', $site, 9);
+        $otherPages     = $mgr->findAllByGamePagesByCategory('other', $site, 9);
+
 
         $displayedGamePages     = array($actionPages, $rpgPages, $strategyPages, $otherPages);
         $displayedGamePageIds   = array();
@@ -35,7 +38,7 @@ class GamePageController extends Controller
             }
         }
 
-        $publishedArchives = $mgr->findAllGamePagesWhereIdNotIn($displayedGamePageIds);
+        $publishedArchives = $mgr->findAllGamePagesWhereIdNotIn($displayedGamePageIds, $site);
 
         $archives = array_merge($publishedArchives, $archives);
 
@@ -57,7 +60,9 @@ class GamePageController extends Controller
     {
         $this->enforceAgeProtection(self::AGE_LIMIT);
 
-        $gamePage = $this->getGamePageManager()->findOneBySlug($slug);
+        $site = $this->getCurrentSite();
+
+        $gamePage = $this->getGamePageManager()->findOneBySlug($slug, $site);
         if (!$gamePage) {
             throw $this->createNotFoundException('No game page found in this site for slug '.$slug);
         }
@@ -66,26 +71,26 @@ class GamePageController extends Controller
         $feedEvents = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->findActivesForGame($gamePage->getGame(), $this->getLocale())
+            ->findActivesForGame($gamePage->getGame(), $this->getCurrentSite())
         ;
 
         $dealRepo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Deal');
 
-        $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($this->getLocale(), $gamePage->getGame());
-        $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getLocale());
+        $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($this->getCurrentSite(), $gamePage->getGame());
+        $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getCurrentSite());
 
         $hasVideos = $gamePage->getyoutubeIdTrailer1() != ''
-            && $gamePage->getyoutubeIdTrailer1() != ''
-            && $gamePage->getyoutubeIdTrailer1() != ''
-            && $gamePage->getyoutubeIdTrailer1() != '';
+            || $gamePage->getyoutubeIdTrailer1() != ''
+            || $gamePage->getyoutubeIdTrailer1() != ''
+            || $gamePage->getyoutubeIdTrailer1() != '';
 
-        $hasFeedItems = count($deals) > 0 && count($feedNewsItems) > 0 && count($feedEvents) > 0;
+        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos;
 
         $hasFeatures = $gamePage->getKeyFeature1() != ''
-            && $gamePage->getKeyFeature2() != ''
-            && $gamePage->getKeyFeature3() != '';
+            || $gamePage->getKeyFeature2() != ''
+            || $gamePage->getKeyFeature3() != '';
 
         return array(
             'gamePage' => $gamePage,

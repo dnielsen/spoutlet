@@ -23,8 +23,8 @@
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
             <td>
-                {% for locale in gamePage.gamePageLocales %}
-                    {{ locale.locale | site_name -}}
+                {% for site in gamePage.sites %}
+                    {{ site.name -}}
                     {{- loop.last ? '' : ',' }}
                 {% endfor %}
             </td>

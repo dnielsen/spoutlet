@@ -3,11 +3,12 @@
 namespace Platformd\UserBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\UserBundle\Entity\User;
 
-class LoadUsers implements FixtureInterface, ContainerAwareInterface
+class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     protected $container;
 
@@ -55,4 +56,11 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
     {
         return $this->container->get('fos_user.util.user_manipulator');
     }
+
+    public function getOrder()
+    {
+        return 1;
+    }
 }
+
+?>

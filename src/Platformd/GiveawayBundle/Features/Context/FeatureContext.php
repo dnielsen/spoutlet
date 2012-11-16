@@ -41,7 +41,6 @@ class FeatureContext extends AbstractFeatureContext
 
         foreach ($table->getHash() as $data) {
             $giveaway = new Giveaway();
-            $giveaway->setLocale($this->getCurrentSite());
             $giveaway->setAsActive();
 
             if (isset($data['name'])) {
@@ -51,6 +50,10 @@ class FeatureContext extends AbstractFeatureContext
             if (isset($data['type'])) {
                 $giveaway->setGiveawayType($data['type']);
             }
+
+            $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->getCurrentSite());
+
+            $giveaway->setSites(array($site));
 
             $keys = isset($data['keys']) ? explode(',', $data['keys']) : array();
             if (count($keys) > 0) {
@@ -131,7 +134,10 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode);
+        $em = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->getCurrentSite());
+
+        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $site);
     }
 
     /**

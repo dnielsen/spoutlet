@@ -145,7 +145,7 @@ class SpoutletExtension extends Twig_Extension
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s\\media\\%s', $cf, $media->getFilename());
+        return sprintf('%s/media/%s', $cf, $media->getFilename());
     }
 
     public function endsWith($haystack, $needle) {
@@ -682,6 +682,7 @@ class SpoutletExtension extends Twig_Extension
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
             case 'PHOTOS':                      return !$chinaOrJapanOrLatam;
+            case 'MICROSOFT':                   return !$japan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

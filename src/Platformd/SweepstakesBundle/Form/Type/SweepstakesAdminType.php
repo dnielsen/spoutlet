@@ -20,7 +20,12 @@ class SweepstakesAdminType extends EventType
             'url_prefix' => '/sweepstakes/'
         ));
         $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this Sweepstake page.'));
-        $builder->add('locale', new SiteChoiceType());
+        $builder->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
+            ));
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);

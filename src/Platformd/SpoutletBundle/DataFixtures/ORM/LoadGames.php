@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\SpoutletBundle\Entity\Site;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,6 +46,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $manager->flush();
 
         $gpManager = $this->getGamePageManager();
+        $siteRepo  = $manager->getRepository('SpoutletBundle:Site');
 
         $gamePage1 = new GamePage();
         $gamePage1->setGame($game1);
@@ -54,7 +56,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage1->setYoutubeIdTrailer3('WD8HF-AL2yY');
         $gamePage1->setYoutubeIdTrailer4('Qkp2SAPLuDk');
         $gamePage1->setStatus(GamePage::STATUS_PUBLISHED);
-        $gamePage1->setLocales(array('en', 'ja'));
+        $gamePage1->setSites(array($siteRepo->find(1), $siteRepo->find(2)));
 
         $gpManager->saveGamePage($gamePage1);
 
@@ -66,7 +68,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage2->setYoutubeIdTrailer3('y_CIzFVRvLU');
         $gamePage2->setYoutubeIdTrailer4('2f96hKqkY_Y');
         $gamePage2->setStatus(GamePage::STATUS_PUBLISHED);
-        $gamePage2->setLocales(array('en', 'zh'));
+        $gamePage2->setSites(array($siteRepo->find(1), $siteRepo->find(3)));
 
         $gpManager->saveGamePage($gamePage2);
 
@@ -78,7 +80,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage3->setYoutubeIdTrailer3('y_CIzFVRvLU');
         $gamePage3->setYoutubeIdTrailer4('2f96hKqkY_Y');
         $gamePage3->setStatus(GamePage::STATUS_ARCHIVED);
-        $gamePage3->setLocales(array('en', 'ja'));
+        $gamePage3->setSites(array($siteRepo->find(1), $siteRepo->find(2)));
 
         $gpManager->saveGamePage($gamePage3);
 
@@ -86,7 +88,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         $gamePage4->setGame($game4);
         $gamePage4->setExternalUrl("https://www.google.com/search?btnG=1&pws=0&q=skyrim");
         $gamePage4->setStatus(GamePage::STATUS_ARCHIVED);
-        $gamePage4->setLocales(array('en', 'ja'));
+        $gamePage4->setSites(array($siteRepo->find(1), $siteRepo->find(2)));
 
         $gpManager->saveGamePage($gamePage4);
     }
@@ -117,3 +119,5 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
         return 2;
     }
 }
+
+?>

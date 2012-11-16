@@ -11,7 +11,7 @@ class FrontendController extends Controller
 {
     public function indexAction()
     {
-        $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getLocale());
+        $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getCurrentSite());
 
     	return $this->render('SweepstakesBundle:Frontend:index.html.twig', array(
             'sweepstakess' => $sweepstakess
@@ -122,7 +122,7 @@ class FrontendController extends Controller
      */
     private function findSweepstakes($slug, $restrictUnpublished = true)
     {
-        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlug($slug, $this->getLocale());
+        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlug($slug, $this->getCurrentSite());
 
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweepstakes for slug '.$slug);

@@ -29,7 +29,7 @@ class DefaultController extends Controller
     public function hotStoriesAction()
     {
         $news = $this->getNewsRepo()
-            ->findMostRecentForLocale($this->getLocale(), 13)
+            ->findMostRecentForSite($this->getCurrentSite(), 13)
         ;
 
         return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
@@ -58,7 +58,7 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getLocale(), 10)
+            ->getCurrentSweepstakes($this->getCurrentSite(), 10)
         ;
 
         $sweepstakes_list = array();
@@ -69,7 +69,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllActiveForLocaleWithLimit($this->getLocale(), 10)
+            ->findAllActiveForSiteWithLimit($this->getCurrentSite(), 10)
         ;
 
         $giveaways_list = array();
@@ -83,7 +83,7 @@ class DefaultController extends Controller
         $competitions = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($this->getLocale(), 10)
+            ->getCurrentEventsOnly($this->getCurrentSite(), 10)
         ;
 
         $competitions_list = array();
