@@ -44,6 +44,12 @@
     height: 80px;
 }
 
+.gallery-media-thumb-small {
+    border: 1px solid #4A4A4A;
+    width: 116px;
+    height: 69px;
+}
+
 .gallery-media-thumb a {
     border: none;
 }

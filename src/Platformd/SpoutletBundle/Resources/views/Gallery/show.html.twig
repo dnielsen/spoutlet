@@ -33,37 +33,31 @@
             <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
 
             {% if (otherMedia | length) > 0 %}
-                <div class="media-gallery ad-gallery user-media-gallery">
-                    <a name="media"></a>
-                    <h3>
-                        More images from {{ media.author.username | capitalize }}
-                    </h3>
-                    <div class="media-content">
-                        <div class="ad-nav{{ ((otherMedia | length) <= 2) ? ' no-scroll' : '' }}">
-                            <div class="ad-thumbs">
-                                <ul class="ad-thumb-list" style="height: 150px;">
-                                    {% for media in otherMedia %}
-                                    <li{{ loop.last ? ' class="last"' : '' }}>
-                                        {% set url = media_path_nice(media.image) %}
-                                        <div style="min-height: 150px;">
 
-                                            <!-- This link would be much nicer from a user experience (preview in lightbox, have link in caption to full image page), but LB doesn't enjoy this implementation without some fiddling
+                <p>
+                    More media from <a href="javascript:void(0);">{{ media.author.username }}</a>
+                </p>
 
-                                            <a href="{{ url }}" rel="lightbox[{{ media.author.username }}]" title="View this image in full &lt;a href=&quot;{{ path('gallery_media_show', { 'id' : media.id }) }}&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;">
-                                                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" title="{{ media.title }}" />
-                                            </a> -->
-
-                                            <a href="{{ path('gallery_media_show', { 'id' : media.id }) }}" target=_"blank">
-                                                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" title="{{ media.title }}" />
-                                            </a>
-                                        </div>
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+                <div class="page_container">
+                    <div class="gallery-items content" style="width:636px;">
+                        {% for media in otherMedia %}
+                            <div class="gallery-media-thumb-wrapper">
+                                <div class="gallery-media-thumb-small">
+                                    <a href="{{ media_path_nice(media.image) }}" rel="lightbox[{{ media.author.username }}]">
+                                        <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                                    </a>
+                                </div>
+                                <div style="width:115px;">
+                                    <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                                </div>
+                                <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
+                                <input type="hidden" value="{{ media.views }}" class="media-popular" />
                             </div>
-                        </div>
+                        {% endfor %}
                     </div>
+                    <div class="page_navigation" style="float: right; padding-top: 10px;"></div>
                 </div>
+
             {% endif %}
         </div>
 
@@ -143,37 +137,16 @@
     {{ parent() }}
 
     <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
-
+    <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
-            var GalleryMediaPage = {
+        $(function () {
 
-            };
+            $('.media-title').truncate();
 
-            GalleryMediaPage.initializeMediaGallery = function() {
-                var galleries = $('.media-gallery').adGallery({
-                    loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
-
-                    display_next_and_prev: false,
-                    display_back_and_forward: true,
-                    slideshow: {
-                        enable: false,
-                        autostart: false,
-                        speed: 5000,
-                        stop_on_scroll: false
-                    },
-                    effect: 'fade'
+            $('.page_container').pajinate({
+                    items_per_page: 5,
+                    show_first_last: false,
                 });
-
-                // we actually grab the thumbnails, and remove the adgallery behavior
-                // this allows them to be clean, and we can do whatever next
-                // this is done because adgallery normally loads the image in the larger view
-                // but we don't even have the larger view
-                var mediaGalleryAnchors = $('.media-gallery .ad-thumb-list a');
-                mediaGalleryAnchors.unbind('click');
-            };
-            jQuery(document).ready(function() {
-
-                GalleryMediaPage.initializeMediaGallery();
-            });
+        });
     </script>
 {% endblock %}
