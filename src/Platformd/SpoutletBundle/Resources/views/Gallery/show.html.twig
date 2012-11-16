@@ -22,8 +22,14 @@
 
 {% block content %}
 <div class="media-show-page">
+    <div class="std_1col" style="padding:0 0 10px 0">
+        <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
+        <div style="padding: 3px 0 3px 0;"><a href="{{ path('gallery_index') }}">Photo Gallery</a> <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span><span style="color:#B3B3B3">{{ media.title }}</span></div>
+        <div style="padding: 3px 0 0 0;"><a href="{{ path('gallery_submit') }}" class="btn btn-primary">Submit Photos</a></div>
+    </div>
     <div class="std_2col" style="min-height: 500px;">
         <div class="left">
+
             <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" />
 
             {% if (otherMedia | length) > 0 %}
