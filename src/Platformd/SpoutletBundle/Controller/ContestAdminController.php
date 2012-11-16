@@ -120,6 +120,11 @@ class ContestAdminController extends Controller
             return $this->redirect($this->generateUrl('admin_contest_index'));
         }
 
+        if ($contest->getWinner()) {
+            $this->setFlash('error', 'This contest already has a winner selected!');
+            return $this->redirect($this->generateUrl('admin_contest_index'));
+        }
+
         $contest->setWinner($winner);
         $em->persist($contest);
         $em->flush();

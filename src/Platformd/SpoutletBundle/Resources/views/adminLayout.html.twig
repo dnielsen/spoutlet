@@ -247,6 +247,13 @@
                     </div>
                 {% endif %}
 
+                {% if app.session.hasFlash('error') %}
+                    <div class="alert alert-error">
+                        <i class="icon-ok"></i>
+                        {{ app.session.getflash('error') | trans }}
+                    </div>
+                {% endif %}
+
                 {% block content %}{% endblock %}
 
                 <footer>
