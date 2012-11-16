@@ -85,7 +85,7 @@ class ContestAdminController extends Controller
     {
         $em                 = $this->getDoctrine()->getEntityManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
-        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
 
         if (!$contest) {
@@ -95,9 +95,37 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb()->addChild($contest->getSlug());
         $this->getBreadcrumbs()->addChild('Select Winner');
 
-        $entries = $contestEntryRepo->findTopEntriesForContest($contest);
+        $entries = $galleryMediaRepo->findTopMediaForContest($contest);
 
-        var_dump($entries);exit;
+        return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
+            'entries'   => $entries,
+            'contest'   => $contest,
+        ));
+    }
+
+    public function confirmWinnerAction($slug, $id)
+    {
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+        $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+        $winner             = $galleryMediaRepo->find($id);
+
+        if (!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        if (!$contest->isFinished()) {
+            $this->setFlash('error', 'This contest has not finished yet!');
+            return $this->redirect($this->generateUrl('admin_contest_index'));
+        }
+
+        $contest->setWinner($winner);
+        $em->persist($contest);
+        $em->flush();
+
+        $this->setFlash('success', 'Winner successfully chosen!');
+        return $this->redirect($this->generateUrl('admin_contest_index'));
     }
 
     public function metricsAction()

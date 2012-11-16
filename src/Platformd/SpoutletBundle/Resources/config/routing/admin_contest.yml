@@ -45,6 +45,10 @@ admin_contest_update:
     defaults: { _controller: "SpoutletBundle:ContestAdmin:edit" }
     requirements: { _method: post }
 
+admin_contest_confirm_winner:
+    pattern: /{slug}/winner-confirm/{id}
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:confirmWinner" }
+
 admin_contest_select_winner:
     pattern: /{slug}/winner
     defaults: { _controller: "SpoutletBundle:ContestAdmin:chooseWinner" }

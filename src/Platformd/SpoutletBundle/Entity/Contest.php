@@ -754,4 +754,9 @@ class Contest implements LinkableInterface
         }
 
     }
+
+    public function isFinished()
+    {
+        return $this->votingEnd < new \DateTime('now');
+    }
 }

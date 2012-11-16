@@ -46,9 +46,15 @@
                 </td>
                 <td>
                     <a href="{{ path('admin_contest_edit', { 'slug' : contest.slug }) }}">edit</a>
+
                 {% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
                      | <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">select winner</a>
                 {% endif %}
+
+                {% if (contest.winner != null) %}
+                     | <a target="_blank" href="{{ path('gallery_media_show', { 'id' : contest.winner.id }) }}">view winner</a>
+                {% endif %}
+
                 </td>
             </tr>
         {% endfor %}
@@ -59,6 +65,6 @@
 </table>
 
 <a class="btn btn-primary" href="{{ path('admin_contest_new') }}">
-    Create a new entry
+    Create a new contest
 </a>
 {% endblock %}
