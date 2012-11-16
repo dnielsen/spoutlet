@@ -16,12 +16,12 @@
             </select>
         </div>
         <div class="page_container">
-            <div class="gallery-items content" style="min-height: 448px;">
+            <div class="gallery-items content" style="min-height: 448px;width:636px;">
                 {% for media in medias %}
                     <div class="gallery-media-thumb-wrapper">
                         <div class="gallery-media-thumb">
                             <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image) | imagine_filter('media_photo_thumb') }}" />
                             </a>
                         </div>
                         <div style="width:135px;">
