@@ -18,7 +18,6 @@ Feature: Main Navigation
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
-      | Microsoft   | /app_test.php/microsoft  |  http://japan.alienwarearena.local/app_test.php/microsoft  |
 
   Scenario: The "China" site's main navigation menu has the correct items
     Given I am on the "China" site
