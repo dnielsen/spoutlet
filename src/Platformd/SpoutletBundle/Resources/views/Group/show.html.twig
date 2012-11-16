@@ -217,38 +217,24 @@
 
             var loadVideoContent = function(id) {
                 var content = $('.featured-content-category#content-'+id);
-                $.ajax({
-                    url: '{{ path('group_videos', { 'id' : group.id }) }}',
-                    method: 'get',
-                    success: function(data, textStatus, jqXHR) {
-                        content.html(data);
-                        $("#scrollable-videos").scrollable();
-                        $('.youtube-link').truncate();
-                    }
+
+                content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
+                    $("#scrollable-videos").scrollable();
+                    $('.youtube-link').truncate();
                 });
             }
 
             var loadNewsContent = function(id) {
                 var content = $('.featured-content-category#content-'+id);
-                $.ajax({
-                    url: '{{ path('group_news', { 'id' : group.id }) }}',
-                    method: 'get',
-                    success: function(data, textStatus, jqXHR) {
-                        content.html(data);
-                    }
-                });
+                content.load('{{ path('group_news', { 'id' : group.id }) }}');
             }
 
             var loadImageContent = function(id) {
                 var content = $('.featured-content-category#content-'+id);
-                $.ajax({
-                    url: '{{ path('group_images', { 'id' : group.id }) }}',
-                    method: 'get',
-                    success: function(data, textStatus, jqXHR) {
-                        content.html(data);
-                        $("#scrollable-images").scrollable();
-                        $('.group-image-title').truncate();
-                    }
+
+                content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $("#scrollable-images").scrollable();
+                    $('.group-image-title').truncate();
                 });
             }
 
