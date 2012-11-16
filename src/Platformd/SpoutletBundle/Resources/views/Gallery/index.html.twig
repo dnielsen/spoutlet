@@ -14,7 +14,7 @@
             <div class="slider-wrapper theme-nivo">
                 <div id="slider" class="nivoSlider">
                     {% for media in nivoSliderMedia %}
-                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" />
+                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" class="gallery-slider"/>
                     {% endfor %}
                 </div>
             </div>
@@ -73,7 +73,7 @@
 
             $('#slider').nivoSlider({
                 pauseTime: 5000,
-                effect: 'fold,fade'
+                effect: 'fade',
             });
 
             var baseGalleryUrl = $('#media-gallery-link').attr('href');
