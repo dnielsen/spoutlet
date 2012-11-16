@@ -4,6 +4,14 @@
 
 <h1>Contest Entries</h1>
 
+{% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
+
+    <p class="alert alert-info help"><i class="icon-info-sign"></i>
+        This contest has now finished but a winner has not yet been chosen. Click <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">here</a> to choose a winner!
+    </p>
+
+{% endif %}
+
 <a class="btn btn-primary" href="{{ path('admin_contest_entries_export', { 'slug' : slug }) }}" style="margin-bottom: 10px;">Export</a>
 
 <form action="{{ path('admin_contest_entries_update', { 'slug' : slug }) }}" method="post" class="form-horizontal">
@@ -25,32 +33,39 @@
             </tr>
         </thead>
         <tbody>
-        {% for entry in entries %}
-            {% for media in entry.medias %}
-                <tr>
-                    <td><img src="{{ media_path(media.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ media.title }}" /></td>
-                    <td><a href="{{ media_path_nice(media.image) }}">{{ media_path_nice(media.image) }}</a></td>
-                    <td>{{ media.author.username }}</td>
-                    <td>{{ media.author.firstname }}</td>
-                    <td>{{ media.author.lastname }}</td>
-                    <td>{{ media.createdAt | date }}</td>
-                    <td>{{ entry.ipAddress }}</td>
-                    <td><a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ media.votes | length }}</a></td>
-                    <td>{{ media.author.country }}</td>
-                    <td>{{ likes[media.id] }}</td>
-                    <td>
-                        <div class="admin-contest-remove-entry">
-                            <label for "contest_entry_delete[{{ media.id }}]">Remove from Contest</label>
-                            <input type="checkbox" id="contest_entry_delete[{{ media.id }}]" name="contest_entry_delete[{{ media.id }}]" />
-                        </div>
-                        <div class="admin-contest-delete-media">
-                            <label for "site_media_delete[{{ media.id }}]" style="color: #FF0000;">Remove from Site</label>
-                            <input type="checkbox" id="site_media_delete[{{ media.id }}]" name="site_media_delete[{{ media.id }}]" />
-                        </div>
-                    </td>
-                </tr>
+
+        {% if entries | length > 0 %}
+            {% for entry in entries %}
+                {% for media in entry.medias %}
+                    <tr>
+                        <td><img src="{{ media_path(media.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ media.title }}" /></td>
+                        <td><a href="{{ media_path_nice(media.image) }}">{{ media_path_nice(media.image) }}</a></td>
+                        <td>{{ media.author.username }}</td>
+                        <td>{{ media.author.firstname }}</td>
+                        <td>{{ media.author.lastname }}</td>
+                        <td>{{ media.createdAt | date }}</td>
+                        <td>{{ entry.ipAddress }}</td>
+                        <td><a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ media.votes | length }}</a></td>
+                        <td>{{ media.author.country }}</td>
+                        <td>{{ likes[media.id] }}</td>
+                        <td>
+                            <div class="admin-contest-remove-entry">
+                                <label for "contest_entry_delete[{{ media.id }}]">Remove from Contest</label>
+                                <input type="checkbox" id="contest_entry_delete[{{ media.id }}]" name="contest_entry_delete[{{ media.id }}]" />
+                            </div>
+                            <div class="admin-contest-delete-media">
+                                <label for "site_media_delete[{{ media.id }}]" style="color: #FF0000;">Remove from Site</label>
+                                <input type="checkbox" id="site_media_delete[{{ media.id }}]" name="site_media_delete[{{ media.id }}]" />
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan=11>No entries found!</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 

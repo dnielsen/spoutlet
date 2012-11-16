@@ -1,0 +1,75 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Choose Winner for {{ contest.name }}</h1>
+
+{% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
+
+<p class="alert alert-info help"><i class="icon-info-sign"></i>
+    The entry with the most votes is shown below. Please confirm that this entry is the contest winner.
+</p>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>URL</th>
+            <th>Username</th>
+            <th>Entry Date</th>
+            <th>Votes</th>
+            <th>Country</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    {% if entries | length < 1 %}
+
+        <tr>
+            <td colspan=6>No entries found!</td>
+        </tr>
+
+    {% else %}
+
+        {# the for loop is redundant at present as only one result is shown, but left in should we decide to offer more than one choice in order of votes #}
+        {% for entry in entries %}
+            <tr>
+                <td><img src="{{ media_path(entry[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ entry[0].title }}" /></td>
+                <td><a target="_blank" href="{{ media_path_nice(entry[0].image) }}">{{ media_path_nice(entry[0].image) }}</a></td>
+                <td>{{ entry[0].author.username }}</td>
+                <td>{{ entry[0].createdAt | date }}</td>
+                <td>{{ entry[0].votes | length }}</a></td>
+                <td>{{ entry[0].author.country }}</td>
+                <td>
+                    <a class="confirm-contest-winner-link" href="{{ path('admin_contest_confirm_winner', { 'slug' : contest.slug, 'id' : entry[0].id }) }}">Confirm as winner</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+    {% endif %}
+
+    </tbody>
+</table>
+
+{% else %}
+
+<p class="alert alert-info help"><i class="icon-info-sign"></i>
+    Voting for this contest has not finished yet. Please either wait for the contest to end or edit the contest so that it has already ended.
+</p>
+
+{% endif %}
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $("a.confirm-contest-winner-link").bind("click", function(event) {
+            if (!confirm("Are you sure you wish to confirm this entry as the winner?")) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                return false;
+            }
+        })
+    });
+</script>
+
+{% endblock %}

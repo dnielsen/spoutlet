@@ -105,6 +105,7 @@ class CountryAgeRestrictionRuleset
     public function doesUserPassRules($user, $country) {
 
         $age            = $user->getAge();
+        $isAllowed      = null;
 
         foreach ($this->getRules() as $rule) {
             $isAllowed = $rule->isAllowed($age, $country) ;

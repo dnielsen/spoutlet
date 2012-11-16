@@ -81,6 +81,58 @@ class ContestAdminController extends Controller
         ));
     }
 
+    public function chooseWinnerAction($slug)
+    {
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+        $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+
+        if (!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        $this->addContestsBreadcrumb()->addChild($contest->getSlug());
+        $this->getBreadcrumbs()->addChild('Select Winner');
+
+        $entries = $galleryMediaRepo->findTopMediaForContest($contest);
+
+        return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
+            'entries'   => $entries,
+            'contest'   => $contest,
+        ));
+    }
+
+    public function confirmWinnerAction($slug, $id)
+    {
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+        $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+        $winner             = $galleryMediaRepo->find($id);
+
+        if (!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        if (!$contest->isFinished()) {
+            $this->setFlash('error', 'This contest has not finished yet!');
+            return $this->redirect($this->generateUrl('admin_contest_index'));
+        }
+
+        if ($contest->getWinner()) {
+            $this->setFlash('error', 'This contest already has a winner selected!');
+            return $this->redirect($this->generateUrl('admin_contest_index'));
+        }
+
+        $contest->setWinner($winner);
+        $em->persist($contest);
+        $em->flush();
+
+        $this->setFlash('success', 'Winner successfully chosen!');
+        return $this->redirect($this->generateUrl('admin_contest_index'));
+    }
+
     public function metricsAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -88,7 +140,13 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
+        $entryCounts = array();
+
         foreach ($contests as $contest) {
+            if ($contest[0] === null) {
+                break;
+            }
+
             $entryCounts[$contest[0]->getId()] = $contest[0]->getEntries()
                         ->filter(function($x) {
                             return
@@ -107,6 +165,7 @@ class ContestAdminController extends Controller
         $contestEntryRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
+        $likes              = array();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -128,6 +187,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Entries');
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
+            'contest'   => $contest,
             'entries'   => $entries,
             'slug'      => $slug,
             'likes'     => $likes,

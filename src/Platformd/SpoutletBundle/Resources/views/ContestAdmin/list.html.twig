@@ -11,35 +11,59 @@
             <th>Sites</th>
             <th>URL</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-    {% for contest in contests %}
+
+    {% if contests | length < 1 %}
+
         <tr>
-            <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
-            <td>{{ contest.category }}</td>
-            <td>
-                 {% for site in contest.sites %}
-                    [ {{ site.name }} ]
-                {% endfor %}
-            </td>
-            <td><a href="{{ path('contest_show', { 'slug': contest.slug }) }}">{{ path('contest_show', { 'slug': contest.slug }) }}</a></td>
-            <td>
-                {% if contest.status == "published" %}
-                    <span class="label label-success">
-                {% else %}
-                    <span class="label label-warning">
+            <td colspan=6>No contests found!</td>
+        </tr>
+
+    {% else %}
+
+        {% for contest in contests %}
+            <tr>
+                <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
+                <td>{{ contest.category }}</td>
+                <td>
+                     {% for site in contest.sites %}
+                        [ {{ site.name }} ]
+                    {% endfor %}
+                </td>
+                <td><a href="{{ path('contest_show', { 'slug': contest.slug }) }}">{{ path('contest_show', { 'slug': contest.slug }) }}</a></td>
+                <td>
+                    {% if contest.status == "published" %}
+                        <span class="label label-success">
+                    {% else %}
+                        <span class="label label-warning">
+                    {% endif %}
+
+                    {{ contest.status | capitalize }}</span>
+
+                </td>
+                <td>
+                    <a href="{{ path('admin_contest_edit', { 'slug' : contest.slug }) }}">edit</a>
+
+                {% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
+                     | <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">select winner</a>
                 {% endif %}
 
-                {{ contest.status | capitalize }}</span>
+                {% if (contest.winner != null) %}
+                     | <a target="_blank" href="{{ path('gallery_media_show', { 'id' : contest.winner.id }) }}">view winner</a>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
 
-            </td>
-        </tr>
-    {% endfor %}
+    {% endif %}
+
     </tbody>
 </table>
 
 <a class="btn btn-primary" href="{{ path('admin_contest_new') }}">
-    Create a new entry
+    Create a new contest
 </a>
 {% endblock %}

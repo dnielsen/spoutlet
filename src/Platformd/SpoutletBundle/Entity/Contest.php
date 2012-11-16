@@ -202,6 +202,12 @@ class Contest implements LinkableInterface
      */
     protected $entries;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $winner;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -600,6 +606,16 @@ class Contest implements LinkableInterface
         $this->entries = $entries;
     }
 
+    public function getWinner()
+    {
+        return $this->winner;
+    }
+
+    public function setWinner($winner)
+    {
+        $this->winner = $winner;
+    }
+
     public function getRedemptionInstructionsArray()
     {
         $arr = explode(self::REDEMPTION_LINE_PREFIX, $this->getRedemptionInstructions());
@@ -737,5 +753,10 @@ class Contest implements LinkableInterface
             );
         }
 
+    }
+
+    public function isFinished()
+    {
+        return $this->votingEnd < new \DateTime('now');
     }
 }
