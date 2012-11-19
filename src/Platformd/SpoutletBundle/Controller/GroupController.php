@@ -472,7 +472,9 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
-            ->add('article', 'textarea')
+            ->add('article', 'textarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -513,7 +515,9 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
-            ->add('article', 'textarea')
+            ->add('article', 'textarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -808,6 +812,15 @@ Alienware Arena Team
         $this->setFlash('success', 'Video was deleted successfully!');
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+    }
+
+    public function aboutAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        return $this->render('SpoutletBundle:Group:about.html.twig', array(
+            'group' => $group,
+        ));
     }
 
     public function showAction($slug)
