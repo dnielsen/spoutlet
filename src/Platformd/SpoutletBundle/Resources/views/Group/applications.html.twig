@@ -14,6 +14,8 @@
         <div id="group-avatar">
             {% if group.groupAvatar %}
                 <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
             {% endif %}
         </div>
     </div>
