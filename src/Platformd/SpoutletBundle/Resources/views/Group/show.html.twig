@@ -145,12 +145,10 @@
                     <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                    <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;">
-                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
-                    </div>
+                    <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                 {% elseif isAllowedToViewGroup %}
                     <div id="content-group-about" class="featured-content-category active" style="height: 550px;background: #191919;">
-                        {% include 'SpoutletBundle:Group:_about.html.twig' %}
+                        {% include 'SpoutletBundle:Group:about.html.twig' %}
                     </div>
                 {% endif %}
             </div>
@@ -216,7 +214,7 @@
             var tab = 'group-' + hash;
 
             var loadVideoContent = function(id) {
-                var content = $('.featured-content-category#content-'+id);
+                var content = $('.featured-content-category#content-group-news');
 
                 content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
                     $("#scrollable-videos").scrollable();
@@ -225,16 +223,24 @@
             }
 
             var loadNewsContent = function(id) {
-                var content = $('.featured-content-category#content-'+id);
+                var content = $('.featured-content-category#content-group-news');
                 content.load('{{ path('group_news', { 'id' : group.id }) }}');
             }
 
             var loadImageContent = function(id) {
-                var content = $('.featured-content-category#content-'+id);
+                var content = $('.featured-content-category#content-group-news');
 
                 content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $("#scrollable-images").scrollable();
                     $('.group-image-title').truncate();
+                });
+            }
+
+            var loadAboutContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_about', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    
                 });
             }
 
@@ -251,7 +257,7 @@
             }
 
             var killVideoContent = function() {
-                $('#content-group-videos').html('');
+                $('#content-group-news').html('');
             }
 
             $(".featured-content-header a").click(function() {
@@ -263,10 +269,10 @@
 
                 $('.featured-content-header a.active').removeClass('active');
                 $(this).addClass('active');
-                $('.featured-content-category#content-'+current).fadeOut('fast', function () {
+                $('.featured-content-category#content-group-news').fadeOut('fast', function () {
                     $('.report-wrapper').remove();
 
-                    var content = $('.featured-content-category#content-'+id);
+                    var content = $('.featured-content-category#content-group-news');
 
                     switch(id) {
                         case 'group-videos':
@@ -279,12 +285,11 @@
                             loadImageContent(id);
                             break;
                         case 'group-about':
-                            content.resize();
-                            content.mCustomScrollbar('update');
+                            loadAboutContent(id);
                             break;
                     }
 
-                    $(this).delay(500);
+                    //$(this).delay(500);
                     content.fadeIn();
                 });
             });

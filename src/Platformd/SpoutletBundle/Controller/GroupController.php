@@ -810,6 +810,15 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
     }
 
+    public function aboutAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        return $this->render('SpoutletBundle:Group:about.html.twig', array(
+            'group' => $group,
+        ));
+    }
+
     public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
