@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
+use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
@@ -38,12 +39,13 @@ class GalleryController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $user = $this->getCurrentUser();
+        $user       = $this->getCurrentUser();
 
-        $form = $this->createForm(new SubmitImageType($user));
+        $form       = $this->createForm(new SubmitImageType($user));
 
-        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
 
         if ($request->getMethod() == 'POST')
         {
@@ -76,6 +78,7 @@ class GalleryController extends Controller
             'form'      => $form->createView(),
             'medias'    => $medias,
             'galleries' => $galleries,
+            'groups'    => $groups,
         ));
     }
 
@@ -83,13 +86,15 @@ class GalleryController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $user = $this->getCurrentUser();
-        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $user       = $this->getCurrentUser();
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
 
         return $this->render('SpoutletBundle:Gallery:editPhotos.html.twig', array(
             'medias' => $medias,
-            'galleries' => $galleries
+            'galleries' => $galleries,
+            'groups'    => $groups,
         ));
     }
 
@@ -128,7 +133,7 @@ class GalleryController extends Controller
 
         $params = json_decode($content, true);
 
-        if (!isset($params['id']) || !isset($params['title']) || !isset($params['description']) || !isset($params['galleries'])) {
+        if (!isset($params['id']) || !isset($params['title']) || !isset($params['description']) || !isset($params['galleries']) || !isset($params['groups'])) {
 
             $response->setContent(json_encode(array(
                 "success" => false,
@@ -141,6 +146,7 @@ class GalleryController extends Controller
         $title       = $params['title'];
         $description = $params['description'];
         $gals        = $params['galleries'];
+        $groups      = $params['groups'];
 
         $errors = $this->validateMediaPublish($id, $title, $description, $gals);
 
@@ -154,9 +160,12 @@ class GalleryController extends Controller
             return $response;
         }
 
-        $galleries = $this->getGalleryRepository()->findAllGalleries($gals);
-
-        $media = $this->getGalleryMediaRepository()->find($id);
+        $galleries  = $this->getGalleryRepository()->findAllGalleries($gals);
+        $media      = $this->getGalleryMediaRepository()->find($id);
+        $groupRepo  = $this->getGroupRepository();
+        $user       = $this->getCurrentUser();
+        $site       = $this->getCurrentSite();
+        $em         = $this->getEntityManager();
 
         if(!$media)
         {
@@ -169,8 +178,24 @@ class GalleryController extends Controller
         $media->setPublished(true);
         $media->setGalleries($galleries);
 
-        $em = $this->getEntityManager();
         $em->persist($media);
+
+        if (count($groups) > 0) {
+            foreach ($groups as $group) {
+
+                $group      = $groupRepo->find($group);
+                if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                    $groupImage = new GroupImage();
+                    $groupImage->setGroup($group);
+                    $groupImage->setTitle($title);
+                    $groupImage->setImage($media->getImage());
+                    $groupImage->setAuthor($user);
+
+                    $em->persist($groupImage);
+                }
+            }
+        }
+
         $em->flush();
 
         $response->setContent(json_encode(array("success" => true, 'message' => 'Photo published successfully')));
@@ -494,6 +519,11 @@ class GalleryController extends Controller
     private function getGalleryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+    }
+
+    private function getGroupRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
     }
 
     private function getContestRepository()

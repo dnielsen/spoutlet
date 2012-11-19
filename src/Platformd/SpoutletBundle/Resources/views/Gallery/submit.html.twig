@@ -71,6 +71,27 @@
                         </div>
                     </div>
                 </div>
+
+
+                    <div id="gallery-submit-image-groups">
+                        <div class="control-group ">
+                            <label class="control-label">{{ 'galleries.submit_photo_groups' | trans }}</label>
+                            <div class="controls">
+                            {% if groups | length > 0 %}
+                                {% for group in groups %}
+                                    <label class="checkbox">
+                                        <input class="group-checkbox" type="checkbox" id="group-{{ group.id }}" name="group-{{ group.id }}" value="{{ group.id }}" />
+                                        {{ group.name }}
+                                    </label>
+                                {% endfor %}
+                            {% else %}
+                                <p style="margin-top: 7px;">You are not a member of any groups at this time.</p>
+                            {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+
                 <input type="hidden" id="media-id" name="media-id" />
             </div>
         </div>
@@ -132,10 +153,17 @@
                 var url = '{{ path('gallery_publish_photo') }}';
 
                 var galleries = [];
+                var groups = [];
 
                 $('.gallery-checkbox').each(function () {
                     if($(this).is(':checked')) {
                         galleries.push($(this).val());
+                    }
+                });
+
+                $('.group-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        groups.push($(this).val());
                     }
                 });
 
@@ -144,6 +172,7 @@
                     'title' : $('#media-title').val(),
                     'description' : $('#media-description').val(),
                     'galleries' : galleries,
+                    'groups' : groups,
                 };
 
                 $.ajax({
