@@ -415,7 +415,7 @@ liip_imagine:
         nivo_slider:
             quality: 100
             filters:
-                thumbnail: { size: [636, 295], mode: inset }
+                relative_resize: { widen: 636, heighten: 295 }
                 crop: { start: [0, 0], size: [636, 295] }
 
         media_photo_thumb:
