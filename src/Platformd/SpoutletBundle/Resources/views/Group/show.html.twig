@@ -240,7 +240,8 @@
                 var content = $('.featured-content-category#content-group-news');
 
                 content.load('{{ path('group_about', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    
+                    $('.featured-content-category#content-group-news').resize();
+                    $('.featured-content-category#content-group-news').mCustomScrollbar();
                 });
             }
 
@@ -286,6 +287,7 @@
                             break;
                         case 'group-about':
                             loadAboutContent(id);
+                            
                             break;
                     }
 
