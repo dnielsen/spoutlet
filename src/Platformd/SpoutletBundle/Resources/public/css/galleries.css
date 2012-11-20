@@ -43,6 +43,16 @@
     margin: 0;
 }
 
+.user-media-thumb-wrapper {
+    display: inline-table;
+    margin: 0 0 0 5px;
+    padding: 5px 0 0 0;
+}
+
+.first-media {
+    margin: 0;
+}
+
 .gallery-media-thumb {
     border: 1px solid #4A4A4A;
     width: 135px;
@@ -112,11 +122,34 @@
 }
 
 .page_link {
-    padding: 0 3px 0 3px;
+    font-size: 10px;
+    color: #fff;
+    padding: 3px 3px 3px 3px;
+    margin: 0 3px;
+    padding: 3px 4px;
+    background: #121212;
+    border: 1px solid #4a4a4a;
+}
+
+.page_link:hover {
+    color: #fff;
+    border: 1px solid #01a2d2;
 }
 
 .active_page {
-    text-decoration: underline;
+    font-size: 12px;
+    margin: 0 3px;
+    padding: 4px 5px;
+    background: #121212;
+    border: 1px solid #01a2d2;
+}
+
+.previous_link {
+    display: none;
+}
+
+.next_link {
+    display: none;
 }
 
 .gallery-slider {
