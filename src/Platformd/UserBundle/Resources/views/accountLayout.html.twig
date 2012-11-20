@@ -54,6 +54,16 @@
 
             {% endif %}
 
+            <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        {% if site_has_feature('PHOTOS') %}
+                            <li><a href="{{ path('gallery_submit') }}">{{ 'platformd.user.account.media_upload' | trans }}</a></li>
+                            <li><a href="{{ path('accounts_photos') }}" target="_blank">{{ 'platformd.user.account.my_media' | trans }}</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
             <li><a href="{{ path('_fos_user_security_logout') }}">{{ "platformd.layout.top_menu.sign_out" | trans }}</a></li>
         </ul>
     </div>

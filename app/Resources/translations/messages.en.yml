@@ -243,6 +243,9 @@ platformd:
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
+            media: Media
+            media_upload: Upload
+            my_media: My Media
 
     giveaway:
         giveaway: Giveaway
