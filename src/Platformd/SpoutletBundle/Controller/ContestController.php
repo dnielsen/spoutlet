@@ -107,16 +107,16 @@ class ContestController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $user = $this->getCurrentUser();
-
-        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
+        $user       = $this->getCurrentUser();
+        $contest    = $this->getContestRepository()->findOneBy(array('slug' => $slug));
 
         $this->ensureContestIsValid($contest);
 
-        $form = $this->createForm(new SubmitImageType($user));
+        $form       = $this->createForm(new SubmitImageType($user));
 
-        $medias = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $galleries = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
 
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
@@ -163,6 +163,7 @@ class ContestController extends Controller
             'galleries'         => $galleries,
             'entriesLeft'       => $entriesLeft,
             'submissionEnded'   => $submissionEnded,
+            'groups'            => $groups,
         ));
     }
 
@@ -217,6 +218,11 @@ class ContestController extends Controller
     private function getGalleryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+    }
+
+    private function getGroupRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
     }
 
     private function getContestRepository()
