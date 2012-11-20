@@ -415,7 +415,7 @@ class GalleryController extends Controller
         ));
     }
 
-    public function galleryAction($slug)
+    public function galleryAction($slug, $sort)
     {
         $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
 

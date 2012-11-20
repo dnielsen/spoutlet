@@ -158,10 +158,17 @@
                 var url = '{{ path('gallery_publish_photo') }}';
 
                 var galleries = [];
+                var groups = [];
 
                 $('.gallery-checkbox').each(function () {
                     if($(this).is(':checked')) {
                         galleries.push($(this).val());
+                    }
+                });
+
+                $('.group-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        groups.push($(this).val());
                     }
                 });
 
@@ -170,6 +177,7 @@
                     'title' : $('#media-title').val(),
                     'description' : $('#media-description').val(),
                     'galleries' : galleries,
+                    'groups' : groups,
                 };
 
                 $.ajax({

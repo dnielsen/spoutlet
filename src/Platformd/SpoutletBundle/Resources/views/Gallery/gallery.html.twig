@@ -9,19 +9,20 @@
         <div style="float: left">
             <a href="{{ path('gallery_submit') }}" class="btn btn-primary">Submit Photos</a>
         </div>
-        <div style="float: right;" class="styled-select">
+        <div style="float: right;margin-right: 10px;" class="styled-select">
             <select id="media-filter-options">
                 <option value="latest">{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
                 <option value="popular">{{ 'galleries.gallery_filter_option_popular' | trans }}</option>
             </select>
         </div>
         <div class="page_container">
-            <div class="gallery-items content" style="min-height: 448px;width:636px;">
+            <div class="gallery-items content" style="min-height: 468px;width:636px;">
                 {% for media in medias %}
-                    <div class="gallery-media-thumb-wrapper">
+                    {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+                    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
                         <div class="gallery-media-thumb">
                             <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image) | imagine_filter('media_photo_thumb') }}" />
+                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                             </a>
                         </div>
                         <div style="width:135px;">
@@ -33,7 +34,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="page_navigation" style="float: right;"></div>
+            <div class="page_navigation" style="float: right;margin-right: 10px;"></div>
         </div>
     </div>
     <div class="right">

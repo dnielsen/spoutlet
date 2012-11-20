@@ -35,7 +35,12 @@
 
 .gallery-media-thumb-wrapper {
     display: inline-table;
-    margin-left: 5px;
+    margin: 0 0 0 22px;
+    padding: 5px 0 0 0;
+}
+
+.first {
+    margin: 0;
 }
 
 .gallery-media-thumb {
@@ -108,6 +113,10 @@
 
 .page_link {
     padding: 0 3px 0 3px;
+}
+
+.active_page {
+    text-decoration: underline;
 }
 
 .gallery-slider {

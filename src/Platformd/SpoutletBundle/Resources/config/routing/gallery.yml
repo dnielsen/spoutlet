@@ -37,7 +37,7 @@ gallery_media_show:
     defaults: { _controller: SpoutletBundle:Gallery:show, site: ~ }
 
 gallery_gallery_show:
-    pattern: /{slug}
+    pattern: /{slug}/{sort}
     defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~ }
 
 gallery_delete_media:

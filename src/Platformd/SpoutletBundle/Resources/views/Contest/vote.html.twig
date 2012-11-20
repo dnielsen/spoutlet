@@ -13,7 +13,8 @@
         <div id="contest-entries">
             {% if medias | length > 0 %}
                 {% for media in medias %}
-                    <div class="gallery-media-thumb-wrapper">
+                    {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+                    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
                         <div class="gallery-media-thumb">
                             <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                 <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
