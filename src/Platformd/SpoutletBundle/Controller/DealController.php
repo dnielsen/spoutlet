@@ -41,6 +41,10 @@ class DealController extends Controller
      */
     public function showAction($slug, Request $request)
     {
+        /*if ($slug == 'ravaged') {
+            return $this->render('SpoutletBundle:Deal:showRavaged.html.twig');
+        }*/
+
         $em                     = $this->getDoctrine()->getEntityManager();
         $site                   = $this->getCurrentSite();
         $deal                   = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug, $site);

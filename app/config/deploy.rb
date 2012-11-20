@@ -7,10 +7,15 @@ ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :app1,        "ec2-184-73-162-139.compute-1.amazonaws.com"
-set :app2,        "ec2-75-101-175-33.compute-1.amazonaws.com"
-set :app3,        "ec2-23-20-160-63.compute-1.amazonaws.com"
-set :app4,        "ec2-50-16-44-162.compute-1.amazonaws.com"
+set :app1,  "ec2-107-22-29-29.compute-1.amazonaws.com"
+set :app2,  "ec2-23-22-88-106.compute-1.amazonaws.com"
+set :app3,  "ec2-23-20-160-63.compute-1.amazonaws.com"
+set :app4,  "ec2-50-16-44-162.compute-1.amazonaws.com"
+set :app5,  "ec2-50-16-61-193.compute-1.amazonaws.com"
+set :app6,  "ec2-23-20-68-193.compute-1.amazonaws.com"
+set :app7,  "ec2-23-20-86-114.compute-1.amazonaws.com"
+set :app8,  "ec2-107-21-192-142.compute-1.amazonaws.com"
+set :app9,  "ec2-54-243-15-119.compute-1.amazonaws.com"
 
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
@@ -20,8 +25,8 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. beta)
 set :branch,      "master"
 
-role :web,        app1, app2, app3, app4                         # Your HTTP server, Apache/etc
-role :app,        app1, app2, app3, app4                         # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9                         # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9                         # This may be the same as your `Web` server
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 
 set  :keep_releases,  3

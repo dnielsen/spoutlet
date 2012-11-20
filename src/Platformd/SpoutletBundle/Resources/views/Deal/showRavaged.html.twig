@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+<div class="std_2col control_panel">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+    <div class="left">
+        <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        Deal Temporarily Unavailable
+                    </div>
+                </div>
+                <div class="widget-content">
+                    Due to extremely high demand, this deal is currently unavailable. Please try again soon.
+                </div>
+        </div>
+    </div>
+
+{% endblock %}
