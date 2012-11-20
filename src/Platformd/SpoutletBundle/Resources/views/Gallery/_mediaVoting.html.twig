@@ -6,13 +6,9 @@
     </div>
     <div class="widget-content">
         <div class="media-voting">
-            <span class="media-voting-label">Rate this image:</span>
-            <a class="media-voting-button" id="media-voting-vote-up" href="javascript:void(0);">
-                <img src="{{ asset('bundles/spoutlet/images/thumbs_up.gif') }}" alt="Vote Up!" style="height: 30px; width: 30px;" />
-            </a>
-            <a class="media-voting-button" id="media-voting-vote-down" href="javascript:void(0);">
-                <img src="{{ asset('bundles/spoutlet/images/thumbs_down.gif') }}" alt="Vote Down!" style="height: 30px; width: 30px;" />
-            </a>
+            <div class="media-voting-label">Rate this image:</div>
+            <a class="media-voting-button up" id="media-voting-vote-up" href="javascript:void(0);">&nbsp;</a>
+            <a class="media-voting-button down" id="media-voting-vote-down" href="javascript:void(0);"></a>
         </div>
         <div id="media-voting-vote-response" style="display: none;">
             Your vote has been placed successfully!

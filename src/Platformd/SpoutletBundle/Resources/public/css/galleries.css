@@ -101,9 +101,31 @@
     padding-top: 20px;
 }
 
-.media-voting-button {
-    padding-left: 10px;
-    padding-right: 5px;
+a.media-voting-button {
+    display: block;
+    width: 32px;
+    height: 32px;
+    float: left;
+}
+
+.up {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 64px;
+}
+
+.up:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 32px;
+}
+
+.down {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 32px 64px;
+}
+
+.down:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 32px 32px;
 }
 
 #media-voting-vote-response,
@@ -155,4 +177,9 @@
 .gallery-slider {
     width: 636px;
     height: 295px;
+}
+
+.flag {
+    padding-left: 20px;
+    background: url('/bundles/spoutlet/images/flag_content.png') no-repeat;
 }
