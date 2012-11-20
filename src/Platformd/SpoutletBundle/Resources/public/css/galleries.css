@@ -64,12 +64,17 @@
     width: 200px;
 }
 
+.social-media-share {
+    padding: 10px 0 10px 0;
+}
+
 #facebook-share {
     display: inline-table;
 }
 
 #twitter-share {
     display: inline-table;
+    margin-left: 20px;
 }
 
 .media-publish-error {
