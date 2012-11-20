@@ -1,7 +1,3 @@
-deal_show_ravaged:
-    pattern: /ravaged
-    defaults: { _controller: "SpoutletBundle:Deal:showRavaged" }
-
 deal_list:
     pattern:  /
     defaults: { _controller: "SpoutletBundle:Deal:index" }
