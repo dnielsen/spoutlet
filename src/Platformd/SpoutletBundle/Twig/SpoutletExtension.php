@@ -38,7 +38,8 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
-            'wrap' => new Twig_Filter_Method($this, 'wrap')
+            'wrap' => new Twig_Filter_Method($this, 'wrap'),
+            'add_links' => new Twig_Filter_Method($this, 'addLinks'),
         );
     }
 
@@ -68,6 +69,11 @@ class SpoutletExtension extends Twig_Extension
 
     public function wrap($obj, $length = 75, $breakWith = '<br />', $cut = true) {
         return wordwrap($obj, $length, $breakWith, $cut);
+    }
+
+    public function addLinks($string)
+    {
+        return preg_replace("/(http:\/\/[^\s]+)/", "<a href=\"$1\">$1</a>", $string);
     }
 
     public function getFunctions()

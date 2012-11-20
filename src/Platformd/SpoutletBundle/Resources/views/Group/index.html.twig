@@ -42,7 +42,7 @@
                             </a>
                             <div class="details">
                                 <div class="item-detail">Members: {{ group.members.count }}</div>
-                                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'AWA Staff' : group.owner.username }}</div>
+                                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
                             </div>
                         </div>
                     {% endfor %}
@@ -70,7 +70,7 @@
                                     </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
-                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'AWA Staff' : group.owner.username }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -105,7 +105,7 @@
                                     </a>
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
-                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'AWA Staff' : group.owner.username }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
                                     </div>
                                 </div>
                             {% endfor %}

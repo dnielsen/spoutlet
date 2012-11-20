@@ -77,7 +77,7 @@
                     </tr>
                     <tr>
                         <td>Organizer</td>
-                        <td><a href="javascript:void(0);">{{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'AWA Staff' : group.owner.username }}</a></td>
+                        <td><a href="javascript:void(0);">{{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</a></td>
                     </tr>
                     <tr>
                         <td>Members</td>
@@ -287,7 +287,7 @@
                             break;
                         case 'group-about':
                             loadAboutContent(id);
-                            
+
                             break;
                     }
 
