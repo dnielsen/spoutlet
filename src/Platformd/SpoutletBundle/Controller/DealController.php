@@ -10,6 +10,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DealController extends Controller
 {
+    public function showRavagedAction()
+    {
+        return $this->render('SpoutletBundle:Deal:showRavaged.html.twig');
+    }
+
+
     /**
      * The main deals "list" page
      * @Template
