@@ -40,6 +40,10 @@ gallery_gallery_show:
     pattern: /{slug}/{sort}
     defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~ }
 
+gallery_gallery_show_no_sort:
+    pattern: /{slug}
+    defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~ }
+
 gallery_delete_media:
     pattern: /delete-media/{id}
     defaults: { _controller: SpoutletBundle:Gallery:deleteMedia, site: ~ }

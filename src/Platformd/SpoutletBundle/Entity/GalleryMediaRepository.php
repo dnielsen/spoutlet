@@ -144,6 +144,36 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findTopMediaForGallery($gallery, $limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->select('gm', 'COUNT(v.id) AS vote_count')
+            ->leftJoin('gm.votes', 'v')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->andWhere('gmg.id = :galleryId')
+            ->andWhere('gm.deleted <> 1')
+            ->groupBy('gm.id')
+            ->orderBy('vote_count', 'DESC')
+            ->setParameter('galleryId', $gallery->getId())
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findLatestMediaForGallery($gallery, $limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->where('gmg.id = :galleryId')
+            ->andWhere('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('galleryId', $gallery->getId())
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findMediaForIndexPage($limit=5)
     {
         return $this->createQueryBuilder('gm')

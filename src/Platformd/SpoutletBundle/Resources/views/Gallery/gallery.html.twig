@@ -11,28 +11,47 @@
         </div>
         <div style="float: right;margin-right: 10px;" class="styled-select">
             <select id="media-filter-options">
-                <option value="latest">{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
-                <option value="popular">{{ 'galleries.gallery_filter_option_popular' | trans }}</option>
+                <option value="latest" {% if sort == 'latest' %}selected="selected"{% endif %}>{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
+                <option value="popular" {% if sort == 'popular' %}selected="selected"{% endif %}>{{ 'galleries.gallery_filter_option_popular' | trans }}</option>
             </select>
         </div>
         <div class="page_container">
             <div class="gallery-items content" style="min-height: 468px;width:636px;">
-                {% for media in medias %}
+                {% if sort == 'popular' %}
+                    {% for media in medias %}
+                        {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+                        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+                            <div class="gallery-media-thumb">
+                                <a href="{{ path('gallery_media_show', { id: media[0].id }) }}">
+                                    <img class="media-thumb" title="{{ media[0].title }}" src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                                </a>
+                            </div>
+                            <div style="width:135px;">
+                                <a class="media-title" href="{{ path('gallery_media_show', { id: media[0].id }) }}">{{ media[0].title }}</a>
+                                <div>by: {{ media[0].author.username }}</div>
+                            </div>
+                            <input type="hidden" value="{{ media[0].createdAt | date('m-d-Y') }}" class="media-date" />
+                            <input type="hidden" value="{{ media[0].views }}" class="media-popular" />
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {% for media in medias %}
                     {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-                    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
-                        <div class="gallery-media-thumb">
-                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                            </a>
+                        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+                            <div class="gallery-media-thumb">
+                                <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                                    <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                                </a>
+                            </div>
+                            <div style="width:135px;">
+                                <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                                <div>by: {{ media.author.username }}</div>
+                            </div>
+                            <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
+                            <input type="hidden" value="{{ media.views }}" class="media-popular" />
                         </div>
-                        <div style="width:135px;">
-                            <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                            <div>by: {{ media.author.username }}</div>
-                        </div>
-                        <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
-                        <input type="hidden" value="{{ media.views }}" class="media-popular" />
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="page_navigation" style="float: right;margin-right: 10px;"></div>
         </div>
@@ -80,7 +99,8 @@
             }
 
             $('#media-filter-options').change(function () {
-                $('.gallery-media-thumb-wrapper').sort(sortMedia).appendTo('.gallery-items');
+                var sort = $(this).val();
+                window.location = '{{ path('gallery_gallery_show_no_sort', { slug : gallery.slug }) }}' + '/' + sort;
             });
 
             $('.media-title').truncate();

@@ -424,11 +424,17 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Gallery not found.');
         }
 
-        $medias = $this->getGalleryMediaRepository()->findMediaForGalleryByGalleryId($gallery->getId(), 100);
+        if($sort == 'popular')
+        {
+            $medias = $this->getGalleryMediaRepository()->findTopMediaForGallery($gallery, 100);
+        } else {
+            $medias = $this->getGalleryMediaRepository()->findLatestMediaForGallery($gallery, 100);
+        }
 
         return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
             'gallery' => $gallery,
             'medias'  => $medias,
+            'sort'    => $sort,
         ));
     }
 
