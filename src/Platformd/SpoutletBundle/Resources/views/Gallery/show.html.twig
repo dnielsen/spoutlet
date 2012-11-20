@@ -41,7 +41,7 @@
                 <div class="page_container">
                     <div class="gallery-items content" style="width:636px;">
                         {% for media in otherMedia %}
-                            {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+                            {% set isFirstInRow = (loop.index - 1) is divisibleby(5) or loop.first  %}
                             <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% endif %}">
                                 <div class="gallery-media-thumb-small">
                                     <a href="{{ media_path_nice(media.image) }}" rel="lightbox[{{ media.author.username }}]">
