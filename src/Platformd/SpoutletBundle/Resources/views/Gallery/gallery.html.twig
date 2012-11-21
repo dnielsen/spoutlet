@@ -100,7 +100,7 @@
 
             $('#media-filter-options').change(function () {
                 var sort = $(this).val();
-                window.location = '{{ path('gallery_gallery_show_no_sort', { slug : gallery.slug }) }}' + '/' + sort;
+                window.location = '{{ path('gallery_gallery_show', { slug : gallery.slug }) }}' + '/' + sort;
             });
 
             $('.media-title').truncate();

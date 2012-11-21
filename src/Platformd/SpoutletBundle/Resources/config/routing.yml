@@ -92,6 +92,10 @@ SpoutletBundle_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/gallery.yml"
     prefix:   /galleries
 
+SpoutletBundle_media:
+    resource: "@SpoutletBundle/Resources/config/routing/media.yml"
+    prefix:   /media
+
 SpoutletBundle_contest:
     resource: "@SpoutletBundle/Resources/config/routing/contest.yml"
     prefix:   /contests

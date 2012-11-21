@@ -1,0 +1,11 @@
+gallery_delete_media:
+    pattern: /delete/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:deleteMedia, site: ~ }
+
+gallery_edit_media:
+    pattern: /edit/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:editMedia, site: ~ }
+
+gallery_feature_media:
+    pattern: /feature/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:feature, site: ~ }

@@ -2,6 +2,8 @@
 
 {% block title 'galleries.submit_photo_page_title' | trans %}
 
+
+
 {% block content %}
 <div class="xnotices" id="flash-publish-success" style="display:none;">
     <div class="successNotice notice">
@@ -35,6 +37,7 @@
 </div>
 
 {% if medias | length > 0 %}
+{% set initialId = medias[0].id %}
 <div class="std_2col" id="publish-media">
     <div class="left">
         <p>
@@ -88,7 +91,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" id="media-id" name="media-id" />
+                <input type="hidden" id="media-id" name="media-id" value="{{ initialId }}" />
             </div>
         </div>
         <div class="form-actions">
@@ -98,7 +101,7 @@
     <div class="right">
         {% for media in medias %}
             <div class="gallery-media-wrapper">
-                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active {% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
             </div>
         {% endfor %}
     </div>
@@ -122,8 +125,11 @@
 
             var t;
 
-            var clearForm = function() {
-                $('#media-title').val('');
+            var clearForm = function(publishing) {
+                if(publishing) {
+                    $('#media-title').val('');
+                }
+
                 $('#media-description').val('');
                 $('input:checkbox').removeAttr('checked');
                 $('#media-form-errors').empty();
@@ -143,6 +149,14 @@
 
                     $('.xnotices').fadeOut();
                 }, 10000);
+            }
+
+            var initMedia = function() {
+                var first = $('.gallery-media').first();
+
+                if(first) {
+                    first.click();
+                }
             }
 
             $('#publish-photo').click(function () {
@@ -180,8 +194,9 @@
                         if(data.success) {
                             $('#flash-publish-success').fadeIn();
                             $('#media-' + $('#media-id').val()).parent().remove();
-                            clearForm();
+                            clearForm(true);
                             hideFlash();
+                            initMedia();
                         } else {
                             $('#media-form-errors').empty();
                             if(data.errors.length > 0) {
@@ -201,6 +216,7 @@
                 var id = $(this).attr('data-id');
                 $('#media-title').val(title);
                 $('#media-id').val(id);
+                clearForm(false);
             });
 
             $('.gallery-media').qtip({
@@ -236,13 +252,15 @@
                 }
             );
 
-            hideFlash();
-
-
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
             });
+
+            initMedia();
+
+            hideFlash();
+
         });
     </script>
 {% endblock %}
