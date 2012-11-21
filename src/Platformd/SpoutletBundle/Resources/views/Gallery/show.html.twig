@@ -21,11 +21,38 @@
 {% block title media.title %}
 
 {% block content %}
+<h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
 <div class="media-show-page">
-    <div class="std_1col" style="padding:0 0 10px 0">
-        <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
-        <div style="padding: 3px 0 3px 0;"><a href="{{ path('gallery_index') }}">Photo Gallery</a> <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span><span style="color:#B3B3B3">{{ media.title }}</span></div>
-        <div style="padding: 3px 0 0 0;"><a href="{{ path('gallery_submit') }}" class="btn btn-primary">Submit Photos</a></div>
+    <div class="std_2col" style="padding:0 0 10px 0">
+        <div class="left">
+            <div style="padding: 3px 0 3px 0;float:left;">
+                <a href="{{ path('gallery_index') }}">Photo Gallery</a>
+                <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
+                {% if crumb %}
+                <a href="{{ crumb['value'] }}">{{ crumb['text'] }}</a>
+                <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
+                {% endif %}
+
+                <span style="color:#B3B3B3">{{ media.title }}</span>
+            </div>
+
+        </div>
+        <div class="right">
+        <div id="media-social">
+            <div class="fb-like"
+                data-send="false"
+                data-width="300"
+                data-layout="button_count"
+                data-show-faces="false"
+                data-colorscheme="dark"
+                style="vertical-align:top;zoom:1;*display:inline">
+            </div>
+            <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+        </div>
+        </div>
     </div>
     <div class="std_2col" style="min-height: 500px;">
         <div class="left">
@@ -75,13 +102,6 @@
                     </div>
                     <div class="photo-date">{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('M d, Y')}}</div>
                     <div class="description">{{ media.description }}</div>
-                    <div id="media-social">
-                        <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
-                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-
-                    </div>
                     <div id="widget-footer">
                         <p>
                             {% if canDelete %}
@@ -99,6 +119,9 @@
                                 {% endif %}
                                 </a>
                             {% endif %}
+                        </p>
+                        <p>
+                            <div style="padding: 3px 0 0 0;"><a href="{{ path('gallery_submit') }}">submit image</a></div>
                         </p>
                         <p>
                             <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">flag</a>
@@ -120,9 +143,10 @@
                     <div style="display:inline-table;width:140px;">
                         Points: <span id="media-upvotes">{{ upVotes }}</span>
                     </div>
+                    {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
                 </div>
             </div>
-            {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+
         </div>
     </div>
 </div>

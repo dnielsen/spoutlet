@@ -582,6 +582,8 @@ galleries:
 
     gallery_see_all: See All
 
+    gallery_go_to_galleries: Go to Galleries
+
 contests:
     index_page_title: Contests
     show_page_overview: Overview

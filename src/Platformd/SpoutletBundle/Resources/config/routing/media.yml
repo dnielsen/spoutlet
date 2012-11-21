@@ -9,3 +9,7 @@ gallery_edit_media:
 gallery_feature_media:
     pattern: /feature/{id}
     defaults: { _controller: SpoutletBundle:Gallery:feature, site: ~ }
+
+gallery_share_photo:
+    pattern: /share/photo
+    defaults: { _controller: SpoutletBundle:Gallery:sharePhoto, site: ~ }

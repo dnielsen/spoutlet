@@ -228,7 +228,7 @@ class GalleryController extends Controller
         return $errors;
     }
 
-    public function showAction($id)
+    public function showAction($id, Request $request)
     {
         $media          = $this->getGalleryMediaRepository()->find($id);
 
@@ -250,10 +250,13 @@ class GalleryController extends Controller
         $em->persist($media);
         $em->flush();
 
+        $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'         => $media,
             'otherMedia'    => $otherMedia,
             'upVotes'       => $upVotes,
+            'crumb'         => $crumb,
         ));
     }
 
@@ -415,7 +418,7 @@ class GalleryController extends Controller
         ));
     }
 
-    public function galleryAction($slug, $sort='latest')
+    public function galleryAction($slug, $sort='latest', Request $request)
     {
         $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
 
@@ -432,9 +435,9 @@ class GalleryController extends Controller
         }
 
         return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
-            'gallery' => $gallery,
-            'medias'  => $medias,
-            'sort'    => $sort,
+            'gallery'       => $gallery,
+            'medias'        => $medias,
+            'sort'          => $sort,
         ));
     }
 
@@ -547,6 +550,17 @@ class GalleryController extends Controller
         return $this->getEntityManager()->getRepository('SpoutletBundle:Country');
     }
 
+    private function getGalleryBreadCrumb($previousUrl, $galleries)
+    {
+        $breadCrumb = array();
+        foreach ($galleries as $gallery) {
+            if(strpos($previousUrl, $gallery->getSlug()) !== false) {
+                $breadCrumb['value'] = $previousUrl;
+                $breadCrumb['text'] = $gallery->getName();
+            }
+        }
+        return $breadCrumb;
+    }
 
     private function getCurrentUser()
     {
