@@ -17,8 +17,7 @@ class ContentReportRepository extends EntityRepository
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
-            WHERE item.deleted = false
-            AND report.deleted = false
+            WHERE report.deleted = false
             GROUP BY item
             ORDER BY reportCount DESC, report.reportedAt
             ',
@@ -51,10 +50,12 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
+
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
-            WHERE item.deleted = true
+            WHERE item.deleted = true AND report.deleted = true
             GROUP BY item
             HAVING reportCount > 0
             ORDER BY reportCount DESC, report.reportedAt
@@ -170,5 +171,17 @@ class ContentReportRepository extends EntityRepository
             $report->setDeleted(true);
             $em->persist($report);
         }
+
+    public function getLastReportDateForUser($user)
+    {
+        $result = $this->createQueryBuilder('cr')
+            ->where('cr.reporter = :user')
+            ->setParameter('user', $user)
+            ->orderBy('cr.reportedAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->execute();
+
+        return $result ? $result[0]->getReportedAt() : null;
     }
 }

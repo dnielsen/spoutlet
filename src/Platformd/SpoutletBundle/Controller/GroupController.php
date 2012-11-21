@@ -472,7 +472,9 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
-            ->add('article', 'textarea')
+            ->add('article', 'textarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -513,7 +515,9 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
-            ->add('article', 'textarea')
+            ->add('article', 'textarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
