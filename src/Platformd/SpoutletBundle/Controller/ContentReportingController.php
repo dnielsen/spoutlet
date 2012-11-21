@@ -106,55 +106,51 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
-        //$this->sendUserNotificationEmail($id, $type, $reason);
-        //$this->sendAdminNotificationEmail($id, $type, $reason);
+        $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
     }
 
-    private function sendUserNotificationEmail($id, $type, $reason)
+    private function sendUserReportedNotificationEmail($id, $type, $reason)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
         $emailTo = $item->getAuthor()->getEmail();
-        $url     = "http://www.alienwarearena.com/inappropriate";
+
+        $reason = ucwords(str_replace('_', ' ', $reason));
+
+        switch ($type) {
+            case 'GalleryMedia':
+                $itemType = ucfirst($item->getCategory());
+                break;
+
+            default:
+                $itemType = "Group ".str_replace('Group', '', $type);
+                break;
+        }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
 
-        $subject            = "Post flagged as inappropriate";
-        $message            = sprintf("Something you posted on Alienware Arena has been flagged by another user as inappropriate and has been temporarily removed from the site.
-
-            You can view the item at %s.
-
-            The item will be reviewed shortly by an admin to decide if it should be removed permanently.
-
-            Alienware Arena Team
-", $url);
-
-        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
-    }
-
-    private function sendAdminNotificationEmail($id, $type, $reason)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
-
-        $emailTo = "contentreporting@alienwarearena.com";
-        $url     = "http://www.alienwarearena.com/inappropriate";
-
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
-
-        $subject            = "Post flagged as inappropriate";
+        $subject            = "Your Content Has Been Flagged";
         $message            = sprintf("An item posted at %s has been flagged as inappropriate and requires review.
 
-            Alienware Arena Team
-", $url);
+Type: %s
+Name:  %s
+Reason: %s
 
-        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported Admin Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+
+Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+
+Alienware Arena Team
+
+", $itemType, $item->getTitle(), $reason);
+
+        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
 
     private function getEmailManager()
