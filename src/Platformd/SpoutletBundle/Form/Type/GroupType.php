@@ -34,7 +34,7 @@ class GroupType extends AbstractType
                 'label' => 'Group Category',
             ))
             ->add('groupAvatar', new MediaType(), array(
-                'image_label'   => 'Group Avatar',
+                'image_label'   => 'Group Header Image',
                 'image_help'    => 'Recommended size: 950x120',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
