@@ -1,13 +1,12 @@
-<div class="widget-33" style="height: 120px; margin-bottom: 15px;">
-    <div class="widget-header">
-        <div class="widget-title">
-            {{ 'galleries.show_photo_vote_label' | trans }}
+<div class="media-voting">
+    <div style="padding:5px 5px 0 5px;text-align: center;">
+        <div style="display:inline-table;font-size:16px;height:30px;vertical-align:middle;padding-right:10px;">
+            Vote Now
         </div>
-    </div>
-    <div class="widget-content">
-        <div class="media-voting">
-            <div class="media-voting-label">Rate this image:</div>
-            <a class="media-voting-button up" id="media-voting-vote-up" href="javascript:void(0);">&nbsp;</a>
+        <div style="display:inline-table;margin-top:3px">
+            <a class="media-voting-button up" id="media-voting-vote-up" href="javascript:void(0);"></a>
+        </div>
+        <div style="display:inline-table;margin-top:3px">
             <a class="media-voting-button down" id="media-voting-vote-down" href="javascript:void(0);"></a>
         </div>
         <div id="media-voting-vote-response" style="display: none;">
@@ -18,6 +17,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script type="text/javascript">
     $(function () {

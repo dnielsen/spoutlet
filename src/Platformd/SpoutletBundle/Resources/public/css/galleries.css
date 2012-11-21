@@ -7,13 +7,13 @@
     border: 1px solid #4A4A4A;
 }
 
-.active {
-    border: 1px solid #009CDA;
-}
-
 .photo-description {
     width: 350px;
     height: 150px;
+}
+
+.active {
+    border: 1px solid #009CDA;
 }
 
 .photo-title {
@@ -25,12 +25,29 @@
 }
 
 .photo-author {
+    display: inline-table;
+    width:100px;
+}
 
+.photo-author-link {
+    padding: 3px 0 0 0;
 }
 
 .photo-author img {
     width: 84px;
     height: 84px;
+}
+
+.photo-date {
+    display: inline-table;
+    vertical-align: top;
+    text-align: right;
+    width: 180px;
+}
+
+.description {
+    width: 100%;
+    padding: 3px 3px 3px 0;
 }
 
 .gallery-media-thumb-wrapper {
@@ -97,12 +114,16 @@
 }
 
 .media-voting {
-    text-align: center;
-    padding-top: 20px;
+    margin: 10px auto;
+    width: 100%;
+    display: inline-block;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background: #252525;
+    min-height: 20px;
 }
 
 a.media-voting-button {
-    display: block;
     width: 32px;
     height: 32px;
     float: left;
