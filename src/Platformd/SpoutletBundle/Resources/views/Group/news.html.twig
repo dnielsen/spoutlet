@@ -27,7 +27,7 @@
                 <h2>{{ article.title }}</h2>
                 <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
                 <div class="group-news-article">
-                    {{ article.article | add_links | nl2br }}
+                    {{ article.article | raw }}
                 </div>
             </div>
         {% else %}
