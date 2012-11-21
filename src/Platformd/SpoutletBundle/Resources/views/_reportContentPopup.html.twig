@@ -54,12 +54,8 @@
                 }),
                 contentType: 'json',
                 success: function(data) {
-                    if(!data.success) {
-                        $('#report-response').text(data.messageForUser);
-                        $('#report-response').fadeIn();
-                    } else {
-                        $('#report-response').fadeIn();
-                    }
+                    $('#report-response').text(data.messageForUser);
+                    $('#report-response').fadeIn();
                     $('#close-dialog-{{ reportContentType }}').text('OK');
                     $('#submit-report-{{ reportContentType }}').hide();
                 }

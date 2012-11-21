@@ -83,10 +83,16 @@ class ContentReportAdminController extends Controller
         $groupImage = $report->getGroupImage();
 
         if ($groupVideo) {
+            $groupVideo->setDeleted(false);
+            $groupVideo->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupVideo($groupVideo);
         } else if ($groupNews) {
+            $groupNews->setDeleted(false);
+            $groupNews->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupNews($groupNews);
         } else if ($groupImage) {
+            $groupImage->setDeleted(false);
+            $groupImage->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
         } else {
             $this->setFlash('error', 'Unknown content type.');

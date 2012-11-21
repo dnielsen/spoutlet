@@ -47,6 +47,9 @@ class ContentReportingController extends Controller
         $user   = $this->getCurrentUser();
         $site   = $this->getCurrentSite();
 
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $lastReport = $contentReportRepo->getLastReportDateForUser($user);
+
         if (!in_array($reason, $report->getValidReasons())) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid reason not given.")));
             return $response;
@@ -54,6 +57,11 @@ class ContentReportingController extends Controller
 
         if (!($user instanceof User)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to report content.")));
+            return $response;
+        }
+
+        if ($lastReport && $lastReport > new \DateTime('-1 hour')) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You may only report one item per hour.")));
             return $response;
         }
 
@@ -89,9 +97,68 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $em->persist($report);
+
+        $reportedItem = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+        $reportedItem->setDeleted(true);
+        $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+
+        $em->persist($reportedItem);
+
         $em->flush();
 
-        $response->setContent(json_encode(array("success" => true)));
+        //$this->sendUserNotificationEmail($id, $type, $reason);
+        //$this->sendAdminNotificationEmail($id, $type, $reason);
+
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
+    }
+
+    private function sendUserNotificationEmail($id, $type, $reason)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+
+        $emailTo = $item->getAuthor()->getEmail();
+        $url     = "http://www.alienwarearena.com/inappropriate";
+
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+
+        $subject            = "Post flagged as inappropriate";
+        $message            = sprintf("Something you posted on Alienware Arena has been flagged by another user as inappropriate and has been temporarily removed from the site.
+
+            You can view the item at %s.
+
+            The item will be reviewed shortly by an admin to decide if it should be removed permanently.
+
+            Alienware Arena Team
+", $url);
+
+        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+    }
+
+    private function sendAdminNotificationEmail($id, $type, $reason)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+
+        $emailTo = "contentreporting@alienwarearena.com";
+        $url     = "http://www.alienwarearena.com/inappropriate";
+
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+
+        $subject            = "Post flagged as inappropriate";
+        $message            = sprintf("An item posted at %s has been flagged as inappropriate and requires review.
+
+            Alienware Arena Team
+", $url);
+
+        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported Admin Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+    }
+
+    private function getEmailManager()
+    {
+        return $this->get('platformd.model.email_manager');
     }
 }
