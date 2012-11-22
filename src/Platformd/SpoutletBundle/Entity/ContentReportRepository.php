@@ -171,6 +171,7 @@ class ContentReportRepository extends EntityRepository
             $report->setDeleted(true);
             $em->persist($report);
         }
+    }
 
     public function getLastReportDateForUser($user)
     {
