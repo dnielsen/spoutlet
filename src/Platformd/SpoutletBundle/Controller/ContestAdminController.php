@@ -81,7 +81,7 @@ class ContestAdminController extends Controller
         ));
     }
 
-    public function chooseWinnerAction($slug)
+    public function chooseWinnersAction($slug)
     {
         $em                 = $this->getDoctrine()->getEntityManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
@@ -94,7 +94,7 @@ class ContestAdminController extends Controller
         }
 
         $this->addContestsBreadcrumb()->addChild($contest->getSlug());
-        $this->getBreadcrumbs()->addChild('Select Winner');
+        $this->getBreadcrumbs()->addChild('Select Winners');
 
         $entries = $galleryMediaRepo->findMediaForContest($contest);
 
@@ -112,34 +112,38 @@ class ContestAdminController extends Controller
         ));
     }
 
-    public function confirmWinnerAction($slug, $id)
+    public function confirmWinnersAction($slug, Request $request)
     {
         $em                 = $this->getDoctrine()->getEntityManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
-        $winner             = $galleryMediaRepo->find($id);
 
-        if (!$contest) {
-            throw $this->createNotFoundException('Unable to find contest.');
-        }
+        if ($request->getMethod() == 'POST') {
+            if (!$contest) {
+                throw $this->createNotFoundException('Unable to find contest.');
+            }
 
-        if (!$contest->isFinished()) {
-            $this->setFlash('error', 'This contest has not finished yet!');
+            if (!$contest->isFinished()) {
+                $this->setFlash('error', 'This contest has not finished yet!');
+                return $this->redirect($this->generateUrl('admin_contest_index'));
+            }
+
+            $winners = array($request->request->get('first_place'));
+
+            $winners[] = $request->request->get('second_place') ? : null;
+            $winners[] = $request->request->get('third_place') ? : null;
+
+            $contest->setWinners($winners);
+            $em->persist($contest);
+            $em->flush();
+
+            $this->setFlash('success', 'Winner successfully chosen!');
             return $this->redirect($this->generateUrl('admin_contest_index'));
         }
 
-        if ($contest->getWinner()) {
-            $this->setFlash('error', 'This contest already has a winner selected!');
-            return $this->redirect($this->generateUrl('admin_contest_index'));
-        }
-
-        $contest->setWinner($winner);
-        $em->persist($contest);
-        $em->flush();
-
-        $this->setFlash('success', 'Winner successfully chosen!');
-        return $this->redirect($this->generateUrl('admin_contest_index'));
+        $this->setFlash('error', 'Something went wrong!');
+        return $this->redirect($this->generateUrl('admin_contest_select_winner', array('slug' => $slug)));
     }
 
     public function metricsAction()

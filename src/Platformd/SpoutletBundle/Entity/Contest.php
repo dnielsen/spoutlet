@@ -203,10 +203,12 @@ class Contest implements LinkableInterface
     protected $entries;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * The published/unpublished/archived field
+     *
+     * @var string
+     * @ORM\Column(name="winners", type="array", nullable=true)
      */
-    protected $winner;
+    protected $winners;
 
     public function __construct()
     {
@@ -606,14 +608,14 @@ class Contest implements LinkableInterface
         $this->entries = $entries;
     }
 
-    public function getWinner()
+    public function getWinners()
     {
-        return $this->winner;
+        return $this->winners;
     }
 
-    public function setWinner($winner)
+    public function setWinners($winners)
     {
-        $this->winner = $winner;
+        $this->winners = $winners;
     }
 
     public function getRedemptionInstructionsArray()

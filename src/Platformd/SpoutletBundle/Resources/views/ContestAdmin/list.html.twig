@@ -47,12 +47,12 @@
                 <td>
                     <a href="{{ path('admin_contest_edit', { 'slug' : contest.slug }) }}">edit</a>
 
-                {% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
+                {% if (contest.votingEnd | date < 'now' | date) and (contest.winners == null) %}
                      | <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">select winner</a>
                 {% endif %}
 
-                {% if (contest.winner != null) %}
-                     | <a target="_blank" href="{{ path('gallery_media_show', { 'id' : contest.winner.id }) }}">view winner</a>
+                {% if (contest.winners != null) %}
+                     | <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">edit winner</a>
                 {% endif %}
                 </td>
             </tr>

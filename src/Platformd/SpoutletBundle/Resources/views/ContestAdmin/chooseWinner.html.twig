@@ -3,10 +3,10 @@
 {% block content %}
 <h1>Choose Winner for {{ contest.name }}</h1>
 
-{% if (contest.votingEnd | date < 'now' | date) and (contest.winner == null) %}
+{% if contest.votingEnd | date < 'now' | date %}
 
 <p class="alert alert-info help"><i class="icon-info-sign"></i>
-    The entries are shown below. Please select up to 3 winners.
+    The entries are shown below, sorted by vote count. Please select up to 3 winners.
 </p>
 
 <form action="{{ path('admin_contest_confirm_winner', { 'slug' : contest.slug }) }}" method="post" class="form-horizontal">
@@ -36,15 +36,15 @@
         {% for entry in entries %}
             <tr>
                 <td><img src="{{ media_path(entry.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ entry.title }}" /></td>
-                <td><a target="_blank" href="{{ media_path_nice(entry.image) }}">{{ media_path_nice(entry.image) }}</a></td>
+                <td><a target="_blank" href="{{ path('gallery_media_show', { 'id' : entry.id }) }}">{{ path('gallery_media_show', { 'id' : entry.id }) }}</a></td>
                 <td>{{ entry.author.username }}</td>
                 <td>{{ entry.createdAt | date }}</td>
                 <td>{{ entry.id in votes|keys ? votes[entry.id] : 0 }}</a></td>
                 <td>{{ entry.author.country }}</td>
                 <td>
-                    <input type="radio" name="first_place" value="{{ entry.id }}">1st place<br />
-                    <input type="radio" name="second_place" value="{{ entry.id }}">2nd place<br />
-                    <input type="radio" name="third_place" value="{{ entry.id }}">3rd place<br />
+                    <input type="radio" name="first_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[0] == entry.id) %} checked=true{% endif %}>1st place<br />
+                    <input type="radio" name="second_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[1] == entry.id) %} checked=true{% endif %}>2nd place<br />
+                    <input type="radio" name="third_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[2] == entry.id) %} checked=true{% endif %}>3rd place<br />
                 </td>
             </tr>
         {% endfor %}
@@ -55,6 +55,7 @@
 </table>
 
 <button type="submit" class="btn btn-primary choose-winners" formnovalidate>Submit</button>
+<input class="btn btn-primary" type="reset" value="Reset Form" />
 
 {% else %}
 
@@ -73,7 +74,7 @@
 
     jQuery(function($) {
         $("button.choose-winners").bind("click", function(event) {
-            if (!$("first_place").checked) {
+            if (!$("input[name='first_place']").is(':checked')) {
                 alert("You have not selected a first place entry");
                 event.stopPropagation();
                 event.preventDefault();
@@ -81,8 +82,8 @@
                 return false;
             }
 
-            if ($("first_place").checked && $("third_place").checked && !$("second_place").checked) {
-                alert("You have selected a third palce entry without awarding second place");
+            if ($("input[name='first_place']").is(':checked') && $("input[name='third_place']").is(':checked') && !$("input[name='second_place']").is(':checked')) {
+                alert("You have selected a third place entry without awarding second place");
                 event.stopPropagation();
                 event.preventDefault();
 
