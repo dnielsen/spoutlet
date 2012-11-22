@@ -23,6 +23,7 @@ class ContestType extends AbstractType
             ->add('game', 'entity', array(
                 'class'     => 'SpoutletBundle:Game',
                 'property'  => 'name',
+                'empty_value' => 'N/A'
             ))
             ->add('slug', new SlugType(), array(
                 'url_prefix' => '/contest/'

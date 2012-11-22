@@ -27,8 +27,12 @@ class GalleryType extends AbstractType
                 'expanded' => true,
                 'property' => 'name'
             ))
-            ->add('deleted', 'checkbox', array(
-                'label' => 'Deleted'
+            ->add('deleted', 'choice', array(
+                'label'     => 'Status',
+                'choices'   => array(
+                    0 => 'Published',
+                    1 => 'Unpublished',
+                ),
         ));
     }
 
