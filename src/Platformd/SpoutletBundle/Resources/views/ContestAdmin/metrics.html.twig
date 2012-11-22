@@ -15,7 +15,7 @@
     </thead>
     <tbody>
 
-    {% if contests[0][0] == null %}
+    {% if contests == null %}
 
     <tr>
         <td colspan=4>No contests found!</td>
@@ -25,17 +25,17 @@
 
         {% for contest in contests %}
             <tr>
-                <td>{{ contest[0].name }}</td>
+                <td>{{ contest.name }}</td>
                 <td>
-                    {% for site in contest[0].sites %}
+                    {% for site in contest.sites %}
                         [ {{ site.name }} ]
                     {% endfor %}
                 </td>
                 <td>
-                    <a href="{{ path('admin_contest_entries', { 'slug' : contest[0].slug }) }}">{{ entryCounts[contest[0].id] }}</a>
+                    <a href="{{ path('admin_contest_entries', { 'slug' : contest.slug }) }}">{{ entryCounts[contest.id] }}</a>
                 </td>
                 <td>
-                    {{ contest[1] }}
+                    {{ contest.id in votes|keys ? votes[contest.id] : 0 }}
                 </td>
             </tr>
         {% endfor %}

@@ -34,30 +34,13 @@ class ContestEntryRepository extends EntityRepository
             ->execute();
     }
 
-    public function findTopEntriesForContest($contest, $limit=5)
+    public function findMediaCountsForContests()
     {
-
-        /*die($this->createQueryBuilder('e')
-            ->select('e', 'COUNT(v.id) AS vc')
-            ->leftJoin('e.medias', 'm')
-            ->leftJoin('m.votes', 'v')
-            ->andWhere('e.contest = :contest')
-            ->andWhere('e.deleted <> 1')
-            ->orderBy('vc', 'DESC')
-            ->setMaxResults($limit)
-            ->setParameter('contest', $contest)
-            ->getQuery()->getSql());exit;*/
-
         return $this->createQueryBuilder('e')
-            ->select('e', 'COUNT(v.id) AS vc')
-            ->leftJoin('e.medias', 'm')
-            ->leftJoin('m.votes', 'v')
-            ->andWhere('e.contest = :contest')
-            ->andWhere('e.deleted <> 1')
-            ->andWhere('v.voteType = "up"')
-            ->orderBy('vc', 'DESC')
-            ->setMaxResults($limit)
-            ->setParameter('contest', $contest)
+            ->select('c.id', 'COUNT(gm.id) AS entry_count')
+            ->leftJoin('e.medias', 'gm')
+            ->leftJoin('e.contest', 'c')
+            ->groupBy('gm.contestEntry')
             ->getQuery()
             ->execute();
     }

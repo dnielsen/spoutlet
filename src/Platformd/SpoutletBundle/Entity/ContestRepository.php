@@ -20,13 +20,9 @@ class ContestRepository extends EntityRepository
             ->execute();
     }
 
-    public function findAllForMetrics()
+    public function findAllAlphabetically()
     {
         return $this->createQueryBuilder('c')
-            ->leftJoin('c.entries', 'e')
-            ->leftJoin('e.medias', 'm')
-            ->leftJoin('m.votes', 'v')
-            ->select('c', 'COUNT(v)')
             ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->execute();

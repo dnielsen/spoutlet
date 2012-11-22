@@ -42,4 +42,35 @@ class VoteRepository extends EntityRepository
 
         return !$existingVote;
     }
+
+    public function getVotesForContests()
+    {
+        return $this->createQueryBuilder('v')
+            ->select('c.id', 'COUNT(v.id) AS vote_count')
+            ->leftJoin('v.galleryMedia', 'gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
+            ->andWhere('gm.contestEntry IS NOT NULL')
+            ->andWhere('v.voteType = :up')
+            ->setParameter('up', 'up')
+            ->groupBy('c.id')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getVotesForContest($contest)
+    {
+        return $this->createQueryBuilder('v')
+            ->select('gm.id', 'COUNT(v.id) AS vote_count')
+            ->leftJoin('v.galleryMedia', 'gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
+            ->andWhere('c = :contest')
+            ->andWhere('v.voteType = :up')
+            ->setParameter('contest', $contest)
+            ->setParameter('up', 'up')
+            ->groupBy('gm.id')
+            ->getQuery()
+            ->execute();
+    }
 }

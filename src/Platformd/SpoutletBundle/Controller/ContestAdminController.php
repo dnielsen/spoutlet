@@ -86,6 +86,7 @@ class ContestAdminController extends Controller
         $em                 = $this->getDoctrine()->getEntityManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+        $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
 
         if (!$contest) {
@@ -95,11 +96,19 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb()->addChild($contest->getSlug());
         $this->getBreadcrumbs()->addChild('Select Winner');
 
-        $entries = $galleryMediaRepo->findTopMediaForContest($contest);
+        $entries = $galleryMediaRepo->findMediaForContest($contest);
+
+        $voteData = $voteRepo->getVotesForContest($contest);
+        $votes = array();
+
+        foreach ($voteData as $itemVotes) {
+            $votes[$itemVotes['id']] = $itemVotes['vote_count'];
+        }
 
         return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
             'entries'   => $entries,
             'contest'   => $contest,
+            'votes'     => $votes,
         ));
     }
 
@@ -135,28 +144,30 @@ class ContestAdminController extends Controller
 
     public function metricsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForMetrics();
+        $em         = $this->getDoctrine()->getEntityManager();
+        $contests   = $em->getRepository('SpoutletBundle:Contest')->findAllAlphabetically();
+        $voteResult = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
         $entryCounts = array();
+        $votes       = array();
 
-        foreach ($contests as $contest) {
-            if ($contest[0] === null) {
-                break;
-            }
+        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $mediaCounts        = $contestEntryRepo->findMediaCountsForContests();
 
-            $entryCounts[$contest[0]->getId()] = $contest[0]->getEntries()
-                        ->filter(function($x) {
-                            return
-                            $x->getDeleted() != 1 ; })
-                        ->count();
+        foreach ($mediaCounts as $count) {
+            $entryCounts[$count['id']] = $count['entry_count'];
+        }
+
+        foreach ($voteResult as $vote) {
+            $votes[$vote['id']] = $vote['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:metrics.html.twig', array(
             'contests'      => $contests,
             'entryCounts'   => $entryCounts,
+            'votes'         => $votes,
         ));
     }
 
