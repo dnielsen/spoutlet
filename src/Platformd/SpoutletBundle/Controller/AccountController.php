@@ -132,21 +132,8 @@ class AccountController extends Controller
             ->findAllPublishedByUserNewestFirst($this->getUser())
         ;
 
-        // 16 images per page
-        $itemsPerPage = 20;
-        $totalPageCount = ceil(count($images) / $itemsPerPage);
-
-        $pages = array();
-        $offset = 0;
-        for($i = 0; $i < $totalPageCount; $i++)
-        {
-            $pages[] = array(array_slice($images, $offset, $itemsPerPage));
-            $offset += $itemsPerPage;
-        }
-
         return $this->render('SpoutletBundle:Account:photos.html.twig', array(
             'images'    => $images,
-            'pages'     => $pages,
         ));
     }
 

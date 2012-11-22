@@ -1,61 +1,57 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.user.account.photos" | trans }}{% endblock %}
+{% block title %}{{ "platformd.user.account.gallery" | trans }}{% endblock %}
 
 {% block content %}
 <div class="control_panel">
 
-    <div class="widget-header">
-        <div class="widget-title">
-            <h2>{{ "platformd.account_page.photos.my_photos" | trans }}</h2>
-        </div>
-    </div>
-    <a class="btn btn-primary" href="{{ path('gallery_submit') }}" style="margin-bottom:10px;">{{ "platformd.account_page.photos.submit" | trans }}</a>
-    <div class="widget-content">
-        {% if pages | length > 0 %}
-            <div class="scrollable" id="scrollable-images" style="height: 800px; background: #191919;">
-                <div class="items">
-                    {% for pageNumber,page in pages %}
-                        <div class="items-wrapper">
-                        {% for images in page %}
-                            {% for image in images %}
-                                <div class="account-image-item">
-                                    <div class="account-image-image">
-                                        <a href="{{  media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ image.author.username }}]" style="border:none;">
-                                            <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
-                                        </a>
-                                    </div>
-                                    <div class="account-image-title">
-                                        <a href="{{ path('gallery_edit_media', { 'id': image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
-                                            {{ image.title }}
-                                        </a>
-                                    </div>
-                                    <div>
-                                        Uploaded: {{ image.createdAt | date('m/d/Y') }}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                        <div class="account-image-pagination">
-                            Page {{ pageNumber + 1 }} of {{ pages | length}}
-                        </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div id="scroll-actions" style="margin-top: 10px;">
-                <a class="prev browse image-scroll-prev">Previous</a>
-                <a class="next browse image-scroll-next">See More</a>
-            </div>
+    <div class="std_1col">
 
-        {% else %}
-        <div style="height: 500px; width: 600px;">
-            <p>No images yet... please come back later!</p>
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2>{{ "platformd.user.account.gallery" | trans }}</h2>
+            </div>
         </div>
-        {% endif %}
-    </div>
-    <div class="widget-footer">
-        &nbsp;
+        <a class="btn btn-primary" href="{{ path('gallery_submit') }}" style="margin-bottom:10px;">{{ "platformd.account_page.photos.submit" | trans }}</a>
+        <div class="widget-content">
+            {% if images | length > 0 %}
+
+                <div class="page_container">
+                    <div class="gallery-items content" style="width: 950px;">
+                        {% for image in images %}
+                            {% set isFirstInRow = (loop.index - 1) is divisibleby(5) or loop.first  %}
+                            <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% else %} "style="padding-left:7px;{% endif %}">
+                                <div class="account-image-image">
+                                    <a href="{{  media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ image.author.username }}]" style="border:none;">
+                                        <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
+                                    </a>
+                                </div>
+                                <div style="width:115px;">
+                                    <a href="{{ path('gallery_edit_media', { 'id': image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
+                                        {{ image.title }}
+                                    </a>
+                                </div>
+                                <div>
+                                    Uploaded: {{ image.createdAt | date('m/d/Y') }}
+                                </div>
+
+                                <input type="hidden" value="{{ image.createdAt | date('m-d-Y') }}" class="media-date" />
+                                <input type="hidden" value="{{ image.views }}" class="media-popular" />
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="page_navigation" style="float: right; padding-top: 10px;"></div>
+                </div>
+
+            {% else %}
+            <div>
+                <p>No images yet... please come back later!</p>
+            </div>
+            {% endif %}
+        </div>
+        <div class="widget-footer">
+            &nbsp;
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -64,20 +60,23 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
-
+    <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
+        $(function () {
 
-    $(function() {
-        // initialize scrollable
-        $(".scrollable").scrollable();
-    });
+            $('.media-title').truncate();
 
+            $('.page_container').pajinate({
+                    items_per_page: 10,
+                    show_first_last: false,
+                });
+        });
     </script>
-
 {% endblock %}
