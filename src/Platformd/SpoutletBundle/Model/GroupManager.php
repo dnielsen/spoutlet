@@ -65,6 +65,10 @@ class GroupManager
             $group->setMembers($members);
         }
 
+        $groupDescription = $group->getDescription();
+        $groupDescription = strip_tags($groupDescription, '<p><br><a><strong><em><ol><ul><li>');
+        $group->setDescription($groupDescription);
+
         $this->em->persist($group);
 
         $this->handleMediaFields($group);
@@ -80,6 +84,10 @@ class GroupManager
             $user = $this->securityContext->getToken()->getUser();
             $groupNews->setAuthor($user);
         }
+
+        $article = $groupNews->getArticle();
+        $article = strip_tags($article, '<p><br><a><strong><em><ol><ul><li>');
+        $groupNews->setArticle($article);
 
         $this->em->persist($groupNews);
 
