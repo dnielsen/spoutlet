@@ -69,7 +69,7 @@ class GalleryController extends Controller
 
             $em->flush();
 
-            $this->setFlash('success', 'Your images were uploaded successfully.');
+            $this->setFlash('success', $this->trans('galleries.submit_photo_upload_success'));
             return $this->redirect($this->generateUrl('gallery_submit'));
         }
 
