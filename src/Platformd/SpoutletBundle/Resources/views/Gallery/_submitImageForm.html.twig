@@ -18,17 +18,7 @@
             <li>{{ 'galleries.submit_photo_restriction5' | trans}}</li>
         </ul>
     </p>
-    <ul class="medias-list clearfix row-fluid" data-prototype="{{ form_widget(form.galleryImages.get('prototype')) | e }}">
-        {# see the CSS file this explanation #}
-        <li class="dummy" style="list-style: none;"></li>
-        {% for mediaForm in form.galleryImages %}
-            <li class="span5 image-li existing-element" style="list-style: none;">{{ form_row(mediaForm) }}</li>
-
-            {% if loop.index is even %}
-                <li class="clear"></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    <input type="file" id="galleryImages" />
 
     {{ form_widget(form.galleryImages) }}
 </div>

@@ -23,7 +23,7 @@
 <div class="std_2col">
     <div class="left">
         <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
-        <form action="{{ path('gallery_submit') }}" method="post" {{ form_enctype(form) }}>
+        <form action="{{ path('gallery_submit') }}" id="submit-photo-form" method="post" enctype="multipart/form-data">
             {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">Save Photos</button>
@@ -119,6 +119,8 @@
 {% block javascripts %}
     {{ parent() }}
     {% include 'SpoutletBundle:Gallery:_formJavascript.html.twig' %}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript">
         $(function() {
 
@@ -256,8 +258,15 @@
                 return false;
             });
 
-            initMedia();
+            $('#galleryImages').MultiFile({
+                afterFileSelect: function(element, value, master_element) {
+                    var total = $('.MultiFile-applied').length - 1;
+                    var name = element.getAttribute('name');
+                    element.name = 'platformd_spoutletbundle_submitimagetype[galleryImages][' + total + '][fileObject]';
+                }
+            });
 
+            initMedia();
             hideFlash();
 
         });

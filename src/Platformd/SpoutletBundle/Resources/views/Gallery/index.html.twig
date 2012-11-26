@@ -5,8 +5,6 @@
 {% block title 'galleries.index_page_title' | trans %}
 
 {% block content %}
-
-<h3 style="font-weight:bold;font-size:17px;padding:0 0 10px 0;">{{ 'galleries.index_page_header' | trans }}</h3>
 <div class="std_2col">
     <div class="left">
         {% if hasPhotos %}
@@ -25,7 +23,7 @@
             <div class="widget-header">
                 <div class="widget-title">
                     <div id="media-gallery-name" style="float: left;">
-                        {{ 'galleries.gallery_filter_option_featured' | trans }}
+                        {{ 'galleries.index_page_header' | trans }}
                     </div>
                     <div style="float: right;" class="styled-select">
                         <select id="media-filter-options">
@@ -93,7 +91,7 @@
                     }
                 });
 
-                $('#media-gallery-name').text(galleryName);
+                //$('#media-gallery-name').text(galleryName);
             }
 
             $('#media-filter-options').change(function() {

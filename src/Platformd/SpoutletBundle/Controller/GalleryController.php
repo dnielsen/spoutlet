@@ -26,7 +26,7 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        $nivoSliderMedia = $this->getGalleryMediaRepository()->findMediaForNivoSlider();
+        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMedia(5);
         $options = $this->getFilterOptions();
 
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
