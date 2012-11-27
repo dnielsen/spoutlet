@@ -23,7 +23,7 @@
                 <div style="padding: 0 0 0 5px;">
                     <div class="photo-author">
                         <img src="{{ asset(get_avatar_url(winner.author)) }}" alt="{{ winner.author.username }}" />
-                        <div class="photo-author-link"><a href="javascript:void(0);">{{ winner.author.username }}</a></div>
+                        <div class="photo-author-link"><a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></div>
                     </div>
                     <div style="font-size: 21px;">{{ winner.title }}</div>
                     <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ winner.createdAt | date('M d, Y')}}</div>
