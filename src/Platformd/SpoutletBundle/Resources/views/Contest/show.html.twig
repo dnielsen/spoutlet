@@ -30,17 +30,16 @@
             </div>
             <div class="widget-content">
                 <div id="contest-instructions">
-                    <ul>
+                    <ol>
                         {% include 'SpoutletBundle:Contest:_steps.html.twig' with { 'contest' : contest } %}
                         {% if (instructions is not empty)  %}
                             {% for instruction in instructions %}
                             <li>
-                                <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
                                 <span class="item controlled-spacing">{{ instruction | raw }}</span>
                             </li>
                             {% endfor %}
                         {% endif %}
-                    </ul>
+                    </ol>
                     <div class="form-msg-error" id="contest_error" style="display:none;margin-left:0;width:auto;"></div>
                     {% if isEligible %}
                     <div style="padding-top: 10px;">

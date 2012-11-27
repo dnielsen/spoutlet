@@ -1,8 +1,6 @@
-#contest-instructions { }
-#contest-instructions ul { margin: 5px; padding: 0;}
-#contest-instructions ul li { list-style-position: inside; list-style: none; padding: 2px 0 2px 0; }
-#contest-instructions ul li span.item { color: #BFBFBF;}
-#contest-instructions ul li span.step-number { color: #BFBFBF; padding-right: 3px;}
+#contest-instructions ol { margin: 0; padding: 0;}
+#contest-instructions ol li { list-style-position: inside; background: url('/bundles/giveaway/images/giveaway-list-item-bg.png') 6px 49% no-repeat #252525; border-radius: 5px 5px 5px 5px; margin: 3px; padding: 8px 5px 8px 14px; font-weight: bold; }
+#contest-instructions ol li span.item { vertical-align: middle; display: inline-block; font-size: 12px; font-weight: normal; width: 88%; padding-left: 7px; }
 
 .contest-header {
     padding: 5px 0 5px 0;
