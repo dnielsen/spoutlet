@@ -411,3 +411,7 @@ liip_imagine:
                 thumbnail: { size: [400, 400], mode: inset }
 
 knp_time: ~
+
+spoutlet:
+    elasticache_servers:
+        "127.0.0.1": 11211

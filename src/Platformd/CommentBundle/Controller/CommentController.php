@@ -16,7 +16,6 @@ use FOS\CommentBundle\Entity\Thread;
  */
 class CommentController extends BaseCommentController
 {
-
     public function deleteAction($id)
     {
         $manager = $this->container->get('fos_comment.manager.comment');
@@ -38,6 +37,8 @@ class CommentController extends BaseCommentController
         // so we just use the ORM directly
         $threadSlug = $comment->getThread()->getId();
 
+        $this->getCache()->delete($threadSlug);
+
         if($threadSlug == 'custom-military-page') {
             return new RedirectResponse($router->generate('military').'#commentsView');
         }
@@ -54,6 +55,8 @@ class CommentController extends BaseCommentController
     protected function onCreateSuccess(Form $form)
     {
         $threadId = $form->getData()->getThread()->getId();
+
+        $this->getCache()->delete($threadId);
 
         // temporarily here for custom military page. will be removed when groups are implemented.
         if($threadId == 'custom-military-page') {
@@ -134,5 +137,10 @@ class CommentController extends BaseCommentController
     protected function getCommentManager()
     {
         return $this->container->get('fos_comment.manager.comment');
+    }
+
+    private function getCache()
+    {
+        return $this->container->get('platformd.cache');
     }
 }

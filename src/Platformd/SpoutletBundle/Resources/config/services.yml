@@ -156,3 +156,6 @@ services:
         class: Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    platformd.cache:
+        class: Memcached
