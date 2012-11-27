@@ -15,3 +15,27 @@
 #contest-voting-rules {
     padding-bottom: 10px;
 }
+
+#contest-header {
+    width: 950px;
+    height: 160px;
+}
+
+#contest-header ul {
+    margin: 0;
+    padding: 136px 5px 0 5px;
+    width: 100%;
+    list-style:none;
+}
+
+#contest-header li {
+    float: left;
+    font-weight: bold;
+    padding: 0 17px;
+}
+
+#contest-header li a {
+    color: #e1e1e1;
+    text-transform: capitalize;
+    text-shadow:2px 2px 5px #000000;
+}

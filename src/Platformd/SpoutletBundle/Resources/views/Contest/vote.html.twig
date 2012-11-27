@@ -3,8 +3,10 @@
 {% block title contest.name %}
 
 {% block content %}
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
 <h3 class="contest-header">{{ contest.name }}</h3>
-{% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
 <div class="std_2col">
     <div class="left">
         <div id="contest-voting-rules">

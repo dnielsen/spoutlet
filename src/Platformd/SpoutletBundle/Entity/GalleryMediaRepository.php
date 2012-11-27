@@ -191,4 +191,15 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findMediaForContestWinners($contest)
+    {
+        $qb = $this->createQueryBuilder('gm');
+
+        return $qb->where($qb->expr()->in('gm.id', $contest->getWinners()))
+            ->andWhere('gm.deleted = false')
+            ->andWhere('gm.published = true')
+            ->getQuery()
+            ->execute();
+    }
 }

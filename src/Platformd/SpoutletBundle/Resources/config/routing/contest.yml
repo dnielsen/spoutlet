@@ -22,3 +22,7 @@ contest_rules_show:
     pattern: /rules/{slug}
     defaults: { _controller: SpoutletBundle:Contest:rules }
 
+contest_winners:
+    pattern: /winners/{slug}
+    defaults: { _controller: SpoutletBundle:Contest:winners }
+

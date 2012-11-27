@@ -126,6 +126,15 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
+        $mediaCount = $entry->getMedias()
+            ->filter(function($x) {
+                return $x->getDeleted() != 1;
+            });
+
+        $entriesLeft        = $contest->getMaxEntries() - count($mediaCount);
+        $isUnlimited        = $contest->getMaxEntries() == 0;
+        $submissionEnded    = new \DateTime("now") > $contest->getSubmissionEnd();
+
         if ($request->getMethod() == 'POST')
         {
             $em = $this->getEntityManager();
@@ -149,12 +158,9 @@ class ContestController extends Controller
 
             $em->flush();
 
-            $this->setFlash('success', 'Your images were uploaded successfully.');
+            $this->setFlash('success', $this->trans('galleries.submit_photo_upload_success'));
             return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
-
-        $entriesLeft = $contest->getMaxEntries() > 0 ? $contest->getMaxEntries() - count($entry->getMedias()) : "unlimited";
-        $submissionEnded = new \DateTime("now") > $contest->getSubmissionEnd();
 
         return $this->render('SpoutletBundle:Contest:submit.html.twig', array(
             'form'              => $form->createView(),
@@ -162,6 +168,7 @@ class ContestController extends Controller
             'medias'            => $medias,
             'galleries'         => $galleries,
             'entriesLeft'       => $entriesLeft,
+            'isUnlimited'       => $isUnlimited,
             'submissionEnded'   => $submissionEnded,
             'groups'            => $groups,
         ));
@@ -189,6 +196,20 @@ class ContestController extends Controller
 
         return $this->render('SpoutletBundle:Contest:rules.html.twig', array(
             'contest' => $contest,
+        ));
+    }
+
+    public function winnersAction($slug)
+    {
+        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
+
+        $this->ensureContestIsValid($contest);
+
+        $winners = $this->getGalleryMediaRepository()->findMediaForContestWinners($contest);
+
+        return $this->render('SpoutletBundle:Contest:winners.html.twig', array(
+            'contest' => $contest,
+            'winners' => $winners,
         ));
     }
 

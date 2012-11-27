@@ -3,21 +3,15 @@
 {% block title contest.name %}
 
 {% block content %}
-<h3 class="contest-header" style="text-align:center;">{{ contest.name }}</h3>
-<div style="text-align:center;">
-    {% include 'SpoutletBundle:Contest:_enterVoteLinks.html.twig' %}
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
 </div>
-{% if contest.banner %}
-<div class="std_1col" style="text-align: center;">
-    <img src="{{ media_path(contest.banner) }}" alt="{{ contest.name }}" />
-</div>
-{% endif %}
 <div class="std_2col">
     <div class="left">
         <div class="widget-66">
             <div class="widget-header">
                 <div class="widget-title">
-                    {{ 'contests.show_page_overview' | trans }}
+                    {{ contest.name }}
                 </div>
             </div>
             <div class="widget-content">

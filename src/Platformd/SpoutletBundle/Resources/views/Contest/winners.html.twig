@@ -1,0 +1,46 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
+<div class="std_1col">
+    <div id="contest-entries">
+        <table>
+        {% for winner in winners %}
+        <tr>
+            <td colspan="2"><h3>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}</h3></td>
+        </tr>
+        <tr>
+            <td style="width:636px;">
+                <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
+                    <img src="{{ media_path(winner.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="{{ winner.title }}" />
+                </a>
+            </td>
+            <td style="vertical-align:top;width:267px;">
+                <div style="padding: 0 0 0 5px;">
+                    <div class="photo-author">
+                        <img src="{{ asset(get_avatar_url(winner.author)) }}" alt="{{ winner.author.username }}" />
+                        <div class="photo-author-link"><a href="javascript:void(0);">{{ winner.author.username }}</a></div>
+                    </div>
+                    <div style="font-size: 21px;">{{ winner.title }}</div>
+                    <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ winner.createdAt | date('M d, Y')}}</div>
+                    <p>{{ winner.description }}</p>
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <p>{{ 'contests.no_winners' | trans }}</p>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}

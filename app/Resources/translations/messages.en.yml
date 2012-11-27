@@ -590,6 +590,8 @@ contests:
     show_page_instructions: Instructions
     show_page_enter_contest: Enter Contest
     show_page_submit_photos: Submit Photos
+    show_page_contest: Contest
+    show_page_winners: Winners
     show_page_official_rules: Official Rules
     show_page_vote_now: Vote Now
     show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
@@ -600,3 +602,6 @@ contests:
     submit_page_no_entry: You must enter the contest before you can submit %s(s).
     submit_page_entry_max_reached: You have entered the maximum number of photos for this entry.
     submit_page_submission_ended: Submissions are no longer being accepted.
+    submit_page_back_to_contest: Back to Contest
+    no_winners: No winners have been selected yet. Please check back later.
+    place: Place

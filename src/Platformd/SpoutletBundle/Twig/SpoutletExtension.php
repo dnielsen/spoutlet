@@ -40,6 +40,7 @@ class SpoutletExtension extends Twig_Extension
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
             'wrap' => new Twig_Filter_Method($this, 'wrap'),
             'add_links' => new Twig_Filter_Method($this, 'addLinks'),
+            'add_ordinal_suffix' => new Twig_Filter_Method($this, 'addOrdinalSuffix'),
         );
     }
 
@@ -183,6 +184,20 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $base.$path;
+    }
+
+    /**
+     * @return string
+     */
+    public function addOrdinalSuffix($num) {
+        if (!in_array(($num % 100),array(11,12,13))){
+          switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+          }
+        }
+        return $num.'th';
     }
 
      /**

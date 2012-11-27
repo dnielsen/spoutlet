@@ -17,11 +17,13 @@
         </div>
     </div>
 </div>
-
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
 <div class="std_2col">
     <div class="left">
         <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
-        {% if (entriesLeft > 0) or (entriesLeft == "unlimited") %}
+        {% if (entriesLeft > 0) or (isUnlimited) %}
             {% if not submissionEnded %}
                 <form action="{{ path('contest_submit', {slug: contest.slug}) }}" method="post" {{ form_enctype(form) }}>
                     {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
@@ -33,9 +35,11 @@
                 </form>
             {% else %}
                 <p>{{ 'contests.submit_page_submission_ended' | trans }}</p>
+                <a href="{{ path('contest_show', {slug: contest.slug}) }}" class="btn">{{ 'contests.submit_page_back_to_contest' | trans }}</a>
             {% endif %}
         {% else %}
         <p>{{ 'contests.submit_page_entry_max_reached' | trans }}</p>
+        <a href="{{ path('contest_show', {slug: contest.slug}) }}" class="btn">{{ 'contests.submit_page_back_to_contest' | trans }}</a>
         {% endif %}
     </div>
     <div class="right">
@@ -44,6 +48,7 @@
 </div>
 
 {% if medias | length > 0 %}
+{% set initialId = medias[0].id %}
 <div class="std_2col" id="publish-media">
     <div class="left">
         <p>
@@ -97,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" id="media-id" name="media-id" />
+                <input type="hidden" id="media-id" name="media-id" value="{{ initialId }}" />
             </div>
         </div>
         <div class="form-actions">
@@ -119,13 +124,15 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% include 'SpoutletBundle:Contest:_formJavascript.html.twig' %}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript">
         $(function() {
 
@@ -152,6 +159,14 @@
 
                     $('.xnotices').fadeOut();
                 }, 10000);
+            }
+
+            var initMedia = function() {
+                var first = $('.gallery-media').first();
+
+                if(first) {
+                    first.click();
+                }
             }
 
             $('#publish-photo').click(function () {
@@ -245,13 +260,24 @@
                 }
             );
 
-            hideFlash();
-
-
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
             });
+
+            $('#galleryImages').MultiFile({
+                max: {{ entriesLeft }},
+                accept: 'gif|jpg|png',
+                afterFileSelect: function(element, value, master_element) {
+                    var total = $('.MultiFile-applied').length - 1;
+                    var name = element.getAttribute('name');
+                    element.name = 'platformd_spoutletbundle_submitimagetype[galleryImages][' + total + '][fileObject]';
+                }
+            });
+
+            hideFlash();
+            initMedia();
+
         });
     </script>
 {% endblock %}

@@ -1,0 +1,9 @@
+<div id="contest-header" {% if contest.banner %}style="background:url('{{ media_path(contest.banner) }}') top left no-repeat;"{% endif %}>
+    <ul class="links">
+        <li><a href="{{ path('contest_show', {slug: contest.slug}) }}">{{ 'contests.show_page_contest' | trans }}</a></li>
+        <li><a href="{{ path('contest_vote', {slug: contest.slug})}}">{{ 'contests.show_page_vote_now' | trans }}</a></li>
+        {% if contest.isFinished %}
+        <li><a href="{{ path('contest_winners', {slug: contest.slug})}}">{{ 'contests.show_page_winners' | trans }}</a></li>
+        {% endif %}
+    </ul>
+</div>
