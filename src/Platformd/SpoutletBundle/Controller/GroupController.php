@@ -841,14 +841,8 @@ Alienware Arena Team
 
         $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
-        if ($commentTotal && isset($commentTotal[0]) && isset($commentTotal[0]['numComments'])) {
-            $commentCount = $commentTotal[0]['numComments'];
-        } else {
-            $commentCount = 0;
-        }
-
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'commentTotal' => $commentCount,
+            'commentTotal' => $commentTotal,
             'group' => $group,
             'groupNews' => $groupNews,
             'groupVideos' => $groupVideos,

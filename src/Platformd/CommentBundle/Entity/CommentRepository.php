@@ -3,6 +3,7 @@
 namespace Platformd\CommentBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 
 class CommentRepository extends EntityRepository
@@ -33,6 +34,7 @@ class CommentRepository extends EntityRepository
     public function getCommentCountByThread($thread, $fromDate=null, $thruDate=null)
     {
         $qb = $this->createQueryBuilder('c');
+        $qb->select('COUNT(c.id)');
         $qb->where('c.thread = :thread');
         $qb->setParameter('thread', $thread);
 
@@ -43,9 +45,13 @@ class CommentRepository extends EntityRepository
                ->setParameter('fromDate', $fromDate)
                ->setParameter('thruDate', $thruDate);
         }
+        try {
+        $total = $qb->getQuery()->getSingleScalarResult();
+        }
+        catch (NoResultException $e) {
+            return 0;
+        }
 
-        $total = $qb->getQuery()->getResult();
-
-        return count($total);
+        return $total;
     }
 }
