@@ -584,6 +584,12 @@ galleries:
 
     gallery_go_to_galleries: Go to Galleries
 
+    publish_photo_error: Error! You must provide details for each photo in order to publish them in our galleries. Click on the photo to fill out the details.
+    publish_photo_error_id: Media ID is missing.
+    publish_photo_error_title: Please provide a title.
+    publish_photo_error_desc: Please provide a description.
+    publish_photo_error_gallery: You must select at least one gallery.
+
 contests:
     index_page_title: Contests
     show_page_overview: Overview

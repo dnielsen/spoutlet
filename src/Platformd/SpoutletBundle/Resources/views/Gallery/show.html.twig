@@ -171,7 +171,9 @@
     <script type="text/javascript">
         $(function () {
 
-            $('.media-title').truncate();
+            $('.media-title').truncate({
+                width: 115,
+            });
 
             $('.page_container').pajinate({
                     items_per_page: 5,

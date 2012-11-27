@@ -154,7 +154,7 @@ class GalleryController extends Controller
         {
             $response->setContent(json_encode(array(
                 "success" => false,
-                "message" => "Some required information was not passed.",
+                "message" => $this->trans('galleries.publish_photo_error'),
                 "errors"  => $errors
             )));
             return $response;
@@ -207,22 +207,22 @@ class GalleryController extends Controller
         $errors = array();
         if($id == 0)
         {
-            $errors[] = "Media ID is missing.";
+            $errors[] = $this->trans('galleries.publish_photo_error_id');
         }
 
         if(StringUtil::IsNullOrEmptyString($title))
         {
-            $errors[] = "Please provide a title.";
+            $errors[] = $this->trans('galleries.publish_photo_error_title');
         }
 
         if(StringUtil::IsNullOrEmptyString($desc))
         {
-            $errors[] = "Please provide a description.";
+            $errors[] = $this->trans('galleries.publish_photo_error_desc');
         }
 
         if(count($galleries) == 0)
         {
-            $errors[] = "You must select at least one gallery.";
+            $errors[] = $this->trans('galleries.publish_photo_error_gallery');
         }
 
         return $errors;

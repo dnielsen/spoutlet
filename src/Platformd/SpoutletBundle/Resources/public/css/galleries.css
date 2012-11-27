@@ -92,6 +92,10 @@
     height: 80px;
 }
 
+.media-title {
+    width: 115px;
+}
+
 #media-filter-options {
     width: 200px;
 }

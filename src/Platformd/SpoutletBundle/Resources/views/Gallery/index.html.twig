@@ -86,7 +86,9 @@
                     type: 'get',
                     success: function (html) {
                         $('#media-wrapper').html(html);
-                        $('.media-title').truncate();
+                        $('.media-title').truncate({
+                            width: 115,
+                        });
                         $('#media-gallery-link').attr('href', href);
                     }
                 });

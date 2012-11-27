@@ -103,7 +103,9 @@
                 window.location = '{{ path('gallery_gallery_show', { slug : gallery.slug }) }}' + '/' + sort;
             });
 
-            $('.media-title').truncate();
+            $('.media-title').truncate({
+                width: 115,
+            });
 
             $('.page_container').pajinate({
                 items_per_page: 16,
