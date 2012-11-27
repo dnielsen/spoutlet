@@ -79,7 +79,8 @@
             var updateMedia = function() {
                 var type        = $('#media-filter-options').val();
                 var url         = "{{ path('gallery_index_data') }}" + '?type=' + type;
-                var href        = baseGalleryUrl + $("#media-filter-options option:selected").attr('data-slug') + '/latest';
+                var slug        = $("#media-filter-options option:selected").attr('data-slug');
+                var href        = slug == '' ? baseGalleryUrl : baseGalleryUrl + slug + '/latest';
                 var galleryName = $('#media-filter-options option:selected').text();
                 $.ajax({
                     url: url,
