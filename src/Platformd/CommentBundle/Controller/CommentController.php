@@ -141,6 +141,6 @@ class CommentController extends BaseCommentController
 
     private function getCache()
     {
-        return $this->container->get('platformd.cache');
+        return $this->container->get('platformd.cache.comment');
     }
 }

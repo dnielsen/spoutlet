@@ -28,7 +28,7 @@ class SpoutletExtension extends Extension
         $loader->load('banners.yml');
 
         foreach ($config['elasticache_servers'] as $host => $port) {
-            $container->getDefinition('platformd.cache')->addMethodCall(
+            $container->getDefinition('platformd.cache.memcached')->addMethodCall(
                 'addServer',
                 array($host, $port)
             );

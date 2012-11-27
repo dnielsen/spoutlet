@@ -8,19 +8,19 @@ class ThreadController extends BaseThreadController
 {
     public function showFlatAction($id, $sorter = null)
     {
-        if ($cachedResult = $this->getCache()->get($id)) {
-            return $cachedResult;
+        if ($cachedResponse = $this->getCache()->get($id)) {
+            return $cachedResponse;
         }
 
-        $result = parent::showFlatAction($id, $sorter);
-        $this->getCache()->set($id, $result);
+        $response = parent::showFlatAction($id, $sorter);
+        $this->getCache()->set($id, $response);
 
-        return $result;
+        return $response;
     }
 
     private function getCache()
     {
-        return $this->container->get('platformd.cache');
+        return $this->container->get('platformd.cache.comment');
     }
 }
 

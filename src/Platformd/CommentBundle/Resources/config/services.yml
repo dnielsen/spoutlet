@@ -2,3 +2,8 @@ services:
     platformd.comment.model.comment_manager:
         class: Platformd\CommentBundle\Model\CommentManager
         parent: fos_comment.manager.comment.default
+
+    platformd.cache.comment:
+        class: Platformd\CommentBundle\Cache\CommentCache
+        arguments:
+            - @platformd.cache.memcached
