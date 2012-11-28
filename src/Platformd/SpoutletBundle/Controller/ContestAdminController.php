@@ -33,7 +33,8 @@ class ContestAdminController extends Controller
         $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($site);
 
         return $this->render('SpoutletBundle:ContestAdmin:list.html.twig', array(
-            'contests' => $contests
+            'contests' => $contests,
+            'site'     => $site,
         ));
     }
 
