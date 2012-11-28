@@ -257,7 +257,10 @@ class GiveawayManager
         $giveaway = $machineCodeEntry->getGiveaway();
         $user = $machineCodeEntry->getUser();
 
-        $giveawayUrl = $this->container->get('platformd.link.linkable_manager')->link($giveaway);
+        $giveawayUrl = $this->router->generate($giveaway->getLinkableRouteName(), array(
+            'slug' => $giveaway->getSlug(),
+            '_locale' => $user->getLocale()
+        ), true);
 
         // translate the message into the user's locale
         $message = $this->translator->trans('email.giveaway_machine_code_deny', array(
