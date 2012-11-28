@@ -8,6 +8,9 @@ class ThreadController extends BaseThreadController
 {
     public function showFlatAction($id, $sorter = null)
     {
+        return parent::showFlatAction($id, $sorter);
+
+        // @TODO re-enable per user cache ( to avoid rendering user specific delete links for example)
         if ($cachedResponse = $this->getCache()->get($id)) {
             return $cachedResponse;
         }

@@ -90,6 +90,8 @@ class CommentController extends BaseCommentController
 
         $url = $this->getUrlForObject($obj);
 
+        $this->container->get('session')->setFlash('error', 'An error occurred with comment submission');
+
         return new RedirectResponse($url);
     }
 
