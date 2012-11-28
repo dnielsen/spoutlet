@@ -38,7 +38,8 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
             'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
-            'wrap' => new Twig_Filter_Method($this, 'wrap')
+            'wrap' => new Twig_Filter_Method($this, 'wrap'),
+            'add_links' => new Twig_Filter_Method($this, 'addLinks'),
         );
     }
 
@@ -70,9 +71,18 @@ class SpoutletExtension extends Twig_Extension
         return wordwrap($obj, $length, $breakWith, $cut);
     }
 
+    public function addLinks($string)
+    {
+        return preg_replace("/(http:\/\/[^\s]+)/", "<a href=\"$1\">$1</a>", $string);
+    }
+
     public function getFunctions()
     {
         return array(
+            'get_current_site'                  => new Twig_Function_Method(
+                $this,
+                'getCurrentSite'
+                ),
             'can_user_apply_to_giveaway'  => new Twig_Function_Method(
                 $this,
                 'canUserApplyToGiveaway'
@@ -106,6 +116,31 @@ class SpoutletExtension extends Twig_Extension
         );
     }
 
+
+    public function getCurrentSite() {
+
+        $currentHost    = $this->getRequest()->getHost();
+        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
+
+        return $this->getSiteFromSubDomain($subDomain);
+    }
+
+    private function getRequest() {
+        return $this->container->get('request');
+    }
+
+    private function getEntityManager() {
+        return $this->container->get('doctrine.orm.entity_manager');
+    }
+
+    private function getSiteFromSubDomain($subDomain) {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
+    private function getSiteFromDefaultLocale($locale) {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+    }
+
     public function mediaPathNice($media) {
 
         $bucketName = $this->container->getParameter('s3_bucket_name');
@@ -116,7 +151,7 @@ class SpoutletExtension extends Twig_Extension
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s\\media\\%s', $cf, $media->getFilename());
+        return sprintf('%s/media/%s', $cf, $media->getFilename());
     }
 
     public function endsWith($haystack, $needle) {
@@ -621,13 +656,14 @@ class SpoutletExtension extends Twig_Extension
         $northAmerica = in_array($locale, array('en_US', 'en'));
         $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
         $demoOnly = in_array($locale, array('en'));
+        $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
         $china = in_array($locale, array('zh'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
             case 'VIDEO':                       return true;
             case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
-            case 'SWEEPSTAKES':                 return $northAmerica;
+            case 'SWEEPSTAKES':                 return false;
             case 'FORUMS':                      return !$chinaOrJapan;
             case 'ARP':                         return !$chinaOrJapan;
             case 'NEWS':                        return $chinaOrJapan;
@@ -635,7 +671,9 @@ class SpoutletExtension extends Twig_Extension
             case 'GAMES':                       return !$chinaOrJapan;
             case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapan;
             case 'MESSAGES':                    return !$chinaOrJapan;
+            case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
+            case 'MICROSOFT':                   return !$japan;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

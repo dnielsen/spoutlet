@@ -21,7 +21,12 @@
         {% for giveaway in giveaways %}
         <tr>
             <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
-            <td>{{ giveaway.locale | site_name }}</td>
+            <td>
+                {% for site in giveaway.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
             <td>
                 {{ giveaway | pd_link_full }}
             </td>

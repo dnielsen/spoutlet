@@ -1,0 +1,52 @@
+{% set reportContentType    = 'GroupImage' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddImage') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
+
+{% if canAdd %}
+    <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
+{% endif %}
+{% if pages | length > 0 %}
+    <div class="scrollable" id="scrollable-images" style="height: 550px; width: 600px;background: #191919;">
+        <div class="items">
+            {% for page in pages %}
+            <div class="items-wrapper">
+            {% for imageList in page %}
+                {% for image in imageList %}
+                    <div class="group-image-item">
+                        <div class="group-image-image">
+                            <a href="{{ media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ group.name }}]" style="border:none;">
+                                <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
+                            </a>
+                        </div>
+                        <div class="group-image-title">
+                            {{ image.title }}
+                        </div>
+                        <div class="group-image-actions">
+                            {% if canDelete %}
+                                <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">delete</a> |
+                            {% endif %}
+                            {% if canEdit %}
+                                <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">edit</a> |
+                            {% endif %}
+                            <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">report</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    <div id="scroll-actions" style="margin-top: 10px;">
+        <a class="prev browse" style="float: left;">Previous</a>
+        <a class="next browse" style="float: right;">See More</a>
+    </div>
+
+{% else %}
+<div style="height: 500px; width: 600px;">
+    <p>No images yet... please come back later!</p>
+</div>
+{% endif %}
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

@@ -64,8 +64,9 @@ body.site-zh #accountHeader {
 
 #accountHeader ul {
     list-style: none outside none;
+    margin: 0;
     padding: 136px 5px 0;
-    width: 100%;
+    width: 950px;
 }
 #accountHeader li {
     float: left;

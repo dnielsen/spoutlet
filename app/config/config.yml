@@ -43,6 +43,7 @@ twig:
         base_host:    %base_host%
         showVideo:    false
         facebook_app_id: %facebook_app_id%
+        google_api_key: %google_api_key%
 
 # Assetic Configuration
 assetic:
@@ -114,6 +115,10 @@ parameters:
     # or resource. If set this to false then a NotFoundHttpException will be thrown instead
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: true
+
+    # this allows config_dev.yml to override where emails that are sent from the system (instead of the "real" recipient)... do not change this in config.yml though
+    email_destination_override: false
+    email_destination_override_with: chris.magee@gametheworld.com
 
     available_locales:
         # we're abusing the locales to make our many "sites"
@@ -394,5 +399,15 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
+
+        image_thumb_small:
+            quality: 100
+            filters:
+                thumbnail: { size: [135, 80], mode: inset }
+
+        lightbox_medium:
+            quality: 100
+            filters:
+                thumbnail: { size: [400, 400], mode: inset }
 
 knp_time: ~

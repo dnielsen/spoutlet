@@ -1,0 +1,37 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+<div class="game-page-form">
+    {{ form_errors(form) }}
+
+        <div class="span11">
+            {{ form_row(form.name) }}
+            <div class="styled-select">
+                {{ form_row(form.category) }}
+            </div>
+            {{ form_widget(form.groupAvatar) }}
+            {{ form_widget(form.backgroundImage) }}
+            {{ form_widget(form.thumbNail )}}
+            {{ form_row(form.description) }}
+            {{ form_row(form.isPublic) }}
+
+
+            {% if form.sites is defined %}
+                {{ form_row(form.sites) }}
+                {{ form_row(form.allLocales) }}
+            {% endif %}
+
+            {% if form.deleted is defined %}
+                {{ form_row(form.deleted) }}
+            {% endif %}
+
+            {% if form.featured is defined %}
+                {{ form_row(form.featured) }}
+            {% endif %}
+
+            <div id="group-location-controls">
+                {{ form_row(form.location) }}
+            </div>
+        </div>
+    {{ form_rest(form) }}
+</div>

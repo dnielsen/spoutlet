@@ -1,0 +1,75 @@
+<div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;" title="Report Content">
+    <input type="hidden" id="report-id-{{ reportContentType }}" />
+    <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
+    <div style="height: 120px;">
+        <div id="report-response" style="display:none;">
+        This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.
+        </div>
+        <div id="report-options">
+            <input class="report-option" type="radio" name="reason" value="inappropriate_content"> Inappropriate content <br />
+            <input class="report-option" type="radio" name="reason" value="spam"> Spam <br />
+            <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> Violates intellectual property <br />
+            <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> Harassment
+        </div>
+    </div>
+    <button id="submit-report-{{ reportContentType }}">Submit</button>
+    <button id="close-dialog-{{ reportContentType }}" style="float: right;">Cancel</button>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        var reportDialog = $('#report-content-dialog-{{ reportContentType }}').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 200,
+            width: 350,
+            draggable: false,
+            resizable: false,
+            close: function (e, ui) {
+
+            }
+        });
+
+        $('.report-content').click(function () {
+            var reportId = $(this).attr('report-data');
+            $('#report-id-{{ reportContentType }}').val(reportId);
+
+            $('.report-option').prop('checked', false);
+            $('#report-response').hide();
+            $('#report-options').show();
+            $('#close-dialog-{{ reportContentType }}').text('Cancel');
+            $('#submit-report-{{ reportContentType }}').show();
+            reportDialog.dialog('open');
+        });
+
+        $('#submit-report-{{ reportContentType }}').click(function () {
+            $('#report-options').fadeOut();
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'ContentId' : $('#report-id-{{ reportContentType }}').val(),
+                    'Reason' : $('input:radio[name=reason]:checked').val(),
+                    'ContentType' : $('#content-type-{{ reportContentType }}').val()
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        $('#report-response').text(data.messageForUser);
+                        $('#report-response').fadeIn();
+                    } else {
+                        $('#report-response').fadeIn();
+                    }
+                    $('#close-dialog-{{ reportContentType }}').text('OK');
+                    $('#submit-report-{{ reportContentType }}').hide();
+                }
+            })
+
+        });
+
+        $('#close-dialog-{{ reportContentType }}').click(function () {
+            reportDialog.dialog('close');
+        });
+    });
+</script>
+

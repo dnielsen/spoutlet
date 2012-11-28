@@ -11,6 +11,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Platformd\SpoutletBundle\Model\EmailManager;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Service class for dealing with the giveaway system
@@ -68,7 +69,7 @@ class GiveawayManager
      *
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
      */
-    public function approveMachineCode(MachineCodeEntry $machineCode)
+    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site)
     {
         // see if it's already assigned to a key
         if ($machineCode->getKey()) {
@@ -83,7 +84,7 @@ class GiveawayManager
         }
 
         // attach the key, then attach it to the machine code
-        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $machineCode->getGiveaway()->getLocale());
+        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $site->getDefaultLocale());
         $machineCode->attachToKey($key);
 
         $this->sendNotificationEmail($machineCode);

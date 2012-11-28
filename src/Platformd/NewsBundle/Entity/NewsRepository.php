@@ -27,12 +27,11 @@ class NewsRepository extends EntityRepository
     }
 
     /**
-     * @param $locale
      * @return array
      */
-    public function findAllForLocale($locale)
+    public function findAllForSite($site)
     {
-        return $this->createBaseQueryBuilder($locale)
+        return $this->createBaseQueryBuilder($site)
             ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
             ->getResult()
@@ -40,13 +39,12 @@ class NewsRepository extends EntityRepository
     }
 
     /**
-     * @param $locale
      * @return \Platformd\NewsBundle\Entity\News;
      */
-    public function findOneFeaturedForLocale($locale)
+    public function findOneFeaturedForSite($site)
     {
         // todo - this will need to do something smarter - see #68
-        return $this->createBaseQueryBuilder($locale)
+        return $this->createBaseQueryBuilder($site)
             ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
             ->setMaxResults(1)
@@ -55,13 +53,12 @@ class NewsRepository extends EntityRepository
     }
 
     /**
-     * @param $locale
      * @param $num
      * @return \Platformd\NewsBundle\Entity\News[]
      */
-    public function findMostRecentForLocale($locale, $num)
+    public function findMostRecentForSite($site, $num)
     {
-        return $this->createBaseQueryBuilder($locale)
+        return $this->createBaseQueryBuilder($site)
             ->orderBy('n.postedAt', 'DESC')
             ->getQuery()
             ->setMaxResults($num)
@@ -71,7 +68,6 @@ class NewsRepository extends EntityRepository
 
     /**
      * @param Game $game
-     * @param string $site The site (i.e. locale)
      * @return \Platformd\NewsBundle\Entity\News[]
      */
     public function findActivesForGame(Game $game, $site)
@@ -88,21 +84,27 @@ class NewsRepository extends EntityRepository
     /**
      * Creates a base query builder that's locale-aware and only returns
      * published entries
-     *
-     * @param $locale
      * @param \Doctrine\ORM\QueryBuilder|null $qb
      * @return \Doctrine\ORM\QueryBuilder|null
      */
-    protected function createBaseQueryBuilder($locale, QueryBuilder $qb = null)
+    protected function createBaseQueryBuilder($site, QueryBuilder $qb = null)
     {
         if ($qb === null) {
             $qb = $this->createQueryBuilder('n');
         }
 
-        $qb->andWhere('n.locale = :locale')
-            ->setParameter('locale', $locale)
-            ->andWhere('n.published = 1')
-        ;
+        $qb->leftJoin('n.sites', 's')
+            ->andWhere('n.published = 1');
+
+        if (is_string($site)) {
+            $qb->andWhere('s.name = :site')
+                ->setParameter('site', $site);
+
+            return $qb;
+        }
+
+        $qb->andWhere('s = :site')
+            ->setParameter('site', $site);
 
         return $qb;
     }

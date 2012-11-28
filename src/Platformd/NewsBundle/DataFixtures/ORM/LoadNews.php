@@ -3,21 +3,24 @@
 namespace Platformd\NewsBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\NewsBundle\Entity\News;
 
-class LoadNews implements FixtureInterface
+class LoadNews implements FixtureInterface, OrderedFixtureInterface
 {
     public function load($manager)
     {
+        $siteRepo  = $manager->getRepository('SpoutletBundle:Site');
+
         $news = new News();
         $news->setBody(<<<EOF
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam nec scelerisque lacus. Curabitur nec ante a augue tincidunt luctus. Vivamus sed pellentesque nulla. Nunc id velit enim. Nullam vestibulum aliquet dui, in tempus nisl pretium ut. Cras nulla tortor, feugiat sed pharetra at, ultrices varius enim. Vestibulum augue neque, fringilla ut egestas in, vehicula quis augue. In ante ante, tincidunt quis vestibulum tempus, dictum sit amet quam. Sed aliquam sagittis erat nec sollicitudin. Nunc augue diam, malesuada quis aliquet eget, ullamcorper eu lacus. Curabitur egestas ante non nulla vehicula ultrices. Aenean aliquet ante eros, quis vestibulum justo. Aliquam interdum tempus dui, ut convallis lacus ullamcorper sit amet. Vestibulum in tortor elit. Nullam eget erat nisl, id consectetur sem. Ut ut dui nunc, et ullamcorper metus.</p>
 EOF
         );
         $news->setTitle('News title #1');
-        $news->setLocale('en');
+        $news->setSites(array($siteRepo->find(1)));
         $news->setPostedAt(new \DateTime('yesterday'));
         $manager->persist($news);
 
@@ -27,10 +30,17 @@ EOF
 EOF
         );
         $news->setTitle('News title #2');
-        $news->setLocale('en');
+        $news->setSites(array($siteRepo->find(1)));
         $news->setPostedAt(new \DateTime('last week'));
         $manager->persist($news);
 
         $manager->flush();
     }
+
+    public function getOrder()
+    {
+        return 3;
+    }
 }
+
+?>

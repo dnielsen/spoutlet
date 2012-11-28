@@ -86,13 +86,18 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
+    platford.model.site_util:
+        class: Platformd\SpoutletBundle\Util\SiteUtil
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@request"
+        scope: request
+
     platformd.model.game_page_manager:
         class: Platformd\SpoutletBundle\Model\GamePageManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@session"
             - "@knp_media.util.media_util"
-            - "@platformd.locale.locales_relationship_helper"
 
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager
@@ -105,9 +110,16 @@ services:
         class: Platformd\SpoutletBundle\Model\DealManager
         arguments:
             - "@doctrine.orm.entity_manager"
+            - "@knp_media.util.media_util"
+
+    platformd.model.group_manager:
+        class: Platformd\SpoutletBundle\Model\GroupManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
             - "@session"
             - "@knp_media.util.media_util"
-            - "@platformd.locale.locales_relationship_helper"
+            - "@security.context"
+        scope: request
 
     platformd.doctrine.locales_relationship_listener:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener

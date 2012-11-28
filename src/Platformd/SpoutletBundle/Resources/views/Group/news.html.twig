@@ -1,0 +1,60 @@
+{% set reportContentType    = 'GroupNews' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddNews') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditNews') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteNews') %}
+
+<div id="news-content-scroll" style="height: 550px;">
+
+    {% if canAdd %}
+        <a href='{{ path('group_add_news', {'id' : group.id }) }}'>Add News</a>
+    {% endif %}
+
+    {% if groupNews is defined %}
+
+        {% for article in groupNews %}
+
+            <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
+                <div class="group-news-actions">
+                    {% if canDelete %}
+                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
+                    {% endif %}
+                    {% if canEdit %}
+                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a> |
+                    {% endif %}
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ article.id }}">report</a>
+                </div>
+                <h2>{{ article.title }}</h2>
+                <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
+                <div class="group-news-article">
+                    {{ article.article | raw }}
+                </div>
+            </div>
+        {% else %}
+            <p>No news articles yet... please come back later!</p>
+        {% endfor %}
+    {% else %}
+        <p>No news articles yet... please come back later!</p>
+    {% endif %}
+</div>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+
+<script type="text/javascript">
+    $(function () {
+        $('.group-news-article').expander({
+            slicePoint:       600,
+            expandText:       'Show More',
+            userCollapseText: 'Show Less',
+            afterExpand: function () {
+                $('#news-content-scroll').resize();
+                $('#news-content-scroll').mCustomScrollbar('update');
+            },
+            onCollapse: function () {
+                //$('#news-content-scroll').mCustomScrollbar("scrollTo","top");
+                $('#news-content-scroll').resize();
+            }
+        });
+
+        $('#news-content-scroll').mCustomScrollbar();
+    });
+</script>

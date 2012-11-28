@@ -1,13 +1,15 @@
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 
 <form method="post" action="{{ route }}" class="form" {{ form_enctype(form) }}>
+
+    {{ form_errors(form) }}
     {{ form_row(form.title) }}
 
     {{ form_row(form.game) }}
 
     {{ form_row(form.slug) }}
 
-    {{ form_row(form.locale) }}
+    {{ form_row(form.sites) }}
 
     {{ form_row(form.postedAt) }}
     {{ form_row(form.overrideUrl) }}

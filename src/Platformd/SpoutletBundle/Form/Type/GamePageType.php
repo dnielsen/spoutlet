@@ -45,7 +45,7 @@ class GamePageType extends AbstractType
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended size: 2001x1496 with the center being 970 pixels wide and black.',
+                'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
             ))
             ->add('aboutGame', null, array(
                 'label' => 'About the Game',
@@ -99,9 +99,11 @@ class GamePageType extends AbstractType
                 'label' => 'Legal Verbiage',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('locales', new SiteChoiceType(), array(
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
+                'property' => 'name',
             ))
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),

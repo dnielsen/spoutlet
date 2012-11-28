@@ -90,6 +90,54 @@ class CommentManager extends BaseCommentManager
             return $deal;
         }
 
+        // case group
+        if (strpos($id, 'group-') === 0) {
+            $pieces = explode('-', $id);
+            if (count($pieces) != 2) {
+                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
+            }
+
+            $groupId = $pieces[1];
+            $group = $this->em
+                ->getRepository('SpoutletBundle:Group')
+                ->find($groupId)
+            ;
+
+            return $group;
+        }
+
+        // case group news article
+        if (strpos($id, 'group_news-') === 0) {
+            $pieces = explode('-', $id);
+            if (count($pieces) != 2) {
+                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
+            }
+
+            $newsArticleId = $pieces[1];
+            $newsArticle = $this->em
+                ->getRepository('SpoutletBundle:GroupNews')
+                ->find($newsArticleId)
+            ;
+
+            return $newsArticle;
+        }
+
+        // case group video
+        if (strpos($id, 'group_video-') === 0) {
+            $pieces = explode('-', $id);
+            if (count($pieces) != 2) {
+                throw new \InvalidArgumentException('Invalid comment id format: '.$id);
+            }
+
+            $videoArticleId = $pieces[1];
+            $video = $this->em
+                ->getRepository('SpoutletBundle:GroupVideo')
+                ->find($videoArticleId)
+            ;
+
+            return $video;
+        }
+
         // everything else is an abstract event and stores *just* the slug as the id
         $event = $this->em
             ->getRepository('SpoutletBundle:AbstractEvent')

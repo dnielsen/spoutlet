@@ -1,0 +1,180 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+{% set site = get_current_site() %}
+<div class="std_1col" style="padding: 0;">
+    <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" alt="Alienware Arena Groups" style="width: 950px; height: 120px; border: none;" />
+</div>
+<div class="std_1col">
+    <div class="groups-sub-nav-wrapper">
+    <div class="groups-sub-nav">
+        <ul>
+            <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+            <li><a href="{{ path('group_new') }}">Create Group</a></li>
+        </ul>
+    </div>
+</div>
+</div>
+<div class="std_2col">
+    <div class="left">
+        <h3 style="margin: 0; color: #fff;font-weight: bold">Recommended Alienware Arena Groups</h3>
+        {% if featuredGroups|length > 0 %}
+        <div>
+            <h4 class="groups-category-header">Featured Groups</h4>
+                <div id="featured-groups">
+                    {% for group in featuredGroups %}
+                        <div class="group-list-item">
+                            <a href="{{ path('group_show', { slug: group.slug}) }}">
+                                {% if group.thumbNail %}
+                                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                {% else %}
+                                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                {% endif %}
+                            </a>
+                            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+                                {{ group.name }}
+                            </a>
+                            <div class="details">
+                                <div class="item-detail">Members: {{ group.members.count }}</div>
+                                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        <div>
+            <h4 class="groups-category-header">Topic Groups</h4>
+            <div class="scrollable" id="scrollable-topic-groups">
+                <div class="items">
+                    {% for page in topicGroups %}
+                        <div class="items-wrapper">
+                        {% for groupList in page %}
+                            {% for group in groupList %}
+                                <div class="group-list-item">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
+                                        {% if group.thumbNail %}
+                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% else %}
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% endif %}
+                                    </a>
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+                                        {{ group.name }}
+                                    </a>
+                                    <div class="details">
+                                        <div class="item-detail">Members: {{ group.members.count }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="scroll-actions" style="margin-top: 0px;">
+                <a id="topic-prev" class="prev browse" style="float: left;">Previous</a>
+                <a id="topic-next" class="next browse" style="float: right;">See More</a>
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+            <h4 class="groups-category-header">Location Groups</h4>
+            <div class="scrollable" id="scrollable-location-groups">
+                <div class="items">
+                    {% for page in locationGroups %}
+                        <div class="items-wrapper">
+                        {% for groupList in page %}
+                            {% for group in groupList %}
+                                <div class="group-list-item">
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
+                                        {% if group.thumbNail %}
+                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% else %}
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        {% endif %}
+                                    </a>
+                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+                                        {{ group.name }}
+                                    </a>
+                                    <div class="details">
+                                        <div class="item-detail">Members: {{ group.members.count }}</div>
+                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div id="scroll-actions" style="margin-top: 10px;">
+                <a id="location-prev" class="prev browse" style="float: left;">Previous</a>
+                <a id="location-next" class="next browse" style="float: right;">See More</a>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        <div class="widget-33" style="margin-top: 15px;background-color: #191919;height: 230px">
+            <div class="widget-header">
+                <div class="widget-title">
+                    Welcome New Groups
+                </div>
+            </div>
+            <div class="widget-content">
+                {% for recentGroup in recentGroups %}
+                <div class="widget-item">
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a>
+                </div>
+                {% else %}
+                    <p>No groups found. Check back soon!</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="widget-33" style="margin-top: 15px;background-color: #191919;height: 230px">
+            <div class="widget-header">
+                <div class="widget-title">
+                    Most Popular Groups
+                </div>
+            </div>
+            <div class="widget-content">
+                {% for popularGroup in popularGroups %}
+                <div class="widget-item">
+                    <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a>
+                </div>
+                {% else %}
+                    <p>No groups found. Check back soon!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#scrollable-location-groups').scrollable({
+                next: '#location-next',
+                prev: '#location-prev'
+            });
+            $('#scrollable-topic-groups').scrollable({
+                next: '#topic-next',
+                prev: '#topic-prev'
+            });
+
+            $('.group-index-link').truncate();
+        });
+    </script>
+
+{% endblock %}

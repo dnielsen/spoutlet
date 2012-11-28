@@ -1,0 +1,130 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+{% set site = get_current_site() %}
+
+<div class="std_2col" style="padding: 0;">
+    <div class="left">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+            {% endif %}
+        </div>
+    </div>
+    <div class="right"></div>
+</div>
+<div class="std_1col" style="padding: 0;">
+    {% include 'SpoutletBundle:Group:_subNav.html.twig' %}
+</div>
+
+<div class="widget-100">
+    <div class="widget-header">
+        <div class="widget-title">Applications</div>
+    </div>
+    <div class="widget-content">
+        <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
+            <tbody><tr>
+                <th style="width:15%;">Action</th>
+                <th style="width:15%;">Username</th>
+                <th style="width:15%;">Date</th>
+                <th style="width:55%;">Reason</th>
+            </tr>
+            {% for application in applications %}
+                <tr class="eventListGroup_lan">
+                    <td>
+                        <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Accept</a> |
+                        <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Reject</a>
+                    </td>
+                    <td>
+                        {{ application.applicant.username }}
+                    </td>
+                    <td>
+                        {{ application.createdAt | date('F d, Y') }}
+                    </td>
+                    <td>
+                        {{ application.reason }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">
+                        <em>There are no applications!</em>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="widget-footer">&nbsp;</div>
+</div>
+<div id="accept-member-dialog" title="Accept Member" style="display:none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="accept-text">Are you sure you want to accept '{0}' to join your group?</span></p>
+</div>
+<div id="reject-member-dialog" title="Reject Member" style="display:none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="reject-text">Are you sure you want to reject '{0}' from joining your group?</span></p>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('.accept-member').click(function () {
+                var username = $(this).attr('user-name');
+                var path = $(this).attr('data-path');
+                var text = $('#accept-text').text().replace('{0}', username);
+
+                $('#accept-text').text(text);
+                $('#accept-member-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 150,
+                    buttons: {
+                        "Yes": function() {
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+
+            $('.reject-member').click(function () {
+                var username = $(this).attr('user-name');
+                var path = $(this).attr('data-path');
+                var text = $('#reject-text').text().replace('{0}', username);
+
+                $('#reject-text').text(text);
+                $('#reject-member-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 150,
+                    buttons: {
+                        "Yes": function() {
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

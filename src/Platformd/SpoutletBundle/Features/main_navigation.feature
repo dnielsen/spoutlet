@@ -4,6 +4,10 @@ Feature: Main Navigation
   As an user
   I should only see main navigation links to features that are enabled for the site I'm on
 
+  Background:
+    Given I am authenticated as a user
+    # And my CEVO User ID is 55 # This is just here for reference, don't uncomment, the system is setup with a default user who actually has a CEVO User ID of 55
+
   Scenario: The "Japan" site's main navigation menu has the correct items
     Given I am on the "Japan" site
     When I go to "/app_test.php/games/"
@@ -14,7 +18,6 @@ Feature: Main Navigation
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
-      | Microsoft   | /app_test.php/microsoft  |  http://japan.alienwarearena.local/app_test.php/microsoft  |
 
   Scenario: The "China" site's main navigation menu has the correct items
     Given I am on the "China" site
@@ -51,24 +54,23 @@ Feature: Main Navigation
     Given I am on the "North America" site
     When I go to "/app_test.php/games/"
     Then the main navigation menu should be:
-      | Link                        | Target                                          | Destination                                             |
-      | Home                        | /app_test.php/                                  | http://www.alienwarearena.com/                          |
-      | Alienware                   | http://www.alienware.com/                       |                                                         |
-      | Games >> Battlefield 3      | http://alienwarearena.com/game/bf3/             |                                                         |
-      | Games >> League of Legends  | http://alienwarearena.com/game/lol/             |                                                         |
-      | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |                                                         |
-      | Games >> Rift               | http://alienwarearena.com/game/rift/            |                                                         |
-      | Games >> More Games         | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify  |
-      | Events                      | http://www.alienwarearena.com/event/            |                                                         |
-      | News >> Articles            | http://www.alienwarearena.com/articles/         |                                                         |
-      | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                         |
-      | SWEEPS                      | /app_test.php/sweepstakes                       | http://www.alienwarearena.com/sweepstakes               |
-      | Media >> Videos             | http://video.alienwarearena.com/                |                                                         |
-      | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers  |
-      | NewDeals                    | /app_test.php/deal/                             | http://na.alienwarearena.local/app_test.php/deal/       |
-      | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                    |
-      | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/          |
-      | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                 |
+      | Link                        | Target                                          | Destination                                                         |
+      | Home                        | /app_test.php/                                  | http://www.alienwarearena.com/                                      |
+      | Alienware                   | http://www.alienware.com/                       |                                                                     |
+      | Games >> Battlefield 3      | http://alienwarearena.com/game/bf3/             |                                                                     |
+      | Games >> League of Legends  | http://alienwarearena.com/game/lol/             |                                                                     |
+      | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |                                                                     |
+      | Games >> Rift               | http://alienwarearena.com/game/rift/            |                                                                     |
+      | Games >> More Games         | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify              |
+      | Events                      | http://www.alienwarearena.com/event/            |                                                                     |
+      | News >> Articles            | http://www.alienwarearena.com/articles/         |                                                                     |
+      | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                                     |
+      | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
+      | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers              |
+      | Deals                       | /app_test.php/deal/                             | http://na.alienwarearena.local/app_test.php/deal/                   |
+      | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
+      | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
+      | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
 
   Scenario: The "Europe" site's main navigatdfion menu has the correct items
     Given I am on the "Europe" site
@@ -87,7 +89,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                                                                          | http://eu.alienwarearena.local/app_test.php/wallpapers  |
-      | NewDeals                    | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
+      | Deals                       | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                                                                           | http://www.alienwarearena.com/microsoft                 |

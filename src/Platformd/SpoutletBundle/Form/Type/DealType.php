@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Deal;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class DealType extends AbstractType
@@ -89,9 +88,11 @@ class DealType extends AbstractType
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),
             ))
-            ->add('locales', new SiteChoiceType(), array(
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
+                'property' => 'name',
             ))
             ->add('legalVerbiage', 'textarea', array('label' => 'Legal Verbiage'))
             ->add('topColor', 'hidden', array(

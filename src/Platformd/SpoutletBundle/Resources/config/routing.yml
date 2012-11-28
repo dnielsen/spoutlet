@@ -22,6 +22,13 @@ microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
 
+content_reporting:
+    pattern:  /report
+    defaults: { _controller: "SpoutletBundle:ContentReporting:reportContent" }
+    requirements:
+        _format: json
+        _method: POST
+
 forums:
     pattern: /forums
     defaults: { _controller: SpoutletBundle:Default:forums }
@@ -57,6 +64,10 @@ SpoutletBundle_game_page:
     resource: "@SpoutletBundle/Resources/config/routing/game_page.yml"
     prefix:   /games
 
+SpoutletBundle_admin_content_reports:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_content_reports.yml"
+    prefix:   /admin/contentReports
+
 SpoutletBundle_admin_game:
     resource: "@SpoutletBundle/Resources/config/routing/admin_game.yml"
     prefix:   /admin/game
@@ -72,6 +83,14 @@ SpoutletBundle_admin_deal:
 SpoutletBundle_deal:
     resource: "@SpoutletBundle/Resources/config/routing/deal.yml"
     prefix:   /deal
+
+SpoutletBundle_group:
+    resource: "@SpoutletBundle/Resources/config/routing/group.yml"
+    prefix:   /groups
+
+SpoutletBundle_admin_group:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_group.yml"
+    prefix:   /admin/groups
 
 SpoutletBundle_admin_wallpapers:
     resource: "@SpoutletBundle/Resources/config/routing/admin_wallpaper.yml"

@@ -19,6 +19,8 @@ use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupNews;
 
 /**
  * Base Feature context.
@@ -47,12 +49,113 @@ class AbstractFeatureContext extends MinkContext
         $con = $em->getConnection();
 
         $con
+            ->prepare("ALTER TABLE `pd_site` AUTO_INCREMENT = 1")
+            ->execute();
+
+        $con
+            ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `subDomain`) VALUES
+            ('Demo', 'en', 'demo'),
+            ('Japan', 'ja', 'japan'),
+            ('China', 'zh', 'china'),
+            ('North America', 'en_US', 'na'),
+            ('Europe', 'en_GB', 'eu'),
+            ('Latin America', 'es', 'latam'),
+            ('India', 'en_IN', 'in'),
+            ('Singapore', 'en_SG', 'mysg'),
+            ('Australia / New Zealand', 'en_AU', 'anz')")
+            ->execute();
+
+        $con
             ->prepare("ALTER TABLE `country` AUTO_INCREMENT = 1")
             ->execute();
 
         $con
             ->prepare("INSERT INTO `country` VALUES (1,'AF','Afghanistan'),(2,'AX','[DO NOT USE] Åland Islands'),(3,'AL','Albania'),(4,'DZ','Algeria'),(5,'AS','American Samoa'),(6,'AD','Andorra'),(7,'AO','Angola'),(8,'AI','Anguilla'),(9,'AQ','Antarctica'),(10,'AG','Antigua and Barbuda'),(11,'AR','Argentina'),(12,'AM','Armenia'),(13,'AW','Aruba'),(14,'AC','[DO NOT USE] Ascension Island'),(15,'AU','Australia'),(16,'AT','Austria'),(17,'AZ','Azerbaijan'),(18,'BS','Bahamas'),(19,'BH','Bahrain'),(20,'BD','Bangladesh'),(21,'BB','Barbados'),(22,'BY','Belarus'),(23,'BE','Belgium'),(24,'BZ','Belize'),(25,'BJ','Benin'),(26,'BM','Bermuda'),(27,'BT','Bhutan'),(28,'BO','Bolivia'),(29,'BA','Bosnia and Herzegovina'),(30,'BW','Botswana'),(31,'BV','Bouvet Island'),(32,'BR','Brazil'),(33,'IO','British Indian Ocean Territory'),(34,'VG','British Virgin Islands'),(35,'BN','Brunei'),(36,'BG','Bulgaria'),(37,'BF','Burkina Faso'),(38,'BI','Burundi'),(39,'KH','Cambodia'),(40,'CM','Cameroon'),(41,'CA','Canada'),(42,'IC','[DO NOT USE] Canary Islands'),(43,'CV','Cape Verde'),(44,'KY','Cayman Islands'),(45,'CF','Central African Republic'),(46,'EA','[DO NOT USE] Ceuta and Melilla'),(47,'TD','Chad'),(48,'CL','Chile'),(49,'CN','China'),(50,'CX','Christmas Island'),(51,'CP','[DO NOT USE] Clipperton Island'),(52,'CC','Cocos [Keeling] Islands'),(53,'CO','Colombia'),(54,'KM','Comoros'),(55,'CG','Congo - Brazzaville'),(56,'CD','Congo - Kinshasa'),(57,'CK','Cook Islands'),(58,'CR','Costa Rica'),(59,'CI','Côte d’Ivoire'),(60,'HR','Croatia'),(61,'CU','Cuba'),(62,'CY','Cyprus'),(63,'CZ','Czech Republic'),(64,'DK','Denmark'),(65,'DG','[DO NOT USE] Diego Garcia'),(66,'DJ','Djibouti'),(67,'DM','Dominica'),(68,'DO','Dominican Republic'),(69,'EC','Ecuador'),(70,'EG','Egypt'),(71,'SV','El Salvador'),(72,'GQ','Equatorial Guinea'),(73,'ER','Eritrea'),(74,'EE','Estonia'),(75,'ET','Ethiopia'),(76,'EU','[DO NOT USE] European Union'),(77,'FK','Falkland Islands'),(78,'FO','Faroe Islands'),(79,'FJ','Fiji'),(80,'FI','Finland'),(81,'FR','France'),(82,'GF','French Guiana'),(83,'PF','French Polynesia'),(84,'TF','French Southern Territories'),(85,'GA','Gabon'),(86,'GM','Gambia'),(87,'GE','Georgia'),(88,'DE','Germany'),(89,'GH','Ghana'),(90,'GI','Gibraltar'),(91,'GR','Greece'),(92,'GL','Greenland'),(93,'GD','Grenada'),(94,'GP','Guadeloupe'),(95,'GU','Guam'),(96,'GT','Guatemala'),(97,'GG','[DO NOT USE] Guernsey'),(98,'GN','Guinea'),(99,'GW','Guinea-Bissau'),(100,'GY','Guyana'),(101,'HT','Haiti'),(102,'HM','Heard Island and McDonald Islands'),(103,'HN','Honduras'),(104,'HK','Hong Kong SAR China'),(105,'HU','Hungary'),(106,'IS','Iceland'),(107,'IN','India'),(108,'ID','Indonesia'),(109,'IR','Iran'),(110,'IQ','Iraq'),(111,'IE','Ireland'),(112,'IM','[DO NOT USE] Isle of Man'),(113,'IL','Israel'),(114,'IT','Italy'),(115,'JM','Jamaica'),(116,'JP','Japan'),(117,'JE','[DO NOT USE] Jersey'),(118,'JO','Jordan'),(119,'KZ','Kazakhstan'),(120,'KE','Kenya'),(121,'KI','Kiribati'),(122,'KW','Kuwait'),(123,'KG','Kyrgyzstan'),(124,'LA','Laos'),(125,'LV','Latvia'),(126,'LB','Lebanon'),(127,'LS','Lesotho'),(128,'LR','Liberia'),(129,'LY','Libya'),(130,'LI','Liechtenstein'),(131,'LT','Lithuania'),(132,'LU','Luxembourg'),(133,'MO','Macau SAR China'),(134,'MK','Macedonia'),(135,'MG','Madagascar'),(136,'MW','Malawi'),(137,'MY','Malaysia'),(138,'MV','Maldives'),(139,'ML','Mali'),(140,'MT','Malta'),(141,'MH','Marshall Islands'),(142,'MQ','Martinique'),(143,'MR','Mauritania'),(144,'MU','Mauritius'),(145,'YT','Mayotte'),(146,'MX','Mexico'),(147,'FM','Micronesia'),(148,'MD','Moldova'),(149,'MC','Monaco'),(150,'MN','Mongolia'),(151,'ME','Montenegro'),(152,'MS','Montserrat'),(153,'MA','Morocco'),(154,'MZ','Mozambique'),(155,'MM','Myanmar [Burma]'),(156,'NA','Namibia'),(157,'NR','Nauru'),(158,'NP','Nepal'),(159,'NL','Netherlands'),(160,'AN','Netherlands Antilles'),(161,'NC','New Caledonia'),(162,'NZ','New Zealand'),(163,'NI','Nicaragua'),(164,'NE','Niger'),(165,'NG','Nigeria'),(166,'NU','Niue'),(167,'NF','Norfolk Island'),(168,'KP','North Korea'),(169,'MP','Northern Mariana Islands'),(170,'NO','Norway'),(171,'OM','Oman'),(172,'QO','[DO NOT USE] Outlying Oceania'),(173,'PK','Pakistan'),(174,'PW','Palau'),(175,'PS','Palestinian Territories'),(176,'PA','Panama'),(177,'PG','Papua New Guinea'),(178,'PY','Paraguay'),(179,'PE','Peru'),(180,'PH','Philippines'),(181,'PN','Pitcairn Islands'),(182,'PL','Poland'),(183,'PT','Portugal'),(184,'PR','Puerto Rico'),(185,'QA','Qatar'),(186,'RE','Réunion'),(187,'RO','Romania'),(188,'RU','Russia'),(189,'RW','Rwanda'),(190,'BL','[DO NOT USE] Saint Barthélemy'),(191,'SH','Saint Helena'),(192,'KN','Saint Kitts and Nevis'),(193,'LC','Saint Lucia'),(194,'MF','[DO NOT USE] Saint Martin'),(195,'PM','Saint Pierre and Miquelon'),(196,'VC','Saint Vincent and the Grenadines'),(197,'WS','Samoa'),(198,'SM','San Marino'),(199,'ST','São Tomé and Príncipe'),(200,'SA','Saudi Arabia'),(201,'SN','Senegal'),(202,'RS','Serbia'),(203,'CS','[DO NOT USE] Serbia and Montenegro'),(204,'SC','Seychelles'),(205,'SL','Sierra Leone'),(206,'SG','Singapore'),(207,'SK','Slovakia'),(208,'SI','Slovenia'),(209,'SB','Solomon Islands'),(210,'SO','Somalia'),(211,'ZA','South Africa'),(212,'GS','South Georgia and the South Sandwich Islands'),(213,'KR','South Korea'),(214,'ES','Spain'),(215,'LK','Sri Lanka'),(216,'SD','Sudan'),(217,'SR','Suriname'),(218,'SJ','Svalbard and Jan Mayen'),(219,'SZ','Swaziland'),(220,'SE','Sweden'),(221,'CH','Switzerland'),(222,'SY','Syria'),(223,'TW','Taiwan'),(224,'TJ','Tajikistan'),(225,'TZ','Tanzania'),(226,'TH','Thailand'),(227,'TL','[DO NOT USE] Timor-Leste'),(228,'TG','Togo'),(229,'TK','Tokelau'),(230,'TO','Tonga'),(231,'TT','Trinidad and Tobago'),(232,'TA','[DO NOT USE] Tristan da Cunha'),(233,'TN','Tunisia'),(234,'TR','Turkey'),(235,'TM','Turkmenistan'),(236,'TC','Turks and Caicos Islands'),(237,'TV','Tuvalu'),(238,'UM','U.S. Minor Outlying Islands'),(239,'VI','U.S. Virgin Islands'),(240,'UG','Uganda'),(241,'UA','Ukraine'),(242,'AE','United Arab Emirates'),(243,'UK','United Kingdom'),(244,'US','United States'),(245,'UY','Uruguay'),(246,'UZ','Uzbekistan'),(247,'VU','Vanuatu'),(248,'VA','Vatican City'),(249,'VE','Venezuela'),(250,'VN','Vietnam'),(251,'WF','Wallis and Futuna'),(252,'EH','Western Sahara'),(253,'YE','Yemen'),(254,'ZM','Zambia'),(255,'ZW','Zimbabwe');")
             ->execute();
+    }
+
+    /**
+     * @Given /^I have the following groups:$/
+     */
+    public function iHaveTheFollowingGroups(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+        $um = $this->getUserManager();
+
+        foreach ($table->getHash() as $data) {
+
+            $group = new Group();
+
+            $group->setName($data['name']);
+            $group->setOwner($um->findUserByUsername($data['owner']));
+            $group->setIsPublic($data['public'] == 'y');
+            $group->setAllLocales($data['all locales'] == 'y');
+            $group->setCategory($data['category']);
+            $group->setDescription('About this group...');
+            $group->setHowToJoin('How to join this group...');
+
+            $em->persist($group);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @Given /^the response is JSON$/
+     */
+    public function theResponseIsJson()
+    {
+        $data = json_decode($this->response);
+
+        if (empty($data)) {
+            throw new Exception("Response was not JSON\n" . $this->response);
+        }
+    }
+
+    /**
+     * @Given /^I have the following group news articles:$/
+     */
+    public function iHaveTheFollowingGroupNewsArticles(TableNode $table)
+    {
+
+        $em         = $this->getEntityManager();
+        $um         = $this->getUserManager();
+        $groupRepo  = $em->getRepository('SpoutletBundle:Group');
+
+        foreach ($table->getHash() as $data) {
+
+            $group = $groupRepo->findOneByName($data['group']);
+
+            $news = new GroupNews();
+
+            $news->setTitle($data['title']);
+            $news->setArticle($data['article']);
+            $news->setAuthor($um->findUserByUsername($data['author']));
+            $news->setGroup($group);
+
+            $em->persist($news);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @Given /^the JSON contains "([^"]*)" equal to "([^"]*)"$/
+     */
+    public function theJsonContainsEqualTo($jsonName, $jsonValue)
+    {
+        $data = json_decode($this->response);
+
+        if (count($data) < 1) {
+            throw new Exception("Response did not contain any data");
+        }
+
+        $first = $data[0];
+        $value = $first[$jsonName];
+
+        if ($value != $jsonValue) {
+            throw new Exception(sprintf("Response did not contain '%s' data", $jsonName));
+        }
     }
 
     /**
@@ -158,7 +261,7 @@ class AbstractFeatureContext extends MinkContext
             ->getParent()
             ->findAll('css', 'a');
 
-        return $aTags[0]->getHtml();
+        return $aTags[0]->getText();
     }
 
     private function isNavHeading($item) {
@@ -172,11 +275,55 @@ class AbstractFeatureContext extends MinkContext
         return strpos($classes, 'more') !== false;
     }
 
+    public function canIntercept()
+    {
+        $driver = $this->getSession()->getDriver();
+        if (!$driver instanceof GoutteDriver) {
+            throw new UnsupportedDriverActionException(
+                'You need to tag the scenario with '.
+                '"@mink:goutte" or "@mink:symfony". '.
+                'Intercepting the redirections is not '.
+                'supported by %s', $driver
+            );
+        }
+    }
+
+    /**
+     * @Given /^(.*) without redirection$/
+     */
+    public function theRedirectionsAreIntercepted($step)
+    {
+        $this->canIntercept();
+        $this->getSession()->getDriver()->getClient()->followRedirects(false);
+
+        return new Step\Given($step);
+    }
+
+    /**
+     * @When /^I follow the redirection$/
+     * @Then /^I should be redirected$/
+     */
+    public function iFollowTheRedirection()
+    {
+        $this->canIntercept();
+        $client = $this->getSession()->getDriver()->getClient();
+        $client->followRedirects(true);
+        $client->followRedirect();
+    }
+
+    private function isExternalUrl($url) {
+        return strpos($url, 'http://www.alienware') === 0 ||
+                strpos($url, 'http://alienware') === 0 ||
+                strpos($url, 'http://www1.euro') === 0 ||
+                strpos($url, 'http://allpowerful.com') === 0;
+    }
+
     private function ensureNavItemsMatch($actual, $expected, $counter) {
 
         $expectedText           = $expected['Link'];
         $expectedDestination    = $expected['Target'];
         $expectedFinal          = trim($expected['Destination']) == "" ? $expectedDestination : $expected['Destination'];
+        $compareWithRedirects   = array_key_exists("CompareWithRedirects", $expected) ? $expected['CompareWithRedirects'] == "yes" : false;
 
         if (!$actual) {
             throw new \Exception(sprintf('Navigation menu item missing.  Expected link text "%s" but there are no more navigations links was found for item number "%d".', $expectedText, $counter + 1));
@@ -204,12 +351,7 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception(sprintf('Navigation menu item mismatch.  Expected link destination "%s" but got "%s" on item number "%d". Link text was "%s".', $expectedDestination, $actualDestination, $counter + 1, $actualText));
         }
 
-        if ($actualDestination && $expectedFinal && (
-                strpos($actualDestination, 'http://www.alienware') === 0 ||
-                strpos($actualDestination, 'http://alienware') === 0 ||
-                strpos($actualDestination, 'http://www1.euro') === 0 ||
-                strpos($actualDestination, 'http://allpowerful.com') === 0
-                )) {
+        if ($actualDestination && $expectedFinal && ($this->isExternalUrl($actualDestination))) {
             #echo "Didn't check $actualDestination\n";
             echo ".";
             return;
@@ -222,7 +364,46 @@ class AbstractFeatureContext extends MinkContext
         $session = $this->getSession();
         $lastUrl = $session->getCurrentUrl();
 
-        $session->visit($actualDestination);
+        if ($compareWithRedirects) {
+
+            #echo "comparing with redirects...\n";
+
+            $goutte = $session->getDriver()->getClient();
+            $goutte->followRedirects(false);
+
+            $session->visit($actualDestination);
+
+            $currentUrl = "";
+
+            while (true) {
+
+                $lastStep = $currentUrl;
+                $currentUrl = $session->getCurrentUrl();
+
+                if ($currentUrl == $lastStep) { # reached the end of a redirection trail
+                    #echo "REACHED END with $currentUrl\n";
+                    break;
+                }
+
+                if ($this->isExternalUrl($currentUrl) && $currentUrl == $expectedFinal) { # if the link is external and we matched with the expected, just stop, its not our system to troubleshoot past this
+                    #echo "EXTERNAL MATCHES, dont need to continue $currentUrl\n";
+                    break;
+                }
+
+                #echo "following, current = '".$session->getCurrentUrl()."'.\n";
+
+                try {
+                    $goutte->followRedirect();
+                } catch (\LogicException $e) {
+                    throw new \Exception(sprintf('Navigation menu item mismatch. [CompareWithRedirects] The expected ultimate destination was "%s" but was navigated to "%s" on item number "%d". Link text was "%s".', $expectedFinal, $currentUrl, $counter + 1, $actualText));
+                }
+            }
+
+            $goutte->followRedirects(true);
+        } else {
+            $session->visit($actualDestination);
+        }
+
         $currentUrl = $session->getCurrentUrl();
 
         if ($currentUrl != $expectedFinal) {
@@ -439,9 +620,21 @@ class AbstractFeatureContext extends MinkContext
         foreach ($table->getHash() as $data) {
             $user = $this->getUserManager()->createUser();
 
-            $user->setUsername($data['username']);
-            $user->setEmail($data['email']);
-            $user->setPassword('foo');
+            if (isset($data['username'])) {
+                $user->setUsername($data['username']);
+            }
+
+            if (isset($data['password'])) {
+                $user->setPassword($data['password']);
+            } else {
+                $user->setPassword('foo');
+            }
+
+            if (isset($data['email'])) {
+                $user->setEmail($data['email']);
+            } else {
+                $user->setEmail('user@example.com');
+            }
 
             if (isset($data['cevo id'])) {
                 $user->setCevoUserId($data['cevo id']);
@@ -525,9 +718,13 @@ class AbstractFeatureContext extends MinkContext
     {
         $game = $this->thereIsAGameCalled($gameName);
 
+        $em = $this->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $siteName));
+
         $page = new GamePage();
         $page->setGame($game);
-        $page->setLocales(array($siteName));
+        $page->setSites(array($site));
         $page->setStatus(GamePage::STATUS_PUBLISHED);
 
         $this->getContainer()->get('platformd.model.game_page_manager')
@@ -582,6 +779,8 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception('Could not find game in the database');
         }
 
+        $siteName = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($siteName);
+
         $gamePage = $em->getRepository('SpoutletBundle:GamePage')->findOneByGame($game, $siteName);
 
         if (!$gamePage) {
@@ -610,8 +809,13 @@ class AbstractFeatureContext extends MinkContext
     public function iShouldBeOnTheDealCalledIn($dealName, $locale)
     {
         $em     = $this->getEntityManager();
-        /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
-        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $locale);
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+
+        if (!$site) {
+            throw new \Exception(sprintf('Site not found for locale "%s"', $locale));
+        }
+
+        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $site);
 
         if (!$deal) {
             throw new \Exception('Could not find the deal in the database');
@@ -685,11 +889,16 @@ class AbstractFeatureContext extends MinkContext
 
             $category = isset($row['category']) ? $row['category'] : 'rpg';
             $status = isset($row['status']) ? $row['status'] : GamePage::STATUS_PUBLISHED;
-            $sites = isset($row['sites']) ? $row['sites'] : 'en';
 
             $game->setCategory($category);
             $gamePage->setStatus($status);
-            $gamePage->setLocales(explode(',', $sites));
+
+            $siteArray = isset($row['sites']) ? explode(',', $row['sites']) : array('en');
+            $siteRepo = $em->getRepository('SpoutletBundle:Site');
+
+            foreach ($siteArray as $site) {
+                $gamePage->getSites()->add($siteRepo->findOneByDefaultLocale($site));
+            }
 
             $em->persist($game);
             $em->flush();
@@ -802,14 +1011,18 @@ class AbstractFeatureContext extends MinkContext
      */
     public function thereIsADealCalledIn($dealName, $locale)
     {
-        if ($deal = $this->getEntityManager()->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
-            $this->getEntityManager()->remove($deal);
-            $this->getEntityManager()->flush();
+        $em = $this->getEntityManager();
+
+        if ($deal = $em->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
+            $em->remove($deal);
+            $em->flush();
         }
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $locale));
 
         $deal = new Deal();
         $deal->setName($dealName);
-        $deal->setLocales(array($locale));
+        $deal->setSites(array($site));
         $deal->setStatus(Deal::STATUS_PUBLISHED);
         $deal->setRedemptionInstructionsArray(array('Do something'));
 

@@ -18,12 +18,16 @@ accounts_deals:
     pattern: /profile/deals
     defaults: { _controller: SpoutletBundle:Account:deals }
 
+accounts_groups:
+    pattern: /profile/groups
+    defaults: { _controller: SpoutletBundle:Account:groups }
+
 videos_edit:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
 
 # profile page - null username means *this* user
 accounts_profile:
-    pattern: /profile/{username}
+    pattern: /profile/view/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 

@@ -44,6 +44,8 @@ class SiteProtectionListener
         '^/comments',
         '^/groups',
         '^/wallpapers',
+        '^/report',
+        '^/giveaways'
     );
 
     static private $urlMap = array(

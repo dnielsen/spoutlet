@@ -237,7 +237,7 @@ class GiveawayAdminController extends Controller
                     $machineCode = $machineCodes[0];
 
                     try {
-                        $this->getGiveawayManager()->approveMachineCode($machineCode);
+                        $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite());
 
                         $successEmails[] = $email;
                     } catch (MissingKeyException $e) {
