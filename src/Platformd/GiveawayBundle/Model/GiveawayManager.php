@@ -219,6 +219,7 @@ class GiveawayManager
             '%userFirstName%' => $user->getFirstname(),
             '%userLastName%'  => $user->getLastname(),
             '%accountUrl%'    => $accountUrl,
+            '%systemTag%'     => $machineCodeEntry->getMachineCode(),
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
