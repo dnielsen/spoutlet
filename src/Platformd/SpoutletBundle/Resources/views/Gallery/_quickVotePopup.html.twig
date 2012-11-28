@@ -1,0 +1,38 @@
+<div id="quick-vote-dialog" class="quick-vote-wrapper" style="display: none; padding-top: 25px;" title="Quick Vote">
+    {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+    <button id="close-dialog" style="margin-left: 75px;">Cancel</button>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        var quickVoteDialog = $('#quick-vote-dialog').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 200,
+            width: 310,
+            draggable: false,
+            resizable: false,
+            close: function (e, ui) {
+
+            }
+        });
+
+        $('.quick-vote-link').click(function () {
+            var mediaId = $(this).attr('media-data');
+            $('#media-id').val(mediaId);
+
+            $('.media-voting-wrapper').show();
+            $('#media-voting-vote-response').text('Your vote has been placed successfully!');
+            $('#media-voting-vote-response').hide();
+            $('#close-dialog').text('Cancel');
+
+            quickVoteDialog.dialog('open');
+        });
+
+        $('#close-dialog').click(function () {
+            quickVoteDialog.dialog('close');
+        });
+    });
+</script>
+
