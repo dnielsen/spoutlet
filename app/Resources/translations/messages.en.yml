@@ -589,6 +589,9 @@ galleries:
     publish_photo_error_title: Please provide a title.
     publish_photo_error_desc: Please provide a description.
     publish_photo_error_gallery: You must select at least one gallery.
+    vote_now: Vote Now
+    vote_success: Thanks for voting!
+    more_images_from: Check out the latest images from
 
 contests:
     index_page_title: Contests

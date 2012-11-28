@@ -63,7 +63,7 @@
             {% if (otherMedia | length) > 0 %}
 
                 <p>
-                    More media from <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a>
+                    {{ 'galleries.more_images_from' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a>
                 </p>
 
                 <div class="page_container">
@@ -72,7 +72,7 @@
                             {% set isFirstInRow = (loop.index - 1) is divisibleby(5) or loop.first  %}
                             <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% endif %}">
                                 <div class="gallery-media-thumb-small">
-                                    <a href="{{ media_path_nice(media.image) }}" rel="lightbox[{{ media.author.username }}]">
+                                    <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                         <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                                     </a>
                                 </div>
@@ -161,13 +161,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
-    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
     <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/spoutlet/js/jquery.imagesloaded.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
