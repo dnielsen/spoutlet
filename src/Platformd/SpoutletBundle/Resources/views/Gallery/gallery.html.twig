@@ -28,7 +28,7 @@
                             </div>
                             <div style="width:135px;">
                                 <a class="media-title" href="{{ path('gallery_media_show', { id: media[0].id }) }}">{{ media[0].title }}</a>
-                                <div>by: {{ media[0].author.username }}</div>
+                                <div>by: <a href="{{ path('accounts_profile', {username: media[0].author.username}) }}">{{ media[0].author.username }}</a></div>
                             </div>
                             <input type="hidden" value="{{ media[0].createdAt | date('m-d-Y') }}" class="media-date" />
                             <input type="hidden" value="{{ media[0].views }}" class="media-popular" />
@@ -45,7 +45,7 @@
                             </div>
                             <div style="width:135px;">
                                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                                <div>by: {{ media.author.username }}</div>
+                                <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
                             </div>
                             <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
                             <input type="hidden" value="{{ media.views }}" class="media-popular" />

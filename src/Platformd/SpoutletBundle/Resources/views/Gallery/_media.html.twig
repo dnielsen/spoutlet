@@ -10,7 +10,7 @@
             </div>
             <div style="width:135px;">
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media[0].id }) }}">{{ media[0].title }}</a>
-                <div>by: {{ media[0].author.username }}</div>
+                <div>by: <a href="{{ path('accounts_profile', {username: media[0].author.username}) }}">{{ media[0].author.username }}</a></div>
             </div>
         </div>
     {% else %}
@@ -27,7 +27,7 @@
             </div>
             <div style="width:135px;">
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                <div>by: {{ media.author.username }}</div>
+                <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
             </div>
         </div>
     {% else %}
