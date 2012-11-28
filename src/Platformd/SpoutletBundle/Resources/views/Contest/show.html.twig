@@ -41,15 +41,17 @@
                         {% endif %}
                     </ol>
                     <div class="form-msg-error" id="contest_error" style="display:none;margin-left:0;width:auto;"></div>
-                    {% if isEligible %}
-                    <div style="padding-top: 10px;">
-                        <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
-                            <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
-                            <div style="text-align:center;">
-                                <button type="submit" formnovalidate style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                        {% if isEligible %}
+                            <div style="padding-top: 10px;">
+                                <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
+                                    <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
+                                    <div style="text-align:center;">
+                                        <button type="submit" formnovalidate style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
+                        {% endif %}
                     {% endif %}
                     {% if isEntered %}
                         <div style="text-align:center;">

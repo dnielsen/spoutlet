@@ -541,7 +541,7 @@ galleries:
     submit_photo_page_title: Submit Image
     submit_photo_page_header: Submit Image
 
-    submit_photo_step1: Step 1:
+    submit_photo_step1: Step 1 of 2:
     submit_photo_step1_detail: Submit Image
     submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
     submit_photo_file_restrictions: File Restrictions
@@ -556,7 +556,7 @@ galleries:
     submit_photo_share: Share Photos
     submit_photo_my_photos: My Images
 
-    submit_photo_step2: Step 2:
+    submit_photo_step2: Step 2 of 2:
     submit_photo_step2_detail: Click on an image to provide details.
     submit_photo_image_name: Image Name:
     submit_photo_image_desc: Description:
