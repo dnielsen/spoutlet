@@ -140,6 +140,7 @@ class GalleryMediaRepository extends EntityRepository
             ->leftJoin('gm.contestEntry', 'ce')
             ->leftJoin('ce.contest', 'c')
             ->andWhere('gmg.id = :galleryId')
+            ->andWhere('gm.published = true')
             ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.contestEntry IS NULL OR c.votingEnd < :now')
             ->groupBy('gm.id')
