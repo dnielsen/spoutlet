@@ -39,8 +39,8 @@
 
                 </div>
             </div>
-            <div class="widget-footer">
-                <a href="{{ path('gallery_index') }}" id="media-gallery-link" class="aw-link featured-footer-link">{{ 'galleries.gallery_see_all' | trans }}</a>
+            <div class="widget-footer" style="height:15px;">
+                <a href="{{ path('gallery_index') }}" id="media-gallery-link" class="aw-link featured-footer-link" style="display:none;">{{ 'galleries.gallery_see_all' | trans }}</a>
                 <div class="clear"></div>
             </div>
         </div>
@@ -90,7 +90,14 @@
                         $('.media-title').truncate({
                             width: 115,
                         });
+
                         $('#media-gallery-link').attr('href', href);
+
+                        if(slug == '') {
+                            $('#media-gallery-link').hide();
+                        } else {
+                            $('#media-gallery-link').show();
+                        }
                     }
                 });
 
