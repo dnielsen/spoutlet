@@ -78,6 +78,7 @@ platformd:
             wallpapers: Wallpapers
             microsoft: Microsoft
             photos: Photo Gallery
+            contests: Contests
 
         page_content:
             featured: Featured

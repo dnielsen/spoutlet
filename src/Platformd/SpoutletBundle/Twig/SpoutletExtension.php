@@ -356,6 +356,7 @@ class SpoutletExtension extends Twig_Extension
             case 'USER_GIVEAWAY':                   return $this->GetUserGiveawayLink($locale);
             case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
             case 'PHOTOS':                          return $this->GetPhotosLink($locale);
+            case 'CONTESTS':                        return $this->GetContestsLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -653,6 +654,19 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetContestsLink($locale)
+    {
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.contests').'</a>';
+        $url            = $this->container->get('router')->generate('contest_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
     private function GetUserGameIdLink($locale) {
         $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
 
@@ -704,6 +718,7 @@ class SpoutletExtension extends Twig_Extension
             case 'WALLPAPERS':                  return !$japan;
             case 'PHOTOS':                      return !$chinaOrJapanOrLatam;
             case 'MICROSOFT':                   return !$japan;
+            case 'CONTESTS':                    return !$chinaOrJapanOrLatam;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
