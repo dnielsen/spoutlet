@@ -75,6 +75,24 @@ class CommentController extends BaseCommentController
         return new RedirectResponse($url);
     }
 
+    protected function onCreateError(Form $form)
+    {
+        $threadId = $form->getData()->getThread()->getId();
+
+        // temporarily here for custom military page. will be removed when groups are implemented.
+        if($threadId == 'custom-military-page') {
+            $url = $this->container->get('router')->generate('military');
+            return new RedirectResponse($url);
+        }
+
+        // Did we post a comment on a giveway or an event, news maybe ?
+        $obj = $this->getCommentManager()->getObjectFromThread($form->getData()->getThread());
+
+        $url = $this->getUrlForObject($obj);
+
+        return new RedirectResponse($url);
+    }
+
     /**
      * Syntactic sugar to retrieve a giveaway using its slug
      *
