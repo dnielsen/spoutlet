@@ -396,7 +396,20 @@ approved: Approved
 
 email:
     giveaway_machine_code_approve: |
+        こんにちは%userLastName%様,
 
+        この度は 「%giveawayName%」にご登録いただき誠にありがとうございます。
+        キーコードはALIENWARE ARENAのあなたのアカウントあてに届けております。
+        以下のサイトから確認、ご使用ください。
+        %accountUrl%
+
+        ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
+        japan@alienwarearena.com.
+
+        - ALIENWARE ARENA チーム
+
+
+    giveaway_machine_code_deny: |
 
         こんにちは%userLastName%様,
 
@@ -408,7 +421,7 @@ email:
         ご登録頂いたサービスタグナンバー: %systemTag%
 
         正しいサービスタグナンバーをご確認後、再度ご登録される場合は、こちらのページからお手続きください。
-        %accountUrl%
+        %giveawayUrl%
 
         万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
         japan@alienwarearena.com
@@ -416,26 +429,6 @@ email:
         Eメール受領後に再照合し、10日前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
 
          - ALIENWARE ARENA チーム
-
-    giveaway_machine_code_deny: |
-        こんにちは%userLastName%様,
-
-        この度は「%giveawayName%」にご登録いただき誠にありがとうございます。
-        ご登録頂いたサービスタグナンバーのパソコンは、ご購入時期に相違があるため、本キャンペーンの対象外となります。
-        誠に申し訳ございませんが、本キャンペーンのお申し込みは無効となりますので、ご了承ください。
-        ご登録頂いたサービスタグナンバー: %systemTag%
-        恐れ入りますが、サービスタグナンバーを再度ご確認の上、以下の3つの情報を添えてjapan@alienwarearena.comまで、Ｅメールにてご連絡をお願いいたします。
-
-        1)        ALIENWARE ARENAに登録した際のユーザー名
-        2)        ALIENWARE ARENAに登録した際のEメールアドレス
-        3)        パソコンのサービスタグナンバー(7桁)
-
-        Eメール受領後に再照合し、10日前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
-
-        万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
-        japan@alienwarearena.com.
-
-        - ALIENWARE ARENA チーム
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ

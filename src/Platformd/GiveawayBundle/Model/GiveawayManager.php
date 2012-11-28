@@ -219,7 +219,6 @@ class GiveawayManager
             '%userFirstName%' => $user->getFirstname(),
             '%userLastName%'  => $user->getLastname(),
             '%accountUrl%'    => $accountUrl,
-            '%systemTag%'     => $machineCodeEntry->getMachineCode(),
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
@@ -258,16 +257,14 @@ class GiveawayManager
         $giveaway = $machineCodeEntry->getGiveaway();
         $user = $machineCodeEntry->getUser();
 
-        $accountUrl = $this->router->generate('accounts_giveaways', array(
-            '_locale' => $user->getLocale()
-        ), true);
+        $giveawayUrl = $this->container->get('platformd.link.linkable_manager')->link($giveaway);
 
         // translate the message into the user's locale
         $message = $this->translator->trans('email.giveaway_machine_code_deny', array(
             '%giveawayName%'  => $giveaway->getName(),
             '%userFirstName%' => $user->getFirstname(),
             '%userLastName%'  => $user->getLastname(),
-            '%accountUrl%'    => $accountUrl,
+            '%giveawayUrl%'   => $giveawayUrl,
             '%systemTag%'     => $machineCodeEntry->getMachineCode(),
         ), 'messages', $giveaway->getLocale());
 
