@@ -593,6 +593,8 @@ galleries:
     vote_now: Vote Now
     vote_success: Thanks for voting!
     more_images_from: Check out the latest images from
+    save_images: Save Images
+    cancel: Cancel
 
 contests:
     index_page_title: Contests

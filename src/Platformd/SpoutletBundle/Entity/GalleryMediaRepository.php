@@ -23,6 +23,19 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllUnpublishedByUserForContest($user)
+    {
+        return $this->createQueryBuilder('gm')
+            ->where('gm.author = :user')
+            ->andWhere('gm.published = :published')
+            ->andWhere('gm.deleted <> 1')
+            ->andWhere('gm.contestEntry IS NOT NULL')
+            ->setParameter('user', $user)
+            ->setParameter('published', false)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findAllPublishedByUserNewestFirst($user)
     {
         return $this->createQueryBuilder('gm')
