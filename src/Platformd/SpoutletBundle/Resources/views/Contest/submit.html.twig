@@ -25,7 +25,7 @@
         <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
         {% if (entriesLeft > 0) or (isUnlimited) %}
             {% if not submissionEnded %}
-                <form action="{{ path('contest_submit', {slug: contest.slug}) }}" method="post" {{ form_enctype(form) }}>
+                <form action="{{ path('contest_submit', {slug: contest.slug}) }}" id="submit-photo-form" method="post" {{ form_enctype(form) }}>
                     {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
                     <input type="hidden" id="entries-left" value="{{ entriesLeft }}" />
                     <div class="form-actions">
@@ -118,6 +118,9 @@
         {% endfor %}
     </div>
 </div>
+<div id="blockUI" style="display:none;">
+<p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
+</div>
 {% endif %}
 
 
@@ -134,16 +137,21 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
     <script type="text/javascript">
         $(function() {
 
             var t;
 
-            var clearForm = function() {
-                $('#media-title').val('');
+            var clearForm = function(publishing) {
+                if(publishing) {
+                    $('#media-title').val('');
+                }
+
                 $('#media-description').val('');
                 $('input:checkbox').removeAttr('checked');
                 $('#media-form-errors').empty();
+                $('#media-form-error-msg').text('');
                 var mediaCount = $('.gallery-media').length;
 
                 if(mediaCount == 0) {
@@ -207,6 +215,7 @@
                             $('#media-' + $('#media-id').val()).parent().remove();
                             clearForm();
                             hideFlash();
+                            initMedia();
                         } else {
                             $('#media-form-error-msg').text(data.message);
                             $('#media-form-errors').empty();
@@ -275,6 +284,10 @@
                     var name = element.getAttribute('name');
                     element.name = 'platformd_spoutletbundle_submitimagetype[galleryImages][' + total + '][fileObject]';
                 }
+            });
+
+            $('#submit-photo-form').bind('submit', function() {
+                $.blockUI({message: $('#blockUI')});
             });
 
             hideFlash();
