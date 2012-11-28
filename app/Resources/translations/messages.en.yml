@@ -611,3 +611,6 @@ contests:
     submit_page_back_to_contest: Back to Contest
     no_winners: No winners have been selected yet. Please check back later.
     place: Place
+    entry_period: Entry Period
+    vote_period: Voting Period
+    no_contests: There are no contests.
