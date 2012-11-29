@@ -106,7 +106,7 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
-        $this->sendUserReportedNotificationEmail($id, $type, $reason);
+        //$this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;

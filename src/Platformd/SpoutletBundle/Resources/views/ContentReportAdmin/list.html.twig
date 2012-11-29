@@ -42,6 +42,10 @@
                         <h1>Article</h1>
                         <div>{{ item[0].article }}</div>
 
+                    {% elseif item[0].getContentType == 'Group' %}
+                        <h1>Group</h1>
+                        <div><a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a></div>
+
                     {% endif %}
                 </td>
                 <td>

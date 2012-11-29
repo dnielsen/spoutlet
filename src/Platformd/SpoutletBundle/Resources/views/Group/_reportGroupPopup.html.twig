@@ -3,13 +3,13 @@
     <input type="hidden" id="content-type-Group" value="Group" />
     <div style="height: 120px;">
         <div id="report-group-response" style="display:none;">
-        This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.
+        The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
         </div>
         <div id="report-group-options">
-            <input class="report-group-option" type="radio" name="reason" value="inappropriate_content"> Inappropriate content <br />
-            <input class="report-group-option" type="radio" name="reason" value="spam"> Spam <br />
-            <input class="report-group-option" type="radio" name="reason" value="violates_intellectual_property"> Violates intellectual property <br />
-            <input class="report-group-option" type="radio" name="reason" value="individual_harrassing_me"> Harassment
+            <input class="report-group-option" type="radio" name="group-reason" value="inappropriate_content"> Inappropriate content <br />
+            <input class="report-group-option" type="radio" name="group-reason" value="spam"> Spam <br />
+            <input class="report-group-option" type="radio" name="group-reason" value="violates_intellectual_property"> Violates intellectual property <br />
+            <input class="report-group-option" type="radio" name="group-reason" value="individual_harrassing_me"> Harassment
         </div>
     </div>
     <button id="submit-report-Group">Submit</button>
@@ -17,6 +17,8 @@
 </div>
 <script type="text/javascript">
     $(function () {
+
+        var groupDeleted = false;
 
         var reportGroupDialog = $('#report-content-dialog-Group').dialog({
             autoOpen: false,
@@ -26,7 +28,9 @@
             draggable: false,
             resizable: false,
             close: function (e, ui) {
-
+                if(groupDeleted) {
+                    window.location = '{{ path('groups') }}';
+                }
             }
         });
 
@@ -49,7 +53,7 @@
                 type: 'post',
                 data: JSON.stringify({
                     'ContentId' : $('#report-id-Group').val(),
-                    'Reason' : $('input:radio[name=reason]:checked').val(),
+                    'Reason' : $('input:radio[name=group-reason]:checked').val(),
                     'ContentType' : $('#content-type-Group').val()
                 }),
                 contentType: 'json',
@@ -62,6 +66,7 @@
                     }
                     $('#close-dialog-Group').text('OK');
                     $('#submit-report-Group').hide();
+                    groupDeleted = true;
                 }
             })
 
@@ -69,6 +74,9 @@
 
         $('#close-dialog-Group').click(function () {
             reportGroupDialog.dialog('close');
+            if(groupDeleted) {
+                window.location = '{{ path('groups') }}';
+            }
         });
     });
 </script>

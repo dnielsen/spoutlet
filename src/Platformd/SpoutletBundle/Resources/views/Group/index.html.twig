@@ -1,10 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
-{% endblock %}
-
 {% block content %}
 
 {% set site = get_current_site() %}
@@ -61,8 +56,14 @@
                                     <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
+                                        </div>
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
+                                        </div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
@@ -96,8 +97,14 @@
                                     <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
+                                        </div>
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
+                                        </div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
@@ -157,13 +164,29 @@
         </div>
     </div>
 </div>
+{% include 'SpoutletBundle:Group:_reportGroupPopup.html.twig' %}
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
         $(function () {
+
+            $('.group-list-item').hover(function() {
+                $(this).find('.report-group-caption').stop(false,true).fadeIn(200);
+            },
+            function() {
+                $(this).find('.report-group-caption').stop(false,true).fadeOut(200);
+            });
+
             $('#scrollable-location-groups').scrollable({
                 next: '#location-next',
                 prev: '#location-prev'

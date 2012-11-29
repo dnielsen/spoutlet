@@ -27,8 +27,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Group implements LinkableInterface, ReportableContentInterface
 {
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
-    const DELETED_BY_OWNER = 'by_owner';
-    const DELETED_BY_ADMIN = 'by_admin';
+    const DELETED_BY_OWNER  = 'by_owner';
+    const DELETED_BY_ADMIN  = 'by_admin';
+    const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
 
     static private $validCategories = array(
         'location',
@@ -38,6 +39,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     static private $validDeletedReasons = array(
         self::DELETED_BY_OWNER,
         self::DELETED_BY_ADMIN,
+        self::DELETED_BY_REPORT,
     );
 
     static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
@@ -683,6 +685,7 @@ class Group implements LinkableInterface, ReportableContentInterface
             $isApplicant    = $this->isApplicant($user);
 
             if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
+
                 return true;
             }
 

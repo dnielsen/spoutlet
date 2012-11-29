@@ -29,17 +29,20 @@ class ContentReportAdminController extends Controller
             $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
+            $groups      = $repo->getContentReportTypeForAllSitesArchived("Group");
         } elseif ($mode == "deletedContent") {
             $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
+            $groups      = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
         } elseif ($mode == "manage") {
             $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
+            $groups      = $repo->getContentReportTypeForAllSites("Group");
         }
 
-        $allReports = array_merge($groupNews, $groupVideos, $groupImages);
+        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $groups);
 
         usort($allReports, function($a, $b) {
 
