@@ -36,10 +36,6 @@ class MediaPathResolver implements PathResolver
             return false;
         }
 
-        return $media->getFilename();
-
-
-        /* old method of differentiating between locally stored images and s3 located ones. Not needed as all media images will be on s3 now.
         // used when you're going to pipe it into imagine
         if (isset($options['local']) && $options['local']) {
             return $media->getFilename();
