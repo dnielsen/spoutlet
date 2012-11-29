@@ -372,6 +372,7 @@ jms_translation:
 
 liip_imagine:
     data_loader:    s3
+    cache: amazon_s3
     filter_sets:
         # on a list of articles, for example
         article_list:

@@ -7,7 +7,7 @@
         {% if item.image %}
         <div class="article-image">
             <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
-                <img src="{{ media_path(item.image, {'local': true}) | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
+                <img src="{{ item.image.filename | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
             </a>
         </div>
         {% endif %}
