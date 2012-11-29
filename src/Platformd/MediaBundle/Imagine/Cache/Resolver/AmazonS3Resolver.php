@@ -87,14 +87,19 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
 
     protected function persistFilteredMedia($targetPath, $filter)
     {
-        $filename       = str_replace($filter.'/', '', $targetPath);
-        $parentMedia    = $this->em->getRepository('MediaBundle:Media')->findOneByFilename($filename);
+        $filteredMedia  = $this->em->getRepository('MediaBundle:FilteredMedia')->findOneByPath($targetPath);
 
-        $filteredMedia = new FilteredMedia();
-        $filteredMedia->setPath($targetPath);
-        $filteredMedia->setParent($parentMedia);
-        $this->em->persist($filteredMedia);
-        $this->em->flush();
+        if (!$filteredMedia) {
+
+            $filename       = str_replace($filter.'/', '', $targetPath);
+            $parentMedia    = $this->em->getRepository('MediaBundle:Media')->findOneByFilename($filename);
+
+            $filteredMedia = new FilteredMedia();
+            $filteredMedia->setPath($targetPath);
+            $filteredMedia->setParent($parentMedia);
+            $this->em->persist($filteredMedia);
+            $this->em->flush();
+        }
     }
 
     protected function objectExists($objectPath)
