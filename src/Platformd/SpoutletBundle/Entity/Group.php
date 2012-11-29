@@ -10,6 +10,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
+use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -23,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
  */
-class Group implements LinkableInterface
+class Group implements LinkableInterface, ReportableContentInterface
 {
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
     const DELETED_BY_OWNER = 'by_owner';
@@ -236,12 +237,21 @@ class Group implements LinkableInterface
      */
     protected $featuredAt;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+    protected $contentReports;
+
     public function __construct()
     {
-        $this->sites = new ArrayCollection();
-        $this->members = new ArrayCollection();
-        $this->applications = new ArrayCollection();
-        $this->userMembershipActions = new ArrayCollection();
+        $this->sites                    = new ArrayCollection();
+        $this->members                  = new ArrayCollection();
+        $this->applications             = new ArrayCollection();
+        $this->userMembershipActions    = new ArrayCollection();
+        $this->contentReports           = new ArrayCollection();
     }
 
     /**
@@ -629,6 +639,19 @@ class Group implements LinkableInterface
         $this->membershipActions = $value;
     }
 
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($value)
+    {
+        $this->contentReports = $value;
+    }
+
+    public function getContentType() {
+        return "Group";
+    }
 
     public function isVisibleOnSite($site) {
 

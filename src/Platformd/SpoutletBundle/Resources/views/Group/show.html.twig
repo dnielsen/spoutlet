@@ -98,7 +98,7 @@
                 </div>
 
                 <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
-
+                <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">Report</a></div>
                 {% if group.location and group.category == 'location' %}
                 <div id="group-location-address" class="location-info">
                     <div>LOCATION:</div>
@@ -163,7 +163,7 @@
             </div>
         {% endif %}
     </div>
-
+    {% include 'SpoutletBundle:Group:_reportGroupPopup.html.twig' %}
 </div>
 {% endblock %}
 

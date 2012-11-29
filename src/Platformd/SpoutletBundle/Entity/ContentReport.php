@@ -93,6 +93,13 @@ class ContentReport
     protected $groupVideo = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $group = null;
+
+    /**
      * Get id
      *
      * @return integer
@@ -172,6 +179,16 @@ class ContentReport
     public function setGroupVideo($value)
     {
         $this->groupVideo = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
     }
 
     public function getSite()
