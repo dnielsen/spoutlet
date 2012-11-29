@@ -8,6 +8,9 @@
             {{ 'galleries.submit_photo_step1_detail' | trans }}
         </div>
     </p>
+    {% if contest is defined %}
+    <p>{{ 'contests.photo_submission_message' | trans }}</p>
+    {% endif %}
     <p>
         <span style="font-weight:bold;">{{ 'galleries.submit_photo_file_restrictions' | trans }}</span>
         <ul>
@@ -18,6 +21,9 @@
             <li>{{ 'galleries.submit_photo_restriction5' | trans}}</li>
         </ul>
     </p>
+    {% if contest is defined %}
+    <p>{{ 'contests.igames_disclaimer' | trans }}</p>
+    {% endif %}
     <input type="file" id="galleryImages" />
 
     {{ form_widget(form.galleryImages) }}

@@ -17,6 +17,7 @@ class GalleryMediaRepository extends EntityRepository
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
             ->andWhere('gm.published = :published')
+            ->andWhere('gm.contestEntry IS NULL')
             ->setParameter('user', $user)
             ->setParameter('published', false)
             ->getQuery()
