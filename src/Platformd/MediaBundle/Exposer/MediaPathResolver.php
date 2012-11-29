@@ -46,7 +46,7 @@ class MediaPathResolver implements PathResolver
             $this->getBucketName(),
             $this->getPrefix(),
             $media->getFilename()
-        );*/
+        );
     }
 
     /**
