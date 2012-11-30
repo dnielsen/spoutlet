@@ -39,6 +39,12 @@
     margin-bottom: 5px;
 }
 
+#report-group-wrapper {
+    padding: 5px 0 10px 0;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
 #group-video-form-wrapper h2 {
     font-size: 12pt;
 }
