@@ -149,6 +149,7 @@ class GiveawayManager
                 $key->getValue(),
                 $key->getPool()->getGiveaway(),
                 MachineCodeEntry::STATUS_APPROVED,
+                null,
                 $key->getAssignedAt()
             );
         }
@@ -165,11 +166,14 @@ class GiveawayManager
         $requests = array();
 
         foreach ($machineCodes as $code) {
+            $deniedAt = $code->getDeniedAt() ? : null;
+
             $requests[] = new GiveawayKeyRequest(
                 null,
                 $code->getGiveaway(),
                 $code->getStatus(),
-                null
+                $code->getMachineCode(),
+                $deniedAt
             );
         }
 

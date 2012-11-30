@@ -29,7 +29,7 @@
                                         {{ keyRequest.value | nl2br }}
                                     {% else %}
                                         <em>
-                                            {{ keyRequest.status | trans }}
+                                            {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
                                         </em>
                                     {% endif %}
                                 </td>
