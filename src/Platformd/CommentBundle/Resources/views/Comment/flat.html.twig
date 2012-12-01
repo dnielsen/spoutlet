@@ -17,4 +17,4 @@
     } %}
 {% endfor %}
 
-{{ pagerfanta(pager, 'default', {'routeName': 'group_show', 'routeParams': {'slug': object.slug} }) }}
+{{ pagerfanta(pager, 'default', {'routeName': routeName, 'routeParams': routeParams }) }}

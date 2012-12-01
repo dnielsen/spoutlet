@@ -33,7 +33,9 @@ class CommentController extends BaseCommentController
             array(
                 'pager' => $pager,
                 'sorter' => $sorter,
-                'object' => $object
+                'object' => $object,
+                'routeName' => $this->getRouteForObject($object),
+                'routeParams' => $this->getRouteParamsForObject($object),
             )
         );
     }
@@ -159,6 +161,42 @@ class CommentController extends BaseCommentController
         }
 
         return $url;
+    }
+
+    public function getRouteForObject($obj)
+    {
+        if ($obj instanceof LinkableInterface) {
+            return $obj->getLinkableRouteName();
+        }
+
+        if ($obj instanceof Event) {
+            $route = 'events_detail';
+        } elseif ($obj instanceof Giveaway) {
+            $route = 'giveaway_show';
+        } elseif ($obj instanceof Sweepstakes) {
+            $route = 'sweepstakes_show';
+        } else {
+            throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
+        }
+
+        return $route;
+    }
+
+    public function getRouteParamsForObject($obj)
+    {
+        if ($obj instanceof LinkableInterface) {
+            return $obj->getLinkableRouteParameters();
+        }
+
+        if ($obj instanceof Event) {
+            return array('slug' => $obj->getSLug());
+        } elseif ($obj instanceof Giveaway) {
+            return array('slug' => $obj->getSLug());
+        } elseif ($obj instanceof Sweepstakes) {
+            return array('slug' => $obj->getSLug());
+        }
+
+        throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
     }
 
     /**
