@@ -54,4 +54,5 @@ class CommentRepository extends EntityRepository
 
         return $total;
     }
+
 }

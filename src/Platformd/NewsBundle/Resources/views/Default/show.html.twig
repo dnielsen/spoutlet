@@ -28,7 +28,7 @@
                 {{ news.body | raw }}
             </div>
 
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": news.commentThreadId } %}
+                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": news.threadId, 'page': app.request.query.get('page', 1) } %}
         </div>
     </div>
 </div>

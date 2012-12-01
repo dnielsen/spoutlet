@@ -6,19 +6,22 @@ use FOS\CommentBundle\Controller\ThreadController as BaseThreadController;
 
 class ThreadController extends BaseThreadController
 {
-    public function showFlatAction($id, $sorter = null)
+    public function showFlatPagedAction($page, $id, $sorter = null)
     {
-        return parent::showFlatAction($id, $sorter);
+        $thread = $this->getThread($id);
+        $newCommentForm = $this->getCommentForm($thread);
+        $replyForm = $this->getCommentForm($thread);
 
-        // @TODO re-enable per user cache ( to avoid rendering user specific delete links for example)
-        if ($cachedResponse = $this->getCache()->get($id)) {
-            return $cachedResponse;
-        }
-
-        $response = parent::showFlatAction($id, $sorter);
-        $this->getCache()->set($id, $response);
-
-        return $response;
+        return $this->container->get('templating')->renderResponse(
+            'FOSCommentBundle:Thread:showFlat.html.'.$this->container->getParameter('fos_comment.template.engine'),
+            array(
+                'thread'           => $thread,
+                'sorter'           => $sorter,
+                'newCommentForm'   => $newCommentForm->createView(),
+                'replyForm'        => $replyForm->createView(),
+                'page' => $page
+            )
+        );
     }
 
     private function getCache()

@@ -188,7 +188,7 @@
     <div class="std_2col">
         <div class="right">&nbsp;</div>
         <div class="left">
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": "custom-military-page" } %}
+            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": 'custom-military-page', 'page': app.request.query.get('page', 1) } %}
         </div>
     </div>
 </div>

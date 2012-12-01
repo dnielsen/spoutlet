@@ -10,12 +10,34 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use FOS\CommentBundle\Entity\Thread;
+use FOS\CommentBundle\Model\ThreadInterface;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 /**
  * @author Ryan Weaver <ryan@knplabs.com>
  */
 class CommentController extends BaseCommentController
 {
+    public function flatPagedAction($page, ThreadInterface $thread, $sorter = null)
+    {
+        $qb = $this->container->get('fos_comment.manager.comment')->findCommentsByThreadQB($thread, null, $sorter);
+        $object = $this->container->get('fos_comment.manager.comment')->getObjectFromThread($thread);
+
+        $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
+        $pager->setMaxPerPage(2);
+        $pager->setCurrentPage((int)$page);
+
+        return $this->container->get('templating')->renderResponse(
+            'FOSCommentBundle:Comment:flat.html.'.$this->container->getParameter('fos_comment.template.engine'),
+            array(
+                'pager' => $pager,
+                'sorter' => $sorter,
+                'object' => $object
+            )
+        );
+    }
+
     public function deleteAction($id)
     {
         $manager = $this->container->get('fos_comment.manager.comment');

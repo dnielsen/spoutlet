@@ -99,7 +99,7 @@
 
 
                 </div><!-- giveaway-info -->
-                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": giveaway.slug } %}
+                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": giveaway.slug, 'page': app.request.query.get('page', 1) } %}
             </div><!-- left -->
 
             <div class="clear">

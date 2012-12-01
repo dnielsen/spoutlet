@@ -87,7 +87,7 @@
                             </div>
                         </div>
                     </div>
-                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": deal.threadId } %}
+                    {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.threadId, 'page': app.request.query.get('page', 1) } %}
                 </div>
 
                 <div class="right">

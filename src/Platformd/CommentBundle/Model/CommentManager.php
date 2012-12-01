@@ -4,12 +4,32 @@ namespace Platformd\CommentBundle\Model;
 
 use FOS\CommentBundle\Entity\CommentManager as BaseCommentManager;
 use Platformd\CommentBundle\Entity\Thread;
+use FOS\CommentBundle\Model\ThreadInterface;
 
 /**
  * Our custom comment manager
  */
 class CommentManager extends BaseCommentManager
 {
+    public function findCommentsByThreadQB(ThreadInterface $thread, $depth = null, $sorterAlias = null)
+    {
+        $qb = $this->repository
+                ->createQueryBuilder('c')
+                ->join('c.thread', 't')
+                ->where('t.id = :thread')
+                ->orderBy('c.ancestors', 'ASC')
+                ->setParameter('thread', $thread->getId());
+
+        if ($depth > 0) {
+            // Queries for an additional level so templates can determine
+            // if the final 'depth' layer has children.
+
+            $qb->andWhere('c.depth <= :depth')
+               ->setParameter('depth', $depth + 1);
+        }
+
+        return $qb;
+    }
     /**
      * Returns an array of comments that match the thread prefix, with their
      * associated object attached
