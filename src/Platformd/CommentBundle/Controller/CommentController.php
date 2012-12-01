@@ -25,7 +25,7 @@ class CommentController extends BaseCommentController
         $object = $this->container->get('fos_comment.manager.comment')->getObjectFromThread($thread);
 
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb));
-        $pager->setMaxPerPage(2);
+        $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$page);
 
         return $this->container->get('templating')->renderResponse(

@@ -17,7 +17,8 @@ class CommentManager extends BaseCommentManager
                 ->createQueryBuilder('c')
                 ->join('c.thread', 't')
                 ->where('t.id = :thread')
-                ->orderBy('c.ancestors', 'ASC')
+                ->orderBy('c.id', 'DESC')
+                ->addOrderBy('c.ancestors', 'ASC')
                 ->setParameter('thread', $thread->getId());
 
         if ($depth > 0) {

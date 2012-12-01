@@ -7,3 +7,10 @@ services:
         class: Platformd\CommentBundle\Cache\CommentCache
         arguments:
             - @platformd.cache.memcached
+
+    pagerfanta.view.comment:
+        class: Platformd\CommentBundle\Pagerfanta\View\CommentView
+        arguments:
+            - @pagerfanta.view.default
+        public: false
+        tags: [{ name: pagerfanta.view, alias: comment }]
