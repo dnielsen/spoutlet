@@ -58,10 +58,47 @@ class GiveawayManager
         $keys = $this->getGiveawayKeyRepository()->findAssignedToUser($user);
         $machineCodes = $this->getMachineCodeEntryRepository()->findAssignedToUserWithoutGiveawayKey($user);
 
-        return array_merge(
+        $result = array_merge(
             $requests = $this->convertKeysToRequests($keys),
             $this->convertMachineCodesToRequests($machineCodes)
         );
+
+        $counter            = 1;
+        $previousGiveaway   = null;
+        $approvedGiveaways  = array();
+
+        foreach ($result as $key => $request) {
+
+            $currentGiveaway = $request->getGiveaway()->getId();
+
+            if ($request->getMachineCode()) {
+
+                // getAssignedAt() actually returns the deniedAt datetime for machinecodes in this case. This is a workaraound due to the way the arrays are merged above.
+                if ($request->getAssignedAt() && $currentGiveaway == $previousGiveaway) {
+                    $counter++;
+
+                    if ($counter > 5) {
+                        unset($result[$key]);
+                    }
+                } else {
+                    $counter = 1;
+                }
+
+                $previousGiveaway = $currentGiveaway;
+            }
+
+            if ($request->getValue()) {
+                $approvedGiveaways[] = $currentGiveaway;
+            }
+        }
+
+        foreach ($result as $key => $request) {
+            if ((in_array($request->getGiveaway()->getId(), $approvedGiveaways)) && (!$request->getValue())) {
+                unset($result[$key]);
+            }
+        }
+
+        return $result;
     }
 
     /**

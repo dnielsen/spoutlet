@@ -27,7 +27,10 @@ class MachineCodeEntryRepository extends EntityRepository
         $this->addUserQueryBuilder($user, $qb);
 
         return $qb
+            ->leftJoin('mce.giveaway', 'g')
             ->andWhere('mce.key IS NULL')
+            ->addOrderBy('g.id')
+            ->addOrderBy('mce.deniedAt', 'DESC')
             ->getQuery()
             ->execute()
         ;
