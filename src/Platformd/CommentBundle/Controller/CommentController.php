@@ -7,6 +7,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use FOS\CommentBundle\Entity\Thread;
@@ -94,6 +95,7 @@ class CommentController extends BaseCommentController
         $url = $this->getUrlForObject($obj);
 
         // append the dom ID to the comment, for auto-scroll
+
         $url .= '#comment-message-'.$form->getData()->getId();
 
         return new RedirectResponse($url);
