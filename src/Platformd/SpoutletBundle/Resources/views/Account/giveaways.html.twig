@@ -8,7 +8,13 @@
         <div class="pad">
             <div class="widget-header">
                 <div class="widget-title">
-                    <h2>{{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}</h2>
+                    <h2>
+                        {% if get_current_site().subDomain == "mysg" %}
+                            My System Tag Giveaway Keys
+                        {% else %}
+                            {{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}
+                        {% endif %}
+                    </h2>
                 </div>
             </div>
             <div class="widget-content">
@@ -48,7 +54,9 @@
                     </table>
                 </div>
             </div>
-            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}</div>
+            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}
+                {% if get_current_site().subDomain == "mysg" %}<a href="mailto:mysg@alienwarearena.com">mysg@alienwarearena.com</a>{% endif %}
+            </div>
             <div class="widget-footer">
                 &nbsp;
             </div>
