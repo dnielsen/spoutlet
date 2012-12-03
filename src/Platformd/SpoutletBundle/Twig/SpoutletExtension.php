@@ -84,6 +84,7 @@ class SpoutletExtension extends Twig_Extension
                 'getCurrentSite'
                 ),
             'can_user_apply_to_giveaway'  => new Twig_Function_Method(
+
                 $this,
                 'canUserApplyToGiveaway'
             ),
@@ -285,15 +286,6 @@ class SpoutletExtension extends Twig_Extension
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      * @return bool
      */
-    public function hasUserAppliedToGiveaway(Giveaway $giveaway)
-    {
-        if (!$user = $this->getCurrentUser()) {
-            return false;
-        }
-
-        return $this->getGiveawayManager()->hasUserAppliedToGiveaway($user, $giveaway);
-    }
-
     public function canUserApplyToGiveaway(Giveaway $giveaway)
     {
         if (!$user = $this->getCurrentUser()) {
@@ -301,6 +293,15 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $this->getGiveawayManager()->canUserApplyToGiveaway($user, $giveaway);
+    }
+
+    public function hasUserAppliedToGiveaway(Giveaway $giveaway)
+    {
+        if (!$user = $this->getCurrentUser()) {
+            return false;
+        }
+
+        return $this->getGiveawayManager()->hasUserAppliedToGiveaway($user, $giveaway);
     }
 
     /**
