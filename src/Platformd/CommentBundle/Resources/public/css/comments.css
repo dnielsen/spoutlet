@@ -94,3 +94,26 @@ a.fos_comment_thread_feed {
     display: block;
     float: right;
 }
+
+.fos_comment_thread_comments nav a {
+    font-size: 10px;
+    color: #fff;
+    padding: 3px 3px 3px 3px;
+    margin: 0 3px;
+    padding: 3px 4px;
+    background: #121212;
+    border: 1px solid #4a4a4a;
+}
+
+.fos_comment_thread_comments nav a:hover {
+    color: #fff;
+    border: 1px solid #01a2d2;
+}
+
+.fos_comment_thread_comments nav .current {
+    font-size: 12px;
+    margin: 0 3px;
+    padding: 4px 5px;
+    background: #121212;
+    border: 1px solid #01a2d2;
+}
