@@ -87,7 +87,6 @@
                             </div>
                         </div>
                     </div>
-                    {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.threadId, 'page': app.request.query.get('page', 1) } %}
                 </div>
 
                 <div class="right">
@@ -150,6 +149,13 @@
                 {{ deal.legalVerbiage }}
             </div>
             {% endif %}
+        </div>
+    </div>
+    <div class="std_2col">
+        <div class="left">
+            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.threadId, 'page': app.request.query.get('page', 1) } %}
+        </div>
+        <div class="right">
         </div>
     </div>
 {% endblock %}

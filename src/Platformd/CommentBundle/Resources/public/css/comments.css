@@ -117,3 +117,7 @@ a.fos_comment_thread_feed {
     background: #121212;
     border: 1px solid #01a2d2;
 }
+
+.disabled {
+    display: none;
+}
