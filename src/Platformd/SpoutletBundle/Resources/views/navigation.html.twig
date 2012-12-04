@@ -68,7 +68,7 @@
                     <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
-                {#{% if site_has_feature('GROUPS') %}
+                {% if site_has_feature('GROUPS') %}
                     <li class="more">
                         <a class="blue">
                             <span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>Groups
@@ -85,7 +85,7 @@
                             </li>
                         </ul>
                     </li>
-                {% endif %}#}
+                {% endif %}
 
                 {% if site_has_feature('FORUMS') %}
                     <li><a href="{{ path('forums') }}">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
