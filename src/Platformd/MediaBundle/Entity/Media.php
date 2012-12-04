@@ -8,6 +8,7 @@ use Knp\MediaBundle\Entity\Media as BaseMedia;
 use Knp\MediaBundle\Model\MediaOwnerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Platformd\SiteBundle\Entity\Site;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Our media entity
@@ -47,6 +48,12 @@ class Media extends BaseMedia implements MediaOwnerInterface
      * @ORM\Column(name="removed", type="boolean")
      */
     protected $removed = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\MediaBundle\Entity\FilteredMedia", mappedBy="parent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $filteredMedias;
 
     /**
      * @return \Platformd\UserBundle\Entity\User
@@ -94,5 +101,15 @@ class Media extends BaseMedia implements MediaOwnerInterface
     public function setRemoved($removed)
     {
         $this->removed = $removed;
+    }
+
+    public function getFilteredMedias()
+    {
+        return $this->filteredMedias;
+    }
+
+    public function setFilteredMedias($filteredMedias)
+    {
+        $this->filteredMedias = $filteredMedias;
     }
 }

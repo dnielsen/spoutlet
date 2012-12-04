@@ -16,8 +16,8 @@
                 {% for image in imageList %}
                     <div class="group-image-item">
                         <div class="group-image-image">
-                            <a href="{{ media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ group.name }}]" style="border:none;">
-                                <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
+                            <a href="{{ image.image.filename | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ group.name }}]" style="border:none;">
+                                <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
                             </a>
                         </div>
                         <div class="group-image-title">

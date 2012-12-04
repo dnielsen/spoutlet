@@ -20,7 +20,7 @@
             <div id="first-game-info" style="width: 450px; height: 393px; text-align: center;">
                 <div style="padding-top: 130px;">
                     {% if firstGame.game.logoThumbnail %}
-                    <img src="{{ media_path(firstGame.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ firstGame.game.name }}" />
+                    <img src="{{ firstGame.game.logoThumbnail.filename | imagine_filter('game_list_logo') }}" alt="{{ firstGame.game.name }}" />
                     {% else %}
                     <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ firstGame.game.name }}" />
                     {% endif %}
@@ -53,7 +53,7 @@
                     <li{{ isFirstInRow ? ' class="first"' : ''}}>
                         <a href="{{ url }}"{{ target_blank(actionPage) }}>
                             {% if actionPage.game.logoThumbnail %}
-                            <img src="{{ media_path(actionPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ actionPage.game.name }}" />
+                            <img src="{{ actionPage.game.logoThumbnail.filename | imagine_filter('game_list_logo') }}" alt="{{ actionPage.game.name }}" />
                             {% else %}
                             <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ actionPage.game.name }}" />
                             {% endif %}
@@ -89,7 +89,7 @@
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(rpgPage) }}>
                         {% if rpgPage.game.logoThumbnail %}
-                        <img src="{{ media_path(rpgPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ rpgPage.game.name }}" />
+                        <img src="{{ rpgPage.game.logoThumbnail.filename | imagine_filter('game_list_logo') }}" alt="{{ rpgPage.game.name }}" />
                         {% else %}
                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ rpgPage.game.name }}" />
                         {% endif %}
@@ -124,7 +124,7 @@
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(strategyPage) }}>
                         {% if strategyPage.game.logoThumbnail %}
-                        <img src="{{ media_path(strategyPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ strategyPage.game.name }}" />
+                        <img src="{{ strategyPage.game.logoThumbnail.filename | imagine_filter('game_list_logo') }}" alt="{{ strategyPage.game.name }}" />
                         {% else %}
                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ strategyPage.game.name }}" />
                         {% endif %}
@@ -159,7 +159,7 @@
                 <li{{ isFirstInRow ? ' class="first"' : ''}}>
                     <a href="{{ url }}"{{ target_blank(otherPage) }}>
                         {% if otherPage.game.logoThumbnail %}
-                        <img src="{{ media_path(otherPage.game.logoThumbnail, {'local': true}) | imagine_filter('game_list_logo') }}" alt="{{ otherPage.game.name }}" />
+                        <img src="{{ otherPage.game.logoThumbnail.filename | imagine_filter('game_list_logo') }}" alt="{{ otherPage.game.name }}" />
                         {% else %}
                         <img src="{{ 'bundles/spoutlet/images/alienwarelogothumb.png' | imagine_filter('game_list_logo') }}" alt="{{ otherPage.game.name }}" />
                         {% endif %}
