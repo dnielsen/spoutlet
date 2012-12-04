@@ -30,6 +30,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     const DELETED_BY_OWNER  = 'by_owner';
     const DELETED_BY_ADMIN  = 'by_admin';
     const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
+    const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     static private $validCategories = array(
         'location',
@@ -40,6 +41,7 @@ class Group implements LinkableInterface, ReportableContentInterface
         self::DELETED_BY_OWNER,
         self::DELETED_BY_ADMIN,
         self::DELETED_BY_REPORT,
+        self::DELETED_BY_REPORT_ADMIN,
     );
 
     static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
@@ -334,7 +336,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     public function setDeletedReason($value)
     {
 
-        if (!in_array($value, self::$validDeletedReasons)) {
+        if ($value && !in_array($value, self::$validDeletedReasons)) {
             throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
         }
 
