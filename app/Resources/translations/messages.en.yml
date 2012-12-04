@@ -239,6 +239,7 @@ platformd:
             my_giveaways: My Giveaways
             my_videos: My Videos
             my_events: My Events
+            my_groups: My Groups
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
