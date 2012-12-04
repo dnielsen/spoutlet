@@ -17,4 +17,9 @@
     } %}
 {% endfor %}
 
-{{ pagerfanta(pager, 'comment', {'routeName': routeName, 'routeParams': routeParams }) }}
+{{ pagerfanta(pager, 'comment', {
+    'routeName': routeName,
+    'routeParams': routeParams,
+    'previous_message': '',
+    'next_message': '',
+}) }}
