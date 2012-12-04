@@ -23,6 +23,7 @@
     </p>
     {% if contest is defined %}
     <p>{{ 'contests.igames_disclaimer' | trans }}</p>
+    <p style="color:#ff0000;">{{ 'contests.photo_submissions_left' | trans | format(contest.maxEntries)}}
     {% endif %}
     <input type="file" id="galleryImages" />
 
