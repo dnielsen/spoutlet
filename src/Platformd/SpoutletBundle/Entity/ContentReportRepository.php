@@ -179,7 +179,7 @@ class ContentReportRepository extends EntityRepository
 
         $reports = $em->createQuery('
             SELECT report, c FROM SpoutletBundle:ContentReport report
-            LEFT JOIN report.galleryMedia c
+            LEFT JOIN report.group c
             WHERE report.deleted = false
             AND c = :content
             ')
