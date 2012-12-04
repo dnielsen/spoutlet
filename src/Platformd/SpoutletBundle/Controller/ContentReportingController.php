@@ -135,7 +135,7 @@ class ContentReportingController extends Controller
         $fromName           = $this->container->getParameter('sender_email_name');
 
         $subject            = "Your Content Has Been Flagged";
-        $message            = sprintf("An item posted at %s has been flagged as inappropriate and requires review.
+        $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
 
 Type: %s
 Name:  %s
