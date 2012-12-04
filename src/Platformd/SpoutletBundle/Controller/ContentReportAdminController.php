@@ -120,7 +120,7 @@ class ContentReportAdminController extends Controller
 
         $this->sendUserRestoredNotificationEmail($id, $type);
 
-        $this->setFlash('success', 'Complaint has been hidden.');
+        $this->setFlash('success', 'Content has been reinstated and the complaint has been hidden.');
         return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 
@@ -174,7 +174,7 @@ class ContentReportAdminController extends Controller
 
         $em->flush();
 
-        $this->setFlash('success', 'Content has been removed successfully.');
+        $this->setFlash('success', 'Content has been confirmed as removed.');
         return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 
@@ -244,7 +244,7 @@ class ContentReportAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $item->getAuthor()->getEmail();
+        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
 
         switch ($type) {
             case 'GalleryMedia':
@@ -258,7 +258,7 @@ class ContentReportAdminController extends Controller
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-
+        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
         $subject            = "Your Content is Restored";
         $message            = sprintf("This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
 
@@ -268,7 +268,7 @@ Name: %s
 
 Alienware Arena Team
 
-", $itemType, $item->getTitle());
+", $itemType, $name);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
@@ -280,5 +280,10 @@ Alienware Arena Team
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    private function getEmailManager()
+    {
+        return $this->get('platformd.model.email_manager');
     }
 }
