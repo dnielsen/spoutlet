@@ -31,7 +31,7 @@
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Image</h1>
-                        <div><img src="{{ item[0].image.filenamegamepage | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
+                        <div><img src="{{ item[0].image.filename | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
 
                     {% elseif item[0].getContentType == 'GroupNews' %}
 
