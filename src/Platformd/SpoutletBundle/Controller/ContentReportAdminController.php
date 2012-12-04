@@ -89,6 +89,7 @@ class ContentReportAdminController extends Controller
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
         $galleryMedia = $report->getGalleryMedia();
+        $group = $report->getGroup();
 
         if ($groupVideo) {
             $groupVideo->setDeleted(false);
@@ -114,6 +115,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
             $type = 'GalleryMedia';
             $id = $galleryMedia->getId();
+        } else if ($group) {
+            $group->setDeleted(false);
+            $group->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroup($group);
+            $type = 'Group';
+            $id = $group->getId();
         } else {
             $this->setFlash('error', 'Unknown content type.');
             return $this->redirect($this->generateUrl('admin_content_reports'));
