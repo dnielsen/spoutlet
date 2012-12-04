@@ -117,7 +117,7 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $item->getAuthor()->getEmail();
+        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
 
         $reason = ucwords(str_replace('_', ' ', $reason));
 
@@ -133,7 +133,7 @@ class ContentReportingController extends Controller
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-
+        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
         $subject            = "Your Content Has Been Flagged";
         $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
 
@@ -148,7 +148,7 @@ Thank you for your patience.  Should you have any questions, please contact us a
 
 Alienware Arena Team
 
-", $itemType, $item->getTitle(), $reason);
+", $itemType, $name, $reason);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
