@@ -152,6 +152,25 @@ class ContentReportRepository extends EntityRepository
         }
     }
 
+    public function deleteAllContentReportsForGroup($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.group c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
     public function getLastReportDateForUser($user)
     {
         $result = $this->createQueryBuilder('cr')

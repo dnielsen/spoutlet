@@ -129,6 +129,7 @@ class ContentReportAdminController extends Controller
         $groupVideo = $report->getGroupVideo();
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $group          = $report->getGroup();
 
         if ($groupVideo) {
 
@@ -151,6 +152,13 @@ class ContentReportAdminController extends Controller
             $em->persist($groupImage);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
 
+        } else if ($group) {
+
+            $group->setDeleted(true);
+            $group->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($group);
+            $repo->deleteAllContentReportsForGroup($group);
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -172,9 +180,10 @@ class ContentReportAdminController extends Controller
 
         $report = $repo->find($contentReportId);
 
-        $groupVideo = $report->getGroupVideo();
-        $groupNews = $report->getGroupNews();
-        $groupImage = $report->getGroupImage();
+        $groupVideo     = $report->getGroupVideo();
+        $groupNews      = $report->getGroupNews();
+        $groupImage     = $report->getGroupImage();
+        $group          = $report->getGroup();
 
         if ($groupVideo) {
 
@@ -199,6 +208,14 @@ class ContentReportAdminController extends Controller
             $em->persist($groupImage);
             $type = 'GroupImage';
             $id = $groupImage->getId();
+
+        } else if ($group) {
+
+            $group->setDeleted(false);
+            $group->setDeletedReason(null);
+            $em->persist($group);
+            $type = 'Group';
+            $id = $group->getId();
 
         } else {
 
