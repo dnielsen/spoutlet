@@ -411,3 +411,8 @@ liip_imagine:
                 thumbnail: { size: [400, 400], mode: inset }
 
 knp_time: ~
+
+spoutlet:
+    elasticache_servers:
+        %memcached_server1_ip%: %memcached_server1_port%
+

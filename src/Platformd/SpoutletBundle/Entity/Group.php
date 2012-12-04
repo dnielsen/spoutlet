@@ -778,7 +778,6 @@ class Group implements LinkableInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getId(),
             'slug' => $this->getSlug(),
         );
     }

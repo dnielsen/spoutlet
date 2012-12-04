@@ -99,7 +99,9 @@
 
 
                 </div><!-- giveaway-info -->
-                    {# render "FOSCommentBundle:Thread:showFlat" with {"id": giveaway.slug } #}
+                {% if commentsEnabled %}
+                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": giveaway.slug, 'page': app.request.query.get('page', 1) } %}
+                {% endif %}
             </div><!-- left -->
 
             <div class="clear">

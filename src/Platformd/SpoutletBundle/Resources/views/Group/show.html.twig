@@ -155,7 +155,7 @@
         </div>
         {% if isAllowedToViewGroupContent %}
             <div id="group-comments">
-                {% render "FOSCommentBundle:Thread:showFlat" with {"id": group.threadId } %}
+                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": group.threadId, 'page': app.request.query.get('page', 1) } %}
             </div>
         {% else %}
             <div id="group-comments">
@@ -246,7 +246,7 @@
             }
 
             var loadContent = function(tab) {
-                if(tab == 'group-') {
+                if(tab == 'group-' || tab.indexOf('comment') > 0) {
                     loadNewsContent('group-news');
                 } else {
                     $('#' + tab).click();
