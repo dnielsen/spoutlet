@@ -42,6 +42,10 @@
                         <h1>Article</h1>
                         <div>{{ item[0].article }}</div>
 
+                    {% elseif item[0].getContentType == 'Group' %}
+                        <h1>Group</h1>
+                        <div><a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a></div>
+
                     {% endif %}
                 </td>
                 <td>
@@ -63,8 +67,8 @@
                 </td>
                 {% if manage and item[0].contentReports.count > 0 %}
                     <td>
-                        <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : item[0].contentReports[0].id }) }}">Remove Content</a></div>
-                        <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : item[0].contentReports[0].id }) }}">Archive These Complaints</a></div>
+                        <div id="remove-content"><a href="{{ path('admin_content_reports_remove_content', { "contentReportId" : item[0].contentReports[0].id }) }}">Confirm Removal</a></div>
+                        <div id="hide-complaint"><a href="{{ path('admin_content_reports_hide_complaint', { "contentReportId" : item[0].contentReports[0].id }) }}">Reactivate Content</a></div>
                     </td>
                 {% elseif deletedContent %}
                     <td>

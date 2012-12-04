@@ -826,7 +826,7 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
-
+        $user = $this->getCurrentUser();
         $group = $this->getGroupBySlug($slug);
 
         if ($group->getDeleted()) {

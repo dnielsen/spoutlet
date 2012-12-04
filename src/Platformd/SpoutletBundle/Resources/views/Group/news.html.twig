@@ -17,15 +17,17 @@
             <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
                 <div class="group-news-actions">
                     {% if canDelete %}
-                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">delete</a> |
+                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">Delete</a> |
                     {% endif %}
                     {% if canEdit %}
-                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">edit</a> |
+                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">Edit</a>
                     {% endif %}
-                    <a href="javascript:void(0);" class="report-content" report-data="{{ article.id }}">report</a>
                 </div>
                 <h2>{{ article.title }}</h2>
-                <div class="group-news-date">Announced on {{ article.createdAt | date('F d, Y') }}</div>
+                <div class="group-news-date">
+                    {{ article.createdAt | date('F d, Y') }}
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ article.id }}" style="display: none; float: right;"> Report</a>
+                </div>
                 <div class="group-news-article">
                     {{ article.article | raw }}
                 </div>
@@ -54,6 +56,14 @@
                 $('#news-content-scroll').resize();
             }
         });
+
+        $('.group-news-item').hover(
+            function () {
+                $('.report-content', this).show()
+            },
+            function () {
+                $('.report-content', this).hide()
+            });
 
         $('#news-content-scroll').mCustomScrollbar();
     });
