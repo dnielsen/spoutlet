@@ -317,7 +317,7 @@ button#join-group-button:hover {
 }
 
 .group-list-item .details {
-    margin-top: 10px;
+    margin-top: 2px;
 }
 
 .group-list-item .item-detail {
@@ -347,35 +347,9 @@ button#join-group-button:hover {
 }
 
 .group-list-item .report-group-caption {
-    width:100px;
-    height:20px;
-    background:#000;
-    color:#fff;
-
-    position:absolute;
-    bottom: 60px;
-    left: 50%;
-    margin-left: -50px;
-    text-align: center;
-    border: 1px solid #01a2d2;
-
     /* hide it by default */
-    display:none;
-
-    /* opacity setting */
-    filter:alpha(opacity=70);    /* ie  */
-    -moz-opacity:0.7;    /* old mozilla browser like netscape  */
-    -khtml-opacity: 0.7;    /* for really really old safari */
-    opacity: 0.7;    /* css standard, currently it works in most modern browsers like firefox,  */
-
 }
 
 .group-list-item .report-group-caption a {
-    text-decoration:none;
-    color:#fff;
-    font-size:12px;
-
-    /* add spacing and make the whole div clickable*/
-    padding-top: 1px;
-    display:block;
+    font-size: 10px;
 }

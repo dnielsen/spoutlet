@@ -38,6 +38,9 @@
                             <div class="details">
                                 <div class="item-detail">Members: {{ group.members.count }}</div>
                                 <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                <div class="report-group-caption">
+                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -56,14 +59,8 @@
                                     <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
-                                        </div>
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
-                                        </div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
@@ -72,6 +69,9 @@
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -97,14 +97,8 @@
                                     <a href="{{ path('group_show', { slug: group.slug}) }}">
                                         {% if group.thumbNail %}
                                         <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
-                                        </div>
                                         {% else %}
                                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report</a>
-                                        </div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
@@ -113,6 +107,9 @@
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -179,14 +176,6 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
         $(function () {
-
-            $('.group-list-item').hover(function() {
-                $(this).find('.report-group-caption').stop(false,true).fadeIn(200);
-            },
-            function() {
-                $(this).find('.report-group-caption').stop(false,true).fadeOut(200);
-            });
-
             $('#scrollable-location-groups').scrollable({
                 next: '#location-next',
                 prev: '#location-prev'
