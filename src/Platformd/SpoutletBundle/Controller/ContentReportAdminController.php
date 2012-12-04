@@ -141,6 +141,7 @@ class ContentReportAdminController extends Controller
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
         $galleryMedia = $report->getGalleryMedia();
+        $group          = $report->getGroup();
 
         if ($groupVideo) {
 
@@ -170,6 +171,12 @@ class ContentReportAdminController extends Controller
             $em->persist($galleryMedia);
             $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
 
+        } else if ($group) {
+
+            $group->setDeleted(true);
+            $group->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($group);
+            $repo->deleteAllContentReportsForGroup($group);
 
         } else {
 
@@ -196,6 +203,7 @@ class ContentReportAdminController extends Controller
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
         $galleryMedia = $report->getGalleryMedia();
+        $group          = $report->getGroup();
 
         if ($groupVideo) {
 
@@ -228,6 +236,14 @@ class ContentReportAdminController extends Controller
             $em->persist($galleryMedia);
             $type = 'GalleryMedia';
             $id = $groupImage->getId();
+
+        } else if ($group) {
+
+            $group->setDeleted(false);
+            $group->setDeletedReason(null);
+            $em->persist($group);
+            $type = 'Group';
+            $id = $group->getId();
 
         } else {
 
