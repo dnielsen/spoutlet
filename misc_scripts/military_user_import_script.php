@@ -57,10 +57,22 @@ try {
         echo "\n$row users added...";
 
         $cevoIds =  implode(',', $cevoIdArray) ;
+
+        echo "\nAdding users to military group...\n";
+
         $groupSql = 'INSERT IGNORE INTO `'.$db.'`.`pd_groups_members` SELECT 1, `id` FROM `fos_user` WHERE `cevoUserId` IN ('.$cevoIds.')';
         $stat = $dbh->prepare($groupSql);
         $stat->bindParam(':cevoIds', $cevoIds);
         $stat->execute();
+
+        echo "Adding join actions for users...\n";
+
+        $groupActionsSql = 'INSERT IGNORE INTO `'.$db.'`.`pd_group_membership_actions` (`group_id`, `user_id`, `action`, `created_at`) SELECT 1, `id`, "JOINED", NOW() FROM `fos_user` WHERE `cevoUserId` IN ('.$cevoIds.')';
+        $stat = $dbh->prepare($groupActionsSql);
+        $stat->bindParam(':cevoIds', $cevoIds);
+        $stat->execute();
+
+        echo "\nFinished import\n";
     }
 
 } catch (PDOException $e) {
