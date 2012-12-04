@@ -10,7 +10,6 @@ class ContentReportRepository extends EntityRepository
     public function getContentReportTypeForAllSites($type)
     {
         if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia" && $type != "Group") {
-
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
