@@ -81,7 +81,8 @@ class GroupRepository extends EntityRepository
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
-            ->setParameter('site', $site);
+            ->setParameter('site', $site)
+            ->orderBy('g.createdAt', 'DESC');
 
         return $qb->getQuery()->execute();
     }
