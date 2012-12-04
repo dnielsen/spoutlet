@@ -196,6 +196,7 @@ class ContentReport
     public function setGalleryMedia($value)
     {
         $this->galleryMedia = $value;
+    }
 
     public function getGroup()
     {
