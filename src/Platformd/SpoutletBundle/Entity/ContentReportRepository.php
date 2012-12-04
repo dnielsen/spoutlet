@@ -9,8 +9,8 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSites($type)
     {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia" && $type != "Group") {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -27,7 +27,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesArchived($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia" && $type != "Group") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -46,7 +46,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesDeletedContent($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "GalleryMedia" && $type != "Group") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 

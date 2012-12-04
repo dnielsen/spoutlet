@@ -100,6 +100,13 @@ class ContentReport
     protected $galleryMedia = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $group = null;
+
+    /**
      * Get id
      *
      * @return integer
@@ -189,6 +196,15 @@ class ContentReport
     public function setGalleryMedia($value)
     {
         $this->galleryMedia = $value;
+
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
     }
 
     public function getSite()
