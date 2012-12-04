@@ -292,7 +292,8 @@ class GroupRepository extends EntityRepository
         WHERE
             pd_group_membership_actions.group_id = :id
         AND
-            pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)';
+            pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)
+        GROUP BY pd_group_membership_actions.user_id';
 
         $stmt = $this->getEntityManager()
                      ->getConnection()
