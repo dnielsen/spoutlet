@@ -977,6 +977,10 @@ Alienware Arena Team
                     $group->setDeletedReason(GROUP::DELETED_BY_ADMIN);
                 }
 
+                if ($group->getFeatured()) {
+                    $group->setFeaturedAt(new \DateTime('now'));
+                }
+
                 $this->getGroupManager()->saveGroup($group);
 
                 return true;
