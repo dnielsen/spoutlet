@@ -315,6 +315,7 @@ class GroupRepository extends EntityRepository
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('g.featuredAt', 'DESC')
+            ->distinct('g.id')
             ->setMaxResults(4)
             ->setParameter('site', $site);
 
