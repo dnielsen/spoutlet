@@ -235,6 +235,12 @@ a.media-voting-button {
 
 }
 
+.media-thumb {
+    max-width: 100%;
+    vertical-align: middle;
+    border: 0;
+}
+
 .gallery-media-thumb .thumbnail-vote-caption a {
     text-decoration:none;
     color:#fff;

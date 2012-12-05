@@ -150,6 +150,8 @@ class GalleryController extends Controller
 
         $errors = $this->validateMediaPublish($id, $title, $description, $gals);
 
+        $canPublish = count($errors) == 0;
+
         if(count($errors) > 0)
         {
             $response->setContent(json_encode(array(
@@ -160,7 +162,9 @@ class GalleryController extends Controller
             return $response;
         }
 
-        $galleries  = $this->getGalleryRepository()->findAllGalleries($gals);
+        $galleryIds = count($gals) == 0 ? array(0) : $gals;
+
+        $galleries  = $this->getGalleryRepository()->findAllGalleries($galleryIds);
         $media      = $this->getGalleryMediaRepository()->find($id);
         $groupRepo  = $this->getGroupRepository();
         $user       = $this->getCurrentUser();
@@ -175,7 +179,12 @@ class GalleryController extends Controller
 
         $media->setTitle($title);
         $media->setDescription($description);
-        $media->setPublished(true);
+
+        if($canPublish)
+        {
+            $media->setPublished(true);
+        }
+
         $media->setGalleries($galleries);
 
         $em->persist($media);

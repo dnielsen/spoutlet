@@ -118,12 +118,10 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}
 <div id="blockUI" style="display:none;">
 <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
 </div>
-{% endif %}
-
-
 {% endblock %}
 
 {% block stylesheets %}
@@ -236,6 +234,8 @@
                 var id = $(this).attr('data-id');
                 $('#media-title').val(title);
                 $('#media-id').val(id);
+
+                $('#publish-photo').click();
             });
 
             $('.gallery-media').qtip({

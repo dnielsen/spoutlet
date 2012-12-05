@@ -35,7 +35,6 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
-
 {% if medias | length > 0 %}
 {% set initialId = medias[0].id %}
 <div class="std_2col" id="publish-media">
@@ -106,12 +105,10 @@
         {% endfor %}
     </div>
 </div>
-<div id="blockUI" style="display:none;">
-<p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
-</div>
 {% endif %}
-
-
+<div id="blockUI" style="display:none;">
+    <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
+</div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -126,6 +123,10 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
     <script type="text/javascript">
+        window.onbeforeunload = function () {
+            return 'You have some unsaved photos.';
+        }
+
         $(function() {
 
             var t;
@@ -161,11 +162,21 @@
                 var first = $('.gallery-media').first();
 
                 if(first) {
-                    first.click();
+                    selectMedia(first);
                 }
             }
 
-            $('#publish-photo').click(function () {
+            var selectMedia = function (current) {
+                $('.gallery-media').removeClass('active');
+                current.addClass('active');
+                var title = current.attr('data-title');
+                var id = current.attr('data-id');
+                $('#media-title').val(title);
+                $('#media-id').val(id);
+                clearForm(false);
+            }
+
+            var publishPhoto = function () {
                 var url = '{{ path('gallery_publish_photo') }}';
 
                 var galleries = [];
@@ -214,16 +225,14 @@
                         }
                     }
                 });
-            });
+            }
+
+
+            $('#publish-photo').click(publishPhoto);
 
             $('.gallery-media').click(function () {
-                $('.gallery-media').removeClass('active');
-                $(this).addClass('active');
-                var title = $(this).attr('data-title');
-                var id = $(this).attr('data-id');
-                $('#media-title').val(title);
-                $('#media-id').val(id);
-                clearForm(false);
+                selectMedia($(this));
+                publishPhoto();
             });
 
             $('.gallery-media').qtip({
