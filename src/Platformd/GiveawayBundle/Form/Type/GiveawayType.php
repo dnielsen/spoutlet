@@ -38,6 +38,7 @@ class GiveawayType extends AbstractType
             'property' => 'name',
         ));
         $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'));
+        $builder->add('displayRemainingKeysNumber', null, array('label' => 'Show key count'));
     }
 
     public function getName()
