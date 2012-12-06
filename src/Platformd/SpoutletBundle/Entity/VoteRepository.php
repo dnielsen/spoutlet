@@ -30,6 +30,18 @@ class VoteRepository extends EntityRepository
         return $result[0][1];
     }
 
+    public function findVoteCount($media)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->andWhere('v.galleryMedia = :media')
+            ->select('COUNT(v)')
+            ->setParameter('media', $media);
+
+        $result = $qb->getQuery()->execute();
+
+        return $result[0][1];
+    }
+
     public function canVoteOnMedia($media, $user)
     {
         $qb = $this->createQueryBuilder('v')

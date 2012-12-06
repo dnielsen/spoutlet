@@ -6,6 +6,9 @@
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media[0].id }) }}">
                     <img class="media-thumb" title="{{ media[0].title }}" src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    <div class="thumbnail-vote-caption">
+                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media[0].id }}">Quick Vote</a>
+                    </div>
                 </a>
             </div>
             <div style="width:135px;">
@@ -23,6 +26,9 @@
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                     <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    <div class="thumbnail-vote-caption">
+                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                    </div>
                 </a>
             </div>
             <div style="width:135px;">
@@ -35,4 +41,17 @@
     {% endfor %}
 
 {% endif %}
+
+{% include 'SpoutletBundle:Gallery:_quickVotePopup.html.twig' %}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.gallery-media-thumb').hover(function() {
+            $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeIn(200);
+        },
+        function() {
+            $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeOut(200);
+        });
+    });
+</script>
 

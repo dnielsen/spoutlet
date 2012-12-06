@@ -54,9 +54,13 @@
                         {% endif %}
                     {% endif %}
                     {% if isEntered %}
-                        <div style="text-align:center;">
-                            <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_submit_photos' | trans }}</button>
-                        </div>
+                        {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                            <div style="text-align:center;">
+                                <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_submit_photos' | trans }}</button>
+                            </div>
+                        {% else %}
+                            <p style="text-align: center;"><em>This contest is no longer available</em></p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

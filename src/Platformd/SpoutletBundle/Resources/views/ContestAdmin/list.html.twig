@@ -49,7 +49,7 @@
                 <td>
                     <a href="{{ path('admin_contest_edit', { 'slug' : contest.slug }) }}">Edit</a>
 
-                {% if (contest.votingEnd | date < 'now' | date) and (contest.winners == null) %}
+                {% if (contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s')) and (contest.winners == null) %}
                      | <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">Select Winner</a>
                 {% endif %}
 

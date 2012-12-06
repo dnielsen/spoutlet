@@ -22,17 +22,20 @@
                             {% set isFirstInRow = (loop.index - 1) is divisibleby(5) or loop.first  %}
                             <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% else %} "style="padding-left:7px;{% endif %}">
                                 <div class="account-image-image">
-                                    <a href="{{  media_path(image.image, {'local': true}) | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ image.author.username }}]" style="border:none;">
+                                   <a href="{{ path('gallery_media_show', { id: image.id }) }}">
                                         <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
+                                        <div class="thumbnail-caption" style="display:none;">
+                                            <a href="{{ path('gallery_edit_media', { id : image.id }) }}">Edit</a>
+                                        </div>
                                     </a>
                                 </div>
-                                <div style="width:115px;">
-                                    <a href="{{ path('gallery_edit_media', { 'id': image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
+                                <div style="width:177px;">
+                                    <a class="media-title" href="{{ path('gallery_media_show', { id: image.id }) }}">
                                         {{ image.title }}
                                     </a>
                                 </div>
                                 <div>
-                                    Uploaded: {{ image.createdAt | date('m/d/Y') }}
+                                    {{ image.createdAt | date('M n, Y') }}
                                 </div>
 
                                 <input type="hidden" value="{{ image.createdAt | date('m-d-Y') }}" class="media-date" />
@@ -71,7 +74,14 @@
     <script type="text/javascript">
         $(function () {
 
-            $('.media-title').truncate();
+            $('.account-image-image').hover(function() {
+                $(this).find('div.thumbnail-caption').stop(false,true).fadeIn(200);
+            },
+            function() {
+                $(this).find('div.thumbnail-caption').stop(false,true).fadeOut(200);
+            });
+
+            $('.media-title').truncate({ width: 177 });
 
             $('.page_container').pajinate({
                     items_per_page: 10,

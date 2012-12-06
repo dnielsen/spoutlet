@@ -98,8 +98,7 @@ class ContestController extends Controller
             $em->persist($entry);
             $em->flush();
 
-            $this->setFlash('success', sprintf($this->trans('contests.enter_page_success'), $contest->getName(), $contest->getCategory()));
-            return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+            return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
     }
 

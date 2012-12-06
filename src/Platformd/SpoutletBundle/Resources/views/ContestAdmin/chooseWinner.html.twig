@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Choose Winner for {{ contest.name }}</h1>
 
-{% if contest.votingEnd | date < 'now' | date %}
+{% if contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s') %}
 
 <p class="alert alert-info help"><i class="icon-info-sign"></i>
     The entries are shown below, sorted by vote count. Please select up to 3 winners.

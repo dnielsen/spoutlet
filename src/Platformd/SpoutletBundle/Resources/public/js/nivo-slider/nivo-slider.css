@@ -103,3 +103,7 @@
 .nivo-controlNav a.active {
 	font-weight:bold;
 }
+
+.nivoSlider, .nivoSlider img, .nivo-slice{
+	border-radius:5px;  /*change value based on preference*/
+}

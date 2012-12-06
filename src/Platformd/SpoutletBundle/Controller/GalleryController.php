@@ -233,7 +233,10 @@ class GalleryController extends Controller
         $media          = $this->getGalleryMediaRepository()->find($id);
 
         $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
-        $upVotes        = $this->getVoteRepository()->findUpVotes($id);
+
+        $totalVotes     = $this->getVoteRepository()->findVoteCount($id);
+        $upVotes        = round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100);
+        $downVotes      = 100 - $upVotes;
 
         if(!$media)
         {
@@ -257,6 +260,7 @@ class GalleryController extends Controller
             'otherMedia'    => $otherMedia,
             'upVotes'       => $upVotes,
             'crumb'         => $crumb,
+            'downVotes'     => $downVotes,
         ));
     }
 
@@ -393,9 +397,10 @@ class GalleryController extends Controller
         $em->persist($vote);
         $em->flush();
 
-        $upvotes = $voteRepo->findUpVotes($media);
+        $totalVotes     = $this->getVoteRepository()->findVoteCount($media);
+        $upVotes        = round(($this->getVoteRepository()->findUpVotes($media)/$totalVotes)*100);
 
-        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upvotes)));
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes)));
         return $response;
     }
 

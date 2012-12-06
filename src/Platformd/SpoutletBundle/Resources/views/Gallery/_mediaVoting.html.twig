@@ -21,8 +21,6 @@
     </div>
 </div>
 
-
-
 <script type="text/javascript">
     $(function () {
 
@@ -46,9 +44,12 @@
                         }
                     } else {
                         $('#media-voting-vote-response').fadeIn();
-                        $('#media-upvotes').hide();
-                        $('#media-upvotes').text(data.messageForUser);
-                        $('#media-upvotes').fadeIn();
+                            $('#media-upvotes').hide();
+                            $('#media-upvotes').text(data.messageForUser);
+                            $('#media-upvotes').fadeIn();
+                            $('#media-downvotes').hide();
+                            $('#media-downvotes').text(100-$('#media-upvotes').text);
+                            $('#media-downvotes').fadeIn();
                     }
                     $('#close-dialog').text('Close');
                 }
@@ -75,9 +76,12 @@
                         }
                     } else {
                         $('#media-voting-vote-response').fadeIn();
-                        $('#media-upvotes').hide();
-                        $('#media-upvotes').text(data.messageForUser);
-                        $('#media-upvotes').fadeIn();
+                            $('#media-upvotes').hide();
+                            $('#media-upvotes').text(data.messageForUser);
+                            $('#media-upvotes').fadeIn();
+                            $('#media-downvotes').hide();
+                            $('#media-downvotes').text(100-parseInt(data.messageForUser));
+                            $('#media-downvotes').fadeIn();
                     }
                     $('#close-dialog').text('Close');
                 }

@@ -601,7 +601,7 @@ contests:
     index_page_title: Contests
     show_page_overview: Overview
     show_page_instructions: Instructions
-    show_page_enter_contest: Enter Contest
+    show_page_enter_contest: Enter
     show_page_submit_photos: Submit Photos
     show_page_contest: Contest
     show_page_winners: Winners
@@ -625,3 +625,4 @@ contests:
     photo_submission_message: All photo submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your photo fulfills all the requirements
     igames_disclaimer: By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
     photo_submissions_left: You can submit a maximum of %s photos for this contest.
+    photo_submissions_unlimited: You can submit as many photos as you like for this contest.

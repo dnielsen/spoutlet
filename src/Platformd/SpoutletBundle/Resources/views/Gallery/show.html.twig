@@ -103,6 +103,17 @@
                     </div>
                     <div class="photo-date">{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('M d, Y')}}</div>
                     <div class="description">{{ media.description }}</div>
+
+                    <div style="margin-top:10px; width:300px">
+                        <div style="width:20%; float:left;">Galleries: </div>
+                        <div style="width:80%; float:right;">
+                            {% for gallery in media.galleries %}
+                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
+                            {% endfor %}
+                        </div>
+                        <div class="clear" />
+                    </div>
+
                     <div id="widget-footer">
                         <p>
                             {% if canDelete %}
@@ -122,10 +133,7 @@
                             {% endif %}
                         </p>
                         <p>
-                            <div style="padding: 3px 0 0 0;"><a href="{{ path('gallery_submit') }}">submit image</a></div>
-                        </p>
-                        <p>
-                            <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">flag</a>
+                            <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">Report</a>
                         </p>
                     </div>
                 </div>
@@ -138,14 +146,17 @@
                 </div>
                 <div class="widget-content">
 
-                    <div style="display:inline-table;width:140px;margin-left:5px;">
+                    <div style="display:inline-table;width:120px;margin-left:5px;">
                         {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
                     </div>
-                    <div style="display:inline-table;width:140px;">
-                        Points: <span id="media-upvotes">{{ upVotes }}</span>
+                    <div style="display:inline-table;width:160px;">
+                        Likes: <span id="media-upvotes">{{ upVotes }}</span>% / Dislikes: <span id="media-downvotes">{{ downVotes }}</span>%
                     </div>
                     {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
                 </div>
+            </div>
+            <div class="submit-media">
+                <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
 
         </div>
