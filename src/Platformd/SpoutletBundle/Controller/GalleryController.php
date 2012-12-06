@@ -44,7 +44,7 @@ class GalleryController extends Controller
         $form       = $this->createForm(new SubmitImageType($user));
 
         $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUser($user);
-        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategory('image');
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
         $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
 
         if ($request->getMethod() == 'POST')
@@ -212,17 +212,17 @@ class GalleryController extends Controller
 
         if(StringUtil::IsNullOrEmptyString($title))
         {
-            $errors[] = $this->trans('galleries.publish_photo_error_title');
+            $errors[] = 'title';
         }
 
         if(StringUtil::IsNullOrEmptyString($desc))
         {
-            $errors[] = $this->trans('galleries.publish_photo_error_desc');
+            $errors[] ='description';
         }
 
         if(count($galleries) == 0)
         {
-            $errors[] = $this->trans('galleries.publish_photo_error_gallery');
+            $errors[] = 'galleries';
         }
 
         return $errors;

@@ -20,10 +20,11 @@
 <div class="std_1col" >
     {% include 'SpoutletBundle:Contest:_links.html.twig' %}
 </div>
-<div class="std_2col">
-    <div class="left">
-        <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
-        {% if (entriesLeft > 0) or (isUnlimited) %}
+
+{% if (entriesLeft > 0) or (isUnlimited) %}
+    <div class="std_2col">
+        <div class="left">
+            <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
             {% if not submissionEnded %}
                 <form action="{{ path('contest_submit', {slug: contest.slug}) }}" id="submit-photo-form" method="post" {{ form_enctype(form) }}>
                     {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
@@ -37,15 +38,15 @@
                 <p>{{ 'contests.submit_page_submission_ended' | trans }}</p>
                 <a href="{{ path('contest_show', {slug: contest.slug}) }}" class="btn">{{ 'contests.submit_page_back_to_contest' | trans }}</a>
             {% endif %}
-        {% else %}
-        <p>{{ 'contests.submit_page_entry_max_reached' | trans }}</p>
-        <a href="{{ path('contest_show', {slug: contest.slug}) }}" class="btn">{{ 'contests.submit_page_back_to_contest' | trans }}</a>
-        {% endif %}
+        </div>
+        <div class="right">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
     </div>
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-    </div>
-</div>
+{% else %}
+    <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
+    <p><span style="font-weight:bold;">{{ 'galleries.submit_photo_step1' | trans }}</span> {{ 'contests.submit_page_entry_max_reached' | trans }}</p>
+{% endif %}
 
 {% if medias | length > 0 %}
 {% set initialId = medias[0].id %}
@@ -55,26 +56,27 @@
             <span style="font-weight:bold;">{{ 'galleries.submit_photo_step2' | trans }}</span>
             {{ 'galleries.submit_photo_step2_detail' | trans }}
         </p>
+        <span>* required fields</span>
         <div id="media-form" class="form-horizontal">
             <p style="color: #ff0000;" id="media-form-error-msg"></p>
             <ul id="media-form-errors">
             </ul>
             <div class="span11">
                 <div class="control-group ">
-                    <label class="control-label" for="media-title">{{ 'galleries.submit_photo_image_name' | trans }}</label>
+                    <label class="control-label" for="media-title" id="media-title-label">{{ 'galleries.submit_photo_image_name' | trans }}</label>
                     <div class="controls">
                         <input type="text" id="media-title" name="media-title" required="required" maxlength="255" class="photo-title form-txt">
                     </div>
                 </div>
                 <div class="control-group ">
-                    <label class="control-label" for="media-description">{{ 'galleries.submit_photo_image_desc' | trans }}</label>
+                    <label class="control-label" for="media-description" id="media-description-label">{{ 'galleries.submit_photo_image_desc' | trans }}</label>
                     <div class="controls">
                         <textarea id="media-description" name="media-description" required="required" maxlength="512" class="photo-description"></textarea>
                     </div>
                 </div>
                 <div id="platformd_spoutletbundle_gallery_media_galleries">
                     <div class="control-group ">
-                        <label class="control-label">{{ 'galleries.submit_photo_image_galleries' | trans }}</label>
+                        <label class="control-label" id="media-galleries-label">{{ 'galleries.submit_photo_image_galleries' | trans }}</label>
                         <div class="controls">
                             {% for gallery in galleries %}
                                 <label class="checkbox">
@@ -149,7 +151,7 @@
                 }
 
                 $('#media-description').val('');
-                $('input:checkbox').removeAttr('checked');
+                //$('input:checkbox').removeAttr('checked');
                 $('#media-form-errors').empty();
                 $('#media-form-error-msg').text('');
                 var mediaCount = $('.gallery-media').length;
@@ -221,7 +223,8 @@
                             $('#media-form-errors').empty();
                             if(data.errors.length > 0) {
                                 $.each(data.errors, function(i, item) {
-                                    $('#media-form-errors').append('<li class="media-publish-error">' + item + '</li>');
+                                    $('#media-' + item + '-label').css({"color":"red"});
+                                    $('#media-' + item).css({"border-color":"red"});
                                 });
                             }
                         }
@@ -236,6 +239,12 @@
                 var id = $(this).attr('data-id');
                 $('#media-title').val(title);
                 $('#media-id').val(id);
+                $('#media-title-label').css({"color":"#AAA"});
+                $('#media-description-label').css({"color":"#AAA"});
+                $('#media-galleries-label').css({"color":"#AAA"});
+                $('#media-title').css({"border-color":"#AAA"});
+                $('#media-description').css({"border-color":"#AAA"});
+                $('#media-form-error-msg').text("");
             });
 
             $('.gallery-media').qtip({

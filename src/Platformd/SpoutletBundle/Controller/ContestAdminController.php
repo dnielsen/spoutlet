@@ -182,6 +182,8 @@ class ContestAdminController extends Controller
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
         $likes              = array();
+        $upVotes            = array();
+        $downVotes          = array();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -192,6 +194,24 @@ class ContestAdminController extends Controller
         foreach ($entries as $entry) {
             foreach ($entry->getMedias() as $media) {
                 $likes[$media->getId()] = $this->getEntryLikeCount($media);
+
+                $totalVotes =  $media->getVotes()->count();
+
+                if ($totalVotes) {
+                    $upCount = $media->getVotes()
+                        ->filter(function($x) {
+                            return
+                            $x->getVoteType() == "up"; })
+                        ->count();
+
+                    $upVotes[$media->getId()] = round(($upCount/$totalVotes)*100);
+                    $downVotes[$media->getId()] = round((($totalVotes - $upCount)/$totalVotes)*100);
+                } else {
+                    $upVotes[$media->getId()] = 0;
+                    $downVotes[$media->getId()] = 0;
+                }
+
+
             }
         }
 
@@ -207,6 +227,8 @@ class ContestAdminController extends Controller
             'entries'   => $entries,
             'slug'      => $slug,
             'likes'     => $likes,
+            'upVotes'   => $upVotes,
+            'downVotes' => $downVotes,
         ));
     }
 
@@ -275,7 +297,7 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
-        $entries    = $contestEntryRepo->findAllForContest($contest);
+        $entries    = $contestEntryRepo->findAllNotDeletedForContest($contest);
         $factory    = new CsvResponseFactory();
 
         $factory->addRow(array(
@@ -432,7 +454,7 @@ class ContestAdminController extends Controller
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s\\media\\%s', $cf, $galleryMedia->getImage()->getFilename());
+        return sprintf('%s/media/%s', $cf, $galleryMedia->getImage()->getFilename());
     }
 
     private function getEntryLikeCount($galleryMedia)

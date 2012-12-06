@@ -560,10 +560,10 @@ galleries:
 
     submit_photo_step2: Step 2 of 2:
     submit_photo_step2_detail: Click on an image to provide details.
-    submit_photo_image_name: Image Name:
-    submit_photo_image_desc: Description:
-    submit_photo_image_galleries: Galleries:
-    submit_photo_groups: Groups:
+    submit_photo_image_name: Image Name*
+    submit_photo_image_desc: Description*
+    submit_photo_image_galleries: Galleries*
+    submit_photo_groups: Groups
     submit_photo_button_publish: Publish
     submit_photo_publish_success: Success!
     submit_photo_upload_success: Your images were uploaded successfully.

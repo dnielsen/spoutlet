@@ -30,6 +30,22 @@ class GalleryRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllGalleriesByCategoryForSite($site, $category='image')
+    {
+        $result = $this->createQueryBuilder('ga')
+            ->leftJoin('ga.categories', 'cat')
+            ->leftJoin('ga.sites', 's')
+            ->where('cat.name = :category')
+            ->andWhere('s = :site')
+            ->orderBy('ga.name', 'ASC')
+            ->setParameter('category', $category)
+            ->setParameter('site', $site)
+            ->getQuery()
+            ->execute();
+
+        return $result;
+    }
+
     public function findAllGalleriesForSite($site)
     {
         return $this->createQueryBuilder('g')
