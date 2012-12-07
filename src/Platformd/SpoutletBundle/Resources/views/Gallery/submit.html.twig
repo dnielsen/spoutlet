@@ -256,12 +256,14 @@
                                 var media = medias[len];
                                 for (var i = published.length - 1; i >= 0; i--) {
                                     if(published[i] == media.id) {
-                                        $('#gallery-media-wrapper-' + media.id).fadeOut();
+                                        $('#gallery-media-wrapper-' + media.id).remove();
                                         medias.splice(len, 1);
                                     }
                                 };
                             }
                         }
+
+                        initMedia();
 
                         $.unblockUI();
                     }
