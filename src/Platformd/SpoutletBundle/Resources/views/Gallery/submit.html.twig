@@ -107,9 +107,15 @@
 </div>
 {% endif %}
 <div id="blockUploadUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
     <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
 </div>
 <div id="blockPublishUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
     <p>{{ 'galleries.submit_photo_publish_blockUI_message' | trans }}</p>
 </div>
 {% endblock %}
@@ -126,8 +132,6 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
     <script type="text/javascript">
-
-
         $(function() {
 
             window.onbeforeunload = function () {
