@@ -63,7 +63,7 @@
                                 <ol>
                                     {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
                                 </ol>
-    
+
                                 <div class="form-msg-error" id="_sweeps_error"></div>
 
                                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -81,7 +81,7 @@
                                     </div>
 
                                 {% endif %}
-    
+
                                 <div class="clear"></div>
                             {% endif %}
 
@@ -90,7 +90,7 @@
                 </div>
 
             </div><!-- right -->
-            
+
             <div class="left">
                 <div id="giveaway-info" class="widget-66">
                     <div class="widget-header">
@@ -139,11 +139,11 @@
                     </div><!-- giveaway-details -->
 
                 </div><!-- giveaway-info -->
-                    {% render "FOSCommentBundle:Thread:showFlat" with {"id": sweepstakes.slug } %}
+                    {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": sweepstakes.slug, 'page': app.request.query.get('page', 1) } %}
             </div><!-- left -->
-            
+
             <div class="clear">
-            
+
             </div><!-- clear -->
         </div><!-- std_2col -->
     </div>

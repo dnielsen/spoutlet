@@ -81,7 +81,8 @@ class GroupRepository extends EntityRepository
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
-            ->setParameter('site', $site);
+            ->setParameter('site', $site)
+            ->orderBy('g.createdAt', 'DESC');
 
         return $qb->getQuery()->execute();
     }
@@ -292,7 +293,8 @@ class GroupRepository extends EntityRepository
         WHERE
             pd_group_membership_actions.group_id = :id
         AND
-            pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)';
+            pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)
+        GROUP BY pd_group_membership_actions.user_id';
 
         $stmt = $this->getEntityManager()
                      ->getConnection()
@@ -313,6 +315,7 @@ class GroupRepository extends EntityRepository
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('g.featuredAt', 'DESC')
+            ->distinct('g.id')
             ->setMaxResults(4)
             ->setParameter('site', $site);
 

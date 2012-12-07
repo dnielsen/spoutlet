@@ -81,8 +81,7 @@
                 </div>
             </div>
 
-            {% render "FOSCommentBundle:Thread:showFlat" with {"id": event.slug } %}
-
+            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": event.slug, 'page': app.request.query.get('page', 1) } %}
         </div>
     </div>
 
