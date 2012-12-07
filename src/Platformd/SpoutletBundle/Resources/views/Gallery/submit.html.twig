@@ -227,11 +227,11 @@
                 var len = medias.length;
                 while(len--) {
                     var media = medias[len];
-                    publishPhoto(media, len);
+                    publishPhoto(media, len, removeMedia);
                 }
             }
 
-            var publishPhoto = function (media, i) {
+            var publishPhoto = function (media, i, callback) {
                 var url = '{{ path('gallery_publish_photo') }}';
 
                 $.ajax({
@@ -241,12 +241,16 @@
                     contentType: 'application/json',
                     success: function(data) {
                         if(data.success) {
-                            $('#flash-publish-success').fadeIn();
-                            $('#gallery-media-wrapper-' + media.id).remove();
-                            medias.splice(i, 1);
+                            callback(i, media.id);
                         }
                     }
                 });
+            }
+
+            var removeMedia = function(i, id) {
+                $('#flash-publish-success').fadeIn();
+                $('#gallery-media-wrapper-' + id).remove();
+                medias.splice(i, 1);
             }
 
             var setSelectedGalleries = function (galleries) {
