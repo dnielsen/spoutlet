@@ -39,6 +39,12 @@
     margin-bottom: 5px;
 }
 
+#report-group-wrapper {
+    padding: 5px 0 10px 0;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
 #group-video-form-wrapper h2 {
     font-size: 12pt;
 }
@@ -307,10 +313,11 @@ button#join-group-button:hover {
     width: 135px;
     height: 130px;
     margin: 5px;
+    position: relative;
 }
 
 .group-list-item .details {
-    margin-top: 10px;
+    margin-top: 2px;
 }
 
 .group-list-item .item-detail {
@@ -337,4 +344,12 @@ button#join-group-button:hover {
 
 .group-details-table td {
     padding: 0 0 5px 0;
+}
+
+.group-list-item .report-group-caption {
+    /* hide it by default */
+}
+
+.group-list-item .report-group-caption a {
+    font-size: 10px;
 }

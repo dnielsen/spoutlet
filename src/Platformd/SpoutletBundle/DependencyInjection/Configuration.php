@@ -24,6 +24,18 @@ class Configuration implements ConfigurationInterface
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
+        $rootNode
+            ->children()
+                ->arrayNode('elasticache_servers')
+                    ->defaultValue(array())
+                    ->addDefaultsIfNotSet()
+                    ->useAttributeAsKey('host')
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
         return $treeBuilder;
     }
 }

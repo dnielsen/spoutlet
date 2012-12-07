@@ -47,6 +47,9 @@ class ContentReportingController extends Controller
         $user   = $this->getCurrentUser();
         $site   = $this->getCurrentSite();
 
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $lastReport = $contentReportRepo->getLastReportDateForUser($user);
+
         if (!in_array($reason, $report->getValidReasons())) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Valid reason not given.")));
             return $response;
@@ -54,6 +57,11 @@ class ContentReportingController extends Controller
 
         if (!($user instanceof User)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to report content.")));
+            return $response;
+        }
+
+        if ($lastReport && $lastReport > new \DateTime('-1 hour')) {
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You may only report one item per hour.")));
             return $response;
         }
 
@@ -89,9 +97,64 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $em->persist($report);
+
+        $reportedItem = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+        $reportedItem->setDeleted(true);
+        $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+
+        $em->persist($reportedItem);
+
         $em->flush();
 
-        $response->setContent(json_encode(array("success" => true)));
+        $this->sendUserReportedNotificationEmail($id, $type, $reason);
+
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
+    }
+
+    private function sendUserReportedNotificationEmail($id, $type, $reason)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+
+        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
+
+        $reason = ucwords(str_replace('_', ' ', $reason));
+
+        switch ($type) {
+            case 'GalleryMedia':
+                $itemType = ucfirst($item->getCategory());
+                break;
+
+            default:
+                $itemType = "Group ".str_replace('Group', '', $type);
+                break;
+        }
+
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
+        $subject            = "Your Content Has Been Flagged";
+        $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+
+Type: %s
+Name:  %s
+Reason: %s
+
+The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+
+Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+
+Alienware Arena Team
+
+", $itemType, $name, $reason);
+
+        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+    }
+
+    private function getEmailManager()
+    {
+        return $this->get('platformd.model.email_manager');
     }
 }

@@ -42,11 +42,14 @@ class GiveawayController extends Controller
 
         $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
 
+        $commentsEnabled = $this->getLocale() != 'zh' && $this->getLocale() != 'ja';
+
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $instruction,
             'available_keys'    => $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool),
             'assignedKey'       => $assignedKey,
+            'commentsEnabled'   => $commentsEnabled,
         ));
     }
 

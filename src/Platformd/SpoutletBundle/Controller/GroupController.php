@@ -826,7 +826,7 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
-
+        $user = $this->getCurrentUser();
         $group = $this->getGroupBySlug($slug);
 
         if ($group->getDeleted()) {
@@ -841,14 +841,8 @@ Alienware Arena Team
 
         $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
-        if ($commentTotal && isset($commentTotal[0]) && isset($commentTotal[0]['numComments'])) {
-            $commentCount = $commentTotal[0]['numComments'];
-        } else {
-            $commentCount = 0;
-        }
-
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'commentTotal' => $commentCount,
+            'commentTotal' => $commentTotal,
             'group' => $group,
             'groupNews' => $groupNews,
             'groupVideos' => $groupVideos,
@@ -975,6 +969,10 @@ Alienware Arena Team
 
                 if ($deleted) {
                     $group->setDeletedReason(GROUP::DELETED_BY_ADMIN);
+                }
+
+                if ($group->getFeatured()) {
+                    $group->setFeaturedAt(new \DateTime('now'));
                 }
 
                 $this->getGroupManager()->saveGroup($group);

@@ -150,7 +150,7 @@
             <div class="left">
                 {% if gamePage.logo %}
                     <div class="logo">
-                        <img src="{{ media_path(gamePage.logo, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ gamePage.game.name }}" />
+                        <img src="{{ gamePage.logo.filename | imagine_filter('game_show_logo') }}" alt="{{ gamePage.game.name }}" />
                     </div>
                 {% endif %}
 
@@ -253,7 +253,7 @@
                                     {% set url = media_path_nice(media) %}
                                     <div style="min-height: 120px;">
                                         <a href="{{ url }}" target="_blank">
-                                            <img src="{{ media_path(media, {'local': true}) | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
+                                            <img src="{{ media.filename | imagine_filter('image_thumb') }}" data-url="{{ url }}" />
                                         </a>
                                     </div>
                                 </li>

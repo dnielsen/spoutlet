@@ -1,10 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
-{% endblock %}
-
 {% block content %}
 
 {% set site = get_current_site() %}
@@ -43,6 +38,9 @@
                             <div class="details">
                                 <div class="item-detail">Members: {{ group.members.count }}</div>
                                 <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                <div class="report-group-caption">
+                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -71,6 +69,9 @@
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -106,6 +107,9 @@
                                     <div class="details">
                                         <div class="item-detail">Members: {{ group.members.count }}</div>
                                         <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="report-group-caption">
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                        </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -157,7 +161,15 @@
         </div>
     </div>
 </div>
+{% include 'SpoutletBundle:Group:_reportGroupPopup.html.twig' %}
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>

@@ -1,6 +1,6 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.user.account.deals" | trans }}{% endblock %}
+{% block title %}{{ "platformd.user.account.my_groups" | trans }}{% endblock %}
 
 {% block content %}
 
@@ -28,7 +28,7 @@
                         <a href="{{ path('group_show', { 'slug': group.slug }) }}">{{ group.name }}</a>
                     </td>
                     <td>
-                        {{group.owner.username}}
+                        {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}
                     </td>
                     <td>
                         {% if group.isPublic %}
