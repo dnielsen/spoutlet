@@ -232,7 +232,7 @@ platformd:
         account:
             account_home: Account Home
             edit_account: Edit Account
-            change_password: Change Password
+            change_password: Change Pass
             profile:      Profile
             # checked up until here
             registered_events: Registered Events

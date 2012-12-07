@@ -40,7 +40,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                          | Destination |
       | Account Home                  | http://alienwarearena.com/account/                              |             |
-      | Change Password               | http://alienwarearena.com/account/password/                     |             |
+      | Change Pass                   | http://alienwarearena.com/account/password/                     |             |
       | Profile                       | http://www.alienwarearena.com/latam/member/55/                  |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |             |
       | My Giveaways                  | http://www.alienwarearena.com/latam/account/my-giveaway-keys/   |             |
@@ -54,7 +54,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                    | Destination                                                        |
       | Account Home                  | http://alienwarearena.com/account/                        |                                                                    |
-      | Change Password               | http://alienwarearena.com/account/password/               |                                                                    |
+      | Change Pass                   | http://alienwarearena.com/account/password/               |                                                                    |
       | Profile                       | http://www.alienwarearena.com/member/55/                  |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                  |                                                                    |
       | My Events                     | http://www.alienwarearena.com/account/events/             |                                                                    |
@@ -70,7 +70,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                          | Destination                                                        |
       | Account Home                  | http://alienwarearena.com/account/                              |                                                                    |
-      | Change Password               | http://alienwarearena.com/account/password/                     |                                                                    |
+      | Change Pass                   | http://alienwarearena.com/account/password/                     |                                                                    |
       | Profile                       | http://www.alienwarearena.com/europe/member/55/                 |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |                                                                    |
       | My Giveaways                  | http://www.alienwarearena.com/europe/account/my-giveaway-keys/  |                                                                    |
@@ -85,7 +85,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                            | Destination |
       | Account Home                  | http://alienwarearena.com/account/                                |             |
-      | Change Password               | http://alienwarearena.com/account/password/                       |             |
+      | Change Pass                   | http://alienwarearena.com/account/password/                       |             |
       | Profile                       | http://www.alienwarearena.com/in/member/55/                       |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                          |             |
       | My Giveaways                  | http://www.alienwarearena.com/in/account/my-giveaway-keys/        |             |
@@ -99,7 +99,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                        | Destination |
       | Account Home                  | http://alienwarearena.com/account/                            |             |
-      | Change Password               | http://alienwarearena.com/account/password/                   |             |
+      | Change Pass                   | http://alienwarearena.com/account/password/                   |             |
       | Profile                       | http://www.alienwarearena.com/sg/member/55/                   |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                      |             |
       | My Giveaways                  | http://www.alienwarearena.com/sg/account/my-giveaway-keys/    |             |
@@ -113,7 +113,7 @@ Feature: User Navigation
     Then the user navigation menu should be:
       | Link                          | Target                                                        | Destination |
       | Account Home                  | http://alienwarearena.com/account/                            |             |
-      | Change Password               | http://alienwarearena.com/account/password/                   |             |
+      | Change Pass                   | http://alienwarearena.com/account/password/                   |             |
       | Profile                       | http://www.alienwarearena.com/anz/member/55/                  |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                      |             |
       | My Giveaways                  | http://www.alienwarearena.com/anz/account/my-giveaway-keys/   |             |
