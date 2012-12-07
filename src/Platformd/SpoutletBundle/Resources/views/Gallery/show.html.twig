@@ -60,33 +60,6 @@
 
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
-            {% if (otherMedia | length) > 0 %}
-
-                <p>
-                    {{ 'galleries.more_images_from' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a>
-                </p>
-
-                <div class="page_container">
-                    <div class="gallery-items content" style="width:636px;">
-                        {% for media in otherMedia %}
-                            {% set isFirstInRow = (loop.index - 1) is divisibleby(5) or loop.first  %}
-                            <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% endif %}">
-                                <div class="gallery-media-thumb-small">
-                                    <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                        <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                                    </a>
-                                </div>
-                                <div style="width:115px;">
-                                    <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                                </div>
-                                <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
-                                <input type="hidden" value="{{ media.views }}" class="media-popular" />
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div class="page_navigation" style="float: right; padding-top: 10px;"></div>
-                </div>
-            {% endif %}
         </div>
 
         <div class="right">
@@ -138,7 +111,8 @@
                     </div>
                 </div>
             </div>
-            <div class="widget-33" style="height:auto;margin-top:10px;">
+
+            <div class="widget-33" style="height:auto;margin-top:20px;">
                 <div class="widget-header">
                     <div class="widget-title">
                         {{ 'galleries.show_photo_vote_label' | trans }}
@@ -155,6 +129,37 @@
                     {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
                 </div>
             </div>
+
+            {% if (otherMedia | length) > 0 %}
+                <div class="widget-33" style="height: 290px;margin-top:15px;">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ 'galleries.more_images_from' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+
+                        <div class="page_container">
+                            <div class="gallery-items content" style="width:100%; height:190px">
+                                {% for media in otherMedia %}
+                                    {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first  %}
+                                    <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% endif %}">
+                                        <div class="gallery-media-thumb-square">
+                                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                                                <img style="width:92px; height:92px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />
+                                            </a>
+                                        </div>
+                                        <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
+                                        <input type="hidden" value="{{ media.views }}" class="media-popular" />
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="page_navigation" style="float: right; padding-top:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div class="submit-media">
                 <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
@@ -181,6 +186,34 @@
     <script type="text/javascript">
         $(function () {
 
+            $('.media-thumb').qtip({
+                content: $(this).attr('data-title'),
+                style: {
+                    border: {
+                        width: 2,
+                        radius: 5 },
+                    padding: 10,
+                    tip: true,
+                    name: 'dark'
+                },
+                position: {
+                    corner: {
+                        tooltip: 'rightMiddle',
+                        target: 'leftMiddle'
+                    }
+                }
+            });
+
+            $('.gallery-media-thumb-small').hover(
+                function () {
+
+                    $(this).addClass('active');
+                },
+                function () {
+                    $(this).removeClass('active');
+                }
+            );
+
             $('#main-photo').imagesLoaded(function () {
                 $(this).fadeIn('slow');
             });
@@ -190,7 +223,7 @@
             });
 
             $('.page_container').pajinate({
-                    items_per_page: 5,
+                    items_per_page: 6,
                     show_first_last: false,
                 });
         });

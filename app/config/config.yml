@@ -425,6 +425,18 @@ liip_imagine:
                 relative_resize: { widen: 135, heighten: 80 }
                 crop: { start: [0, 0], size: [135, 80] }
 
+        media_photo_thumb_square:
+            quality: 100
+            filters:
+                relative_resize: { widen: 150, heighten: 150 }
+                crop: { start: [0, 0], size: [92, 92] }
+
+        gallery_image_square:
+            quality: 100
+            filters:
+                relative_resize: { widen: 400, heighten: 400 }
+                crop: { start: [0, 0], size: [300, 300] }
+
         media_photo_show:
             quality: 100
             filters:

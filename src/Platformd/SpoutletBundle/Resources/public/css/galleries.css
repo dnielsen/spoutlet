@@ -62,8 +62,8 @@
 
 .user-media-thumb-wrapper {
     display: inline-table;
-    margin: 0 0 0 5px;
-    padding: 5px 0 0 0;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
 }
 
 .first-media {
@@ -82,6 +82,12 @@
     width: 116px;
     height: 69px;
     position: relative;
+}
+
+.gallery-media-thumb-square {
+    border: 1px solid #4A4A4A;
+    width: 92px;
+    height: 92px;
 }
 
 .gallery-media-thumb a {

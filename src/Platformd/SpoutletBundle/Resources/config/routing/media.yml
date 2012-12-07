@@ -2,6 +2,13 @@ gallery_delete_media:
     pattern: /delete/{id}
     defaults: { _controller: SpoutletBundle:Gallery:deleteMedia, site: ~ }
 
+gallery_delete_media_ajax:
+    pattern: /delete-ajax
+    defaults: { _controller: SpoutletBundle:Gallery:deleteMediaAjax, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
 gallery_edit_media:
     pattern: /edit/{id}
     defaults: { _controller: SpoutletBundle:Gallery:editMedia, site: ~ }

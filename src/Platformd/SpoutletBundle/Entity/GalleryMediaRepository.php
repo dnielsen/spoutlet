@@ -16,6 +16,7 @@ class GalleryMediaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
+            ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.published = :published')
             ->andWhere('gm.contestEntry IS NULL')
             ->setParameter('user', $user)
@@ -42,6 +43,7 @@ class GalleryMediaRepository extends EntityRepository
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
             ->andWhere('gm.published = :published')
+            ->andWhere('gm.deleted <> 1')
             ->orderBy('gm.createdAt', 'DESC')
             ->setParameter('user', $user)
             ->setParameter('published', true)
@@ -54,6 +56,7 @@ class GalleryMediaRepository extends EntityRepository
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
             ->andWhere('gm.published = :published')
+            ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.id != :id')
             ->orderBy('gm.createdAt', 'DESC')
             ->setParameter('user', $user)
@@ -67,6 +70,7 @@ class GalleryMediaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.featured = true')
+            ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.category = :category')
             ->setParameter('category', $category)
             ->getQuery()
@@ -188,6 +192,7 @@ class GalleryMediaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.published = true')
+            ->andWhere('gm.deleted <> 1')
             ->orderBy('gm.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
@@ -199,6 +204,7 @@ class GalleryMediaRepository extends EntityRepository
         return $this->createQueryBuilder('gm')
             ->where('gm.published = true')
             ->andWhere('gm.deleted = false')
+            ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.author = :user')
             ->orderBy('gm.publishedAt', 'DESC')
             ->setParameter('user', $user)
@@ -221,12 +227,16 @@ class GalleryMediaRepository extends EntityRepository
 
     public function findMediaForContestWinners($contest)
     {
-        $qb = $this->createQueryBuilder('gm');
+        if ($contest->getWinners()) {
+            $qb =  $this->createQueryBuilder('gm');
 
-        return $qb->where($qb->expr()->in('gm.id', $contest->getWinners()))
-            ->andWhere('gm.deleted = false')
-            ->andWhere('gm.published = true')
-            ->getQuery()
-            ->execute();
+            return $qb->where($qb->expr()->in('gm.id', $contest->getWinners()))
+                ->andWhere('gm.deleted = false')
+                ->andWhere('gm.published = true')
+                ->getQuery()
+                ->execute();
+        }
+
+        return false;
     }
 }

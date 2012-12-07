@@ -593,7 +593,7 @@ galleries:
     publish_photo_error_gallery: You must select at least one gallery.
     vote_now: Vote Now
     vote_success: Thanks for voting!
-    more_images_from: Check out the latest images from
+    more_images_from: More images from
     save_images: Save Images
     cancel: Cancel
 
@@ -626,3 +626,4 @@ contests:
     igames_disclaimer: By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
     photo_submissions_left: You can submit a maximum of %s photos for this contest.
     photo_submissions_unlimited: You can submit as many photos as you like for this contest.
+    congratulations_winners: Congratulations To The Winners!

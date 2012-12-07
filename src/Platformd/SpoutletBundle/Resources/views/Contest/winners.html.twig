@@ -6,36 +6,28 @@
 <div class="std_1col" >
     {% include 'SpoutletBundle:Contest:_links.html.twig' %}
 </div>
-<div class="std_1col">
-    <div id="contest-entries">
-        <table>
-        {% for winner in winners %}
-        <tr>
-            <td colspan="2"><h3>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}</h3></td>
-        </tr>
-        <tr>
-            <td style="width:636px;">
-                <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
-                    <img src="{{ media_path(winner.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="{{ winner.title }}" />
-                </a>
-            </td>
-            <td style="vertical-align:top;width:267px;">
-                <div style="padding: 0 0 0 5px;">
-                    <div class="photo-author">
-                        <img src="{{ asset(get_avatar_url(winner.author)) }}" alt="{{ winner.author.username }}" />
-                        <div class="photo-author-link"><a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></div>
-                    </div>
-                    <div style="font-size: 21px;">{{ winner.title }}</div>
-                    <div>{{ 'galleries.show_photo_details_upload_on' | trans }} {{ winner.createdAt | date('M d, Y')}}</div>
-                    <p>{{ winner.description }}</p>
+<div class="std_1col" style="text-align:center;">
+
+    {% if contest.winners | length > 0 %}
+        <h3>{{ 'contests.congratulations_winners' | trans }}</h3>
+
+        <div id="contest-entries">
+            {% for winner in winners %}
+
+                <div class="contest-winner-wrapper"{% if loop.index == 1 %} style="margin-left: 10px;"{% endif %}>
+                    <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
+                        <img src="{{ winner.image.filename | imagine_filter('gallery_image_square') }}" alt="{{ winner.title }}" />
+                    </a>
+                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></p>
+
                 </div>
-            </td>
-        </tr>
-        {% else %}
+
+            {% endfor %}
+        </div>
+
+    {% else %}
         <p>{{ 'contests.no_winners' | trans }}</p>
-        {% endfor %}
-        </table>
-    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

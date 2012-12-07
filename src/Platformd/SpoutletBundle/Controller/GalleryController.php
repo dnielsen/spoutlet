@@ -326,6 +326,41 @@ class GalleryController extends Controller
         return $this->redirect($this->generateUrl('gallery_index'));
     }
 
+    public function deleteMediaAjaxAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+        $params = json_decode($content, true);
+
+        if (empty($content) || !isset($params['id'])) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $id                 = $params['id'];
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $media              = $galleryMediaRepo->find($id);
+
+        $user = $this->getCurrentUser();
+
+        if(!$media || $media->getAuthor()->getId() != $user->getId())
+        {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $em = $this->getEntityManager();
+        $media->setDeleted(true);
+        $em->persist($media);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
+
     public function voteAction(Request $request)
     {
         $response = new Response();
