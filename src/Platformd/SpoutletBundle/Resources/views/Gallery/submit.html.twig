@@ -99,7 +99,7 @@
     </div>
     <div class="right">
         {% for media in medias %}
-            <div class="gallery-media-wrapper">
+            <div class="gallery-media-wrapper" id="gallery-media-wrapper-{{ media.id }}">
                 <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active {% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
             </div>
         {% endfor %}
@@ -123,29 +123,26 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
     <script type="text/javascript">
-        window.onbeforeunload = function () {
-            return 'You have some unsaved photos.';
-        }
+
 
         $(function() {
 
+            window.onbeforeunload = function () {
+                if(medias.length > 0) {
+                    return 'You have some unpublished photos.';
+                }
+            }
+
+            var medias = [];
+
             var t;
 
-            var clearForm = function(publishing) {
-                if(publishing) {
-                    $('#media-title').val('');
-                }
-
+            var clearForm = function() {
+                $('#media-title').val('');
                 $('#media-description').val('');
                 $('input:checkbox').removeAttr('checked');
                 $('#media-form-errors').empty();
                 $('#media-form-error-msg').text('');
-                var mediaCount = $('.gallery-media').length;
-
-                if(mediaCount == 0) {
-                    var url = "{{ path('gallery_share_photo') }}";
-                    window.location = url;
-                }
             }
 
             var hideFlash = function () {
@@ -159,48 +156,83 @@
             }
 
             var initMedia = function() {
-                var first = $('.gallery-media').first();
-
-                if(first) {
-                    selectMedia(first);
+                if($('.gallery-media').length > 0) {
+                    selectMedia($('.gallery-media').first());
                 }
             }
 
             var selectMedia = function (current) {
+                clearForm();
                 $('.gallery-media').removeClass('active');
                 current.addClass('active');
-                var title = current.attr('data-title');
-                var id = current.attr('data-id');
-                $('#media-title').val(title);
-                $('#media-id').val(id);
-                clearForm(false);
+
+                $('#media-title').val(current.attr('data-title'));
+                $('#media-id').val(current.attr('data-id'));
+
+                var media = getMedia($('#media-id').val());
+
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
+
+                    medias.push(media);
+                } else {
+                    $('#media-id').val(media.id);
+                    $('#media-title').val(media.title);
+                    $('#media-description').val(media.description);
+                    setSelectedGalleries(media.galleries);
+                    setSelectedGroups(media.groups);
+                }
             }
 
-            var publishPhoto = function () {
-                var url = '{{ path('gallery_publish_photo') }}';
+            var mediaChanged = function () {
+                var media = getMedia($('#media-id').val());
 
-                var galleries = [];
-                var groups = [];
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
 
-                $('.gallery-checkbox').each(function () {
-                    if($(this).is(':checked')) {
-                        galleries.push($(this).val());
+                    medias.push(media);
+                } else {
+                    media.title = $('#media-title').val();
+                    media.description = $('#media-description').val();
+                    media.galleries = getSelectedGalleries();
+                    media.groups = getSelectedGroups();
+                }
+            }
+
+            var getMedia = function (id) {
+                for (var i = medias.length - 1; i >= 0; i--) {
+                    if(medias[i].id == id) {
+                        return medias[i];
                     }
-                });
-
-                $('.group-checkbox').each(function () {
-                    if($(this).is(':checked')) {
-                        groups.push($(this).val());
-                    }
-                });
-
-                var media = {
-                    'id' : $('#media-id').val(),
-                    'title' : $('#media-title').val(),
-                    'description' : $('#media-description').val(),
-                    'galleries' : galleries,
-                    'groups' : groups,
                 };
+
+                return null;
+            }
+
+            var publishAllPhotos = function() {
+                clearForm();
+
+                var len = medias.length;
+                while(len--) {
+                    var media = medias[len];
+                    publishPhoto(media, len);
+                }
+            }
+
+            var publishPhoto = function (media, i) {
+                var url = '{{ path('gallery_publish_photo') }}';
 
                 $.ajax({
                     type: 'post',
@@ -210,29 +242,67 @@
                     success: function(data) {
                         if(data.success) {
                             $('#flash-publish-success').fadeIn();
-                            $('#media-' + $('#media-id').val()).parent().remove();
-                            clearForm(true);
-                            hideFlash();
-                            initMedia();
-                        } else {
-                            $('#media-form-error-msg').text(data.message);
-                            $('#media-form-errors').empty();
-                            if(data.errors.length > 0) {
-                                $.each(data.errors, function(i, item) {
-                                    $('#media-form-errors').append('<li class="media-publish-error">' + item + '</li>');
-                                });
-                            }
+                            $('#gallery-media-wrapper-' + media.id).remove();
+                            medias.splice(i, 1);
                         }
                     }
                 });
             }
 
+            var setSelectedGalleries = function (galleries) {
+                $('.gallery-checkbox').prop('checked', false);
+                for (var i = galleries.length - 1; i >= 0; i--) {
+                    $('#gallery-' + galleries[i]).prop('checked', true);
+                };
+            }
 
-            $('#publish-photo').click(publishPhoto);
+            var setSelectedGroups = function (groups) {
+                $('.group-checkbox').prop('checked', false);
+                for (var i = groups.length - 1; i >= 0; i--) {
+                    $('#group-' + groups[i]).prop('checked', true);
+                };
+            }
+
+            var getSelectedGroups = function () {
+                var groups = [];
+
+                $('.group-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        groups.push($(this).val());
+                    }
+                });
+
+                return groups;
+            }
+
+            var getSelectedGalleries = function () {
+                var galleries = [];
+
+                $('.gallery-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        galleries.push($(this).val());
+                    }
+                });
+
+                return galleries;
+            }
+
+            $('#media-description').bind('input propertychange', function () {
+                mediaChanged();
+            });
+
+            $('.gallery-checkbox').change(function () {
+                mediaChanged();
+            });
+
+            $('#media-title').bind('input propertychange', function () {
+                mediaChanged();
+            });
+
+            $('#publish-photo').click(publishAllPhotos);
 
             $('.gallery-media').click(function () {
                 selectMedia($(this));
-                publishPhoto();
             });
 
             $('.gallery-media').qtip({

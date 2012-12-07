@@ -20,6 +20,19 @@ class ContestRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllForSiteByDate($site)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.sites', 's')
+            ->where('c.votingEnd > :today')
+            ->andWhere('s.defaultLocale = :site')
+            ->setParameter('site', $site)
+            ->setParameter('today', new \DateTime('now'))
+            ->orderBy('c.votingEnd', 'DESC')
+            ->getQuery()
+            ->execute();
+    }
+
     public function findAllAlphabetically()
     {
         return $this->createQueryBuilder('c')
