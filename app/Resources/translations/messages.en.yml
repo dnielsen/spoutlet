@@ -243,6 +243,7 @@ platformd:
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
+            sign_out: Sign Out
 
     giveaway:
         giveaway: Giveaway

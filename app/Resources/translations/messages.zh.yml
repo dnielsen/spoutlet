@@ -235,6 +235,7 @@ platformd:
             my_events: 我的活动
             help: 帮助？
             game_ids: 游戏IDs
+            sign_out: 退出
 
     giveaway:
         giveaway: 邀请码
