@@ -12,7 +12,7 @@
                 <div class="pad3">
                     <div class="pad4">
                         <h3>{{ 'galleries.submit_photo_publish_success' | trans }}</h3>
-                        <p>{{ 'galleries.submit_photo_publish_message' | trans }}</p>
+                        <p id="publish-success-message"></p>
                     </div>
                 </div>
             </div>
@@ -106,8 +106,11 @@
     </div>
 </div>
 {% endif %}
-<div id="blockUI" style="display:none;">
+<div id="blockUploadUI" style="display:none;">
     <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
+</div>
+<div id="blockPublishUI" style="display:none;">
+    <p>{{ 'galleries.submit_photo_publish_blockUI_message' | trans }}</p>
 </div>
 {% endblock %}
 
@@ -221,36 +224,48 @@
                 return null;
             }
 
-            var publishAllPhotos = function() {
+            var publishMultiplePhotos = function() {
                 clearForm();
 
-                var len = medias.length;
-                while(len--) {
-                    var media = medias[len];
-                    publishPhoto(media, len, removeMedia);
-                }
-            }
+                $.blockUI({
+                    message: $('#blockPublishUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
+                    }
+                });
 
-            var publishPhoto = function (media, i, callback) {
-                var url = '{{ path('gallery_publish_photo') }}';
+                var url = '{{ path('gallery_publish_multiple_photos') }}';
 
                 $.ajax({
                     type: 'post',
                     url: url,
-                    data: JSON.stringify(media),
-                    contentType: 'application/json',
-                    success: function(data) {
+                    data: JSON.stringify(medias),
+                    controlstentType: 'application/json',
+                    success: function (data) {
                         if(data.success) {
-                            callback(i, media.id);
+                            $('#publish-success-message').text(data.message);
+                            $('#flash-publish-success').fadeIn();
+
+                            var unpublished = data.unpublished;
+                            var published = data.published;
+
+                            var len = medias.length;
+                            while(len--) {
+                                var media = medias[len];
+                                for (var i = published.length - 1; i >= 0; i--) {
+                                    if(published[i] == media.id) {
+                                        $('#gallery-media-wrapper-' + media.id).fadeOut();
+                                        medias.splice(len, 1);
+                                    }
+                                };
+                            }
                         }
+
+                        $.unblockUI();
                     }
                 });
-            }
-
-            var removeMedia = function(i, id) {
-                $('#flash-publish-success').fadeIn();
-                $('#gallery-media-wrapper-' + id).remove();
-                medias.splice(i, 1);
             }
 
             var setSelectedGalleries = function (galleries) {
@@ -303,7 +318,7 @@
                 mediaChanged();
             });
 
-            $('#publish-photo').click(publishAllPhotos);
+            $('#publish-photo').click(publishMultiplePhotos);
 
             $('.gallery-media').click(function () {
                 selectMedia($(this));
@@ -357,7 +372,14 @@
             });
 
             $('#submit-photo-form').bind('submit', function() {
-                $.blockUI({message: $('#blockUI')});
+                $.blockUI({
+                    message: $('#blockUploadUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
+                    }
+                });
             });
 
             initMedia();
