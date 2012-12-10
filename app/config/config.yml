@@ -444,3 +444,8 @@ liip_imagine:
 
 
 knp_time: ~
+
+spoutlet:
+    elasticache_servers:
+        %memcached_server1_ip%: %memcached_server1_port%
+

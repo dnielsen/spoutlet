@@ -18,7 +18,7 @@
  * jquery.form.js is available from: http://malsup.com/jquery/form/
  */
 
-$('form.fos_comment_comment_form').live('submit', function() {
+$('form.fos_comment_comment_form').submit(function() {
     var $form = $(this).addClass('processing').ajaxSubmit({
         success: function(html) {
             $form.closest('div.fos_comment_thread_show').replaceWith(html);

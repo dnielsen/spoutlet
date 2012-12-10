@@ -241,6 +241,7 @@ platformd:
             my_giveaways: My Giveaways
             my_videos: My Videos
             my_events: My Events
+            my_groups: My Groups
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
@@ -542,6 +543,7 @@ galleries:
     submit_photo_page_title: Submit Image
     submit_photo_page_header: Submit Image
     submit_photo_blockUI_message: Your images are uploading. Please wait...
+    submit_photo_publish_blockUI_message: Your images are being published. Please wait...
 
     submit_photo_step1: Step 1 of 2:
     submit_photo_step1_detail: Submit Image
@@ -596,8 +598,11 @@ galleries:
     more_images_from: More images from
     save_images: Save Images
     cancel: Cancel
+    publish_photo_multiple_message: %s of %s images are published.
+    publish_photo_multiple_message_more: Click on the images below to complete the highlighted fields.
 
 contests:
+    index_page_title_long: Alienware Arena Contests
     index_page_title: Contests
     show_page_overview: Overview
     show_page_instructions: Instructions

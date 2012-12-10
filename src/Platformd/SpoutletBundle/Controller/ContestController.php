@@ -23,7 +23,7 @@ class ContestController extends Controller
     public function indexAction()
     {
         $site = $this->getCurrentSite();
-        $contests = $this->getContestRepository()->findAllForSiteAlphabetically($site->getDefaultLocale());
+        $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
             'contests' => $contests,

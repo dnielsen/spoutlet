@@ -2,37 +2,42 @@
 ; by enclosing the key with % (like %database_user%)
 ; Comments start with ';', as in php.ini
 [parameters]
-    database_driver   = pdo_mysql
-    database_host     = localhost
-    database_port     =
-    database_name     = platformd
-    database_user     = root
-    database_password =
+    database_driver         = pdo_mysql
+    database_host           = localhost
+    database_port           =
+    database_name           = platformd
+    database_user           = root
+    database_password       =
 
-    mailer_transport  = smtp
-    mailer_host       = localhost
-    mailer_user       =
-    mailer_password   =
-    mailer_encryption = tls
-    mailer_port       = 587
+    mailer_transport        = smtp
+    mailer_host             = localhost
+    mailer_user             =
+    mailer_password         =
+    mailer_encryption       = tls
+    mailer_port             = 587
 
-    locale            = en
+    locale                  = en
 
-    secret            = ThisTokenIsNotSoSecretChangeIt
+    secret                  = ThisTokenIsNotSoSecretChangeIt
 
-    recaptcha.public_key =
-    recaptcha.private_key =
+    recaptcha.public_key    =
+    recaptcha.private_key   =
 
-    base_host         = site.com
-    host_suffix       =
+    base_host               = site.com
+    host_suffix             =
 
-    s3.access_key     = AKIAIEEZJDPZDWD4SDOA
-    s3.secret_key     = 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
-    s3_bucket_name    = platformd-testing
+    s3.access_key           = AKIAIEEZJDPZDWD4SDOA
+    s3.secret_key           = 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
+    s3_bucket_name          = platformd-testing
 
     ; this is for the "alienware" staging
-    facebook_app_id   = 468808186479620
+    facebook_app_id         = 468808186479620
 
-    mink_base_url     = http://your_app.dev/app_test.php
+    mink_base_url           = http://your_app.dev/app_test.php
 
-    google_api_key    = YourGoogleApiKey
+    google_api_key          = YourGoogleApiKey
+
+    google_ua               = UA-9917033-2
+
+    memcached_server1_ip    = 127.0.0.1
+    memcached_server1_port  = 11211

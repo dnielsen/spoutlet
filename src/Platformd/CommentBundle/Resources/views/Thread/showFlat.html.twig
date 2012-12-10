@@ -25,7 +25,7 @@
         </h3>
         <div class="fos_comment_thread_comments" id="commentList">
             {# show the flat comments, but default the sorting to be newest first #}
-            {% render "FOSCommentBundle:Comment:flat" with {"thread": thread, "sorter": sorter|default('date_desc')} %}
+            {% render "FOSCommentBundle:Comment:flatPaged" with {'page': page, "thread": thread, "sorter": sorter|default('date_desc')} %}
         </div>
     {% endif %}
 

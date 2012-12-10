@@ -25,6 +25,13 @@ gallery_publish_photo:
         _format: json
         _method: POST
 
+gallery_publish_multiple_photos:
+    pattern: /publish-multiple
+    defaults: { _controller: SpoutletBundle:Gallery:publishMultiple, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
 gallery_media_vote:
     pattern:  /vote
     defaults: { _controller: "SpoutletBundle:Gallery:vote" }

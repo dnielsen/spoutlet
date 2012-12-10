@@ -186,13 +186,9 @@ class GroupAdminController extends Controller
 
     private function getGroupCommentTotal($groupId, $fromDate, $thruDate)
     {
-        $thread = $this->getDoctrine()
-            ->getRepository('CommentBundle:Thread')
-            ->findOneById($groupId);
-
         $total = $this->getDoctrine()
             ->getRepository('CommentBundle:Comment')
-            ->getCommentCountByThread($thread, $fromDate, $thruDate);
+            ->getCommentCountByThread($groupId, $fromDate, $thruDate);
 
         return $total;
     }
@@ -289,6 +285,7 @@ class GroupAdminController extends Controller
 
             $type = $group->getIsPublic() ? 'Public' : 'Private';
 
+            $region = '';
             if ($group->getAllLocales()) {
                 $region          = 'All Sites';
             } else {

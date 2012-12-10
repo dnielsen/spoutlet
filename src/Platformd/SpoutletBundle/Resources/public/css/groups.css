@@ -299,12 +299,12 @@ button#join-group-button:hover {
 }
 
 #scrollable-location-groups {
-    height: 300px;
+    height: 310px;
     width: 600px;
 }
 
 #scrollable-topic-groups {
-    height: 300px;
+    height: 310px;
     width: 600px;
 }
 

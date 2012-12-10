@@ -806,7 +806,6 @@ class Group implements LinkableInterface, ReportableContentInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getId(),
             'slug' => $this->getSlug(),
         );
     }

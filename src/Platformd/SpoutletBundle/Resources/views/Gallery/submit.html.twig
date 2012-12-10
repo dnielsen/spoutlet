@@ -12,7 +12,7 @@
                 <div class="pad3">
                     <div class="pad4">
                         <h3>{{ 'galleries.submit_photo_publish_success' | trans }}</h3>
-                        <p>{{ 'galleries.submit_photo_publish_message' | trans }}</p>
+                        <p id="publish-success-message"></p>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,6 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
-
 {% if medias | length > 0 %}
 {% set initialId = medias[0].id %}
 <div class="std_2col" id="publish-media">
@@ -101,19 +100,26 @@
     </div>
     <div class="right">
         {% for media in medias %}
-            <div class="gallery-media-wrapper">
-                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active {% endif %}" data-title="{{ media.title }}" data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+            <div class="gallery-media-wrapper" id="gallery-media-wrapper-{{ media.id }}">
+                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active {% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
                 <a href="#" class="delete-media" data-id="{{ media.id }}" style="vertical-align:top; padding-left:10px;">&times;</a>
             </div>
         {% endfor %}
     </div>
 </div>
-<div id="blockUI" style="display:none;">
-<p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
-</div>
 {% endif %}
-
-
+<div id="blockUploadUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
+    <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
+</div>
+<div id="blockPublishUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
+    <p>{{ 'galleries.submit_photo_publish_blockUI_message' | trans }}</p>
+</div>
 {% endblock %}
 
 {% block stylesheets %}
@@ -130,22 +136,21 @@
     <script type="text/javascript">
         $(function() {
 
+            window.onbeforeunload = function () {
+                if(medias.length > 0) {
+                    return 'You have some unpublished photos.';
+                }
+            }
+
+            var medias = [];
+
             var t;
 
-            var clearForm = function(publishing) {
-                if(publishing) {
-                    $('#media-title').val('');
-                }
-
+            var clearForm = function() {
+                $('#media-title').val('');
                 $('#media-description').val('');
                 $('#media-form-errors').empty();
                 $('#media-form-error-msg').text('');
-                var mediaCount = $('.gallery-media').length;
-
-                if(mediaCount == 0) {
-                    var url = "{{ path('gallery_share_photo') }}";
-                    window.location = url;
-                }
             }
 
             var hideFlash = function () {
@@ -159,24 +164,133 @@
             }
 
             var initMedia = function() {
-                var first = $('.gallery-media').first();
-
-                if(first) {
-                    first.click();
+                if($('.gallery-media').length > 0) {
+                    selectMedia($('.gallery-media').first());
                 }
             }
 
-            $('#publish-photo').click(function () {
-                var url = '{{ path('gallery_publish_photo') }}';
+            var selectMedia = function (current) {
+                clearForm();
+                $('.gallery-media').removeClass('active');
+                current.addClass('active');
 
-                var galleries = [];
-                var groups = [];
+                $('#media-title').val(current.attr('data-title'));
+                $('#media-id').val(current.attr('data-id'));
 
-                $('.gallery-checkbox').each(function () {
-                    if($(this).is(':checked')) {
-                        galleries.push($(this).val());
+                var media = getMedia($('#media-id').val());
+
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
+
+                    medias.push(media);
+                } else {
+                    $('#media-id').val(media.id);
+                    $('#media-title').val(media.title);
+                    $('#media-description').val(media.description);
+                    setSelectedGalleries(media.galleries);
+                    setSelectedGroups(media.groups);
+                }
+            }
+
+            var mediaChanged = function () {
+                var media = getMedia($('#media-id').val());
+
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
+
+                    medias.push(media);
+                } else {
+                    media.title = $('#media-title').val();
+                    media.description = $('#media-description').val();
+                    media.galleries = getSelectedGalleries();
+                    media.groups = getSelectedGroups();
+                }
+            }
+
+            var getMedia = function (id) {
+                for (var i = medias.length - 1; i >= 0; i--) {
+                    if(medias[i].id == id) {
+                        return medias[i];
+                    }
+                };
+
+                return null;
+            }
+
+            var publishMultiplePhotos = function() {
+                clearForm();
+
+                $.blockUI({
+                    message: $('#blockPublishUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
                     }
                 });
+
+                var url = '{{ path('gallery_publish_multiple_photos') }}';
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(medias),
+                    controlstentType: 'application/json',
+                    success: function (data) {
+                        if(data.success) {
+                            $('#publish-success-message').text(data.message);
+                            $('#flash-publish-success').fadeIn();
+
+                            var unpublished = data.unpublished;
+                            var published = data.published;
+
+                            var len = medias.length;
+                            while(len--) {
+                                var media = medias[len];
+                                for (var i = published.length - 1; i >= 0; i--) {
+                                    if(published[i] == media.id) {
+                                        $('#gallery-media-wrapper-' + media.id).remove();
+                                        medias.splice(len, 1);
+                                    }
+                                };
+                            }
+                        }
+
+                        initMedia();
+
+                        $.unblockUI();
+                    }
+                });
+            }
+
+            var setSelectedGalleries = function (galleries) {
+                $('.gallery-checkbox').prop('checked', false);
+                for (var i = galleries.length - 1; i >= 0; i--) {
+                    $('#gallery-' + galleries[i]).prop('checked', true);
+                };
+            }
+
+            var setSelectedGroups = function (groups) {
+                $('.group-checkbox').prop('checked', false);
+                for (var i = groups.length - 1; i >= 0; i--) {
+                    $('#group-' + groups[i]).prop('checked', true);
+                };
+            }
+
+            var getSelectedGroups = function () {
+                var groups = [];
 
                 $('.group-checkbox').each(function () {
                     if($(this).is(':checked')) {
@@ -184,37 +298,31 @@
                     }
                 });
 
-                var media = {
-                    'id' : $('#media-id').val(),
-                    'title' : $('#media-title').val(),
-                    'description' : $('#media-description').val(),
-                    'galleries' : galleries,
-                    'groups' : groups,
-                };
+                return groups;
+            }
 
-                $.ajax({
-                    type: 'post',
-                    url: url,
-                    data: JSON.stringify(media),
-                    contentType: 'application/json',
-                    success: function(data) {
-                        if(data.success) {
-                            $('#flash-publish-success').fadeIn();
-                            $('#media-' + $('#media-id').val()).parent().remove();
-                            clearForm(true);
-                            hideFlash();
-                            initMedia();
-                        } else {
-                            $('#media-form-error-msg').text(data.message);
-                            $('#media-form-errors').empty();
-                            if(data.errors.length > 0) {
-                                $.each(data.errors, function(i, item) {
-                                    $('#media-form-errors').append('<li class="media-publish-error">' + item + '</li>');
-                                });
-                            }
-                        }
+            var getSelectedGalleries = function () {
+                var galleries = [];
+
+                $('.gallery-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        galleries.push($(this).val());
                     }
                 });
+
+                return galleries;
+            }
+
+            $('#media-description').bind('input propertychange', function () {
+                mediaChanged();
+            });
+
+            $('.gallery-checkbox').change(function () {
+                mediaChanged();
+            });
+
+            $('#media-title').bind('input propertychange', function () {
+                mediaChanged();
             });
 
             $('.delete-media').click(function(event) {
@@ -246,15 +354,10 @@
                 });
             });
 
+            $('#publish-photo').click(publishMultiplePhotos);
 
             $('.gallery-media').click(function () {
-                $('.gallery-media').removeClass('active');
-                $(this).addClass('active');
-                var title = $(this).attr('data-title');
-                var id = $(this).attr('data-id');
-                $('#media-title').val(title);
-                $('#media-id').val(id);
-                clearForm(false);
+                selectMedia($(this));
             });
 
             $('.gallery-media').qtip({
@@ -305,7 +408,14 @@
             });
 
             $('#submit-photo-form').bind('submit', function() {
-                $.blockUI({message: $('#blockUI')});
+                $.blockUI({
+                    message: $('#blockUploadUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
+                    }
+                });
             });
 
             initMedia();

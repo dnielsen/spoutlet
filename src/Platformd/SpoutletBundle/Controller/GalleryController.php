@@ -118,6 +118,89 @@ class GalleryController extends Controller
         return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
     }
 
+    public function publishMultipleAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+        $em     = $this->getEntityManager();
+
+        $unpublished = array();
+        $published   = array();
+        $allErrors   = array();
+
+        foreach ($params as $param) {
+            $id          = (int) $param['id'];
+            $title       = $param['title'];
+            $description = $param['description'];
+            $gals        = $param['galleries'];
+            $groups      = $param['groups'];
+
+            $errors      = $this->validateMediaPublish($id, $title, $description, $gals);
+
+            $galleryIds  = count($gals) == 0 ? array(0) : $gals;
+            $media       = $this->getGalleryMediaRepository()->find($id);
+            $galleries   = $this->getGalleryRepository()->findAllGalleries($galleryIds);
+            $groupRepo   = $this->getGroupRepository();
+            $user        = $this->getCurrentUser();
+            $site        = $this->getCurrentSite();
+
+            $media->setTitle($title);
+            $media->setDescription($description);
+            $media->setGalleries($galleries);
+
+            if(count($errors) == 0)
+            {
+                $published[] = $id;
+                $media->setPublished(true);
+            } else {
+                $unpublished[] = $id;
+                $allErrors[] = $errors;
+            }
+
+            $em->persist($media);
+
+            if (count($groups) > 0) {
+                foreach ($groups as $group) {
+
+                    $group = $groupRepo->find($group);
+                    if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                        $groupImage = new GroupImage();
+                        $groupImage->setGroup($group);
+                        $groupImage->setTitle($title);
+                        $groupImage->setImage($media->getImage());
+                        $groupImage->setAuthor($user);
+
+                        $em->persist($groupImage);
+                    }
+                }
+            }
+
+            $em->flush();
+        }
+
+        $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), count($params));
+
+        $response->setContent(json_encode(array(
+            "success" => true,
+            "message" => $message,
+            "published" => $published,
+            "unpublished" => $unpublished,
+            "errors" => $allErrors)
+        ));
+
+        return $response;
+    }
+
     public function publishAction(Request $request)
     {
         $response = new Response();
@@ -150,6 +233,8 @@ class GalleryController extends Controller
 
         $errors = $this->validateMediaPublish($id, $title, $description, $gals);
 
+        $canPublish = count($errors) == 0;
+
         if(count($errors) > 0)
         {
             $response->setContent(json_encode(array(
@@ -160,7 +245,9 @@ class GalleryController extends Controller
             return $response;
         }
 
-        $galleries  = $this->getGalleryRepository()->findAllGalleries($gals);
+        $galleryIds = count($gals) == 0 ? array(0) : $gals;
+
+        $galleries  = $this->getGalleryRepository()->findAllGalleries($galleryIds);
         $media      = $this->getGalleryMediaRepository()->find($id);
         $groupRepo  = $this->getGroupRepository();
         $user       = $this->getCurrentUser();
@@ -175,7 +262,12 @@ class GalleryController extends Controller
 
         $media->setTitle($title);
         $media->setDescription($description);
-        $media->setPublished(true);
+
+        if($canPublish)
+        {
+            $media->setPublished(true);
+        }
+
         $media->setGalleries($galleries);
 
         $em->persist($media);
