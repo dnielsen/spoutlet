@@ -383,6 +383,7 @@
             });
 
             $('#galleryImages').MultiFile({
+                max: {{ entriesLeft }},
                 accept: 'gif|jpg|png',
                 afterFileSelect: function(element, value, master_element) {
                     var total = $('.MultiFile-applied').length - 1;
