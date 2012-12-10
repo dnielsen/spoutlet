@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Locale\Locale;
 use Platformd\SpoutletBundle\Entity\Deal;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -182,5 +183,31 @@ class DealController extends Controller
     protected function getCommentManager()
     {
         return $this->container->get('fos_comment.manager.comment');
+    }
+
+    public function commentsAction(Request $request)
+    {
+        $thread = array(
+            'id' => 1,
+            'can_comment' => true,
+            'last_comment_at' => '2012-12-10 11:59:00',
+            'permalink' => 'http://www.example.com/news/some-artcle#comments',
+            'comments' => array(
+                    array(
+                            'id' => 1,
+                            'parent_id' => 0,
+                            'body' => 'Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they&#39;re actually proud of that shit.',
+                            'depth' => 0,
+                            'created_at' => '2012-12-10 11:44:00',
+                            'votes' => 0,
+                            'replies' => array()
+                        )
+                )
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+        $response->setContent(json_encode($thread));
+        return $response;
     }
 }

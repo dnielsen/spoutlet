@@ -9,3 +9,7 @@ deal_show:
 deal_redeem:
     pattern:  /{slug}/redeem
     defaults: { _controller: "SpoutletBundle:Deal:redeem" }
+
+deal_comment:
+    pattern:  /{slug}/comments
+    defaults: { _controller: "SpoutletBundle:Deal:comments" }
