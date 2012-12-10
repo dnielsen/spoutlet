@@ -566,7 +566,7 @@ galleries:
     submit_photo_image_desc: Description:
     submit_photo_image_galleries: Galleries:
     submit_photo_groups: Groups:
-    submit_photo_button_publish: Publish
+    submit_photo_button_publish: Publish All Photos
     submit_photo_publish_success: Success!
     submit_photo_upload_success: Your images were uploaded successfully.
     submit_photo_publish_message: Your photos were published successfully.
@@ -597,6 +597,7 @@ galleries:
     vote_success: Thanks for voting!
     more_images_from: Check out the latest images from
     save_images: Save Images
+    upload_images: Upload
     cancel: Cancel
     publish_photo_multiple_message: %s of %s images are published.
     publish_photo_multiple_message_more: Click on the images below to complete the highlighted fields.
