@@ -430,6 +430,12 @@ liip_imagine:
             filters:
                 relative_resize: { widen: 636 }
 
+        media_contest_winner:
+            quality: 100
+            filters:
+                relative_resize: { widen: 300, heighten: 250 }
+                crop: { start: [0, 0], size: [300, 250] }
+
 
 knp_time: ~
 

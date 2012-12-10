@@ -223,7 +223,9 @@ class GalleryMediaRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('gm');
 
-        return $qb->where($qb->expr()->in('gm.id', $contest->getWinners()))
+        $ids = count($contest->getWinners()) > 0 ? $contest->getWinners() : array(0);
+
+        return $qb->where($qb->expr()->in('gm.id', $ids))
             ->andWhere('gm.deleted = false')
             ->andWhere('gm.published = true')
             ->getQuery()
