@@ -265,13 +265,24 @@
                                     }
                                 };
                             }
+
                         }
 
                         initMedia();
 
                         $.unblockUI();
+
+                        if(unpublished.length > 0) {
+                            $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_more' | trans }}');
+                        }
+
+                        if($('.gallery-media-wrapper').length == 0) {
+                            window.location = '{{ path('gallery_share_photo') }}';
+                        }
                     }
                 });
+
+
             }
 
             var setSelectedGalleries = function (galleries) {
