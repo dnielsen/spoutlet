@@ -13,6 +13,7 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
@@ -374,6 +375,18 @@ class GalleryController extends Controller
             {
                 $em = $this->getEntityManager();
                 $media = $form->getData();
+
+                if(count($media->getGalleries()) == 0)
+                {
+                    $form = $this->createForm(new GalleryMediaType($user), $media);
+                    $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
+
+                    return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
+                        'media' => $media,
+                        'form'  => $form->createView(),
+                    ));
+                }
+
                 $em->persist($media);
                 $em->flush();
 

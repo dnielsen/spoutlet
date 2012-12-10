@@ -32,6 +32,7 @@ class GalleryMediaType extends AbstractType
             'label' => 'Galleries',
             'expanded' => true,
             'multiple' => true,
+            'required' => true,
         ));
 
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {

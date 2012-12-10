@@ -41,10 +41,10 @@ class GalleryMediaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
-            ->andWhere('gm.published = :published')
+            ->andWhere('gm.published = 1')
+            ->andWhere('gm.deleted <> 1')
             ->orderBy('gm.createdAt', 'DESC')
             ->setParameter('user', $user)
-            ->setParameter('published', true)
             ->getQuery()
             ->execute();
     }
@@ -53,11 +53,11 @@ class GalleryMediaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('gm')
             ->where('gm.author = :user')
-            ->andWhere('gm.published = :published')
+            ->andWhere('gm.published = 1')
+            ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.id != :id')
             ->orderBy('gm.createdAt', 'DESC')
             ->setParameter('user', $user)
-            ->setParameter('published', true)
             ->setParameter('id', $id)
             ->getQuery()
             ->execute();
