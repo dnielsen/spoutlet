@@ -38,6 +38,12 @@
     text-shadow:2px 2px 5px #000000;
 }
 
+#contest-header li a.vote-now {
+    color: #ff5711;
+    text-transform: capitalize;
+    text-shadow:2px 2px 5px #000000;
+}
+
 .contest-winner-wrapper {
     width:300px;
     margin-right: 10px;
