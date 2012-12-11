@@ -6,6 +6,7 @@
 {% set site                         = get_current_site() %}
 {% set isAllowedToViewGroupContent  = group.isAllowedTo(app.user, site, "ViewGroupContent") %}
 {% set isAllowedToViewGroup         = group.isAllowedTo(app.user, site, "ViewGroup") %}
+{% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -134,6 +135,9 @@
                     <a href="javascript:void(0);" id="group-news" class="active">News</a>
                     <a href="javascript:void(0);" id="group-images">Images</a>
                     <a href="javascript:void(0);" id="group-videos">Videos</a>
+                    {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
+                        <a href="javascript:void(0);" id="group-discussions">Discussions</a>
+                    {% endif %}
                     <a href="javascript:void(0);" id="group-about">About</a>
                 {% elseif isAllowedToViewGroup %}
                     <a href="javascript:void(0);" id="group-about" class="active">About</a>
@@ -145,6 +149,7 @@
                     <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-discussions" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                 {% elseif isAllowedToViewGroup %}
                     <div id="content-group-about" class="featured-content-category active" style="height: 550px;background: #191919;">
@@ -185,6 +190,7 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.expander.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.awa.pagerUi.js"></script>
 
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
@@ -236,6 +242,12 @@
                 });
             }
 
+            var loadDiscussionContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_discussions', { 'id' : group.id }) }}');
+            }
+
             var loadAboutContent = function(id) {
                 var content = $('.featured-content-category#content-group-news');
 
@@ -285,9 +297,11 @@
                         case 'group-images':
                             loadImageContent(id);
                             break;
+                        case 'group-discussions':
+                            loadDiscussionContent(id);
+                            break;
                         case 'group-about':
                             loadAboutContent(id);
-
                             break;
                     }
 

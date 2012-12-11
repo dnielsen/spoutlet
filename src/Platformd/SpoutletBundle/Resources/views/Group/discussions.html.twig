@@ -1,0 +1,92 @@
+{% set reportContentType    = 'GroupDiscussion' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddDiscussion') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditDiscussion') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteDiscussion') %}
+{% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
+
+<div id="discussion-content-scroll" style="height: 550px;">
+
+    {% if isAllowedToManageDiscussions %}
+        <div class="discussions-manager-actions">
+            {% if group.discussionsEnabled == true %}
+                Discussions are currently enabled for this group<br>
+                <a href="{{ path('group_disable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to disable discussions for this group?');">Disable Discussions for this group</a>
+            {% else %}
+                Discussions are currently disabled for this group<br>
+                <a href="{{ path('group_enable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to enable discussions for this group?');">Enable Discussions for this group</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if canAdd %}
+        <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Create new discussion</a>
+    {% endif %}
+
+    {% if results | length > 0 %}
+        <div class="scrollable" id="scrollable-discussions" style="height: 550px; width: 600px;background: #191919;">
+            <div class="items">
+                <div class="items-wrapper">
+                    {% for discussion in results %}
+                        <div class="group-discussion-item">
+                            <div class="group-discussion-title">
+                                <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">
+                                    {{ discussion.title }}
+                                </a>
+                                <div class="group-discussion-stats">
+                                    <div class="group-discussion-views group-discussion-stat">
+                                        Views: {{ discussion.viewCount }}
+                                    </div>
+                                    <div class="group-discussion-replies group-discussion-stat">
+                                        Replies: {{ discussion.replyCount }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group-discussion-actions">
+                                {% if canDelete %}
+                                    <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                                {% endif %}
+                                {% if canEdit %}
+                                    <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
+                                {% endif %}
+                                <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="pagerfanta" id="pager">
+            {{ pagerfanta(pager, 'spoutlet', {
+                'previous_message': '',
+                'next_message': '',
+            }) }}
+        </div>
+
+        {# Ajax Pager Widget #}
+        <script type="text/javascript">
+
+            jQuery(document).ready(function() {
+                var content = $('.featured-content-category#content-group-news');
+
+                $('#pager').pagerUi({
+                    'target': content
+                });
+            });
+
+        </script>
+
+        {#<div id="scroll-actions" style="margin-top: 10px;">#}
+            {#<a class="prev browse" style="float: left;">Previous</a>#}
+            {#<a class="next browse" style="float: right;">See More</a>#}
+        {#</div>#}
+
+    {% else %}
+        <div style="height: 500px; width: 600px;">
+            <p>No discussions yet... please come back later!</p>
+        </div>
+    {% endif %}
+
+</div>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

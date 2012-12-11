@@ -7,6 +7,10 @@ use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
+use Platformd\SpoutletBundle\Entity\GroupDiscussion;
+use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
+use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
+use Platformd\SpoutletBundle\GroupEvents;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
@@ -15,6 +19,7 @@ use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Manager for Group:
@@ -33,12 +38,15 @@ class GroupManager
 
     private $securityContext;
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext)
+    private $eventDispatcher;
+
+    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
         $this->securityContext = $securityContext;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -126,6 +134,66 @@ class GroupManager
         if ($flush) {
             $this->em->flush();
         }
+    }
+
+    public function viewGroupDiscussion(GroupDiscussion $groupDiscussion, Session $session)
+    {
+        $groupDiscussionToken = 'groupDiscussion' . $groupDiscussion->getId();
+
+        if (!$session->has($groupDiscussionToken)) {
+            $session->set($groupDiscussionToken, true);
+            $groupDiscussion->incViewCount(1);
+            $this->saveGroupDiscussion($groupDiscussion);
+        }
+    }
+
+    public function saveGroupDiscussion(GroupDiscussion $groupDiscussion, $flush = true)
+    {
+        if (!$groupDiscussion->getAuthor()) {
+            $user = $this->securityContext->getToken()->getUser();
+            $groupDiscussion->setAuthor($user);
+        }
+
+        $this->em->persist($groupDiscussion);
+
+        if ($flush) {
+            $this->em->flush();
+        }
+    }
+
+    public function saveGroupDiscussionPost(GroupDiscussionPost $groupDiscussionPost, $flush = true)
+    {
+        if (!$groupDiscussionPost->getAuthor()) {
+            $user = $this->securityContext->getToken()->getUser();
+            $groupDiscussionPost->setAuthor($user);
+        }
+
+        $eventName = ($groupDiscussionPost->getId()) ? GroupEvents::DISCUSSION_POST_UPDATE : GroupEvents::DISCUSSION_POST_CREATE;
+        $event = new GroupDiscussionPostEvent($groupDiscussionPost);
+
+        $this->em->persist($groupDiscussionPost);
+
+        if ($flush) {
+            $this->em->flush();
+        }
+
+        // We dispatch our GroupDiscussionPostEvent
+        $this->eventDispatcher->dispatch($eventName, $event);
+    }
+
+    public function deleteGroupDiscussionPost(GroupDiscussionPost $groupDiscussionPost, $flush = true)
+    {
+        $this->em->remove($groupDiscussionPost);
+
+        if ($flush) {
+            $this->em->flush();
+        }
+
+        $eventName = GroupEvents::DISCUSSION_POST_DELETE;
+        $event = new GroupDiscussionPostEvent($groupDiscussionPost);
+
+        // We dispatch our GroupDiscussionPostEvent
+        $this->eventDispatcher->dispatch($eventName, $event);
     }
 
     /**

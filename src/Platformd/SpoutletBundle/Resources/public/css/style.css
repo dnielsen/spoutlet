@@ -840,3 +840,27 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 /* qtip styles */
 .qtip-content { font-size: 14px; }
 .tooltip { font-size: 14px; }
+
+/* pager style */
+nav.spoutlet-pager a {
+    font-size: 10px;
+    color: #fff;
+    padding: 3px 3px 3px 3px;
+    margin: 0 3px;
+    padding: 3px 4px;
+    background: #121212;
+    border: 1px solid #4a4a4a;
+}
+
+nav.spoutlet-pager a:hover {
+    color: #fff;
+    border: 1px solid #01a2d2;
+}
+
+nav.spoutlet-pager .current {
+    font-size: 12px;
+    margin: 0 3px;
+    padding: 4px 5px;
+    background: #121212;
+    border: 1px solid #01a2d2;
+}
