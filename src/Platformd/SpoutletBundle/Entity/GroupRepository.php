@@ -128,6 +128,8 @@ class GroupRepository extends EntityRepository
             $qb->setParameter('endDate', $endDate);
         }
 
+        $qb->distinct('g.id');
+
         return $qb->getQuery()->execute();
     }
 
