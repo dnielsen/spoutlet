@@ -242,7 +242,7 @@ class ContentReportAdminController extends Controller
             $galleryMedia->setDeletedReason(null);
             $em->persist($galleryMedia);
             $type = 'GalleryMedia';
-            $id = $groupImage->getId();
+            $id = $galleryMedia->getId();
 
         } else if ($group) {
 

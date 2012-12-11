@@ -26,7 +26,7 @@
         <form action="{{ path('gallery_submit') }}" id="submit-photo-form" method="post" {{ form_enctype(form) }}>
             {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
             <div class="form-actions">
-                <button class="btn btn-primary" type="submit">{{ 'galleries.save_images' | trans }}</button>
+                <button class="btn btn-primary" type="submit">{{ 'galleries.upload_images' | trans }}</button>
                 <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">{{ 'galleries.cancel' | trans }}</button>
             </div>
         </form>
@@ -266,13 +266,24 @@
                                     }
                                 };
                             }
+
                         }
 
                         initMedia();
 
                         $.unblockUI();
+
+                        if(unpublished.length > 0) {
+                            $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_more' | trans }}');
+                        }
+
+                        if($('.gallery-media-wrapper').length == 0) {
+                            window.location = '{{ path('gallery_share_photo') }}';
+                        }
                     }
                 });
+
+
             }
 
             var setSelectedGalleries = function (galleries) {
