@@ -225,15 +225,17 @@ class GalleryMediaRepository extends EntityRepository
 
     public function findMediaForContestWinners($contest)
     {
-        if ($contest->getWinners()) {
-            $qb =  $this->createQueryBuilder('gm');
+            if ($contest->getWinners()) {
+                $qb =  $this->createQueryBuilder('gm');
+            }
 
-        $ids = count($contest->getWinners()) > 0 ? $contest->getWinners() : array(0);
+            $ids = count($contest->getWinners()) > 0 ? $contest->getWinners() : array(0);
 
-        return $qb->where($qb->expr()->in('gm.id', $ids))
-            ->andWhere('gm.deleted = false')
-            ->andWhere('gm.published = true')
-            ->getQuery()
-            ->execute();
+            return $qb->where($qb->expr()->in('gm.id', $ids))
+                ->andWhere('gm.deleted = false')
+                ->andWhere('gm.published = true')
+                ->getQuery()
+                ->execute();
+
     }
 }
