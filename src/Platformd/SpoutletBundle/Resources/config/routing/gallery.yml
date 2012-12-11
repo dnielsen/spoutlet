@@ -7,7 +7,7 @@ gallery_index_data:
     defaults: { _controller: SpoutletBundle:Gallery:galleryData, site: ~ }
 
 gallery_submit:
-    pattern: /submit-photo
+    pattern: /submit-image
     defaults: { _controller: SpoutletBundle:Gallery:submit, site: ~ }
 
 gallery_upload:
