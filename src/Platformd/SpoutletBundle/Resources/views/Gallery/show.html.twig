@@ -41,7 +41,7 @@
         <div class="right">
 
             {{ 'galleries.submit_photo_now' | trans }}
-            <div class="submit-media">
+            <div class="submit-media" style="display: inline; margin-left: 5px;">
                 <a href="{{ path('gallery_submit') }}" class="btn btn-primary" id="gallery-show-submit-media">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
 
@@ -73,7 +73,8 @@
 
              {% if (otherMediaPages | length) > 0 %}
 
-                <a id="nav-prev" class="nav-prev" style="float: left;display: inline-block;"></a>
+             <div class="other-media" style="margin-bottom: 20px;">
+                <a id="nav-prev" class="nav-prev" style="float: left;"></a>
                 <div class="scrollable" id="scrollable-other-media">
 
                     <div class="items">
@@ -92,11 +93,12 @@
                         {% endfor %}
                     </div>
                 </div>
-                <a id="nav-next" class="nav-next" style="float: right;"></a>
+                <a id="nav-next" class="nav-next" style="float: right; margin-top: -93px;"></a>
+            </div>
 
-                {% endif %}
+            {% endif %}
 
-            <div class="widget-33" style="height:auto;">
+            <div class="widget-33" style="height:auto; margin-bottom: 10px;">
                 <div class="widget-header">
                     <div class="widget-title">
                         {{ 'galleries.show_photo_details_label' | trans }}
@@ -172,7 +174,12 @@
                 </div>
             </div>
 
+            <div style="margin-top: 30px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
         </div>
+
     </div>
 </div>
 
