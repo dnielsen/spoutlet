@@ -2,6 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\ContentReportEvents;
+use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
@@ -106,6 +108,11 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
+        // We dispatch an event for further stuff like maintaining counts
+        $eventName = ContentReportEvents::REPORT;
+        $event = new ContentReportEvent($reportedItem);
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+
         $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
@@ -133,7 +140,18 @@ class ContentReportingController extends Controller
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
+
+        switch ($type) {
+            case 'Group':
+                $name = $item->getName();
+                break;
+            case 'GroupDiscussionPost':
+                $name = 'post id:' . $item->getId();
+                break;
+            default:
+                $name = $item->getTitle();
+        }
+
         $subject            = "Your Content Has Been Flagged";
         $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
 

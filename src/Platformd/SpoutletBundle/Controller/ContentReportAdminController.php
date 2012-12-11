@@ -2,6 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\ContentReportEvents;
+use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Entity\ContentReport;
 use Platformd\SpoutletBundle\Form\Type\ReportedContentType;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,23 +28,29 @@ class ContentReportAdminController extends Controller
         $allowArchived = $mode == "archived";
 
         if ($mode == "archived") {
-            $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
-            $groups      = $repo->getContentReportTypeForAllSitesArchived("Group");
+            $groupNews              = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussionPost");
+            $groups                 = $repo->getContentReportTypeForAllSitesArchived("Group");
         } elseif ($mode == "deletedContent") {
-            $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
-            $groups      = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
+            $groupNews              = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussionPost");
+            $groups                 = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
         } elseif ($mode == "manage") {
-            $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
-            $groups      = $repo->getContentReportTypeForAllSites("Group");
+            $groupNews              = $repo->getContentReportTypeForAllSites("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSites("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSites("GroupImage");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSites("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
+            $groups                 = $repo->getContentReportTypeForAllSites("Group");
         }
 
-        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $groups);
+        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $groups, $groupDiscussions, $groupDiscussionPosts);
 
         usort($allReports, function($a, $b) {
 
@@ -84,32 +92,64 @@ class ContentReportAdminController extends Controller
         $groupVideo = $report->getGroupVideo();
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $groupDiscussion = $report->getGroupDiscussion();
+        $groupDiscussionPost = $report->getGroupDiscussionPost();
         $group = $report->getGroup();
 
         if ($groupVideo) {
+
             $groupVideo->setDeleted(false);
             $groupVideo->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupVideo($groupVideo);
             $type = 'GroupVideo';
             $id = $groupVideo->getId();
+            $reportedItem = $groupVideo;
+
         } else if ($groupNews) {
+
             $groupNews->setDeleted(false);
             $groupNews->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupNews($groupNews);
             $type = 'GroupNews';
             $id = $groupNews->getId();
+            $reportedItem = $groupNews;
+
         } else if ($groupImage) {
+
             $groupImage->setDeleted(false);
             $groupImage->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
             $type = 'GroupImage';
             $id = $groupImage->getId();
+            $reportedItem = $groupImage;
+
+        } else if ($groupDiscussion) {
+
+            $groupDiscussion->setDeleted(false);
+            $groupDiscussion->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroupDiscussion($groupDiscussion);
+            $type = 'GroupDiscussion';
+            $id = $groupDiscussion->getId();
+            $reportedItem = $groupDiscussion;
+
+        } else if ($groupDiscussionPost) {
+
+            $groupDiscussionPost->setDeleted(false);
+            $groupDiscussionPost->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
+            $type = 'GroupDiscussionPost';
+            $id = $groupDiscussionPost->getId();
+            $reportedItem = $groupDiscussionPost;
+
         } else if ($group) {
+
             $group->setDeleted(false);
             $group->setDeletedReason(null);
             $repo->deleteAllContentReportsForGroup($group);
             $type = 'Group';
             $id = $group->getId();
+            $reportedItem = $group;
+
         } else {
             $this->setFlash('error', 'Unknown content type.');
             return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -117,6 +157,11 @@ class ContentReportAdminController extends Controller
 
         $em->persist($report);
         $em->flush();
+
+        // We dispatch an event for further stuff like maintaining counts
+        $eventName = ContentReportEvents::REINSTATE;
+        $event = new ContentReportEvent($reportedItem);
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         $this->sendUserRestoredNotificationEmail($id, $type);
 
@@ -136,6 +181,8 @@ class ContentReportAdminController extends Controller
         $groupVideo = $report->getGroupVideo();
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $groupDiscussion = $report->getGroupDiscussion();
+        $groupDiscussionPost = $report->getGroupDiscussionPost();
         $group          = $report->getGroup();
 
         if ($groupVideo) {
@@ -158,6 +205,20 @@ class ContentReportAdminController extends Controller
             $groupImage->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupImage);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
+
+        } else if ($groupDiscussion) {
+
+            $groupDiscussion->setDeleted(true);
+            $groupDiscussion->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($groupDiscussion);
+            $repo->deleteAllContentReportsForGroupDiscussion($groupDiscussion);
+
+        } else if ($groupDiscussionPost) {
+
+            $groupDiscussionPost->setDeleted(true);
+            $groupDiscussionPost->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($groupDiscussionPost);
+            $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
 
         } else if ($group) {
 
@@ -190,6 +251,8 @@ class ContentReportAdminController extends Controller
         $groupVideo     = $report->getGroupVideo();
         $groupNews      = $report->getGroupNews();
         $groupImage     = $report->getGroupImage();
+        $groupDiscussion = $report->getGroupDiscussion();
+        $groupDiscussionPost = $report->getGroupDiscussionPost();
         $group          = $report->getGroup();
 
         if ($groupVideo) {
@@ -199,6 +262,7 @@ class ContentReportAdminController extends Controller
             $em->persist($groupVideo);
             $type = 'GroupVideo';
             $id = $groupVideo->getId();
+            $reportedItem = $groupVideo;
 
         } else if ($groupNews) {
 
@@ -207,6 +271,7 @@ class ContentReportAdminController extends Controller
             $em->persist($groupNews);
             $type = 'GroupNews';
             $id = $groupNews->getId();
+            $reportedItem = $groupNews;
 
         } else if ($groupImage) {
 
@@ -215,6 +280,25 @@ class ContentReportAdminController extends Controller
             $em->persist($groupImage);
             $type = 'GroupImage';
             $id = $groupImage->getId();
+            $reportedItem = $groupImage;
+
+        } else if ($groupDiscussion) {
+
+            $groupDiscussion->setDeleted(false);
+            $groupDiscussion->setDeletedReason(null);
+            $em->persist($groupDiscussion);
+            $type = 'GroupDiscussion';
+            $id = $groupDiscussion->getId();
+            $reportedItem = $groupDiscussion;
+
+        } else if ($groupDiscussionPost) {
+
+            $groupDiscussionPost->setDeleted(false);
+            $groupDiscussionPost->setDeletedReason(null);
+            $em->persist($groupDiscussionPost);
+            $type = 'GroupDiscussionPost';
+            $id = $groupDiscussionPost->getId();
+            $reportedItem = $groupDiscussionPost;
 
         } else if ($group) {
 
@@ -223,6 +307,7 @@ class ContentReportAdminController extends Controller
             $em->persist($group);
             $type = 'Group';
             $id = $group->getId();
+            $reportedItem = $group;
 
         } else {
 
@@ -231,6 +316,11 @@ class ContentReportAdminController extends Controller
         }
 
         $em->flush();
+
+        // We dispatch an event for further stuff like maintaining counts
+        $eventName = ContentReportEvents::REINSTATE;
+        $event = new ContentReportEvent($reportedItem);
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         $this->sendUserRestoredNotificationEmail($id, $type);
 
@@ -258,7 +348,18 @@ class ContentReportAdminController extends Controller
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
+
+        switch ($type) {
+            case 'Group':
+                $name = $item->getName();
+                break;
+            case 'GroupDiscussionPost':
+                $name = 'post id:' . $item->getId();
+                break;
+            default:
+                $name = $item->getTitle();
+        }
+
         $subject            = "Your Content is Restored";
         $message            = sprintf("This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
 

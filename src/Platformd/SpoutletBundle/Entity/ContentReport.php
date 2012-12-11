@@ -107,6 +107,13 @@ class ContentReport
     protected $groupDiscussion = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GroupDiscussionPost")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupDiscussionPost = null;
+
+    /**
      * Get id
      *
      * @return integer
@@ -208,6 +215,16 @@ class ContentReport
         $this->groupDiscussion = $groupDiscussion;
     }
 
+    public function setGroupDiscussionPost($groupDiscussionPost)
+    {
+        $this->groupDiscussionPost = $groupDiscussionPost;
+    }
+
+    public function getGroupDiscussionPost()
+    {
+        return $this->groupDiscussionPost;
+    }
+
     public function getSite()
     {
         return $this->site;
@@ -236,5 +253,4 @@ class ContentReport
     {
         return $this->reason;
     }
-
 }

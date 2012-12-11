@@ -10,24 +10,28 @@ class ContentReportRepository extends EntityRepository
     public function getContentReportTypeForAllSites($type)
     {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group" && $type != "GroupDiscussion" && $type != "GroupDiscussionPost") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
-        return $this->getEntityManager()->createQuery(sprintf('
+        $qb = $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
             WHERE report.deleted = false
             GROUP BY item
             ORDER BY reportCount DESC, report.reportedAt
             ',
-            $type))
+            $type));
+
+        $sql = $qb->getSQL();
+
+        return $qb
             ->execute();
     }
 
     public function getContentReportTypeForAllSitesArchived($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group" && $type != "GroupDiscussion" && $type != "GroupDiscussionPost") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -46,7 +50,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesDeletedContent($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group" && $type != "GroupDiscussion" && $type != "GroupDiscussionPost") {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -68,10 +72,12 @@ class ContentReportRepository extends EntityRepository
     {
 
         return $this->getEntityManager()->createQuery('
-            SELECT report, i, v, n FROM SpoutletBundle:ContentReport report
+            SELECT report, i, v, n, d, dp FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.groupImage i
             LEFT JOIN report.groupVideo v
             LEFT JOIN report.groupNews n
+            LEFT JOIN report.groupDiscussion d
+            LEFT JOIN report.groupDiscussionPost dp
             WHERE report.deleted = false
             ORDER BY report.reportedAt
             ')
@@ -82,10 +88,12 @@ class ContentReportRepository extends EntityRepository
     {
 
         return $this->getEntityManager()->createQuery('
-            SELECT report, i, v, n FROM SpoutletBundle:ContentReport report
+            SELECT report, i, v, n, d, dp FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.groupImage i
             LEFT JOIN report.groupVideo v
             LEFT JOIN report.groupNews n
+            LEFT JOIN report.groupDiscussion d
+            LEFT JOIN report.groupDiscussionPost dp
             JOIN report.site site
             WHERE report.deleted = false
             AND site = :site
@@ -142,6 +150,44 @@ class ContentReportRepository extends EntityRepository
             LEFT JOIN report.groupVideo c
             WHERE report.deleted = false
             AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForGroupDiscussion($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, d FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupDiscussion d
+            WHERE report.deleted = false
+            AND d = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForGroupDiscussionPost($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, dp FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupDiscussionPost dp
+            WHERE report.deleted = false
+            AND dp = :content
             ')
             ->setParameter('content', $content)
             ->execute();
