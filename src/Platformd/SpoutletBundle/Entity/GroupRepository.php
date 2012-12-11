@@ -222,6 +222,7 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.images', 'i')
             ->leftJoin('g.membershipActions', 'm')
             ->where('g IN (:results)')
+            ->distinct('g.id')
             ->setParameter('results', $results);
 
         return $qb->getQuery()->execute();
