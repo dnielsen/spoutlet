@@ -136,21 +136,7 @@
                     </div>
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
-                    <div class="description">{{ media.description }}</div>
-                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }}</div>
-
-                    <div style="margin-top:10px; width:300px">
-                        <div style="width:20%; float:left;">Galleries: </div>
-                        <div style="width:80%; float:right;">
-                            {% for gallery in media.galleries %}
-                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
-                            {% endfor %}
-                        </div>
-                        <div class="clear" />
-                    </div>
-
-                    <div id="widget-footer">
-                        <p>
+                    <p>
                             {% if canDelete %}
                                 <a href="{{ path('gallery_delete_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a> |
                             {% endif %}
@@ -167,6 +153,20 @@
                                 </a>
                             {% endif %}
                         </p>
+                    <div class="description">{{ media.description }}</div>
+                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }}</div>
+
+                    <div style="margin-top:10px; width:300px">
+                        <div style="width:20%; float:left;">Galleries: </div>
+                        <div style="width:80%; float:right;">
+                            {% for gallery in media.galleries %}
+                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
+                            {% endfor %}
+                        </div>
+                        <div class="clear" />
+                    </div>
+
+                    <div id="widget-footer">
                         <p>
                             <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">Report</a>
                         </p>

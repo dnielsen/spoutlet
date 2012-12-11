@@ -144,7 +144,8 @@ button:disabled {
     -ms-user-select: none;
     text-decoration: none;
     min-width: 140px;
-    text-shadow: 0.1em 0.1em #838382
+    text-shadow: 0.1em 0.1em #838382;
+    cursor: default;
 }
 
 .form-actions {

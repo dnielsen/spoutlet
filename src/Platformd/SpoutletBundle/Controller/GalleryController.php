@@ -427,7 +427,7 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Media not found');
         }
 
-        if($media->getAuthor()->getId() != $user->getId())
+        if(($media->getAuthor()->getId() != $user->getId()) && !$user->hasRole('ROLE_SUPER_ADMIN'))
         {
             $this->setFlash('error', $this->trans('galleries.delete_photo_error_message'));
             return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $id)));
