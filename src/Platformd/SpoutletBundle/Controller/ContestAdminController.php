@@ -42,18 +42,36 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('New Contest');
 
-        $contest  = new Contest();
+        $em                 = $this->getDoctrine()->getEntityManager();
+        $existingContests   = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($this->getCurrentSite());
+        $importId           = $request->get('existing_contest_select');
+        $importedContest    = $em->getRepository('SpoutletBundle:Contest')->find($importId);
+
+        if ($importId) {
+            $contest = $importedContest ? : new Contest();
+
+            $contest->setName(null);
+            $contest->setSlug(null);
+            $contest->setBanner(null);
+            $contest->setOpenGraphOverride(null);
+            $contest->setWinners(null);
+
+        } else {
+            $contest = new Contest();
+        }
+
         $form    = $this->createForm(new ContestType(), $contest);
 
-        if ($this->processForm($form, $request)) {
+        if (!$importedContest && $this->processForm($form, $request)) {
             $this->setFlash('success', 'The contest was created!');
 
             return $this->redirect($this->generateUrl('admin_contest_index'));
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:new.html.twig', array(
-            'contest' => $contest,
-            'form'   => $form->createView()
+            'contest'           => $contest,
+            'form'              => $form->createView(),
+            'existingContests'  => $existingContests,
         ));
     }
 

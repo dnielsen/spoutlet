@@ -425,6 +425,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
         }
 
         $galleries = $this->getGalleries();
+        $isAllowedForSite = false;
 
         foreach ($galleries as $gallery) {
 
@@ -472,5 +473,21 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
         }
 
         return $this->getAuthor() === $user;
+    }
+
+    public function hasUserVoted($user)
+    {
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
+
+            $votes = $this->votes;
+
+            foreach ($votes as $vote) {
+                if ($vote->getUser() == $user) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

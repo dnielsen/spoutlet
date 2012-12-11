@@ -39,23 +39,15 @@
 
         </div>
         <div class="right">
-        <div id="media-social">
-            <div class="fb-like"
-                data-send="false"
-                data-width="300"
-                data-layout="button_count"
-                data-show-faces="false"
-                data-colorscheme="dark"
-                style="vertical-align:top;zoom:1;*display:inline">
+
+            {{ 'galleries.submit_photo_now' | trans }}
+            <div class="submit-media">
+                <a href="{{ path('gallery_submit') }}" class="btn btn-primary" id="gallery-show-submit-media">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
-            <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
-                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
         </div>
-        </div>
     </div>
-    <div class="std_2col" style="min-height: 500px;">
+    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
 
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
@@ -63,6 +55,47 @@
         </div>
 
         <div class="right">
+
+            <div id="media-social" style="margin-top: 0px; margin-bottom: 5px;">
+                <div class="fb-like"
+                    data-send="false"
+                    data-width="300"
+                    data-layout="button_count"
+                    data-show-faces="false"
+                    data-colorscheme="dark"
+                    style="vertical-align:top;zoom:1;*display:inline">
+                </div>
+                <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+            </div>
+
+             {% if (otherMediaPages | length) > 0 %}
+
+                <a id="nav-prev" class="nav-prev" style="float: left;display: inline-block;"></a>
+                <div class="scrollable" id="scrollable-other-media">
+
+                    <div class="items">
+                        {% for page in otherMediaPages %}
+                            <div class="items-wrapper">
+                            {% for media in page %}
+                                <div class="user-media-thumb-wrapper">
+                                   <div class="gallery-media-thumb-square">
+                                        <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                                            <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <a id="nav-next" class="nav-next" style="float: right;"></a>
+
+                {% endif %}
+
             <div class="widget-33" style="height:auto;">
                 <div class="widget-header">
                     <div class="widget-title">
@@ -74,8 +107,35 @@
                         <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
                         <div class="photo-author-link"><a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
                     </div>
-                    <div class="photo-date">{{ 'galleries.show_photo_details_upload_on' | trans }} {{ media.createdAt | date('M d, Y')}}</div>
+
+                    <div class="photo-voting-wrapper">
+                        <div class="photo-votes upvotes">
+                            <div class="votes"><strong><span id="media-upvotes">{{ upVotes }}</span>%</strong></div>
+                            <div>Likes</div>
+                        </div>
+
+                       <div class="photo-votes downvotes">
+                            <div class="votes"><strong><span id="media-downvotes">{{ downVotes }}</span>%</strong></div>
+                            <div>Dislikes</div>
+                        </div>
+
+                        {% if media.hasUserVoted(app.user) == false %}
+
+                            <div class="media-voting-wrapper">
+                                {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+                            </div>
+
+                            <div id="media-voting-login-required" style="display: none; margin-top: 7px; padding: 0 20px;">
+                                <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">Login</a>
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
                     <div class="description">{{ media.description }}</div>
+                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }}</div>
 
                     <div style="margin-top:10px; width:300px">
                         <div style="width:20%; float:left;">Galleries: </div>
@@ -112,58 +172,6 @@
                 </div>
             </div>
 
-            <div class="widget-33" style="height:auto;margin-top:20px;">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        {{ 'galleries.show_photo_vote_label' | trans }}
-                    </div>
-                </div>
-                <div class="widget-content">
-
-                    <div style="display:inline-table;width:120px;margin-left:5px;">
-                        {{ 'galleries.show_photo_details_views' | trans}} {{ media.views }}
-                    </div>
-                    <div style="display:inline-table;width:160px;">
-                        Likes: <span id="media-upvotes">{{ upVotes }}</span>% / Dislikes: <span id="media-downvotes">{{ downVotes }}</span>%
-                    </div>
-                    {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
-                </div>
-            </div>
-
-            {% if (otherMedia | length) > 0 %}
-                <div class="widget-33" style="height: 290px;margin-top:15px;">
-                    <div class="widget-header">
-                        <div class="widget-title">
-                            {{ 'galleries.more_images_from' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a>
-                        </div>
-                    </div>
-                    <div class="widget-content">
-
-                        <div class="page_container">
-                            <div class="gallery-items content" style="width:100%; height:190px">
-                                {% for media in otherMedia %}
-                                    {% set isFirstInRow = (loop.index - 1) is divisibleby(3) or loop.first  %}
-                                    <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% endif %}">
-                                        <div class="gallery-media-thumb-square">
-                                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                                <img style="width:92px; height:92px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />
-                                            </a>
-                                        </div>
-                                        <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
-                                        <input type="hidden" value="{{ media.views }}" class="media-popular" />
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="page_navigation" style="float: right; padding-top:10px;"></div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="submit-media">
-                <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
-            </div>
-
         </div>
     </div>
 </div>
@@ -181,28 +189,10 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script src="{{ asset('bundles/spoutlet/js/jquery.imagesloaded.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
-
-            $('.media-thumb').qtip({
-                content: $(this).attr('data-title'),
-                style: {
-                    border: {
-                        width: 2,
-                        radius: 5 },
-                    padding: 10,
-                    tip: true,
-                    name: 'dark'
-                },
-                position: {
-                    corner: {
-                        tooltip: 'rightMiddle',
-                        target: 'leftMiddle'
-                    }
-                }
-            });
 
             $('.gallery-media-thumb-small').hover(
                 function () {
@@ -222,10 +212,10 @@
                 width: 115,
             });
 
-            $('.page_container').pajinate({
-                    items_per_page: 6,
-                    show_first_last: false,
-                });
+            $('#scrollable-other-media').scrollable({
+                next: '#nav-next',
+                prev: '#nav-prev'
+            });
         });
     </script>
 {% endblock %}

@@ -1,3 +1,5 @@
+{% set reportContentType    = 'GalleryMedia' %}
+
 {% if type == 'popular' %}
     {# because the DQL returns an assoc array with the vote count in it, we have to index the first key in the array for the GalleryMedia object #}
     {% for media in medias %}
@@ -35,6 +37,9 @@
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
                 <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
             </div>
+            <div class="image-actions">
+                <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">Report</a>
+            </div>
         </div>
     {% else %}
         <p>{{ 'galleries.index_page_no_media_found' | trans }}</p>
@@ -43,9 +48,11 @@
 {% endif %}
 
 {% include 'SpoutletBundle:Gallery:_quickVotePopup.html.twig' %}
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
 <script type="text/javascript">
     $(document).ready(function() {
+
         $('.gallery-media-thumb').hover(function() {
             $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeIn(200);
         },

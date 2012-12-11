@@ -326,9 +326,20 @@ class GalleryController extends Controller
 
         $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
 
+        $otherMediaPerPage = 3;
+        $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);
+
+        $otherMediaPages = array();
+        $offset = 0;
+        for($i = 0; $i < $pageCount; $i++)
+        {
+            $otherMediaPages[] = array_slice($otherMedia, $offset, $otherMediaPerPage);
+            $offset += $otherMediaPerPage;
+        }
+
         $totalVotes     = $this->getVoteRepository()->findVoteCount($id);
-        $upVotes        = round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100);
-        $downVotes      = 100 - $upVotes;
+        $upVotes        = $totalVotes ? round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100) : 0;
+        $downVotes      = $totalVotes ? 100 - $upVotes : 0;
 
         if(!$media)
         {
@@ -348,11 +359,11 @@ class GalleryController extends Controller
         $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
-            'media'         => $media,
-            'otherMedia'    => $otherMedia,
-            'upVotes'       => $upVotes,
-            'crumb'         => $crumb,
-            'downVotes'     => $downVotes,
+            'media'             => $media,
+            'otherMediaPages'   => $otherMediaPages,
+            'upVotes'           => $upVotes,
+            'crumb'             => $crumb,
+            'downVotes'         => $downVotes,
         ));
     }
 

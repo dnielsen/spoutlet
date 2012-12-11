@@ -4,6 +4,28 @@
 
 <h1>New Contest</h1>
 
+<div class="row-fluid">
+    <form action="{{ path('admin_contest_new') }}" method="post" class="form-horizontal">
+        <fieldset>
+            <legend>a) Import Settings (Optional)</legend>
+            <div class="row-fluid first">
+
+                <select id="existing_contest_select" name="existing_contest_select">
+                    {% for existingContest in existingContests %}
+                        <option value="{{ existingContest.id }}">{{ existingContest.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn btn-primary" formnovalidate>Import</button>
+
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+
+
 <form action="{{ path('admin_contest_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:ContestAdmin:_form.html.twig' %}
 

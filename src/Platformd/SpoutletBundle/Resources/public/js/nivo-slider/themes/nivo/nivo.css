@@ -27,15 +27,15 @@ Author URI: http://dev7studios.com
 }
 
 .theme-nivo .nivo-controlNav {
-    background:url(control-nav.png) no-repeat;
+    background:url(control-nav_small.png) no-repeat;
     width:72px;
     height:13px;
     position:absolute;
     left:50%;
-    bottom:15px;
+    bottom:0px;
     margin-left:-51px; /* Tweak this to center bullets */
     z-index:210;
-    padding:15px 13px 15px 17px;
+    padding:8px 13px 15px 17px;
     opacity:0.5;
     -webkit-transition: opacity 300ms ease-in-out;
     -moz-transition: opacity 300ms ease-in-out;
@@ -62,9 +62,9 @@ Author URI: http://dev7studios.com
 
 .theme-nivo .nivo-directionNav a {
     display:block;
-    width:43px;
-    height:43px;
-    background:url(arrows.png) no-repeat;
+    width:26px;
+    height:26px;
+    background:url(arrows_small.png) no-repeat;
     text-indent:-9999px;
     border:0;
     opacity: 0;
@@ -76,19 +76,19 @@ Author URI: http://dev7studios.com
 }
 .theme-nivo:hover .nivo-directionNav a { opacity: 1; }
 .theme-nivo a.nivo-nextNav {
-    background-position:-43px 0;
+    background-position:-26px 0;
     left:370px;
-    top:236px;
+    top:260px;
 }
 .theme-nivo a.nivo-nextNav:hover {
-    background-position:-43px -43px;
+    background-position:-26px -26px;
 }
 .theme-nivo a.nivo-prevNav {
     right:370px;
-    top:236px;
+    top:260px;
 }
 .theme-nivo a.nivo-prevNav:hover {
-    background-position:0 -43px;
+    background-position:0 -26px;
 }
 
 .theme-nivo .nivo-caption {

@@ -45,7 +45,7 @@ class ContestRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('c')
             ->leftJoin('c.sites', 's')
-            ->where('s.defaultLocale = :site')
+            ->where('s.defaultLocale = :site OR s = :site')
             ->setParameter('site', $site)
         ;
 

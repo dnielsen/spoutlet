@@ -5,7 +5,7 @@
 
 <div class="row-fluid">
     <fieldset>
-        <legend>a) Contest Information</legend>
+        <legend>b) Contest Information</legend>
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.name) }}
@@ -27,7 +27,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>b) Rules and Instructions</legend>
+        <legend>c) Rules and Instructions</legend>
         <div class="row-fluid first">
             {{ form_row(form.rules) }}
             {{ form_row(form.entryInstructions) }}
@@ -51,7 +51,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>c) Restrictions</legend>
+        <legend>d) Restrictions</legend>
         <div class="game-page-form">
             <ul class="medias-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
                 {# see the CSS file this explanation #}
@@ -69,7 +69,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>d) Facebook Info</legend>
+        <legend>e) Facebook Info</legend>
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.openGraphOverride.description) }}
@@ -79,7 +79,7 @@
     </fieldset>
 
     <fieldset>
-        <legend>e) Status</legend>
+        <legend>f) Status</legend>
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.status) }}

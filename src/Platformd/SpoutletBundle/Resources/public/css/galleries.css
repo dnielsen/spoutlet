@@ -39,10 +39,28 @@
 }
 
 .photo-date {
+    padding-top:5px;
+}
+
+.photo-views {
+    padding-top:5px;
+}
+
+.photo-voting-wrapper {
     display: inline-table;
     vertical-align: top;
-    text-align: right;
     width: 180px;
+}
+
+.photo-voting-wrapper .photo-votes {
+    display: inline-table;
+    padding: 25px 5px;
+}
+
+.media-voting-wrapper {
+    display: inline-table;
+    padding: 0 10px;
+    margin-top: 15px;
 }
 
 .description {
@@ -86,8 +104,8 @@
 
 .gallery-media-thumb-square {
     border: 1px solid #4A4A4A;
-    width: 92px;
-    height: 92px;
+    width: 82px;
+    height: 82px;
 }
 
 .gallery-media-thumb a {
@@ -142,33 +160,79 @@
 }
 
 a.media-voting-button {
-    width: 32px;
-    height: 32px;
+    width: 29px;
+    height: 29px;
     float: left;
 }
 
 .up {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 0 64px;
+    background-position: 0 0;
 }
 
 .up:hover {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 0 32px;
+    background-position: 0 29px;
 }
 
 .down {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 32px 64px;
+    background-position: 29px 0;
 }
 
 .down:hover {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 32px 32px;
+    background-position: 29px 29px;
+}
+
+.nav-prev, .nav-next {
+    background: url('/bundles/spoutlet/images/other-images-prev-next-sprite.png');
+    height: 82px;
+    width: 15px;
+    display: inline;
+    border: 1px solid #4a4a4a;
+}
+
+.nav-prev {
+    background-position: 0 0;
+}
+
+.nav-next {
+    background-position: 15px 0;
+}
+
+.scrollable {
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+}
+
+.scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position:absolute;
+}
+
+.items .items-wrapper {
+    width: 260px;
+    margin-left: 5px;
+    float: left;
+}
+
+#gallery-show-submit-media {
+    padding: 5px 15px;
+    min-width: 95px;
+}
+
+#scrollable-other-media {
+    height: 84px;
+    width: 260px;
+    margin-bottom: 10px;
 }
 
 #media-voting-vote-response,
 #media-voting-login-required {
+    display: inline-table;
     text-align: center;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -177,6 +241,8 @@ a.media-voting-button {
 .submit-media {
     text-align: center;
     padding: 10px 0 10px 0;
+    display: inline;
+    margin-left: 5px;
 }
 
 .gallery-items {

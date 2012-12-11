@@ -542,6 +542,7 @@ galleries:
     index_page_no_media_found: No photos were found.
     submit_photo_page_title: Submit Image
     submit_photo_page_header: Submit Image
+    submit_photo_now: Submit your own images now!
     submit_photo_blockUI_message: Your images are uploading. Please wait...
     submit_photo_publish_blockUI_message: Your images are being published. Please wait...
 
