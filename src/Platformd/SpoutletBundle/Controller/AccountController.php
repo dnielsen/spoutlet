@@ -122,15 +122,44 @@ class AccountController extends Controller
         ));
     }
 
-    public function photosAction()
+    public function photosAction($filter='all')
     {
         $this->checkSecurity();
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $images = $em->getRepository('SpoutletBundle:GalleryMedia')
-            ->findAllPublishedByUserNewestFirst($this->getUser())
-        ;
+        $galleries = $em->getRepository('SpoutletBundle:Gallery')
+                ->findAllGalleriesByCategoryForSite($this->getCurrentSite())
+            ;
+
+        switch($filter)
+        {
+            case 'all':
+                $images = $em->getRepository('SpoutletBundle:GalleryMedia')
+                    ->findAllPublishedByUserNewestFirst($this->getUser())
+                ;
+                break;
+            case 'deleted':
+                $images = $em->getRepository('SpoutletBundle:GalleryMedia')
+                    ->findAllDeletedMediaForUser($this->getUser())
+                ;
+                break;
+            default:
+                foreach ($galleries as $gallery)
+                {
+                    if(strtolower($gallery->getName()) == strtolower($filter))
+                    {
+                        $images = $em->getRepository('SpoutletBundle:GalleryMedia')
+                            ->findAllMediaByUserAndGallery($this->getUser(), $gallery)
+                        ;
+                    }
+                }
+
+                if(!isset($images)) {
+                    $images = null;
+                }
+                break;
+        }
 
         return $this->render('SpoutletBundle:Account:photos.html.twig', array(
             'images'    => $images,

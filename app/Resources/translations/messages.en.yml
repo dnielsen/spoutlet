@@ -603,6 +603,7 @@ galleries:
     cancel: Cancel
     publish_photo_multiple_message: %s of %s images are published.
     publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
+    no_images_found: No images found...
 
 contests:
     index_page_title_long: Alienware Arena Contests

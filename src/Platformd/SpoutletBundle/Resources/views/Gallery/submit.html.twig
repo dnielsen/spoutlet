@@ -356,6 +356,14 @@
                         if(data.success) {
                             mediaDiv.fadeOut('normal');
                             mediaDiv.remove();
+
+                            var len = medias.length;
+                            while(len--) {
+                                if(medias[len].id == media.id) {
+                                    medias.splice(len, 1);
+                                }
+                            }
+
                             if($('.gallery-media-wrapper').length < 1) {
                                 window.location = '{{ path('gallery_submit') }}';
                             }

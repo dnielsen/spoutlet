@@ -238,4 +238,30 @@ class GalleryMediaRepository extends EntityRepository
                 ->execute();
 
     }
+
+    public function findAllDeletedMediaForUser($user)
+    {
+         return $this->createQueryBuilder('gm')
+            ->where('gm.author = :user')
+            ->andWhere('gm.deleted = 1')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllMediaByUserAndGallery($user, $gallery)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->where('gm.author = :user')
+            ->andWhere('gmg.id = :galleryId')
+            ->andWhere('gm.published = 1')
+            ->andWhere('gm.deleted <> 1')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('user', $user)
+            ->setParameter('galleryId', $gallery->getId())
+            ->getQuery()
+            ->execute();
+    }
 }
