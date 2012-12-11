@@ -130,9 +130,7 @@
                             <div id="media-voting-login-required" style="display: none; margin-top: 7px; padding: 0 20px;">
                                 <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">Login</a>
                             </div>
-
                         {% endif %}
-
                     </div>
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
@@ -171,6 +169,13 @@
                             <a href="javascript:void(0);" class="report-content flag" report-data="{{ media.id }}">Report</a>
                         </p>
                     </div>
+                    {% if media.hasUserVoted(app.user) %}
+                        <div style="width:290px;">
+                            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                {{ 'galleries.already_voted' | trans }}
+                            </p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
 
