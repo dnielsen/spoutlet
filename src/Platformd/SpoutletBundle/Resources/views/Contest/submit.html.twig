@@ -30,7 +30,7 @@
                     {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
                     <input type="hidden" id="entries-left" value="{{ entriesLeft }}" />
                     <div class="form-actions">
-                        <button class="btn btn-primary" type="submit">{{ 'galleries.upload_images' | trans }}</button>
+                        <button id="media-upload" class="btn btn-primary" type="submit" disabled>{{ 'galleries.upload_images' | trans }}</button>
                         <button id="cancel" class="btn btn-primary" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">{{ 'galleries.cancel' | trans }}</button>
                     </div>
                 </form>
@@ -351,7 +351,7 @@
             $('#publish-photo').click(publishMultiplePhotos);
 
             $('.gallery-media').click(function () {
-<<<<<<< HEAD
+
                 $('.gallery-media').removeClass('active');
                 $(this).addClass('active');
                 var title = $(this).attr('data-title');
@@ -364,9 +364,8 @@
                 $('#media-title').css({"border-color":"#AAA"});
                 $('#media-description').css({"border-color":"#AAA"});
                 $('#media-form-error-msg').text("");
-=======
+
                 selectMedia($(this));
->>>>>>> feature/media_gallery
             });
 
             $('.gallery-media').qtip({
@@ -414,6 +413,15 @@
                     var total = $('.MultiFile-applied').length - 1;
                     var name = element.getAttribute('name');
                     element.name = 'platformd_spoutletbundle_submitimagetype[galleryImages][' + total + '][fileObject]';
+                    if(total > 0) {
+                        document.getElementById('media-upload').disabled = false;
+                    }
+                },
+                afterFileRemove: function(element, value, master_element) {
+                    var total = $('.MultiFile-applied').length - 1;
+                    if(total == 0) {
+                        document.getElementById('media-upload').disabled = true;
+                    }
                 }
             });
 

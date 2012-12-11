@@ -26,7 +26,7 @@
         {% if isUnlimited %}
             <p style="color:#ff0000;">{{ 'contests.photo_submissions_unlimited' | trans }}</p>
         {% else %}
-            <p style="color:#ff0000;">{{ 'contests.photo_submissions_left' | trans | format(contest.maxEntries)}}
+            <p style="color:#ff0000;">{{ 'contests.photo_submissions_left' | trans | format(contest.maxEntries)}}</p>
         {% endif %}
     {% endif %}
     <input type="file" id="galleryImages" />
