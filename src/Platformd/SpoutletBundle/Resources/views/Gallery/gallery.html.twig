@@ -6,9 +6,6 @@
 <h3>{{ gallery.name }}</h3>
 <div class="std_2col">
     <div class="left">
-        <div style="float: left">
-            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
-        </div>
         <div style="float: right;margin-right: 10px;" class="styled-select">
             <select id="media-filter-options">
                 <option value="latest" {% if sort == 'latest' %}selected="selected"{% endif %}>{{ 'galleries.gallery_filter_option_latest' | trans }}</option>
@@ -62,12 +59,14 @@
             </div>
             <div class="page_navigation" style="float: left;margin:15px 0 0 0;"></div>
         </div>
+        <div style="width:100%;padding:15px 0 15px 0;text-align:center; float: left;">
+        <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+    </div>
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
-
 {% endblock %}
 
 {% block stylesheets %}

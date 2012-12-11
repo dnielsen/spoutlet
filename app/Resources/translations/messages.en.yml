@@ -557,7 +557,8 @@ galleries:
     submit_photo_restriction5: Files supported: JPG, GIF and PNG.
 
     submit_photo_add: Add
-    submit_photo_publish_share: Your photos are published. Share these awesome photos with your friends!
+    submit_photo_publish_share: Thanks! Your images have been published.
+    submit_photo_publish_share_2: Share your photos with your friends!
     submit_photo_share: Share Photos
     submit_photo_my_photos: My Images
 
