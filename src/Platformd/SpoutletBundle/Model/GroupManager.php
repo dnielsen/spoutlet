@@ -73,6 +73,8 @@ class GroupManager
 
         $this->handleMediaFields($group);
 
+        $this->updateFacebookLikes($group);
+
         if ($flush) {
             $this->em->flush();
         }
@@ -148,6 +150,49 @@ class GroupManager
         if (!$mUtil->persistRelatedMedia($group->getThumbNail())) {
             $group->setThumbNail(null);
         }
+    }
+
+    public function updateFacebookLikes(Group $group)
+    {
+        /*
+        format for getting open graph data:
+        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
+        */
+
+        $total = 0;
+
+        $url = 'http://graph.facebook.com/?ids=';
+
+        $sites = $group->getSites();
+
+        foreach($sites as $site)
+        {
+            $url .= sprintf('http://%s.alienwarearena.com/groups/%s/show/,', $site->getSubDomain(), $group->getId());
+        }
+
+        $url = substr($url, 0, -1);
+
+        $curl = curl_init();
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
+
+        $results = json_decode(curl_exec($curl), true);
+
+        foreach($results as $result)
+        {
+            if(isset($result))
+            {
+                if(array_key_exists('likes', $result))
+                {
+                    $total += $result['likes'];
+                }
+            }
+        }
+
+        $group->setFacebookLikes($total);
     }
 
     /**

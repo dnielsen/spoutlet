@@ -87,7 +87,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findGroups($groupName, $category, $status, $sites, $startDate="", $endDate="")
+    public function getFindGroupsQB($groupName, $category, $status, $sites, $startDate="", $endDate="")
     {
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.sites', 's');
@@ -130,7 +130,15 @@ class GroupRepository extends EntityRepository
 
         $qb->distinct('g.id');
 
-        return $qb->getQuery()->execute();
+        return $qb;
+    }
+
+    public function findGroups($groupName, $category, $status, $sites, $startDate="", $endDate="")
+    {
+        return $this->getFindGroupsQB($groupName, $category, $status, $sites, $startDate, $endDate)
+            ->getQuery()
+            ->execute()
+        ;
     }
 
     public function getGroupMemberListForExport($groupId)
@@ -213,17 +221,21 @@ class GroupRepository extends EntityRepository
         return $result[0][0];
     }
 
-    public function findGroupStats($results)
+    public function findGroupStats(array $filters = array())
     {
-        $qb = $this->createQueryBuilder('g')
-            ->select('g', 'n', 'v', 'i', 'm')
+        $filters = array_merge(
+            array('groupName' => '', 'catagory' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            $filters
+        );
+        $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
+            ->addSelect('n', 'v', 'i', 'm', 'o', 'members')
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('g.videos', 'v')
             ->leftJoin('g.images', 'i')
+            ->leftJoin('g.owner', 'o')
+            ->leftJoin('g.members', 'members')
             ->leftJoin('g.membershipActions', 'm')
-            ->where('g IN (:results)')
-            ->distinct('g.id')
-            ->setParameter('results', $results);
+        ;
 
         return $qb->getQuery()->execute();
     }
