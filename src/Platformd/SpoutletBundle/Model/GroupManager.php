@@ -51,7 +51,6 @@ class GroupManager
      */
     public function saveGroup(Group $group, $flush = true)
     {
-
         if (!$group->getOwner()) {
             $user = $this->securityContext->getToken()->getUser();
             $group->setOwner($user);
@@ -193,6 +192,13 @@ class GroupManager
         }
 
         $group->setFacebookLikes($total);
+
+        return $total;
+    }
+
+    public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
+    {
+        return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
     }
 
     /**

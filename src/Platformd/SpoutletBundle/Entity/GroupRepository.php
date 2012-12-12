@@ -336,4 +336,18 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+    public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
+    {
+        $date = new \DateTime;
+        $date->modify(sprintf('-%d sec', $minutes));
+
+        $qb = $this->createQueryBuilder('g')
+            ->addSelect('s')
+            ->leftJoin('g.sites', 's')
+            ->addOrderBy('g.facebookLikesUpdatedAt', 'ASC')
+            ->andWhere('g.facebookLikesUpdatedAt >= :date')
+            ->setParameter('date', $date);
+
+        return $qb->getQuery()->execute();
+    }
 }
