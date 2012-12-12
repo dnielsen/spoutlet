@@ -840,3 +840,66 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 /* qtip styles */
 .qtip-content { font-size: 14px; }
 .tooltip { font-size: 14px; }
+
+/* comments */
+.comment-wrapper {
+    position: relative;
+    float: left;
+    padding: 5px;
+    width: 626px;
+    background: #2e2e2e;
+}
+
+.alt {
+    background: #2c3a3f;
+}
+
+.comment-wrapper .comment-author {
+    width: 84px;
+    float: left;
+}
+
+.comment-wrapper .author-level {
+    font-size: 10px;
+}
+
+.comment-wrapper .level-img {
+    margin: 5px 0 0 0;
+    width: 84px;
+    height: 15px;
+    background: url('/bundles/spoutlet/images/arp/alienware-xp-bar-grey.png') top left repeat-x;
+    font-size: 9px;
+    text-align: right;
+}
+
+.comment-wrapper .level-img div {
+    padding: 2px 3px 0 0;
+}
+
+.comment-wrapper .comment-author img {
+    width: 84px;
+    height: 84px;
+}
+
+.comment-wrapper .comment-body {
+    float: right;
+    width: 535px;
+}
+
+.comment-body p {
+    margin: 0 0 10px 0;
+}
+
+.comment-body hr {
+    border: 1px solid #000;
+    color: #000;
+    background-color: #000;
+}
+
+.comment-wrapper .comment-footer {
+    position: absolute;
+    bottom: 5px;
+    right: 0px;
+    width: 540px;
+    color: #9b9b9b;
+}

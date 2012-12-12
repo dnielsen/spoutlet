@@ -153,7 +153,25 @@
     </div>
     <div class="std_2col">
         <div class="left">
-            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.threadId, 'page': app.request.query.get('page', 1) } %}
+            {% for comment in thread['comments'] %}
+                <div class="comment-wrapper">
+                    <div class="comment-author">
+                        <img src="{{ asset(get_avatar_url(comment['author'])) }}" alt="{{ comment['author'].username }}" />
+                        <div class="author-link"><a href="{{ path('accounts_profile', {'username': comment['author'].username }) }}">{{ comment['author'].username }}</a></div>
+                        <div class="author-level">Level 7</div>
+                        <div class="level-img"><div>5477 ARP</div></div>
+                    </div>
+                    <div class="comment-body">
+                        <p>{{ comment['body'] }}</p>
+                        <hr />
+                    </div>
+                    <div class="comment-footer">
+                        {{ comment['created_at'] | date }}
+                    </div>
+                </div>
+
+
+            {% endfor %}
         </div>
         <div class="right">
         </div>

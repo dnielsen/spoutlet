@@ -87,6 +87,7 @@ class DealController extends Controller
             'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
             'hasKeys' => $hasKeys > 0,
+            'thread' => $this->getThread(),
         );
     }
 
@@ -185,6 +186,31 @@ class DealController extends Controller
         return $this->container->get('fos_comment.manager.comment');
     }
 
+    private function getThread()
+    {
+        $thread = array(
+            'id' => 1,
+            'can_comment' => true,
+            'last_comment_at' => '2012-12-10 11:59:00',
+            'permalink' => 'http://www.example.com/news/some-artcle#comments',
+            'comments' => array(
+                    array(
+                            'id'            => 1,
+                            'parent_id'     => 0,
+                            'author'        => $this->getUser(),
+                            'body'          => "Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit.",
+                            'depth'         => 0,
+                            'created_at'    => '2012-12-10 11:44:00',
+                            'votes'         => 0,
+                            'replies'       => array()
+                        )
+                )
+        );
+
+
+        return $thread;
+    }
+
     public function commentsAction(Request $request)
     {
         $thread = array(
@@ -196,6 +222,7 @@ class DealController extends Controller
                     array(
                             'id' => 1,
                             'parent_id' => 0,
+                            'author_id' => 3,
                             'body' => 'Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they&#39;re actually proud of that shit.',
                             'depth' => 0,
                             'created_at' => '2012-12-10 11:44:00',
