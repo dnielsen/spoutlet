@@ -109,10 +109,26 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findLatestMediaForSite($site, $limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'gmg')
+            ->leftJoin('gmg.sites', 's')
+            ->where('gm.published = true')
+            ->andWhere('gm.deleted = false')
+            ->andWhere('s.id = :siteId')
+            ->setParameter('siteId', $site->getId())
+            ->orderBy('gm.createdAt', 'DESC')
+            ->distinct('gm.id')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findPopularMedia($limit=12)
     {
         $results = $this->getEntityManager()->createQuery('
-            SELECT
+            SELECT DISTINCT
                 gm, COUNT(gmv.id) as vote_count
             FROM
                 SpoutletBundle:GalleryMedia gm
@@ -124,6 +140,30 @@ class GalleryMediaRepository extends EntityRepository
             ORDER BY vote_count DESC'
         )->setMaxResults($limit)
         ->setParameter('up', 'up')
+        ->execute();
+
+        return $results;
+    }
+
+    public function findPopularMediaForSite($site, $limit=12)
+    {
+        $results = $this->getEntityManager()->createQuery('
+            SELECT DISTINCT
+                gm, COUNT(gmv.id) as vote_count
+            FROM
+                SpoutletBundle:GalleryMedia gm
+            LEFT JOIN gm.votes gmv
+            LEFT JOIN gm.galleries gmg
+            LEFT JOIN gmg.sites s
+            WHERE gm.deleted = 0
+            AND gm.published = 1
+            AND gmv.voteType = :up
+            AND s.id = :siteId
+            GROUP BY gm.id
+            ORDER BY vote_count DESC'
+        )->setMaxResults($limit)
+        ->setParameter('up', 'up')
+        ->setParameter('siteId', $site->getId())
         ->execute();
 
         return $results;

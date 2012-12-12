@@ -52,6 +52,7 @@ class ContestController extends Controller
         }
 
         $agreeText = $this->trans('contests.show_page_agree_text');
+        $canVote = $contest->getVotingStart() < new \DateTime('now');
 
         return $this->render('SpoutletBundle:Contest:show.html.twig', array(
             'contest'       => $contest,
@@ -59,6 +60,7 @@ class ContestController extends Controller
             'isEligible'    => $isEligible,
             'agreeText'     => $agreeText,
             'isEntered'     => $isEntered,
+            'canVote'       => $canVote,
         ));
     }
 

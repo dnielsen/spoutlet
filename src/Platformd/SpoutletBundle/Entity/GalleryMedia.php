@@ -265,7 +265,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
 
     public function getPublished()
     {
-        return $this->getPublished();
+        return $this->published;
     }
 
     public function setPublished($published)

@@ -325,6 +325,16 @@ class GalleryController extends Controller
     {
         $media          = $this->getGalleryMediaRepository()->find($id);
 
+        if(!$media)
+        {
+            throw $this->createNotFoundException('No media found.');
+        }
+
+        if($media->getDeleted() || !$media->isVisibleOnSite($this->getCurrentSite()) || !$media->getPublished())
+        {
+            throw $this->createNotFoundException('No media found.');
+        }
+
         $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
 
         $otherMediaPerPage = 3;
@@ -342,10 +352,7 @@ class GalleryController extends Controller
         $upVotes        = $totalVotes ? round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100) : 0;
         $downVotes      = $totalVotes ? 100 - $upVotes : 0;
 
-        if(!$media)
-        {
-            throw $this->createNotFoundException('No media found.');
-        }
+
 
         $views = $media->getViews();
 
@@ -613,7 +620,7 @@ class GalleryController extends Controller
 
             case 'latest':
                 # get latest media
-                $medias = $repo->findLatestMedia();
+                $medias = $repo->findLatestMediaForSite($this->getCurrentSite());
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -621,7 +628,7 @@ class GalleryController extends Controller
 
             case 'popular':
                 # get popular media (based on views but will need to be based on ratings when those are implemented)
-                $medias = $repo->findPopularMedia();
+                $medias = $repo->findPopularMediaForSite($this->getCurrentSite());
 
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,

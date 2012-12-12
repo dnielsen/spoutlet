@@ -600,6 +600,8 @@ galleries:
     vote_success: Thanks for voting!
     more_images_from: More images from
     save_images: Save Images
+    save_image: Save Image
+    delete_image: Delete Image
     upload_images: Upload
     cancel: Cancel
     publish_photo_multiple_message: %s of %s images are published.

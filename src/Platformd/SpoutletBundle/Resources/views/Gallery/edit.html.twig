@@ -16,7 +16,8 @@
 <form action="{{ path('gallery_edit_media', {id: media.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'SpoutletBundle:Gallery:_editImageForm.html.twig' %}
     <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Save Photo</button>
+        <button class="btn btn-primary" type="submit">{{ 'galleries.save_image' | trans }}</button>
+        <button class="btn btn-primary" id="delete-media" rel="{{ path('gallery_delete_media', { 'id' : media.id })}}" style="margin-left: 10px;">{{ 'galleries.delete_image' | trans }}</button>
     </div>
 </form>
 {% endblock %}
@@ -26,4 +27,16 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+           $('#delete-media').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+        });
+    </script>
 {% endblock %}

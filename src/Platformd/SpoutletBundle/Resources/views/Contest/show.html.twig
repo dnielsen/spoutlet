@@ -21,7 +21,7 @@
             </div>
         </div>
         <div style="width:100%;padding:15px 0 15px 0;text-align:center;">
-            <a class="btn" href="{{ path('contest_vote', {slug: contest.slug})}}">{{ 'contests.show_page_vote_now' | trans }}</a>
+            <a class="{% if not canVote %}disabled-button{% else %}btn{% endif %}" id="vote-now" href="{{ path('contest_vote', {slug: contest.slug})}}">{{ 'contests.show_page_vote_now' | trans }}</a>
         </div>
     </div>
     <div class="right">
@@ -96,6 +96,11 @@
         };
 
         $(function () {
+            if($('#vote-now').hasClass('disabled')) {
+                $('#vote-now').click(function (e) {
+                    e.preventDefault();
+                });
+            }
 
             $('#btn-submit-photos').delegate('','click change',function(){
                 window.location = '{{ path('contest_submit', {slug: contest.slug}) }}';
