@@ -224,7 +224,7 @@ class GroupRepository extends EntityRepository
     public function findGroupStats(array $filters = array())
     {
         $filters = array_merge(
-            array('groupName' => '', 'catagory' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
             $filters
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
@@ -342,12 +342,11 @@ class GroupRepository extends EntityRepository
         $date->modify(sprintf('-%d sec', $minutes));
 
         $qb = $this->createQueryBuilder('g')
-            ->addSelect('s')
-            ->leftJoin('g.sites', 's')
             ->addOrderBy('g.facebookLikesUpdatedAt', 'ASC')
-            ->andWhere('g.facebookLikesUpdatedAt >= :date')
+            ->addOrderBy('g.id', 'ASC')
+            ->andWhere('g.facebookLikesUpdatedAt <= :date OR g.facebookLikesUpdatedAt IS NULL')
             ->setParameter('date', $date);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->iterate();
     }
 }
