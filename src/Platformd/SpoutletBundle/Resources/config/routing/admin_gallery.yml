@@ -1,3 +1,15 @@
+admin_image_find:
+    pattern: /metrics/find-images
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:find" }
+
+admin_image_summary:
+    pattern: /metrics/image-summary
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:exportMetrics" }
+
+admin_delete_media:
+    pattern: /delete/{id}
+    defaults: { _controller: SpoutletBundle:GalleryAdmin:deleteMedia, site: ~ }
+
 admin_gallery_new:
     pattern: /new
     defaults: { _controller: "SpoutletBundle:GalleryAdmin:new" }

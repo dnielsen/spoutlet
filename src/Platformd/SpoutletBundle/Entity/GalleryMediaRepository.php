@@ -304,4 +304,50 @@ class GalleryMediaRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findImagesForMetrics($title, $deleted, $status, $sites, $startDate="", $endDate="")
+    {
+        $qb = $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'g')
+            ->leftJoin('g.sites', 's')
+            ->leftJoin('gm.votes', 'v');
+
+        if (count($sites) > 0) {
+
+            $qb->andWhere('(s.defaultLocale IN (:siteList))');
+            $qb->setParameter('siteList', $sites);
+
+        }
+
+        if ($title) {
+            $qb->andWhere('gm.title like :title');
+            $qb->setParameter('title', '%'.$title.'%');
+        }
+
+        if ($deleted != "") {
+            $qb->andWhere('gm.deleted = :deleted');
+            $qb->setParameter('deleted', $deleted);
+        }
+
+        if ($status != "") {
+            $qb->andWhere('gm.published = :status');
+            $qb->setParameter('status', $status);
+        }
+
+        if ($startDate != "") {
+
+            $startDate->setTime(0, 0, 0);
+            $qb->andWhere('gm.createdAt >= :startDate');
+            $qb->setParameter('startDate', $startDate);
+        }
+
+        if ($endDate != "") {
+
+            $endDate->setTime(23, 59, 59);
+            $qb->andWhere('gm.createdAt <= :endDate');
+            $qb->setParameter('endDate', $endDate);
+        }
+
+        return $qb->getQuery()->execute();
+    }
 }
