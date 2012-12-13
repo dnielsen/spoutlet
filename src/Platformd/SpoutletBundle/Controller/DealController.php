@@ -219,7 +219,17 @@ class DealController extends Controller
                                             'author' => $this->getUser(),
                                             'body' => "Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.",
                                             'depth' => 1,
-                                            'created_at' => '2012-12-10 11:50:00',
+                                            'created_at' => '2012-12-10 11:51:00',
+                                            'votes' => 0,
+                                            'replies' => array(),
+                                        ),
+                                    array(
+                                            'id' => 5,
+                                            'parent_id' => 1,
+                                            'author' => $this->getUser(),
+                                            'body' => "Duis accumsan velit quis lorem ultricies vestibulum. Vestibulum velit diam, interdum nec suscipit sit amet, ultrices sit amet dui. Donec sapien urna, pretium eget fringilla vel, posuere ut metus. Duis tempor lacus ultrices quam ultrices sagittis. Ut adipiscing, sapien sodales tincidunt fringilla, risus justo facilisis lacus, ac luctus leo dolor eu neque. Donec egestas, orci at egestas congue, libero tellus consectetur ante, vitae varius leo massa euismod dolor. Quisque vel arcu nisl. Curabitur ac ipsum tincidunt ante egestas tristique id quis lacus. Donec volutpat tincidunt quam in fringilla. Praesent condimentum dapibus sodales. Fusce quis odio elit, sit amet tristique nibh. Pellentesque vehicula venenatis leo in rutrum.",
+                                            'depth' => 1,
+                                            'created_at' => '2012-12-10 11:55:00',
                                             'votes' => 0,
                                             'replies' => array(),
                                         )

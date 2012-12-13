@@ -171,7 +171,6 @@
                             <div class="choices" id="choices-{{ comment['id'] }}">
                                 <ul>
                                     <li><a href="#">Report</a></li>
-                                    <li><a href="#">Reply</a></li>
                                     <li><a href="#">Edit</a></li>
                                     <li><a href="#">Delete</a></li>
                                 </ul>
@@ -179,8 +178,20 @@
                         </div>
                     </div>
                 </div>
-
-
+                <div class="comment-replies-wrapper">
+                    <div class="comment-tri"></div>
+                    <div class="comment-replies">
+                        <input type="text" /><a href="#">Reply</a>
+                    </div>
+                    {% if comment['replies'] | length > 0 %}
+                        {% for reply in comment['replies'] %}
+                            <div class="comment-reply">
+                                <img src="{{ asset(get_avatar_url(reply['author'])) }}" alt="{{ reply['author'].username }}" />
+                                <div><a href="{{ path('accounts_profile', {'username': comment['author'].username }) }}">{{ comment['author'].username }}</a>{{ reply['body'] }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
         <div class="right">

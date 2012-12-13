@@ -953,3 +953,55 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
     font-weight: normal;
     padding: 1px 16px 1px 22px;
 }
+
+.comment-replies-wrapper {
+    margin-top: 5px;
+    width: 626px;
+    float: left;
+}
+
+.comment-tri {
+    background: url('/bundles/spoutlet/images/comments/reply_tri.png') no-repeat;
+    background-position: 50px 0px;
+    height: 5px;
+}
+
+.comment-replies {
+    width: 626px;
+    padding: 5px;
+    background: #2e2e2e;
+    min-height: 30px;
+}
+
+.comment-replies input[type='text'] {
+    width: 575px;
+}
+
+.comment-replies a {
+    margin-left: 5px;
+}
+
+.comment-reply {
+    font-size: 11px;
+    width: 626px;
+    float: left;
+    padding: 5px;
+    background: #2e2e2e;
+    margin-top: 1px;
+}
+
+.comment-reply img {
+    float: left;
+    width: 32px;
+    height: 32px;
+}
+
+.comment-reply div {
+    margin-left: 5px;
+    width: 585px;
+    float: left;
+}
+
+.comment-reply a {
+    padding-right: 5px;
+}
