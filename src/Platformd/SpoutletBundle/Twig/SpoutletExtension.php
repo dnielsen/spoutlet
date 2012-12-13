@@ -630,7 +630,7 @@ class SpoutletExtension extends Twig_Extension
                     <a class="blue" style="background: url(\'/bundles/spoutlet/images/nav-arrow-1.png\') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">Giveaways</a>
                     <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
                         <li><a href="http://www.alienwarearena.com/sg/account/my-giveaway-keys/">Giveaway Keys</a></li>
-                        <li><a href="'.$this->container->get('router')->generate('accounts_giveaways').'" target="_blank">System Tag Keys</a></li>
+                        <li><a href="'.$this->container->get('router')->generate('accounts_giveaways').'">System Tag Keys</a></li>
                     </ul>
                 </li>';
 

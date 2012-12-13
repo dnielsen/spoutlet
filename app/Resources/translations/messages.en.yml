@@ -253,7 +253,7 @@ platformd:
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
+        in_process_1: If you have registered for a key giveaway and your status is showing as “Pending”,
         in_process_2: please allow at least 10 days for it to be posted into your account.
         in_process_3: If after 10 days it has not been posted, please email
         admin:
@@ -403,7 +403,7 @@ submit_machine_code: Apply
 machine_code: System Tag
 no_machine_code_submitted: Please enter your system tag number.
 
-pending: In Process
+pending: Pending
 denied: Denied
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
