@@ -843,6 +843,7 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 
 /* comments */
 .comment-wrapper {
+    margin-top: 10px;
     position: relative;
     float: left;
     padding: 5px;
@@ -902,4 +903,39 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
     right: 0px;
     width: 540px;
     color: #9b9b9b;
+}
+
+.comment-wrapper .options {
+    position: absolute;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background: url('/bundles/spoutlet/css/bootstrap/img/glyphicons-halflings-white.png') no-repeat;
+    background-position: -432px 0;
+    right: 5px;
+    bottom: 0px;
+    cursor: pointer;
+}
+
+.options .choices {
+    border: 1px solid #bfbfbf;
+    background: #191919;
+    width: 120px;
+    position: absolute;
+    display: none;
+    right: -53px;
+    bottom: 15px;
+}
+
+.choices ul {
+    margin: 0;
+    padding: 3px 0 4px;
+    list-style: none;
+}
+
+.choices li {
+    line-height: 1.28;
 }

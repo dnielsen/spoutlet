@@ -166,7 +166,17 @@
                         <hr />
                     </div>
                     <div class="comment-footer">
-                        {{ comment['created_at'] | date }}
+                        <div class="comment-at">{{ comment['created_at'] | date }}</div>
+                        <div class="options" data-id="{{ comment['id'] }}">
+                            <div class="choices" id="choices-{{ comment['id'] }}">
+                                <ul>
+                                    <li><a href="#">Report</a></li>
+                                    <li><a href="#">Reply</a></li>
+                                    <li><a href="#">Edit</a></li>
+                                    <li><a href="#">Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -208,6 +218,11 @@
             });
 
             $('.deals-timeleft').fadeIn();
+
+            $('.options').click(function () {
+                var id = $(this).attr('data-id');
+                $('#choices-' + id).fadeIn();
+            });
         });
     </script>
 

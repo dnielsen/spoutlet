@@ -203,6 +203,16 @@ class DealController extends Controller
                             'created_at'    => '2012-12-10 11:44:00',
                             'votes'         => 0,
                             'replies'       => array()
+                        ),
+                    array(
+                            'id'            => 2,
+                            'parent_id'     => 0,
+                            'author'        => $this->getUser(),
+                            'body'          => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique. In id purus in sapien aliquet dictum quis eget nisl. Fusce non orci est, ut sagittis mi. Curabitur euismod dui vitae massa pharetra vel vestibulum eros sodales. Vivamus scelerisque dictum orci, nec rhoncus risus hendrerit eu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam erat volutpat.",
+                            'depth'         => 0,
+                            'created_at'    => '2012-12-10 11:45:00',
+                            'votes'         => 0,
+                            'replies'       => array()
                         )
                 )
         );
