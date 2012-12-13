@@ -352,8 +352,6 @@ class GalleryController extends Controller
         $upVotes        = $totalVotes ? round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100) : 0;
         $downVotes      = $totalVotes ? 100 - $upVotes : 0;
 
-
-
         $views = $media->getViews();
 
         $views++;
@@ -584,6 +582,19 @@ class GalleryController extends Controller
     public function galleryAction($slug, $sort='latest', Request $request)
     {
         $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
+        $page = 0;
+        $returnId = null;
+
+        $referer = $request->headers->get('referer');
+
+        if ($referer) {
+            $parts = explode('/', $referer);
+
+            if (is_numeric(end($parts))) {
+                $returnId = end($parts);
+            }
+        }
+        
 
         if(!$gallery || $gallery->getDeleted())
         {
@@ -597,10 +608,19 @@ class GalleryController extends Controller
             $medias = $this->getGalleryMediaRepository()->findLatestMediaForGallery($gallery, 100);
         }
 
+        if ($returnId) {
+            foreach ($medias as $key => $media) {
+                if ($media->getId() == $returnId) {
+                    $page = floor($key/16);  
+                }
+            }
+        }
+        
         return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
             'gallery'       => $gallery,
             'medias'        => $medias,
             'sort'          => $sort,
+            'page'          => $page,
         ));
     }
 
