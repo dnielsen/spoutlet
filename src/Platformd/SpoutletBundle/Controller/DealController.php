@@ -202,7 +202,28 @@ class DealController extends Controller
                             'depth'         => 0,
                             'created_at'    => '2012-12-10 11:44:00',
                             'votes'         => 0,
-                            'replies'       => array()
+                            'replies'       => array(
+                                    array(
+                                            'id' => 3,
+                                            'parent_id' => 1,
+                                            'author' => $this->getUser(),
+                                            'body' => "Like you, I used to think the world was this great place where everybody lived by the same standards I did, then some kid with a nail showed me I was living in his world, a world where chaos rules not order, a world where righteousness is not rewarded. That's Cesar's world, and if you're not willing to play by his rules, then you're gonna have to pay the price.",
+                                            'depth' => 1,
+                                            'created_at' => '2012-12-10 11:50:00',
+                                            'votes' => 0,
+                                            'replies' => array(),
+                                        ),
+                                    array(
+                                            'id' => 4,
+                                            'parent_id' => 1,
+                                            'author' => $this->getUser(),
+                                            'body' => "Your bones don't break, mine do. That's clear. Your cells react to bacteria and viruses differently than mine. You don't get sick, I do. That's also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We're on the same curve, just on opposite ends.",
+                                            'depth' => 1,
+                                            'created_at' => '2012-12-10 11:50:00',
+                                            'votes' => 0,
+                                            'replies' => array(),
+                                        )
+                                )
                         ),
                     array(
                             'id'            => 2,
@@ -219,32 +240,5 @@ class DealController extends Controller
 
 
         return $thread;
-    }
-
-    public function commentsAction(Request $request)
-    {
-        $thread = array(
-            'id' => 1,
-            'can_comment' => true,
-            'last_comment_at' => '2012-12-10 11:59:00',
-            'permalink' => 'http://www.example.com/news/some-artcle#comments',
-            'comments' => array(
-                    array(
-                            'id' => 1,
-                            'parent_id' => 0,
-                            'author_id' => 3,
-                            'body' => 'Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they&#39;re actually proud of that shit.',
-                            'depth' => 0,
-                            'created_at' => '2012-12-10 11:44:00',
-                            'votes' => 0,
-                            'replies' => array()
-                        )
-                )
-        );
-
-        $response = new Response();
-        $response->headers->set('Content-type', 'text/json; charset=utf-8');
-        $response->setContent(json_encode($thread));
-        return $response;
     }
 }

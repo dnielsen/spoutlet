@@ -921,9 +921,9 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 }
 
 .options .choices {
-    border: 1px solid #bfbfbf;
+    border: 1px solid #494949;
     background: #191919;
-    width: 120px;
+    min-width: 120px;
     position: absolute;
     display: none;
     right: -53px;
@@ -938,4 +938,18 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 
 .choices li {
     line-height: 1.28;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+.choices li:hover {
+    background: #595959;
+    border-top: 1px solid #494949;
+    border-bottom: 1px solid #494949;
+}
+
+.choices li a {
+    font-size: 11px;
+    font-weight: normal;
+    padding: 1px 16px 1px 22px;
 }
