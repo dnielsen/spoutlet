@@ -589,8 +589,9 @@ class GalleryController extends Controller
 
         if ($referer) {
             $parts = explode('/', $referer);
+            $parsedUrl = parse_url($referer);
 
-            if (is_numeric(end($parts))) {
+            if (is_numeric(end($parts)) && strpos($parsedUrl['path'], 'galleries/photo')) {
                 $returnId = end($parts);
             }
         }
