@@ -920,6 +920,21 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
     cursor: pointer;
 }
 
+.comment-reply .options {
+    position: absolute;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    *margin-right: .3em;
+    line-height: 14px;
+    vertical-align: text-top;
+    background: url('/bundles/spoutlet/css/bootstrap/img/glyphicons-halflings-white.png') no-repeat;
+    background-position: -432px 0;
+    right: 5px;
+    bottom: 5px;
+    cursor: pointer;
+}
+
 .options .choices {
     border: 1px solid #494949;
     background: #191919;
@@ -982,6 +997,7 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
 }
 
 .comment-reply {
+    position: relative;
     font-size: 11px;
     width: 626px;
     float: left;
@@ -990,18 +1006,33 @@ table.xTable th, table.xTable td { padding: 4px 4px 4px 4px; }
     margin-top: 1px;
 }
 
+.hidden {
+    display: none;
+}
+
 .comment-reply img {
     float: left;
     width: 32px;
     height: 32px;
 }
 
-.comment-reply div {
+.comment-reply .reply-body {
     margin-left: 5px;
+    padding-bottom: 5px;
     width: 585px;
     float: left;
 }
 
 .comment-reply a {
     padding-right: 5px;
+}
+
+.replied-at {
+    color: #9B9B9B;
+    margin-left: 36px;
+}
+
+.more-comments {
+    float: left;
+    padding: 5px;
 }

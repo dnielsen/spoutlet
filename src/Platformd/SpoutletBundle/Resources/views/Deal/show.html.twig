@@ -163,10 +163,9 @@
                     </div>
                     <div class="comment-body">
                         <p>{{ comment['body'] }}</p>
-                        <hr />
                     </div>
                     <div class="comment-footer">
-                        <div class="comment-at">{{ comment['created_at'] | date }}</div>
+                        <div class="comment-at" title="{{ comment['created_at'] | date }}"></div>
                         <div class="options" data-id="{{ comment['id'] }}">
                             <div class="choices" id="choices-{{ comment['id'] }}">
                                 <ul>
@@ -178,7 +177,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="comment-replies-wrapper">
+                <div class="comment-replies-wrapper" id="replies-{{ comment['id'] }}">
                     <div class="comment-tri"></div>
                     <div class="comment-replies">
                         <input type="text" /><a href="#">Reply</a>
@@ -187,10 +186,27 @@
                         {% for reply in comment['replies'] %}
                             <div class="comment-reply">
                                 <img src="{{ asset(get_avatar_url(reply['author'])) }}" alt="{{ reply['author'].username }}" />
-                                <div><a href="{{ path('accounts_profile', {'username': comment['author'].username }) }}">{{ comment['author'].username }}</a>{{ reply['body'] }}</div>
+                                <div class="reply-body">
+                                    <a href="{{ path('accounts_profile', {'username': reply['author'].username }) }}">{{ reply['author'].username }}</a>{{ reply['body'] }}
+                                </div>
+                                <div class="comment-footer">
+                                    <div class="replied-at" title="{{ reply['created_at'] | date }}"></div>
+                                    <div class="options" data-id="{{ reply['id'] }}">
+                                        <div class="choices" id="choices-{{ reply['id'] }}">
+                                            <ul>
+                                                <li><a href="#">Report</a></li>
+                                                <li><a href="#">Edit</a></li>
+                                                <li><a href="#">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         {% endfor %}
                     {% endif %}
+                </div>
+                <div class="more-comments">
+                    <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment['id'] }}" data-id="{{ comment['id'] }}">More Replies</a>
                 </div>
             {% endfor %}
         </div>
@@ -218,6 +234,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var endsAt = new Date($('#deal-ends-date').val());
@@ -230,10 +247,27 @@
 
             $('.deals-timeleft').fadeIn();
 
+
+            //comments
+
             $('.options').click(function () {
                 var id = $(this).attr('data-id');
                 $('#choices-' + id).toggle('fast');
             });
+
+            $('.more-comments-link').click(function () {
+                var commentId = $(this).attr('data-id');
+                $.ajax({
+                   url: '{{ path('deal_repies', {slug: deal.slug}) }}',
+                   method: 'get',
+                   success: function(html) {
+                       $('#replies-' + commentId).append(html);
+                   }
+                });
+            });
+
+            $('.comment-at').timeago();
+            $('.replied-at').timeago();
         });
     </script>
 
