@@ -120,11 +120,13 @@ class GiveawayManager
             throw new MissingKeyException();
         }
 
+        $locale = $site->getDefaultLocale();
+
         // attach the key, then attach it to the machine code
-        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $site->getDefaultLocale());
+        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale);
         $machineCode->attachToKey($key);
 
-        $this->sendNotificationEmail($machineCode);
+        $this->sendNotificationEmail($machineCode, $locale);
 
         $this->em->persist($key);
         $this->em->persist($machineCode);
@@ -240,7 +242,7 @@ class GiveawayManager
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCodeEntry
      * @return string
      */
-    private function sendNotificationEmail(MachineCodeEntry $machineCodeEntry)
+    private function sendNotificationEmail(MachineCodeEntry $machineCodeEntry, $approvedLocale)
     {
         // don't send more than once
         if ($machineCodeEntry->getNotificationEmailSentAt()) {
@@ -248,10 +250,14 @@ class GiveawayManager
         }
 
         $giveaway = $machineCodeEntry->getGiveaway();
+
+        $locale     = $machineCodeEntry->getKey()->getAssignedSite();
+        $subDomain  = $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale)->getSubDomain();
+
         $user = $machineCodeEntry->getUser();
 
         $accountUrl = $this->router->generate('accounts_giveaways', array(
-            '_locale' => $user->getLocale()
+            '_locale' => $approvedLocale
         ), true);
 
         // translate the message into the user's locale
@@ -260,6 +266,7 @@ class GiveawayManager
             '%userFirstName%' => $user->getFirstname(),
             '%userLastName%'  => $user->getLastname(),
             '%accountUrl%'    => $accountUrl,
+            '%subDomain%'     => $subDomain,
         ), 'messages', $giveaway->getLocale());
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
@@ -272,7 +279,7 @@ class GiveawayManager
             return;
         }
 
-        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Approved", $user->getLocale(), $this->fromName, $this->fromAddress);
+        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Approved", $subDomain, $this->fromName, $this->fromAddress);
 
         if (!$result || !$result->getSendStatusOk()) {
             return;

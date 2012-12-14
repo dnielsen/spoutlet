@@ -412,12 +412,12 @@ email:
     giveaway_machine_code_approve: |
         Hi %userFirstName%,
 
-        Thank you for registering for %giveawayName%.
+        Thank you for registering for the %giveawayName%.
 
         The key has been posted to your Alienware Arena account and can be accessed from here:
         (%accountUrl%)
 
-        If you have any questions, please email us at  contact@alienwarearena.com.
+        If you have any questions, please email us at %subDomain%@alienwarearena.com.
 
         Thank you,
         - Alienware Arena Team
