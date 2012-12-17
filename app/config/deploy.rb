@@ -7,7 +7,7 @@ ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :app1,  "ec2-107-22-29-29.compute-1.amazonaws.com"
+set :app1,  "ec2-54-242-133-224.compute-1.amazonaws.com"
 set :app2,  "ec2-23-22-88-106.compute-1.amazonaws.com"
 set :app3,  "ec2-23-20-160-63.compute-1.amazonaws.com"
 set :app4,  "ec2-50-16-44-162.compute-1.amazonaws.com"

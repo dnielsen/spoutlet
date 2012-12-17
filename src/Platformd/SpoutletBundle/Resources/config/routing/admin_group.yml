@@ -1,6 +1,12 @@
+admin_group_filter:
+    pattern: /metrics/find-groups
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:filter" }
+    requirements: { _method: POST }
+
 admin_group_find:
     pattern: /metrics/find-groups
     defaults: { _controller: "SpoutletBundle:GroupAdmin:find" }
+    requirements: { _method: GET }
 
 admin_group_show:
     pattern: /{id}

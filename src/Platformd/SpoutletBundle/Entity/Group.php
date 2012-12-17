@@ -261,6 +261,16 @@ class Group implements LinkableInterface, ReportableContentInterface
      */
     protected $contentReports;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $facebookLikesUpdatedAt;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    protected $facebookLikes = 0;
+
     public function __construct()
     {
         $this->sites                    = new ArrayCollection();
@@ -896,5 +906,46 @@ class Group implements LinkableInterface, ReportableContentInterface
     public function getDiscussionsEnabled()
     {
         return $this->discussionsEnabled;
+    }
+
+    /**
+     * Get facebookLikesUpdatedAt.
+     *
+     * @return facebookLikesUpdatedAt.
+     */
+    public function getFacebookLikesUpdatedAt()
+    {
+        return $this->facebookLikesUpdatedAt;
+    }
+
+    /**
+     * Set facebookLikesUpdatedAt.
+     *
+     * @param facebookLikesUpdatedAt the value to set.
+     */
+    public function setFacebookLikesUpdatedAt(\DateTime $facebookLikesUpdatedAt)
+    {
+        $this->facebookLikesUpdatedAt = $facebookLikesUpdatedAt;
+    }
+
+    /**
+     * Get facebookLikes.
+     *
+     * @return facebookLikes.
+     */
+    public function getFacebookLikes()
+    {
+        return $this->facebookLikes;
+    }
+
+    /**
+     * Set facebookLikes.
+     *
+     * @param facebookLikes the value to set.
+     */
+    public function setFacebookLikes($facebookLikes)
+    {
+        $this->facebookLikes = $facebookLikes;
+        $this->facebookLikesUpdatedAt = new \DateTime;
     }
 }

@@ -1,23 +1,6 @@
 {% set facebookLink = site_link('FACEBOOK') %}
 {% set twitterLink = site_link('TWITTER') %}
 {% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
-<script type="text/javascript">
-//<![CDATA[
-$(document).ready(function() {
-$(".featured-content-header a").click(function() {
-        var id = $(this).attr("id");
-        $(".featured-content-header a.active").removeClass("active");
-        $(this).addClass("active");
-        $(".featured-content-category").removeClass('active');
-        $(".featured-content-category#featured-content-"+id).addClass('active');
-
-        // show the widget footer
-        $('.widget-footer a.featured-footer-link').hide();
-        $(".widget-footer #featured-footer-"+id).show();
-});
-});
-//]]>
-</script>
 <div id="header">
     <div id="topHeader">
         <div class="wide-950">
