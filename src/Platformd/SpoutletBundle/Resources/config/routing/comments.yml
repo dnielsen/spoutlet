@@ -1,0 +1,7 @@
+comments_thread:
+    pattern: /thread/{threadId}
+    defaults: { _controller: "SpoutletBundle:Comments:thread" }
+
+comments_replies:
+    pattern: /replies/{commentId}
+    defaults: { _controller: "SpoutletBundle:Comments:replies" }
