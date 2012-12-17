@@ -317,7 +317,7 @@ class GiveawayAdminController extends Controller
                     // pop up the first one, ideally there's only one
                     $machineCode = $machineCodes[0];
 
-                    $this->getGiveawayManager()->denyMachineCode($machineCode);
+                    $this->getGiveawayManager()->denyMachineCode($machineCode, $this->getCurrentSite());
 
                     $successEmails[] = $email;
                 }

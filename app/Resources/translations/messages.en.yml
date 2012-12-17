@@ -427,14 +427,14 @@ email:
 
         Thank you for registering for the %giveawayName%.
 
-        Unfortunately, the system tag you entered does not match an Alienware system that qualifies to receive a key for this promotion. This may be due to your Alienware system being purchased before the promotion start date, or an incorrectly entered system tag.　
+        Unfortunately, the system tag you entered does not match an Alienware system that qualifies to receive a key for this promotion. This may be due to your Alienware system being purchased before the promotion start date, or an incorrectly entered system tag.
 
         The system tag you entered is: %systemTag%
 
         If the system tag you entered is incorrect, please access the link below to re-enter the 7-digit number:
         %giveawayUrl%
 
-        Please allow at least 10 days for us to verify your system tag, and post the key to your account. If after 10 days it has not been posted, or if you reqiure further assistance, please email us at mysg@alienwarearena.com.
+        Please allow at least 10 days for us to verify your system tag, and post the key to your account. If after 10 days it has not been posted, or if you reqiure further assistance, please email us at %subDomain%@alienwarearena.com.
 
         Thank you,
         - Alienware Arena Team

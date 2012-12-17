@@ -126,7 +126,7 @@ class GiveawayManager
         $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale);
         $machineCode->attachToKey($key);
 
-        $this->sendNotificationEmail($machineCode, $locale);
+        $this->sendNotificationEmail($machineCode, $site);
 
         $this->em->persist($key);
         $this->em->persist($machineCode);
@@ -138,7 +138,7 @@ class GiveawayManager
      *
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
      */
-    public function denyMachineCode(MachineCodeEntry $machineCode)
+    public function denyMachineCode(MachineCodeEntry $machineCode, Site $site)
     {
         // see if it's already assigned to a key
         if ($machineCode->getKey()) {
@@ -147,7 +147,7 @@ class GiveawayManager
 
         $machineCode->markAsDenied();
 
-        $this->sendDeniedNotificationEmail($machineCode);
+        $this->sendDeniedNotificationEmail($machineCode, $site);
 
         $this->em->persist($machineCode);
         $this->em->flush();
@@ -242,7 +242,7 @@ class GiveawayManager
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCodeEntry
      * @return string
      */
-    private function sendNotificationEmail(MachineCodeEntry $machineCodeEntry, $approvedLocale)
+    private function sendNotificationEmail(MachineCodeEntry $machineCodeEntry, Site $site)
     {
         // don't send more than once
         if ($machineCodeEntry->getNotificationEmailSentAt()) {
@@ -251,13 +251,14 @@ class GiveawayManager
 
         $giveaway = $machineCodeEntry->getGiveaway();
 
-        $locale     = $machineCodeEntry->getKey()->getAssignedSite();
-        $subDomain  = $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale)->getSubDomain();
+        $appliedSite    = $machineCodeEntry->getSiteAppliedFrom() ? : $site;
+        $subDomain      = $appliedSite->getSubDomain();
+        $locale         = $appliedSite->getDefaultLocale();
 
         $user = $machineCodeEntry->getUser();
 
         $accountUrl = $this->router->generate('accounts_giveaways', array(
-            '_locale' => $approvedLocale
+            '_locale' => $locale
         ), true);
 
         // translate the message into the user's locale
@@ -267,11 +268,11 @@ class GiveawayManager
             '%userLastName%'  => $user->getLastname(),
             '%accountUrl%'    => $accountUrl,
             '%subDomain%'     => $subDomain,
-        ), 'messages', $giveaway->getLocale());
+        ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
             '%giveawayName%'  => str_replace(array("\r\n"), ' ', $giveaway->getName()),
-        ), 'messages', $giveaway->getLocale());
+        ), 'messages', $locale);
 
         $emailTo = $user->getEmail();
 
@@ -295,7 +296,7 @@ class GiveawayManager
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCodeEntry
      * @return string
      */
-    private function sendDeniedNotificationEmail(MachineCodeEntry $machineCodeEntry)
+    private function sendDeniedNotificationEmail(MachineCodeEntry $machineCodeEntry, Site $site)
     {
         // don't send more than once
         if ($machineCodeEntry->getNotificationEmailSentAt()) {
@@ -305,9 +306,13 @@ class GiveawayManager
         $giveaway = $machineCodeEntry->getGiveaway();
         $user = $machineCodeEntry->getUser();
 
+        $appliedSite    = $machineCodeEntry->getSiteAppliedFrom() ? : $site;
+        $subDomain      = $appliedSite->getSubDomain();
+        $locale         = $appliedSite->getDefaultLocale();
+
         $giveawayUrl = $this->router->generate($giveaway->getLinkableRouteName(), array(
             'slug' => $giveaway->getSlug(),
-            '_locale' => $user->getLocale()
+            '_locale' => $locale,
         ), true);
 
         // translate the message into the user's locale
@@ -317,11 +322,12 @@ class GiveawayManager
             '%userLastName%'  => $user->getLastname(),
             '%giveawayUrl%'   => $giveawayUrl,
             '%systemTag%'     => $machineCodeEntry->getMachineCode(),
-        ), 'messages', $giveaway->getLocale());
+            '%subDomain%'     => $subDomain,
+        ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_deny', array(
             '%giveawayName%'  => str_replace(array("\r\n"), ' ', $giveaway->getName()),
-        ), 'messages', $giveaway->getLocale());
+        ), 'messages', $locale);
 
         $emailTo = $user->getEmail();
 
@@ -329,7 +335,7 @@ class GiveawayManager
             return;
         }
 
-        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Denied", $user->getLocale(), $this->fromName, $this->fromAddress);
+        $result = $this->emailManager->sendEmail($emailTo, $subject, $message, "Giveaway Machine Code Denied", $subDomain, $this->fromName, $this->fromAddress);
 
         if (!$result || !$result->getSendStatusOk()) {
             return;
