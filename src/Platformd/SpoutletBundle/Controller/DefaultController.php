@@ -58,7 +58,7 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getCurrentSite(), 10)
+            ->getCurrentSweepstakes($this->getCurrentSite())
         ;
 
         $sweepstakes_list = array();
@@ -69,7 +69,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllActiveForSiteWithLimit($this->getCurrentSite(), 10)
+            ->findAllActiveForSiteWithLimit($this->getCurrentSite())
         ;
 
         $giveaways_list = array();
@@ -83,7 +83,7 @@ class DefaultController extends Controller
         $competitions = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($this->getCurrentSite(), 10)
+            ->getCurrentEventsOnly($this->getCurrentSite())
         ;
 
         $competitions_list = array();
