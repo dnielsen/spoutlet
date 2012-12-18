@@ -196,12 +196,21 @@ class CommentsController extends Controller
         $aclProvider->updateAcl($acl);
 
         // grant admins access
-        $securityIdentity = new RoleSecurityIdentity('ROLE_ADMIN');
+        $securityIdentityAdmin = new RoleSecurityIdentity('ROLE_ADMIN');
 
         try {
-            $acl->isGranted(array(MaskBuilder::MASK_MASTER), array($securityIdentity));
+            $acl->isGranted(array(MaskBuilder::MASK_MASTER), array($securityIdentityAdmin));
         } catch (NoAceFoundException $e) {
-            $acl->insertClassAce($securityIdentity, MaskBuilder::MASK_MASTER);
+            $acl->insertClassAce($securityIdentityAdmin, MaskBuilder::MASK_MASTER);
+            $aclProvider->updateAcl($acl);
+        }
+
+        $securityIdentitySuperAdmin = new RoleSecurityIdentity('ROLE_SUPER_ADMIN');
+
+        try {
+            $acl->isGranted(array(MaskBuilder::MASK_MASTER), array($securityIdentitySuperAdmin));
+        } catch (NoAceFoundException $e) {
+            $acl->insertClassAce($securityIdentitySuperAdmin, MaskBuilder::MASK_MASTER);
             $aclProvider->updateAcl($acl);
         }
     }
