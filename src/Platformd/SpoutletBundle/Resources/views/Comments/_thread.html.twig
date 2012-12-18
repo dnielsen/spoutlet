@@ -1,3 +1,5 @@
+
+
 {% for comment in thread['comments'] %}
     <div class="comment-wrapper">
         <input type="hidden" id="comment-{{ comment['id'] }}" value="{{ comment['id'] }}" />
@@ -26,9 +28,9 @@
             <div class="options" data-id="{{ comment['id'] }}">
                 <div class="choices" id="choices-{{ comment['id'] }}">
                     <ul>
-                        <li><a href="#">Report</a></li>
-                        <li><a href="#">Edit</a></li>
-                        <li><a href="#">Delete</a></li>
+                        <li><a href="javascript:void(0);">Report</a></li>
+                        <li><a href="javascript:void(0);">Edit</a></li>
+                        <li><a href="javascript:void(0);">Delete</a></li>
                     </ul>
                 </div>
             </div>
@@ -37,7 +39,7 @@
     <div class="comment-replies-wrapper" id="replies-{{ comment['id'] }}">
         <div class="comment-tri"></div>
         <div class="comment-replies">
-            <input type="text" /><a href="#">Reply</a>
+            <input type="text" /><a href="javascript:void(0);" data-id="{{ comment['id'] }}">Reply</a>
         </div>
         {% if comment['replies'] | length > 0 %}
             {% for reply in comment['replies'] %}
