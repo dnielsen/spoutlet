@@ -56,7 +56,7 @@
 
 .comment-wrapper .comment-footer {
     position: absolute;
-    bottom: 3px;
+    bottom: 5px;
     right: 0px;
     width: 540px;
     color: #9b9b9b;
@@ -68,9 +68,9 @@
 }
 
 .comment-vote {
-    float: left;
+    float: right;
     width: auto;
-    padding: 0 3px 0 0;
+    margin: 0 25px 0 0;
 }
 
 .comment-wrapper .options {
