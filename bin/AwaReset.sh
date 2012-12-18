@@ -70,6 +70,10 @@ echo "  - Loading fixtures..."
 
 ./app/console doctrine:fixtures:load --append > /dev/null
 
+echo "  - Initialising ACL Structure..."
+
+./app/console init:acl > /dev/null
+
 echo
 echo "Resetting test database:"
 echo "  - Dropping database..."
@@ -89,6 +93,10 @@ echo "  - Loading fixtures..."
 # Note: this needs to be --append, because some database data comes from the migrations
 
 ./app/console doctrine:fixtures:load --append --env=test > /dev/null
+
+echo "  - Initialising ACL Structure..."
+
+./app/console init:acl --env=test > /dev/null
 
 echo
 echo "Clearing caches:"

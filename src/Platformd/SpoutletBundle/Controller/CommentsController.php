@@ -2,10 +2,75 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\Entity\Comment;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class CommentsController extends Controller
 {
+
+    public function newAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        if (!$this->isGranted('ROLE_USER')) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $comment  = new Comment();
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['thread']) || !isset($params['body']) || empty($params['body'])) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $em     = $this->getDoctrine()->getEntityManager();
+
+        $thread = $em->getRepository('SpoutletBundle:Thread')->find((int) $params['thread']);
+
+        if (!$thread) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $parent = $params['parent'] ? $em->getRepository('SpoutletBundle:Comment')->find((int) $params['parent']) : null;
+        $author = $this->getUser();
+        $body   = $params['body'];
+
+        if ($parent !== null) {
+            $comment->setParent($parent);
+        }
+
+        $comment->setAuthor($author);
+        $comment->setBody($body);
+        $comment->setThread($thread);
+
+        $thread->incrementCommentCount();
+
+        $em->persist($comment);
+        $em->persist($thread);
+        $em->flush();
+
+        $this->createAcl($comment);
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
 
     public function threadAction($threadId)
     {
@@ -113,6 +178,23 @@ class CommentsController extends Controller
 
 
         return $thread;
+    }
+
+    private function createAcl($comment)
+    {
+        // creating the ACL
+        $aclProvider = $this->get('security.acl.provider');
+        $objectIdentity = ObjectIdentity::fromDomainObject($comment);
+        $acl = $aclProvider->createAcl($objectIdentity);
+
+        // retrieving the security identity of the currently logged-in user
+        $securityContext = $this->get('security.context');
+        $user = $securityContext->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+
+        // grant owner access
+        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $aclProvider->updateAcl($acl);
     }
 
 }

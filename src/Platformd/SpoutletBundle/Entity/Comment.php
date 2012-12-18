@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -105,6 +106,16 @@ class Comment implements ReportableContentInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getThread()
+    {
+        return $this->thread;
+    }
+
+    public function setThread(Thread $thread)
+    {
+        $this->thread = $thread;
     }
 
     public function getParent()

@@ -23,6 +23,9 @@ security:
                 success_handler: platformd_user.security_logout_handler
             switch_user: ~
 
+    acl:
+        connection: default
+
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }

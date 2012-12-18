@@ -118,6 +118,11 @@ class Controller extends BaseController
         return $this->container->get('security.context')->isGranted($roles);
     }
 
+    protected function isGranted($role, $object)
+    {
+        return $this->container->get('security.context')->isGranted($role, $object);
+    }
+
     protected function enforceUserSecurity()
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
