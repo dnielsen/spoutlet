@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class CommentsController extends Controller
@@ -74,7 +75,7 @@ class CommentsController extends Controller
 
     public function threadAction($threadId)
     {
-        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread' => $this->getThread(),
         ));
     }
@@ -180,21 +181,29 @@ class CommentsController extends Controller
         return $thread;
     }
 
-    private function createAcl($comment)
+    private function createAcl($object)
     {
         // creating the ACL
         $aclProvider = $this->get('security.acl.provider');
-        $objectIdentity = ObjectIdentity::fromDomainObject($comment);
+        $objectIdentity = ObjectIdentity::fromDomainObject($object);
         $acl = $aclProvider->createAcl($objectIdentity);
 
-        // retrieving the security identity of the currently logged-in user
-        $securityContext = $this->get('security.context');
-        $user = $securityContext->getToken()->getUser();
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
-
         // grant owner access
+        $securityIdentity = UserSecurityIdentity::fromAccount($this->getUser());
         $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+
+        // grant admins access
+        $securityIdentity = new RoleSecurityIdentity('ROLE_ADMIN');
+        $acl->insertClassAce($securityIdentity, MaskBuilder::MASK_MASTER);
+
         $aclProvider->updateAcl($acl);
     }
 
+    /*
+        Default roles are VIEW, EDIT, CREATE, DELETE, UNDELETE, OPERATOR, MASTER, OWNER
+    */
+    private function checkAcl($role, $object)
+    {
+        return $this->container->get('security.context')->isGranted($role, $object);
+    }
 }
