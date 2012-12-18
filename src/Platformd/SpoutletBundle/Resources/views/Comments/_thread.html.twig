@@ -1,5 +1,6 @@
 {% for comment in thread['comments'] %}
     <div class="comment-wrapper">
+        <input type="hidden" id="comment-{{ comment['id'] }}" value="{{ comment['id'] }}" />
         <div class="comment-author">
             <img src="{{ asset(get_avatar_url(comment['author'])) }}" alt="{{ comment['author'].username }}" />
             <div class="author-link"><a href="{{ path('accounts_profile', {'username': comment['author'].username }) }}">{{ comment['author'].username }}</a></div>
@@ -10,7 +11,16 @@
             <p>{{ comment['body'] }}</p>
         </div>
         <div class="comment-footer">
+            <div class="comment-vote">
+                <div style="display:inline-table;">
+                    <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up"></a>
+                </div>
+                <div style="display:inline-table;">
+                    <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down"></a>
+                </div>
+            </div>
             <div class="comment-at" title="{{ comment['created_at'] | date }}"></div>
+
             <div class="options" data-id="{{ comment['id'] }}">
                 <div class="choices" id="choices-{{ comment['id'] }}">
                     <ul>
