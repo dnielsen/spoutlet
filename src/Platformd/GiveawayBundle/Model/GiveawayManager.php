@@ -189,6 +189,7 @@ class GiveawayManager
                 $key->getPool()->getGiveaway(),
                 MachineCodeEntry::STATUS_APPROVED,
                 null,
+                $key->getAssignedSite(),
                 $key->getAssignedAt()
             );
         }
@@ -207,11 +208,14 @@ class GiveawayManager
         foreach ($machineCodes as $code) {
             $deniedAt = $code->getDeniedAt() ? : null;
 
+            $site = $code->getSiteAppliedFrom() ? $code->getSiteAppliedFrom()->getDefaultLocale() : null;
+
             $requests[] = new GiveawayKeyRequest(
                 null,
                 $code->getGiveaway(),
                 $code->getStatus(),
                 $code->getMachineCode(),
+                $site,
                 $deniedAt
             );
         }

@@ -30,13 +30,16 @@ class GiveawayKeyRequest
 
     private $machineCode;
 
-    public function __construct($value, Giveaway $giveaway, $status, $machineCode, \DateTime $assignedAt = null)
+    private $site;
+
+    public function __construct($value, Giveaway $giveaway, $status, $machineCode, $site, \DateTime $assignedAt = null)
     {
         $this->value = $value;
         $this->giveaway = $giveaway;
         $this->status = $status;
         $this->assignedAt = $assignedAt;
         $this->machineCode = $machineCode;
+        $this->site = $site;
     }
 
     public function getValue()
@@ -70,5 +73,10 @@ class GiveawayKeyRequest
     public function getAssignedAtTranslationArray()
     {
         return AbstractEvent::convertDateTimeIntoTranslationArray($this->getAssignedAt());
+    }
+
+    public function getSite()
+    {
+        return $this->site;
     }
 }

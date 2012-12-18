@@ -45,7 +45,16 @@
                                     {% endif %}
                                 </td>
                                 <td class="nowrap">
-                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': keyRequest.giveaway.locale} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+
+                                    {% if keyRequest.site != null %}
+                                        {% set site = keyRequest.site %}
+                                    {% elseif keyRequest.giveaway.locale != null %}
+                                        {% set site = keyRequest.site %}
+                                    {% else %}
+                                        {% set site = get_current_site().defaultLocale %}
+                                    {% endif %}
+
+                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': site } ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
                                 </td>
                             </tr>
                             {% endfor %}

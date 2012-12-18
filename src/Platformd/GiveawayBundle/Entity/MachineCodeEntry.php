@@ -108,8 +108,8 @@ class MachineCodeEntry
     protected $updated;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $siteAppliedFrom;
 
