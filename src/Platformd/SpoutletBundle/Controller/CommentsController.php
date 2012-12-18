@@ -9,6 +9,7 @@ use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Acl\Exception\NoAceFoundException;
 
 class CommentsController extends Controller
 {
@@ -192,11 +193,17 @@ class CommentsController extends Controller
         $securityIdentity = UserSecurityIdentity::fromAccount($this->getUser());
         $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
 
+        $aclProvider->updateAcl($acl);
+
         // grant admins access
         $securityIdentity = new RoleSecurityIdentity('ROLE_ADMIN');
-        $acl->insertClassAce($securityIdentity, MaskBuilder::MASK_MASTER);
 
-        $aclProvider->updateAcl($acl);
+        try {
+            $acl->isGranted(array(MaskBuilder::MASK_MASTER), array($securityIdentity));
+        } catch (NoAceFoundException $e) {
+            $acl->insertClassAce($securityIdentity, MaskBuilder::MASK_MASTER);
+            $aclProvider->updateAcl($acl);
+        }
     }
 
     /*
