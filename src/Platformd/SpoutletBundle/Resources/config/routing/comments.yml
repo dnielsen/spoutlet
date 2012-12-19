@@ -7,5 +7,8 @@ comments_replies:
     defaults: { _controller: "SpoutletBundle:Comments:replies" }
 
 comments_new:
-    pattern: /new/{threadId}
+    pattern: /new
     defaults: { _controller: "SpoutletBundle:Comments:new" }
+    requirements:
+        _format: json
+        _method: POST

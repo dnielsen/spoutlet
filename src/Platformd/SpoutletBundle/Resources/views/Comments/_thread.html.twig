@@ -1,6 +1,9 @@
 <div class="comments">
-    {% include "SpoutletBundle:Comments:_form.html.twig" with { 'threadId' : thread['id']} %}
-
+    <h3>Add Your Comment</h3>
+    <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+    <div class="comment-form-submit">
+        <button id="new-comment-submit" type="submit">Add Comment</button>
+    </div>
 {% if thread.comments | length > 0 %}
     {% for comment in thread.comments %}
         {% if comment.parent is null %}
@@ -89,5 +92,24 @@
 
         $('.comment-at').timeago();
         $('.replied-at').timeago();
+
+        $('#new-comment-submit').click(function () {
+            var comment = {
+                'thread' : '{{ thread.id }}',
+                'body' : $('#new-comment-body').val(),
+                'parent' : 0
+            };
+            $.ajax({
+                url: '{{ path('comments_new') }}',
+                type: 'post',
+                data: JSON.stringify(comment),
+                controlstentType: 'application/json',
+                success: function (data, status, req) {
+                    if(data.success) {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
     });
 </script>
