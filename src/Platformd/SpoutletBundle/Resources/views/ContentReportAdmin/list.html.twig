@@ -46,6 +46,15 @@
                         <h1>Group</h1>
                         <div><a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a></div>
 
+                    {% elseif item[0].getContentType == 'Comment' %}
+
+                        <h1>Thread</h1>
+                        <div><a href="url({{ item[0].thread.permalink }})" target="_blank">Click to view thread</a></div>
+                        <h1>Comment</h1>
+                        <div>{{ item[0].body }}</div>
+                        <h1>Author</h1>
+                        <div>{{ item[0].author.username }}</div>
+
                     {% endif %}
                 </td>
                 <td>
