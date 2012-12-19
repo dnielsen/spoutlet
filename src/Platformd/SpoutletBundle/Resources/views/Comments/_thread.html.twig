@@ -1,3 +1,5 @@
+<div class="comments">
+    {% include "SpoutletBundle:Comments:_form.html.twig" with { 'threadId' : thread['id']} %}
 
 {% if thread.comments | length > 0 %}
     {% for comment in thread.comments %}

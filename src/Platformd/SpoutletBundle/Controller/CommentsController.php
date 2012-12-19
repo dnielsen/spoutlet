@@ -8,7 +8,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
-
+use Platformd\SpoutletBundle\Form\Type\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -89,8 +89,11 @@ class CommentsController extends Controller
             $thread = $this->createThread($threadId, $object);
         }
 
+        $form = $this->createForm(new CommentType());
+
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread' => $thread,
+            'form'   => $form->createView(),
         ));
     }
 
