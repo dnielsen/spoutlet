@@ -5,3 +5,7 @@ comments_thread:
 comments_replies:
     pattern: /replies/{commentId}
     defaults: { _controller: "SpoutletBundle:Comments:replies" }
+
+comments_new:
+    pattern: /new/{threadId}
+    defaults: { _controller: "SpoutletBundle:Comments:new" }

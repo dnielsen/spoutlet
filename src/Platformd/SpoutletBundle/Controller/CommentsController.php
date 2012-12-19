@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Comment;
+use Platformd\SpoutletBundle\Form\Type\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -76,8 +77,11 @@ class CommentsController extends Controller
 
     public function threadAction($threadId)
     {
-         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+        $form = $this->createForm(new CommentType());
+
+        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread' => $this->getThread(),
+            'form'   => $form->createView(),
         ));
     }
 

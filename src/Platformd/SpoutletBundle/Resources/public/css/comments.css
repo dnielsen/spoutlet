@@ -161,7 +161,10 @@
 }
 
 .comment-replies a {
-    margin-left: 5px;
+    padding: 0 0 8px 5px;
+    height: 16px;
+    vertical-align: middle;
+    display: inline-block;
 }
 
 .comment-reply {
@@ -229,4 +232,21 @@ a.comment-voting-button {
 .down:hover {
     background: url('/bundles/spoutlet/images/comments/comment_vote_sprite.png');
     background-position: 14px 14px;
+}
+
+.comments textarea {
+    height: 80px;
+    width: 98%;
+    padding: 1%;
+}
+
+.comment-replies textarea {
+    height: 18px;
+    width: 575px;
+    overflow-y: hidden;
+}
+
+.comment-form-submit {
+    text-align: center;
+    padding: 5px;
 }
