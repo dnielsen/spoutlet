@@ -3,6 +3,12 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Comment;
+use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\SpoutletBundle\Entity\Event;
+use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -43,7 +49,7 @@ class CommentsController extends Controller
 
         $em     = $this->getDoctrine()->getEntityManager();
 
-        $thread = $em->getRepository('SpoutletBundle:Thread')->find((int) $params['thread']);
+        $thread = $em->getRepository('SpoutletBundle:Thread')->find($params['thread']);
 
         if (!$thread) {
             $response->setContent(json_encode(array("success" => false)));
@@ -74,11 +80,31 @@ class CommentsController extends Controller
         return $response;
     }
 
-    public function threadAction($threadId)
+    public function threadAction($threadId, $object)
     {
-         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread' => $this->getThread(),
+        $em         = $this->getDoctrine()->getEntityManager();
+        $thread = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
+
+        if (!$thread) {
+            $thread = $this->createThread($threadId, $object);
+        }
+
+        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+            'thread' => $thread,
         ));
+    }
+
+    private function createThread($threadId, $object)
+    {
+        $thread = new Thread();
+        $thread->setId($threadId);
+        $thread->setPermalink($this->getUrlForObject($object).'#comments');
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($thread);
+        $em->flush();
+
+        return $thread;
     }
 
     public function repliesAction($commentId)
@@ -221,5 +247,27 @@ class CommentsController extends Controller
     private function checkAcl($role, $object)
     {
         return $this->container->get('security.context')->isGranted($role, $object);
+    }
+
+    private function getUrlForObject($obj)
+    {
+        if ($obj instanceof LinkableInterface) {
+            $url = $this->container->get('platformd.link.linkable_manager')->link($obj);
+        } else {
+            // todo - refactor everything to be a LinkableInterface
+            if ($obj instanceof Event) {
+                $route = 'events_detail';
+            } elseif ($obj instanceof Giveaway) {
+                $route = 'giveaway_show';
+            } elseif ($obj instanceof Sweepstakes) {
+                $route = 'sweepstakes_show';
+            } else {
+                throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
+            }
+
+            $url = $this->container->get('router')->generate($route, array('slug' => $obj->getSlug()));
+        }
+
+        return $url;
     }
 }

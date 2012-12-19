@@ -26,7 +26,7 @@ class Thread
     protected $isCommentable = true;
 
     /**
-     * @ORM\Column(name="last_commented_at", type="datetime")
+     * @ORM\Column(name="last_commented_at", type="datetime", nullable=true)
      */
     protected $lastCommentAt = null;
 
@@ -104,5 +104,10 @@ class Thread
     public function setLastCommentAt($lastCommentAt)
     {
         $this->lastCommentAt = $lastCommentAt;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
     }
 }
