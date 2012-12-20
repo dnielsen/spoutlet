@@ -1,8 +1,9 @@
+<a name="comments" />
 <div class="comments">
 
 {% if thread.comments | length > 0 %}
     {% for comment in thread.comments %}
-        {% if comment.parent is null %}
+        {% if comment.parent is null and comment.deleted == false %}
         <div id="post-id-{{ comment.id }}">
             <div class="comment-wrapper">
                 <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
@@ -54,32 +55,34 @@
                 </div>
 
                 {% for reply in comment.replies %}
-                    <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
-                        <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
-                        <div class="reply-body">
-                            <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
-                        </div>
-                        <div class="comment-footer">
-                            <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
-                            <div class="options more-replies" data-id="{{ reply.id }}">
-                                <div class="choices" id="choices-{{ reply.id }}">
-                                    <ul>
-                                        <li class="report-li" data-id="{{ reply.id }}"><a href="#"class="report">Report</a></li>
-                                        <li><a href="#">Edit</a></li>
-                                        <li><a href="#">Delete</a></li>
-                                    </ul>
-                                </div>
-                                <div class="report-options" id="report-options-{{ reply.id }}">
-                                    <ul>
-                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
-                                    </ul>
+                    {% if reply.deleted == false %}
+                        <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
+                            <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
+                            <div class="reply-body">
+                                <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
+                            </div>
+                            <div class="comment-footer">
+                                <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
+                                <div class="options more-replies" data-id="{{ reply.id }}">
+                                    <div class="choices" id="choices-{{ reply.id }}">
+                                        <ul>
+                                            <li class="report-li" data-id="{{ reply.id }}"><a href="#"class="report">Report</a></li>
+                                            <li><a href="#">Edit</a></li>
+                                            <li><a href="#">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="report-options" id="report-options-{{ reply.id }}">
+                                        <ul>
+                                            <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                            <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
+                                            <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                            <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             {% if comment.replies | length > 3 %}
@@ -147,7 +150,7 @@
                     if(data.success) {
                         $('#post-id-' + contentId).fadeOut();
                     } else {
-
+                        alert(data.messageForUser);
                     }
                 }
             })

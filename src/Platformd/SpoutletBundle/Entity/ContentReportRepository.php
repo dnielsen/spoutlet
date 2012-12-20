@@ -6,11 +6,19 @@ use Doctrine\ORM\EntityRepository;
 
 class ContentReportRepository extends EntityRepository
 {
+    private static $validTypes = array(
+        'GroupImage',
+        'GroupNews',
+        'GroupVideo',
+        'Group',
+        'Comment',
+        'GalleryMedia',
+    );
 
     public function getContentReportTypeForAllSites($type)
     {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -27,7 +35,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesArchived($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -46,7 +54,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesDeletedContent($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
