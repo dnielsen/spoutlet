@@ -25,6 +25,7 @@
                 success: function (html, status, req) {
                     $('.comments').html(html);
                     $('.thread').unblock();
+                    $('#new-comment-body').val('');
                 }
             });
         });
