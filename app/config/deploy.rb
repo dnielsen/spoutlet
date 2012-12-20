@@ -25,8 +25,8 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. beta)
 set :branch,      "master"
 
-role :web,        app1, app2, app3, app4, app5, app6                         # Your HTTP server, Apache/etc
-role :app,        app1, app2, app3, app4, app5, app6                         # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9                         # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9                         # This may be the same as your `Web` server
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 
 set  :keep_releases,  3
