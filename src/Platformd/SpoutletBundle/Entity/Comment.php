@@ -169,6 +169,18 @@ class Comment implements ReportableContentInterface
         return $this->votes;
     }
 
+    public function getUpVoteCount()
+    {
+        $upvotes = $this->votes->filter(function ($x) { return $x->getVoteType() == 'up';});
+        return count($upvotes);
+    }
+
+    public function getDownVoteCount()
+    {
+        $downvotes = $this->votes->filter(function ($x) { return $x->getVoteType() == 'down';});
+        return count($downvotes);
+    }
+
     public function getReplies()
     {
         return $this->replies;

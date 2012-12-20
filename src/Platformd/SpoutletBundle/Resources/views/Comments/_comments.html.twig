@@ -17,11 +17,11 @@
                     <div class="comment-footer">
                         <div class="comment-vote">
                             <div style="display:inline-table;">
-                                <span>10</span>
+                                <span>{{ comment.getUpVoteCount }}</span>
                                 <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up"></a>
                             </div>
                             <div style="display:inline-table;">
-                                <span>1</span>
+                                <span>{{ comment.getDownVoteCount }}</span>
                                 <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down"></a>
                             </div>
                         </div>
