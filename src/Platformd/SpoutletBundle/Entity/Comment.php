@@ -17,8 +17,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Comment implements ReportableContentInterface
 {
-    const DELETED_BY_OWNER  = 'by_owner';
-    const DELETED_BY_ADMIN  = 'by_admin';
+    const DELETED_BY_OWNER  = 'BY_OWNER';
+    const DELETED_BY_ADMIN  = 'BY_ADMIN';
     const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 

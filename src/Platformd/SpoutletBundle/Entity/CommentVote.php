@@ -50,11 +50,11 @@ class CommentVote extends AbstractVote
      */
     protected $votedAt;
 
-    public function __construct(User $user, Comment $answer, $type, $ipAddress)
+    public function __construct(User $user, Comment $comment, $voteType, $ipAddress)
     {
         $this->user         = $user;
-        $this->comment      = $answer;
-        $this->type         = $type;
+        $this->comment      = $comment;
+        $this->voteType     = $voteType;
         $this->ipAddress    = $ipAddress;
     }
 

@@ -12,3 +12,17 @@ comments_new:
     requirements:
         _format: json
         _method: POST
+
+comments_delete:
+    pattern: /delete
+    defaults: { _controller: "SpoutletBundle:Comments:delete" }
+    requirements:
+        _format: json
+        _method: POST
+
+comments_vote:
+    pattern: /vote
+    defaults: { _controller: "SpoutletBundle:Vote:vote" }
+    requirements:
+        _format: json
+        _method: POST

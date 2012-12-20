@@ -3,7 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 /*
-    Abstract vote entitiy. Extend this base entity when implementing voting on a feature.
+    Abstract vote entity. Extend this base entity when implementing voting on a feature.
     It requires that the developer properly map the properties for each implementation.
 */
 
