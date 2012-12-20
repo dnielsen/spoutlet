@@ -130,7 +130,7 @@ class CommentsController extends Controller
         ));
     }
 
-    public function threadAction($threadId, $object)
+    public function threadAction($threadId, $object, $commentLimit=25)
     {
         $em         = $this->getDoctrine()->getEntityManager();
         $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
@@ -139,8 +139,11 @@ class CommentsController extends Controller
             $thread = $this->createThread($threadId, $object);
         }
 
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
+
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread' => $thread
+            'thread'    => $threadId,
+            'comments'  => $comments,
         ));
     }
 

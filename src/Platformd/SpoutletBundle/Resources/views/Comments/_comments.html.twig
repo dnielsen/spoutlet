@@ -1,7 +1,8 @@
 <div class="comments">
     <a href="#comments"></a>
-    {% if thread.comments | length > 0 %}
-        {% for comment in thread.comments %}
+    {% if comments | length > 0 %}
+        {% for commentArray in comments %}
+            {% set comment = commentArray[0] %}
             {% if comment.parent is null and comment.deleted == false %}
                 <div id="post-id-{{ comment.id }}">
                     <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
@@ -137,7 +138,7 @@
             $('.thread').block({message: null});
             var id = $(this).attr('data-id');
             var reply = {
-                'thread' : '{{ thread.id }}',
+                'thread' : '{{ thread }}',
                 'body' : $('#reply-text-' + id).val(),
                 'parent' : id
             };

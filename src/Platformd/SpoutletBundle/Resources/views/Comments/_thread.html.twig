@@ -4,7 +4,7 @@
     <div class="comment-form-submit">
         <button id="new-comment-submit" type="submit">Add Comment</button>
     </div>
-    {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'thread' : thread} %}
+    {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
 </div>
 <script type="text/javascript">
     $(function () {
@@ -13,7 +13,7 @@
             $('.thread').block({message: null});
 
             var comment = {
-                'thread' : '{{ thread.id }}',
+                'thread' : '{{ thread }}',
                 'body' : $('#new-comment-body').val(),
                 'parent' : 0
             };

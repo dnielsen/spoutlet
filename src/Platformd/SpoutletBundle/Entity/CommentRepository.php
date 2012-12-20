@@ -8,7 +8,7 @@ class CommentRepository extends EntityRepository
 {
     public function findCommentsForThreadSortedByDate($thread, $limit=25)
     {
-        return $this->createQueryBuilder('c')
+        $result = $this->createQueryBuilder('c')
             ->leftJoin('c.thread', 't')
             ->andWhere('t.id = :thread')
             ->andWhere('c.parent IS NULL')
@@ -18,11 +18,13 @@ class CommentRepository extends EntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
+
+        return $result;
     }
 
     public function findCommentsForThreadSortedByVotes($thread, $limit=25)
     {
-        return $this->createQueryBuilder('c')
+        $result = $this->createQueryBuilder('c')
             ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes')
             ->leftJoin('c.thread', 't')
             ->leftJoin('c.votes', 'v')
@@ -35,5 +37,7 @@ class CommentRepository extends EntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
+
+        return $result;
     }
 }
