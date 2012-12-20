@@ -3,6 +3,7 @@
 {% if thread.comments | length > 0 %}
     {% for comment in thread.comments %}
         {% if comment.parent is null %}
+        <div id="post-id-{{ comment.id }}">
             <div class="comment-wrapper">
                 <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
                 <div class="comment-author">
@@ -36,10 +37,10 @@
                             </ul>
                             <div class="report-options" id="report-options-{{ comment.id }}">
                                 <ul>
-                                    <li><a href="#">Inappropriate content</a></li>
-                                    <li><a href="#">Spam</a></li>
-                                    <li><a href="#">Violates intellectual property</a></li>
-                                    <li><a href="#">Harassment</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -53,7 +54,7 @@
                 </div>
 
                 {% for reply in comment.replies %}
-                    <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}">
+                    <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
                         <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
                         <div class="reply-body">
                             <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
@@ -70,10 +71,10 @@
                                 </div>
                                 <div class="report-options" id="report-options-{{ reply.id }}">
                                     <ul>
-                                        <li><a href="#">Inappropriate content</a></li>
-                                        <li><a href="#">Spam</a></li>
-                                        <li><a href="#">Violates intellectual property</a></li>
-                                        <li><a href="#">Harassment</a></li>
+                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
+                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                        <li><a href="#" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -86,6 +87,7 @@
                     <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">More Replies</a>
                 </div>
             {% endif %}
+            </div>
         {% endif %}
     {% endfor %}
 {% endif %}
@@ -112,13 +114,43 @@
             $('#report-options-' + id).toggle('fast');
         });
 
+        $('.choices').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $('.report-options').click(function (event) {
+            event.stopPropagation();
+        });
+
         $('.more-comments-link').click(function () {
             var commentId = $(this).attr('data-id');
             $('#more-comments-' + commentId).hide();
-            $('#replies-' + commentId + ' > .hidden').fadeIn();
+            $('#replies-' + commentId + ' > .hidden').hide().removeClass('hidden').fadeIn();
         });
 
         $('.comment-at').timeago();
         $('.replied-at').timeago();
+
+        $('.report-link').click(function (event) {
+            event.preventDefault();
+            var contentId = $(this).attr('data-id');
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'ContentId' : contentId,
+                    'Reason' : $(this).attr('data-reason'),
+                    'ContentType' : "Comment"
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(data.success) {
+                        $('#post-id-' + contentId).fadeOut();
+                    } else {
+
+                    }
+                }
+            })
+        });
     });
 </script>
