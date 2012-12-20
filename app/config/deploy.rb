@@ -13,6 +13,9 @@ set :app3,  "ec2-54-234-66-252.compute-1.amazonaws.com"
 set :app4,  "ec2-23-20-94-62.compute-1.amazonaws.com"
 set :app5,  "ec2-54-242-218-154.compute-1.amazonaws.com"
 set :app6,  "ec2-54-234-78-4.compute-1.amazonaws.com"
+set :app7,  "ec2-54-234-19-103.compute-1.amazonaws.com"
+set :app8,  "ec2-54-242-192-234.compute-1.amazonaws.com"
+set :app9,  "ec2-23-22-36-86.compute-1.amazonaws.com"
 
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
