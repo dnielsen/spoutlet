@@ -6,11 +6,19 @@ use Doctrine\ORM\EntityRepository;
 
 class ContentReportRepository extends EntityRepository
 {
+    private static $validTypes = array(
+        'GroupImage',
+        'GroupNews',
+        'GroupVideo',
+        'Group',
+        'Comment',
+        'GalleryMedia',
+    );
 
     public function getContentReportTypeForAllSites($type)
     {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -27,7 +35,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesArchived($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -46,7 +54,7 @@ class ContentReportRepository extends EntityRepository
 
     public function getContentReportTypeForAllSitesDeletedContent($type) {
 
-        if ($type != "GroupImage" && $type != "GroupVideo" && $type != "GroupNews" && $type != "Group") {
+        if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
@@ -159,6 +167,25 @@ class ContentReportRepository extends EntityRepository
         $reports = $em->createQuery('
             SELECT report, c FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.group c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForComment($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.comment c
             WHERE report.deleted = false
             AND c = :content
             ')

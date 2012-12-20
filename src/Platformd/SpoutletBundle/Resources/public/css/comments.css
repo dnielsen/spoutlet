@@ -124,28 +124,50 @@
     bottom: 15px;
 }
 
+.report-options ul,
 .choices ul {
     margin: 0;
     padding: 3px 0 4px;
     list-style: none;
 }
 
+.report-options li,
 .choices li {
     line-height: 1.28;
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
 }
 
+.report-options li:hover,
 .choices li:hover {
     background: #595959;
     border-top: 1px solid #494949;
     border-bottom: 1px solid #494949;
 }
 
+.report-options li a,
 .choices li a {
     font-size: 11px;
     font-weight: normal;
     padding: 1px 16px 1px 22px;
+}
+
+.report-options {
+    border: 1px solid #494949;
+    background: #191919;
+    min-width: 180px;
+    position: absolute;
+    display: none;
+}
+
+.comment-wrapper .report-options {
+    right: -188px;
+    bottom: -18px;
+}
+
+.comment-replies-wrapper .report-options {
+    right: -240px;
+    bottom: 0px;
 }
 
 .comment-replies-wrapper {

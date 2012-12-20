@@ -100,6 +100,13 @@ class ContentReport
     protected $group = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $comment = null;
+
+    /**
      * Get id
      *
      * @return integer
@@ -189,6 +196,16 @@ class ContentReport
     public function setGroup($value)
     {
         $this->group = $value;
+    }
+
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    public function setComment($value)
+    {
+        $this->comment = $value;
     }
 
     public function getSite()
