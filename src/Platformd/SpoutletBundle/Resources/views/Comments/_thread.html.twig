@@ -1,99 +1,17 @@
-<div class="comments">
+<div class="thread">
     <h3>Add Your Comment</h3>
     <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
     <div class="comment-form-submit">
         <button id="new-comment-submit" type="submit">Add Comment</button>
     </div>
-{% if thread.comments | length > 0 %}
-    {% for comment in thread.comments %}
-        {% if comment.parent is null %}
-            <div class="comment-wrapper">
-                <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
-                <div class="comment-author">
-                    <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
-                    <div class="author-link"><a href="{{ path('accounts_profile', {'username': comment.author.username }) }}">{{ comment.author.username }}</a></div>
-                    <div class="author-level">Level 7</div>
-                    <div class="level-img"><div>5477 ARP</div></div>
-                </div>
-                <div class="comment-body">
-                    <p>{{ comment.body }}</p>
-                </div>
-                <div class="comment-footer">
-                    <div class="comment-vote">
-                        <div style="display:inline-table;">
-                            <span>10</span>
-                            <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up"></a>
-                        </div>
-                        <div style="display:inline-table;">
-                            <span>1</span>
-                            <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down"></a>
-                        </div>
-                    </div>
-                    <div class="comment-at" title="{{ comment.createdAt | date }}"></div>
-
-                    <div class="options" data-id="{{ comment.id }}">
-                        <div class="choices" id="choices-{{ comment.id }}">
-                            <ul>
-                                <li><a href="javascript:void(0);">Report</a></li>
-                                <li><a href="javascript:void(0);">Edit</a></li>
-                                <li><a href="javascript:void(0);">Delete</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
-                <div class="comment-tri"></div>
-                <div class="comment-replies">
-                    <input type="text" /><a href="javascript:void(0);" data-id="{{ comment.id }}">Reply</a>
-                </div>
-
-                {% for reply in comment.replies %}
-                    <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}">
-                        <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
-                        <div class="reply-body">
-                            <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
-                        </div>
-                        <div class="comment-footer">
-                            <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
-                            <div class="options more-replies" data-id="{{ reply.id }}">
-                                <div class="choices" id="choices-{{ reply.id }}">
-                                    <ul>
-                                        <li><a href="#">Report</a></li>
-                                        <li><a href="#">Edit</a></li>
-                                        <li><a href="#">Delete</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            {% if comment.replies | length > 3 %}
-                <div class="more-comments" id="more-comments-{{ comment.id }}">
-                    <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">More Replies</a>
-                </div>
-            {% endif %}
-        {% endif %}
-    {% endfor %}
-{% endif %}
+    {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'thread' : thread} %}
+</div>
 <script type="text/javascript">
     $(function () {
-        $('.options').click(function () {
-            var id = $(this).attr('data-id');
-            $('#choices-' + id).toggle('fast');
-        });
-
-        $('.more-comments-link').click(function () {
-            var commentId = $(this).attr('data-id');
-            $('#more-comments-' + commentId).hide();
-            $('#replies-' + commentId + ' > .hidden').fadeIn();
-        });
-
-        $('.comment-at').timeago();
-        $('.replied-at').timeago();
 
         $('#new-comment-submit').click(function () {
+            $('.thread').block({message: null});
+
             var comment = {
                 'thread' : '{{ thread.id }}',
                 'body' : $('#new-comment-body').val(),
@@ -104,10 +22,9 @@
                 type: 'post',
                 data: JSON.stringify(comment),
                 controlstentType: 'application/json',
-                success: function (data, status, req) {
-                    if(data.success) {
-                        alert(data.message);
-                    }
+                success: function (html, status, req) {
+                    $('.comments').html(html);
+                    $('.thread').unblock();
                 }
             });
         });

@@ -1,4 +1,15 @@
 /* comments */
+
+.thread {
+    width: 100%;
+    float: left;
+}
+
+.comments {
+    width: 100%;
+    float: left;
+}
+
 .comment-wrapper {
     margin-top: 10px;
     position: relative;
@@ -234,7 +245,7 @@ a.comment-voting-button {
     background-position: 14px 14px;
 }
 
-.comments textarea {
+.thread textarea {
     height: 80px;
     width: 98%;
     padding: 1%;

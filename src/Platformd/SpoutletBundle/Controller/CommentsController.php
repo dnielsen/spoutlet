@@ -76,24 +76,22 @@ class CommentsController extends Controller
 
         $this->createAcl($comment);
 
-        $response->setContent(json_encode(array("success" => true)));
-        return $response;
+        return $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
+            'thread' => $thread,
+        ));
     }
 
     public function threadAction($threadId, $object)
     {
         $em         = $this->getDoctrine()->getEntityManager();
-        $thread = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
+        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
 
         if (!$thread) {
             $thread = $this->createThread($threadId, $object);
         }
 
-        $form = $this->createForm(new CommentType());
-
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread' => $thread,
-            'form'   => $form->createView(),
+            'thread' => $thread
         ));
     }
 
