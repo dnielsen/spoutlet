@@ -4,7 +4,13 @@
     <div class="comment-form-submit">
         <button id="new-comment-submit" type="submit">Add Comment</button>
     </div>
-    {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
+    <div class="comments">
+        <a href="#comments"></a>
+        {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
+    </div>
+    <div id="more-comments-loader" data-offset="{{ offset }}" data-increment="5">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
+    </div>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -15,7 +21,8 @@
             var comment = {
                 'thread' : '{{ thread }}',
                 'body' : $('#new-comment-body').val(),
-                'parent' : 0
+                'parent' : 0,
+                'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
             $.ajax({
                 url: '{{ path('comments_new') }}',
@@ -23,11 +30,70 @@
                 data: JSON.stringify(comment),
                 controlstentType: 'application/json',
                 success: function (html, status, req) {
-                    $('.comments').html(html);
+                    $('.thread').html(html);
                     $('.thread').unblock();
                     $('#new-comment-body').val('');
                 }
             });
         });
     });
+
+    var ajaxRequestSent;
+
+    $(window).scroll(function() {
+
+        if($(window).scrollTop() >= $(document).height() - $(window).height()) {
+
+            if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
+                console.log('no more comments');
+                return false;
+            }
+
+            if (ajaxRequestSent) {
+                console.log('already requested');
+                return false; // don't make another request, let the current one complete, or
+                // ajax.abort(); // stop the current request, let it run again
+            }
+
+            console.log('no request in progress');
+            ajaxRequestSent = loadMorePosts();
+            console.log('request complete');
+        }
+    });
+
+    function loadMorePosts()
+    {
+        console.log('loading more posts...');
+        $('#more-comments-loader').show();
+        var offset = parseInt($('#more-comments-loader').attr('data-offset'));
+        var increment = parseInt($('#more-comments-loader').attr('data-increment'));
+        return $.ajax({
+            url: '{{ path('comments_update_thread') }}',
+            type: 'post',
+            data: JSON.stringify({
+                'threadId' : '{{ thread }}',
+                'increment' : increment,
+                'offset' : offset
+            }),
+            contentType: 'json',
+            success: function(data)
+            {
+                if(data.message == "no_more_comments") {
+                    console.log('no more comments, setting no-more-comments class.');
+                    $('#more-comments-loader').html('No more posts to show.');
+                    $('.comment-wrapper:last').addClass('no-more-comments');
+                } else if(data.message == "error") {
+                    console.log('error received whilst loading - ' + data.details);
+                    $('#more-comments-loader').html('An error has occurred during loading.');
+                } else {
+                    console.log('appending comments...');
+                    $(".comments").append(data);
+                    $('#more-comments-loader').hide();
+                }
+
+                ajaxRequestSent = false;
+            }
+        });
+    }
+
 </script>

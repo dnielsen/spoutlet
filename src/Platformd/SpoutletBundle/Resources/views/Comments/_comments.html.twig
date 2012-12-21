@@ -1,100 +1,98 @@
-<div class="comments">
-    <a href="#comments"></a>
-    {% if comments | length > 0 %}
-        {% for commentArray in comments %}
-            {% set comment = commentArray[0] %}
-            {% if comment.parent is null and comment.deleted == false %}
-                <div id="post-id-{{ comment.id }}">
-                    <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
-                        <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
-                        <div class="comment-author">
-                            <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
-                            <div class="author-link"><a href="{{ path('accounts_profile', {'username': comment.author.username }) }}">{{ comment.author.username }}</a></div>
-                            <div class="author-level">Level 7</div>
-                            <div class="level-img"><div>5477 ARP</div></div>
-                        </div>
-                        <div class="comment-body">
-                            <p>{{ comment.body }}</p>
-                        </div>
-                        <div class="comment-footer">
-                            <div class="comment-vote">
-                                <div style="display:inline-table;">
-                                    <span id="comment-upvotes-{{ comment.id }}">{{ comment.getUpVoteCount }}</span>
-                                    <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{{ comment.id }}" data-votetype="up"></a>
-                                </div>
-                                <div style="display:inline-table;">
-                                    <span id="comment-downvotes-{{ comment.id }}">{{ comment.getDownVoteCount }}</span>
-                                    <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
-                                </div>
+{% if comments | length > 0 %}
+    {% for commentArray in comments %}
+        {% set comment = commentArray[0] %}
+        {% if comment.parent is null and comment.deleted == false %}
+            <div id="post-id-{{ comment.id }}">
+                <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
+                    <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
+                    <div class="comment-author">
+                        <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+                        <div class="author-link"><a href="{{ path('accounts_profile', {'username': comment.author.username }) }}">{{ comment.author.username }}</a></div>
+                        <div class="author-level">Level 7</div>
+                        <div class="level-img"><div>5477 ARP</div></div>
+                    </div>
+                    <div class="comment-body">
+                        <p>{{ comment.body }}</p>
+                    </div>
+                    <div class="comment-footer">
+                        <div class="comment-vote">
+                            <div style="display:inline-table;">
+                                <span id="comment-upvotes-{{ comment.id }}">{{ comment.getUpVoteCount }}</span>
+                                <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{{ comment.id }}" data-votetype="up"></a>
                             </div>
-                            <div class="comment-at" title="{{ comment.createdAt | date }}"></div>
+                            <div style="display:inline-table;">
+                                <span id="comment-downvotes-{{ comment.id }}">{{ comment.getDownVoteCount }}</span>
+                                <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
+                            </div>
+                        </div>
+                        <div class="comment-at" title="{{ comment.createdAt | date }}"></div>
 
-                            <div class="options" data-id="{{ comment.id }}">
-                                <div class="choices" id="choices-{{ comment.id }}">
-                                    <ul>
-                                        <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Report</a></li>
-                                        <li><a href="javascript:void(0);">Edit</a></li>
-                                        <li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">Delete</a></li>
-                                    </ul>
-                                </div>
-                                <div class="report-options" id="report-options-{{ comment.id }}">
-                                    <ul>
-                                        <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                        <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
-                                    </ul>
-                                </div>
+                        <div class="options" data-id="{{ comment.id }}">
+                            <div class="choices" id="choices-{{ comment.id }}">
+                                <ul>
+                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Report</a></li>
+                                    <li><a href="javascript:void(0);">Edit</a></li>
+                                    <li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a></li>
+                                </ul>
+                            </div>
+                            <div class="report-options" id="report-options-{{ comment.id }}">
+                                <ul>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
-                        <div class="comment-tri"></div>
-                        <div class="comment-replies">
-                            <input id="reply-text-{{ comment.id }}" type="text" /><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">Reply</a>
-                        </div>
+                </div>
+                <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
+                    <div class="comment-tri"></div>
+                    <div class="comment-replies">
+                        <input id="reply-text-{{ comment.id }}" type="text" /><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">Reply</a>
+                    </div>
 
-                        {% for reply in comment.replies %}
-                            {% if reply.deleted == false %}
-                                <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
-                                    <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
-                                    <div class="reply-body">
-                                        <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
-                                    </div>
-                                    <div class="comment-footer">
-                                        <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
-                                        <div class="options more-replies" data-id="{{ reply.id }}">
-                                           <div class="choices" id="choices-{{ reply.id }}">
-                                                <ul>
-                                                    <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">Report</a></li>
-                                                    <li><a href="javascript:void(0);">Edit</a></li>
-                                                    <li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="report-options" id="report-options-{{ reply.id }}">
-                                                <ul>
-                                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
-                                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
-                                                </ul>
-                                            </div>
+                    {% for reply in comment.replies %}
+                        {% if reply.deleted == false %}
+                            <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
+                                <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
+                                <div class="reply-body">
+                                    <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
+                                </div>
+                                <div class="comment-footer">
+                                    <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
+                                    <div class="options more-replies" data-id="{{ reply.id }}">
+                                       <div class="choices" id="choices-{{ reply.id }}">
+                                            <ul>
+                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">Report</a></li>
+                                                <li><a href="javascript:void(0);">Edit</a></li>
+                                                <li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="report-options" id="report-options-{{ reply.id }}">
+                                            <ul>
+                                                <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                                <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
+                                                <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                                <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    {% if comment.replies | length > 3 %}
-                        <div class="more-comments" id="more-comments-{{ comment.id }}">
-                            <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">More Replies</a>
-                        </div>
-                    {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-</div>
+                {% if comment.replies | length > 3 %}
+                    <div class="more-comments" id="more-comments-{{ comment.id }}">
+                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">More Replies</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 <script type="text/javascript">
     $(function () {
 
@@ -102,6 +100,10 @@
             $('.choices').hide();
             $('.report-options').hide();
          });
+
+        {% if offset is defined %}
+            $('#more-comments-loader').attr('data-offset', {{ offset }})
+        {% endif %}
 
         $('.comment-at').timeago();
         $('.replied-at').timeago();
@@ -140,7 +142,8 @@
             var reply = {
                 'thread' : '{{ thread }}',
                 'body' : $('#reply-text-' + id).val(),
-                'parent' : id
+                'parent' : id,
+                'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
             $.ajax({
                 url: '{{ path('comments_new') }}',
@@ -148,7 +151,7 @@
                 data: JSON.stringify(reply),
                 contentType: 'application/json',
                 success: function (html, status, req) {
-                    $('.comments').html(html);
+                    $('.thread').html(html);
                     $('.thread').unblock();
                 }
             });
@@ -187,10 +190,11 @@
                 type: 'post',
                 data: JSON.stringify({
                     'commentId' : commentId,
+                    'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
                 }),
                 contentType: 'application/json',
                 success: function(html, status, req) {
-                    $('.comments').html(html);
+                    $('.thread').html(html);
                     $('.thread').unblock();
                 }
             })

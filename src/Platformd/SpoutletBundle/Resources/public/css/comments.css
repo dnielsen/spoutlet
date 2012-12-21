@@ -283,3 +283,10 @@ a.comment-voting-button {
     text-align: center;
     padding: 5px;
 }
+
+#more-comments-loader {
+    display:none;
+    clear:both;
+     text-align:center;
+     padding-top:15px;
+}

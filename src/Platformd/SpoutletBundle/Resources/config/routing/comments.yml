@@ -2,6 +2,13 @@ comments_thread:
     pattern: /thread/{threadId}
     defaults: { _controller: "SpoutletBundle:Comments:thread" }
 
+comments_update_thread:
+    pattern: /update-thread
+    defaults: { _controller: "SpoutletBundle:Comments:updateThread" }
+    requirements:
+        _format: json
+        _method: POST
+
 comments_replies:
     pattern: /replies/{commentId}
     defaults: { _controller: "SpoutletBundle:Comments:replies" }

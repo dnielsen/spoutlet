@@ -33,7 +33,29 @@ class CommentRepository extends EntityRepository
             ->andWhere('c.deleted <> true')
             ->setParameter('thread', $thread)
             ->setParameter('up', 'up')
-            ->orderBy('upvotes', 'DESC')
+            ->addOrderBy('upvotes', 'DESC')
+            ->addOrderBy('c.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+
+        return $result;
+    }
+
+    public function findCommentsForThreadSortedByVotesWithOffset($thread, $offset, $limit=25)
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes')
+            ->leftJoin('c.thread', 't')
+            ->leftJoin('c.votes', 'v')
+            ->andWhere('t.id = :thread')
+            ->andWhere('c.parent IS NULL')
+            ->andWhere('c.deleted <> true')
+            ->setParameter('thread', $thread)
+            ->setParameter('up', 'up')
+            ->addOrderBy('upvotes', 'DESC')
+            ->addOrderBy('c.createdAt', 'DESC')
+            ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
@@ -41,3 +63,4 @@ class CommentRepository extends EntityRepository
         return $result;
     }
 }
+

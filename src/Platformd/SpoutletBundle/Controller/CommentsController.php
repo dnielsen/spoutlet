@@ -59,6 +59,8 @@ class CommentsController extends Controller
         $parent = $params['parent'] ? $em->getRepository('SpoutletBundle:Comment')->find((int) $params['parent']) : null;
         $author = $this->getUser();
         $body   = $params['body'];
+        $threadId = $thread->getId();
+        $commentCount = $params['commentCount'];
 
         if ($parent !== null) {
             $comment->setParent($parent);
@@ -76,8 +78,12 @@ class CommentsController extends Controller
 
         $this->createAcl($comment);
 
-        return $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
-            'thread' => $thread,
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentCount);
+
+        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+            'thread'    => $threadId,
+            'comments'  => $comments,
+            'offset'    => $commentCount,
         ));
     }
 
@@ -87,7 +93,7 @@ class CommentsController extends Controller
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
         if (!$this->isGranted('ROLE_USER')) {
-            $response->setContent(json_encode(array("success" => false)));
+            $response->setContent(json_encode(array("success" => false, "details" => 'not logged in')));
             return $response;
         }
 
@@ -95,14 +101,14 @@ class CommentsController extends Controller
         $content  = $request->getContent();
 
         if (empty($content)) {
-            $response->setContent(json_encode(array("success" => false)));
+            $response->setContent(json_encode(array("success" => false, "details" => 'no content passed')));
             return $response;
         }
 
         $params   = json_decode($content, true);
 
         if (!isset($params['commentId'])) {
-            $response->setContent(json_encode(array("success" => false)));
+            $response->setContent(json_encode(array("success" => false, "details" => 'no comment id set')));
             return $response;
         }
 
@@ -110,12 +116,12 @@ class CommentsController extends Controller
         $comment    = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
 
         if (!$comment) {
-            $response->setContent(json_encode(array("success" => false)));
+            $response->setContent(json_encode(array("success" => false, "details" => 'comment not found')));
             return $response;
         }
 
         if (!$this->checkAcl('DELETE', $comment)) {
-            $response->setContent(json_encode(array("success" => false)));
+            $response->setContent(json_encode(array("success" => false, "details" => 'permission check failure')));
             return $response;
         }
 
@@ -125,12 +131,20 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->flush();
 
-        return $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
-            'thread' => $comment->getThread(),
+        $commentCount = $comment->getParent() ? $params['commentCount'] : $params['commentCount'] - 1;
+
+        $threadId = $comment->getThread()->getId();
+
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentCount);
+
+        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+            'thread'    => $threadId,
+            'comments'  => $comments,
+            'offset'    => $commentCount,
         ));
     }
 
-    public function threadAction($threadId, $object, $commentLimit=25)
+    public function threadAction($threadId, $object, $commentLimit=5)
     {
         $em         = $this->getDoctrine()->getEntityManager();
         $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
@@ -144,7 +158,54 @@ class CommentsController extends Controller
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
+            'offset' => $commentLimit,
         ));
+    }
+
+    public function updateThreadAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "no content passed")));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset'])) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
+            return $response;
+        }
+
+        $threadId    = $params['threadId'];
+        $increment   = $params['increment'];
+        $offset      = $params['offset'];
+
+        $em         = $this->getDoctrine()->getEntityManager();
+        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
+
+        if (!$thread) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "thread not found")));
+            return $response;
+        }
+
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotesWithOffset($threadId, $offset, $increment);
+
+        if (!$comments) {
+            $response->setContent(json_encode(array("message" => "no_more_comments")));
+            return $response;
+        }
+
+        return $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
+            'thread'    => $threadId,
+            'comments'  => $comments,
+            'offset'    => $offset + count($comments),
+        ));
+
     }
 
     private function createThread($threadId, $object)
