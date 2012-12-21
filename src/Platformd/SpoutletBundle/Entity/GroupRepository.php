@@ -224,7 +224,7 @@ class GroupRepository extends EntityRepository
     public function findGroupStats(array $filters = array())
     {
         $filters = array_merge(
-            array('groupName' => '', 'catagory' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
             $filters
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
