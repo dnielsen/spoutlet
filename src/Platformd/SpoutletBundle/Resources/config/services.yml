@@ -159,3 +159,22 @@ services:
 
     platformd.cache.memcached:
         class: Memcached
+
+    platformd.form.transformer.html_purifier_basic:
+        class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
+        arguments:
+            - "@exercise_html_purifier.editor_basic"
+
+    platformd.form.transformer.html_purifier_admin:
+        class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
+        arguments:
+            - "@exercise_html_purifier.editor_admin"
+
+    platformd.form.type.editor_field:
+        class: Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType
+        arguments:
+            - "@platformd.form.transformer.html_purifier_basic"
+            - "@platformd.form.transformer.html_purifier_admin"
+            - "@security.context"
+        tags:
+            - { name: form.type, alias: purifiedTextarea }
