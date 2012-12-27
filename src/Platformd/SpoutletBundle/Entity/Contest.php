@@ -51,6 +51,7 @@ class Contest implements LinkableInterface
     private static $validCategories = array(
         'image',
         'video',
+        'group',
     );
 
     /**
