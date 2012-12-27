@@ -1,0 +1,13 @@
+admin_featured_index:
+    pattern: /
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:featuredIndex" }
+
+admin_featured_list:
+    pattern: /list/{category}
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:featuredList" }
+
+admin_unfeature_media:
+    pattern: /unfeature/{item}
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:unfeature" }
+
+

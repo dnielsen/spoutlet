@@ -1,0 +1,33 @@
+admin_image_find:
+    pattern: /metrics/find-images
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:find" }
+
+admin_image_summary:
+    pattern: /metrics/image-summary
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:exportMetrics" }
+
+admin_delete_media:
+    pattern: /delete/{id}
+    defaults: { _controller: SpoutletBundle:GalleryAdmin:deleteMedia, site: ~ }
+
+admin_gallery_new:
+    pattern: /new
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:new" }
+
+admin_gallery_index:
+    pattern: /
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:index" }
+
+admin_gallery_edit:
+    pattern: /{slug}/edit
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:edit" }
+
+admin_gallery_create:
+    pattern: /create
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:new" }
+    requirements: { _method: post }
+
+admin_gallery_update:
+    pattern:  /{slug}/update
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:edit" }
+    requirements: { _method: post }

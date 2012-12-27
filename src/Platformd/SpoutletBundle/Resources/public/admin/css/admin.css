@@ -107,6 +107,44 @@ fieldset .row-fluid.first div[class*="span"] {
     border-radius: 5px;
 }
 
+.game-page-form li.restriction-li {
+    text-align: center;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.game-page-form label.control-label {
+    width: 100px;
+}
+
+.game-page-form div.controls {
+    margin-left: 0px;
+}
+
+.game-page-form a.remove {
+    float: left;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 18px;
+    color: black;
+    text-shadow: 0 1px 0 white;
+    opacity: 0.2;
+}
+
+.game-page-form .rules li.new-link div.wrap {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
 table#content-reports {
     border: 1px solid #CCCCCC;
     text-align: left;
@@ -166,3 +204,23 @@ table#content-reports th#content-report-action {
     min-width: 200px;
 }
 
+table#content-reports th#content-report-action {
+    min-width: 200px;
+}
+
+.admin-contest-remove-entry,
+.admin-contest-delete-media {
+    width: 160px;
+    text-align: right;
+}
+
+.admin-contest-remove-entry label,
+.admin-contest-delete-media label {
+    display: inline;
+    width: 140px;
+}
+
+.admin-contest-remove-entry input,
+.admin-contest-delete-media input {
+    margin: 0;
+}

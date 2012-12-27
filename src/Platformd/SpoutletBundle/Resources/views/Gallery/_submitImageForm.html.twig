@@ -1,0 +1,35 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+<div class="page-form">
+    {{ form_errors(form) }}
+    <p>
+        <div>
+            <span style="font-weight:bold;">{{ 'galleries.submit_photo_step1' | trans }}</span>
+            {{ 'galleries.submit_photo_step1_detail' | trans }}
+        </div>
+    </p>
+    {% if contest is defined %}
+    <p>{{ 'contests.photo_submission_message' | trans }}</p>
+    {% endif %}
+    <p>
+        <span style="font-weight:bold;">{{ 'galleries.submit_photo_file_restrictions' | trans }}</span>
+        <ul>
+            <li>{{ 'galleries.submit_photo_restriction1' | trans}}</li>
+            <li>{{ 'galleries.submit_photo_restriction2' | trans}}</li>
+            <li>{{ 'galleries.submit_photo_restriction3' | trans}}</li>
+            <li>{{ 'galleries.submit_photo_restriction4' | trans}}</li>
+            <li>{{ 'galleries.submit_photo_restriction5' | trans}}</li>
+        </ul>
+    </p>
+    {% if contest is defined %}
+         <p>{{ 'contests.igames_disclaimer' | trans }}</p>
+        {% if isUnlimited %}
+            <p style="color:#ff0000;">{{ 'contests.photo_submissions_unlimited' | trans }}</p>
+        {% else %}
+            <p style="color:#ff0000;">{{ 'contests.photo_submissions_left' | trans | format(contest.maxEntries)}}</p>
+        {% endif %}
+    {% endif %}
+    <input type="file" id="galleryImages" />
+
+    {{ form_widget(form.galleryImages) }}
+</div>

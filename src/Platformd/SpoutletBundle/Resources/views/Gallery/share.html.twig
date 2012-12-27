@@ -1,0 +1,88 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'galleries.submit_photo_share' | trans %}
+
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ media.title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="{{ openGraphThumb }}" />
+    <meta property="og:description" content="{{ media.description }}" />
+{% endblock %}
+
+{% block content %}
+<div style="min-height:400px;">
+    <h3 style="text-align:center;color:#fff;margin-top: 50px;font-weight:bold;font-size:24px;">{{ 'galleries.submit_photo_publish_share' | trans }}<br />
+        {{ 'galleries.submit_photo_publish_share_2' | trans }}
+    </h3>
+    <div style="width:100%;text-align:center;padding:80px 0 80px 0;">
+        <a href="javascript:void(0);" id="facebook-share-button" style="border: none;">
+            <img src="{{ asset('bundles/spoutlet/images/icons/fb_64x64px.png') }}" style="width:64px;height:64px;" alt="Share on Facebook" />
+        </a>
+        <a href="javascript:void(0);" id="twitter-share-button" style="border: none;">
+            <img src="{{ asset('bundles/spoutlet/images/icons/tw_64x64.png') }}" style="width:64px;height:64px;" alt="Share on Twitter" />
+        </a>
+    </div>
+    <div style="padding: 20px 0 0 0;width:100%;text-align:center">
+        <a href="{{ path('accounts_photos') }}" class="btn">{{ 'galleries.submit_photo_my_photos' | trans }}</a>
+        <a href="{{ path('gallery_index') }}" class="btn" style="margin-left: 20px;">{{ 'galleries.gallery_go_to_galleries' | trans }}</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            var postToFeed = function() {
+
+                // calling the API ...
+                var obj = {
+                  method: 'feed',
+                  link: "{{ path('gallery_media_show', { id: media.id }) | absolute_url }}",
+                  picture: '{{ openGraphThumb }}',
+                  name: 'Alienware Arena Photos',
+                  caption: '{{ media.title }}',
+                  description: '{{ media.description }}'
+                };
+
+                function callback(response) {
+                  document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+                }
+
+                FB.ui(obj, callback);
+            }
+
+            $('#facebook-share-button').click(function () {
+                postToFeed();
+            });
+
+            $('#twitter-share-button').click(function () {
+                var url = "http://twitter.com/share?url={{ path('gallery_media_show', { id : media.id }) | absolute_url | url_encode() }}";
+                var width  = 575,
+                    height = 400,
+                    left   = ($(window).width()  - width)  / 2,
+                    top    = ($(window).height() - height) / 2,
+                    opts   = 'status=1' +
+                             ',width='  + width  +
+                             ',height=' + height +
+                             ',top='    + top    +
+                             ',left='   + left;
+
+                window.open(url, 'twitter', opts);
+
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

@@ -104,6 +104,52 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
+platformd.user.account.photos: My Photos
+platformd.account_page.photos.my_photos: My Photos
+platformd.account_page.photos.submit: Submit Photo
+
 wallpapers: Fondo de pantalla
 exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
+
+galleries:
+    navigation_label: Photo Gallery
+    index_page_title: Galleries
+    index_page_header: ALIENWARE ARENA PHOTOS
+    submit_photo_page_title: Submit Image
+    submit_photo_page_header: Submit Image
+
+    submit_photo_step1: Step 1:
+    submit_photo_step1_detail: Submit Image
+    submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
+    submit_photo_file_restrictions: File Restrictions
+    submit_photo_restriction1: Only gaming related images. Everything else will get deleted without notice.
+    submit_photo_restriction2: No copyrighted material.
+    submit_photo_restriction3: No images of children ages 13 and under.
+    submit_photo_restriction4: Max file size per image is 5MB.
+    submit_photo_restriction5: Files supported: JPG, GIF and PNG.
+
+    submit_photo_add: Add
+    submit_photo_publish_share: Your photos are published. Share these awesome photos with your friends!
+    submit_photo_share: Share Photos
+
+    submit_photo_step2: Step 2:
+    submit_photo_step2_detail: Click on an image to provide details.
+    submit_photo_image_name: Image Name:
+    submit_photo_image_desc: Description:
+    submit_photo_image_galleries: Galleries:
+    submit_photo_button_publish: Publish
+    submit_photo_publish_success: Success!
+    submit_photo_publish_message: Your photos were published successfully.
+
+    show_photo_details_label: Photo Details
+    show_photo_details_upload_on: Uploaded On
+    show_photo_details_views: Views:
+
+    show_photo_vote_label: Vote
+
+    gallery_filter_option_latest: Latest
+    gallery_filter_option_popular: Popular
+    gallery_filter_option_featured: Featured
+
+    gallery_see_all: See All

@@ -1,0 +1,56 @@
+<div id="quick-vote-dialog" class="quick-vote-wrapper" style="display: none; padding-top: 25px; height: 100px" title="Quick Vote">
+    <div class="media-voting">
+        <div style="padding:5px 5px 0 5px;text-align: center;">
+            <div class="media-voting-wrapper" style="margin-top: 0;">
+                <div style="display:inline-table;font-size:16px;height:30px;vertical-align:middle;padding-right:10px;">
+                    {{ 'galleries.vote_now' | trans }}
+                </div>
+                {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+            </div>
+            <div id="media-voting-vote-response" style="display: none;">
+                {{ 'galleries.vote_success' | trans }}
+            </div>
+            <div id="media-voting-login-required" style="display: none;">
+                You must be <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">logged in</a> to vote.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.quick-vote-dialog-wrapper').remove();
+
+        var quickVoteDialog = $('#quick-vote-dialog').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 160,
+            width: 310,
+            draggable: false,
+            resizable: false,
+            dialogClass: 'quick-vote-dialog-wrapper',
+            close: function (e, ui) {
+
+            }
+        });
+
+        $('.quick-vote-link').click(function () {
+            var mediaId = $(this).attr('media-data');
+            $('#media-id').val(mediaId);
+
+            $('.media-voting-wrapper').show();
+            $('#media-voting-vote-response').text('{{ "galleries.vote_success" | trans }}');
+            $('#media-voting-vote-response').hide();
+
+            quickVoteDialog.dialog('open');
+        });
+
+        $('#quick-vote-dialog').each(function() {
+            if (!$(this).parent().hasClass('quick-vote-dialog-wrapper')) {
+                $(this).remove();
+            }
+        });
+
+    });
+</script>
+

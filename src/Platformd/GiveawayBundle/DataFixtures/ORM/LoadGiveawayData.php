@@ -14,7 +14,7 @@ class LoadGiveawayData extends AbstractFixture implements OrderedFixtureInterfac
         $siteRepo   = $manager->getRepository('SpoutletBundle:Site');
 
         $machineGiveaway = new Giveaway();
-        $machineGiveaway->setSites($siteRepo->find(1));
+        $machineGiveaway->setSites(array($siteRepo->find(1)));
         $machineGiveaway->setName('My machine giveaway');
         $machineGiveaway->setStatus('active');
 

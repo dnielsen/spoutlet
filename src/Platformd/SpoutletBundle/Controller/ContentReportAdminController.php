@@ -29,20 +29,24 @@ class ContentReportAdminController extends Controller
             $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
+            $galleryMedia = $repo->getContentReportTypeForAllSitesArchived("GalleryMedia");
             $groups      = $repo->getContentReportTypeForAllSitesArchived("Group");
         } elseif ($mode == "deletedContent") {
             $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
+            $galleryMedia = $repo->getContentReportTypeForAllSitesDeletedContent("GalleryMedia");
             $groups      = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
         } elseif ($mode == "manage") {
             $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
+
+            $galleryMedia = $repo->getContentReportTypeForAllSites("GalleryMedia");
             $groups      = $repo->getContentReportTypeForAllSites("Group");
         }
 
-        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $groups);
+        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $galleryMedia, $groups);
 
         usort($allReports, function($a, $b) {
 
@@ -84,6 +88,7 @@ class ContentReportAdminController extends Controller
         $groupVideo = $report->getGroupVideo();
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $galleryMedia = $report->getGalleryMedia();
         $group = $report->getGroup();
 
         if ($groupVideo) {
@@ -104,6 +109,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGroupImage($groupImage);
             $type = 'GroupImage';
             $id = $groupImage->getId();
+        } else if ($galleryMedia) {
+            $galleryMedia->setDeleted(false);
+            $galleryMedia->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
+            $type = 'GalleryMedia';
+            $id = $galleryMedia->getId();
         } else if ($group) {
             $group->setDeleted(false);
             $group->setDeletedReason(null);
@@ -136,6 +147,7 @@ class ContentReportAdminController extends Controller
         $groupVideo = $report->getGroupVideo();
         $groupNews = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $galleryMedia = $report->getGalleryMedia();
         $group          = $report->getGroup();
 
         if ($groupVideo) {
@@ -158,6 +170,13 @@ class ContentReportAdminController extends Controller
             $groupImage->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupImage);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
+
+        } else if ($galleryMedia) {
+
+            $galleryMedia->setDeleted(true);
+            $galleryMedia->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($galleryMedia);
+            $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
 
         } else if ($group) {
 
@@ -187,9 +206,10 @@ class ContentReportAdminController extends Controller
 
         $report = $repo->find($contentReportId);
 
-        $groupVideo     = $report->getGroupVideo();
-        $groupNews      = $report->getGroupNews();
-        $groupImage     = $report->getGroupImage();
+        $groupVideo = $report->getGroupVideo();
+        $groupNews = $report->getGroupNews();
+        $groupImage = $report->getGroupImage();
+        $galleryMedia = $report->getGalleryMedia();
         $group          = $report->getGroup();
 
         if ($groupVideo) {
@@ -215,6 +235,14 @@ class ContentReportAdminController extends Controller
             $em->persist($groupImage);
             $type = 'GroupImage';
             $id = $groupImage->getId();
+
+        } else if ($galleryMedia) {
+
+            $galleryMedia->setDeleted(false);
+            $galleryMedia->setDeletedReason(null);
+            $em->persist($galleryMedia);
+            $type = 'GalleryMedia';
+            $id = $galleryMedia->getId();
 
         } else if ($group) {
 

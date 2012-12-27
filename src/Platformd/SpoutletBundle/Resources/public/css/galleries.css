@@ -1,0 +1,356 @@
+.gallery-media-wrapper {
+    padding: 5px 0 5px 0;
+}
+
+.gallery-media {
+    cursor: pointer;
+    border: 2px solid #4A4A4A;
+}
+
+.photo-description {
+    width: 350px;
+    height: 150px;
+}
+
+.active {
+    border: 2px solid #009CDA;
+}
+
+.photo-title {
+    width: 350px;
+}
+
+#media-social {
+    margin-top: 10px;
+}
+
+.photo-author {
+    display: inline-table;
+    width:100px;
+}
+
+.photo-author-link {
+    padding: 3px 0 0 0;
+}
+
+.photo-author img {
+    width: 84px;
+    height: 84px;
+}
+
+.photo-date {
+    padding-top:5px;
+}
+
+.photo-views {
+    padding-top:5px;
+}
+
+.photo-voting-wrapper {
+    display: inline-table;
+    vertical-align: top;
+    width: 180px;
+}
+
+.photo-voting-wrapper .photo-votes {
+    display: inline-table;
+    padding: 25px 5px;
+}
+
+.media-voting-wrapper {
+    display: inline-table;
+    padding: 0 10px;
+    margin-top: 15px;
+}
+
+.description {
+    width: 100%;
+    padding: 3px 3px 3px 0;
+}
+
+.gallery-media-thumb-wrapper {
+    display: inline-table;
+    margin: 0 0 0 22px;
+    padding: 5px 0 0 0;
+}
+
+.first {
+    margin: 0;
+}
+
+.user-media-thumb-wrapper {
+    display: inline-table;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+.first-media {
+    margin: 0;
+}
+
+.gallery-media-thumb {
+    border: 1px solid #4A4A4A;
+    width: 135px;
+    height: 80px;
+    position: relative;
+}
+
+.gallery-media-thumb-small {
+    border: 1px solid #4A4A4A;
+    width: 116px;
+    height: 69px;
+    position: relative;
+}
+
+.gallery-media-thumb-square {
+    border: 1px solid #4A4A4A;
+    width: 82px;
+    height: 82px;
+}
+
+.gallery-media-thumb a {
+    border: none;
+}
+
+.gallery-media-thumb img {
+    cursor: pointer;
+    width: 135px;
+    height: 80px;
+}
+
+.gallery-media-thumb-small img {
+    cursor: pointer;
+    width: 116px;
+    height: 69px;
+}
+
+.media-title {
+    width: 115px;
+}
+
+#media-filter-options {
+    width: 200px;
+}
+
+.social-media-share {
+    padding: 10px 0 10px 0;
+}
+
+#facebook-share {
+    display: inline-table;
+}
+
+#twitter-share {
+    display: inline-table;
+    margin-left: 20px;
+}
+
+.media-publish-error {
+    color: #ff0000;
+}
+
+.media-voting {
+    margin: 10px auto;
+    width: 100%;
+    display: inline-block;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background: #252525;
+    min-height: 20px;
+}
+
+a.media-voting-button {
+    width: 29px;
+    height: 29px;
+    float: left;
+}
+
+.up {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 0;
+}
+
+.up:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 29px;
+}
+
+.down {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 29px 0;
+}
+
+.down:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 29px 29px;
+}
+
+.nav-prev, .nav-next {
+    background: url('/bundles/spoutlet/images/other-images-prev-next-sprite.png');
+    height: 82px;
+    width: 15px;
+    display: inline;
+    border: 1px solid #4a4a4a;
+}
+
+.nav-prev {
+    background-position: 0 0;
+}
+
+.nav-next {
+    background-position: 15px 0;
+}
+
+.scrollable {
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+}
+
+.scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position:absolute;
+}
+
+.items .items-wrapper {
+    width: 260px;
+    margin-left: 5px;
+    float: left;
+}
+
+#gallery-show-submit-media {
+    padding: 5px 15px;
+    min-width: 95px;
+}
+
+#scrollable-other-media {
+    height: 84px;
+    width: 260px;
+    margin-bottom: 10px;
+}
+
+#media-voting-vote-response,
+#media-voting-login-required {
+    display: inline-table;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.submit-media {
+    text-align: center;
+    padding: 10px 0 10px 0;
+}
+
+.gallery-items {
+    float: left;
+}
+
+.page_link {
+    font-size: 10px;
+    color: #fff;
+    padding: 3px 3px 3px 3px;
+    margin: 0 3px;
+    padding: 3px 4px;
+    background: #121212;
+    border: 1px solid #4a4a4a;
+}
+
+.page_link:hover {
+    color: #fff;
+    border: 1px solid #01a2d2;
+}
+
+.active_page {
+    font-size: 12px;
+    margin: 0 3px;
+    padding: 4px 5px;
+    background: #121212;
+    border: 1px solid #01a2d2;
+}
+
+.previous_link {
+    display: none;
+}
+
+.next_link {
+    display: none;
+}
+
+.gallery-slider {
+    width: 636px;
+    height: 295px;
+}
+
+.flag {
+    padding-left: 20px;
+    background: url('/bundles/spoutlet/images/flag_content.png') no-repeat;
+}
+
+.gallery-media-thumb .thumbnail-vote-caption,
+.gallery-media-thumb-small .thumbnail-vote-caption,
+.account-image-image .thumbnail-caption {
+
+    background:#000;
+    color:#fff;
+    position:absolute;
+    height:20px;
+    left: 50%;
+    text-align: center;
+    border: 1px solid #01a2d2;
+
+    /* hide it by default */
+    display:none;
+
+    /* opacity setting */
+    filter:alpha(opacity=70);    /* ie  */
+    -moz-opacity:0.7;    /* old mozilla browser like netscape  */
+    -khtml-opacity: 0.7;    /* for really really old safari */
+    opacity: 0.7;    /* css standard, currently it works in most modern browsers like firefox,  */
+
+}
+
+.media-thumb {
+    max-width: 100%;
+    vertical-align: middle;
+    border: 0;
+}
+
+.gallery-media-thumb .thumbnail-vote-caption a,
+.gallery-media-thumb-small .thumbnail-vote-caption a,
+.account-image-image .thumbnail-caption a {
+
+    text-decoration:none;
+    color:#fff;
+    font-size:12px;
+
+    /* add spacing and make the whole div clickable*/
+    padding-top: 1px;
+    display:block;
+}
+
+.gallery-media-thumb .thumbnail-vote-caption {
+    width:100px;
+    margin-left: -50px;
+    bottom:5px;
+}
+
+.gallery-media-thumb-small .thumbnail-vote-caption {
+    width:80px;
+    margin-left: -40px;
+    bottom: 2px;
+}
+
+.account-image-image .thumbnail-caption {
+    width:88px;
+    margin-left: -44px;
+    bottom: 5px;
+}
+
+.account-image-image {
+    border: 1px solid #4A4A4A;
+    width: 177px;
+    height: 107px;
+    position: relative;
+}

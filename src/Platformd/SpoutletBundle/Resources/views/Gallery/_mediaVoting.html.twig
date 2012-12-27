@@ -1,0 +1,78 @@
+<input type="hidden" id="media-id" />
+
+<div style="display:inline-table;margin-top:3px">
+    <a class="media-voting-button up" id="media-voting-vote-up" href="javascript:void(0);" tabindex="-1"></a>
+</div>
+<div style="display:inline-table;margin-top:3px">
+    <a class="media-voting-button down" id="media-voting-vote-down" href="javascript:void(0);" tabindex="-1"></a>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#media-voting-vote-up').click(function () {
+            $('.media-voting-wrapper').fadeOut();
+            $.ajax({
+                url: '{{ path('gallery_media_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : {% if mediaId is defined %}'{{ mediaId }}'{% else %}$('#media-id').val(){% endif %},
+                    'voteType' : 'up'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        if (data.messageForUser == 'FORCE_LOGIN_TO_VOTE') {
+                            $('#media-voting-login-required').fadeIn();
+                        } else {
+                            $('#media-voting-vote-response').text(data.messageForUser);
+                            $('#media-voting-vote-response').fadeIn();
+                        }
+                    } else {
+                        $('#media-voting-vote-response').fadeIn();
+                        $('#media-upvotes').hide();
+                        $('#media-upvotes').text(data.messageForUser);
+                        $('#media-upvotes').fadeIn();
+                        $('#media-downvotes').hide();
+                        $('#media-downvotes').text(100-parseInt(data.messageForUser));
+                        $('#media-downvotes').fadeIn();
+                        $('#media-voting-success').fadeIn();
+                    }
+                    $('#close-dialog').text('Close');
+                }
+            })
+        });
+
+        $('#media-voting-vote-down').click(function () {
+            $('.media-voting-wrapper').fadeOut();
+            $.ajax({
+                url: '{{ path('gallery_media_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : {% if mediaId is defined %}'{{ mediaId }}'{% else %}$('#media-id').val(){% endif %},
+                    'voteType' : 'down'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(!data.success) {
+                        if (data.messageForUser == 'FORCE_LOGIN_TO_VOTE') {
+                            $('#media-voting-login-required').fadeIn();
+                        } else {
+                            $('#media-voting-vote-response').text(data.messageForUser);
+                            $('#media-voting-vote-response').fadeIn();
+                        }
+                    } else {
+                        $('#media-voting-vote-response').fadeIn();
+                            $('#media-upvotes').hide();
+                            $('#media-upvotes').text(data.messageForUser);
+                            $('#media-upvotes').fadeIn();
+                            $('#media-downvotes').hide();
+                            $('#media-downvotes').text(100-parseInt(data.messageForUser));
+                            $('#media-downvotes').fadeIn();
+                    }
+                    $('#close-dialog').text('Close');
+                }
+            })
+        });
+    });
+</script>
