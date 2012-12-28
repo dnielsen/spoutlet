@@ -12,7 +12,8 @@
                         <div class="level-img"><div>5477 ARP</div></div>
                     </div>
                     <div class="comment-body">
-                        <div class="editable" id="comment-body-{{ comment.id }}">{{ comment.body }}</div>
+                        <div class="comment-errors" id="comment-errors-{{ comment.id }}"></div>
+                        <div class="editable" id="comment-body-{{ comment.id }}">{{ comment.body | nl2br }}</div>
                     </div>
                     <div class="comment-footer">
                         <div class="comment-vote">
@@ -37,10 +38,10 @@
                             </div>
                             <div class="report-options" id="report-options-{{ comment.id }}">
                                 <ul>
-                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
-                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                    <li><a href="#" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
+                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                    <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -49,7 +50,7 @@
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
                     <div class="comment-tri"></div>
                     <div class="comment-replies">
-                        <input id="reply-text-{{ comment.id }}" type="text" /><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">Reply</a>
+                        <input id="reply-text-{{ comment.id }}" type="text" required="required" /><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">Reply</a>
                     </div>
 
                     {% for reply in comment.replies %}
@@ -57,7 +58,8 @@
                             <div class="comment-reply{% if loop.index > 3 %} hidden{% endif %}" id="post-id-{{ reply.id }}">
                                 <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
                                 <div class="reply-body">
-                                    <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>{{ reply.body }}
+                                    <a href="{{ path('accounts_profile', {'username': reply.author.username }) }}">{{ reply.author.username }}</a>
+                                    <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body }}</div>
                                 </div>
                                 <div class="comment-footer">
                                     <div class="replied-at" title="{{ reply.createdAt | date }}"></div>
@@ -65,7 +67,7 @@
                                        <div class="choices" id="choices-{{ reply.id }}">
                                             <ul>
                                                 <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">Report</a></li>
-                                                <li><a href="javascript:void(0);">Edit</a></li>
+                                                <li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">Edit</a></li>
                                                 <li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a></li>
                                             </ul>
                                         </div>
@@ -182,20 +184,57 @@
             })
         });
 
-        $('.editable').editable('{{ path('comments_edit') }}', {
-                type    : 'textarea',
-                event   : 'edit-comment',
-                submit  : 'Save',
-                cancel  : 'Cancel',
-                cssclass: 'editable-comment-form',
-                onblur  : 'ignore',
-                width   : 523,
-                height  : 90
-        });
+
+        var toggleEdit = function(element, id, text) {
+            if(element.find('.comment-edit-textarea').length == 0) {
+                element.text('');
+                element.append("<textarea class='comment-edit-textarea' id='comment-edit-" +  id + "' required='required' />");
+                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>Save</button>");
+
+                element.append("<button class='comment-edit-btn' type='cancel' id='comment-edit-cancel-" + id + "'>Cancel</button>");
+
+                $('#comment-edit-cancel-' + id).click(function () {
+                   toggleEdit(element, id, text);
+                });
+
+                $('#comment-edit-save-' + id).click(function () {
+                    var comment = {
+                        'id' : id,
+                        'body': $('#comment-edit-' + id).val()
+                    };
+                    $.ajax({
+                        url: '{{ path('comments_edit') }}',
+                        type: 'post',
+                        data: JSON.stringify(comment),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if(data.success) {
+                                element.html(data.details);
+                                if($('#comment-errors-' + id).is(':visible')) {
+                                    $('#comment-errors-' + id).fadeOut();
+                                }
+                            } else {
+                                $('#comment-errors-' + id).text(data.details);
+                                $('#comment-errors-' + id).fadeIn();
+                            }
+
+                        }
+                    });
+                });
+
+                $('#comment-edit-' + id).val(text);
+            } else {
+                element.text(text);
+                if($('#comment-errors-' + id).is(':visible')) {
+                    $('#comment-errors-' + id).fadeOut();
+                }
+            }
+        }
 
         $('.edit-options-link').click(function (event) {
             var contentId = $(this).attr('data-id');
-            $('#comment-body-' + contentId).trigger('edit-comment');
+            toggleEdit($('#comment-body-' + contentId), contentId, $('#comment-body-' + contentId).text());
             $('#choices-' + contentId).toggle('fast');
         });
 

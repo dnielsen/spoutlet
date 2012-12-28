@@ -90,6 +90,7 @@ class CommentsController extends Controller
     public function editAction(Request $request)
     {
         $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
         if (!$this->isGranted('ROLE_USER')) {
             $response->setContent(json_encode(array("success" => false, "details" => 'not logged in')));
@@ -106,16 +107,18 @@ class CommentsController extends Controller
 
         $params   = json_decode($content, true);
 
-        $response->setContent(urldecode($request->get('value')));
-        return $response;
-
-        if (!isset($params['commentId'])) {
-            $response->setContent(json_encode(array("success" => false, "details" => 'no comment id set')));
+        if(!isset($params['id']) || !isset($params['body'])) {
+            $response->setContent(json_encode(array("success" => false, "details" => "There was an error processing your comment.")));
             return $response;
         }
 
+
+        $id         = (int)$params['id'];
+        $body       = $params['body'];
         $em         = $this->getDoctrine()->getEntityManager();
-        $comment    = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
+        $comment    = $em->getRepository('SpoutletBundle:Comment')->find($id);
+
+
 
         if (!$comment) {
             $response->setContent(json_encode(array("success" => false, "details" => 'comment not found')));
@@ -126,6 +129,18 @@ class CommentsController extends Controller
             $response->setContent(json_encode(array("success" => false, "details" => 'permission check failure')));
             return $response;
         }
+
+        if(empty($body)) {
+            $response->setContent(json_encode(array("success" => false, "details" => "The comment must contain at least two characters.")));
+            return $response;
+        }
+
+        $comment->setBody($body);
+        $em->persist($comment);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true, "details" => $body)));
+        return $response;
     }
 
     public function deleteAction(Request $request) {

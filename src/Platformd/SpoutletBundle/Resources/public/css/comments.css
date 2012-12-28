@@ -66,16 +66,16 @@
 }
 
 .comment-wrapper .comment-footer {
-    position: absolute;
-    bottom: 5px;
-    right: 0px;
-    width: 540px;
-    color: #9b9b9b;
+    float: right;
+    width: 100%;
+    color: #9B9B9B;
+    padding-top: 5px;
 }
 
 .comment-at {
     float: left;
     width: auto;
+    margin-left: 90px;
 }
 
 .comment-vote {
@@ -95,7 +95,7 @@
     background: url('/bundles/spoutlet/css/bootstrap/img/glyphicons-halflings-white.png') no-repeat;
     background-position: -432px 0;
     right: 5px;
-    bottom: 0px;
+    bottom: 5px;
     cursor: pointer;
 }
 
@@ -291,16 +291,22 @@ a.comment-voting-button {
      padding-top:15px;
 }
 
-.editable-comment-form textarea {
+.comment-edit-textarea {
     overflow-y: hidden;
     white-space: pre-wrap;
 }
 
-.editable-comment-form button {
+.comment-edit-btn {
     padding: 5px 15px;
     min-width: 95px;
 }
 
-.editable-comment-form button[type="cancel"] {
+.comment-edit-btn[type="cancel"] {
     margin-left: 10px;
+}
+
+.comment-errors {
+    display: none;
+    color: #ff0000;
+    padding: 5px 0 5px 0;
 }
