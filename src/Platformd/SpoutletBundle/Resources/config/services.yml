@@ -170,7 +170,7 @@ services:
         arguments:
             - "@exercise_html_purifier.editor_admin"
 
-    platformd.form.type.editor_field:
+    platformd.form.type.purified_textarea_field:
         class: Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType
         arguments:
             - "@platformd.form.transformer.html_purifier_basic"

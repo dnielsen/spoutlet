@@ -42,6 +42,6 @@ class PurifiedTextareaType extends AbstractType
 
     public function getName()
     {
-        return 'editor';
+        return 'purified_textarea';
     }
 }
