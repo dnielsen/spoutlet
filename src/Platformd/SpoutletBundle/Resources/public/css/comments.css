@@ -290,3 +290,17 @@ a.comment-voting-button {
      text-align:center;
      padding-top:15px;
 }
+
+.editable-comment-form textarea {
+    overflow-y: hidden;
+    white-space: pre-wrap;
+}
+
+.editable-comment-form button {
+    padding: 5px 15px;
+    min-width: 95px;
+}
+
+.editable-comment-form button[type="cancel"] {
+    margin-left: 10px;
+}

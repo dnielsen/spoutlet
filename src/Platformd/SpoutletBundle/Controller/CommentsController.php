@@ -87,6 +87,47 @@ class CommentsController extends Controller
         ));
     }
 
+    public function editAction(Request $request)
+    {
+        $response = new Response();
+
+        if (!$this->isGranted('ROLE_USER')) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'not logged in')));
+            return $response;
+        }
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'no content passed')));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        $response->setContent(urldecode($request->get('value')));
+        return $response;
+
+        if (!isset($params['commentId'])) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'no comment id set')));
+            return $response;
+        }
+
+        $em         = $this->getDoctrine()->getEntityManager();
+        $comment    = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
+
+        if (!$comment) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'comment not found')));
+            return $response;
+        }
+
+        if (!$this->checkAcl('EDIT', $comment)) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'permission check failure')));
+            return $response;
+        }
+    }
+
     public function deleteAction(Request $request) {
 
         $response = new Response();

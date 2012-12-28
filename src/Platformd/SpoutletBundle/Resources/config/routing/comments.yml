@@ -20,6 +20,13 @@ comments_new:
         _format: json
         _method: POST
 
+comments_edit:
+    pattern: /edit
+    defaults: { _controller: "SpoutletBundle:Comments:edit" }
+    requirements:
+        _format: json
+        _method: POST
+
 comments_delete:
     pattern: /delete
     defaults: { _controller: "SpoutletBundle:Comments:delete" }
