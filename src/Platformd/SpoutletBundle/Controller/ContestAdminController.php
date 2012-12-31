@@ -328,7 +328,6 @@ class ContestAdminController extends Controller
             'Votes',
             'IP Address',
             'Country Registered',
-            'Likes',
         ));
 
         foreach($entries as $entry) {
@@ -343,7 +342,6 @@ class ContestAdminController extends Controller
                     $media->getVotes()->count(),
                     $entry->getIpAddress(),
                     $media->getAuthor()->getCountry(),
-                    $this->getEntryLikeCount($media),
                 ));
             }
         }
