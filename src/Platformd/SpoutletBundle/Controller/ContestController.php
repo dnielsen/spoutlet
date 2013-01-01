@@ -113,12 +113,6 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $form       = $this->createForm(new SubmitImageType($user));
-
-        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user);
-        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
-        $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
-
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
         if(!$entry)
@@ -127,12 +121,24 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
+        $form       = $this->createForm(new SubmitImageType($user));
+
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user);
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
+        
+        $groupEntryIds = count($entry->getGroups()) > 0 ? array() : array(0);
+        foreach ($entry->getGroups() as $group) {
+           array_push($groupEntryIds, $group->getId());
+        }
+
+        $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllGroupsWhereIdNotInForSite($groupEntryIds, $this->getCurrentSite());
+        
         $mediaCount = $entry->getMedias()
             ->filter(function($x) {
                 return $x->getDeleted() != 1;
             });
 
-        $entriesLeft        = $contest->getMaxEntries() - count($mediaCount);
+        $entriesLeft        = $contest->getCategory() == 'image' ? $contest->getMaxEntries() - count($mediaCount) : $contest->getMaxEntries() - count($entry->getGroups());
         $isUnlimited        = $contest->getMaxEntries() == 0;
         $submissionEnded    = new \DateTime("now") > $contest->getSubmissionEnd();
 
@@ -172,7 +178,57 @@ class ContestController extends Controller
             'isUnlimited'       => $isUnlimited,
             'submissionEnded'   => $submissionEnded,
             'groups'            => $groups,
+            'groupsEntered'     => $entry->getGroups()
         ));
+    }
+
+    public function groupSubmitAction($slug, Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        if (!$this->isGranted('ROLE_USER')) {
+            $response->setContent(json_encode(array("success" => false, "Authorization failed.")));
+            return $response;
+        }
+
+        $params = array();
+        $content = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "details" => "There were no details sent.")));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['slug']) || !isset($params['groups'])) {
+            $response->setContent(json_encode(array("success" => false, "details" => "There was some missing information.")));
+            return $response;
+        }
+
+        $user       = $this->getCurrentUser();
+        $contest    = $this->getContestRepository()->findOneBy(array('slug' => $params['slug']));
+
+        $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
+
+        if(!$entry)
+        {
+            $response->setContent(json_encode(array("success" => false, "details" => "There was no entry found.")));
+            return $response;
+        }
+
+        $em              = $this->getEntityManager();
+        $postedGroups    = $params['groups'];
+        $groups          = $this->getGroupRepository()->getAllGroupsForUser($user);
+        $groupsForEntry  = $this->getGroupRepository()->findAllGroupsWhereIdInForSite($postedGroups, $this->getCurrentSite());
+
+        $entry->setGroups($groupsForEntry);
+        $em->persist($entry);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true, "details" => "Your groups have been successfully submitted!")));
+        return $response;
     }
 
     public function voteAction($slug)

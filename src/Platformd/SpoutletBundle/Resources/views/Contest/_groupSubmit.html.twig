@@ -1,0 +1,141 @@
+<div class="xnotices" id="flash-publish-success" style="display:none;">
+    <div class="successNotice notice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3>{{ 'galleries.submit_photo_publish_success' | trans }}</h3>
+                        <p>{{ 'galleries.submit_photo_publish_message' | trans }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
+<div class="std_2col">
+    <div class="left">
+    	<div class="group-contest-content">
+			<h3>{{ 'contests.submit_groups_title' | trans }}{% if contest.maxEntries > 1 %}s{% endif %}</h3>
+			<div>
+				{% if groupsEntered.count > 0 %}
+					<p>{{ 'contests.submit_groups_how_many_so_far' | trans }}</p>
+				{% endif %}
+				{% for group in groupsEntered %}
+					<div class="group-list-item entered selected" data-id="{{ group.id }}">
+			            <a href="{{ path('group_show', { slug: group.slug}) }}">
+			                {% if group.thumbNail %}
+			                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+			                {% else %}
+			                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+			                {% endif %}
+			            </a>
+			            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+			                {{ group.name }}
+			            </a>
+			            <div class="details">
+			                <div class="item-detail">Members: {{ group.members.count }}</div>
+			                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+			            </div>
+			        </div>
+				{% endfor %}
+			</div>
+			<p>
+				{% if contest.maxEntries > 1%}
+					{{ 'contests.submit_group_instructions_multiple_entries' | trans | format(contest.maxEntries, entriesLeft) | raw }}
+				{% else %}
+					{{ 'contests.submit_group_instructions_single_entry' | trans | format(contest.maxEntries, entriesLeft) | raw }}
+				{% endif %}
+			</p>
+			<div>
+				{% for group in groups %}
+					<div class="group-list-item" data-id="{{ group.id }}">
+			            <a href="{{ path('group_show', { slug: group.slug}) }}">
+			                {% if group.thumbNail %}
+			                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+			                {% else %}
+			                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+			                {% endif %}
+			            </a>
+			            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+			                {{ group.name }}
+			            </a>
+			            <div class="details">
+			                <div class="item-detail">Members: {{ group.members.count }}</div>
+			                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+			            </div>
+			        </div>
+				{% else %}
+					{{ 'contests.no_groups_found' | trans | format(path('group_new')) | raw }}
+				{% endfor %}
+			</div>
+			<div style="padding: 10px 0 10px 0;text-align:center;">
+				<button id="submit-groups" class="btn" {% if entriesLeft == 0 %}disabled="disabled"{% endif %}>{{ 'contests.submit_group' | trans }}</button>
+			</div>
+		</div>
+    </div>
+    <div class="right">
+    	{% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
+<div id="blah">
+</div>
+<script type="text/javascript">
+	$(function () {
+		$('.group-list-item').click(function (e) {
+			var entriesLeft = parseInt($('#entries-left').text());
+			var entries = $('.entered').length;
+			var maxEntries = {{ contest.maxEntries }};
+
+			if(!$(this).hasClass('entered')) {
+				if($(this).hasClass('selected')) {
+					$(this).removeClass('selected');
+					if(entriesLeft < (maxEntries - entries)) {
+						entriesLeft++;
+						$('#entries-left').text(entriesLeft);
+					}
+				} else {
+					if(entriesLeft > 0) {
+						$(this).addClass('selected');
+						entriesLeft--;
+						$('#entries-left').text(entriesLeft);
+					}
+				}
+			}
+		});
+
+		$('#submit-groups').click(function (e) {
+			var slug = '{{ contest.slug }}';
+			var groups = [];
+
+			$('.group-list-item.selected').each(function () {
+				groups.push($(this).attr('data-id'));
+			});
+
+			var entry = {
+				'slug' : slug,
+				'groups' : groups
+			}
+
+			$.ajax({
+				url: '{{ path('contest_submit_group', {'slug' : contest.slug}) }}',
+				type: 'post',
+				dataType: 'json',
+				data: JSON.stringify(entry),
+				contentType: 'application/json',
+				success: function(data) {
+					if(data.success) {
+						window.location = '{{ path('contest_submit', {'slug' : contest.slug }) }}';
+					}
+				},
+				error: function(e, s, t) {
+					console.log(e.responseText);
+					console.log(s);
+					console.log(t);
+				}
+			});
+		});
+	});
+</script>

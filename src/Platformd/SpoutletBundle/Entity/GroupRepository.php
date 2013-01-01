@@ -350,4 +350,28 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function findAllGroupsWhereIdInForSite($groupIds, $site)
+    {
+        $qb = $this->createQueryBuilder('g');
+        return $qb->leftJoin('g.sites', 's')
+            ->where($qb->expr()->in('g.id', $groupIds))
+            ->andWhere('g.deleted = false')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->setParameter('site', $site)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllGroupsWhereIdNotInForSite($groupIds, $site)
+    {
+        $qb = $this->createQueryBuilder('g');
+        return $qb->leftJoin('g.sites', 's')
+            ->where($qb->expr()->notIn('g.id', $groupIds))
+            ->andWhere('g.deleted = false')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->setParameter('site', $site)
+            ->getQuery()
+            ->execute();
+    }
 }

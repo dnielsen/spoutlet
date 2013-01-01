@@ -616,11 +616,12 @@ contests:
     show_page_instructions: How to Enter
     show_page_enter_contest: Enter
     show_page_submit_photos: Submit Photos
-    show_page_contest: Contest
+    show_page_contest: Contest Details
     show_page_winners: Winners
     show_page_official_rules: Official Rules
+    show_page_see_more_contests: See More Contests
     show_page_vote_now: View Entries
-    show_page_entries: Entries
+    show_page_entries: Entries/Vote
     show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
     vote_page_instruction: Voting Instructions
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
@@ -630,6 +631,9 @@ contests:
     submit_page_entry_max_reached: You have entered the maximum number of photos for this entry.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
+    submit_groups_title: Submit Your Group
+    submit_group_instructions_multiple_entries: Please select %s groups from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
+    submit_group_instructions_single_entry: Please select one group from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
     no_winners: No winners have been selected yet. Please check back later.
     place: Place
     entry_period: Entry Period
@@ -642,3 +646,6 @@ contests:
     photo_submissions_unlimited: You can submit as many photos as you like for this contest.
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
+    no_groups_found: No groups found. You must be the owner of at least one group to enter this contest. Click <a href="%s" target="_blank">here</a> to create one now!
+    submit_group: Submit Selected Groups
+    submit_groups_how_many_so_far: These are the groups you have entered so far.
