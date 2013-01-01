@@ -40,7 +40,7 @@ class ContestEntryRepository extends EntityRepository
             ->select('c.id', 'COUNT(gm.id) AS entry_count')
             ->leftJoin('e.medias', 'gm')
             ->leftJoin('e.contest', 'c')
-            ->groupBy('gm.contestEntry')
+            ->groupBy('c.id')
             ->getQuery()
             ->execute();
     }
