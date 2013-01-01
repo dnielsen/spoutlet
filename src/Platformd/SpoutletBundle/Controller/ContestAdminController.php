@@ -346,7 +346,7 @@ class ContestAdminController extends Controller
             }
         }
 
-        $exportFilename = '['.$contest->getName().']_Contest_Entry_Export.csv';
+        $exportFilename = $contest->getName().'-Contest_Entry_Export.csv';
         return $factory->createResponse($exportFilename);
     }
 
@@ -393,7 +393,7 @@ class ContestAdminController extends Controller
             ));
         }
 
-        $exportFilename = '['.$vote->getGalleryMedia()->getTitle().']_Votes_Export.csv';
+        $exportFilename = $vote->getGalleryMedia()->getTitle().'-Votes_Export.csv';
         return $factory->createResponse($exportFilename);
     }
 
