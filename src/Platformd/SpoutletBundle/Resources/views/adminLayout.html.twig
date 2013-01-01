@@ -40,7 +40,7 @@
                 'bundles/spoutlet/js/jquery.multiselect.min.js'
                 'bundles/spoutlet/js/jquery.multiselect.filter.min.js'
 		        'ckeditor/ckeditor.js'
-		        'ckeditor/config.js'
+		        'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
 		        output='js/packed/admin.js'
 		    %}
@@ -57,6 +57,10 @@
         </title>
 
         {% include 'SpoutletBundle::_analytics.html.twig' %}
+
+        <script type="text/javascript">
+            CKEDITOR.config.customConfig = 'config.admin.js';
+        </script>
 	</head>
 	<body>
 
