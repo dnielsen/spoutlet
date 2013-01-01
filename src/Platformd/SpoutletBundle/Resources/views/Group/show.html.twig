@@ -155,7 +155,7 @@
         </div>
         {% if isAllowedToViewGroupContent %}
             <div id="group-comments">
-                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": group.threadId, 'page': app.request.query.get('page', 1) } %}
+                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : group.threadId, 'object' : group } %}
             </div>
         {% else %}
             <div id="group-comments">

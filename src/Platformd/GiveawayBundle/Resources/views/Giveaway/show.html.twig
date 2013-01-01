@@ -100,7 +100,9 @@
 
                 </div><!-- giveaway-info -->
                 {% if commentsEnabled %}
-                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": giveaway.slug, 'page': app.request.query.get('page', 1) } %}
+
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
+
                 {% endif %}
             </div><!-- left -->
 
