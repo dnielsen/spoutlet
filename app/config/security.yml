@@ -24,7 +24,7 @@ security:
             switch_user: ~
 
     acl:
-        connection: default
+        connection: acl
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
