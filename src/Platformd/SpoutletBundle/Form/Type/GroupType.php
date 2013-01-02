@@ -48,7 +48,7 @@ class GroupType extends AbstractType
                 'image_help'    => 'Recommended size: 135x80',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('description', null, array(
+            ->add('description', 'purifiedTextarea', array(
                 'label' => 'Information about Group*',
                 'attr'  => array('class' => 'ckeditor')
             ))
