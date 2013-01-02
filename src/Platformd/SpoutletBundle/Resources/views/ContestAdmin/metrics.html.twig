@@ -32,7 +32,7 @@
                     {% endfor %}
                 </td>
                 <td>
-                    <a href="{{ path('admin_contest_entries', { 'slug' : contest.slug }) }}">{{ entryCounts[contest.id] }}</a>
+                    <a href="{{ path('admin_contest_entries', { 'slug' : contest.slug }) }}">{% if contest.id in entryCounts|keys %}{{ entryCounts[contest.id] }}{% else %}0{% endif %}</a>
                 </td>
                 <td>
                     {{ contest.id in votes|keys ? votes[contest.id] : 0 }}
