@@ -170,3 +170,13 @@
 [KnpTimeBundle]
     git=http://github.com/KnpLabs/KnpTimeBundle.git
     target=bundles/Knp/Bundle/TimeBundle
+
+[HTMLPurifierBundle]
+    git=http://github.com/Exercise/HTMLPurifierBundle.git
+    target=bundles/Exercise/HTMLPurifierBundle
+    version=f79f6bcd8725f41ba5c3af2d045a91bcfd00ba2a
+
+[HTMLPurifier]
+    git=http://github.com/ezyang/htmlpurifier.git
+    target=htmlpurifier
+    version=344e0640b6610883a0aa6766cc6750d26d091c76

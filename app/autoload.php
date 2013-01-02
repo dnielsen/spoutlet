@@ -34,11 +34,13 @@ $loader->registerNamespaces(array(
     'Liip'                          => __DIR__.'/../vendor/bundles',
     'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
     'Cybernox'                      => __DIR__.'/../vendor/bundles',
+    'Exercise'                      => __DIR__ . '/../vendor/bundles',
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
     'Twig_'            => __DIR__.'/../vendor/twig/lib',
-    'PHPParser'        => __DIR__.'/../vendor/php-parser/lib'
+    'PHPParser'        => __DIR__.'/../vendor/php-parser/lib',
+    'HTMLPurifier'     => __DIR__.'/../vendor/htmlpurifier/library',
 ));
 
 // intl
