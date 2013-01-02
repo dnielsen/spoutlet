@@ -52,20 +52,20 @@
             </div>
     </fieldset>
     <fieldset>
-            <legend>d) Restrictions</legend>
-            <div class="game-page-form">
-                <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
-                    {# see the CSS file this explanation #}
-                    <li class="dummy"></li>
-                    {% for rule in form.ruleset.rules %}
-                        <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
+        <legend>d) Restrictions</legend>
+        <div class="game-page-form">
+            <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+                {# see the CSS file this explanation #}
+                <li class="dummy"></li>
+                {% for rule in form.ruleset.rules %}
+                    <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
 
-                        {% if loop.index is even %}
-                            <li class="clear"></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
+                    {% if loop.index is even %}
+                        <li class="clear"></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
     </fieldset>
     <fieldset>
         <legend>e) Content</legend>

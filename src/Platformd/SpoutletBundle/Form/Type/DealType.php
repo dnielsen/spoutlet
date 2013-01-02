@@ -104,7 +104,7 @@ class DealType extends AbstractType
                 'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
             ));
 
-            //$builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
+            $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 
     public function getStatusChoices()
