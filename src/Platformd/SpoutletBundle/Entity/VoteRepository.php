@@ -72,7 +72,7 @@ class VoteRepository extends EntityRepository
 
     public function getVotesForContest($contest)
     {
-        return $this->createQueryBuilder('v')
+        $upvotes = $this->createQueryBuilder('v')
             ->select('gm.id', 'COUNT(v.id) AS vote_count')
             ->leftJoin('v.galleryMedia', 'gm')
             ->leftJoin('gm.contestEntry', 'ce')
@@ -84,5 +84,21 @@ class VoteRepository extends EntityRepository
             ->groupBy('gm.id')
             ->getQuery()
             ->execute();
+
+        $downvotes = $this->createQueryBuilder('v')
+            ->select('gm.id', 'COUNT(v.id) AS vote_count')
+            ->leftJoin('v.galleryMedia', 'gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
+            ->andWhere('c = :contest')
+            ->andWhere('v.voteType = :down')
+            ->setParameter('contest', $contest)
+            ->setParameter('down', 'down')
+            ->groupBy('gm.id')
+            ->getQuery()
+            ->execute();
+
+        return array('up' => $upvotes, 'down' => $downvotes);
     }
+
 }

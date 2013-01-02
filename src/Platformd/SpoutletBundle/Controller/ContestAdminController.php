@@ -118,16 +118,22 @@ class ContestAdminController extends Controller
         $entries = $galleryMediaRepo->findMediaForContest($contest);
 
         $voteData = $voteRepo->getVotesForContest($contest);
-        $votes = array();
+        $likes = array();
+        $dislikes = array();
 
-        foreach ($voteData as $itemVotes) {
-            $votes[$itemVotes['id']] = $itemVotes['vote_count'];
+        foreach ($voteData['up'] as $upVotes) {
+            $likes[$upVotes['id']] = $upVotes['vote_count'];
+        }
+
+        foreach ($voteData['down'] as $downVotes) {
+            $dislikes[$downVotes['id']] = $downVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
             'entries'   => $entries,
             'contest'   => $contest,
-            'votes'     => $votes,
+            'likes'     => $likes,
+            'dislikes'  => $dislikes,
         ));
     }
 

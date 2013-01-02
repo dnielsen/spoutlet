@@ -18,7 +18,9 @@
             <th>URL</th>
             <th>Username</th>
             <th>Entry Date</th>
-            <th>Votes</th>
+            <th>Likes</th>
+            <th>Dislikes</th>
+            <th>Points</th>
             <th>Country</th>
             <th>Actions</th>
         </tr>
@@ -34,12 +36,20 @@
     {% else %}
 
         {% for entry in entries %}
+
+            {% set entryLikes = entry.id in likes|keys ? likes[entry.id] : 0 %}
+            {% set entryDislikes = entry.id in dislikes|keys ? dislikes[entry.id] : 0 %}
+            {% set likesPercentage = entryLikes + entryDislikes > 0 ? entryLikes / (entryLikes + entryDislikes) * 100 : 0 %}
+            {% set dislikesPercentage = entryLikes + entryDislikes > 0 ? entryDislikes / (entryLikes + entryDislikes) * 100 : 0 %}
+
             <tr>
                 <td><img src="{{ media_path(entry.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ entry.title }}" /></td>
                 <td><a target="_blank" href="{{ path('gallery_media_show', { 'id' : entry.id }) }}">{{ path('gallery_media_show', { 'id' : entry.id }) }}</a></td>
                 <td>{{ entry.author.username }}</td>
                 <td>{{ entry.createdAt | date }}</td>
-                <td>{{ entry.id in votes|keys ? votes[entry.id] : 0 }}</a></td>
+                <td>{{ likesPercentage | number_format }}%</td>
+                <td>{{ dislikesPercentage | number_format }}%</td>
+                <td>{{ entryLikes - entryDislikes }}</td>
                 <td>{{ entry.author.country }}</td>
                 <td>
                     <input type="radio" name="first_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[0] == entry.id) %} checked=true{% endif %}>1st place<br />
@@ -68,7 +78,7 @@
 <script type="text/javascript">
     $(function () {
         $("table").tablesorter({
-            sortList: [[4,1]]
+            sortList: [[6,1]]
         });
     });
 

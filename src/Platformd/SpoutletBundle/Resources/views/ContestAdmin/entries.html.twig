@@ -47,7 +47,7 @@
                         <td>{{ media.author.lastname }}</td>
                         <td>{{ media.createdAt | date }}</td>
                         <td>{{ entry.ipAddress }}</td>
-                        <td><a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ media.votes | length }}</a></td>
+                        <td>{% if media.votes | length > 0 %}<a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ media.votes | length }}</a>{% else %}0{% endif %}</td>
                         <td>{{ upVotes[media.id] }}%</td>
                         <td>{{ downVotes[media.id] }}%</td>
                         <td>{{ media.author.country }}</td>
