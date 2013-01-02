@@ -293,6 +293,10 @@ a.comment-voting-button {
     display: inline;
 }
 
+.comment-sorting select {
+    color: #555;
+}
+
 #more-comments-loader {
     display:none;
     clear:both;
