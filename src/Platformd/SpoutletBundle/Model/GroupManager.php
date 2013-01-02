@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\GroupDiscussion;
 use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
+use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
 use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\GroupEvents;
 use Doctrine\ORM\EntityManager;
@@ -137,7 +138,14 @@ class GroupManager
         }
     }
 
-    public function viewGroupDiscussion(GroupDiscussion $groupDiscussion, Session $session)
+    /**
+     * Updates a group discussion count
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param \Symfony\Component\HttpFoundation\Session $session
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function viewGroupDiscussion(GroupDiscussion $groupDiscussion, Session $session, User $user)
     {
         $groupDiscussionToken = 'groupDiscussion' . $groupDiscussion->getId();
 
@@ -145,9 +153,47 @@ class GroupManager
             $session->set($groupDiscussionToken, true);
             $groupDiscussion->incViewCount(1);
             $this->saveGroupDiscussion($groupDiscussion);
+
+            // We dispatch a GroupDiscussionEvent
+            $event = new GroupDiscussionEvent($groupDiscussion, $user);
+            $this->eventDispatcher->dispatch(GroupEvents::DISCUSSION_VIEW, $event);
         }
     }
 
+    /**
+     * Creates a group discussion
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     */
+    public function createGroupDiscussion(GroupDiscussion $groupDiscussion)
+    {
+        $this->saveGroupDiscussion($groupDiscussion);
+
+        // We dispatch a GroupDiscussionEvent
+        $event = new GroupDiscussionEvent($groupDiscussion);
+        $this->eventDispatcher->dispatch(GroupEvents::DISCUSSION_CREATE, $event);
+    }
+
+    /**
+     * Updates a group discussion
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     */
+    public function updateGroupDiscussion(GroupDiscussion $groupDiscussion)
+    {
+        $this->saveGroupDiscussion($groupDiscussion);
+
+        // We dispatch a GroupDiscussionEvent
+        $event = new GroupDiscussionEvent($groupDiscussion);
+        $this->eventDispatcher->dispatch(GroupEvents::DISCUSSION_UPDATE, $event);
+    }
+
+    /**
+     * Persists a group discussion
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param bool $flush
+     */
     public function saveGroupDiscussion(GroupDiscussion $groupDiscussion, $flush = true)
     {
         if (!$groupDiscussion->getAuthor()) {
@@ -162,6 +208,31 @@ class GroupManager
         }
     }
 
+    /**
+     * "Deletes" a discussion, in fact sets deleted property to true
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     */
+    public function deleteGroupDiscussion(GroupDiscussion $groupDiscussion)
+    {
+        $groupDiscussion->setDeleted(true);
+
+        $user = $this->securityContext->getToken()->getUser();
+
+        $this->em->persist($groupDiscussion);
+        $this->em->flush();
+
+        // We dispatch a GroupDiscussionEvent
+        $event = new GroupDiscussionEvent($groupDiscussion, $user);
+        $this->eventDispatcher->dispatch(GroupEvents::DISCUSSION_DELETE, $event);
+    }
+
+    /**
+     * Saves a group discussion post
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussionPost $groupDiscussionPost
+     * @param bool $flush
+     */
     public function saveGroupDiscussionPost(GroupDiscussionPost $groupDiscussionPost, $flush = true)
     {
         if (!$groupDiscussionPost->getAuthor()) {

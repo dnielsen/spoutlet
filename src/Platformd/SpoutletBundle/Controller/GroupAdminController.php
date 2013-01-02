@@ -11,6 +11,7 @@ use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+use Platformd\SpoutletBundle\Metric\MetricManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -162,6 +163,43 @@ class GroupAdminController extends Controller
                 'users_left'=> $this->getGroupMembersLeftCount($group, $from, $thru),
         ));
         return new Response(json_encode($result));
+    }
+
+    public function detailsAction($id, Request $request)
+    {
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+
+        $group = $groupRepo->find($id);
+
+        if(!$group) {
+            throw $this->createNotFoundException('Unable to find group.');
+        }
+
+        $this->addFindGroupsBreadcrumb()->addChild($group->getName());
+
+        $from = $request->get('from') == null ? new DateTime('-1 month midnight') : new DateTime($request->get('from'));
+        $thru = $request->get('thru') == null ? new DateTime('today midnight') : new DateTime($request->get('thru'));
+
+        $groupMetrics = $this->getMetricManager()->getGroupMetricsForPeriod($group, $from, $thru);
+
+        $groupNewMembersArray = array();
+        $groupNewDiscussionsArray = array();
+        $groupDeletedDiscussionsArray = array();
+
+        foreach($groupMetrics as $groupMetric) {
+            $groupNewMembersArray[] = array(($groupMetric->getDate()->getTimestamp() * 1000), $groupMetric->getNewMembers());
+            $groupNewDiscussionsArray[] = array(($groupMetric->getDate()->getTimestamp() * 1000), $groupMetric->getNewDiscussions());
+            $groupDeletedDiscussionsArray[] = array(($groupMetric->getDate()->getTimestamp() * 1000), $groupMetric->getDeletedDiscussions());
+        }
+
+        return $this->render('SpoutletBundle:GroupAdmin:details.html.twig', array(
+            'group' => $group,
+            'from' => $from,
+            'thru' => $thru,
+            'groupNewMembers' => json_encode($groupNewMembersArray),
+            'groupNewDiscussions' => json_encode($groupNewDiscussionsArray),
+            'groupDeletedDiscussions' => json_encode($groupDeletedDiscussionsArray)
+        ));
     }
 
     private function getGroupVideoCount($group, $fromDate, $thruDate)
@@ -462,5 +500,13 @@ class GroupAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return MetricManager
+     */
+    private function getMetricManager()
+    {
+        return $this->get('platformd.metric_manager');
     }
 }

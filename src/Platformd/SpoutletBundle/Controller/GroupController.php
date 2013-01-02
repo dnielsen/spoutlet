@@ -10,12 +10,15 @@ use Platformd\SpoutletBundle\Entity\GroupDiscussion;
 use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
+use Platformd\SpoutletBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
+use Platformd\SpoutletBundle\GroupEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Group controller.
@@ -302,6 +305,12 @@ Alienware Arena Team
         $group->getMembers()->removeElement($user);
         $group->getUserMembershipActions()->add($leaveAction);
 
+        // TODO Add a service layer for managing groups and dispatching such events
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        $event = new GroupEvent($group, $user);
+        $dispatcher->dispatch(GroupEvents::GROUP_LEAVE, $event);
+
         $this->getGroupManager()->saveGroup($group);
 
         $this->setFlash('success', 'You have successfully left this group!');
@@ -326,6 +335,7 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'JoinGroup');
 
+        // TODO This should probably be refactored to use the global activity table
         $joinAction = new GroupMembershipAction();
         $joinAction->setGroup($group);
         $joinAction->setUser($user);
@@ -333,6 +343,12 @@ Alienware Arena Team
 
         $group->getMembers()->add($user);
         $group->getUserMembershipActions()->add($joinAction);
+
+        // TODO Add a service layer for managing groups and dispatching such events
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        $event = new GroupEvent($group, $user);
+        $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
         $this->getGroupManager()->saveGroup($group);
 
@@ -877,7 +893,7 @@ Alienware Arena Team
 
                 $groupDiscussion->setGroup($group);
 
-                $this->getGroupManager()->saveGroupDiscussion($groupDiscussion);
+                $this->getGroupManager()->createGroupDiscussion($groupDiscussion);
 
                 $this->setFlash('success', 'New discussion posted successfully.');
 
@@ -917,7 +933,7 @@ Alienware Arena Team
 
                 $discussion->setGroup($group);
 
-                $this->getGroupManager()->saveGroupDiscussion($discussion);
+                $this->getGroupManager()->updateGroupDiscussion($discussion);
 
                 $this->setFlash('success', 'Discussion updated successfully.');
 
@@ -946,9 +962,7 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
         }
 
-        $em = $this->getEntityManager();
-        $em->remove($discussion);
-        $em->flush();
+        $this->getGroupManager()->deleteGroupDiscussion($discussion);
 
         $this->setFlash('success', 'Discussion was deleted successfully!');
 
@@ -968,7 +982,7 @@ Alienware Arena Team
         }
 
         // We increment viewCount
-        $this->getGroupManager()->viewGroupDiscussion($groupDiscussion, $request->getSession());
+        $this->getGroupManager()->viewGroupDiscussion($groupDiscussion, $request->getSession(), $this->getCurrentUser());
 
         $page = $request->query->get('page', 1);
 

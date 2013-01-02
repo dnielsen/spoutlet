@@ -23,3 +23,7 @@ admin_group_export:
 admin_group_content_report:
     pattern: /metrics/group-content-report/{id}
     defaults: { _controller: "SpoutletBundle:GroupAdmin:contentReport" }
+
+admin_group_details:
+    pattern: /metrics/group/{id}/details
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:details" }

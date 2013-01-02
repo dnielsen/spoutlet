@@ -1,0 +1,87 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title group.name ~ ' | Admin'  %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#group-metrics-thru').datepicker();
+            $('#group-metrics-from').datepicker();
+            $('#generate-report').click(function() {
+                window.location = '{{ path('admin_group_details', {id: group.id}) }}' + getDateFilterParams();
+            });
+
+            var getDateFilterParams = function() {
+                if($('#group-metrics-from').val() != '' && $('#group-metrics-thru').val() != '') {
+                    return '?from=' + $('#group-metrics-from').val() + '&thru=' + $('#group-metrics-thru').val();
+                }
+
+                return '';
+            };
+
+            var groupNewMembers = $.parseJSON('{{ groupNewMembers|escape('js') }}');
+            var groupNewDiscussions = $.parseJSON('{{ groupNewDiscussions|escape('js') }}');
+            var groupDeletedDiscussions = $.parseJSON('{{ groupDeletedDiscussions|escape('js') }}');
+
+//            // helper for returning the weekends in a period
+            function weekendAreas(axes) {
+                var markings = [];
+                var d = new Date(axes.xaxis.min);
+                // go to the first Saturday
+                d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
+                d.setUTCSeconds(0);
+                d.setUTCMinutes(0);
+                d.setUTCHours(0);
+                var i = d.getTime();
+                do {
+                    // when we don't set yaxis, the rectangle automatically
+                    // extends to infinity upwards and downwards
+                    markings.push({ xaxis:{ from:i, to:i + 2 * 24 * 60 * 60 * 1000 } });
+                    i += 7 * 24 * 60 * 60 * 1000;
+                } while (i < axes.xaxis.max);
+
+                return markings;
+            }
+
+            var options = {
+                xaxis:{ mode:"time", tickSize:[1, "day"] },
+                selection:{ mode:"x" },
+                grid:{ markings:weekendAreas }
+            };
+
+            $.plot($("#placeholder"), [
+                { label: 'New Members', data: groupNewMembers },
+                { label: 'New Discussions', data: groupNewDiscussions },
+                { label: 'Deleted Discussions', data: groupDeletedDiscussions }
+            ], options);
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ group.name }}</h1>
+
+    <div class="form-horizontal">
+        <div class="row-fluid first">
+            <div class="control-group">
+                <label class="control-label" for="group-metrics-from">Starts Date</label>
+                <div class="controls">
+                    <input type="text" id="group-metrics-from" name="group-metrics-from" value="{{ from|date('m/d/Y') }}">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="group-metrics-thru">Ends Date</label>
+                <div class="controls">
+                    <input type="text" id="group-metrics-thru" name="group-metrics-thru" value="{{ thru|date('m/d/Y') }}">
+                </div>
+            </div>
+            <div style="margin-left: 160px">
+                <button type="submit" id="generate-report" class="btn btn-primary" formnovalidate="">Generate Report</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="placeholder" style="width:800px;height:360px;margin:40px 0;"></div>
+{% endblock %}

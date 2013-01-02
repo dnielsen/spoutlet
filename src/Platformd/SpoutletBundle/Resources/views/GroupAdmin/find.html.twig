@@ -33,6 +33,7 @@
                     <th>News</th>
                     <th>Likes</th>
                     <th>Leave Group</th>
+                    <th>Actions</th>
 
                 </tr>
             </thead>
@@ -53,6 +54,7 @@
                         <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.GroupId })  }}">{{ group.NewsArticleCount }}</a></td>
                         <td>{{ group.FacebookLikes }}</td>
                         <td>{{ group.LeftMemberCount }}</td>
+                        <td><a href="{{ path('admin_group_details', { "id" : group.GroupId })  }}">View details</a></td>
 
                     </tr>
                 {% else %}
