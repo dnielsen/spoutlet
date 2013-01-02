@@ -1,6 +1,14 @@
 <div class="thread">
     <h3>Add Your Comment</h3>
     <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+    <div class="comment-sorting">
+        <label for="comment-sort-method">Sort by: </label>
+        <select name="comment-sort-method" id="comment-sort-method">
+            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>Votes</option>
+            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>Most Recent</option>
+            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>Oldest</option>
+        </select>
+    </div>
     <div class="comment-form-submit">
         <button id="new-comment-submit" type="submit">Add Comment</button>
     </div>
@@ -15,6 +23,25 @@
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
 <script type="text/javascript">
     $(function () {
+
+        $('.comment-sorting select').change(function() {
+            $('.thread').block({message: null});
+            var data = {
+                'thread' : '{{ thread }}',
+                'method' : $('#comment-sort-method').val(),
+                'commentLimit' : '{{ offset }}'
+            };
+            $.ajax({
+                url: '{{ path('comments_sort_thread') }}',
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            });
+        });
 
         $('#new-comment-submit').click(function () {
             $('.thread').block({message: null});

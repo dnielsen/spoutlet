@@ -280,8 +280,17 @@ a.comment-voting-button {
 }
 
 .comment-form-submit {
-    text-align: center;
+    float: right;
     padding: 5px;
+}
+
+.comment-sorting {
+    float: left;
+    padding: 5px;
+}
+
+.comment-sorting label {
+    display: inline;
 }
 
 #more-comments-loader {

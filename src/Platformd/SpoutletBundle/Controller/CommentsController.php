@@ -214,7 +214,65 @@ class CommentsController extends Controller
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
-            'offset' => $commentLimit,
+            'offset'    => $commentLimit,
+        ));
+    }
+
+    public function threadSortAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "no content passed")));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['thread']) || !isset($params['method'])) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
+            return $response;
+        }
+
+        $threadId       = $params['thread'];
+        $method         = $params['method'];
+        $commentLimit   = $params['commentLimit'];
+
+        $em         = $this->getDoctrine()->getEntityManager();
+        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
+
+        if (!$thread) {
+            $response->setContent(json_encode(array("message" => "error", "details" => "comment thread not found")));
+            return $response;
+        }
+
+        switch ($method) {
+            case 'votes':
+                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
+                break;
+
+            case 'recent':
+                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByDate($threadId, $commentLimit);
+                break;
+
+            case 'oldest':
+                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByDate($threadId, $commentLimit, 'ASC');
+                break;
+
+            default:
+                $response->setContent(json_encode(array("message" => "error", "details" => "invalid method passed")));
+                return $response;
+                break;
+        }
+
+        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+            'thread'    => $threadId,
+            'comments'  => $comments,
+            'offset'    => $commentLimit,
+            'method'    => $method,
         ));
     }
 
