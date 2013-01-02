@@ -13,24 +13,10 @@
             {{ contest.voteInstructions | raw }}
         </div>
         <div id="contest-entries">
-            {% if medias | length > 0 %}
-                {% for media in medias %}
-                    {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-                    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
-                        <div class="gallery-media-thumb">
-                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                                <div class="thumbnail-vote-caption">
-                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
-                                </div>
-                            </a>
-                        </div>
-                        <div style="width:135px;">
-                            <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                            <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
-                        </div>
-                    </div>
-                {% endfor %}
+            {% if contest.category == 'image' %}
+                {% include "SpoutletBundle:Contest:_medias.html.twig" with { "medias" : medias} %}
+            {% elseif contest.category == 'group' %}
+                {% include "SpoutletBundle:Contest:_groups.html.twig" with { "groups" : groups} %}
             {% endif %}
         </div>
     </div>

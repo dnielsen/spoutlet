@@ -63,4 +63,22 @@ class ContestRepository extends EntityRepository
 
         return $result ? true : false;
     }
+
+    public function findAllByCategoryAndSite($category, $site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('c.category = :category')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllExpiredBySite($site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('c.votingEnd < :today')
+            ->setParameter('today', new \DateTime('now'))
+            ->getQuery()
+            ->execute();
+    }
 }

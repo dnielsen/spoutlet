@@ -30,6 +30,21 @@ class ContestController extends Controller
         ));
     }
 
+    public function filteredContestsAction($filter)
+    {
+        $site = $this->getCurrentSite();
+
+        if($filter == 'expired') {
+            $contests = $this->getContestRepository()->findAllExpiredBySite($site);
+        } else {
+            $contests = $this->getContestRepository()->findAllByCategoryAndSite($filter, $site);
+        }
+
+        return $this->render('SpoutletBundle:Contest:_contests.html.twig', array(
+            'contests' => $contests,
+        ));
+    }
+
     public function showAction($slug, Request $request)
     {
         $user = $this->getCurrentUser();
@@ -125,14 +140,14 @@ class ContestController extends Controller
 
         $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user);
         $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
-        
+
         $groupEntryIds = count($entry->getGroups()) > 0 ? array() : array(0);
         foreach ($entry->getGroups() as $group) {
            array_push($groupEntryIds, $group->getId());
         }
 
         $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllGroupsWhereIdNotInForSite($groupEntryIds, $this->getCurrentSite());
-        
+
         $mediaCount = $entry->getMedias()
             ->filter(function($x) {
                 return $x->getDeleted() != 1;
@@ -238,10 +253,20 @@ class ContestController extends Controller
         $this->ensureContestIsValid($contest);
 
         $medias = $this->getGalleryMediaRepository()->findMediaForContest($contest);
+        $entries = $this->getContestEntryRepository()->findGroupsByContest($contest);
+
+        $groups = array();
+
+        foreach ($entries as $entry) {
+            foreach ($entry->getGroups() as $group) {
+                array_push($groups, $group);
+            }
+        }
 
         return $this->render('SpoutletBundle:Contest:vote.html.twig', array(
             'contest' => $contest,
             'medias'  => $medias,
+            'groups'  => $groups,
         ));
     }
 

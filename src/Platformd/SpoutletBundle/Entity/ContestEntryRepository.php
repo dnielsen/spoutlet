@@ -44,4 +44,13 @@ class ContestEntryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findGroupsByContest($contest)
+    {
+        return $this->createQueryBuilder('e')
+            ->where('e.contest = :contest')
+            ->setParameter('contest', $contest)
+            ->getQuery()
+            ->execute();
+    }
 }
