@@ -53,7 +53,7 @@
     <fieldset>
         <legend>d) Restrictions</legend>
         <div class="game-page-form">
-            <ul class="medias-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+            <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
                 {# see the CSS file this explanation #}
                 <li class="dummy"></li>
                 {% for rule in form.ruleset.rules %}
@@ -91,7 +91,7 @@
 
 <div style="display: none;">
     {{ form_row(form.ruleset) }}
-    {{ form_label(form.rules) }}
+    {{ form_label(form.ruleset.rules) }}
 </div>
 
 {{ form_rest(form) }}

@@ -122,10 +122,11 @@ class DealController extends Controller
             return $this->redirect($dealShow);
         }
 
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
+        // check that they pass the new style age-country restriction ruleset
+        /*if ($deal->getRuleset()->doesUserPassRules($user, $country)) {
+            $this->setFlash('error', 'deal_not_eligible');
             return $this->redirect($dealShow);
-        }
+        }*/
 
         $pools = $dealPoolRepo->getAllPoolsForDealGivenCountry($deal, $country);
 

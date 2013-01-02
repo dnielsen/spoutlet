@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\EventType;
+use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 
 class SweepstakesAdminType extends EventType
 {
@@ -35,13 +36,8 @@ class SweepstakesAdminType extends EventType
         $builder->add('generalImageFile', 'file', array(
             'label' => 'General image'
         ));
-        $builder->add('allowedCountries', 'country', array(
-            'multiple' => true,
-            'expanded' => false,
-        ));
-        $builder->add('minimumAgeRequirement', 'number', array(
-            'label' => 'Age requirement',
-        ));
+
+        $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
 
         $builder->add('officialRules', 'textarea');
 
