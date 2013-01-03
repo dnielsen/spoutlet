@@ -1,3 +1,4 @@
+
 <p class="alert alert-info help"><i class="icon-info-sign"></i>
     The entries are shown below, sorted by vote count. Please select up to 3 winners.
 </p>
@@ -11,7 +12,9 @@
             <th>URL</th>
             <th>Username</th>
             <th>Entry Date</th>
-            <th>Votes</th>
+            <th>Likes</th>
+            <th>Dislikes</th>
+            <th>Points</th>
             <th>Country</th>
             <th>Actions</th>
         </tr>
@@ -21,18 +24,26 @@
     {% if entries | length < 1 %}
 
         <tr>
-            <td colspan=6>No entries found!</td>
+            <td colspan=9>No entries found!</td>
         </tr>
 
     {% else %}
 
         {% for entry in entries %}
+
+            {% set entryLikes = entry.id in likes|keys ? likes[entry.id] : 0 %}
+            {% set entryDislikes = entry.id in dislikes|keys ? dislikes[entry.id] : 0 %}
+            {% set likesPercentage = entryLikes + entryDislikes > 0 ? entryLikes / (entryLikes + entryDislikes) * 100 : 0 %}
+            {% set dislikesPercentage = entryLikes + entryDislikes > 0 ? entryDislikes / (entryLikes + entryDislikes) * 100 : 0 %}
+
             <tr>
                 <td><img src="{{ media_path(entry.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ entry.title }}" /></td>
                 <td><a target="_blank" href="{{ path('gallery_media_show', { 'id' : entry.id }) }}">{{ path('gallery_media_show', { 'id' : entry.id }) }}</a></td>
                 <td>{{ entry.author.username }}</td>
                 <td>{{ entry.createdAt | date }}</td>
-                <td>{{ entry.id in votes|keys ? votes[entry.id] : 0 }}</a></td>
+                <td>{{ likesPercentage | number_format }}%</td>
+                <td>{{ dislikesPercentage | number_format }}%</td>
+                <td>{{ entryLikes - entryDislikes }}</td>
                 <td>{{ entry.author.country }}</td>
                 <td>
                     <input type="radio" name="first_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[0] == entry.id) %} checked=true{% endif %}>1st place<br />
@@ -49,4 +60,3 @@
 
 <button type="submit" class="btn btn-primary choose-winners" formnovalidate>Submit</button>
 <input class="btn btn-primary" type="reset" value="Reset Form" />
-</form>

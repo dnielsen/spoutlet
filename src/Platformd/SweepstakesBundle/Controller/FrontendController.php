@@ -44,6 +44,8 @@ class FrontendController extends Controller
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
+            'countries' => $sweepstakes->getRuleset()->getAllowedCountries(),
+            'ageRestrictions' => $sweepstakes->getRuleset()->areThereAgeRestrictions(),
         );
     }
 
@@ -79,17 +81,14 @@ class FrontendController extends Controller
             return $this->redirectToShow($sweepstakes);
         }
 
-        // check that they're old enough
-        if (!$sweepstakes->isUserOldEnough($this->getUser()->getBirthdate())) {
+        // check that they pass the new style age-country restriction ruleset
+        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
+
+        $user           = $this->getUser();
+        $country        = $countryRepo->findOneByCode($user->getCountry());
+
+        if ($sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
-
-            return $this->redirectToShow($sweepstakes);
-        }
-
-        // check that they're from an approved country
-        if (!$sweepstakes->isCountryAllowed($this->getUser()->getCountry())) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
-
             return $this->redirectToShow($sweepstakes);
         }
 

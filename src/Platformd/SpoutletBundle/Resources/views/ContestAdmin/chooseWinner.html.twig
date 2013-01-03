@@ -4,13 +4,11 @@
 <h1>Choose Winner for {{ contest.name }}</h1>
 
 {% if contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s') %}
-
-{% if contest.category == 'image' %}
-    {% include 'SpoutletBundle:ContestAdmin:_imageEntries.html.twig' %}
-{% elseif contest.category == 'group' %}
-    {% include 'SpoutletBundle:ContestAdmin:_groupEntries.html.twig' %}
-{% endif %}
-
+    {% if contest.category == 'image' %}
+        {% include 'SpoutletBundle:ContestAdmin:_imageEntries.html.twig' %}
+    {% elseif contest.category == 'group' %}
+        {% include 'SpoutletBundle:ContestAdmin:_groupEntries.html.twig' %}
+    {% endif %}
 {% else %}
 
 <p class="alert alert-info help"><i class="icon-info-sign"></i>
@@ -22,7 +20,7 @@
 <script type="text/javascript">
     $(function () {
         $("table").tablesorter({
-            sortList: [[4,1]]
+            sortList: [[6,1]]
         });
     });
 

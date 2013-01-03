@@ -136,16 +136,22 @@ class ContestAdminController extends Controller
 
 
         $voteData = $voteRepo->getVotesForContest($contest);
-        $votes = array();
+        $likes = array();
+        $dislikes = array();
 
-        foreach ($voteData as $itemVotes) {
-            $votes[$itemVotes['id']] = $itemVotes['vote_count'];
+        foreach ($voteData['up'] as $upVotes) {
+            $likes[$upVotes['id']] = $upVotes['vote_count'];
+        }
+
+        foreach ($voteData['down'] as $downVotes) {
+            $dislikes[$downVotes['id']] = $downVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
             'entries'   => $entries,
             'contest'   => $contest,
-            'votes'     => $votes,
+            'likes'     => $likes,
+            'dislikes'  => $dislikes,
         ));
     }
 
@@ -361,7 +367,6 @@ class ContestAdminController extends Controller
             'Votes',
             'IP Address',
             'Country Registered',
-            'Likes',
         ));
 
         foreach($entries as $entry) {
@@ -376,12 +381,11 @@ class ContestAdminController extends Controller
                     $media->getVotes()->count(),
                     $entry->getIpAddress(),
                     $media->getAuthor()->getCountry(),
-                    $this->getEntryLikeCount($media),
                 ));
             }
         }
 
-        $exportFilename = '['.$contest->getName().']_Contest_Entry_Export.csv';
+        $exportFilename = $contest->getName().'-Contest_Entry_Export.csv';
         return $factory->createResponse($exportFilename);
     }
 
@@ -428,7 +432,7 @@ class ContestAdminController extends Controller
             ));
         }
 
-        $exportFilename = '['.$vote->getGalleryMedia()->getTitle().']_Votes_Export.csv';
+        $exportFilename = $vote->getGalleryMedia()->getTitle().'-Votes_Export.csv';
         return $factory->createResponse($exportFilename);
     }
 
