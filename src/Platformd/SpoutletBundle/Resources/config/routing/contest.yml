@@ -22,7 +22,7 @@ contest_submit_group:
         _method: POST
 
 contest_vote:
-    pattern: /vote/{slug}
+    pattern: /entries/{slug}
     defaults: { _controller: SpoutletBundle:Contest:vote }
 
 contest_rules_show:
