@@ -84,6 +84,16 @@ class ContestRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllByCategoryOrderdByVoteEnding($category, $sortDir='DESC')
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.category = :category')
+            ->orderBy('c.votingEnd', $sortDir)
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findAllExpiredBySite($site)
     {
         return $this->createSiteQueryBuilder($site)
