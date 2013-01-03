@@ -152,13 +152,13 @@ platformd:
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
-            hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
+            hello_user: "こんにちは %username%."
             ready_to_game: |
                 このALIENWARE ARENA管理画面はARENAに参加する際の主要ツールが準備されています。 現在、イベントサインア
                 ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもARENAサポートチームへコンタ
                 クトしてください。
             warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。ALIENWARE ARENAはその責任を負うことができません。
-            under_construction: "注：ALIENWARE ARENAは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
+            under_construction: ""
             change_your_password: パスワードの変更
         giveaway:
             your_giveaway_keys: 取得済みキー
