@@ -30,6 +30,9 @@ class GroupDiscussionListener
         } elseif ($event instanceof ContentReportEvent) {
             /** @var GroupDiscussionPost $groupDiscussionPost */
             $groupDiscussionPost = $event->getContent();
+            if (!$groupDiscussionPost instanceof GroupDiscussionPost) {
+                return;
+            }
         }
 
         if (isset($groupDiscussionPost)) {
@@ -49,6 +52,9 @@ class GroupDiscussionListener
         } elseif ($event instanceof ContentReportEvent) {
             /** @var GroupDiscussionPost $groupDiscussionPost */
             $groupDiscussionPost = $event->getContent();
+            if (!$groupDiscussionPost instanceof GroupDiscussionPost) {
+                return;
+            }
         };
 
         if (isset($groupDiscussionPost)) {
