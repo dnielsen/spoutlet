@@ -68,6 +68,17 @@ class ContestRepository extends EntityRepository
     {
         return $this->createSiteQueryBuilder($site)
             ->andWhere('c.category = :category')
+            ->andWhere('c.votingEnd > :today')
+            ->setParameter('category', $category)
+            ->setParameter('today', new \DateTime('now'))
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllByCategory($category)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.category = :category')
             ->setParameter('category', $category)
             ->getQuery()
             ->execute();

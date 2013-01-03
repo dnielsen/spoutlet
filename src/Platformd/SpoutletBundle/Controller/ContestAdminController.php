@@ -106,6 +106,7 @@ class ContestAdminController extends Controller
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
+        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
 
         if (!$contest) {
@@ -115,7 +116,24 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb()->addChild($contest->getSlug());
         $this->getBreadcrumbs()->addChild('Select Winners');
 
-        $entries = $galleryMediaRepo->findMediaForContest($contest);
+        switch($contest->getCategory()) {
+            case 'image':
+                $entries = $galleryMediaRepo->findMediaForContest($contest);
+                break;
+            case 'group':
+                $contestEntries = $contestEntryRepo->findGroupsByContest($contest);
+
+                $entries = array();
+
+                foreach ($contestEntries as $entry) {
+                    foreach ($entry->getGroups() as $group) {
+                        array_push($entries, $group);
+                    }
+                }
+                break;
+        }
+
+
 
         $voteData = $voteRepo->getVotesForContest($contest);
         $votes = array();
@@ -167,20 +185,27 @@ class ContestAdminController extends Controller
 
     public function metricsAction()
     {
-        $em         = $this->getDoctrine()->getEntityManager();
-        $contests   = $em->getRepository('SpoutletBundle:Contest')->findAllAlphabetically();
-        $voteResult = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
+        $em              = $this->getDoctrine()->getEntityManager();
+        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategory('image');
+        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategory('group');
+        $voteResult      = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
-        $entryCounts = array();
-        $votes       = array();
+        $entryCounts      = array();
+        $groupEntryCounts = array();
+        $votes            = array();
 
         $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
         $mediaCounts        = $contestEntryRepo->findMediaCountsForContests();
+        $groupCounts        = $contestEntryRepo->findGroupCountsForContests();
 
         foreach ($mediaCounts as $count) {
             $entryCounts[$count['id']] = $count['entry_count'];
+        }
+
+        foreach ($groupCounts as $count) {
+            $groupEntryCounts[$count['id']] = $count['entry_count'];
         }
 
         foreach ($voteResult as $vote) {
@@ -188,8 +213,10 @@ class ContestAdminController extends Controller
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:metrics.html.twig', array(
-            'contests'      => $contests,
+            'imageContests' => $imageContests,
+            'groupContests' => $groupContests,
             'entryCounts'   => $entryCounts,
+            'groupEntryCounts' => $groupEntryCounts,
             'votes'         => $votes,
         ));
     }
@@ -199,6 +226,12 @@ class ContestAdminController extends Controller
         $contestEntryRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
+
+        return $this->renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+    }
+
+    private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
+    {
         $likes              = array();
         $upVotes            = array();
         $downVotes          = array();

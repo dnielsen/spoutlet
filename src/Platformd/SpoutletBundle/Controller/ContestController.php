@@ -279,7 +279,7 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $winners = $this->getGalleryMediaRepository()->findMediaForContestWinners($contest);
+        $winners = $contest->getCategory() == 'image' ? $this->getGalleryMediaRepository()->findMediaForContestWinners($contest) : $this->getGroupRepository()->findGroupWinnersForContest($contest);
 
         return $this->render('SpoutletBundle:Contest:winners.html.twig', array(
             'contest' => $contest,

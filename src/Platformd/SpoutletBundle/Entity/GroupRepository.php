@@ -395,4 +395,14 @@ class GroupRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findGroupWinnersForContest($contest)
+    {
+        $ids = count($contest->getWinners()) > 0 ? $contest->getWinners() : array(0);
+        $qb  = $this->createQueryBuilder('g');
+
+        return $qb->where($qb->expr()->in('g.id', $ids))
+            ->getQuery()
+            ->execute();
+    }
 }

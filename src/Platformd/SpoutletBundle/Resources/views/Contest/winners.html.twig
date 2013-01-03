@@ -16,11 +16,21 @@
             {% for winner in winners %}
 
                 <div class="contest-winner-wrapper"{% if loop.index == 1 %} style="margin-left: 10px;"{% endif %}>
+                    {% if contest.category == 'image' %}
                     <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
                         <img src="{{ winner.image.filename | imagine_filter('gallery_image_square') }}" alt="{{ winner.title }}" />
                     </a>
                     <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></p>
-
+                    {% elseif contest.category == 'group' %}
+                    <a href="{{ path('group_show', {slug : winner.slug}) }}">
+                        {% if winner.thumbNail %}
+                        <img src="{{ media_path(winner.thumbNail) }}" alt="{{ winner.name }}" title="{{ winner.name }}" />
+                        {% else %}
+                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ winner.name }}" title="{{ winner.name }}" />
+                        {% endif %}
+                    </a>
+                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.owner.username}) }}">{{ winner.owner.username }}</a></p>
+                    {% endif %}
                 </div>
 
             {% endfor %}

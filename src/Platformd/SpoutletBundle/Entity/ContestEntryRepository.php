@@ -53,4 +53,15 @@ class ContestEntryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findGroupCountsForContests()
+    {
+        return $this->createQueryBuilder('e')
+            ->select('c.id', 'COUNT(g.id) AS entry_count')
+            ->leftJoin('e.groups', 'g')
+            ->leftJoin('e.contest', 'c')
+            ->groupBy('e')
+            ->getQuery()
+            ->execute();
+    }
 }

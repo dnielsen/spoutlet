@@ -1,21 +1,19 @@
 {% if groups | length > 0 %}
     {% for group in groups %}
-        {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
-            <div class="gallery-media-thumb">
-                <a href="{{ path('group_show', { slug: group.slug}) }}">
-                    {% if group.thumbNail %}
-                    <img class="media-thumb" src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
-                    {% else %}
-                    <img class="media-thumb" src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
-                    {% endif %}
-                    <div class="thumbnail-vote-caption">
-                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ group.id }}">Quick Vote</a>
-                    </div>
-                </a>
-            </div>
-            <div style="width:135px;">
-                <a class="media-title" href="{{ path('group_show', { slug: group.slug}) }}">{{ group.name }}</a>
+        <div class="group-list-item">
+            <a href="{{ path('group_show', { slug: group.slug}) }}" target="_blank">
+                {% if group.thumbNail %}
+                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                {% else %}
+                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                {% endif %}
+            </a>
+            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}" target="_blank">
+                {{ group.name }}
+            </a>
+            <div class="details">
+                <div class="item-detail">Members: {{ group.members.count }}</div>
+                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
             </div>
         </div>
     {% endfor %}
