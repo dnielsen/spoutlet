@@ -3,16 +3,19 @@
         {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
         <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
             <div class="gallery-media-thumb">
-                <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                    <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                <a href="{{ path('group_show', { slug: group.slug}) }}">
+                    {% if group.thumbNail %}
+                    <img class="media-thumb" src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                    {% else %}
+                    <img class="media-thumb" src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                    {% endif %}
                     <div class="thumbnail-vote-caption">
-                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ group.id }}">Quick Vote</a>
                     </div>
                 </a>
             </div>
             <div style="width:135px;">
-                <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
+                <a class="media-title" href="{{ path('group_show', { slug: group.slug}) }}">{{ group.name }}</a>
             </div>
         </div>
     {% endfor %}

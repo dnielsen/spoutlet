@@ -374,4 +374,25 @@ class GroupRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findAllOwnedGroupsForContest($user, $entry, $site)
+    {
+        $groupIds = array(0);
+
+        foreach($entry->getGroups() as $group) {
+            array_push($groupIds, $group->getId());
+        }
+
+        $qb = $this->createQueryBuilder('g');
+
+        return $qb->leftJoin('g.sites', 's')
+            ->where('g.owner = :user')
+            ->andWhere('g.deleted = false')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere($qb->expr()->notIn('g.id', $groupIds))
+            ->setParameter('user', $user)
+            ->setParameter('site', $site)
+            ->getQuery()
+            ->execute();
+    }
 }

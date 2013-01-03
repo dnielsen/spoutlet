@@ -50,26 +50,28 @@
 				{% endif %}
 			</p>
 			<div>
-				{% for group in groups %}
-					<div class="group-list-item" data-id="{{ group.id }}">
-			            <a href="{{ path('group_show', { slug: group.slug}) }}">
-			                {% if group.thumbNail %}
-			                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
-			                {% else %}
-			                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
-			                {% endif %}
-			            </a>
-			            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
-			                {{ group.name }}
-			            </a>
-			            <div class="details">
-			                <div class="item-detail">Members: {{ group.members.count }}</div>
-			                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
-			            </div>
-			        </div>
-				{% else %}
+				{% if groups | length > 0 %}
+					{% for group in groups %}
+						<div class="group-list-item" data-id="{{ group.id }}">
+				            <a href="{{ path('group_show', { slug: group.slug}) }}">
+				                {% if group.thumbNail %}
+				                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+				                {% else %}
+				                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+				                {% endif %}
+				            </a>
+				            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+				                {{ group.name }}
+				            </a>
+				            <div class="details">
+				                <div class="item-detail">Members: {{ group.members.count }}</div>
+				                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+				            </div>
+				        </div>
+					{% endfor %}
+				{% elseif groups | length == 0 and groupsEntered.count == 0 %}
 					{{ 'contests.no_groups_found' | trans | format(path('group_new')) | raw }}
-				{% endfor %}
+				{% endif %}
 			</div>
 			<div style="padding: 10px 0 10px 0;text-align:center;">
 				<button id="submit-groups" class="btn" {% if entriesLeft == 0 %}disabled="disabled"{% endif %}>{{ 'contests.submit_group' | trans }}</button>
