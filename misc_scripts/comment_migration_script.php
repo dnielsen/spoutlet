@@ -56,8 +56,10 @@ try {
 
 // Production comments
 
-    echo "\n - Migrating comments(production)...";
-    migrateComments($dbName, $dbh, $classId);
+    if ($dbName !== '') {
+        echo "\n - Migrating comments(production)...";
+        migrateComments($dbName, $dbh, $classId);
+    }
 
 // Staging comments
 
