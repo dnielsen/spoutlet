@@ -5,21 +5,49 @@ $dsn = 'mysql:dbname=;host=';
 $user = '';
 $password = '';
 
-$dbName = '';
+$productionDbName = '';
 $stagingDbName = '';
 
-$baseDir = '/var/www/alienwarearena.com';
+$productionAclDbName = '';
+$stagingAclDbName = '';
+
+$baseDir = '/var/www/alienwarearena/deploy/current';
+$stagingBaseDir = '/var/www/staging/deploy/current';
 
 try {
     $dbh = new PDO($dsn, $user, $password);
 
-// ACL structure
+    echo "\nBeginning comment migration...";
 
-    echo "\nCreating ACL database structure...";
+// Production comments
 
+    if ($productionDbName !== '') {
+        echo "\n - Creating ACL database structure (production)...";
+        $classId = setupAclTables($productionAclDbName, $dbh, $baseDir);
+        echo "\n - Migrating comments(production)...";
+        migrateComments($productionDbName, $productionAclDbName, $dbh, $classId);
+    }
+
+// Staging comments
+
+    if ($stagingDbName !== '') {
+        echo "\n - Creating ACL database structure (staging)...";
+        $classId = setupAclTables($stagingAclDbName, $dbh, $stagingBaseDir);
+        echo "\n - Migrating comments(staging)...";
+        migrateComments($stagingDbName, $stagingAclDbName, $dbh, $classId);
+    }
+
+    echo "\nDone.\n";
+
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+}
+
+function setupAclTables($dbName, $dbh, $baseDir)
+{
     exec('php '.$baseDir.'/app/console init:acl');
 
-    echo "\n - Inserting class specific ACL entries for admin access...";
+    echo "\n   - Inserting class specific ACL entries for admin access...";
 
     $class = "Platformd\\SpoutletBundle\\Entity\\Comment";
     $sql = 'INSERT IGNORE INTO `'.$dbName.'`.`acl_classes` (`class_type`) VALUES (:class)';
@@ -54,29 +82,12 @@ try {
                           ':admin'=>$roleAdminId,
                           ':superAdmin'=>$roleSuperAdminId));
 
-// Production comments
-
-    if ($dbName !== '') {
-        echo "\n - Migrating comments(production)...";
-        migrateComments($dbName, $dbh, $classId);
-    }
-
-// Staging comments
-
-    if ($stagingDbName !== '') {
-        echo "\n - Migrating comments(staging)...";
-        migrateComments($stagingDbName, $dbh, $classId);
-    }
-
-    echo "\nDone.\n";
-
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
+    return $classId;
 }
 
-function migrateComments($dbName, $dbh, $classId)
+function migrateComments($dbName, $aclDbName, $dbh, $classId)
 {
-    echo "\n - Collating author information...";
+    echo "\n   - Collating author information...";
 
     $usernames = array();
     $userIdents = array();
@@ -85,7 +96,7 @@ function migrateComments($dbName, $dbh, $classId)
             FROM `'.$dbName.'`.`comment`
             LEFT JOIN `'.$dbName.'`.`fos_user` ON `comment`.`author_id` = `fos_user`.`id`';
 
-    $insertSql = 'INSERT IGNORE INTO `'.$dbName.'`.`acl_security_identities` (`identifier`, `username`) VALUES (:identifier, 1)';
+    $insertSql = 'INSERT IGNORE INTO `'.$aclDbName.'`.`acl_security_identities` (`identifier`, `username`) VALUES (:identifier, 1)';
 
     foreach ($result = $dbh->query($sql) as $row) {
         $identifier = "Platformd\\UserBundle\\Entity\\User-".$row['username'];
@@ -107,8 +118,8 @@ function migrateComments($dbName, $dbh, $classId)
 
     echo "\n   - Migrating comment posts...";
 
-    $sql = 'INSERT INTO `'.$dbName.'`.`commenting_comment` (`id`, `thread_id`, `parent_id`, `author_id`, `body`, `created_at`, `deleted`)
-        SELECT `id`, `thread_id`, NULL, `author_id`, `body`, `created_at`, 0 FROM `'.$dbName.'`.`comment`';
+    $sql = 'INSERT INTO `'.$dbName.'`.`commenting_comment` (`thread_id`, `parent_id`, `author_id`, `body`, `created_at`, `deleted`)
+        SELECT `thread_id`, NULL, `author_id`, `body`, `created_at`, 0 FROM `'.$dbName.'`.`comment`';
     $query = $dbh->prepare($sql);
     $query->execute();
 
@@ -116,12 +127,12 @@ function migrateComments($dbName, $dbh, $classId)
 
     $selectCommentSql = 'SELECT * FROM `'.$dbName.'`.`commenting_comment`';
 
-    $insertIdentSql = 'INSERT IGNORE INTO `'.$dbName.'`.`acl_object_identities` (`parent_object_identity_id`, `class_id`, `object_identifier`, `entries_inheriting`)
+    $insertIdentSql = 'INSERT IGNORE INTO `'.$aclDbName.'`.`acl_object_identities` (`parent_object_identity_id`, `class_id`, `object_identifier`, `entries_inheriting`)
         VALUES (NULL, :classId, :commentId, 1)';
 
-    $insertAncestorSql = 'INSERT IGNORE INTO `'.$dbName.'`.`acl_object_identity_ancestors` (`object_identity_id`, `ancestor_id`) VALUES (:id, :id)';
+    $insertAncestorSql = 'INSERT IGNORE INTO `'.$aclDbName.'`.`acl_object_identity_ancestors` (`object_identity_id`, `ancestor_id`) VALUES (:id, :id)';
 
-    $insertEntrySql = 'INSERT IGNORE INTO `'.$dbName.'`.`acl_entries` (`class_id`, `object_identity_id`, `security_identity_id`, `ace_order`, `mask`, `granting`, `granting_strategy`, `audit_success`, `audit_failure`)
+    $insertEntrySql = 'INSERT IGNORE INTO `'.$aclDbName.'`.`acl_entries` (`class_id`, `object_identity_id`, `security_identity_id`, `ace_order`, `mask`, `granting`, `granting_strategy`, `audit_success`, `audit_failure`)
         VALUES (:classId, :objectIdentId, :securityIdentId, 0, 128, 1, "all", 0, 0)';
 
     foreach ($dbh->query($selectCommentSql) as $row) {
