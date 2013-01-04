@@ -89,10 +89,14 @@ class GalleryMediaRepository extends EntityRepository
     public function findFeaturedMedia($limit=12)
     {
         return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
             ->where('gm.published = true')
+            ->andWhere('gm.contestEntry IS NULL OR c.votingEnd < :now')
             ->andWhere('gm.featured = true')
             ->andWhere('gm.deleted = false')
             ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('now', new \DateTime('now'))
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
@@ -101,9 +105,13 @@ class GalleryMediaRepository extends EntityRepository
     public function findLatestMedia($limit=12)
     {
         return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
             ->where('gm.published = true')
+            ->andWhere('gm.contestEntry IS NULL OR c.votingEnd < :now')
             ->andWhere('gm.deleted = false')
             ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('now', new \DateTime('now'))
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
@@ -114,10 +122,14 @@ class GalleryMediaRepository extends EntityRepository
         return $this->createQueryBuilder('gm')
             ->leftJoin('gm.galleries', 'gmg')
             ->leftJoin('gmg.sites', 's')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
             ->where('gm.published = true')
+            ->andWhere('gm.contestEntry IS NULL OR c.votingEnd < :now')
             ->andWhere('gm.deleted = false')
             ->andWhere('s.id = :siteId')
             ->setParameter('siteId', $site->getId())
+            ->setParameter('now', new \DateTime('now'))
             ->orderBy('gm.createdAt', 'DESC')
             ->distinct('gm.id')
             ->setMaxResults($limit)
@@ -147,6 +159,7 @@ class GalleryMediaRepository extends EntityRepository
 
     public function findPopularMediaForSite($site, $limit=12)
     {
+
         $results = $this->getEntityManager()->createQuery('
             SELECT DISTINCT
                 gm, COUNT(gmv.id) as vote_count
@@ -155,7 +168,10 @@ class GalleryMediaRepository extends EntityRepository
             LEFT JOIN gm.votes gmv
             LEFT JOIN gm.galleries gmg
             LEFT JOIN gmg.sites s
+            LEFT JOIN gm.conTestEntry ce
+            LEFT JOIN ce.contest c
             WHERE gm.deleted = 0
+            AND (gm.contestEntry IS NULL OR c.votingEnd < :now)
             AND gm.published = 1
             AND gmv.voteType = :up
             AND s.id = :siteId
@@ -163,6 +179,7 @@ class GalleryMediaRepository extends EntityRepository
             ORDER BY vote_count DESC'
         )->setMaxResults($limit)
         ->setParameter('up', 'up')
+        ->setParameter('now', new \DateTime('now'))
         ->setParameter('siteId', $site->getId())
         ->execute();
 
