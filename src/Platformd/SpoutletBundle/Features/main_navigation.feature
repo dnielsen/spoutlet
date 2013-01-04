@@ -73,6 +73,7 @@ Feature: Main Navigation
       | NewGroups >> All Groups     | /app_test.php/groups/                           | http://na.alienwarearena.local/app_test.php/groups/                 |
       | NewGroups >> My Groups      | /app_test.php/account/profile/groups            | http://na.alienwarearena.local/app_test.php/account/profile/groups  |
       | NewGroups >> Create Group   | /app_test.php/groups/new/                        | http://na.alienwarearena.local/app_test.php/groups/new/              |
+      | NewGroups >> Contests       | /app_test.php/contests/                         | http://na.alienwarearena.local/app_test.php/contests/               |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
       | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
@@ -100,6 +101,7 @@ Feature: Main Navigation
       | NewGroups >> All Groups     | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
       | NewGroups >> My Groups      | /app_test.php/account/profile/groups                                                              | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
       | NewGroups >> Create Group   | /app_test.php/groups/new/                                                                          | http://eu.alienwarearena.local/app_test.php/groups/new/             |
+      | NewGroups >> Contests       | /app_test.php/contests/                         | http://eu.alienwarearena.local/app_test.php/contests/               |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                                                                           | http://www.alienwarearena.com/microsoft                 |
