@@ -56,7 +56,7 @@
                     {% if isEntered %}
                         {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
                             <div style="text-align:center;">
-                                <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
+                                <button id="btn-submit-photos" style="margin-top: 10px;width:170px;">{{ 'contests.show_page_my_entries' | trans }}</button>
                             </div>
                         {% else %}
                             <p style="text-align: center;"><em>This contest is no longer available</em></p>

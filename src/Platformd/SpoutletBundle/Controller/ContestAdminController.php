@@ -191,12 +191,13 @@ class ContestAdminController extends Controller
 
     public function metricsAction()
     {
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Contests');
+
         $em              = $this->getDoctrine()->getEntityManager();
         $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite());
         $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite());
         $voteResult      = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
-        $this->getBreadcrumbs()->addChild('Metrics');
-        $this->getBreadcrumbs()->addChild('Contests');
 
         $entryCounts      = array();
         $groupEntryCounts = array();
