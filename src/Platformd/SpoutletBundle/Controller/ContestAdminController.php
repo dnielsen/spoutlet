@@ -234,7 +234,42 @@ class ContestAdminController extends Controller
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
 
-        return $this->renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Contests', array(
+            'route' => 'admin_contest_metrics'
+        ));
+        $this->getBreadcrumbs()->addChild($contest->getName());
+        $this->getBreadcrumbs()->addChild('Entries');
+
+        if($contest->getCategory() == 'image') {
+            return $this->renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+        } elseif ($contest->getCategory() == 'group') {
+            return $this->renderGroupMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+        }
+
+    }
+
+    private function renderGroupMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
+    {
+        $groups = array();
+
+        if(!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
+
+        foreach ($entries as $entry) {
+            foreach($entry->getGroups() as $group) {
+                array_push($groups, $group);
+            }
+        }
+
+        return $this->render('SpoutletBundle:ContestAdmin:groupEntries.html.twig', array(
+            'contest'   => $contest,
+            'entries'   => $entries,
+            'slug'      => $slug,
+        ));
     }
 
     private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
@@ -247,7 +282,7 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
-        $entries            = $contestEntryRepo->findAllNotDeletedForContest($contest);
+        $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
 
         foreach ($entries as $entry) {
             foreach ($entry->getMedias() as $media) {
@@ -273,12 +308,7 @@ class ContestAdminController extends Controller
             }
         }
 
-        $this->getBreadcrumbs()->addChild('Metrics');
-        $this->getBreadcrumbs()->addChild('Contests', array(
-            'route' => 'admin_contest_metrics'
-        ));
-        $this->getBreadcrumbs()->addChild($contest->getName());
-        $this->getBreadcrumbs()->addChild('Entries');
+
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
             'contest'   => $contest,
