@@ -25,13 +25,15 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
-    public function findAllUnpublishedByUserForContest($user)
+    public function findAllUnpublishedByUserForContest($user, $contest)
     {
         return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.contestEntry', 'ce')
             ->where('gm.author = :user')
             ->andWhere('gm.published = :published')
             ->andWhere('gm.deleted <> 1')
-            ->andWhere('gm.contestEntry IS NOT NULL')
+            ->andWhere('ce.contest = :contest')
+            ->setParameter('contest', $contest)
             ->setParameter('user', $user)
             ->setParameter('published', false)
             ->getQuery()
@@ -168,7 +170,7 @@ class GalleryMediaRepository extends EntityRepository
             LEFT JOIN gm.votes gmv
             LEFT JOIN gm.galleries gmg
             LEFT JOIN gmg.sites s
-            LEFT JOIN gm.conTestEntry ce
+            LEFT JOIN gm.contestEntry ce
             LEFT JOIN ce.contest c
             WHERE gm.deleted = 0
             AND (gm.contestEntry IS NULL OR c.votingEnd < :now)
