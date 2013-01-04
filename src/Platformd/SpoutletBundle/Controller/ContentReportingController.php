@@ -110,7 +110,7 @@ class ContentReportingController extends Controller
 
         // We dispatch an event for further stuff like maintaining counts
         $eventName = ContentReportEvents::REPORT;
-        $event = new ContentReportEvent($reportedItem);
+        $event = new ContentReportEvent($reportedItem, $this->getUser());
         $this->get('event_dispatcher')->dispatch($eventName, $event);
 
         $this->sendUserReportedNotificationEmail($id, $type, $reason);
