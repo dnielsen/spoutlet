@@ -455,3 +455,10 @@ spoutlet:
     elasticache_servers:
         %memcached_server1_ip%: %memcached_server1_port%
 
+exercise_html_purifier:
+    default:
+        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+    editor_basic:
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li
+    editor_admin:
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, *[style]
