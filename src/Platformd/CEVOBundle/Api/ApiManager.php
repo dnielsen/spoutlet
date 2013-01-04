@@ -222,6 +222,14 @@ class ApiManager
         return $jsonArr;
     }
 
+    public function GiveUserXp($award, $user_id = null)
+    {
+        $uid = isset($user_id) ? $user_id : $this->getUserId();
+
+        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award));
+        return $response;
+    }
+
     private function logError($message)
     {
         if ($this->logger) {

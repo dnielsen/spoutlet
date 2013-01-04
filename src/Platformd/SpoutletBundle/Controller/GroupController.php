@@ -858,6 +858,8 @@ Alienware Arena Team
 
     public function newAction(Request $request)
     {
+
+
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $this->addGroupsBreadcrumb()->addChild('New Group');
@@ -867,6 +869,8 @@ Alienware Arena Team
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
+
+            //$response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
@@ -1026,5 +1030,10 @@ Alienware Arena Team
     private function getGroupVideoRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }
