@@ -146,7 +146,7 @@ class GalleryController extends Controller
             $gals        = $param['galleries'];
             $groups      = $param['groups'];
 
-            $errors      = $this->validateMediaPublish($id, $title, $description, $gals);
+            $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
             $galleryIds  = count($gals) == 0 ? array(0) : $gals;
             $media       = $this->getGalleryMediaRepository()->find($id);
@@ -232,7 +232,7 @@ class GalleryController extends Controller
         $gals        = $params['galleries'];
         $groups      = $params['groups'];
 
-        $errors = $this->validateMediaPublish($id, $title, $description, $gals);
+        $errors = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
         $canPublish = count($errors) == 0;
 
@@ -295,7 +295,7 @@ class GalleryController extends Controller
         return $response;
     }
 
-    private function validateMediaPublish($id, $title, $desc, $galleries)
+    private function validateMediaPublish($id, $title, $desc, $galleries, $groups)
     {
         $errors = array();
         if($id == 0)
@@ -313,7 +313,7 @@ class GalleryController extends Controller
             $errors[] ='description';
         }
 
-        if(count($galleries) == 0)
+        if(count($galleries) == 0 && count($groups) == 0)
         {
             $errors[] = 'galleries';
         }
@@ -595,7 +595,7 @@ class GalleryController extends Controller
                 $returnId = end($parts);
             }
         }
-        
+
 
         if(!$gallery || $gallery->getDeleted())
         {
@@ -612,11 +612,11 @@ class GalleryController extends Controller
         if ($returnId) {
             foreach ($medias as $key => $media) {
                 if ($media->getId() == $returnId) {
-                    $page = floor($key/16);  
+                    $page = floor($key/16);
                 }
             }
         }
-        
+
         return $this->render('SpoutletBundle:Gallery:gallery.html.twig', array(
             'gallery'       => $gallery,
             'medias'        => $medias,
