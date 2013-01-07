@@ -84,4 +84,38 @@
     </div>
 
     <div id="placeholder" style="width:800px;height:360px;margin:40px 0;"></div>
+
+    <h3>Group Discussion Metrics</h3>
+    <table class="table table-striped table-bordered tablesorter">
+        <thead>
+            <tr>
+                <th>Discussions Added</th>
+                <th>Replies Added</th>
+                <th>Deleted Discussions</th>
+                <th>Region</th>
+                <th>Group Name</th>
+                <th>Total Discussions</th>
+                <th>Total Replies</th>
+                <th>Active Users</th>
+                <th>Discussions/day</th>
+                <th>Replies/day</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ discussionMetricsArray['discussionsAdded'] }}</td>
+                <td>{{ discussionMetricsArray['repliesAdded'] }}</td>
+                <td>{{ discussionMetricsArray['discussionsDeleted'] }}</td>
+                <td>{{ group.Region }}</td>
+                <td>{{ group.name }}</td>
+                <td>{{ discussionMetricsArray['discussions'] }}</td>
+                <td>{{ discussionMetricsArray['replies'] }}</td>
+                <td>{{ discussionMetricsArray['activeUsers'] }}</td>
+                <td>{{ discussionMetricsArray['avgDiscussions'] }}</td>
+                <td>{{ discussionMetricsArray['avgReplies'] }}</td>
+                <td><a href="{{ path('admin_group_discussion_summary_export', { 'id' : group.id , 'from': from|date('m/d/Y'), 'thru': thru|date('m/d/Y')}) }}">Report</a></td>
+            </tr>
+        </tbody>
+    </table>
 {% endblock %}

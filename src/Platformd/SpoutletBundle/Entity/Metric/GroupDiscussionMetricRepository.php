@@ -60,4 +60,35 @@ class GroupDiscussionMetricRepository extends EntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     *
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param \DateTime $from
+     * @param \DateTime $thru
+     * @return array
+     */
+    public function findMetricsForPeriod(GroupDiscussion $groupDiscussion, DateTime $from = null, DateTime $thru = null)
+    {
+        $qb = $this->createQueryBuilder('gDM')
+            ->where('gDM.groupDiscussion = :groupDiscussion')
+            ->setParameter('groupDiscussion', $groupDiscussion)
+            ->orderBy('gDM.date', 'ASC')
+        ;
+
+        if ($from !== null) {
+            $qb
+                ->andWhere('gDM.date >= :from')
+                ->setParameter('from', $from);
+        }
+
+        if ($thru !== null) {
+            $qb
+                ->andWhere('gDM.date <= :thru')
+                ->setParameter('thru', $thru);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

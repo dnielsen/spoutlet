@@ -321,6 +321,75 @@ class MetricManager
     }
 
     /**
+     * Creates a discussions metrics summary array for a specific group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \DateTime $from
+     * @param \DateTime $thru
+     */
+    public function getDiscussionMetricsForGroup(Group $group, DateTime $from, DateTime $thru)
+    {
+        $arr = array(
+            'replies' => 0,
+            'repliesAdded' => 0,
+            'activeUsers' => 0,
+            'discussionsAdded' => 0,
+            'discussionsDeleted' => 0
+        );
+
+        $numberOfDays = $thru->diff($from)->days;
+
+        $arr['discussions'] = $group->getDiscussions()->count();
+
+        $groupMetrics = $this->groupMetricRepository->findMetricsForPeriod($group, $from, $thru);
+        foreach ($groupMetrics as $groupMetric) {
+            $arr['discussionsAdded'] += $groupMetric->getNewDiscussions();
+            $arr['discussionsDeleted'] += $groupMetric->getDeletedDiscussions();
+        }
+
+        foreach($group->getDiscussions() as $discussion) {
+            $arr['replies'] += $discussion->getReplyCount();
+
+            $discussionMetrics = $this->groupDiscussionMetricRepository->findMetricsForPeriod($discussion, $from, $thru);
+            foreach ($discussionMetrics as $discussionMetric) {
+                $arr['repliesAdded'] += $discussionMetric->getReplies();
+                $arr['activeUsers'] += $discussionMetric->getActiveUsers();
+            }
+        }
+
+        $arr['avgDiscussions'] = round(($arr['discussionsAdded'] / $numberOfDays), 1);
+        $arr['avgReplies'] = round(($arr['repliesAdded'] / $numberOfDays), 1);
+
+        return $arr;
+    }
+
+    /**
+     * Creates a detailed
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param $from
+     * @param $thru
+     */
+    public function getDiscussionMetricsDetails(GroupDiscussion $groupDiscussion, DateTime $from = null, DateTime $thru = null)
+    {
+        $arr = array(
+            'replies' => 0,
+            'activeUsers' => 0,
+            'views' => 0
+        );
+
+        $discussionMetrics = $this->groupDiscussionMetricRepository->findMetricsForPeriod($groupDiscussion, $from, $thru);
+
+        foreach ($discussionMetrics as $discussionMetric) {
+            $arr['replies'] += $discussionMetric->getReplies();
+            $arr['activeUsers'] += $discussionMetric->getActiveUsers();
+            $arr['views'] += $discussionMetric->getViews();
+        }
+
+        return $arr;
+    }
+
+    /**
      * Generates group discussions metrics
      *
      * @param \DateTime $date

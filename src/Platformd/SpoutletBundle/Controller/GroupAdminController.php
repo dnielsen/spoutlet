@@ -8,7 +8,9 @@ use Platformd\SpoutletBundle\Entity\GroupVideoRepository;
 use Platformd\SpoutletBundle\Entity\GroupImageRepository;
 use Platformd\SpoutletBundle\Entity\GroupNewsRepository;
 use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
+use Platformd\SpoutletBundle\Entity\DiscussionFindWrapper;
 use Platformd\SpoutletBundle\Form\Type\GroupFindType;
+use Platformd\SpoutletBundle\Form\Type\DiscussionFindType;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\SpoutletBundle\Metric\MetricManager;
@@ -87,6 +89,7 @@ class GroupAdminController extends Controller
             $row['VideoCount']          = $group->getVideos()->count();
             $row['ImageCount']          = $group->getImages()->count();
             $row['NewsArticleCount']    = $group->getNewsArticles()->count();
+            $row['DiscussionCount']     = $group->getDiscussions()->count();
 
             $row['NewMemberCount'] = $group->getMembershipActions()
                 ->filter(function($x) {
@@ -165,6 +168,14 @@ class GroupAdminController extends Controller
         return new Response(json_encode($result));
     }
 
+    /**
+     * Shows detailed metrics for group
+     *
+     * @param $id
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
     public function detailsAction($id, Request $request)
     {
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
@@ -173,6 +184,14 @@ class GroupAdminController extends Controller
 
         if(!$group) {
             throw $this->createNotFoundException('Unable to find group.');
+        }
+
+        if ($group->getAllLocales()) {
+            $group->Region = 'All Sites';
+        } else {
+            foreach ($group->getSites() as $site) {
+                $group->Region .= '[' . $site->getName() . ']';
+            }
         }
 
         $this->addFindGroupsBreadcrumb()->addChild($group->getName());
@@ -192,14 +211,198 @@ class GroupAdminController extends Controller
             $groupDeletedDiscussionsArray[] = array(($groupMetric->getDate()->getTimestamp() * 1000), $groupMetric->getDeletedDiscussions());
         }
 
+        $discussionMetricsArray = $this->getMetricManager()->getDiscussionMetricsForGroup($group, $from, $thru);
+
         return $this->render('SpoutletBundle:GroupAdmin:details.html.twig', array(
             'group' => $group,
             'from' => $from,
             'thru' => $thru,
             'groupNewMembers' => json_encode($groupNewMembersArray),
             'groupNewDiscussions' => json_encode($groupNewDiscussionsArray),
-            'groupDeletedDiscussions' => json_encode($groupDeletedDiscussionsArray)
+            'groupDeletedDiscussions' => json_encode($groupDeletedDiscussionsArray),
+            'discussionMetricsArray' => $discussionMetricsArray
         ));
+    }
+
+    /**
+     * Generates group discussion summary report for a specific date range
+     *
+     * @param $id
+     * @param \DateTime $from
+     * @param \DateTime $thru
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function generateGroupDiscussionCsvAction($id, Request $request)
+    {
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+
+        $group = $groupRepo->find($id);
+
+        if(!$group) {
+            throw $this->createNotFoundException('Unable to find group.');
+        }
+
+        if ($group->getAllLocales()) {
+            $group->Region = 'All Sites';
+        } else {
+            foreach ($group->getSites() as $site) {
+                $group->Region .= '[' . $site->getName() . ']';
+            }
+        }
+
+        $from = $request->get('from') == null ? new DateTime('-1 month midnight') : new DateTime($request->get('from'));
+        $thru = $request->get('thru') == null ? new DateTime('today midnight') : new DateTime($request->get('thru'));
+
+        $discussionMetricsArray = $this->getMetricManager()->getDiscussionMetricsForGroup($group, $from, $thru);
+
+        $factory = new CsvResponseFactory();
+
+        $factory->addRow(array(
+            'Date Range',
+            'Region',
+            'Group Name',
+            'Discussions Added',
+            'Replies Added',
+            'Discussions Deleted',
+            'Total discussions',
+            'Total replies',
+            'Active users',
+            'Discussion/day',
+            'Replies/day'
+        ));
+
+        $factory->addRow(array(
+            date_format($from, 'Y/m/d') . '-' . date_format($thru, 'Y/m/d'),
+            $group->Region,
+            $group->getName(),
+            $discussionMetricsArray['discussionsAdded'],
+            $discussionMetricsArray['repliesAdded'],
+            $discussionMetricsArray['discussionsDeleted'],
+            $discussionMetricsArray['discussions'],
+            $discussionMetricsArray['replies'],
+            $discussionMetricsArray['activeUsers'],
+            $discussionMetricsArray['avgDiscussions'],
+            $discussionMetricsArray['avgReplies']
+        ));
+
+        return $factory->createResponse('Group_Discussions_Summary.csv');
+    }
+
+    /**
+     * Finds a discussion
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function findDiscussionAction(Request $request)
+    {
+        $this->addFindDiscussionsBreadcrumb();
+
+        $data = new DiscussionFindWrapper();
+        $form = $this->createForm(new DiscussionFindType(), $data);
+
+        if ('POST' == $request->getMethod()) {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+            }
+        }
+
+        $results = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion')->findDiscussionStats(array(
+            'discussionName' => $data->getDiscussionName(),
+            'deleted' => $data->getDeleted(),
+            'sites' => $data->getSites(),
+            'from' => $data->getFrom(),
+            'thru' => $data->getThru()
+        ));
+
+        foreach ($results as $groupDiscussion) {
+            $group = $groupDiscussion->getGroup();
+            if ($group->getAllLocales()) {
+                $group->Region = 'All Sites';
+            } else {
+                foreach ($group->getSites() as $site) {
+                    $group->Region .= '[' . $site->getName() . ']';
+                }
+            }
+            $groupDiscussion->status = $groupDiscussion->getDeleted() ? 'Inactive' : 'Active';
+        }
+
+        return $this->render('SpoutletBundle:GroupAdmin:findDiscussion.html.twig', array(
+            'results' => $results,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Generates a detailed report for a discussion and for a specific date range
+     *
+     * @param $id
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function generateGroupDiscussionDetailsCsvAction($id, Request $request)
+    {
+        $groupDiscussionRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion');
+
+        $groupDiscussion = $groupDiscussionRepo->find($id);
+
+        if(!$groupDiscussion) {
+            throw $this->createNotFoundException('Unable to find discussion.');
+        }
+
+        $from = $request->get('from') == null ? null : new DateTime($request->get('from'));
+        $thru = $request->get('thru') == null ? null : new DateTime($request->get('thru'));;
+
+        $discussionMetricsArray = $this->getMetricManager()->getDiscussionMetricsDetails($groupDiscussion);
+
+        $factory = new CsvResponseFactory();
+
+        $group = $groupDiscussion->getGroup();
+        $region = '';
+        if ($group->getAllLocales()) {
+            $region = 'All Sites';
+        } else {
+            foreach ($group->getSites() as $site) {
+                $region .= '[' . $site->getName() . ']';
+            }
+        }
+
+        $firstRow = array(
+            'Date Range',
+            'Discussion Name',
+            'Region',
+            'Group Name',
+            'Views',
+            'Replies',
+            'Active Users',
+            'Author Username',
+            'Creation Date',
+        );
+
+        $factory->addRow($firstRow);
+
+        $dataRow = array(
+            $groupDiscussion->getTitle(),
+            $region,
+            $group->getName(),
+            $discussionMetricsArray['views'],
+            $discussionMetricsArray['replies'],
+            $discussionMetricsArray['activeUsers'],
+            $groupDiscussion->getAuthor()->getUsername(),
+            date_format($groupDiscussion->getCreatedAt(), 'Y/m/d')
+        );
+
+        if ($from !== null && $thru !== null) {
+            array_unshift($dataRow, date_format($from, 'Y/m/d') . '-' . date_format($thru, 'Y/m/d'));
+        } else {
+            array_unshift($dataRow, 'All Time');
+        }
+
+        $factory->addRow($dataRow);
+
+        return $factory->createResponse('Group_Discussion_Detailed'. $groupDiscussion->getId() .'.csv');
     }
 
     private function getGroupVideoCount($group, $fromDate, $thruDate)
@@ -326,8 +529,6 @@ class GroupAdminController extends Controller
 
     public function generateExportCsvAction($type, $groupId)
     {
-
-
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
 
         switch ($type) {
@@ -392,6 +593,15 @@ class GroupAdminController extends Controller
                 $itemCollection = $group->getNewsArticles();
                 $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
                 $exportFilename = 'Group_News_Export.csv';
+
+                break;
+
+            case 'discussions':
+
+                $group          = $groupRepo->getGroupDiscussionsForExport($groupId);
+                $itemCollection = $group->getDiscussions();
+                $factory        = $this->buildGroupMediaExportCsv($group, $itemCollection);
+                $exportFilename = 'Group_Discussions_Export.csv';
 
                 break;
 
@@ -497,6 +707,18 @@ class GroupAdminController extends Controller
     {
         $this->getBreadcrumbs()->addChild('Find Groups', array(
             'route' => 'admin_group_find'
+        ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    /**
+     * @return \Knp\Menu\ItemInterface
+     */
+    private function addFindDiscussionsBreadcrumb()
+    {
+        $this->getBreadcrumbs()->addChild('Find Discussions', array(
+            'route' => 'admin_group_discussion_find'
         ));
 
         return $this->getBreadcrumbs();

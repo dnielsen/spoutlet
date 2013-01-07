@@ -54,20 +54,20 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     private $author;
 
     /**
-     * @var \DateTime $created
+     * @var \DateTime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
-    private $created;
+    private $createdAt;
 
     /**
-     * @var \DateTime $updated
+     * @var \DateTime $updatedAt
      *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      */
-    private $updated;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -216,19 +216,19 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     }
 
     /**
-     * @param \DateTime $created
+     * @param \DateTime $createdAt
      */
-    public function setCreated($created)
+    public function setCreatedAt($createdAt)
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
     }
 
     /**
      * @return \DateTime
      */
-    public function getCreated()
+    public function getCreatedAt()
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
     public function setDeleted($deleted)
@@ -284,19 +284,19 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     }
 
     /**
-     * @param \DateTime $updated
+     * @param \DateTime $updatedAt
      */
-    public function setUpdated($updated)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updated = $updated;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
      * @return \DateTime
      */
-    public function getUpdated()
+    public function getUpdatedAt()
     {
-        return $this->updated;
+        return $this->updatedAt;
     }
 
     /**

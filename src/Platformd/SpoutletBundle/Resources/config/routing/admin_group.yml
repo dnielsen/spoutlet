@@ -27,3 +27,15 @@ admin_group_content_report:
 admin_group_details:
     pattern: /metrics/group/{id}/details
     defaults: { _controller: "SpoutletBundle:GroupAdmin:details" }
+
+admin_group_discussion_find:
+    pattern: /metrics/find-discussions
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:findDiscussion" }
+
+admin_group_discussion_summary_export:
+    pattern: /{id}/metrics/group-discussions-summary-export
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:generateGroupDiscussionCsv" }
+
+admin_group_discussion_details_export:
+    pattern: /{id}/metrics/group-discussions-details-export
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:generateGroupDiscussionDetailsCsv" }
