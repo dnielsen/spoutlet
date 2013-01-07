@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use DateTime;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * Group admin controller.
@@ -107,10 +109,13 @@ class GroupAdminController extends Controller
             $resultTable[] = $row;
         }
 
+        $pager = new Pagerfanta(new ArrayAdapter($resultTable));
+        $pager->setMaxPerPage(10);
+        $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
         $form = $this->createForm(new GroupFindType(), $filters);
 
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
-            'results' => $resultTable,
+            'results' => $pager,
             'form' => $form->createView(),
         ));
     }
