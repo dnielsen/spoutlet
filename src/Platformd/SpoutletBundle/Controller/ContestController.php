@@ -143,7 +143,7 @@ class ContestController extends Controller
         }
 
         $form       = $this->createForm(new SubmitImageType($user));
-        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user);
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user, $contest);
         $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
         $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllOwnedGroupsForContest($user, $entry, $this->getCurrentSite());
         $mediaCount = $entry->getMedias()
