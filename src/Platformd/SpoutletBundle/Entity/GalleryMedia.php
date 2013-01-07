@@ -389,7 +389,8 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
      */
     public function  getLinkableRouteName()
     {
-        return $this->getCategory() == 'image' ? 'gallery_view_image' : 'gallery_view_video';
+        //Will need updated when vdeo galleries are implemented.
+        return $this->getCategory() == 'image' ? 'gallery_media_show' : 'gallery_media_show';
     }
 
     /**

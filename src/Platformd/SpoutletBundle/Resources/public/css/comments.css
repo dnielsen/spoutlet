@@ -241,28 +241,28 @@
     padding: 5px;
 }
 
-a.comment-voting-button {
+.comment-vote a.comment-voting-button {
     width: 14px;
     height: 14px;
     float: left;
 }
 
-.up {
+.comment-vote .up {
     background: url('/bundles/spoutlet/images/comments/comment_vote_sprite.png');
     background-position: 0 0;
 }
 
-.up:hover {
+.comment-vote .up:hover {
     background: url('/bundles/spoutlet/images/comments/comment_vote_sprite.png');
     background-position: 0 14px;
 }
 
-.down {
+.comment-vote .down {
     background: url('/bundles/spoutlet/images/comments/comment_vote_sprite.png');
     background-position: 14px 0;
 }
 
-.down:hover {
+.comment-vote .down:hover {
     background: url('/bundles/spoutlet/images/comments/comment_vote_sprite.png');
     background-position: 14px 14px;
 }
