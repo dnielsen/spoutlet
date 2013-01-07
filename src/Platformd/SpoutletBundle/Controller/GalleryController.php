@@ -348,9 +348,13 @@ class GalleryController extends Controller
             $offset += $otherMediaPerPage;
         }
 
-        $totalVotes     = $this->getVoteRepository()->findVoteCount($id);
-        $upVotes        = $totalVotes ? round(($this->getVoteRepository()->findUpVotes($id)/$totalVotes)*100) : 0;
-        $downVotes      = $totalVotes ? 100 - $upVotes : 0;
+        $voteRepo       = $this->getVoteRepository();
+        $totalVotes     = $voteRepo->findVoteCount($id);
+        $upVotes        = $voteRepo->findUpVotes($id);
+        $points         = $upVotes - ($totalVotes - $upVotes);
+
+        $upVotesPercentage      = $totalVotes ? round(($upVotes/$totalVotes)*100) : 0;
+        $downVotesPercentage    = $totalVotes ? 100 - $upVotesPercentage : 0;
 
         $views = $media->getViews();
 
@@ -367,9 +371,10 @@ class GalleryController extends Controller
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'             => $media,
             'otherMediaPages'   => $otherMediaPages,
-            'upVotes'           => $upVotes,
+            'upVotes'           => $upVotesPercentage,
             'crumb'             => $crumb,
-            'downVotes'         => $downVotes,
+            'downVotes'         => $downVotesPercentage,
+            'points'            => $points,
         ));
     }
 
