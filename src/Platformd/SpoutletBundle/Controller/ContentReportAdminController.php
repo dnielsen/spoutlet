@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\ContentReport;
 use Platformd\SpoutletBundle\Form\Type\ReportedContentType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
@@ -166,7 +167,11 @@ class ContentReportAdminController extends Controller
             $em->persist($group);
             $repo->deleteAllContentReportsForGroup($group);
 
-            $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getId());
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getId());
+            } catch (ApiException $e) {
+
+            }
 
         } else {
 

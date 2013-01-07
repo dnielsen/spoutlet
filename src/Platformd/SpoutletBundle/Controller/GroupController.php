@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -176,7 +177,11 @@ Alienware Arena Team
         $em->remove($application);
         $em->flush();
 
-        $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getId());
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getId());
+        } catch (ApiException $e) {
+
+        }
 
         $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
 
@@ -340,7 +345,11 @@ Alienware Arena Team
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
 
         if($group->getIsPublic()) {
-            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup');
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('joingroup');
+            } catch (ApiException $e) {
+
+            }
         }
 
         $this->setFlash('success', 'You have successfully joined this group!');
@@ -617,7 +626,11 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroupImage($groupImage);
 
-                $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto');
+                try {
+                    $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto');
+                } catch (ApiException $e) {
+
+                }
 
                 $this->setFlash('success', 'Image posted successfully.');
 
@@ -745,7 +758,11 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroupVideo($groupVideo);
 
-                $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupvideo');
+                try {
+                    $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupvideo');
+                } catch (ApiException $e) {
+
+                }
 
                 $this->setFlash('success', 'New video posted successfully.');
 
@@ -879,7 +896,11 @@ Alienware Arena Team
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
-            $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
+            } catch(ApiException $e) {
+
+            }
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
