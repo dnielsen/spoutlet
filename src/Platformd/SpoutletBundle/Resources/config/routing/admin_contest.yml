@@ -1,0 +1,55 @@
+admin_contest_new:
+    pattern: /new
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
+
+admin_contest_create:
+    pattern: /create
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:new" }
+    requirements: { _method: post }
+
+admin_contest_metrics:
+    pattern: /metrics
+    defaults: { _controller: SpoutletBundle:ContestAdmin:metrics }
+
+admin_contest_entries:
+    pattern: /metrics/{slug}/entries
+    defaults: { _controller: SpoutletBundle:ContestAdmin:entryMetrics }
+
+admin_contest_entries_update:
+    pattern: /metrics/{slug}/entries/update
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:updateEntries" }
+    requirements: { _method: post }
+
+admin_contest_entries_export:
+    pattern: /metrics/{slug}/entries/export
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:generateContestEntriesCsv" }
+
+admin_contest_votes_export:
+    pattern: /metrics/{slug}/entries/{id}/votes
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:generateEntryVotesCsv" }
+
+admin_contest_index:
+    pattern: /
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:index" }
+
+admin_contest_list:
+    pattern: /{site}
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:list" }
+
+admin_contest_edit:
+    pattern: /{slug}/edit
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:edit" }
+
+admin_contest_update:
+    pattern:  /{slug}/update
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:edit" }
+    requirements: { _method: post }
+
+admin_contest_confirm_winner:
+    pattern: /{slug}/confirm-winners
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:confirmWinners" }
+    requirements: { _method: post }
+
+admin_contest_select_winner:
+    pattern: /{slug}/select-winners
+    defaults: { _controller: "SpoutletBundle:ContestAdmin:chooseWinners" }

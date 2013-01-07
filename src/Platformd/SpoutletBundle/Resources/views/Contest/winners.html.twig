@@ -1,0 +1,40 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
+
+<div class="std_1col" style="text-align:center;">
+
+    {% if contest.winners | length > 0 %}
+        <h3>{{ 'contests.congratulations_winners' | trans }}</h3>
+
+        <div id="contest-entries">
+            {% for winner in winners %}
+
+                <div class="contest-winner-wrapper"{% if loop.index == 1 %} style="margin-left: 10px;"{% endif %}>
+                    <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
+                        <img src="{{ winner.image.filename | imagine_filter('gallery_image_square') }}" alt="{{ winner.title }}" />
+                    </a>
+                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></p>
+
+                </div>
+
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <p>{{ 'contests.no_winners' | trans }}</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}

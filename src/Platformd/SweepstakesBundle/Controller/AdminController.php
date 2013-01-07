@@ -207,10 +207,38 @@ class AdminController extends Controller
         // save to db
         $sweepstakes = $sweepstakesForm->getData();
 
+        $ruleset    = $sweepstakes->getRuleset();
+        $rules      = $ruleset->getRules();
+
+        $newRulesArray = array();
+
+        $defaultAllow = true;
+
+        foreach ($rules as $rule) {
+            $rule->setRuleset($ruleset);
+            $newRulesArray[] = $rule;
+
+            $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+        if ($oldRules) {
+            foreach ($oldRules as $oldRule) {
+                if (!in_array($oldRule, $newRulesArray)) {
+                    $oldRule->setRuleset(null);
+                }
+            }
+        }
+
+        $sweepstakes->getRuleset()->setParentType('sweepstake');
+        $sweepstakes->getRuleset()->setDefaultAllow($defaultAllow);
+
         $this
             ->get('platformd.events_manager')
             ->save($sweepstakes);
-            
+
         $this->setFlash('success', 'Sweepstakes Saved');
     }
 

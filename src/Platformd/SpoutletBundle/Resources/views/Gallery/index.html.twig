@@ -1,0 +1,114 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% set hasPhotos = nivoSliderMedia | length > 0 %}
+
+{% block title 'galleries.index_page_title' | trans %}
+
+{% block content %}
+<div class="std_2col">
+    <div class="left">
+        {% if hasPhotos %}
+        <div style="width: 636px; height: 295px;">
+            <div class="slider-wrapper theme-nivo">
+                <div id="slider" class="nivoSlider">
+                    {% for media in nivoSliderMedia %}
+                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" class="gallery-slider"/>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="widget-66" {% if hasPhotos %}style="margin: 15px auto;"{% endif %}>
+            <div class="widget-header">
+                <div class="widget-title">
+                    <div id="media-gallery-name" style="float: left;">
+                        {{ 'galleries.index_page_header' | trans }}
+                    </div>
+                    <div style="float: right;" class="styled-select">
+                        <select id="media-filter-options">
+                        {% for option in filterOptions %}
+                        <option value="{{ option['value'] }}" data-slug="{{ option['slug'] }}">{{ option['name'] | trans }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="media-wrapper">
+
+                </div>
+            </div>
+            <div class="widget-footer" style="height:15px;">
+                <a href="{{ path('gallery_index') }}" id="media-gallery-link" class="aw-link featured-footer-link" style="display:none;">{{ 'galleries.gallery_see_all' | trans }}</a>
+                <div class="clear"></div>
+            </div>
+        </div>
+                <div class="submit-media">
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+        </div>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/js/nivo-slider/nivo-slider.css') }}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/js/nivo-slider/themes/nivo/nivo.css') }}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" type="text/css" media="screen" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/spoutlet/js/nivo-slider/jquery.nivo.slider.pack.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#slider').nivoSlider({
+                pauseTime: 5000,
+                effect: 'fade',
+            });
+
+            var baseGalleryUrl = $('#media-gallery-link').attr('href');
+
+            var updateMedia = function() {
+                var type        = $('#media-filter-options').val();
+                var url         = "{{ path('gallery_index_data') }}" + '?type=' + type;
+                var slug        = $("#media-filter-options option:selected").attr('data-slug');
+                var href        = slug == '' ? baseGalleryUrl : baseGalleryUrl + slug + '/latest';
+                var galleryName = $('#media-filter-options option:selected').text();
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    success: function (html) {
+                        $('#media-wrapper').html(html);
+                        $('.media-title').truncate({
+                            width: 115,
+                        });
+
+                        $('#media-gallery-link').attr('href', href);
+
+                        if(slug == '') {
+                            $('#media-gallery-link').hide();
+                        } else {
+                            $('#media-gallery-link').show();
+                        }
+                    }
+                });
+
+                //$('#media-gallery-name').text(galleryName);
+            }
+
+            $('#media-filter-options').change(function() {
+                updateMedia();
+            });
+
+            updateMedia();
+        });
+    </script>
+{% endblock %}

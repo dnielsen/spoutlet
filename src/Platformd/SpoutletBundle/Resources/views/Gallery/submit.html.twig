@@ -1,0 +1,456 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'galleries.submit_photo_page_title' | trans %}
+
+
+
+{% block content %}
+<div class="xnotices" id="flash-publish-success" style="display:none;">
+    <div class="successNotice notice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3>{{ 'galleries.submit_photo_publish_success' | trans }}</h3>
+                        <p id="publish-success-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="std_2col">
+    <div class="left">
+        <h3>{{ 'galleries.submit_photo_page_header' | trans }}</h3>
+        <form action="{{ path('gallery_submit') }}" id="submit-photo-form" method="post" {{ form_enctype(form) }}>
+            {% include 'SpoutletBundle:Gallery:_submitImageForm.html.twig' %}
+            <div class="form-actions">
+                <button id="media-upload" class="btn btn-primary" type="submit" disabled>{{ 'galleries.upload_images' | trans }}</button>
+                <button id="cancel" class="btn btn-primary" rel="{{ path('gallery_index') }}" style="margin-left: 10px;">{{ 'galleries.cancel' | trans }}</button>
+            </div>
+        </form>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
+{% if medias | length > 0 %}
+{% set initialId = medias[0].id %}
+<div class="std_2col" id="publish-media">
+    <div class="left">
+        <p>
+            <span style="font-weight:bold;">{{ 'galleries.submit_photo_step2' | trans }}</span>
+            {{ 'galleries.submit_photo_step2_detail' | trans }}
+        </p>
+        <span>* required fields</span>
+        <div id="media-form" class="form-horizontal">
+            <p style="color: #ff0000;" id="media-form-error-msg"></p>
+            <ul id="media-form-errors">
+            </ul>
+            <div class="span11">
+                <div class="control-group ">
+                    <label class="control-label" for="media-title">{{ 'galleries.submit_photo_image_name' | trans }}</label>
+                    <div class="controls">
+                        <input type="text" id="media-title" name="media-title" required="required" maxlength="255" class="photo-title form-txt">
+                    </div>
+                </div>
+                <div class="control-group ">
+                    <label class="control-label" for="media-description">{{ 'galleries.submit_photo_image_desc' | trans }}</label>
+                    <div class="controls">
+                        <textarea id="media-description" name="media-description" required="required" maxlength="512" class="photo-description"></textarea>
+                    </div>
+                </div>
+                <div id="platformd_spoutletbundle_gallery_media_galleries">
+                    <div class="control-group ">
+                        <label class="control-label">{{ 'galleries.submit_photo_image_galleries' | trans }}</label>
+                        <div class="controls">
+                            {% for gallery in galleries %}
+                                <label class="checkbox">
+                                    <input class="gallery-checkbox" type="checkbox" id="gallery-{{ gallery.id }}" name="gallery-{{ gallery.id }}" value="{{ gallery.id }}" />
+                                    {{ gallery.name }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div id="gallery-submit-image-groups">
+                    <div class="control-group ">
+                        <label class="control-label">{{ 'galleries.submit_photo_groups' | trans }}</label>
+                        <div class="controls">
+                        {% if groups | length > 0 %}
+                            {% for group in groups %}
+                                <label class="checkbox">
+                                    <input class="group-checkbox" type="checkbox" id="group-{{ group.id }}" name="group-{{ group.id }}" value="{{ group.id }}" />
+                                    {{ group.name }}
+                                </label>
+                            {% endfor %}
+                        {% else %}
+                            <p style="margin-top: 7px;">You are not a member of any groups at this time.</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="media-id" name="media-id" value="{{ initialId }}" />
+            </div>
+            <div class="form-actions" style="padding-left:180px;">
+                <button id="publish-photo" class="btn btn-primary" formnovalidate>{{ 'galleries.submit_photo_button_publish' | trans}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        {% for media in medias %}
+            <div class="gallery-media-wrapper" id="gallery-media-wrapper-{{ media.id }}">
+                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active {% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+                <a href="#" class="delete-media" data-id="{{ media.id }}" style="vertical-align:top; padding-left:10px;">&times;</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<div id="blockUploadUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
+    <p>{{ 'galleries.submit_photo_blockUI_message' | trans }}</p>
+</div>
+<div id="blockPublishUI" style="display:none;">
+    <div style="text-align: center;padding-top:10px;">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" alt="Loading..." />
+    </div>
+    <p>{{ 'galleries.submit_photo_publish_blockUI_message' | trans }}</p>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
+    <script type="text/javascript">
+        $(function() {
+
+            var medias = [];
+
+            var t;
+
+            var clearForm = function() {
+                $('#media-title').val('');
+                $('#media-description').val('');
+                $('#media-form-errors').empty();
+                $('#media-form-error-msg').text('');
+            }
+
+            var hideFlash = function () {
+
+                clearTimeout(t);
+
+                t = window.setTimeout(function() {
+
+                    $('.xnotices').fadeOut();
+                }, 10000);
+            }
+
+            var initMedia = function() {
+                if($('.gallery-media').length > 0) {
+                    selectMedia($('.gallery-media').first());
+                }
+            }
+
+            var selectMedia = function (current) {
+                clearForm();
+                $('.gallery-media').removeClass('active');
+                current.addClass('active');
+
+                $('#media-title').val(current.attr('data-title'));
+                $('#media-id').val(current.attr('data-id'));
+
+                var media = getMedia($('#media-id').val());
+
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
+
+                    medias.push(media);
+                } else {
+                    $('#media-id').val(media.id);
+                    $('#media-title').val(media.title);
+                    $('#media-description').val(media.description);
+                    setSelectedGalleries(media.galleries);
+                    setSelectedGroups(media.groups);
+                }
+            }
+
+            var mediaChanged = function () {
+                var media = getMedia($('#media-id').val());
+
+                if(media == null) {
+                    media = {
+                        'id' : $('#media-id').val(),
+                        'title' : $('#media-title').val(),
+                        'description' : $('#media-description').val(),
+                        'galleries' : getSelectedGalleries(),
+                        'groups' : getSelectedGroups(),
+                    };
+
+                    medias.push(media);
+                } else {
+                    media.title = $('#media-title').val();
+                    media.description = $('#media-description').val();
+                    media.galleries = getSelectedGalleries();
+                    media.groups = getSelectedGroups();
+                }
+            }
+
+            var getMedia = function (id) {
+                for (var i = medias.length - 1; i >= 0; i--) {
+                    if(medias[i].id == id) {
+                        return medias[i];
+                    }
+                };
+
+                return null;
+            }
+
+            var publishMultiplePhotos = function() {
+                clearForm();
+
+                $.blockUI({
+                    message: $('#blockPublishUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
+                    }
+                });
+
+                var url = '{{ path('gallery_publish_multiple_photos') }}';
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(medias),
+                    controlstentType: 'application/json',
+                    success: function (data) {
+                        if(data.success) {
+                            $('#publish-success-message').text(data.message);
+                            $('#flash-publish-success').fadeIn();
+
+                            var unpublished = data.unpublished;
+                            var published = data.published;
+
+                            var len = medias.length;
+                            while(len--) {
+                                var media = medias[len];
+                                for (var i = published.length - 1; i >= 0; i--) {
+                                    if(published[i] == media.id) {
+                                        $('#gallery-media-wrapper-' + media.id).remove();
+                                        medias.splice(len, 1);
+                                    }
+                                };
+                            }
+
+                        }
+
+                        initMedia();
+
+                        $.unblockUI();
+
+                        if(unpublished.length > 0) {
+                            if((data.errors.indexOf("galleries") != -1) || (data.errors == 'galleries')) {
+                                $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_gallery_or_group_required' | trans }}');
+                            } else {
+                                $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_more' | trans }}');
+                            }
+                        }
+
+                        if($('.gallery-media-wrapper').length == 0) {
+                            window.location = '{{ path('gallery_share_photo') }}';
+                        }
+                    }
+                });
+
+
+            }
+
+            var setSelectedGalleries = function (galleries) {
+                $('.gallery-checkbox').prop('checked', false);
+                for (var i = galleries.length - 1; i >= 0; i--) {
+                    $('#gallery-' + galleries[i]).prop('checked', true);
+                };
+            }
+
+            var setSelectedGroups = function (groups) {
+                $('.group-checkbox').prop('checked', false);
+                for (var i = groups.length - 1; i >= 0; i--) {
+                    $('#group-' + groups[i]).prop('checked', true);
+                };
+            }
+
+            var getSelectedGroups = function () {
+                var groups = [];
+
+                $('.group-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        groups.push($(this).val());
+                    }
+                });
+
+                return groups;
+            }
+
+            var getSelectedGalleries = function () {
+                var galleries = [];
+
+                $('.gallery-checkbox').each(function () {
+                    if($(this).is(':checked')) {
+                        galleries.push($(this).val());
+                    }
+                });
+
+                return galleries;
+            }
+
+            $('#media-description').bind('input propertychange', function () {
+                mediaChanged();
+            });
+
+            $('.gallery-checkbox').change(function () {
+                mediaChanged();
+            });
+
+            $('.group-checkbox').change(function () {
+                mediaChanged();
+            });
+
+            $('#media-title').bind('input propertychange', function () {
+                mediaChanged();
+            });
+
+            $('.delete-media').click(function(event) {
+                event.preventDefault();
+
+                var url = '{{ path('gallery_delete_media_ajax') }}';
+
+                var media = {
+                    'id' : $(this).attr('data-id'),
+                };
+
+                var mediaDiv = $(this).parent();
+
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: JSON.stringify(media),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if(data.success) {
+                            mediaDiv.fadeOut('normal');
+                            mediaDiv.remove();
+
+                            var len = medias.length;
+                            while(len--) {
+                                if(medias[len].id == media.id) {
+                                    medias.splice(len, 1);
+                                }
+                            }
+
+                            if($('.gallery-media-wrapper').length < 1) {
+                                window.location = '{{ path('gallery_submit') }}';
+                            }
+                            initMedia();
+                        }
+                    }
+                });
+            });
+
+            $('#publish-photo').click(publishMultiplePhotos);
+
+            $('.gallery-media').click(function () {
+                selectMedia($(this));
+            });
+
+            $('.gallery-media').qtip({
+                style: {
+                    border: {
+                        width: 2,
+                        radius: 5 },
+                        padding: 10,
+                        tip: true,
+                        name: 'dark'
+                    },
+                    position: {
+                        corner: {
+                            tooltip: 'leftMiddle',
+                            target: 'rightMiddle'
+                    }
+                }
+            });
+
+            $('.gallery-media').hover(
+                function () {
+
+                    $(this).addClass('active');
+                },
+                function () {
+                    var selected = $('#media-id').val();
+                    var current = $(this).attr('data-id');
+
+                    if(current == selected) {
+                        return;
+                    }
+                    $(this).removeClass('active');
+                }
+            );
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('#galleryImages').MultiFile({
+                accept: 'gif|jpg|png',
+                afterFileSelect: function(element, value, master_element) {
+                    var total = $('.MultiFile-applied').length - 1;
+                    var name = element.getAttribute('name');
+                    element.name = 'platformd_spoutletbundle_submitimagetype[galleryImages][' + total + '][fileObject]';
+                    if(total > 0) {
+                        document.getElementById('media-upload').disabled = false;
+                    }
+                },
+                afterFileRemove: function(element, value, master_element) {
+                    var total = $('.MultiFile-applied').length - 1;
+                    if(total == 0) {
+                        document.getElementById('media-upload').disabled = true;
+                    }
+                }
+            });
+
+            $('#submit-photo-form').bind('submit', function() {
+                $.blockUI({
+                    message: $('#blockUploadUI'),
+                    css: {
+                        backgroundColor: '#252525',
+                        border: '3px solid #009CDA',
+                        color: '#B3B3B3',
+                    }
+                });
+            });
+
+            initMedia();
+            hideFlash();
+
+        });
+    </script>
+{% endblock %}

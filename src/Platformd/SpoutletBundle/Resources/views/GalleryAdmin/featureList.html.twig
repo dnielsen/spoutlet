@@ -1,0 +1,60 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Featured Media' %}
+
+{% block content %}
+<h1>Featured {{ category | capitalize }}</h1>
+<div style="width: 750px;">
+    <div>
+        <p>{{ items | length }} item(s) found:</p>
+
+        <table class="table table-striped table-bordered tablesorter">
+            <thead>
+                <tr>
+                    <th>Item Information</th>
+                    <th>Item Preview</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+
+                        {% if category == 'image' %}
+
+                            <td>
+                                <h3>Owner</h3>
+                                <div>{{ item.author.username }}</div>
+                                <h3>Title</h3>
+                                <div>{{ item.title }}</div>
+                            </td>
+                            <td><img src="{{ media_path_nice(item.image) }}"  alt="{{ item.title }}" style="width: 300px;" /></td>
+                            <td><a href="{{ path('admin_unfeature_media', { 'item': item.id }) }}">Unfeature</a></td>
+
+                        {% elseif category == 'video' %}
+
+                            <td>
+                                <h3>Owner</h3>
+                                <div>{{ item.author.username }}</div>
+                                <h3>Title</h3>
+                                <div>{{ item.title }}</div>
+                            </td>
+                            <td><a href="http://www.youtube.com/watch?v={{ item.youtubeId }}" target='_blank'>Watch Video (Opens in a new tab)</a></td>
+                            <td><a href="{{ path('admin_unfeature_media', { 'item': item.id }) }}">Unfeature</a></td>
+
+                        {% endif %}
+
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">
+                            No featured items found for category "{{ category }}".
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

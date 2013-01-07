@@ -263,6 +263,11 @@ class Deal implements LinkableInterface, CommentableInterface
     protected $updatedAt;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    private $ruleset;
+
+    /**
      * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
      */
     protected $sitifiedAt;
@@ -874,6 +879,16 @@ class Deal implements LinkableInterface, CommentableInterface
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
     }
 
     /**
