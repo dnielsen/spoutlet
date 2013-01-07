@@ -166,6 +166,8 @@ class ContentReportAdminController extends Controller
             $em->persist($group);
             $repo->deleteAllContentReportsForGroup($group);
 
+            $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getId());
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -285,5 +287,11 @@ Alienware Arena Team
     private function getEmailManager()
     {
         return $this->get('platformd.model.email_manager');
+    }
+
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

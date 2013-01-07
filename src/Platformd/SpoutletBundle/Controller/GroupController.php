@@ -176,6 +176,8 @@ Alienware Arena Team
         $em->remove($application);
         $em->flush();
 
+        $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getId());
+
         $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
 
         return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
@@ -336,7 +338,12 @@ Alienware Arena Team
         $this->getGroupManager()->saveGroup($group);
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
-         $this->setFlash('success', 'You have successfully joined this group!');
+
+        if($group->getIsPublic()) {
+            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup');
+        }
+
+        $this->setFlash('success', 'You have successfully joined this group!');
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
@@ -610,6 +617,8 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroupImage($groupImage);
 
+                $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto');
+
                 $this->setFlash('success', 'Image posted successfully.');
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
@@ -736,6 +745,8 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroupVideo($groupVideo);
 
+                $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupvideo');
+
                 $this->setFlash('success', 'New video posted successfully.');
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
@@ -858,8 +869,6 @@ Alienware Arena Team
 
     public function newAction(Request $request)
     {
-
-
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $this->addGroupsBreadcrumb()->addChild('New Group');
@@ -870,7 +879,7 @@ Alienware Arena Team
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
-            //$response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
+            $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
