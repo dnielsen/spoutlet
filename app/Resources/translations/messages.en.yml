@@ -553,7 +553,7 @@ galleries:
     submit_photo_file_restrictions: |
         <p><span style="font-weight:bold;">Alienware Arena File Standards for Product Images</span></p>
         <p>Technical Requirements:</p>
-        <ul><li>Files supported: JPG, GIF and PNG</li>
+        <ul><li>Files supported: JPG, GIF and PNG.</li>
         <li>Max file size per image is 5MB.</li></ul>
         <p>Alienware Arena maintains the following site product image standards:</p>
         <ul><li>No commercial images without written consent of the owner.</li>
