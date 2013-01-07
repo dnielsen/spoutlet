@@ -540,21 +540,29 @@ galleries:
     index_page_title: Galleries
     index_page_header: ALIENWARE ARENA PHOTOS
     index_page_no_media_found: No photos were found.
-    submit_photo_page_title: Submit Image
-    submit_photo_page_header: Submit Image
+    submit_photo_page_title: Submit Images
+    submit_photo_page_header: Submit Images
     submit_photo_now: Submit your own images now!
     submit_photo_blockUI_message: Your images are uploading. Please wait...
     submit_photo_publish_blockUI_message: Your images are being published. Please wait...
 
     submit_photo_step1: Step 1 of 2:
-    submit_photo_step1_detail: Submit Image
+    submit_photo_step1_detail: Submit Images
     submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
-    submit_photo_file_restrictions: File Restrictions
-    submit_photo_restriction1: Only gaming related images. Everything else will get deleted without notice.
-    submit_photo_restriction2: No copyrighted material.
-    submit_photo_restriction3: No images of children ages 13 and under.
-    submit_photo_restriction4: Max file size per image is 5MB.
-    submit_photo_restriction5: Files supported: JPG, GIF and PNG.
+
+    submit_photo_file_restrictions: |
+        <p><span style="font-weight:bold;">Alienware Arena File Standards for Product Images</span></p>
+        <p>Technical Requirements:</p>
+        <ul><li>Files supported: JPG, GIF and PNG.</li>
+        <li>Max file size per image is 5MB.</li></ul>
+        <p>Alienware Arena maintains the following site product image standards:</p>
+        <ul><li>No commercial images without written consent of the owner.</li>
+        <li>No copyrighted material.</li>
+        <li>No images of children ages 13 years and under.</li>
+        <li>Gaming-related images only.</li>
+        <li>Pornographic and offensive materials are not allowed.</li></ul>
+        <p>Alienware Arena, iGames and its affliliates reserve the right to delete photos without notice that do not comply with restrictions.</p>
+        <p>By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
 
     submit_photo_add: Add
     submit_photo_publish_share: Thanks! Your images have been published.
@@ -577,6 +585,7 @@ galleries:
     show_photo_details_label: Photo Details
     show_photo_details_upload_on: Uploaded On
     show_photo_details_views: Views:
+    show_photo_details_points: Points:
 
     delete_photo_error_message: Photo was not deleted.
     delete_photo_success_message: Your photo was deleted successfully.
@@ -606,6 +615,7 @@ galleries:
     cancel: Cancel
     publish_photo_multiple_message: %s of %s images are published.
     publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
+    publish_photo_multiple_message_gallery_or_group_required: You must select at least one gallery or group to place your image in.
     no_images_found: No images found...
     already_voted: You have already voted on this image.
 
@@ -615,8 +625,8 @@ contests:
     show_page_overview: Overview
     show_page_instructions: How to Enter
     show_page_enter_contest: Enter
-    show_page_submit_photos: Submit Photos
-    show_page_contest: Contest Details
+    show_page_submit_photos: Submit Images
+    show_page_contest: Contest
     show_page_winners: Winners
     show_page_official_rules: Official Rules
     show_page_see_more_contests: See More Contests
@@ -650,3 +660,5 @@ contests:
     no_groups_found: No groups found. You must be the owner of at least one group to enter this contest. Click <a href="%s" target="_blank">here</a> to create one now!
     submit_group: Submit Selected Groups
     submit_groups_how_many_so_far: These are the groups you have entered so far.
+    contest_not_eligible: Sorry, you are not eligible to enter this contest.
+

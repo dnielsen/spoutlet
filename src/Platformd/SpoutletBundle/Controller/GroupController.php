@@ -589,6 +589,43 @@ Alienware Arena Team
         ));
     }
 
+    public function showImageAction ($id)
+    {
+        $groupImageRepo = $this->getGroupImageRepository();
+        $groupImage     = $groupImageRepo->find($id);
+
+        if ($groupImage) {
+            $group = $groupImage->getGroup();
+
+            $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+            $otherMedia     = $groupImageRepo->findAllGroupImagesNewestFirstExcept($group, $id);
+
+            $otherMediaPerPage = 3;
+            $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);
+
+            $otherMediaPages = array();
+            $offset = 0;
+            for($i = 0; $i < $pageCount; $i++)
+            {
+                $otherMediaPages[] = array_slice($otherMedia, $offset, $otherMediaPerPage);
+                $offset += $otherMediaPerPage;
+            }
+
+            $galleryMedia   = $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia')->findOneByImage($groupImage->getImage()->getId());
+
+            return $this->render('SpoutletBundle:Group:showImage.html.twig', array(
+                'media'             => $groupImage,
+                'group'             => $group,
+                'otherMediaPages'   => $otherMediaPages,
+                'galleryMediaItem'  => $galleryMedia,
+            ));
+        }
+
+        $this->setFlash('error', 'Group image not found!');
+        return $this->redirect($this->generateUrl('groups'));
+    }
+
     public function addImageAction($id, Request $request)
     {
         $group = $this->getGroup($id);

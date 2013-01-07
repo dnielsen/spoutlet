@@ -11,16 +11,9 @@
     {% if contest is defined %}
     <p>{{ 'contests.photo_submission_message' | trans }}</p>
     {% endif %}
-    <p>
-        <span style="font-weight:bold;">{{ 'galleries.submit_photo_file_restrictions' | trans }}</span>
-        <ul>
-            <li>{{ 'galleries.submit_photo_restriction1' | trans}}</li>
-            <li>{{ 'galleries.submit_photo_restriction2' | trans}}</li>
-            <li>{{ 'galleries.submit_photo_restriction3' | trans}}</li>
-            <li>{{ 'galleries.submit_photo_restriction4' | trans}}</li>
-            <li>{{ 'galleries.submit_photo_restriction5' | trans}}</li>
-        </ul>
-    </p>
+
+    {{ 'galleries.submit_photo_file_restrictions' | trans | raw }}
+
     {% if contest is defined %}
          <p>{{ 'contests.igames_disclaimer' | trans }}</p>
         {% if isUnlimited %}

@@ -82,12 +82,18 @@ class ContestController extends Controller
     public function enterAction($slug, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
-
         $user = $this->getCurrentUser();
-
         $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
 
         $this->ensureContestIsValid($contest);
+
+        $countryRepo    = $this->getCountryRepository();
+        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+
+        if ($contest->getRuleset()->doesUserPassRules($user, $country)) {
+            $this->setFlash('error', $this->trans('contests.contest_not_eligible'));
+            return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
+        }
 
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
@@ -323,6 +329,11 @@ class ContestController extends Controller
     private function getContestRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Contest');
+    }
+
+    private function getCountryRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Country');
     }
 
     private function getContestEntryRepository()
