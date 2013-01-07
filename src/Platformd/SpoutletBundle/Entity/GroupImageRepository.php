@@ -46,4 +46,17 @@ class GroupImageRepository extends EntityRepository
 
         return count($total);
     }
+
+    public function findAllGroupImagesNewestFirstExcept($group, $id)
+    {
+        return $this->createQueryBuilder('gi')
+            ->where('gi.group = :group')
+            ->andWhere('gi.deleted <> 1')
+            ->andWhere('gi.id != :id')
+            ->orderBy('gi.createdAt', 'DESC')
+            ->setParameter('group', $group)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
+    }
 }
