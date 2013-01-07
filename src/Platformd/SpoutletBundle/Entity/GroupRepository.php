@@ -228,7 +228,7 @@ class GroupRepository extends EntityRepository
             $filters
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
-            ->addSelect('n', 'v', 'i', 'm', 'o', 'members')
+            ->addSelect('n', 'v', 'i', 'm', 'o', 'members', 's')
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('g.videos', 'v')
             ->leftJoin('g.images', 'i')
