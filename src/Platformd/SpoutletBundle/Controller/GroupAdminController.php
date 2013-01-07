@@ -15,8 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use DateTime;
-use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 /**
  * Group admin controller.
@@ -52,64 +52,9 @@ class GroupAdminController extends Controller
 
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
         $filters = $this->getFilterFormData();
-        $results = $groupRepo->findGroupStats($filters);
+        $qb = $groupRepo->findGroupStatsQB($filters);
 
-        $resultTable = array();
-
-        foreach ($results as $group) {
-
-            $row = array();
-
-            if ($group->getDeleted()) {
-                $row['GroupLink']           = $this->container->get('router')->generate('group_edit', array('id' => $group->getId()));;
-            } else {
-                $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
-            }
-
-            $row['GroupId']             = $group->getId();
-            $row['GroupName']           = $group->getName();
-            $row['Category']            = $group->getCategory();
-            $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
-
-            $row['Region']              = "";
-
-            if ($group->getAllLocales()) {
-                $row['Region']          = 'All Sites';
-            } else {
-                foreach ($group->getSites() as $site) {
-                    $row['Region'] .=  '['.$site->getName().']';
-                }
-            }
-
-            $row['CreatedAt']           = $group->getCreatedAt();
-            $row['Status']              = $group->getDeleted() ? 'Inactive' : 'Active';
-            $row['Organizer']           = $group->getOwner()->getUsername();
-            $row['MemberCount']         = $group->getMembers()->count();
-            $row['VideoCount']          = $group->getVideos()->count();
-            $row['ImageCount']          = $group->getImages()->count();
-            $row['NewsArticleCount']    = $group->getNewsArticles()->count();
-
-            $row['NewMemberCount'] = $group->getMembershipActions()
-                ->filter(function($x) {
-                    return
-                    $x->getCreatedAt() >= new DateTime('-30 days') &&
-                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
-                    $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
-                ->count();
-
-            $row['LeftMemberCount'] = $group->getMembershipActions()
-                ->filter(function($x) {
-                    return
-                    $x->getCreatedAt() >= new DateTime('-30 days') &&
-                    $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
-                ->count();
-
-            $row['FacebookLikes'] = $group->getFacebookLikes();
-
-            $resultTable[] = $row;
-        }
-
-        $pager = new Pagerfanta(new ArrayAdapter($resultTable));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
         $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
         $form = $this->createForm(new GroupFindType(), $filters);

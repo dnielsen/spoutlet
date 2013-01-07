@@ -15,6 +15,7 @@ use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 
 /**
  * Platformd\SpoutletBundle\Entity\Group
@@ -909,5 +910,40 @@ class Group implements LinkableInterface, ReportableContentInterface
     {
         $this->facebookLikes = $facebookLikes;
         $this->facebookLikesUpdatedAt = new \DateTime;
+    }
+
+    public function getLeftMemberCount()
+    {
+        return $this->getMembershipActions()->filter(function($x) {
+            return
+                $x->getCreatedAt() >= new DateTime('-30 days') &&
+                $x->getAction() == GroupMembershipAction::ACTION_LEFT;
+        })
+        ->count();
+    }
+
+    public function getNewMemberCount()
+    {
+        return $this->getMembershipActions()->filter(function($x) {
+            return
+                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
+                    $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
+        })
+        ->count();
+    }
+
+    public function getRegion()
+    {
+        if ($this->getAllLocales()) {
+            return 'All Sites';
+        } else {
+            $regions = '';
+            foreach ($this->getSites() as $site) {
+                $regions .=  '['.$site->getName().']';
+            }
+
+            return $regions;
+        }
     }
 }

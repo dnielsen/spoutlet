@@ -43,20 +43,25 @@
             <tbody>
                 {% for group in results %}
                     <tr>
-                        <td><a href="{{ group.GroupLink }}" target="_blank">{{ group.GroupName }}</a></td>
+                        <td>
+                            {% if group.deleted %}
+                            <a href="{{ path('group_edit', {'id': group.id}) }}" target="_blank">{{ group.name }}</a></td>
+                        {% else %}
+                            <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
+                        {% endif %}
                         <td>{{ group.Category }}</td>
-                        <td>{{ group.Type }}</td>
-                        <td>{{ group.Region }}</td>
-                        <td>{{ group.CreatedAt | date('m/d/Y') }}</td>
-                        <td>{{ group.Status }}</td>
-                        <td>{{ group.Organizer }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.GroupId })  }}">{{ group.MemberCount }}</a></td>
-                        <td>{{ group.NewMemberCount }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.GroupId })  }}">{{ group.VideoCount }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.GroupId })  }}">{{ group.ImageCount }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.GroupId })  }}">{{ group.NewsArticleCount }}</a></td>
-                        <td>{{ group.FacebookLikes }}</td>
-                        <td>{{ group.LeftMemberCount }}</td>
+                        <td>{{ group.isPublic() ? 'Public' : 'Private' }}</td>
+                        <td>{{ group.region }}</td>
+                        <td>{{ group.createdAt | date('m/d/Y') }}</td>
+                        <td>{{ group.getDeleted() ? 'Inactive' : 'Active' }}</td>
+                        <td>{{ group.owner.username }}</td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ group.members.count }}</a></td>
+                        <td>{{ group.newMemberCount }}</td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.id })  }}">{{ group.videos.count }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.id })  }}">{{ group.images.count }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.id })  }}">{{ group.newsArticles.count }}</a></td>
+                        <td>{{ group.facebookLikes }}</td>
+                        <td>{{ group.leftMemberCount }}</td>
 
                     </tr>
                 {% else %}

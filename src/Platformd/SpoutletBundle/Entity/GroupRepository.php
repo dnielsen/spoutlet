@@ -221,7 +221,7 @@ class GroupRepository extends EntityRepository
         return $result[0][0];
     }
 
-    public function findGroupStats(array $filters = array())
+    public function findGroupStatsQB(array $filters = array())
     {
         $filters = array_merge(
             array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
@@ -237,7 +237,12 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.membershipActions', 'm')
         ;
 
-        return $qb->getQuery()->execute();
+        return $qb;
+    }
+
+    public function findGroupStats(array $filters = array())
+    {
+        return $this->findGroupStatsQB($filters)->getQuery()->execute();
     }
 
     public function findMostRecentlyCreatedGroupsForSite($site, $limit=8)
