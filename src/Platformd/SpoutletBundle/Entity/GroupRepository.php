@@ -221,14 +221,14 @@ class GroupRepository extends EntityRepository
         return $result[0][0];
     }
 
-    public function findGroupStats(array $filters = array())
+    public function findGroupStatsQB(array $filters = array())
     {
         $filters = array_merge(
             array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
             $filters
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
-            ->addSelect('n', 'v', 'i', 'm', 'o', 'members')
+            ->addSelect('n', 'v', 'i', 'm', 'o', 'members', 's')
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('g.videos', 'v')
             ->leftJoin('g.images', 'i')
@@ -237,7 +237,12 @@ class GroupRepository extends EntityRepository
             ->leftJoin('g.membershipActions', 'm')
         ;
 
-        return $qb->getQuery()->execute();
+        return $qb;
+    }
+
+    public function findGroupStats(array $filters = array())
+    {
+        return $this->findGroupStatsQB($filters)->getQuery()->execute();
     }
 
     public function findMostRecentlyCreatedGroupsForSite($site, $limit=8)
@@ -342,12 +347,11 @@ class GroupRepository extends EntityRepository
         $date->modify(sprintf('-%d sec', $minutes));
 
         $qb = $this->createQueryBuilder('g')
-            ->addSelect('s')
-            ->leftJoin('g.sites', 's')
             ->addOrderBy('g.facebookLikesUpdatedAt', 'ASC')
-            ->andWhere('g.facebookLikesUpdatedAt >= :date')
+            ->addOrderBy('g.id', 'ASC')
+            ->andWhere('g.facebookLikesUpdatedAt <= :date OR g.facebookLikesUpdatedAt IS NULL')
             ->setParameter('date', $date);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->iterate();
     }
 }
