@@ -195,8 +195,19 @@ platformd:
         back: Go Back
 
     comment:
-        login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
+        add_your_comment: Add Your Comment
+        login_to_comment: To post a comment, please <a href="%login_url%">log in.</a>
         comments: Comments
+        sort_by: Sort By:
+        sort_by_votes: Votes
+        sort_by_newest: Most Recent
+        sort_by_oldest: Oldest
+        add_comment: Add Comment
+        login_to_reply: Login to Reply
+        reply: Reply
+        more_replies: More Replies
+        points: Points:
+        post: Post
         date_format: %month%/%day%/%year%
 
     user:

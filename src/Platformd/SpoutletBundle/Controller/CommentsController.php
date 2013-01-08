@@ -69,6 +69,7 @@ class CommentsController extends Controller
         $comment->setAuthor($author);
         $comment->setBody($body);
         $comment->setThread($thread);
+        $comment->setCreatedAt(new \DateTime('now'));
 
         $thread->incrementCommentCount();
 

@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Platformd\SpoutletBundle\Entity\Comment
@@ -61,7 +60,6 @@ class Comment implements ReportableContentInterface
 
     /**
      * @ORM\Column(name="created_at", type="datetime")
-     * @Gedmo\Timestampable(on="create")
      */
     protected $createdAt;
 

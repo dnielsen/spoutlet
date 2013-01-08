@@ -24,18 +24,24 @@
                         <div class="comment-footer">
 
                             <div class="comment-vote">
+                                {% set upVotes = comment.getUpVoteCount %}
+                                {% set downVotes = comment.getDownVoteCount %}
+
                                 <div style="display:inline-table;">
-                                    <span id="comment-upvotes-{{ comment.id }}">{{ comment.getUpVoteCount }}</span>
+                                    <span id="comment-upvotes-{{ comment.id }}">{{ upVotes }}</span>
                                     <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{{ comment.id }}" data-votetype="up"></a>
                                 </div>
                                 <div style="display:inline-table;">
-                                    <span id="comment-downvotes-{{ comment.id }}">{{ comment.getDownVoteCount }}</span>
+                                    <span id="comment-downvotes-{{ comment.id }}">{{ downVotes }}</span>
                                     <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
+                                </div>
+                                <div style="display:inline-table; margin-left: 10px;">
+                                    <span id="comment-points-{{ comment.id }}">{{ 'platformd.comment.points' | trans }} {{ (upVotes - downVotes) | number_format(0, '.', ',') }}</span>
                                 </div>
                             </div>
 
                             <div class="comment-reply-display">
-                                <a href="javascript:void(0)" data-id="{{ comment.id }}">{% if app.user == null %}Login to {% endif %}Reply</a>
+                                <a href="javascript:void(0)" data-id="{{ comment.id }}">{% if app.user == null %}{{ 'platformd.comment.login_to_reply' | trans }}{% else %}{{ 'platformd.comment.reply' | trans }}{% endif %}</a>
                             </div>
 
                             <div class="comment-at" title="{{ comment.createdAt | date }}"></div>
@@ -65,7 +71,7 @@
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
                     <div class="comment-tri{% if comment.replies | length == 0 %} hidden{% endif %}"></div>
                     <div class="comment-replies" id="comment-replies-{{ comment.id }}">
-                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">Post</a>
+                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
                     </div>
 
                     {% set replyCounter = 0 %}
@@ -107,7 +113,7 @@
                 </div>
                 {% if replyCounter   > 3 %}
                     <div class="more-comments" id="more-comments-{{ comment.id }}">
-                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">More Replies</a>
+                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">{{ 'platformd.comment.more_replies' | trans }}</a>
                     </div>
                 {% endif %}
             </div>
@@ -325,12 +331,7 @@
                 contentType: 'json',
                 success: function(data) {
                     if(data.success) {
-                        $('#comment-upvotes-' + commentId).hide();
-                        $('#comment-upvotes-' + commentId).text(data.messageForUser.up);
-                        $('#comment-upvotes-' + commentId).fadeIn();
-                        $('#comment-downvotes-' + commentId).hide();
-                        $('#comment-downvotes-' + commentId).text(data.messageForUser.down);
-                        $('#comment-downvotes-' + commentId).fadeIn();
+                        reloadComments();
                     } else {
                         alert(data.messageForUser);
                     }
@@ -338,5 +339,25 @@
                 }
             })
         });
+
+        function reloadComments()
+        {
+            $('.thread').block({message: null});
+            var data = {
+                'thread' : '{{ thread }}',
+                'method' : $('#comment-sort-method').val(),
+                'commentLimit' : parseInt($('#more-comments-loader').attr('data-offset'))
+            };
+            $.ajax({
+                url: '{{ path('comments_sort_thread') }}',
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            });
+        }
     });
 </script>

@@ -1,17 +1,23 @@
 <div class="thread">
-    <h3>Add Your Comment</h3>
-    <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+    {% if app.user %}
+        <h3>{{ 'platformd.comment.add_your_comment' | trans }}</h3>
+        <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+    {% else %}
+        <h3>{{ 'platformd.comment.login_to_comment' | trans({ '%login_url%' : "http://alienwarearena.com/account/login?return=" ~ app.request.uri | url_encode }) | raw }}</h3>
+    {% endif %}
     <div class="comment-sorting">
-        <label for="comment-sort-method">Sort by: </label>
+        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | trans }}</label>
         <select name="comment-sort-method" id="comment-sort-method">
-            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>Votes</option>
-            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>Most Recent</option>
-            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>Oldest</option>
+            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | trans }}</option>
+            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | trans }}</option>
+            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | trans }}</option>
         </select>
     </div>
-    <div class="comment-form-submit">
-        <button id="new-comment-submit" type="submit">Add Comment</button>
-    </div>
+    {% if app.user %}
+        <div class="comment-form-submit">
+            <button id="new-comment-submit" type="submit">{{ 'platformd.comment.add_comment' | trans }}</button>
+        </div>
+    {% endif %}
     <div class="comments">
         <a href="#comments"></a>
         {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
@@ -76,19 +82,15 @@
         if($(window).scrollTop() >= $(document).height() - $(window).height()) {
 
             if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
-                console.log('no more comments');
                 return false;
             }
 
             if (ajaxRequestSent) {
-                console.log('already requested');
                 return false; // don't make another request, let the current one complete, or
                 // ajax.abort(); // stop the current request, let it run again
             }
 
-            console.log('no request in progress');
             ajaxRequestSent = loadMorePosts();
-            console.log('request complete');
         }
     });
 
@@ -110,14 +112,11 @@
             success: function(data)
             {
                 if(data.message == "no_more_comments") {
-                    console.log('no more comments, setting no-more-comments class.');
                     $('#more-comments-loader').html('No more posts to show.');
                     $('.comment-wrapper:last').addClass('no-more-comments');
                 } else if(data.message == "error") {
-                    console.log('error received whilst loading - ' + data.details);
                     $('#more-comments-loader').html('An error has occurred during loading.');
                 } else {
-                    console.log('appending comments...');
                     $(".comments").append(data);
                     $('#more-comments-loader').hide();
                 }
