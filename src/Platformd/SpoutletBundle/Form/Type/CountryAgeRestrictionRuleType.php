@@ -17,7 +17,7 @@ class CountryAgeRestrictionRuleType extends AbstractType
                 'label'     => 'Country',
                 'class'     => 'SpoutletBundle:Country',
                 'property'  => 'name',
-                'empty_value' => 'N/A',
+                'empty_value' => '',
             ))
             ->add('ruleType', 'choice', array(
                 'choices'   => $this->getValidRuleTypes(),
