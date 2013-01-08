@@ -490,4 +490,28 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
 
         return false;
     }
+
+    public function canUserVote($user)
+    {
+        if ($user && $user instanceof User) {
+
+            $contestEntry = $this->getContestEntry();
+
+            if ($contestEntry) {
+                $contest = $contestEntry->getContest();
+
+                if (!$contest->isFinished()) {
+                    $ruleset = $contest->getRuleset();
+
+                    return $ruleset->doesUserPassRules($user, $user->getCountry());
+                }
+
+                return true;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
 }

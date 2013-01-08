@@ -20,9 +20,15 @@
                         <div class="gallery-media-thumb">
                             <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                 <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                                <div class="thumbnail-vote-caption">
-                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
-                                </div>
+                                {% if media.hasUserVoted(app.user) == false %}
+                                    <div class="thumbnail-vote-caption">
+                                        <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                                    </div>
+                                {% else %}
+                                    <div class="thumbnail-vote-caption">
+                                        <a href="javascript:void(0);">Already Voted!</a>
+                                    </div>
+                                {% endif %}
                             </a>
                         </div>
                         <div style="width:135px;">

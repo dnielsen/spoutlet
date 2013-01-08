@@ -1,9 +1,9 @@
 <input type="hidden" id="media-id" />
 
-<div style="display:inline-table;margin-top:3px">
+<div style="display:inline-table;" class="media-voting-button-wrapper">
     <a class="media-voting-button up" id="media-voting-vote-up" href="javascript:void(0);" tabindex="-1"></a>
 </div>
-<div style="display:inline-table;margin-top:3px">
+<div style="display:inline-table;" class="media-voting-button-wrapper">
     <a class="media-voting-button down" id="media-voting-vote-down" href="javascript:void(0);" tabindex="-1"></a>
 </div>
 
@@ -69,6 +69,7 @@
                             $('#media-downvotes').hide();
                             $('#media-downvotes').text(100-parseInt(data.messageForUser));
                             $('#media-downvotes').fadeIn();
+                            $('#media-voting-success').fadeIn();
                     }
                     $('#close-dialog').text('Close');
                 }
