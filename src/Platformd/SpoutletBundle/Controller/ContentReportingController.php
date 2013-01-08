@@ -108,10 +108,12 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
+        /* Disabled at present as causing issues with reporting.
         // We dispatch an event for further stuff like maintaining counts
         $eventName = ContentReportEvents::REPORT;
         $event = new ContentReportEvent($reportedItem, $this->getUser());
         $this->get('event_dispatcher')->dispatch($eventName, $event);
+        */
 
         $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
