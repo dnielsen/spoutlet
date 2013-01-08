@@ -71,7 +71,7 @@
 
                 </div>
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
-                    <div class="comment-tri{% if comment.replies | length == 0 %} hidden{% endif %}"></div>
+                    <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
                     <div class="comment-replies" id="comment-replies-{{ comment.id }}">
                         <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
                     </div>

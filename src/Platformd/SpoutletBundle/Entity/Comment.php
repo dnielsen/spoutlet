@@ -179,6 +179,12 @@ class Comment implements ReportableContentInterface
         return count($downvotes);
     }
 
+    public function getPublishedReplyCount()
+    {
+        $replies = $this->replies->filter(function ($x) { return !$x->getDeleted(); });
+        return count($replies);
+    }
+
     public function getReplies()
     {
         return $this->replies;
