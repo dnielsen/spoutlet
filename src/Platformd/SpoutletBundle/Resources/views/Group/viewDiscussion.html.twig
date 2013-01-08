@@ -16,9 +16,21 @@
 
 {% block page_background_image customPageBackgroundImage %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+           $('.posted-at').timeago();
+        });
+    </script>
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -39,62 +51,109 @@
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         </div>
         <div class="left" id="group-discussion-form-wrapper">
+            <div id="topicView">
+                <h1>{{ discussion.title }}</h1>
 
-            <div id="discussion-title">
-                <h3>{{ discussion.title }}</h3>
-            </div>
 
-            <div class="group-discussion-actions">
-                {% if canDelete %}
-                    <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
-                {% endif %}
-                {% if canEdit %}
-                    <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
-                {% endif %}
-                <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a> |
-                <a href="{{ path('group_reply_discussion', { 'id': group.id , 'discussionId' : discussion.id }) }}">Add reply</a>
-            </div>
-
-            <div id="discussion-details">
-                {{ discussion.content }}
-            </div>
-
-            <div id="discussion-replies">
-                <div class="pager pagerfanta" id="pager-top">
-                    {{ pagerfanta(pager, 'spoutlet', {
-                        'previous_message': '',
-                        'next_message': '',
-                    }) }}
+                <div class="group-discussion-actions">
+                    {% if canDelete %}
+                        <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                    {% endif %}
+                    {% if canEdit %}
+                        <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
+                    {% endif %}
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a> |
+                    <a href="{{ path('group_reply_discussion', { 'id': group.id , 'discussionId' : discussion.id }) }}">Add reply</a>
                 </div>
 
-                <div id="discussion-post-list">
-                    {% for discussionPost in discussionPosts %}
-                        <div class="discussion-post-item">
-                            <div class="post-content">
-                                {{ discussionPost.content }}
+                <div id="comment_{{ discussion.id }}" class="forumComment row1" style="float: left;padding:0">
+                    <div class="right" style="width: 494px;">
+                        <div class="forumTextWrapper png">
+                            <div class="forumText">{{ discussion.content }}</div>
+                        </div>
+                        <div class="forumBottom png">
+                            <div class="forumSig">
+
                             </div>
-                            <div class="post-actions">
-                                {% if (canDelete or app.user == discussionPost.author) %}
-                                    <a href="{{ path('group_delete_discussion_post', { 'id' : discussionPost.id }) }}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
-                                {% endif %}
-                                {% if (canEdit or app.user == discussionPost.author) %}
-                                    <a href="{{ path('group_edit_discussion_post', { 'id' : discussionPost.id }) }}">Edit</a> |
-                                {% endif %}
-                                <a href="javascript:void(0);" class="report-group-discussion-post" report-data="{{ discussionPost.id }}">Report</a>
+                            <div class="forumNumber png">1</div>
+                            <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
+                                <span class="posted-at" title="{{ discussion.createdAt | date }}"></span>
                             </div>
                         </div>
-                    {% endfor %}
-                    {% include 'SpoutletBundle:Group:_reportGroupDiscussionPostPopup.html.twig' %}
+                    </div>
+                    <div class="left">
+                        <div class="profileInfo png">
+                            <div class="profileAvatar">
+                                <span class="png"></span>
+                                <img src="{{ asset(get_avatar_url(discussion.author)) }}" alt="{{ discussion.author.username }}" />
+                            </div>
+                            <div class="profileName">
+                                <a href="{{ path('accounts_profile', {'username': discussion.author.username }) }}">
+                                    {{ discussion.author.username }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commentEnd">
+                    </div>
                 </div>
+                <div id="discussion-replies">
+                    <div id="discussion-post-list">
+                        <div id="topicComments" style="padding: 0;">
+                            {% for discussionPost in discussionPosts %}
+                                <a id="{{ discussionPost.id }}" class="anchorLink"></a>
+                                <div id="comment_{{ discussionPost.id }}" class="forumComment {% if loop.index is divisibleby(2) %}row1{% else %}row2{% endif %}" style="float: left;margin-top: 19px;padding:0;">
+                                    <div class="right" style="width: 494px;">
+                                        <div class="forumTextWrapper png">
+                                            <div class="forumText">{{ discussionPost.content }}</div>
+                                        </div>
+                                        <div class="forumBottom png">
+                                            <div class="forumSig">
 
-                <div class="pager pagerfanta" id="pager-bottom">
-                    {{ pagerfanta(pager, 'spoutlet', {
-                        'previous_message': '',
-                        'next_message': '',
-                    }) }}
+                                            </div>
+                                            <div class="forumNumber png">{{ loop.index + 1 }}</div>
+                                            <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
+                                                <span class="posted-at" title="{{ discussionPost.created | date }}"></span>
+
+                                                {% if (canDelete or app.user == discussionPost.author) %}
+                                                    <a href="{{ path('group_delete_discussion_post', { 'id' : discussionPost.id }) }}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                                                {% endif %}
+                                                {% if (canEdit or app.user == discussionPost.author) %}
+                                                    <a href="{{ path('group_edit_discussion_post', { 'id' : discussionPost.id }) }}">Edit</a> |
+                                                {% endif %}
+                                                <a href="javascript:void(0);" class="report-group-discussion-post" report-data="{{ discussionPost.id }}">Report</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="left">
+                                        <div class="profileInfo png">
+                                            <div class="profileAvatar">
+                                                <span class="png"></span>
+                                                <img src="{{ asset(get_avatar_url(discussionPost.author)) }}" alt="{{ discussionPost.author.username }}" />
+                                            </div>
+                                            <div class="profileName">
+                                                <a href="{{ path('accounts_profile', {'username': discussionPost.author.username }) }}">
+                                                    {{ discussionPost.author.username }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="commentEnd">
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% include 'SpoutletBundle:Group:_reportGroupDiscussionPostPopup.html.twig' %}
+                    </div>
+                    <div class="pager pagerfanta" id="pager-bottom" style="float: left;">
+                        {{ pagerfanta(pager, 'spoutlet', {
+                            'previous_message': '',
+                            'next_message': '',
+                        }) }}
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
     {% set reportContentType    = 'GroupDiscussion' %}

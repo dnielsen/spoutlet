@@ -24,35 +24,27 @@
     {% endif %}
 
     {% if results | length > 0 %}
-        <div class="scrollable" id="scrollable-discussions" style="height: 550px; width: 600px;background: #191919;">
+        <div id="scrollable-discussions" style="height: 490px; width: 100%;background: #191919;">
             <div class="items">
                 <div class="items-wrapper">
-                    {% for discussion in results %}
-                        <div class="group-discussion-item">
-                            <div class="group-discussion-title">
-                                <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">
-                                    {{ discussion.title }}
-                                </a>
-                                <div class="group-discussion-stats">
-                                    <div class="group-discussion-views group-discussion-stat">
-                                        Views: {{ discussion.viewCount }}
-                                    </div>
-                                    <div class="group-discussion-replies group-discussion-stat">
-                                        Replies: {{ discussion.replyCount }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="group-discussion-actions">
-                                {% if canDelete %}
-                                    <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
-                                {% endif %}
-                                {% if canEdit %}
-                                    <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
-                                {% endif %}
-                                <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    <div id="boardList">
+                        <table>
+                            <tbody>
+                            {% for discussion in results %}
+                                <tr class="forumTopic {% if (loop.index) is divisibleby(2) %}row2{% else %}row1{% endif %}">
+                                    <td class="icon"><img class="png" src="{{ asset('bundles/spoutlet/images/discussions/aw-reg.png') }}"></td>
+                                    <td class="name png">
+                                        <h3>
+                                            <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
+                                        </h3>
+                                    </td>
+                                    <td class="replies png">{{ discussion.replyCount }} Replies</td>
+                                    <td class="views png">{{ discussion.viewCount }} Views</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,6 +64,10 @@
 
                 $('#pager').pagerUi({
                     'target': content
+                });
+
+                $('.name.png > h3 > a').truncate({
+                    width: 280
                 });
             });
 

@@ -100,11 +100,11 @@ group_reply_discussion:
 
 group_edit_discussion_post:
     pattern: /discussion-post/{id}/edit
-    defaults: { _controller: "SpoutletBundle:group:editDiscussionPost", site: ~ }
+    defaults: { _controller: "SpoutletBundle:Group:editDiscussionPost", site: ~ }
 
 group_delete_discussion_post:
     pattern: /discussion-post/{id}/delete
-    defaults: { _controller: "SpoutletBundle:group:deleteDiscussionPost", site: ~ }
+    defaults: { _controller: "SpoutletBundle:Group:deleteDiscussionPost", site: ~ }
 
 group_about:
     pattern: /{id}/about

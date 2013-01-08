@@ -840,7 +840,7 @@ Alienware Arena Team
         $request = $this->getRequest();
         $page = $request->query->get('page', 1);
 
-        $pager = $this->getGroupDiscussionRepository()->getDiscussionsForGroupMostRecentFirst($group, 3, $page);
+        $pager = $this->getGroupDiscussionRepository()->getDiscussionsForGroupMostRecentFirst($group, 11, $page);
         $results = $pager->getCurrentPageResults();
 
         return $this->render('SpoutletBundle:Group:discussions.html.twig', array(
