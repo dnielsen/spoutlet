@@ -107,7 +107,9 @@ class ContestAdminController extends Controller
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
         $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $memberActionRepo   = $em->getRepository('SpoutletBundle:GroupMembershipAction');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+
 
         if (!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -127,7 +129,8 @@ class ContestAdminController extends Controller
 
                 foreach ($contestEntries as $entry) {
                     foreach ($entry->getGroups() as $group) {
-                        array_push($entries, $group);
+                        $members = $memberActionRepo->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+                        array_push($entries, array('group' => $group, 'member_count' => $members));
                     }
                 }
                 break;

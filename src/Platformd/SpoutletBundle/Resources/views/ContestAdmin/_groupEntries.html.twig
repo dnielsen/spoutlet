@@ -10,6 +10,7 @@
             <th>Group</th>
             <th>URL</th>
             <th>Owner</th>
+            <th>Members Gained</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -26,18 +27,19 @@
         {% for entry in entries %}
             <tr>
                 <td>
-                    {% if entry.thumbNail %}
-                    <img src="{{ media_path(entry.thumbNail) }}" alt="{{ entry.name }}" title="{{ entry.name }}" />
+                    {% if entry['group'].thumbNail %}
+                    <img src="{{ media_path(entry['group'].thumbNail) }}" alt="{{ entry['group'].name }}" title="{{ entry['group'].name }}" />
                     {% else %}
-                    <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ entry.name }}" title="{{ entry.name }}" />
+                    <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ entry['group'].name }}" title="{{ entry['group'].name }}" />
                     {% endif %}
                 </td>
-                <td><a target="_blank" href="{{ path('group_show', { 'slug' : entry.slug }) }}">{{ path('group_show', { 'slug' : entry.slug }) }}</a></td>
-                <td>{{ entry.owner.username }}</td>
+                <td><a target="_blank" href="{{ path('group_show', { 'slug' : entry['group'].slug }) }}">{{ path('group_show', { 'slug' : entry['group'].slug }) }}</a></td>
+                <td>{{ entry['group'].owner.username }}</td>
+                <td>{{ entry['member_count'] }}</td>
                 <td>
-                    <input type="radio" name="first_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[0] == entry.id) %} checked=true{% endif %}>1st place<br />
-                    <input type="radio" name="second_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[1] == entry.id) %} checked=true{% endif %}>2nd place<br />
-                    <input type="radio" name="third_place" value="{{ entry.id }}"{% if (contest.winners != null) and (contest.winners[2] == entry.id) %} checked=true{% endif %}>3rd place<br />
+                    <input type="radio" name="first_place" value="{{ entry['group'].id }}"{% if (contest.winners != null) and (contest.winners[0] == entry['group'].id) %} checked=true{% endif %}>1st place<br />
+                    <input type="radio" name="second_place" value="{{ entry['group'].id }}"{% if (contest.winners != null) and (contest.winners[1] == entry['group'].id) %} checked=true{% endif %}>2nd place<br />
+                    <input type="radio" name="third_place" value="{{ entry['group'].id }}"{% if (contest.winners != null) and (contest.winners[2] == entry['group'].id) %} checked=true{% endif %}>3rd place<br />
                 </td>
             </tr>
         {% endfor %}
