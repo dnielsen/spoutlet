@@ -79,3 +79,13 @@
     font-weight: bold;
     font-size: 14px;
 }
+
+.group-list-item.contest {
+    margin: 0 0 0 22px;
+    padding: 5px 0 0 0;
+}
+
+.group-list-item.contest.first {
+    margin: 0;
+    padding: 5px 0 0 0;
+}

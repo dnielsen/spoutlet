@@ -1,6 +1,7 @@
 {% if groups | length > 0 %}
     {% for group in groups %}
-        <div class="group-list-item">
+        {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+        <div class="group-list-item contest{% if isFirstInRow %} first{% endif %}">
             <a href="{{ path('group_show', { slug: group.slug}) }}" target="_blank">
                 {% if group.thumbNail %}
                 <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
