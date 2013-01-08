@@ -761,4 +761,9 @@ class Contest implements LinkableInterface
     {
         return $this->votingEnd < new \DateTime('now');
     }
+
+    public function isVotable()
+    {
+        return $this->votingStart < new \DateTime('now');
+    }
 }

@@ -9,6 +9,8 @@
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
 {% set openGraphThumb       = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
+{% set isVotable = (media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
+
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
     <meta property="og:title" content="{{ media.title }}" />
@@ -110,31 +112,35 @@
                         <div class="photo-author-link"><a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
                     </div>
 
-                    <div class="photo-voting-wrapper">
-                        <div class="photo-votes upvotes">
-                            <div class="votes"><strong><span id="media-upvotes">{{ upVotes }}</span>%</strong></div>
-                            <div>Likes</div>
-                        </div>
+                    {% if isVotable %}
 
-                       <div class="photo-votes downvotes">
-                            <div class="votes"><strong><span id="media-downvotes">{{ downVotes }}</span>%</strong></div>
-                            <div>Dislikes</div>
-                        </div>
-
-                        {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true %}
-
-                            <div class="media-voting-wrapper">
-                                <span>Cast your vote: </span>
-                                {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+                        <div class="photo-voting-wrapper">
+                            <div class="photo-votes upvotes">
+                                <div class="votes"><strong><span id="media-upvotes">{{ upVotes }}</span>%</strong></div>
+                                <div>Likes</div>
                             </div>
 
-                            <div id="media-voting-login-required" style="display: none; margin-top: 35px; padding: 0 20px;">
-                                <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">Login</a>
+                           <div class="photo-votes downvotes">
+                                <div class="votes"><strong><span id="media-downvotes">{{ downVotes }}</span>%</strong></div>
+                                <div>Dislikes</div>
                             </div>
-                        {% endif %}
 
-                        <div id="media-voting-success" style="display:none;margin-top:35px;">Thank you for voting!</div>
-                    </div>
+                            {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
+
+                                <div class="media-voting-wrapper">
+                                    <span>Cast your vote: </span>
+                                    {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
+                                </div>
+
+                                <div id="media-voting-login-required" style="display: none; margin-top: 35px; padding: 0 20px;">
+                                    <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">Login</a>
+                                </div>
+                            {% endif %}
+
+                            <div id="media-voting-success" style="display:none;margin-top:35px;">Thank you for voting!</div>
+                        </div>
+
+                    {% endif %}
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
                     <p>
@@ -155,7 +161,7 @@
                             {% endif %}
                         </p>
                     <div class="description">{{ media.description }}</div>
-                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }} | {{ 'galleries.show_photo_details_points' | trans}} {{ points | number_format(0, '.', ',') }}</div>
+                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }}{% if isVotable %} | {{ 'galleries.show_photo_details_points' | trans}} {{ points | number_format(0, '.', ',') }}{% endif %}</div>
 
                     <div style="margin-top:10px; width:300px">
                         <div style="width:20%; float:left;">Galleries: </div>
@@ -178,7 +184,13 @@
                                 {{ 'galleries.already_voted' | trans }}
                             </p>
                         </div>
-
+                    {% elseif isVotable == false %}
+                        <div style="width:290px;padding:5px 0;">
+                            <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
+                                This image is part of a contest.<br /><br />
+                                Voting begins {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}
+                            </p>
+                        </div>
                     {% elseif media.canUserVote(app.user) == false  %}
                         <div style="width:290px;padding:5px 0;">
                             <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
