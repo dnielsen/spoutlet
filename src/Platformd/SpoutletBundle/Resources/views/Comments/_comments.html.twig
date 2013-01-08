@@ -14,8 +14,10 @@
                         {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ comment.author.cevoUserId %}
 
                         <div class="author-link"><a href="{{ cevoAccountUrl }}">{{ comment.author.username }}</a></div>
-                        <div class="author-level">Level 7</div>
-                        <div class="level-img"><div>5477 ARP</div></div>
+                        <!--  Placeholders for ARP/Level when we handle this ourselves
+                            <div class="author-level">Level 7</div>
+                            <div class="level-img"><div>5477 ARP</div></div>
+                        -->
                     </div>
                     <div class="comment-body">
                         <div class="comment-errors" id="comment-errors-{{ comment.id }}"></div>
