@@ -881,9 +881,11 @@ Alienware Arena Team
         $contest = $this->getContestRepository()->findContestByGroup($group);
 
         $contestMemberCount = 0;
+        $isEntered = false;
 
         if($contest != null) {
             $contestMemberCount = $this->getMemberActionRepository()->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+            $isEntered = $contest->getVotingEnd() < new \DateTime('now');
         }
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
@@ -891,7 +893,7 @@ Alienware Arena Team
             'group'         => $group,
             'groupNews'     => $groupNews,
             'groupVideos'   => $groupVideos,
-            'isEntered'     => $contest != null,
+            'isEntered'     => $isEntered,
             'contestCount'  => $contestMemberCount,
         ));
     }
