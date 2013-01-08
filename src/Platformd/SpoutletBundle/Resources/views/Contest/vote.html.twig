@@ -13,6 +13,7 @@
             {{ contest.voteInstructions | raw }}
         </div>
         <div id="contest-entries">
+
             {% if contest.category == 'image' %}
                 {% include "SpoutletBundle:Contest:_medias.html.twig" with { "medias" : medias} %}
             {% elseif contest.category == 'group' %}

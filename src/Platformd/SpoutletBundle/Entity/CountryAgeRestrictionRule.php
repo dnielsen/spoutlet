@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Entity\Country;
 
 /**
  * Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule
@@ -215,9 +216,16 @@ class CountryAgeRestrictionRule
 
     public function isAllowed($age, $country)
     {
-        if ($country == $this->getCountry() || !$country){
+        if ($country instanceof Country) {
+            $thisCountry = $this->getCountry();
+        } else {
+            $thisCountry = $this->getCountry()->getCode();
+        }
 
-            if (!$age || ($age > $this->getMinAge() && $age < $this->getMaxAge())) {
+        if ($country == $thisCountry || !$country){
+
+            if (!$age || (($age > $this->getMinAge() || !$this->getMinAge()) && ($age < $this->getMaxAge() || !$this->getMaxAge()))) {
+
                 return $this->getRuleType();
             }
 

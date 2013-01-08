@@ -189,10 +189,12 @@ class DealAdminController extends Controller
                 $defaultAllow = true;
 
                 foreach ($rules as $rule) {
-                    $rule->setRuleset($ruleset);
-                    $newRulesArray[] = $rule;
+                    if ($rule->getMinAge() || $rule->getMaxAge() || $rule->getCountry()) {
+                        $rule->setRuleset($ruleset);
+                        $newRulesArray[] = $rule;
 
-                    $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+                        $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+                    }
                 }
 
                 $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));

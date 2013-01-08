@@ -49,18 +49,19 @@
 .photo-voting-wrapper {
     display: inline-table;
     vertical-align: top;
+    text-align: center;
     width: 180px;
 }
 
 .photo-voting-wrapper .photo-votes {
     display: inline-table;
-    padding: 25px 5px;
+    padding: 0px 15px;
 }
 
 .media-voting-wrapper {
     display: inline-table;
     padding: 0 10px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .description {
@@ -163,6 +164,7 @@ a.media-voting-button {
     width: 29px;
     height: 29px;
     float: left;
+    margin: 0 3px;
 }
 
 .up {
@@ -353,4 +355,12 @@ a.media-voting-button {
     width: 177px;
     height: 107px;
     position: relative;
+}
+
+.media-voting-button-wrapper {
+    margin-top: 10px;
+}
+
+.quick-vote-wrapper  .media-voting-button-wrapper {
+    margin-top: 3px;
 }
