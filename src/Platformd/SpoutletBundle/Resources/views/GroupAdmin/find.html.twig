@@ -9,7 +9,7 @@
         {% include 'SpoutletBundle:GroupAdmin:_findForm.html.twig' %}
         <div style="margin-left: 160px">
             <button type="submit" class="btn btn-primary" formnovalidate>Search</button>
-            <a href="{{ path('admin_group_find') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+            <a href="{{ path('admin_group_filter_reset') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
     <div>
@@ -41,7 +41,8 @@
                 </tr>
             </thead>
             <tbody>
-                {% for group in results %}
+                {% for groupRow in results %}
+                    {% set group = groupRow[0] %}
                     <tr>
                         <td>
                             {% if group.deleted %}
@@ -55,11 +56,11 @@
                         <td>{{ group.createdAt | date('m/d/Y') }}</td>
                         <td>{{ group.getDeleted() ? 'Inactive' : 'Active' }}</td>
                         <td>{{ group.owner.username }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ group.members.count }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ groupRow.memberCount }}</a></td>
                         <td>{{ group.newMemberCount }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.id })  }}">{{ group.videos.count }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.id })  }}">{{ group.images.count }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.id })  }}">{{ group.newsArticles.count }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.id })  }}">{{ groupRow.videoCount }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.id })  }}">{{ groupRow.imageCount }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.id })  }}">{{ groupRow.newsCount }}</a></td>
                         <td>{{ group.facebookLikes }}</td>
                         <td>{{ group.leftMemberCount }}</td>
 

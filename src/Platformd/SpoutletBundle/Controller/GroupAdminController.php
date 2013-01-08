@@ -34,6 +34,13 @@ class GroupAdminController extends Controller
         return $this->redirect($this->generateUrl('admin_group_find'));
     }
 
+    public function filterResetAction(Request $request)
+    {
+        $this->setFilterFormData(array());
+
+        return $this->redirect($this->generateUrl('admin_group_find'));
+    }
+
     private function getFilterFormData()
     {
         $session = $this->getRequest()->getSession();
