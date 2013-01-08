@@ -79,6 +79,11 @@
     font-size: 11px;
 }
 
+.comment-reply-display {
+    float: right;
+    margin-right: 15px;
+}
+
 .comment-vote {
     float: right;
     width: auto;
@@ -187,6 +192,7 @@
     padding: 5px;
     background: #2e2e2e;
     min-height: 30px;
+    display: none;
 }
 
 .comment-replies input[type='text'] {
@@ -208,6 +214,10 @@
     padding: 5px;
     background: #2e2e2e;
     margin-top: 1px;
+}
+
+.comment-replies-wrapper .first {
+    margin-top: 0;
 }
 
 .hidden {
