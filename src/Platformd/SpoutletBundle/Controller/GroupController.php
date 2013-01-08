@@ -863,8 +863,9 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
-        $user = $this->getCurrentUser();
-        $group = $this->getGroupBySlug($slug);
+
+        $user   = $this->getCurrentUser();
+        $group  = $this->getGroupBySlug($slug);
 
         if ($group->getDeleted()) {
             $this->setFlash('error', 'Sorry, this group does not exist.');
@@ -873,16 +874,25 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroup', false);
 
-        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
-        $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
+        $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
-        $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $contest = $this->getContestRepository()->findContestByGroup($group);
+
+        $contestMemberCount = 0;
+
+        if($contest != null) {
+            $contestMemberCount = $this->getMemberActionRepository()->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+        }
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'commentTotal' => $commentTotal,
-            'group' => $group,
-            'groupNews' => $groupNews,
-            'groupVideos' => $groupVideos,
+            'commentTotal'  => $commentTotal,
+            'group'         => $group,
+            'groupNews'     => $groupNews,
+            'groupVideos'   => $groupVideos,
+            'isEntered'     => $contest != null,
+            'contestCount'  => $contestMemberCount,
         ));
     }
 
@@ -1063,5 +1073,15 @@ Alienware Arena Team
     private function getGroupVideoRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
+    }
+
+    private function getContestRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Contest');
+    }
+
+    private function getMemberActionRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupMembershipAction');
     }
 }

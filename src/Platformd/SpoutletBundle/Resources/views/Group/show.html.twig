@@ -91,6 +91,12 @@
                         <td>Group</td>
                         <td>{{ group.isPublic ? "Public" : "Private" }}</td>
                     </tr>
+                    {% if isEntered %}
+                    <tr>
+                        <td>New Members Acquired</td>
+                        <td>{{ contestCount }}</td>
+                    </tr>
+                    {% endif %}
                 </table>
                 <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
                 <div id="group-like-wrapper">

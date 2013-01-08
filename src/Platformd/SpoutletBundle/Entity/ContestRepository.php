@@ -101,4 +101,15 @@ class ContestRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findContestByGroup($group)
+    {
+        $qb = $this->createQueryBuilder('c');
+        return $qb->leftJoin('c.entries', 'e')
+            ->leftJoin('e.groups', 'eg')
+            ->where($qb->expr()->in('eg.id', array($group->getId())))
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

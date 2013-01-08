@@ -64,15 +64,4 @@ class ContestEntryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
-
-    public function findGroupByEntry($entry, $group)
-    {
-        $qb = $this->createQueryBuilder('e');
-        return $qb->select('e.contest')
-            ->leftJoin('e.groups', 'g')
-            ->leftJoin('e.contest', 'c')
-            ->where($qb->expr()->in('g.id', array($group->getId())))
-            ->getQuery()
-            ->execute();
-    }
 }
