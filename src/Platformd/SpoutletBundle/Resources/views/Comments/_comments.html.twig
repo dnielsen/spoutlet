@@ -282,7 +282,8 @@
 
                 $('#comment-edit-' + id).val(text);
             } else {
-                element.text(text);
+                htmlText = text.replace(/(\r\n|\n\r|\r|\n)/g, "<br>");
+                element.html(htmlText);
                 if($('#comment-errors-' + id).is(':visible')) {
                     $('#comment-errors-' + id).fadeOut();
                 }
