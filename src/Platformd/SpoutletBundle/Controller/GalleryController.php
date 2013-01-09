@@ -559,9 +559,12 @@ class GalleryController extends Controller
         $em->flush();
 
         $totalVotes     = $this->getVoteRepository()->findVoteCount($media);
-        $upVotes        = round(($this->getVoteRepository()->findUpVotes($media)/$totalVotes)*100);
+        $upVotesCount   = $this->getVoteRepository()->findUpVotes($media);
+        $downVotesCount = $totalVotes - $upVotesCount;
+        $points         = $upVotesCount - $downVotesCount;
+        $upVotes        = round(($upVotesCount/$totalVotes)*100);
 
-        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes)));
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes, "points" => $points)));
         return $response;
     }
 
