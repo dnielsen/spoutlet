@@ -67,7 +67,7 @@
 
 .comment-wrapper .comment-footer {
     float: right;
-    width: 535px;
+    width: 626px;
     color: #9B9B9B;
     position: absolute;
     bottom: 4px;
@@ -80,7 +80,7 @@
 }
 
 .comment-reply-display {
-    float: right;
+    float: left;
     margin-right: 15px;
 }
 
@@ -125,7 +125,7 @@
     min-width: 120px;
     position: absolute;
     display: none;
-    right: -53px;
+    right: -3px;
     bottom: 15px;
 }
 
@@ -167,12 +167,12 @@
 
 .comment-wrapper .report-options {
     right: -188px;
-    bottom: -18px;
+    bottom: -53px;
 }
 
 .comment-replies-wrapper .report-options {
-    right: -240px;
-    bottom: 0px;
+    right: -188px;
+    bottom: -50px;
 }
 
 .comment-replies-wrapper {
@@ -188,15 +188,16 @@
 }
 
 .comment-replies {
-    width: 626px;
+    width: 600px;
     padding: 5px;
     background: #2e2e2e;
     min-height: 30px;
+    margin-left: 26px;
     display: none;
 }
 
 .comment-replies input[type='text'] {
-    width: 575px;
+    width: 550px;
 }
 
 .comment-replies a {
@@ -209,11 +210,12 @@
 .comment-reply {
     position: relative;
     font-size: 11px;
-    width: 626px;
+    width: 600px;
     float: left;
     padding: 5px;
     background: #2e2e2e;
     margin-top: 1px;
+    margin-left: 26px;
 }
 
 .comment-replies-wrapper .first {
@@ -231,10 +233,9 @@
 }
 
 .comment-reply .reply-body {
-    margin-left: 5px;
+    margin-left: 37px;
     padding-bottom: 5px;
     width: 585px;
-    float: left;
 }
 
 .comment-reply a {
@@ -277,6 +278,13 @@
     background-position: 14px 14px;
 }
 
+.reply-body .comment-edit-textarea {
+    overflow-y: hidden;
+    white-space: pre-wrap;
+    width: 550px;
+    display: block;
+}
+
 .thread textarea {
     height: 80px;
     width: 98%;
@@ -285,7 +293,7 @@
 
 .comment-replies textarea {
     height: 18px;
-    width: 575px;
+    width: 550px;
     overflow-y: hidden;
     margin-bottom: 2px;
 }
@@ -306,6 +314,7 @@
 
 .comment-sorting select {
     color: #555;
+    width: 100px;
 }
 
 #more-comments-loader {
@@ -313,11 +322,6 @@
     clear:both;
      text-align:center;
      padding-top:15px;
-}
-
-.comment-edit-textarea {
-    overflow-y: hidden;
-    white-space: pre-wrap;
 }
 
 .comment-edit-btn {

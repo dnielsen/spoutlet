@@ -140,7 +140,7 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->flush();
 
-        $response->setContent(json_encode(array("success" => true, "details" => $body)));
+        $response->setContent(json_encode(array("success" => true, "details" => nl2br($body))));
         return $response;
     }
 
