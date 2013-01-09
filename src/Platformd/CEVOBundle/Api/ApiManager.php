@@ -208,17 +208,14 @@ class ApiManager
         $jsonArr = json_decode($output, true);
 
         if ($jsonArr === false) {
-            $this->logError($output);
             throw new ApiException('Problem with CEVO API Response. Content: '.$output);
         }
 
         if (isset($jsonArr['error']) && $jsonArr['error']) {
-            $this->logError($jsonArr['error']);
             throw new ApiException('API error. Valid response, but with error: '.$jsonArr['error']);
         }
 
         if (isset($jsonArr['api_err_msg']) && $jsonArr['api_err_msg']) {
-            $this->logError($jsonArr['api_err_msg']);
             throw new ApiException('API error. Valid response, but with error: '.$jsonArr['api_err_msg']);
         }
 
