@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\ContentReport;
 use Platformd\SpoutletBundle\Form\Type\ReportedContentType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
@@ -178,6 +179,12 @@ class ContentReportAdminController extends Controller
             $em->persist($galleryMedia);
             $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
 
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('nukephoto', $galleryMedia->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+
         } else if ($group) {
 
             $group->setDeleted(true);
@@ -313,5 +320,10 @@ Alienware Arena Team
     private function getEmailManager()
     {
         return $this->get('platformd.model.email_manager');
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }
