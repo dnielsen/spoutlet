@@ -24,10 +24,11 @@
 {% block title media.title %}
 
 {% block content %}
-<h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
+
 <div class="media-show-page">
     <div class="std_2col" style="padding:0 0 10px 0">
         <div class="left">
+            <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
             <div style="padding: 3px 0 3px 0;float:left;">
                 <a href="{{ path('gallery_index') }}">Photo Gallery</a>
                 <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
@@ -41,12 +42,9 @@
 
         </div>
         <div class="right">
-
-            {{ 'galleries.submit_photo_now' | trans }}
-            <div class="submit-media" style="display: inline; margin-left: 5px;">
-                <a href="{{ path('gallery_submit') }}" class="btn btn-primary" id="gallery-show-submit-media">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+            <div class="submit-media" style="display: inline; margin:10px 15px 0 0; float:right;">
+                <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
-
         </div>
     </div>
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
@@ -83,7 +81,7 @@
                         {% for page in otherMediaPages %}
                             <div class="items-wrapper">
                             {% for media in page %}
-                                <div class="user-media-thumb-wrapper">
+                                <div class="user-other-media-thumb-wrapper">
                                    <div class="gallery-media-thumb-square">
                                         <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                             <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />

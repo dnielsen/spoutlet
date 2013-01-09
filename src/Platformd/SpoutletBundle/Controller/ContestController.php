@@ -40,16 +40,27 @@ class ContestController extends Controller
 
         $instructions = $contest->getCleanedRedemptionInstructionsArray();
 
-        $isEligible = false;
+        $isEligible = true;
         $isEntered = true;
 
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
-        if(!$entry)
-        {
-            $isEligible = true;
-            $isEntered = false;
+        $isEntered = $entry ? true : false;
+
+        $countryRepo    = $this->getCountryRepository();
+        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+
+        if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            $isEligible = false;
         }
+
+        $mediaCount = $entry ? $entry->getMedias()
+        ->filter(function($x) {
+            return $x->getDeleted() != 1;
+        })->count() : 0;
+
+        $entriesLeft        = $contest->getMaxEntries() - $mediaCount;
+        $isUnlimited        = $contest->getMaxEntries() == 0;
 
         $agreeText = $this->trans('contests.show_page_agree_text');
         $canVote = $contest->getVotingStart() < new \DateTime('now');
@@ -61,6 +72,9 @@ class ContestController extends Controller
             'agreeText'     => $agreeText,
             'isEntered'     => $isEntered,
             'canVote'       => $canVote,
+            'entryCount'    => $mediaCount,
+            'entriesLeft'   => $entriesLeft,
+            'isUnlimited'   => $isUnlimited,
         ));
     }
 
@@ -129,7 +143,7 @@ class ContestController extends Controller
 
         if(!$entry)
         {
-            $this->setFlash('error', sprintf($this->trans('contests.submit_page_no_entry', $contest->getCategory())));
+            $this->setFlash('error', sprintf($this->trans('contests.submit_page_no_entry'), $contest->getCategory()));
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 

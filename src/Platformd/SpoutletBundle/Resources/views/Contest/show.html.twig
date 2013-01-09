@@ -46,23 +46,59 @@
                     <div class="form-msg-error" id="contest_error" style="display:none;margin-left:0;width:auto;"></div>
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         {% if isEligible %}
-                            <div style="padding-top: 10px;">
-                                <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
-                                    <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
-                                    <div style="text-align:center;">
-                                        <button type="submit" formnovalidate style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                    {% if isEntered %}
-                        {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
-                            <div style="text-align:center;">
-                                <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_submit_photos' | trans }}</button>
-                            </div>
+                            {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                                {% if isEntered == false %}
+                                    {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                                        <div style="padding-top: 10px;">
+                                            <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
+                                                <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
+                                                <div style="text-align:center;">
+                                                    <button type="submit" formnovalidate style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <div style="padding: 10px 0px;">
+                                            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                                {{ 'contests.submit_page_submission_ended' | trans }}
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    {% if (entriesLeft > 0) or (isUnlimited) %}
+                                        <div style="text-align:center;">
+                                            {% if entryCount > 0 %}
+                                            <div style="padding: 10px 0px;">
+                                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                                    {{ 'contests.inform_user_entrycount' | transchoice(entryCount, {'%entryCount%': entryCount}) }}
+                                                </p>
+                                            </div>
+                                            {% endif %}
+
+                                            <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_submit_photos' | trans }}</button>
+
+                                        </div>
+                                    {% else %}
+                                        <div style="padding: 10px 0px;">
+                                            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                                {{ 'contests.submit_page_entry_max_reached' | trans }}
+                                            </p>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <div style="padding: 10px 0px;">
+                                    <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                        <em>This contest is no longer available</em>
+                                    </p>
+                                </div>
+                            {% endif %}
                         {% else %}
-                            <p style="text-align: center;"><em>This contest is no longer available</em></p>
+                            <div style="padding: 10px 0px;">
+                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                    {{ 'contests.contest_not_eligible' | trans }}
+                                </p>
+                            </div>
                         {% endif %}
                     {% endif %}
                 </div>
