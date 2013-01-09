@@ -222,6 +222,35 @@ class ApiManager
         return $jsonArr;
     }
 
+    /**
+     * creategroup          | +3 | Create a new group
+     * submitgroupvideo     | +2 | Submit an approved video to your group
+     * submitgroupphoto     | +2 | Submit an approved photo to your group
+     * groupnewscomment     | +1 | Comment on a group news post (currently there is no way to comment on a group news post)
+     * groupcommentreply    | +1 | Reply to a group comment thread (see above)
+     * joingroup            | +1 | Join a group
+     * groupnuke            | -5 | Group nuked
+     * photofeature         | +10| Photo is Featured
+     * photosubmit          | +3 | Submit an approved photo to the gallery
+     * photocomment         | +1 | Comment on a photo
+     * photocommentremoved  | -5 | Comment removed
+     * nukephoto            | -5 | Photo removed
+     *
+     * First param, $award is a string. See above list of allowed awards. Second param is $user_id. If it is not specified
+     * it will use the currently logged in user.
+     *
+     * @param $award string
+     * @param @user_id int
+     * @return array
+     */
+    public function GiveUserXp($award, $user_id = null)
+    {
+        $uid = isset($user_id) ? $user_id : $this->getUserId();
+
+        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award));
+        return $response;
+    }
+
     private function logError($message)
     {
         if ($this->logger) {

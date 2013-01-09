@@ -568,6 +568,7 @@ galleries:
     submit_photo_publish_share: Thanks! Your images have been published.
     submit_photo_publish_share_2: Share your photos with your friends!
     submit_photo_share: Share Photos
+    submit_share: Share
     submit_photo_my_photos: My Images
 
     submit_photo_step2: Step 2 of 2:
@@ -576,7 +577,7 @@ galleries:
     submit_photo_image_desc: Description*
     submit_photo_image_galleries: Galleries*
     submit_photo_groups: Groups
-    submit_photo_button_publish: Publish All Photos
+    submit_photo_button_publish: Publish
 
     submit_photo_publish_success: Success!
     submit_photo_upload_success: Your images were uploaded successfully.
@@ -598,7 +599,7 @@ galleries:
 
     gallery_see_all: See All
 
-    gallery_go_to_galleries: Go to Galleries
+    gallery_go_to_galleries: Gallery Home
 
     publish_photo_error: Error! You must provide details for each photo in order to publish them in our galleries. Click on the photo to fill out the details.
     publish_photo_error_id: Media ID is missing.
@@ -609,7 +610,7 @@ galleries:
     vote_success: Thanks for voting!
     more_images_from: More images from
     save_images: Save Images
-    save_image: Save Image
+    save_image: Save
     delete_image: Delete Image
     upload_images: Upload
     cancel: Cancel
@@ -636,11 +637,12 @@ contests:
     show_page_my_entries: Enter
     show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
     vote_page_instruction: Voting Instructions
+    inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
     enter_page_already_entered: You have already entered this contest.
     enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
-    submit_page_no_entry: You must enter the contest before you can submit %s(s).
-    submit_page_entry_max_reached: You have entered the maximum number of photos for this entry.
+    submit_page_no_entry: You must enter the contest before you can submit %ss.
+    submit_page_entry_max_reached: You have entered the maximum number of photos for this contest.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
     submit_groups_title: Submit Your Group

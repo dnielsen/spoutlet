@@ -115,6 +115,8 @@ class CountryAgeRestrictionRuleset
             }
 
             if ($isAllowed === false) return $isAllowed;
+
+            break;
         }
 
         $allowed = $isAllowed ? : $this->getDefaultAllow() === null ? true : $this->getDefaultAllow();

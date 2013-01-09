@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
 use Platformd\SpoutletBundle\Form\Type\GalleryMediaType;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -115,6 +116,14 @@ class GalleryController extends Controller
 
         $flashString = $media->getFeatured() ? 'Media was featured successfully!' : 'Media was unfeatured successfully!';
 
+        if($media->getFeatured()) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('photofeature', $media->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+        }
+
         $this->setFlash('success', $flashString);
         return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
     }
@@ -163,6 +172,13 @@ class GalleryController extends Controller
             {
                 $published[] = $id;
                 $media->setPublished(true);
+
+                try {
+                    $response = $this->getCEVOApiManager()->GiveUserXp('photosubmit');
+                } catch (ApiException $e) {
+
+                }
+
             } else {
                 $unpublished[] = $id;
                 $allErrors[] = $errors;
@@ -532,7 +548,7 @@ class GalleryController extends Controller
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
         $country            = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($contest && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($contest && !$contest->isFinished() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
             return $response;
         }
@@ -559,9 +575,12 @@ class GalleryController extends Controller
         $em->flush();
 
         $totalVotes     = $this->getVoteRepository()->findVoteCount($media);
-        $upVotes        = round(($this->getVoteRepository()->findUpVotes($media)/$totalVotes)*100);
+        $upVotesCount   = $this->getVoteRepository()->findUpVotes($media);
+        $downVotesCount = $totalVotes - $upVotesCount;
+        $points         = $upVotesCount - $downVotesCount;
+        $upVotes        = round(($upVotesCount/$totalVotes)*100);
 
-        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes)));
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes, "points" => $points)));
         return $response;
     }
 
@@ -754,5 +773,10 @@ class GalleryController extends Controller
     private function getCurrentUser()
     {
         return $this->get('security.context')->getToken()->getUser();
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }
