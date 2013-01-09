@@ -47,11 +47,17 @@
             </div>
         </div>
     </div>
+
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
-
+            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
+                <div style="width:100%;padding:5px 0;margin-bottom:10px;text-align:center;">
+                        <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                            This image is part of an ongoing contest! Place your vote in the Photo Details section now!
+                        </p>
+                </div>
+            {% endif %}
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
-
         </div>
 
         <div class="right">
@@ -185,8 +191,8 @@
                     {% elseif isVotable == false %}
                         <div style="width:290px;padding:5px 0;">
                             <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
-                                This image is part of a contest.<br /><br />
-                                Voting begins {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}
+                                <em>This image is part of a contest.<br /><br />
+                                Voting begins {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
                             </p>
                         </div>
                     {% elseif media.canUserVote(app.user) == false  %}
