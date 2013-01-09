@@ -177,6 +177,8 @@ class ApiManager
 
         $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT, null, false);
 
+        var_dump($url);
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);

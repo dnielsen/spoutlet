@@ -898,9 +898,7 @@ Alienware Arena Team
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
-                var_dump($response);
             } catch(ApiException $e) {
-                var_dump($e);
             }
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
