@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\UserBundle\Entity\User;
 
 class ContestController extends Controller
 {
@@ -43,7 +44,7 @@ class ContestController extends Controller
         $isEligible = true;
         $isEntered = true;
 
-        if ($user) {
+        if ($user instanceof User) {
             $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
             $isEntered = $entry ? true : false;
