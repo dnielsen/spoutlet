@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\UserBundle\Entity\User;
 
 class ContestController extends Controller
 {
@@ -58,21 +59,28 @@ class ContestController extends Controller
         $isEligible = true;
         $isEntered = true;
 
-        $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
+        if ($user instanceof User) {
+            $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
-        $isEntered = $entry ? true : false;
+            $isEntered = $entry ? true : false;
 
-        $countryRepo    = $this->getCountryRepository();
-        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+            $countryRepo    = $this->getCountryRepository();
+            $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
 
-        if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+                $isEligible = false;
+            }
+
+            $mediaCount = $entry ? $entry->getMedias()
+            ->filter(function($x) {
+                return $x->getDeleted() != 1;
+            })->count() : 0;
+
+        } else {
             $isEligible = false;
+            $isEntered  = false;
+            $mediaCount = 0;
         }
-
-        $mediaCount = $entry ? $entry->getMedias()
-        ->filter(function($x) {
-            return $x->getDeleted() != 1;
-        })->count() : 0;
 
         $entriesLeft        = $contest->getMaxEntries() - $mediaCount;
         $isUnlimited        = $contest->getMaxEntries() == 0;
