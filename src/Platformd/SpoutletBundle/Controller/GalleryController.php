@@ -532,7 +532,7 @@ class GalleryController extends Controller
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
         $country            = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($contest && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($contest && !$contest->isFinished() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
             return $response;
         }
