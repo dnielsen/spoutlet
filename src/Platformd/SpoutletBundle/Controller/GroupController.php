@@ -178,7 +178,7 @@ Alienware Arena Team
         $em->flush();
 
         try {
-            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getId());
+            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
         } catch (ApiException $e) {
 
         }

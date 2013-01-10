@@ -168,7 +168,7 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGroup($group);
 
             try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getId());
+                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getCevoUserId());
             } catch (ApiException $e) {
 
             }
