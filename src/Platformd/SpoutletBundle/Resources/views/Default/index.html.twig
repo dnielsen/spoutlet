@@ -26,16 +26,31 @@
 </div>
 {% endblock %}
 
-
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
     <script type="text/javascript">
         $(function () {
-           $('.ellipse').truncate({
+            $('.ellipse').truncate({
                 width: '160'
-           });
-           $('.news-ellipse').truncate();
-           $('.ellipse').qtip();
+            });
+            $('.news-ellipse').truncate();
+            $('.ellipse').qtip();
+
+            $('.widget-content').mCustomScrollbar();
+            $(".featured-content-header a").click(function() {
+                    var id = $(this).attr("id");
+                    $(".featured-content-header a.active").removeClass("active");
+                    $(this).addClass("active");
+                    $(".featured-content-category").removeClass('active');
+                    $(".featured-content-category#featured-content-"+id).addClass('active');
+                    // show the widget footer
+                    $(".widget-footer #featured-footer-"+id).show();
+                    $('.widget-content').resize();
+                    $('.widget-content').mCustomScrollbar('update');
+            });
         });
     </script>
 {% endblock %}

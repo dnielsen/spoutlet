@@ -22,78 +22,96 @@ use DateTime;
  */
 class GroupAdminController extends Controller
 {
-    public function findAction(Request $request) {
+    public function filterAction(Request $request)
+    {
+        $form = $this->createForm(new GroupFindType(), $this->getFilterFormData());
+        $form->bindRequest($request);
+
+        $this->setFilterFormData($form->getData());
+
+        return $this->redirect($this->generateUrl('admin_group_find'));
+    }
+
+    private function getFilterFormData()
+    {
+        $session = $this->getRequest()->getSession();
+        return $session->get('formValues', array());
+    }
+
+    private function setFilterFormData(array $data)
+    {
+        $session = $this->getRequest()->getSession();
+        $session->set('formValues', $data);
+    }
+
+    public function findAction(Request $request)
+    {
         $this->addFindGroupsBreadcrumb();
 
-        $form = $this->createForm(new GroupFindType());
-        $results = $this->processFindForm($form, $request);
+        $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
+        $filters = $this->getFilterFormData();
+        $results = $groupRepo->findGroupStats($filters);
 
         $resultTable = array();
 
-        if($results) {
+        foreach ($results as $group) {
 
-            $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
-            $results = $groupRepo->findGroupStats($results);
+            $row = array();
 
-            foreach ($results as $group) {
-
-                $row = array();
-
-                if ($group->getDeleted()) {
-                    $row['GroupLink']           = $this->container->get('router')->generate('group_edit', array('id' => $group->getId()));;
-                } else {
-                    $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
-                }
-
-                $row['GroupId']             = $group->getId();
-                $row['GroupName']           = $group->getName();
-                $row['Category']            = $group->getCategory();
-                $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
-
-                $row['Region']              = "";
-
-                if ($group->getAllLocales()) {
-                    $row['Region']          = 'All Sites';
-                } else {
-                    foreach ($group->getSites() as $site) {
-                        $row['Region'] .=  '['.$site->getName().']';
-                    }
-                }
-
-                $row['CreatedAt']           = $group->getCreatedAt();
-                $row['Status']              = $group->getDeleted() ? 'Inactive' : 'Active';
-                $row['Organizer']           = $group->getOwner()->getUsername();
-                $row['MemberCount']         = $group->getMembers()->count();
-                $row['VideoCount']          = $group->getVideos()->count();
-                $row['ImageCount']          = $group->getImages()->count();
-                $row['NewsArticleCount']    = $group->getNewsArticles()->count();
-
-                $row['NewMemberCount'] = $group->getMembershipActions()
-                    ->filter(function($x) {
-                        return
-                        $x->getCreatedAt() >= new DateTime('-30 days') &&
-                        ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
-                        $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
-                    ->count();
-
-                $row['LeftMemberCount'] = $group->getMembershipActions()
-                    ->filter(function($x) {
-                        return
-                        $x->getCreatedAt() >= new DateTime('-30 days') &&
-                        $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
-                    ->count();
-
-                $row['FacebookLikes'] = $this->getGroupLikeCount($group);
-
-                $resultTable[] = $row;
+            if ($group->getDeleted()) {
+                $row['GroupLink']           = $this->container->get('router')->generate('group_edit', array('id' => $group->getId()));;
+            } else {
+                $row['GroupLink']           = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
             }
+
+            $row['GroupId']             = $group->getId();
+            $row['GroupName']           = $group->getName();
+            $row['Category']            = $group->getCategory();
+            $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
+
+            $row['Region']              = "";
+
+            if ($group->getAllLocales()) {
+                $row['Region']          = 'All Sites';
+            } else {
+                foreach ($group->getSites() as $site) {
+                    $row['Region'] .=  '['.$site->getName().']';
+                }
+            }
+
+            $row['CreatedAt']           = $group->getCreatedAt();
+            $row['Status']              = $group->getDeleted() ? 'Inactive' : 'Active';
+            $row['Organizer']           = $group->getOwner()->getUsername();
+            $row['MemberCount']         = $group->getMembers()->count();
+            $row['VideoCount']          = $group->getVideos()->count();
+            $row['ImageCount']          = $group->getImages()->count();
+            $row['NewsArticleCount']    = $group->getNewsArticles()->count();
+
+            $row['NewMemberCount'] = $group->getMembershipActions()
+                ->filter(function($x) {
+                    return
+                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
+                    $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
+                ->count();
+
+            $row['LeftMemberCount'] = $group->getMembershipActions()
+                ->filter(function($x) {
+                    return
+                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
+                ->count();
+
+            $row['FacebookLikes'] = $group->getFacebookLikes();
+
+            $resultTable[] = $row;
         }
 
-        $this->bindFormValues($form);
+        $form = $this->createForm(new GroupFindType(), $filters);
 
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
             'results' => $resultTable,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ));
     }
 
@@ -111,26 +129,6 @@ class GroupAdminController extends Controller
         return $this->render('SpoutletBundle:GroupAdmin:show.html.twig', array(
             'group' => $group
         ));
-    }
-
-    private function bindFormValues(Form $form)
-    {
-        $data = $form->getData();
-
-        $startDate = $form->get('startDate')->getData();
-        $endDate = $form->get('endDate')->getData();
-
-        $formValues = array(
-            'groupName' => $data['groupName'],
-            'category' => $data['category'],
-            'deleted' => $data['deleted'],
-            'sites' => $data['sites'],
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-
-        $session = $this->getRequest()->getSession();
-        $session->set('formValues', $formValues);
     }
 
     public function summaryAction() {
@@ -160,7 +158,7 @@ class GroupAdminController extends Controller
                 'images'    => $this->getGroupImageCount($group, $from, $thru),
                 'news'      => $this->getGroupNewsCount($group, $from, $thru),
                 'comments'  => $this->getGroupCommentTotal('group-' . $group->getId(), $from, $thru),
-                'likes'     => $this->getGroupLikeCount($group),
+                'likes'     => $group->getFacebookLikes(),
                 'users_left'=> $this->getGroupMembersLeftCount($group, $from, $thru),
         ));
         return new Response(json_encode($result));
@@ -200,49 +198,6 @@ class GroupAdminController extends Controller
         return $repo->getMembersLeftCountByGroup($group, $fromDate, $thruDate);
     }
 
-    private function getGroupLikeCount($group)
-    {
-        /*
-        format for getting open graph data:
-        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
-        */
-
-        $total = 0;
-
-        $url = 'http://graph.facebook.com/?ids=';
-
-        $sites = $group->getSites();
-
-        foreach($sites as $site)
-        {
-            $url .= sprintf('http://%s.alienwarearena.com/groups/%s/show/,', $site->getSubDomain(), $group->getId());
-        }
-
-        $url = substr($url, 0, -1);
-
-        $curl = curl_init();
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
-
-        $results = json_decode(curl_exec($curl), true);
-
-        foreach($results as $result)
-        {
-            if(isset($result))
-            {
-                if(array_key_exists('likes', $result))
-                {
-                    $total += $result['likes'];
-                }
-            }
-        }
-
-        return $total;
-    }
-
     private function getMembershipCountForGroup($groups)
     {
         $total = 0;
@@ -259,8 +214,7 @@ class GroupAdminController extends Controller
         $factory = new CsvResponseFactory();
         $groupRepo = $this->getDoctrine()->getRepository('SpoutletBundle:Group');
 
-        $session = $this->getRequest()->getSession();
-        $formValues = $session->get('formValues');
+        $formValues = $this->getFilterFormData();
 
         $factory->addRow(array(
             'Group Name',
@@ -324,7 +278,7 @@ class GroupAdminController extends Controller
                 $group->getVideos()->count(),
                 $group->getImages()->count(),
                 $group->getNewsArticles()->count(),
-                $this->getGroupLikeCount($group),
+                $group->getFacebookLikes(),
                 $leftMemberCount,
             ));
         }

@@ -40,7 +40,7 @@ class GiveawayRepository extends AbstractEventRepository
         ;
     }
 
-    public function findAllActiveForSiteWithLimit($locale, $limit) {
+    public function findAllActiveForSiteWithLimit($locale, $limit = null) {
 
          return $this->createActiveQueryBuilder($locale)
             ->orderBy('g.created', 'DESC')

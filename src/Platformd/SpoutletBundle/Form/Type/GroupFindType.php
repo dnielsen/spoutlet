@@ -44,7 +44,6 @@ class GroupFindType extends AbstractType
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Start Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
@@ -53,7 +52,6 @@ class GroupFindType extends AbstractType
             ))
             ->add('endDate', 'date', array(
                 'label' => 'End Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(

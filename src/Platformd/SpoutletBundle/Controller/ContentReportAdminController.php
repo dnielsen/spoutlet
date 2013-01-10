@@ -192,6 +192,12 @@ class ContentReportAdminController extends Controller
             $em->persist($group);
             $repo->deleteAllContentReportsForGroup($group);
 
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getId());
+            } catch (ApiException $e) {
+
+            }
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
