@@ -29,6 +29,9 @@
     </div>
     <div style="padding: 20px 0 0 0;width:100%;text-align:center">
         <a href="{{ path('accounts_photos') }}" class="btn">{{ 'galleries.submit_photo_my_photos' | trans }}</a>
+        {% if groupMedia %}
+            <a href="{{ path('group_show', { slug : groupMedia.group.slug }) }}#images" class="btn" style="margin-left: 20px;">{{ 'galleries.group_images' |trans }}</a>
+        {% endif %}
         <a href="{{ path('gallery_index') }}" class="btn" style="margin-left: 20px;">{{ 'galleries.gallery_go_to_galleries' | trans }}</a>
     </div>
 </div>

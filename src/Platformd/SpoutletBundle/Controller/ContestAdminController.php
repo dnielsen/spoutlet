@@ -339,11 +339,8 @@ class ContestAdminController extends Controller
                     $galleryMedia = $galleryMediaRepo->find($galleryMediaId);
 
                     if ($galleryMedia && $value == "on") {
-                        $contestEntry = $galleryMedia->getContestEntry();
-                        $contestEntry->setDeleted(true);
-                        $contestEntry->setDeletedAt(new \DateTime('now'));
-
-                        $em->persist($contestEntry);
+                        $galleryMedia->setContestEntry(null);
+                        $em->persist($galleryMedia);
                     }
                 }
             }
@@ -353,12 +350,7 @@ class ContestAdminController extends Controller
                     $galleryMedia = $galleryMediaRepo->find($galleryMediaId);
 
                     if ($galleryMedia && $value == "on") {
-                        $contestEntry = $galleryMedia->getContestEntry();
-                        $contestEntry->setDeleted(true);
-                        $contestEntry->setDeletedAt(new \DateTime('now'));
-
-                        $em->persist($contestEntry);
-
+                        $galleryMedia->setContestEntry(null);
                         $galleryMedia->setDeleted(true);
                         $galleryMedia->setDeletedReason('REMOVED_BY_ADMIN');
 

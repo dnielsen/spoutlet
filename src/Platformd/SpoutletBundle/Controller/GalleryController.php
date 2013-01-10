@@ -588,10 +588,12 @@ class GalleryController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $user = $this->getCurrentUser();
-        $repo = $this->getGalleryMediaRepository();
+        $user           = $this->getCurrentUser();
+        $repo           = $this->getGalleryMediaRepository();
+        $groupImageRepo = $this->getGroupImageRepository();
 
-        $media = $repo->findMostRecentPublishedByUser($user);
+        $media      = $repo->findMostRecentPublishedByUser($user);
+        $groupMedia = $groupImageRepo->findMostRecentGroupImageForUser($user);
 
         if(!$media)
         {
@@ -600,6 +602,7 @@ class GalleryController extends Controller
 
         return $this->render('SpoutletBundle:Gallery:share.html.twig', array(
             'media' => $media,
+            'groupMedia' => $groupMedia,
         ));
     }
 
@@ -723,6 +726,11 @@ class GalleryController extends Controller
         return $filterOptions;
     }
 
+    public function featuredMediaFeedAction(Request $request)
+    {
+
+    }
+
     private function getEntityManager()
     {
         return $this->getDoctrine()->getEntityManager();
@@ -741,6 +749,11 @@ class GalleryController extends Controller
     private function getGroupRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+    }
+
+    private function getGroupImageRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupImage');
     }
 
     private function getContestRepository()
