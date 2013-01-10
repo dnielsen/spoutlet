@@ -3,7 +3,7 @@
         <h3>{{ 'platformd.comment.add_your_comment' | trans }}</h3>
         <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
     {% else %}
-        <p>{{ 'platformd.comment.login_to_comment' | trans({ '%login_url%' : "http://alienwarearena.com/account/login?return=" ~ (app.request.headers.get('Host') ~ permalink) | url_encode }) | raw }}</p>
+        <p>{{ 'platformd.comment.login_to_comment' | trans({ '%login_url%' : "http://alienwarearena.com/account/login?return=" ~ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }) | raw }}</p>
     {% endif %}
     <div class="comment-sorting">
         <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | trans }}</label>

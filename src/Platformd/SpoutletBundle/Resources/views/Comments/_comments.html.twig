@@ -149,7 +149,7 @@
 
             {% else %}
 
-                document.location.href='http://alienwarearena.com/account/login?return={{ app.request.headers.get('Host') ~ permalink | url_encode }}';
+                document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
 
             {% endif %}
 
@@ -241,7 +241,7 @@
                 }
             })
             {% else %}
-            document.location.href='http://alienwarearena.com/account/login?return={{ app.request.headers.get('Host') ~ permalink | url_encode }}';
+            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
             {% endif %}
         });
 
@@ -344,7 +344,7 @@
                         reloadComments();
                     } else {
                         if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
-                            document.location.href='http://alienwarearena.com/account/login?return={{ (app.request.headers.get('Host') ~ permalink) | url_encode }}';
+                            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
                         } else {
                             alert(data.messageForUser);
                         }
