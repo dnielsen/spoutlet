@@ -269,7 +269,7 @@ class ApiManager
      */
     public function GiveUserXp($award, $user_id = null)
     {
-        $uid = isset($user_id) ? $user_id : $this->getUserId();
+        $uid = isset($user_id) ? $user_id : $this->getCevoUserId();
 
         $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award), true);
         return $response;
@@ -292,10 +292,5 @@ class ApiManager
     private function getSecurityContext()
     {
         return $this->container->get('security.context');
-    }
-
-    public function getInterestingStuff()
-    {
-        return array('session' => $this->getSessionId(), 'userid' => $this->getUserId());
     }
 }
