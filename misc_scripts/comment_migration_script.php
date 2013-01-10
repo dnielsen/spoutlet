@@ -116,6 +116,23 @@ function migrateComments($dbName, $aclDbName, $dbh, $classId)
     $query = $dbh->prepare($sql);
     $query->execute();
 
+    echo "\n   - Updating permalinks...";
+
+    $selectPermalinkSql = 'SELECT `id`, `permalink` FROM `'.$dbName.'`.`commenting_thread` WHERE `permalink` LIKE "http://%"';
+    $updatePermalinkSql = 'UPDATE `'.$dbName.'`.`commenting_thread` SET `permalink` = :permalink WHERE `id` = :id';
+
+    foreach ($dbh->query($selectPermalinkSql) as $thread) {
+        $permalink  = $thread['permalink'];
+        $parsedLink = parse_url($permalink);
+
+        $newPermalink = str_replace($parsedLink['scheme'].'://'.$parsedLink['host'], '', $permalink)."#comments";
+
+        $query = $dbh->prepare($updatePermalinkSql);
+        $query->execute(array(':permalink'=>$newPermalink,
+                              ':id'=>$thread['id']));
+
+    }
+
     echo "\n   - Migrating comment posts...";
 
     $sql = 'INSERT INTO `'.$dbName.'`.`commenting_comment` (`thread_id`, `parent_id`, `author_id`, `body`, `created_at`, `deleted`)
