@@ -759,7 +759,9 @@ Alienware Arena Team
                 $this->getGroupManager()->saveGroupVideo($groupVideo);
 
                 try {
-                    $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupvideo');
+                    $api = $this->getCEVOApiManager();
+                    $response = $api->GiveUserXp('submitgroupvideo');
+                    var_dump($api->getUserSessionId());
                 } catch (ApiException $e) {
 
                 }

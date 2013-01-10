@@ -248,4 +248,9 @@ class ApiManager
     {
         return $this->container->get('security.context');
     }
+
+    public function getUserSessionId()
+    {
+        return $this->getSessionId();
+    }
 }
