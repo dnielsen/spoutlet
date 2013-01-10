@@ -50,7 +50,7 @@
                         <div class="options" data-id="{{ comment.id }}" style="right:0;">
                             <div class="choices" id="choices-{{ comment.id }}">
                                 <ul>
-                                    <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{% if app.user == null %}{{ 'platformd.comment.login_to_reply' | trans }}{% else %}{{ 'platformd.comment.reply' | trans }}{% endif %}</a></li>
+                                    <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | trans }}</a></li>
                                     {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Edit</a></li>{% endif %}
                                     {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">Delete</a></li>{% endif %}
                                     <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Report</a></li>
@@ -149,7 +149,7 @@
 
             {% else %}
 
-                document.location.href='http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}';
+                document.location.href='http://alienwarearena.com/account/login?return={{ app.request.headers.get('Host') ~ permalink | url_encode }}';
 
             {% endif %}
 
@@ -217,6 +217,7 @@
         });
 
         $('.report-link').click(function (event) {
+            {% if app.user %}
             $('.thread').block({message: null});
             var contentId = $(this).attr('data-id');
             $.ajax({
@@ -239,6 +240,9 @@
                     $('.thread').unblock();
                 }
             })
+            {% else %}
+            document.location.href='http://alienwarearena.com/account/login?return={{ app.request.headers.get('Host') ~ permalink | url_encode }}';
+            {% endif %}
         });
 
 
@@ -340,7 +344,7 @@
                         reloadComments();
                     } else {
                         if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
-                            document.location.href='http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}';
+                            document.location.href='http://alienwarearena.com/account/login?return={{ (app.request.headers.get('Host') ~ permalink) | url_encode }}';
                         } else {
                             alert(data.messageForUser);
                         }

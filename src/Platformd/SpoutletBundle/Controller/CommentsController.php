@@ -85,6 +85,7 @@ class CommentsController extends Controller
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $commentCount,
+            'permalink' => $thread->getPermalink(),
         ));
     }
 
@@ -198,6 +199,7 @@ class CommentsController extends Controller
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $commentCount,
+            'permalink' => $thread->getPermalink(),
         ));
     }
 
@@ -216,6 +218,7 @@ class CommentsController extends Controller
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $commentLimit,
+            'permalink' => $thread->getPermalink(),
         ));
     }
 
@@ -274,6 +277,7 @@ class CommentsController extends Controller
             'comments'  => $comments,
             'offset'    => $commentLimit,
             'method'    => $method,
+            'permalink' => $thread->getPermalink(),
         ));
     }
 
@@ -319,6 +323,7 @@ class CommentsController extends Controller
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $offset + count($comments),
+            'permalink' => $thread->getPermalink(),
         ));
 
     }
