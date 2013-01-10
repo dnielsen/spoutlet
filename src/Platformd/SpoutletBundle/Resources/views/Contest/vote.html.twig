@@ -20,20 +20,22 @@
                         <div class="gallery-media-thumb">
                             <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                 <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                                {% if media.hasUserVoted(app.user) == false %}
-                                    {% if contest.isVotable %}
-                                        <div class="thumbnail-vote-caption">
-                                            <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
-                                        </div>
+                                {% if app.user is not null %}
+                                    {% if media.hasUserVoted(app.user) == false %}
+                                        {% if contest.isVotable %}
+                                            <div class="thumbnail-vote-caption">
+                                                <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="thumbnail-vote-caption">
+                                                <a href="javascript:void(0);">Voting Closed!</a>
+                                            </div>
+                                        {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="javascript:void(0);">Voting Closed!</a>
+                                            <a href="javascript:void(0);">Already Voted!</a>
                                         </div>
                                     {% endif %}
-                                {% else %}
-                                    <div class="thumbnail-vote-caption">
-                                        <a href="javascript:void(0);">Already Voted!</a>
-                                    </div>
                                 {% endif %}
                             </a>
                         </div>
