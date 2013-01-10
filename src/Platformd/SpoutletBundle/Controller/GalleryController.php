@@ -172,13 +172,6 @@ class GalleryController extends Controller
             {
                 $published[] = $id;
                 $media->setPublished(true);
-
-                try {
-                    $response = $this->getCEVOApiManager()->GiveUserXp('photosubmit');
-                } catch (ApiException $e) {
-
-                }
-
             } else {
                 $unpublished[] = $id;
                 $allErrors[] = $errors;
