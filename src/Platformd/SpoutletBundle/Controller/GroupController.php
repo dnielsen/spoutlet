@@ -762,9 +762,8 @@ Alienware Arena Team
 
                 try {
                     $response = $api->GiveUserXp('submitgroupvideo');
-                    var_dump($api->getUserSessionId());
                 } catch (ApiException $e) {
-                    var_dump($api->getUserSessionId());
+
                 }
 
                 $this->setFlash('success', 'New video posted successfully.');
