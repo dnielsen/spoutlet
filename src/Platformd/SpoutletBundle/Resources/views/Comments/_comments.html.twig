@@ -10,7 +10,7 @@
             <div id="post-id-{{ comment.id }}">
                 <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
                     <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
-                    <div class="comment-author">
+                    <div class="comment-author" style="z-index:1000;">
                         <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
 
                         {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ comment.author.cevoUserId %}
@@ -157,6 +157,7 @@
 
         $('.comment-at').timeago();
         $('.replied-at').timeago();
+        $('.author-link > a').truncate({width: 84});
 
         $('.comment-replies textarea').keyup(function() {
             $(this).css('height', '1px');
