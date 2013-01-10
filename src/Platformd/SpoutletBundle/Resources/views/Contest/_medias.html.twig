@@ -1,30 +1,31 @@
 {% if medias | length > 0 %}
-{% for media in medias %}
-    {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
-        <div class="gallery-media-thumb">
-            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
-                {% if media.hasUserVoted(app.user) == false %}
-                    {% if contest.isVotable %}
-                        <div class="thumbnail-vote-caption">
-                            <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
-                        </div>
+    {% for media in medias %}
+        {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+            <div class="gallery-media-thumb">
+                <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                    <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    {% if media.hasUserVoted(app.user) == false %}
+                        {% if contest.isVotable %}
+                            <div class="thumbnail-vote-caption">
+                                <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                            </div>
+                        {% else %}
+                            <div class="thumbnail-vote-caption">
+                                <a href="javascript:void(0);">Voting Closed!</a>
+                            </div>
+                        {% endif %}
                     {% else %}
                         <div class="thumbnail-vote-caption">
-                            <a href="javascript:void(0);">Voting Closed!</a>
+                            <a href="javascript:void(0);">Already Voted!</a>
                         </div>
                     {% endif %}
-                {% else %}
-                    <div class="thumbnail-vote-caption">
-                        <a href="javascript:void(0);">Already Voted!</a>
-                    </div>
-                {% endif %}
-            </a>
+                </a>
+            </div>
+            <div style="width:135px;">
+                <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
+            </div>
         </div>
-        <div style="width:135px;">
-            <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-            <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
-        </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+{% endif %}
