@@ -1,4 +1,5 @@
 <div class="thread">
+    <a id="comments"></a>
     {% if app.user %}
         <h3>{{ 'platformd.comment.add_your_comment' | trans }}</h3>
         <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
@@ -19,7 +20,6 @@
         </div>
     {% endif %}
     <div class="comments">
-        <a href="#comments"></a>
         {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
     </div>
     <div id="more-comments-loader" data-offset="{{ offset }}" data-increment="5">
