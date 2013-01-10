@@ -25,6 +25,10 @@
                                 <a href="javascript:void(0);">Already Voted!</a>
                             </div>
                         {% endif %}
+                    {% else %}
+                        <div class="thumbnail-vote-caption">
+                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index')) | url_encode }}">Login to Vote!</a>
+                        </div>
                     {% endif %}
                 </a>
             </div>
@@ -60,6 +64,10 @@
                                 <a href="javascript:void(0);">Already Voted!</a>
                             </div>
                         {% endif %}
+                    {% else %}
+                        <div class="thumbnail-vote-caption">
+                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index')) | url_encode }}">Login to Vote!</a>
+                        </div>
                     {% endif %}
                 </a>
             </div>
