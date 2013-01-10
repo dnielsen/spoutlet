@@ -871,8 +871,6 @@ Alienware Arena Team
 
         $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
-        var_dump($this->getCEVOApiManager()->getInterestingStuff());
-
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
             'commentTotal' => $commentTotal,
             'group' => $group,

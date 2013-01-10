@@ -162,6 +162,30 @@ class ApiManager
         return $this->userId;
     }
 
+    public function getCevoSessionId()
+    {
+        $sessionId = '';
+
+        if(isset($_COOKIE['aw_session'])) {
+            $parts = explode('$', $_COOKIE['aw_session']);
+            $sessionId = $parts[1];
+        }
+
+        return $sessionId;
+    }
+
+    public function getCevoUserId()
+    {
+        $userId = '';
+
+        if(isset($_COOKIE['aw_session'])) {
+            $parts = explode('$', $_COOKIE['aw_session']);
+            $userId = $parts[0];
+        }
+
+        return $userId;
+    }
+
     /**
      * Makes an API request and returns the array response
      *
@@ -170,10 +194,10 @@ class ApiManager
      * @return mixed
      * @throws \LogicException
      */
-    private function makeRequest($action, array $params = array())
+    private function makeRequest($action, array $params = array(), $useCevoAuth=false)
     {
         $params['_method'] = $action;
-        $params['_user_id'] = $this->getUserId();
+        $params['_user_id'] = $useCevoAuth ? $this->getCevoUserId() : $this->getUserId();
 
         $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT, null, false);
 
@@ -185,7 +209,7 @@ class ApiManager
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 
-        $phpSess = sprintf('PHPSESSID=%s;', $this->getSessionId());
+        $phpSess = sprintf('PHPSESSID=%s;', $useCevoAuth ? $this->getCevoSessionId() : $this->getSessionId());
         curl_setopt($ch, CURLOPT_COOKIE, $phpSess);
 
         $output = curl_exec($ch);
@@ -226,7 +250,7 @@ class ApiManager
     {
         $uid = isset($user_id) ? $user_id : $this->getUserId();
 
-        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award));
+        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award), true);
         return $response;
     }
 
