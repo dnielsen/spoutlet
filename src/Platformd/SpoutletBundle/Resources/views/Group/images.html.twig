@@ -5,7 +5,11 @@
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
 
 {% if canAdd %}
-    <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
+    {% if site_has_feature('PHOTOS') %}
+        <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
+    {% else %}
+        <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
+    {% endif %}
 {% endif %}
 {% if pages | length > 0 %}
     <div class="scrollable" id="scrollable-images" style="height: 550px; width: 600px;background: #191919;">
