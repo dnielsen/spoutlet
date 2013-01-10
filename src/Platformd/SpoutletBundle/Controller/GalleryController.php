@@ -384,7 +384,12 @@ class GalleryController extends Controller
 
         $referer = parse_url($request->headers->get('referer'));
         $pathArr = explode('/', $referer['path']);
-        $returnType = $pathArr[2];
+
+        if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
+            $returnType = $pathArr[2];
+        } else {
+            $returnType = $pathArr[1];
+        }
 
         if ($returnType == "contests") {
 
