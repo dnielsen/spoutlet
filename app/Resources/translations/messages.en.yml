@@ -600,6 +600,7 @@ galleries:
     gallery_see_all: See All
 
     gallery_go_to_galleries: Gallery Home
+    group_images: Group Images
 
     publish_photo_error: Error! You must provide details for each photo in order to publish them in our galleries. Click on the photo to fill out the details.
     publish_photo_error_id: Media ID is missing.

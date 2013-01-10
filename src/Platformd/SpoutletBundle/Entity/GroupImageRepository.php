@@ -59,4 +59,18 @@ class GroupImageRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function findMostRecentGroupImageForUser($user)
+    {
+        return $this->createQueryBuilder('gi')
+            ->where('gi.author = :user')
+            ->andWhere('gi.deleted = false')
+            ->andWhere('gi.createdAt > :datetime')
+            ->setParameter('user', $user)
+            ->setParameter('datetime', new \DateTime('-5 minutes'))
+            ->orderBy('gi.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
