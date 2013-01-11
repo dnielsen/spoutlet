@@ -56,7 +56,7 @@
                         <td>{{ group.createdAt | date('m/d/Y') }}</td>
                         <td>{{ group.getDeleted() ? 'Inactive' : 'Active' }}</td>
                         <td>{{ group.owner.username }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ groupRow.memberCount }}</a></td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{% if group.id in memberCounts|keys %}{{ memberCounts[group.id] }}{% else %}0{% endif %}</a></td>
                         <td>{{ group.newMemberCount }}</td>
                         <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.id })  }}">{{ groupRow.videoCount }}</a></td>
                         <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.id })  }}">{{ groupRow.imageCount }}</a></td>

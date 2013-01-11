@@ -916,7 +916,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     {
         return $this->getMembershipActions()->filter(function($x) {
             return
-                $x->getCreatedAt() >= new DateTime('-30 days') &&
+                $x->getCreatedAt() >= new \DateTime('-30 days') &&
                 $x->getAction() == GroupMembershipAction::ACTION_LEFT;
         })
         ->count();
@@ -926,7 +926,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     {
         return $this->getMembershipActions()->filter(function($x) {
             return
-                    $x->getCreatedAt() >= new DateTime('-30 days') &&
+                    $x->getCreatedAt() >= new \DateTime('-30 days') &&
                     ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
                     $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
         })

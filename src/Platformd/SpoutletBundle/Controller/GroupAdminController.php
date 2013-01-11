@@ -66,8 +66,22 @@ class GroupAdminController extends Controller
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
         $form = $this->createForm(new GroupFindType(), $filters);
 
+        $idArray = array();
+
+        foreach ($pager->getCurrentPageResults() as $result) {
+            $idArray[] = $result[0]->getId();
+        }
+
+        $groupMemberCounts  = $groupRepo->findGroupMemberCountsIn($idArray);
+        $memberCounts       = array();
+
+        foreach ($groupMemberCounts as $group) {
+            $memberCounts[$group['id']] = $group['membercount'];
+        }
+
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
             'results' => $pager,
+            'memberCounts'  => $memberCounts,
             'form' => $form->createView(),
         ));
     }
@@ -190,7 +204,12 @@ class GroupAdminController extends Controller
             'Leaves',
         ));
 
-        $results = $groupRepo->findGroups($formValues['groupName'], $formValues['category'], $formValues['deleted'], $formValues['sites'], $formValues['startDate'], $formValues['endDate']);
+        $filters = array_merge(
+            array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            $this->getFilterFormData()
+        );
+
+        $results = $groupRepo->findGroups($filters);
 
         foreach ($results as $group) {
 
