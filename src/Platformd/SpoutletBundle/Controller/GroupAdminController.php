@@ -61,6 +61,13 @@ class GroupAdminController extends Controller
         $filters = $this->getFilterFormData();
         $qb = $groupRepo->findGroupStatsQB($filters);
 
+        $groupMemberCounts  = $groupRepo->findAllGroupMemberCounts();
+        $memberCounts       = array();
+
+        foreach ($groupMemberCounts as $group) {
+            $memberCounts[$group['id']] = $group['membercount'];
+        }
+
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
         $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
@@ -68,6 +75,7 @@ class GroupAdminController extends Controller
 
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
             'results' => $pager,
+            'memberCounts'  => $memberCounts,
             'form' => $form->createView(),
         ));
     }

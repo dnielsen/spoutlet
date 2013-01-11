@@ -229,18 +229,27 @@ class GroupRepository extends EntityRepository
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
             ->addSelect('m', 'o', 's')
-            ->addSelect('COUNT(DISTINCT v.id) as videoCount', 'COUNT(DISTINCT n.id) as newsCount', 'COUNT(DISTINCT i.id) as imageCount', 'COUNT(DISTINCT members.id) as memberCount')
+            ->addSelect('COUNT(DISTINCT v.id) as videoCount', 'COUNT(DISTINCT n.id) as newsCount', 'COUNT(DISTINCT i.id) as imageCount')
             ->leftJoin('g.newsArticles', 'n')
             ->leftJoin('g.videos', 'v')
             ->leftJoin('g.images', 'i')
             ->leftJoin('g.owner', 'o')
-            ->leftJoin('g.members', 'members')
             ->leftJoin('g.membershipActions', 'm')
             ->groupBy('g.id')
             ->distinct(false)
         ;
 
         return $qb;
+    }
+
+    public function findAllGroupMemberCounts()
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->select('g.id', 'COUNT(m.id) as membercount')
+            ->leftJoin('g.members', 'm')
+            ->groupBy('g.id');
+
+        return $qb->getQuery()->execute();
     }
 
     public function findGroupStats(array $filters = array())
