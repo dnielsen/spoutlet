@@ -66,9 +66,13 @@ class GroupAdminController extends Controller
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
         $form = $this->createForm(new GroupFindType(), $filters);
 
-        var_dump($pager->getCurrentPageResults());exit;
+        $idArray = array();
 
-        $groupMemberCounts  = $groupRepo->findAllGroupMemberCounts();
+        foreach ($pager->getCurrentPageResults() as $result) {
+            $idArray[] = $result[0]->getId();
+        }
+
+        $groupMemberCounts  = $groupRepo->findGroupMemberCountsIn($idArray);
         $memberCounts       = array();
 
         foreach ($groupMemberCounts as $group) {
