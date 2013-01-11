@@ -204,7 +204,12 @@ class GroupAdminController extends Controller
             'Leaves',
         ));
 
-        $results = $groupRepo->findGroups($formValues['groupName'], $formValues['category'], $formValues['deleted'], $formValues['sites'], $formValues['startDate'], $formValues['endDate']);
+        $filters = array_merge(
+            array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            $this->getFilterFormData()
+        );
+
+        $results = $groupRepo->findGroups($filters);
 
         foreach ($results as $group) {
 

@@ -133,9 +133,9 @@ class GroupRepository extends EntityRepository
         return $qb;
     }
 
-    public function findGroups($groupName, $category, $status, $sites, $startDate="", $endDate="")
+    public function findGroups(array $filters)
     {
-        return $this->getFindGroupsQB($groupName, $category, $status, $sites, $startDate, $endDate)
+        return $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
             ->getQuery()
             ->execute()
         ;
@@ -242,14 +242,20 @@ class GroupRepository extends EntityRepository
         return $qb;
     }
 
-    public function findAllGroupMemberCounts()
+    public function findGroupMemberCountsIn($ids)
     {
-        $qb = $this->createQueryBuilder('g')
-            ->select('g.id', 'COUNT(m.id) as membercount')
-            ->leftJoin('g.members', 'm')
-            ->groupBy('g.id');
+        if (count($ids) > 0) {
+            $qb = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(m.id) as membercount')
+                ->leftJoin('g.members', 'm')
+                ->andWhere('g.id IN (:ids)')
+                ->setParameter('ids', $ids)
+                ->groupBy('g.id');
 
-        return $qb->getQuery()->execute();
+            return $qb->getQuery()->execute();
+        }
+
+        return array();
     }
 
     public function findGroupStats(array $filters = array())
