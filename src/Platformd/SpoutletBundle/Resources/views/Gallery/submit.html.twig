@@ -180,7 +180,7 @@
                         'title' : $('#media-title').val(),
                         'description' : $('#media-description').val(),
                         'galleries' : getSelectedGalleries(),
-                        'groups' : getSelectedGroups(),
+                        'groups' : getSelectedGroups()
                     };
 
                     medias.push(media);
@@ -202,7 +202,7 @@
                         'title' : $('#media-title').val(),
                         'description' : $('#media-description').val(),
                         'galleries' : getSelectedGalleries(),
-                        'groups' : getSelectedGroups(),
+                        'groups' : getSelectedGroups()
                     };
 
                     medias.push(media);
@@ -232,7 +232,7 @@
                     css: {
                         backgroundColor: '#252525',
                         border: '3px solid #009CDA',
-                        color: '#B3B3B3',
+                        color: '#B3B3B3'
                     }
                 });
 
@@ -323,7 +323,7 @@
                 return galleries;
             }
 
-            $('#media-description').bind('input propertychange', function () {
+            $('#media-description').bind('blur', function () {
                 mediaChanged();
             });
 
@@ -335,7 +335,7 @@
                 mediaChanged();
             });
 
-            $('#media-title').bind('input propertychange', function () {
+            $('#media-title').bind('blur', function () {
                 mediaChanged();
             });
 
@@ -444,7 +444,7 @@
                     css: {
                         backgroundColor: '#252525',
                         border: '3px solid #009CDA',
-                        color: '#B3B3B3',
+                        color: '#B3B3B3'
                     }
                 });
             });

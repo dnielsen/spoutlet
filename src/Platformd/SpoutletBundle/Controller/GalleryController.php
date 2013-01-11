@@ -172,13 +172,6 @@ class GalleryController extends Controller
             {
                 $published[] = $id;
                 $media->setPublished(true);
-
-                try {
-                    $response = $this->getCEVOApiManager()->GiveUserXp('photosubmit');
-                } catch (ApiException $e) {
-
-                }
-
             } else {
                 $unpublished[] = $id;
                 $allErrors[] = $errors;
@@ -382,7 +375,23 @@ class GalleryController extends Controller
         $em->persist($media);
         $em->flush();
 
-        $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+        $referer = parse_url($request->headers->get('referer'));
+        $pathArr = explode('/', $referer['path']);
+
+        if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
+            $returnType = $pathArr[2];
+        } else {
+            $returnType = $pathArr[1];
+        }
+
+        if ($returnType == "contests") {
+
+            $contest = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
+            $crumb = $contest ? array('value' => $request->headers->get('referer'), 'text' => $contest->getName()) : null;
+
+        } else {
+            $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+        }
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'             => $media,
@@ -391,6 +400,7 @@ class GalleryController extends Controller
             'crumb'             => $crumb,
             'downVotes'         => $downVotesPercentage,
             'points'            => $points,
+            'returnType'        => $returnType,
         ));
     }
 

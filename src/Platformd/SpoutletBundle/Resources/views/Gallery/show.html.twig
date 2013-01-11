@@ -30,7 +30,12 @@
         <div class="left">
             <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
             <div style="padding: 3px 0 3px 0;float:left;">
-                <a href="{{ path('gallery_index') }}">Photo Gallery</a>
+                {% if returnType == "contests" %}
+                    <a href="{{ path('contest_index') }}">Contests</a>
+                {% else %}
+                    <a href="{{ path('gallery_index') }}">Photo Gallery</a>
+                {% endif %}
+
                 <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
                 {% if crumb %}
                 <a href="{{ crumb['value'] }}">{{ crumb['text'] }}</a>
