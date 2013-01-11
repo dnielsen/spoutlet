@@ -701,6 +701,7 @@ class SpoutletExtension extends Twig_Extension
         $demoOnly = in_array($locale, array('en'));
         $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
         $china = in_array($locale, array('zh'));
+        $northAmericaEuropeLatamOnly = in_array($locale, array('en_US', 'en_GB', 'es', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -716,8 +717,8 @@ class SpoutletExtension extends Twig_Extension
             case 'MESSAGES':                    return !$chinaOrJapan;
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
-            case 'PHOTOS':                      return false;
             case 'MICROSOFT':                   return !$japan;
+            case 'PHOTOS':                      return false;
             case 'CONTESTS':                    return false;
         }
 
