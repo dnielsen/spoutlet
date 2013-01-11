@@ -323,7 +323,7 @@
                 return galleries;
             }
 
-            $('#media-description').bind('input propertychange', function () {
+            $('#media-description').bind('blur', function () {
                 mediaChanged();
             });
 
@@ -335,7 +335,7 @@
                 mediaChanged();
             });
 
-            $('#media-title').bind('input propertychange', function () {
+            $('#media-title').bind('blur', function () {
                 mediaChanged();
             });
 
