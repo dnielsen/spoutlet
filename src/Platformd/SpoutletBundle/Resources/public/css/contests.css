@@ -1,0 +1,56 @@
+#contest-instructions ol { margin: 0; padding: 0;}
+#contest-instructions ol li { list-style-position: inside; background: url('/bundles/giveaway/images/giveaway-list-item-bg.png') 6px 49% no-repeat #252525; border-radius: 5px 5px 5px 5px; margin: 3px; padding: 8px 5px 8px 14px; font-weight: bold; }
+#contest-instructions ol li span.item { vertical-align: middle; display: inline-block; font-size: 12px; font-weight: normal; width: 88%; padding-left: 7px; }
+
+.contest-header {
+    padding: 5px 0 5px 0;
+}
+
+.contest-enter-vote {
+    padding: 10px 0 10px 0;
+}
+
+#contest-voting-rules {
+    padding-bottom: 10px;
+}
+
+#contest-header {
+    width: 950px;
+    height: 160px;
+}
+
+#contest-header ul {
+    margin: 0;
+    padding: 136px 5px 0 5px;
+    width: 100%;
+    list-style:none;
+}
+
+#contest-header li {
+    float: left;
+    font-weight: bold;
+    padding: 0 17px;
+}
+
+#contest-header li a {
+    color: #e1e1e1;
+    text-transform: capitalize;
+    text-shadow:2px 2px 5px #000000;
+}
+
+#contest-header li a.vote-now {
+    color: #ff5711;
+    text-transform: capitalize;
+    text-shadow:2px 2px 5px #000000;
+}
+
+.contest-winner-wrapper {
+    width:300px;
+    margin-right: 10px;
+
+    display: inline-table;
+}
+
+#contest-entries {
+    margin-top: 15px;
+}

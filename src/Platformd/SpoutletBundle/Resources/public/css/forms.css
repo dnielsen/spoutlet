@@ -37,6 +37,49 @@ textarea {
     resize: none;
 }
 
+
+a.btn {
+    display: inline-block;
+    padding: 12px 15px;
+    line-height: normal;
+    position: relative;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    background: #0094B4;
+    background: -moz-linear-gradient(#0094B4,#00596e);
+    background: -webkit-linear-gradient(#0094B4,#00596e);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#0094B4',endColorstr='#00596e')";
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    text-decoration: none;
+    min-width: 140px;
+    text-align: center;
+}
+
+a.btn:hover {
+    text-decoration: none;
+    background: #00596E;
+    background: -moz-linear-gradient(#00596e,#0094B4);
+    background: -webkit-linear-gradient(#00596e,#0094B4);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
+}
+
+a.btn:active {
+    text-decoration: none;
+    background: #F0F7FA;
+    background: -moz-linear-gradient(#00596e,#0094B4);
+    background: -webkit-linear-gradient(#00596e,#0094B4);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
+}
+
 button {
     display: inline-block;
     padding: 8px 15px;
@@ -76,6 +119,60 @@ button:active {
     background: -moz-linear-gradient(#00596e,#0094B4);
     background: -webkit-linear-gradient(#00596e,#0094B4);
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
+}
+
+button:disabled {
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline-block;
+    padding: 9px 15px;
+    line-height: normal;
+    position: relative;
+    font-size: 13px;
+    color: #454545;
+    background: #838382;
+    background: -moz-linear-gradient(#838382,#494B47);
+    background: -webkit-linear-gradient(#838382,#494B47);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#838382',endColorstr='#494B47')";
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    text-decoration: none;
+    min-width: 140px;
+    text-shadow: 0.1em 0.1em #838382;
+    cursor: default;
+}
+
+a.disabled-button {
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline-block;
+    padding: 9px 15px;
+    line-height: normal;
+    position: relative;
+    font-size: 13px;
+    color: #454545;
+    background: #838382;
+    background: -moz-linear-gradient(#838382,#494B47);
+    background: -webkit-linear-gradient(#838382,#494B47);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#838382',endColorstr='#494B47')";
+    border-radius: 3px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    text-decoration: none;
+    min-width: 140px;
+    text-shadow: 0.1em 0.1em #838382;
+    cursor: default;
 }
 
 .form-actions {
@@ -136,14 +233,14 @@ fieldset .row-fluid.first div[class*="span"] {
     margin: -20px 0 10px 160px;
     width: 200px;
 }
-.game-page-form .medias-list {
+.page-form .medias-list {
     margin-left: 0;
 }
-.game-page-form .medias-list li {
+.page-form .medias-list li {
     list-style-type: none;
     position: relative;
 }
-.game-page-form .medias-list li a.close {
+.page-form .medias-list li a.close {
     position: absolute;
     top: 0;
     right: 0;
@@ -1169,8 +1266,8 @@ input[readonly],
 select[readonly],
 textarea[readonly] {
   cursor: not-allowed;
-  background-color: #eeeeee;
-  border-color: #ddd;
+  background-color: #000;
+  border-color: #000;
 }
 
 input[type="radio"][disabled],

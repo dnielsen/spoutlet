@@ -77,6 +77,8 @@ platformd:
             sweeps: SWEEPS
             wallpapers: Wallpapers
             microsoft: Microsoft
+            photos: Photo Gallery
+            contests: Contests
 
         page_content:
             featured: Featured
@@ -243,6 +245,9 @@ platformd:
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
+            media: Media
+            media_upload: Upload
+            my_media: My Media
 
     giveaway:
         giveaway: Giveaway
@@ -516,6 +521,9 @@ platformd.user.account.messages: Messages
 platformd.user.account.match_client: Match Client
 platformd.user.account.match_lobby: Match Lobby
 
+platformd.user.account.gallery: My Gallery
+platformd.account_page.photos.submit: Submit Images
+
 groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
 groups.opengraph.title: Alienware Arena Groups - Join Now!
 wallpapers: Wallpapers
@@ -523,3 +531,128 @@ exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download
 platformd.groups.category.location: Location
 platformd.groups.category.topic: Topic
+
+platformd.show_more: Show More
+platformd.show_less: Show Less
+
+galleries:
+    navigation_label: Photo Gallery
+    index_page_title: Galleries
+    index_page_header: ALIENWARE ARENA PHOTOS
+    index_page_no_media_found: No photos were found.
+    submit_photo_page_title: Submit Images
+    submit_photo_page_header: Submit Images
+    submit_photo_now: Submit your own images now!
+    submit_photo_blockUI_message: Your images are uploading. Please wait...
+    submit_photo_publish_blockUI_message: Your images are being published. Please wait...
+
+    submit_photo_step1: Step 1 of 2:
+    submit_photo_step1_detail: Submit Images
+    submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
+
+    submit_photo_file_restrictions: |
+        <p><span style="font-weight:bold;">Alienware Arena File Standards for Product Images</span></p>
+        <p>Technical Requirements:</p>
+        <ul><li>Files supported: JPG, GIF and PNG.</li>
+        <li>Max file size per image is 5MB.</li></ul>
+        <p>Alienware Arena maintains the following site product image standards:</p>
+        <ul><li>No commercial images without written consent of the owner.</li>
+        <li>No copyrighted material.</li>
+        <li>No images of children ages 13 years and under.</li>
+        <li>Gaming-related images only.</li>
+        <li>Pornographic and offensive materials are not allowed.</li></ul>
+        <p>Alienware Arena, iGames and its affliliates reserve the right to delete photos without notice that do not comply with restrictions.</p>
+        <p>By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
+
+    submit_photo_add: Add
+    submit_photo_publish_share: Thanks! Your images have been published.
+    submit_photo_publish_share_2: Share your photos with your friends!
+    submit_photo_share: Share Photos
+    submit_share: Share
+    submit_photo_my_photos: My Images
+
+    submit_photo_step2: Step 2 of 2:
+    submit_photo_step2_detail: Click on an image to provide details.
+    submit_photo_image_name: Image Name*
+    submit_photo_image_desc: Description*
+    submit_photo_image_galleries: Galleries*
+    submit_photo_groups: Groups
+    submit_photo_button_publish: Publish
+
+    submit_photo_publish_success: Success!
+    submit_photo_upload_success: Your images were uploaded successfully.
+    submit_photo_publish_message: Your photos were published successfully.
+
+    show_photo_details_label: Photo Details
+    show_photo_details_upload_on: Uploaded On
+    show_photo_details_views: Views:
+    show_photo_details_points: Points:
+
+    delete_photo_error_message: Photo was not deleted.
+    delete_photo_success_message: Your photo was deleted successfully.
+
+    show_photo_vote_label: Votes
+
+    gallery_filter_option_latest: Latest
+    gallery_filter_option_popular: Popular
+    gallery_filter_option_featured: Featured
+
+    gallery_see_all: See All
+
+    gallery_go_to_galleries: Gallery Home
+    group_images: Group Images
+
+    publish_photo_error: Error! You must provide details for each photo in order to publish them in our galleries. Click on the photo to fill out the details.
+    publish_photo_error_id: Media ID is missing.
+    publish_photo_error_title: Please provide a title.
+    publish_photo_error_desc: Please provide a description.
+    publish_photo_error_gallery: You must select at least one gallery.
+    vote_now: Vote Now
+    vote_success: Thanks for voting!
+    more_images_from: More images from
+    save_images: Save Images
+    save_image: Save
+    delete_image: Delete Image
+    upload_images: Upload
+    cancel: Cancel
+    publish_photo_multiple_message: %s of %s images are published.
+    publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
+    publish_photo_multiple_message_gallery_or_group_required: You must select at least one gallery or group to place your image in.
+    no_images_found: No images found...
+    already_voted: You have already voted on this image.
+    ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
+
+contests:
+    index_page_title_long: Alienware Arena Contests
+    index_page_title: Contests
+    show_page_overview: Overview
+    show_page_instructions: How to Enter
+    show_page_enter_contest: Enter
+    show_page_submit_photos: Submit Images
+    show_page_contest: Contest
+    show_page_winners: Winners
+    show_page_official_rules: Official Rules
+    show_page_vote_now: Vote Now
+    show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
+    vote_page_instruction: Voting Instructions
+    inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
+    enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
+    enter_page_already_entered: You have already entered this contest.
+    enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
+    submit_page_no_entry: You must enter the contest before you can submit %ss.
+    submit_page_entry_max_reached: You have entered the maximum number of photos for this contest.
+    submit_page_submission_ended: Submissions are no longer being accepted.
+    submit_page_back_to_contest: Back to Contest
+    no_winners: No winners have been selected yet. Please check back later.
+    place: Place
+    entry_period: Entry Period
+    vote_period: Voting Period
+    no_contests: There are no contests.
+    photos_max: You can submit a maximum of %s photo(s) for this contest.
+    photo_submission_message: All photo submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your photo fulfills all the requirements
+    igames_disclaimer: By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
+    photo_submissions_left: You can submit a maximum of %s photos for this contest.
+    photo_submissions_unlimited: You can submit as many photos as you like for this contest.
+    congratulations_winners: Congratulations To The Winners!
+    winners_page_congrats: Congratulations To The Winners!
+    contest_not_eligible: Sorry, you are not eligible to enter this contest.

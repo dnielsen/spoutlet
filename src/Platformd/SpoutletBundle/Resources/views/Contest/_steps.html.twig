@@ -1,0 +1,11 @@
+<li>
+    <span class="item">
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {{ 'platformd.create_account_or_login' | trans }}
+        {% else %}
+            <a href="{{ path('fos_user_security_login') }}?return={{ url('contest_show', {'slug': contest.slug}) | e }}">
+                {{ 'platformd.create_account_or_login' | trans }}
+            </a>
+        {% endif %}
+    </span>
+</li>

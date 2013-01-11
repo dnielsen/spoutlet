@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>
+    <i class="icon-pencil"></i>
+    Gallery edit
+</h1>
+
+<form action="{{ path('admin_gallery_update', { 'slug': gallery.slug }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {% include 'SpoutletBundle:GalleryAdmin:_form.html.twig' with {
+        'form': edit_form
+    } %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_gallery_index') }}">
+    Back to the list
+</a>
+{% endblock %}

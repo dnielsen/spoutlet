@@ -45,7 +45,10 @@ class SiteProtectionListener
         '^/groups',
         '^/wallpapers',
         '^/report',
-        '^/giveaways'
+        // media galleries
+        '^/galleries',
+        '^/contests',
+        '^/giveaways',
     );
 
     static private $urlMap = array(

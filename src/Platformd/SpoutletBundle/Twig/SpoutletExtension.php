@@ -40,6 +40,7 @@ class SpoutletExtension extends Twig_Extension
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
             'wrap' => new Twig_Filter_Method($this, 'wrap'),
             'add_links' => new Twig_Filter_Method($this, 'addLinks'),
+            'add_ordinal_suffix' => new Twig_Filter_Method($this, 'addOrdinalSuffix'),
         );
     }
 
@@ -183,6 +184,20 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $base.$path;
+    }
+
+    /**
+     * @return string
+     */
+    public function addOrdinalSuffix($num) {
+        if (!in_array(($num % 100),array(11,12,13))){
+          switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+          }
+        }
+        return $num.'th';
     }
 
      /**
@@ -340,6 +355,8 @@ class SpoutletExtension extends Twig_Extension
             case 'USER_PROFILE':                    return $this->GetUserProfileLink($locale);
             case 'USER_GIVEAWAY':                   return $this->GetUserGiveawayLink($locale);
             case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
+            case 'PHOTOS':                          return $this->GetPhotosLink($locale);
+            case 'CONTESTS':                        return $this->GetContestsLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -624,6 +641,32 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetPhotosLink($locale)
+    {
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.photos').'</a>';
+        $url            = $this->container->get('router')->generate('gallery_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
+    private function GetContestsLink($locale)
+    {
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.contests').'</a>';
+        $url            = $this->container->get('router')->generate('contest_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
     private function GetUserGameIdLink($locale) {
         $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
 
@@ -658,6 +701,7 @@ class SpoutletExtension extends Twig_Extension
         $demoOnly = in_array($locale, array('en'));
         $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
         $china = in_array($locale, array('zh'));
+        $northAmericaEuropeLatamOnly = in_array($locale, array('en_US', 'en_GB', 'es', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -674,6 +718,8 @@ class SpoutletExtension extends Twig_Extension
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
             case 'MICROSOFT':                   return !$japan;
+            case 'PHOTOS':                      return false;
+            case 'CONTESTS':                    return false;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

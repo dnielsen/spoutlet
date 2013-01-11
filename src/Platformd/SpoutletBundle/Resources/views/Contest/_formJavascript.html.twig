@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    $(function() {
+        var max = $('#entries-left').val();
+        var count = 0;
+        // Get the div that holds the collection of tags
+        var collectionHolder = $('ul.medias-list');
+
+        // setup an "add a tag" link
+        var $addTagLink = $('<div class="wrap"><a href="#" class="add_tag_link"><i class="icon-plus icon-white"></i> Upload another</a></div>');
+        var $newLinkLi = $('<li class="span5 new-link"></li>').append($addTagLink);
+
+        // add delete links to existing elements
+        collectionHolder.find('li.existing-element').each(function() {
+            addMediaFormDeleteLink($(this));
+        });
+
+        var addMediaFormDeleteLink = function($tagFormLi) {
+            var $removeFormA = $('<a href="#" class="close">&times;</a>');
+            $tagFormLi.append($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                count--;
+
+                // remove the li for the tag form
+                $tagFormLi.fadeOut('normal', function() {
+                    $tagFormLi.remove();
+                });
+            });
+        };
+
+        var addMediaForm = function(collectionHolder, $newLinkLi) {
+            // Get the data-prototype we explained earlier
+            var prototype = collectionHolder.attr('data-prototype');
+
+            // Replace '$$name$$' in the prototype's HTML to
+            // instead be a number based on the current collection's length.
+            var newForm = prototype.replace(/\$\$name\$\$/g, collectionHolder.children().length);
+
+            // Display the form in the page in an li, before the "Add a tag" link li
+            var $newFormLi = $('<li class="span5 image-li"></li>').append(newForm);
+            $newFormLi.hide();
+            $newLinkLi.before($newFormLi);
+            $newFormLi.fadeIn();
+
+            addMediaFormDeleteLink($newFormLi);
+
+            // a bit ugly, but we need a clear after each "row"
+            if ((collectionHolder.find('.image-li').length % 2) == 0) {
+                $newLinkLi.before($('<li class="clear"></li>'));
+            }
+        };
+
+
+        // add the "add a tag" anchor and li to the tags ul
+        collectionHolder.append($newLinkLi);
+
+        $addTagLink.on('click', function(e) {
+            // prevent the link from creating a "#" on the URL
+            e.preventDefault();
+
+            count++;
+
+            addMediaForm(collectionHolder, $newLinkLi);
+        });
+
+    });
+</script>

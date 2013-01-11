@@ -120,14 +120,19 @@
                                 <label>{{ 'eligibility' | trans }}</label>
                                 <ol class="eligibility-list">
                                     <li>{{ 'open_to_legal_residents' | trans({
-                                        '%countries%': sweepstakes.allowedCountryNames | join(', ')
-                                    }) }}</li>
+                                        '%countries%': countries }) }}</li>
+
+                                    {% if ageRestrictions == true %}
                                     <li>
+                                        Age restrictions may apply depending on your country
+                                    </li>
+                                    {% endif %}
+                                    <!-- <li>
                                         {{ 'age_or_older_as_of_date' | trans({
                                             '%age%': sweepstakes.minimumAgeRequirement,
                                             '%as_of_date%': ('sweepstakes_date_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray))
                                         })}}
-                                    </li>
+                                    </li> -->
                                 </ol>
                             </li>
                         </ul>

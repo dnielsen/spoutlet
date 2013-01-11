@@ -66,6 +66,14 @@ class AbstractFeatureContext extends MinkContext
             ->execute();
 
         $con
+            ->prepare("ALTER TABLE `pd_gallery_category` AUTO_INCREMENT = 1")
+            ->execute();
+
+        $con
+            ->prepare("INSERT INTO `pd_gallery_category` (`id`, `name`) VALUES (2, 'video'), (1, 'image')")
+            ->execute();
+
+        $con
             ->prepare("ALTER TABLE `country` AUTO_INCREMENT = 1")
             ->execute();
 

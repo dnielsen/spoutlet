@@ -61,18 +61,7 @@ fieldset .row-fluid.first div[class*="span"] {
     margin: -20px 0 10px 160px;
     width: 200px;
 }
-.game-page-form .medias-list {
-    margin-left: 0;
-}
-.game-page-form .medias-list li {
-    list-style-type: none;
-    position: relative;
-}
-.game-page-form .medias-list li a.close {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+
 /* the first li - this is a dummy, just so that, to twitter bootstrap, none
  * of the *real* items look like the first one. This is a hack, because I'm
  * having each item span5 (5+5 = 10, but our width is 12). Because I'm "under-spanning",
@@ -82,20 +71,42 @@ fieldset .row-fluid.first div[class*="span"] {
  * So, doing this allows me to tile the li's - 2 per row, but without needing
  * to actually surround each row in a row div
  */
-.game-page-form .medias-list li.dummy {
+.game-page-form .medias-list li.dummy,
+.game-page-form .restrictions-list li.dummy {
     display: none;
 }
-.game-page-form .medias-list li.clear {
+.game-page-form .medias-list li.clear,
+.game-page-form .restrictions-list li.clear {
     clear: both;
 }
 /* a way to hide existing elements' upload file. It's confusing: just upload a new file */
-.game-page-form .medias-list li.existing-element .control-group .controls{
+.game-page-form .medias-list li.existing-element .control-group .controls
+.game-page-form .restrictions-list li.existing-element .control-group .controls {
     display: none;
 }
-.game-page-form .medias-list li.new-link {
+.game-page-form .medias-list li.new-link,
+.game-page-form .restrictions-list li.new-link {
 
 }
-.game-page-form .medias-list li.new-link div.wrap {
+
+.game-page-form .medias-list,
+.game-page-form .restrictions-list {
+    margin-left: 0;
+}
+.game-page-form .medias-list li,
+.game-page-form .restrictions-list li {
+    list-style-type: none;
+    position: relative;
+}
+.game-page-form .medias-list li a.close,
+.game-page-form .restrictions-list li a.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.game-page-form .medias-list li.new-link div.wrap,
+.game-page-form .restrictions-list li.new-link div.wrap {
     display: block;
     margin-left: 160px;
     background: #eee;
@@ -105,6 +116,44 @@ fieldset .row-fluid.first div[class*="span"] {
     -webkit-border-radius: 5px;
     -khtml-border-radius: 5px;
     border-radius: 5px;
+}
+
+.game-page-form li.restriction-li {
+    text-align: center;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.game-page-form label.control-label {
+    width: 100px;
+}
+
+.game-page-form div.controls {
+    margin-left: 0px;
+}
+
+.game-page-form a.remove {
+    float: left;
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 18px;
+    color: black;
+    text-shadow: 0 1px 0 white;
+    opacity: 0.2;
+}
+
+.game-page-form .rules li.new-link div.wrap {
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 table#content-reports {
@@ -166,3 +215,23 @@ table#content-reports th#content-report-action {
     min-width: 200px;
 }
 
+table#content-reports th#content-report-action {
+    min-width: 200px;
+}
+
+.admin-contest-remove-entry,
+.admin-contest-delete-media {
+    width: 160px;
+    text-align: right;
+}
+
+.admin-contest-remove-entry label,
+.admin-contest-delete-media label {
+    display: inline;
+    width: 140px;
+}
+
+.admin-contest-remove-entry input,
+.admin-contest-delete-media input {
+    margin: 0;
+}

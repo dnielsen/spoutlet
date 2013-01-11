@@ -1,0 +1,94 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title contest.name %}
+
+{% block content %}
+<div class="std_1col" >
+    {% include 'SpoutletBundle:Contest:_links.html.twig' %}
+</div>
+<h3 class="contest-header">{{ contest.name }}</h3>
+<div class="std_2col">
+    <div class="left">
+        <div id="contest-voting-rules">
+            {{ contest.voteInstructions | raw }}
+        </div>
+        <div id="contest-entries">
+            {% if medias | length > 0 %}
+                {% for media in medias %}
+                    {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
+                    <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+                        <div class="gallery-media-thumb">
+                            <a href="{{ path('gallery_media_show', { id: media.id }) }}">
+                                <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                                {% if app.user is not null %}
+                                    {% if media.hasUserVoted(app.user) == false %}
+                                        {% if contest.isVotable %}
+                                            <div class="thumbnail-vote-caption">
+                                                <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="thumbnail-vote-caption">
+                                                <a href="javascript:void(0);">Voting Closed!</a>
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="thumbnail-vote-caption">
+                                            <a href="javascript:void(0);">Already Voted!</a>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div style="width:135px;">
+                            <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
+                            <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+</div>
+
+{% include 'SpoutletBundle:Gallery:_quickVotePopup.html.twig' %}
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.expander.min.js') }}"></script>
+    <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('.gallery-media-thumb').hover(function() {
+                $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeIn(200);
+            },
+            function() {
+                $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeOut(200);
+            });
+        });
+
+        $(function () {
+            $('.media-title').truncate({
+                width: 115,
+            });
+            $('#contest-voting-rules').expander({
+                slicePoint:       600,
+                expandText:       "{{ 'platformd.show_more' | trans }}",
+                userCollapseText: "{{ 'platformd.show_less' | trans }}",
+            });
+        });
+    </script>
+{% endblock %}
