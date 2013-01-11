@@ -4,8 +4,10 @@
 
 {% block content %}
 <h2 style="color:#fff;">{{ 'contests.index_page_title_long' | trans }}</h2>
+<input type="hidden" id="category" value="{{ category }}" />
 <div class="styled-select">
     <select id="filter-select">
+        <option value="none">- Select a Category -</option>
         <option value="image">Images</option>
         <option value="group">Groups</option>
         <option value="expired">Expired</option>
@@ -25,14 +27,27 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+
+            var category = $('#category').val();
+
+            switch (category) {
+                case 'image':
+                    $('#filter-select').val('image');
+                    break;
+                case 'group':
+                    $('#filter-select').val('group');
+                    break;
+                case 'expired':
+                    $('#filter-select').val('expired');
+                    break;
+                default:
+                    $('#filter-select').val('none');
+                    break;
+            }
+
             $('#filter-select').change(function () {
-                var val = $(this).val();
-                $.ajax({
-                    url: '{{ path('contest_filter') }}' + '/' + val,
-                    success: function (html) {
-                        $('.contest-list').html(html);
-                    }
-                });
+                var c = $(this).val() == 'none' ? '' : '/' + $(this).val();
+                location.href = '{{ path('contest_index') }}' + c;
             });
         });
     </script>

@@ -646,7 +646,7 @@ contests:
     submit_page_entry_max_reached: You have entered the maximum number of photos for this contest.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
-    submit_groups_title: Submit Your Group
+    submit_groups_title: Select Your Group
     submit_group_instructions_multiple_entries: Please select %s groups from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
     submit_group_instructions_single_entry: Please select one group from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
     no_winners: No winners have been selected yet. Please check back later.

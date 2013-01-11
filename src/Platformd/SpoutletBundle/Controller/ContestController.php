@@ -21,13 +21,25 @@ use Platformd\UserBundle\Entity\User;
 
 class ContestController extends Controller
 {
-    public function indexAction()
+    public function indexAction($category=null)
     {
         $site = $this->getCurrentSite();
-        $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
+
+        $contests = null;
+
+        if($category) {
+            if($category == 'expired') {
+                $contests = $this->getContestRepository()->findAllExpiredBySite($site);
+            } else {
+                $contests = $this->getContestRepository()->findAllByCategoryAndSite($category, $site);
+            }
+        } else {
+            $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
+        }
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
             'contests' => $contests,
+            'category' => $category,
         ));
     }
 

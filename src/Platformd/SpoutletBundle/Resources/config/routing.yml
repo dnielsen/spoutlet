@@ -98,6 +98,10 @@ SpoutletBundle_media:
 
 SpoutletBundle_contest:
     resource: "@SpoutletBundle/Resources/config/routing/contest.yml"
+    prefix:   /contest
+
+SpoutletBundle_contests:
+    resource: "@SpoutletBundle/Resources/config/routing/contests.yml"
     prefix:   /contests
 
 SpoutletBundle_admin_group:
