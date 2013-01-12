@@ -87,7 +87,7 @@ class FrontendController extends Controller
         $user           = $this->getUser();
         $country        = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
+        if (!$sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
             return $this->redirectToShow($sweepstakes);
         }
