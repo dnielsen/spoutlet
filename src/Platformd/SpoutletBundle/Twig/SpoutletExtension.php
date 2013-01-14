@@ -716,9 +716,10 @@ class SpoutletExtension extends Twig_Extension
             case 'MESSAGES':                    return !$chinaOrJapan;
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
-            case 'PHOTOS':                      return !$chinaOrJapanOrLatam;
             case 'MICROSOFT':                   return !$japan;
-            case 'CONTESTS':                    return !$chinaOrJapanOrLatam;
+            case 'PHOTOS':                      return $northAmericaOrEurope;
+            case 'CONTESTS':                    return $northAmericaOrEurope;
+            case 'COMMENTS':                    return $northAmericaOrEurope;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
