@@ -375,22 +375,27 @@ class GalleryController extends Controller
         $em->persist($media);
         $em->flush();
 
-        $referer = parse_url($request->headers->get('referer'));
-        $pathArr = explode('/', $referer['path']);
+        if ($request->headers->get('referer') != null) {
+            $referer = parse_url($request->headers->get('referer'));
+            $pathArr = explode('/', $referer['path']);
 
-        if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
-            $returnType = $pathArr[2];
+            if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
+                $returnType = $pathArr[2];
+            } else {
+                $returnType = $pathArr[1];
+            }
+
+            if ($returnType == "contests") {
+
+                $contest = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
+                $crumb = $contest ? array('value' => $request->headers->get('referer'), 'text' => $contest->getName()) : null;
+
+            } else {
+                $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+            }
         } else {
-            $returnType = $pathArr[1];
-        }
-
-        if ($returnType == "contests") {
-
-            $contest = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
-            $crumb = $contest ? array('value' => $request->headers->get('referer'), 'text' => $contest->getName()) : null;
-
-        } else {
-            $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+            $returnType = "galleries";
+            $crumb = null;
         }
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(

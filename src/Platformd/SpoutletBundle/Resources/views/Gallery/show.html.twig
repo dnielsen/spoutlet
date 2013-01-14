@@ -187,23 +187,31 @@
                             <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Report</a>
                         </p>
                     </div>
-                    {% if media.hasUserVoted(app.user) %}
+                    {% if app.user is not null %}
+                        {% if media.hasUserVoted(app.user) %}
+                            <div style="width:290px;padding:5px 0;">
+                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                    {{ 'galleries.already_voted' | trans }}
+                                </p>
+                            </div>
+                        {% elseif isVotable == false %}
+                            <div style="width:290px;padding:5px 0;">
+                                <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
+                                    <em>This image is part of a contest.<br /><br />
+                                    Voting begins {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
+                                </p>
+                            </div>
+                        {% elseif media.canUserVote(app.user) == false  %}
+                            <div style="width:290px;padding:5px 0;">
+                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                    {{ 'galleries.ineligible_due_to_contest' | trans }}
+                                </p>
+                            </div>
+                        {% endif %}
+                    {% else %}
                         <div style="width:290px;padding:5px 0;">
                             <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                {{ 'galleries.already_voted' | trans }}
-                            </p>
-                        </div>
-                    {% elseif isVotable == false %}
-                        <div style="width:290px;padding:5px 0;">
-                            <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
-                                <em>This image is part of a contest.<br /><br />
-                                Voting begins {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
-                            </p>
-                        </div>
-                    {% elseif media.canUserVote(app.user) == false  %}
-                        <div style="width:290px;padding:5px 0;">
-                            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                {{ 'galleries.ineligible_due_to_contest' | trans }}
+                                {{ 'galleries.login_to_vote' | trans({ '%login_url%' : 'http://alienwarearena.com/account/login?return=' ~ app.request.uri | url_encode }) | raw }}
                             </p>
                         </div>
                     {% endif %}

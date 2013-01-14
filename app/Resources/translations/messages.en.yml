@@ -621,6 +621,7 @@ galleries:
     no_images_found: No images found...
     already_voted: You have already voted on this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
+    login_to_vote: Please <a href="%login_url%">login</a> to vote
 
 contests:
     index_page_title_long: Alienware Arena Contests
