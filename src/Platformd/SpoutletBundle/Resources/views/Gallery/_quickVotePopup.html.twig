@@ -11,7 +11,7 @@
                 {{ 'galleries.vote_success' | trans }}
             </div>
             <div id="media-voting-login-required" style="display: none;">
-                You must be <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">logged in</a> to vote.
+                {{ 'galleries.login_to_vote_linked' | trans({ 'login_url' : "http://alienwarearena.com/account/login?return=" ~ app.request.uri | url_encode }) }}
             </div>
         </div>
     </div>

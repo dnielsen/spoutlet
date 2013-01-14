@@ -104,6 +104,26 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findFeaturedMediaForSite($site, $limit=12)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.contestEntry', 'ce')
+            ->leftJoin('ce.contest', 'c')
+            ->leftJoin('gm.galleries', 'g')
+            ->leftJoin('g.sites', 's')
+            ->where('gm.published = true')
+            ->andWhere('gm.contestEntry IS NULL OR c.votingEnd < :now')
+            ->andWhere('gm.featured = true')
+            ->andWhere('gm.deleted = false')
+            ->andWhere('s.id = :site')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('now', new \DateTime('now'))
+            ->setParameter('site', $site->getId())
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findLatestMedia($limit=12)
     {
         return $this->createQueryBuilder('gm')

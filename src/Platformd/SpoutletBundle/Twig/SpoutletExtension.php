@@ -743,7 +743,10 @@ class SpoutletExtension extends Twig_Extension
             case 'MICROSOFT':                   return !$japan;
             case 'PHOTOS':                      return $northAmericaOrEurope;
             case 'CONTESTS':                    return $northAmericaOrEurope;
+<<<<<<< HEAD
             case 'COMMENTS':                    return $northAmericaOrEurope;
+=======
+>>>>>>> feature/media_gallery
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

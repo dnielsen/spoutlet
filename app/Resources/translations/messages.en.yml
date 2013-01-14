@@ -660,9 +660,19 @@ galleries:
     no_images_found: No images found...
     already_voted: You have already voted on this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
-    login_to_vote: Please <a href="%login_url%">login</a> to vote
+    login_to_vote_linked: Please <a href="%login_url%">login</a> to vote
+    login_to_vote: Login to Vote!
+    quick_vote_caption: Quick Vote
+    voting_closed_caption: Voting Closed!
+    already_voted_caption: Already Voted!
+    by: by:
+    submit_no_groups: You are not a member of any groups at this time.
+    likes: Likes
+    dislikes: Dislikes
+    cast_your_vote: Cast your vote:
 
 contests:
+    contests: Contests
     index_page_title_long: Alienware Arena Contests
     index_page_title: Contests
     show_page_overview: Overview
@@ -696,3 +706,7 @@ contests:
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
     contest_not_eligible: Sorry, you are not eligible to enter this contest.
+    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
+    image_part_of_contest: This image is part of a contest.
+    voting_begins: Voting begins
+    no_longer_available: This contest is no longer available.
