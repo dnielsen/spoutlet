@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
 use Platformd\UserBundle\Entity\User;
+use Platformd\MediaBundle\Imagine\Cache\Resolver\AmazonS3Resolver;
 
 /**
  * Gallery controller.
@@ -28,7 +29,7 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMedia(5);
+        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMediaForSite($this->getCurrentSite(), 5);
         $options = $this->getFilterOptions();
 
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
@@ -675,7 +676,7 @@ class GalleryController extends Controller
         switch ($type) {
             case 'featured':
                 # get featured media
-                $medias = $repo->findFeaturedMedia();
+                $medias = $repo->findFeaturedMediaForSite($this->getCurrentSite());
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -743,7 +744,50 @@ class GalleryController extends Controller
 
     public function featuredMediaFeedAction(Request $request)
     {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['site'])) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Site not specified.")));
+            return $response;
+        }
+
+        $em         = $this->getEntityManager();
+        $subdomain  = (int) $params['site'];
+
+        $siteRepo           = $em->getRepository('SpoutletBundle:Site');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+
+        $site   = $siteRepo->findOneBySubDomain($subdomain);
+        $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+        $featuredMedia = array();
+
+        if ($media) {
+            foreach($media as $mediaItem) {
+                $featuredMedia[]['thumbnail']   = AmazonS3Resolver::getBrowserPath($mediaItem->getMedia()->getFilename(), 'image_thumb', true);
+                $featuredMedia[]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId() ));
+            }
+        } else {
+            $featuredMedia = null;
+        }
+
+        $response->setContent(json_encode(array(
+            "success" => true,
+            "media"   => $featuredMedia
+        )));
+
+        return $response;
     }
 
     private function getEntityManager()
