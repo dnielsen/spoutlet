@@ -151,13 +151,16 @@
             {% endif %}
         </div>
     </div>
-    <div class="std_2col">
-        <div class="left">
-            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.getThreadId, 'page': app.request.query.get('page', 1) } %}
+
+    {% if site_has_feature('COMMENTS') %}
+        <div class="std_2col">
+            <div class="left">
+                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
+            </div>
+            <div class="right">
+            </div>
         </div>
-        <div class="right">
-        </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}

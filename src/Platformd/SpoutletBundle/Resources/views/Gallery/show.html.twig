@@ -64,9 +64,9 @@
             {% endif %}
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
-            {# {% if site_has_feature('COMMENTS') %}
+            {% if site_has_feature('COMMENTS') %}
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : media.getThreadId, 'object' : media } %}
-            {% endif %} #}
+            {% endif %}
 
         </div>
 

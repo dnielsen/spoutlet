@@ -153,14 +153,16 @@
                 {% endif %}
             </div>
         </div>
-        {% if isAllowedToViewGroupContent %}
-            <div id="group-comments">
-                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": group.threadId, 'page': app.request.query.get('page', 1) } %}
-            </div>
-        {% else %}
-            <div id="group-comments">
-                <p>You must be a member of a private group before you can see or post comments.</p>
-            </div>
+        {% if site_has_feature('COMMENTS') %}
+            {% if isAllowedToViewGroupContent %}
+                <div id="group-comments">
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : group.threadId, 'object' : group } %}
+                </div>
+            {% else %}
+                <div id="group-comments">
+                    <p>You must be a member of a private group before you can see or post comments.</p>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     {% include 'SpoutletBundle:Group:_reportGroupPopup.html.twig' %}
