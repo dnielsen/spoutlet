@@ -1,0 +1,84 @@
+{
+   "id":1,
+   "can_comment":true,
+   "last_comment_at":"2012-12-10 11:59:00",
+   "permalink":"http://www.example.com/news/some-article#comments",
+   "comments":[
+      {
+         "id":1,
+         "parent_id":0,
+         "body":"Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they&#39;re actually proud of that shit.",
+         "depth":0,
+         "created_at":"2012-12-10 11:44:00",
+         "votes":0,
+         "replies":[
+            {
+               "id":2,
+               "parent_id":1,
+               "body":"Your bones don&#39;t break, mine do. That&#39;s clear. Your cells react to bacteria and viruses differently than mine. You don&#39;t get sick, I do. That&#39;s also clear. But for some reason, you and I react the exact same way to water. We swallow it too fast, we choke. We get some in our lungs, we drown. However unreal it may seem, we are connected, you and I. We&#39;re on the same curve, just on opposite ends.",
+               "depth":1,
+               "created_at":"2012-12-10 11:45:00",
+               "votes":0,
+               "replies":[
+
+               ]
+            },
+            {
+               "id":3,
+               "parent_id":1,
+               "body":"The path of the righteous man is beset on all sides &lt;a href=&quot;http://slipsum.com/lite/&quot;&gt;by the iniquities&lt;/a&gt; of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother&#39;s keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.",
+               "depth":1,
+               "created_at":"2012-12-10 11:46:00",
+               "votes":0,
+               "replies":[
+
+               ]
+            },
+            {
+               "id":4,
+               "parent_id":1,
+               "body":"The path of the righteous man is beset on all sides &lt;a href=&quot;http://slipsum.com/lite/&quot;&gt;by the iniquities&lt;/a&gt; of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother&#39;s keeper and the finder of lost children. And I will strike down upon thee with great vengeance and furious anger those who would attempt to poison and destroy My brothers. And you will know My name is the Lord when I lay My vengeance upon thee.",
+               "depth":1,
+               "created_at":"2012-12-10 11:47:00",
+               "votes":0,
+               "replies":[
+
+               ]
+            }
+         ]
+      },
+      {
+         "id":5,
+         "parent_id":0,
+         "body":"You think water moves fast? You should see ice. It moves like it has a mind. Like it knows it killed the world once and got a taste for murder. After the avalanche, it took us a week to climb out. Now, I don&#39;t know exactly when we turned on each other, but I know that seven of us survived the slide... and only five made it out. Now we took an oath, that I&#39;m breaking now. We said we&#39;d say it was the snow that killed the other two, but it wasn&#39;t. Nature is lethal but it doesn&#39;t hold a candle to man.",
+         "depth":0,
+         "created_at":"2012-12-10 11:48:00",
+         "votes":0,
+         "replies":[
+
+         ]
+      },
+      {
+         "id":6,
+         "parent_id":0,
+         "body":"Normally, both your asses would be dead as fucking fried chicken, but you happen to pull this shit while I&#39;m in a transitional period so I don&#39;t wanna kill you, I wanna help you. But I can&#39;t give you this case, it don&#39;t belong to me. Besides, I&#39;ve already been through too much shit this morning over this case to hand it over to your dumb ass.",
+         "depth":0,
+         "created_at":"2012-12-10 11:49:00",
+         "votes":0,
+         "replies":[
+
+         ]
+      },
+      {
+         "id":7,
+         "parent_id":0,
+         "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In posuere ultricies malesuada. Ut dapibus lorem sit amet ante tempus sit amet sed.",
+         "depth":0,
+         "created_at":"2012-12-10 11:59:00",
+         "votes":0,
+         "replies":[
+
+         ]
+      }
+   ]
+}

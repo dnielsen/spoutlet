@@ -1,0 +1,133 @@
+<div class="thread">
+    <a id="comments"></a>
+    {% if app.user %}
+        <h3>{{ 'platformd.comment.add_your_comment' | trans }}</h3>
+        <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+    {% else %}
+        <p>{{ 'platformd.comment.login_to_comment' | trans({ '%login_url%' : "http://alienwarearena.com/account/login?return=" ~ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }) | raw }}</p>
+    {% endif %}
+    <div class="comment-sorting">
+        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | trans }}</label>
+        <select name="comment-sort-method" id="comment-sort-method">
+            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | trans }}</option>
+            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | trans }}</option>
+            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | trans }}</option>
+        </select>
+    </div>
+    {% if app.user %}
+        <div class="comment-form-submit" style="text-align: right;">
+            <button id="new-comment-submit" type="submit">{{ 'platformd.comment.add_comment' | trans }}</button>
+        </div>
+    {% endif %}
+    <div class="comments">
+        {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
+    </div>
+    <div id="more-comments-loader" data-offset="{{ offset }}" data-increment="5">
+        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
+    </div>
+</div>
+
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('.comment-sorting select').change(function() {
+            $('.thread').block({message: null});
+            var data = {
+                'thread' : '{{ thread }}',
+                'method' : $('#comment-sort-method').val(),
+                'commentLimit' : '{{ offset }}'
+            };
+            $.ajax({
+                url: '{{ path('comments_sort_thread') }}',
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            });
+        });
+
+        $('#new-comment-submit').click(function () {
+
+            if ($('#new-comment-body').val() == "") {
+                return false;
+            }
+
+            $('.thread').block({message: null});
+
+            var comment = {
+                'thread' : '{{ thread }}',
+                'body' : $('#new-comment-body').val(),
+                'parent' : 0,
+                'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
+            };
+            $.ajax({
+                url: '{{ path('comments_new') }}',
+                type: 'post',
+                data: JSON.stringify(comment),
+                controlstentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                    $('#new-comment-body').val('');
+                }
+            });
+        });
+    });
+
+    var ajaxRequestSent;
+
+    $(window).scroll(function() {
+
+        if($(window).scrollTop() >= $(document).height() - $(window).height()) {
+
+            if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
+                return false;
+            }
+
+            if (ajaxRequestSent) {
+                return false; // don't make another request, let the current one complete, or
+                // ajax.abort(); // stop the current request, let it run again
+            }
+
+            ajaxRequestSent = loadMorePosts();
+        }
+    });
+
+    function loadMorePosts()
+    {
+        $('#more-comments-loader').show();
+        var offset = parseInt($('#more-comments-loader').attr('data-offset'));
+        var increment = parseInt($('#more-comments-loader').attr('data-increment'));
+        return $.ajax({
+            url: '{{ path('comments_update_thread') }}',
+            type: 'post',
+            data: JSON.stringify({
+                'threadId' : '{{ thread }}',
+                'increment' : increment,
+                'offset' : offset
+            }),
+            contentType: 'json',
+            success: function(data)
+            {
+                if(data.message == "no_more_comments") {
+                    $('#more-comments-loader').html('No more posts to show.');
+                    $('.comment-wrapper:last').addClass('no-more-comments');
+                } else if(data.message == "error") {
+                    $('#more-comments-loader').html('An error has occurred during loading.');
+                } else {
+                    $(".comments").append(data);
+                    $('#more-comments-loader').hide();
+                }
+
+                ajaxRequestSent = false;
+            }
+        });
+    }
+
+</script>

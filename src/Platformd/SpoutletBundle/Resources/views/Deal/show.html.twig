@@ -153,7 +153,7 @@
     </div>
     <div class="std_2col">
         <div class="left">
-            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": deal.threadId, 'page': app.request.query.get('page', 1) } %}
+            {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
         </div>
         <div class="right">
         </div>
@@ -164,6 +164,7 @@
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/deals.css') }}" />
+    <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 
     {% if deal.bottomColor %}
     <style type="text/css">

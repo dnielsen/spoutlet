@@ -33,4 +33,8 @@ mink:
 
 doctrine:
     dbal:
-        dbname:   %database_name%_test
+        connections:
+            default:
+                dbname:   %database_name%_test
+            acl:
+                dbname:   %acl_database_name%_test

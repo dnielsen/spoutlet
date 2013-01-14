@@ -8,6 +8,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\SpoutletBundle\Model\CommentableInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,7 +31,7 @@ use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\DealRepository")
  */
 
-class Deal implements LinkableInterface
+class Deal implements LinkableInterface, CommentableInterface
 {
 
     const REDEMPTION_LINE_PREFIX = '* ';
