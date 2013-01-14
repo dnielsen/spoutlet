@@ -2,6 +2,10 @@
 
 {% set hasPhotos = nivoSliderMedia | length > 0 %}
 
+{% if site_has_feature('PHOTOS') %}
+    {% block page_background_image asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
+{% endif %}
+
 {% block title 'galleries.index_page_title' | trans %}
 
 {% block content %}

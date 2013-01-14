@@ -11,6 +11,10 @@
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
+{% if site_has_feature('PHOTOS') %}
+    {% block page_background_image asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
+{% endif %}
+
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
     <meta property="og:title" content="{{ media.title }}" />
