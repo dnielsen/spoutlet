@@ -253,6 +253,7 @@ platformd:
         giveaway: Giveaway
         redeem:   Redeem
         get_key:  GET KEY
+        not_eligible: Sorry, you are not eligible to participate in this giveaway.
         no_keys_left: There are no keys available for this giveaway
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
@@ -277,7 +278,7 @@ platformd:
             active:   Active
             blank_value: Choose status
         show:
-            availaible_keys: Availaible keys: %%count%%
+            availaible_keys: Available keys: %%count%%
         giveaways_listings:
             giveaways: Giveaways
         assigned:
@@ -492,6 +493,7 @@ deal_show_expired: This deal is no longer available.
 deal_time_remaining: Time Remaining:
 deal_comments: Deals Comments
 deal_comments_posted_on: Posted on
+deal_not_eligible: Sorry, you are not eligible to participate in this deal.
 choose_country: Choose your country
 
 featured_deals: Alienware Arena Featured Deals

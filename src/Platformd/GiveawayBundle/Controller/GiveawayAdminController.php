@@ -376,6 +376,35 @@ class GiveawayAdminController extends Controller
         $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
 
+        $ruleset    = $giveaway->getRuleset();
+        $rules      = $ruleset->getRules();
+
+        $newRulesArray = array();
+
+        $defaultAllow = true;
+
+        foreach ($rules as $rule) {
+            if ($rule->getMinAge() || $rule->getMaxAge() || $rule->getCountry()) {
+                $rule->setRuleset($ruleset);
+                $newRulesArray[] = $rule;
+
+                $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+            }
+        }
+
+        $oldRules = $this->getEntityManager()->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+        if ($oldRules) {
+            foreach ($oldRules as $oldRule) {
+                if (!in_array($oldRule, $newRulesArray)) {
+                    $oldRule->setRuleset(null);
+                }
+            }
+        }
+
+        $giveaway->getRuleset()->setParentType('giveaway');
+        $giveaway->getRuleset()->setDefaultAllow($defaultAllow);
+
         $this
             ->get('platformd.events_manager')
             ->save($giveaway);

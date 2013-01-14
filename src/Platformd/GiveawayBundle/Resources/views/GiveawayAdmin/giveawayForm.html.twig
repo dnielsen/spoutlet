@@ -8,22 +8,26 @@
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.name) }}
+    <legend>a) Details</legend>
 
-    {{ form_row(form.game) }}
+    <div class="row-fluid first">
+        <div class="span6">
+            {{ form_row(form.name) }}
+            {{ form_row(form.game) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.externalUrl) }}
+            {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
+        </div>
 
-    {{ form_row(form.slug) }}
-
-    {{ form_row(form.externalUrl) }}
-
-    {{ form_row(form.sites) }}
-
-    {{ form_row(form.status) }}
-
-    {{ form_row(form.giveawayType) }}
+        <div class="span6">
+            {{ form_row(form.sites) }}
+            {{ form_row(form.status) }}
+            {{ form_row(form.giveawayType) }}
+        </div>
+    </div>
 
     <div>
-        {{ form_label(form.redemptionInstructionsArray) }}
+        <legend>b) Redemption Instructions</legend>
         {{ form_errors(form.redemptionInstructionsArray) }}
 
         <ol class="input">
@@ -39,15 +43,35 @@
         {{ form_widget(form.redemptionInstructionsArray) }}
     </div>
 
-    {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
+    <legend>c) Restrictions</legend>
+    <div class="game-page-form">
+        <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
+        <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+            {# see the CSS file this explanation #}
+            <li class="dummy"></li>
+            {% for rule in form.ruleset.rules %}
+                <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
+
+                {% if loop.index is even %}
+                    <li class="clear"></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <legend>d) Content</legend>
 
     <div class="form_row">
-        {{ form_label(form.content) }}
         {{ form_errors(form.content) }}
         {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
     </div>
 
+    <div style="display: none;">
+        {{ form_row(form.ruleset) }}
+        {{ form_label(form.ruleset.rules) }}
+    </div>
+
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn btn-primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
+    <input type="submit" style="margin-top:15px;" class="btn btn-primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
 </form>

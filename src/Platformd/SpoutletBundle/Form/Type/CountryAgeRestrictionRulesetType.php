@@ -4,6 +4,8 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormInterface;
 
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRuleType;
@@ -40,5 +42,17 @@ class CountryAgeRestrictionRulesetType extends AbstractType
         }
 
         return $choices;
+    }
+
+    public function buildViewBottomUp(FormView $view, FormInterface $form)
+    {
+        parent::buildViewBottomUp($view, $form);
+
+        $view->set('help', '(Optional)<ul>
+                            <li>If you add at least one "allow" restriction, everything else is disallowed unless specifically allowed</li>
+                            <li>If you only add "disallowed" restrictions, everything else is allowed</li>
+                            <li>If there are no restrictions, everyone will be allowed</li>
+                            </ul>'
+        );
     }
 }

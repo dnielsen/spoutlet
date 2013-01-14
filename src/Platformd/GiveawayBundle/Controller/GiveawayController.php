@@ -69,12 +69,28 @@ class GiveawayController extends Controller
 
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
+        $user = $this->getUser();
 
         $giveaway = $this->findGiveaway($slug);
+        $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
 
         // make sure this is the type of giveaway that actually allows this
         if (!$giveaway->allowKeyFetch()) {
             throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
+        }
+
+        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
+        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+
+        if (!$country) {
+            $this->setFlash('error', 'deal_redeem_invalid_country');
+            return $this->redirect($giveawayShow);
+        }
+
+        // check that they pass the new style age-country restriction ruleset
+        if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
+            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+            return $this->redirect($giveawayShow);
         }
 
         $pool = $giveaway->getActivePool();
@@ -83,7 +99,7 @@ class GiveawayController extends Controller
             // repeated below if there is no unassigned keys
             $this->setFlash('error', 'platformd.giveaway.no_keys_left');
 
-            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            return $this->redirect($giveawayShow);
         }
 
         $clientIp = $request->getClientIp(true);
@@ -92,14 +108,14 @@ class GiveawayController extends Controller
         if (!$this->getKeyRepository()->canIpHaveMoreKeys($clientIp, $pool)) {
             $this->setFlash('error', 'platformd.giveaway.max_ip_limit');
 
-            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            return $this->redirect($giveawayShow);
         }
 
         // does this user already have a key?
         if ($this->getKeyRepository()->doesUserHaveKeyForGiveaway($this->getUser(), $giveaway)) {
             $this->setFlash('error', 'platformd.giveaway.already_assigned');
 
-            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            return $this->redirect($giveawayShow);
         }
 
         $key = $this->getKeyRepository()
@@ -109,7 +125,7 @@ class GiveawayController extends Controller
         if (!$key) {
             $this->setFlash('error', 'platformd.giveaway.no_keys_left');
 
-            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            return $this->redirect($giveawayShow);
         }
 
         // assign this key to this user - record ip address
@@ -138,6 +154,7 @@ class GiveawayController extends Controller
 
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
+        $user = $this->getUser();
 
         $giveaway = $this->findGiveaway($slug);
 
@@ -148,6 +165,20 @@ class GiveawayController extends Controller
 
         if (!$code = $request->request->get('machine_code')) {
             $this->createNotFoundException('No machine code submitted');
+        }
+
+        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
+        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+
+        if (!$country) {
+            $this->setFlash('error', 'deal_redeem_invalid_country');
+            return $this->redirect($giveawayShow);
+        }
+
+        // check that they pass the new style age-country restriction ruleset
+        if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
+            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+            return $this->redirect($giveawayShow);
         }
 
         $clientIp = $request->getClientIp(true);
