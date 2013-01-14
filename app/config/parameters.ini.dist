@@ -9,6 +9,8 @@
     database_user           = root
     database_password       =
 
+    acl_database_name       = platformd_acl
+
     mailer_transport        = smtp
     mailer_host             = localhost
     mailer_user             =
