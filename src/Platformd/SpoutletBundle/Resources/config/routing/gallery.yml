@@ -2,6 +2,13 @@ gallery_index:
     pattern: /
     defaults: { _controller: SpoutletBundle:Gallery:index }
 
+gallery_featured_media_feed:
+    pattern: /featured-feed
+    defaults: { _controller: SpoutletBundle:Gallery:featuredMediaFeed, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
 gallery_index_data:
     pattern: /gallery-data
     defaults: { _controller: SpoutletBundle:Gallery:galleryData, site: ~ }
