@@ -99,11 +99,11 @@
 
 
                 </div><!-- giveaway-info -->
-                {% if commentsEnabled %}
 
+                {% if site_has_feature('COMMENTS') %}
                     {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
-
                 {% endif %}
+
             </div><!-- left -->
 
             <div class="clear">
