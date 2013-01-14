@@ -240,6 +240,7 @@ platformd:
             help: お問い合わせ
             game_ids: ゲームID
             tournaments: トーナメント
+            sign_out: ログアウト
 
     giveaway:
         giveaway: プレゼント
@@ -250,7 +251,7 @@ platformd:
         already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
         in_process_1: キーコード取得に登録された場合、あなたのステータスは「進行中」と表示されます。
-        in_process_2: あなたのアカウントに反映されるまで10日ほど時間がかかります。
+        in_process_2: あなたのアカウントに反映されるまで2週間ほど時間がかかります。
         in_process_3: この期間を過ぎても反映されない場合は<a href='mailto:japan@alienwarearena.com'>japan@alienwarearena.com</a>までメールにてお知らせください。
         admin:
             title: ギブアウェイ管理
@@ -408,25 +409,27 @@ email:
 
         - ALIENWARE ARENA チーム
 
+
     giveaway_machine_code_deny: |
+
         こんにちは%userLastName%様,
 
         この度は「%giveawayName%」にご登録いただき誠にありがとうございます。
+
         ご登録頂いたサービスタグナンバーのパソコンは、ご購入時期に相違があるため、本キャンペーンの対象外となります。
         誠に申し訳ございませんが、本キャンペーンのお申し込みは無効となりますので、ご了承ください。
+
         ご登録頂いたサービスタグナンバー: %systemTag%
-        恐れ入りますが、サービスタグナンバーを再度ご確認の上、以下の3つの情報を添えてjapan@alienwarearena.comまで、Ｅメールにてご連絡をお願いいたします。
 
-        1)        ALIENWARE ARENAに登録した際のユーザー名
-        2)        ALIENWARE ARENAに登録した際のEメールアドレス
-        3)        パソコンのサービスタグナンバー(7桁)
-
-        Eメール受領後に再照合し、10日前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
+        正しいサービスタグナンバーをご確認後、再度ご登録される場合は、こちらのページからお手続きください。
+        %giveawayUrl%
 
         万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
-        japan@alienwarearena.com.
+        japan@alienwarearena.com
 
-        - ALIENWARE ARENA チーム
+        Eメール受領後に再照合し、2週間前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
+
+         - ALIENWARE ARENA チーム
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ

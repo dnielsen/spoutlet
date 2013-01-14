@@ -185,6 +185,7 @@ class GiveawayController extends Controller
 
         $machineCode = new MachineCodeEntry($giveaway, $code);
         $machineCode->attachToUser($this->getUser(), $clientIp);
+        $machineCode->setSiteAppliedFrom($this->getCurrentSite());
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($machineCode);

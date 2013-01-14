@@ -84,6 +84,11 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'getCurrentSite'
                 ),
+            'can_user_apply_to_giveaway'  => new Twig_Function_Method(
+
+                $this,
+                'canUserApplyToGiveaway'
+            ),
             'has_user_applied_to_giveaway'  => new Twig_Function_Method(
                 $this,
                 'hasUserAppliedToGiveaway'
@@ -296,6 +301,15 @@ class SpoutletExtension extends Twig_Extension
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      * @return bool
      */
+    public function canUserApplyToGiveaway(Giveaway $giveaway)
+    {
+        if (!$user = $this->getCurrentUser()) {
+            return false;
+        }
+
+        return $this->getGiveawayManager()->canUserApplyToGiveaway($user, $giveaway);
+    }
+
     public function hasUserAppliedToGiveaway(Giveaway $giveaway)
     {
         if (!$user = $this->getCurrentUser()) {
@@ -504,6 +518,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, '/japan');
             case 'zh':      return sprintf($format, '/china');
             case 'en_US':   return sprintf($format, '');
+            case 'en_SG':   return sprintf($format, '/sg');
 
             default:        return false;
         }
@@ -626,9 +641,17 @@ class SpoutletExtension extends Twig_Extension
 
             case 'ja':      return sprintf($format, $internalUrl);
             case 'zh':      return sprintf($format, $internalUrl);
+            case 'en_SG':
+
+                return '<li class="more">
+                    <a class="blue" style="background: url(\'/bundles/spoutlet/images/nav-arrow-1.png\') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">Giveaways</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="http://www.alienwarearena.com/sg/account/my-giveaway-keys/">Giveaway Keys</a></li>
+                        <li><a href="'.$this->container->get('router')->generate('accounts_giveaways').'">System Tag Keys</a></li>
+                    </ul>
+                </li>';
 
             case 'es':
-            case 'en_SG':
             case 'en_AU':
             case 'en_GB':
             case 'en_IN':
