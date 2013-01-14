@@ -763,20 +763,27 @@ class GalleryController extends Controller
         }
 
         $em         = $this->getEntityManager();
-        $subdomain  = (int) $params['site'];
+        $subdomain  = $params['site'];
 
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
         $site   = $siteRepo->findOneBySubDomain($subdomain);
+
+        if (!$site) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Invalid site specified.")));
+            return $response;
+        }
+
         $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
         $featuredMedia = array();
 
         if ($media) {
             foreach($media as $mediaItem) {
-                $featuredMedia[]['thumbnail']   = AmazonS3Resolver::getBrowserPath($mediaItem->getMedia()->getFilename(), 'image_thumb', true);
-                $featuredMedia[]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId() ));
+                $s3 = $this->get('platformd.media.imagine.cache.resolver.amazon_s3');
+                $featuredMedia[]['thumbnail']   = $s3->getBrowserPath($mediaItem->getImage()->getFilename(), 'image_thumb', true);
+                $featuredMedia[]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
             }
         } else {
             $featuredMedia = null;
