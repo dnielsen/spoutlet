@@ -146,7 +146,7 @@
                             {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
 
                                 <div class="media-voting-wrapper">
-                                    <span>{{ 'galleries.cat_your_vote' | trans }} </span>
+                                    <span>{{ 'galleries.cast_your_vote' | trans }} </span>
                                     {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
                                 </div>
 

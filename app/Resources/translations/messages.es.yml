@@ -26,12 +26,17 @@ platformd:
             events: Eventos
             video: Vídeos
             news: Novedades
+            articles: Artículos
+            announcements: Anuncios
             arp: ARP
             media: Medios
             forums: Foros
             sweeps: Sweeps
+            groups: Grupos
             wallpapers: Explorar
             microsoft: Microsoft
+            photos: Galería de Fotos
+            contests: Concursos
 
         bottom_menu:
             contact_us: Contáctenos

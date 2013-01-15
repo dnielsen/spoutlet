@@ -5,7 +5,7 @@ platformd:
     homepage:
         news_title: News
 
-    create_account_or_login: Create or login to an Alienware Arena account.
+    create_account_or_login: Create or log in to an Alienware Arena account.
 
     alienware: Alienware
 
@@ -71,13 +71,16 @@ platformd:
             events: Events
             video: Videos
             news: News
+            articles: Articles
+            announcements: Announcements
             media: Media
             arp: ARP
             forums: Forums
             sweeps: SWEEPS
             wallpapers: Wallpapers
             microsoft: Microsoft
-            photos: Photo Gallery
+            groups: Groups
+            photos: Image Gallery
             contests: Contests
 
         page_content:
@@ -85,7 +88,7 @@ platformd:
             giveaways: Giveaways
             all: All
             see_more: See More
-            photo_gallery: Photo Gallery
+            photo_gallery: Image Gallery
             view_all: View All
             competitions: Competitions
             hot_stories: Hot Stories
@@ -203,7 +206,7 @@ platformd:
         sort_by_newest: Most Recent
         sort_by_oldest: Oldest
         add_comment: Add Comment
-        login_to_reply: Login to Reply
+        login_to_reply: Log in to Reply
         reply: Reply
         more_replies: More Replies
         points: Points:
@@ -366,7 +369,7 @@ registration_opens: Registration Opens
 registration_closes: Registration Closes
 open_to_legal_residents: Open to legal residents in %countries%
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
-platformd.create_account_or_login_sweepstakes: Create an account or login
+platformd.create_account_or_login_sweepstakes: Create an account or log in
 platformd.sweepstakes.entered.message: Thanks for your participation!
 na: N/A
 instructions: Instructions
@@ -575,10 +578,10 @@ platformd.show_more: Show More
 platformd.show_less: Show Less
 
 galleries:
-    navigation_label: Photo Gallery
+    navigation_label: Image Gallery
     index_page_title: Galleries
-    index_page_header: ALIENWARE ARENA PHOTOS
-    index_page_no_media_found: No photos were found.
+    index_page_header: ALIENWARE ARENA IMAGES
+    index_page_no_media_found: No images were found.
     submit_photo_page_title: Submit Images
     submit_photo_page_header: Submit Images
     submit_photo_now: Submit your own images now!
@@ -600,13 +603,13 @@ galleries:
         <li>No images of children ages 13 years and under.</li>
         <li>Gaming-related images only.</li>
         <li>Pornographic and offensive materials are not allowed.</li></ul>
-        <p>Alienware Arena, iGames and its affliliates reserve the right to delete photos without notice that do not comply with restrictions.</p>
-        <p>By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
+        <p>Alienware Arena, iGames and its affliliates reserve the right to delete images without notice that do not comply with restrictions.</p>
+        <p>By posting or submitting an image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
 
     submit_photo_add: Add
     submit_photo_publish_share: Thanks! Your images have been published.
-    submit_photo_publish_share_2: Share your photos with your friends!
-    submit_photo_share: Share Photos
+    submit_photo_publish_share_2: Share your images with your friends!
+    submit_photo_share: Share Images
     submit_share: Share
     submit_photo_my_photos: My Images
 
@@ -620,15 +623,15 @@ galleries:
 
     submit_photo_publish_success: Success!
     submit_photo_upload_success: Your images were uploaded successfully.
-    submit_photo_publish_message: Your photos were published successfully.
+    submit_photo_publish_message: Your images were published successfully.
 
-    show_photo_details_label: Photo Details
+    show_photo_details_label: Image Details
     show_photo_details_upload_on: Uploaded On
     show_photo_details_views: Views:
     show_photo_details_points: Points:
 
-    delete_photo_error_message: Photo was not deleted.
-    delete_photo_success_message: Your photo was deleted successfully.
+    delete_photo_error_message: Image was not deleted.
+    delete_photo_success_message: Your image was deleted successfully.
 
     show_photo_vote_label: Votes
 
@@ -641,7 +644,7 @@ galleries:
     gallery_go_to_galleries: Gallery Home
     group_images: Group Images
 
-    publish_photo_error: Error! You must provide details for each photo in order to publish them in our galleries. Click on the photo to fill out the details.
+    publish_photo_error: Error! You must provide details for each image in order to publish them in our galleries. Click on the image to fill out the details.
     publish_photo_error_id: Media ID is missing.
     publish_photo_error_title: Please provide a title.
     publish_photo_error_desc: Please provide a description.
@@ -660,8 +663,8 @@ galleries:
     no_images_found: No images found...
     already_voted: You have already voted on this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
-    login_to_vote_linked: Please <a href="%login_url%">login</a> to vote
-    login_to_vote: Login to Vote!
+    login_to_vote_linked: Please <a href="%login_url%">log in</a> to vote.
+    login_to_vote: Log In to Vote!
     quick_vote_caption: Quick Vote
     voting_closed_caption: Voting Closed!
     already_voted_caption: Already Voted!
@@ -690,7 +693,7 @@ contests:
     enter_page_already_entered: You have already entered this contest.
     enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
     submit_page_no_entry: You must enter the contest before you can submit %ss.
-    submit_page_entry_max_reached: You have entered the maximum number of photos for this contest.
+    submit_page_entry_max_reached: You have entered the maximum number of images for this contest.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
     no_winners: No winners have been selected yet. Please check back later.
@@ -698,15 +701,15 @@ contests:
     entry_period: Entry Period
     vote_period: Voting Period
     no_contests: There are no contests.
-    photos_max: You can submit a maximum of %s photo(s) for this contest.
-    photo_submission_message: All photo submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your photo fulfills all the requirements
-    igames_disclaimer: By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
-    photo_submissions_left: You can submit a maximum of %s photos for this contest.
-    photo_submissions_unlimited: You can submit as many photos as you like for this contest.
+    photos_max: You can submit a maximum of %s image(s) for this contest.
+    photo_submission_message: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements
+    igames_disclaimer: By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
+    photo_submissions_left: You can submit a maximum of %s images for this contest.
+    photo_submissions_unlimited: You can submit as many images as you like for this contest.
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
     contest_not_eligible: Sorry, you are not eligible to enter this contest.
-    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
+    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Image Details section now!
     image_part_of_contest: This image is part of a contest.
     voting_begins: Voting begins
     no_longer_available: This contest is no longer available.
