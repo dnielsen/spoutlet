@@ -42,6 +42,22 @@ platformd:
             link: "¿Busca un equipo poderoso? <br/> ¡Encuéntrelo en Alienware!"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    comment:
+        add_your_comment: Añada tu comentario
+        login_to_comment: Para poner un comentario, favor de <a href="%login_url%">iniciar sesión.</a>
+        comments: Comentarios
+        sort_by: Ordenar por:
+        sort_by_votes: Votos
+        sort_by_newest: Más Reciente
+        sort_by_oldest: Más Antigua
+        add_comment: Añadir comentario
+        login_to_reply: Inicia sesión para responder
+        reply: Responder
+        more_replies: Más respuestas
+        points: Puntos:
+        post: Puesto
+        date_format: %month%/%day%/%year%
+
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.
     message: El contenido está dirigido a un público maduro.
