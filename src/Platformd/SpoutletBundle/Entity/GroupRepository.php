@@ -229,10 +229,6 @@ class GroupRepository extends EntityRepository
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
             ->addSelect('m', 'o', 's')
-            ->addSelect('COUNT(DISTINCT v.id) as videoCount', 'COUNT(DISTINCT n.id) as newsCount', 'COUNT(DISTINCT i.id) as imageCount')
-            ->leftJoin('g.newsArticles', 'n')
-            ->leftJoin('g.videos', 'v')
-            ->leftJoin('g.images', 'i')
             ->leftJoin('g.owner', 'o')
             ->leftJoin('g.membershipActions', 'm')
             ->groupBy('g.id')
@@ -240,6 +236,57 @@ class GroupRepository extends EntityRepository
         ;
 
         return $qb;
+    }
+
+    public function findGroupMediaCountsIn($ids)
+    {
+        if (count($ids) > 0) {
+
+            $return = array();
+
+            $videos = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(v.id) videoCount')
+                ->leftJoin('g.videos', 'v')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($videos as $groupVideoInfo) {
+                $return[$groupVideoInfo['id']]['videoCount'] = $groupVideoInfo['videoCount'];
+            }
+
+            $news = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(n.id) newsCount')
+                ->leftJoin('g.newsArticles', 'n')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($news as $groupNewsInfo) {
+                $return[$groupNewsInfo['id']]['newsCount'] = $groupNewsInfo['newsCount'];
+            }
+
+            $images = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(i.id) imageCount')
+                ->leftJoin('g.images', 'i')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($images as $groupImageInfo) {
+                $return[$groupImageInfo['id']]['imageCount'] = $groupImageInfo['imageCount'];
+            }
+
+            return $return;
+        }
+
+        return array();
     }
 
     public function findGroupMemberCountsIn($ids)
