@@ -69,7 +69,7 @@ class GroupAdminController extends Controller
         $idArray = array();
 
         foreach ($pager->getCurrentPageResults() as $result) {
-            $idArray[] = $result[0]->getId();
+            $idArray[] = $result->getId();
         }
 
         $groupMemberCounts  = $groupRepo->findGroupMemberCountsIn($idArray);
@@ -79,10 +79,13 @@ class GroupAdminController extends Controller
             $memberCounts[$group['id']] = $group['membercount'];
         }
 
+        $mediaCounts = $groupRepo->findGroupMediaCountsIn($idArray);
+
         return $this->render('SpoutletBundle:GroupAdmin:find.html.twig', array(
-            'results' => $pager,
+            'results'       => $pager,
             'memberCounts'  => $memberCounts,
-            'form' => $form->createView(),
+            'mediaCounts'   => $mediaCounts,
+            'form'          => $form->createView(),
         ));
     }
 
