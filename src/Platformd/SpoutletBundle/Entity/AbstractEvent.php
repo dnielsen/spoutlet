@@ -213,6 +213,11 @@ abstract class AbstractEvent implements LinkableInterface
     protected $display_timezone = true;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    private $ruleset;
+
+    /**
      * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
      */
     protected $sitifiedAt;
@@ -659,6 +664,16 @@ abstract class AbstractEvent implements LinkableInterface
      */
     public function getExternalUrl() {
         return $this->externalUrl;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
     }
 
     /**

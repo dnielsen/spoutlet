@@ -27,18 +27,21 @@ class ContentReportAdminController extends Controller
         $allowArchived = $mode == "archived";
 
         if ($mode == "archived") {
+            $comments    = $repo->getContentReportTypeForAllSitesArchived("Comment");
             $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
             $galleryMedia = $repo->getContentReportTypeForAllSitesArchived("GalleryMedia");
             $groups      = $repo->getContentReportTypeForAllSitesArchived("Group");
         } elseif ($mode == "deletedContent") {
+            $comments    = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
             $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
             $galleryMedia = $repo->getContentReportTypeForAllSitesDeletedContent("GalleryMedia");
             $groups      = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
         } elseif ($mode == "manage") {
+            $comments    = $repo->getContentReportTypeForAllSites("Comment");
             $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
             $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
             $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
@@ -47,7 +50,7 @@ class ContentReportAdminController extends Controller
             $groups      = $repo->getContentReportTypeForAllSites("Group");
         }
 
-        $allReports = array_merge($groupNews, $groupVideos, $groupImages, $galleryMedia, $groups);
+        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups);
 
         usort($allReports, function($a, $b) {
 
@@ -87,10 +90,11 @@ class ContentReportAdminController extends Controller
         $report = $repo->find($contentReportId);
 
         $groupVideo = $report->getGroupVideo();
-        $groupNews = $report->getGroupNews();
+        $groupNews  = $report->getGroupNews();
         $groupImage = $report->getGroupImage();
+        $group      = $report->getGroup();
+        $comment    = $report->getComment();
         $galleryMedia = $report->getGalleryMedia();
-        $group = $report->getGroup();
 
         if ($groupVideo) {
             $groupVideo->setDeleted(false);
@@ -122,6 +126,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGroup($group);
             $type = 'Group';
             $id = $group->getId();
+        } else if ($comment) {
+            $comment->setDeleted(false);
+            $comment->setDeletedReason(null);
+            $repo->deleteAllContentReportsForComment($comment);
+            $type = 'Comment';
+            $id = $comment->getId();
         } else {
             $this->setFlash('error', 'Unknown content type.');
             return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -150,6 +160,7 @@ class ContentReportAdminController extends Controller
         $groupImage = $report->getGroupImage();
         $galleryMedia = $report->getGalleryMedia();
         $group          = $report->getGroup();
+        $comment    = $report->getComment();
 
         if ($groupVideo) {
 
@@ -198,6 +209,13 @@ class ContentReportAdminController extends Controller
 
             }
 
+        } else if ($comment) {
+
+            $comment->setDeleted(true);
+            $comment->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($comment);
+            $repo->deleteAllContentReportsForComment($comment);
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -224,6 +242,7 @@ class ContentReportAdminController extends Controller
         $groupImage = $report->getGroupImage();
         $galleryMedia = $report->getGalleryMedia();
         $group          = $report->getGroup();
+        $comment    = $report->getComment();
 
         if ($groupVideo) {
 
@@ -265,6 +284,14 @@ class ContentReportAdminController extends Controller
             $type = 'Group';
             $id = $group->getId();
 
+        } else if ($comment) {
+
+            $comment->setDeleted(false);
+            $comment->setDeletedReason(null);
+            $em->persist($comment);
+            $type = 'Comment';
+            $id = $comment->getId();
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -292,19 +319,27 @@ class ContentReportAdminController extends Controller
                 $itemType = ucfirst($item->getCategory());
                 break;
 
-            default:
+            case 'Group':
                 $itemType = "Group ".str_replace('Group', '', $type);
+                break;
+
+            case 'Comment':
+                $itemType = "Comment";
+                break;
+
+            default:
+                $itemType = "Unknown";
                 break;
         }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $item->getTitle();
+        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
         $subject            = "Your Content is Restored";
         $message            = sprintf("This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
 
 Type: %s
-Name: %s
+Content: %s
 
 
 Alienware Arena Team

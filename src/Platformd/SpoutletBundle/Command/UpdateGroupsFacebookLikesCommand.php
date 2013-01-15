@@ -36,21 +36,26 @@ EOT
         $manager = $this->getContainer()->get('platformd.model.group_manager');
         $groups = $manager->findGroupsForFacebookLikesLastUpdatedAt($input->getArgument('updatedAt'));
 
-        $i = 0;
-        foreach ($groups as $group) {
+        $i = 1;
+        foreach ($groups as $groupRow) {
+            $group = $groupRow[0];
             $total = $manager->updateFacebookLikes($group);
-            sleep(3);
             $output->writeLn(sprintf('updated group: %d with %d likes', $group->getId(), $total));
             if ($i % 50 === 0) {
+                $output->writeLn('flush');
                 $em->flush();
                 $i = 0;
             }
             if (time() >= $start + $input->getOption('timeout')) {
-                $output->writeLn('timeout');
+                $output->writeLn('timeout flush');
                 $em->flush();
                 return;
             }
+            $i++;
         }
+        $output->writeLn('final flush');
         $em->flush();
+
+        $output->writeLn('finished');
     }
 }

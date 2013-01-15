@@ -96,7 +96,7 @@
                                     </label>
                                 {% endfor %}
                             {% else %}
-                                <p style="margin-top: 7px;">You are not a member of any groups at this time.</p>
+                                <p style="margin-top: 7px;">{{ 'galleries.submit_no_groups' | trans }}</p>
                             {% endif %}
                             </div>
                         </div>
@@ -106,7 +106,7 @@
             </div>
             <div class="form-actions" style="padding-left:180px;">
                 <button id="publish-photo" class="btn btn-primary" formnovalidate>{{ 'galleries.submit_photo_button_publish' | trans}}</button>
-                <a href="{{ path('gallery_index') }}" class="btn btn-primary" id="gallery-submit-cancel">{{ 'galleries.cancel' | trans }}</a>
+                <a href="{{ path('gallery_share_photo') }}" class="btn btn-primary" id="gallery-submit-share">{{ 'galleries.submit_share' | trans }}</a>
             </div>
         </div>
     </div>

@@ -133,9 +133,9 @@ class GroupRepository extends EntityRepository
         return $qb;
     }
 
-    public function findGroups($groupName, $category, $status, $sites, $startDate="", $endDate="")
+    public function findGroups(array $filters)
     {
-        return $this->getFindGroupsQB($groupName, $category, $status, $sites, $startDate, $endDate)
+        return $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
             ->getQuery()
             ->execute()
         ;
@@ -221,23 +221,93 @@ class GroupRepository extends EntityRepository
         return $result[0][0];
     }
 
-    public function findGroupStats(array $filters = array())
+    public function findGroupStatsQB(array $filters = array())
     {
         $filters = array_merge(
             array('groupName' => '', 'category' => '', 'deleted' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
             $filters
         );
         $qb = $this->getFindGroupsQB($filters['groupName'], $filters['category'], $filters['deleted'], $filters['sites'], $filters['startDate'], $filters['endDate'])
-            ->addSelect('n', 'v', 'i', 'm', 'o', 'members')
-            ->leftJoin('g.newsArticles', 'n')
-            ->leftJoin('g.videos', 'v')
-            ->leftJoin('g.images', 'i')
+            ->addSelect('m', 'o', 's')
             ->leftJoin('g.owner', 'o')
-            ->leftJoin('g.members', 'members')
             ->leftJoin('g.membershipActions', 'm')
+            ->groupBy('g.id')
+            ->distinct(false)
         ;
 
-        return $qb->getQuery()->execute();
+        return $qb;
+    }
+
+    public function findGroupMediaCountsIn($ids)
+    {
+        if (count($ids) > 0) {
+
+            $return = array();
+
+            $videos = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(v.id) videoCount')
+                ->leftJoin('g.videos', 'v')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($videos as $groupVideoInfo) {
+                $return[$groupVideoInfo['id']]['videoCount'] = $groupVideoInfo['videoCount'];
+            }
+
+            $news = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(n.id) newsCount')
+                ->leftJoin('g.newsArticles', 'n')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($news as $groupNewsInfo) {
+                $return[$groupNewsInfo['id']]['newsCount'] = $groupNewsInfo['newsCount'];
+            }
+
+            $images = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(i.id) imageCount')
+                ->leftJoin('g.images', 'i')
+                ->andWhere('g.id IN (:ids)')
+                ->groupBy('g.id')
+                ->setParameter('ids', $ids)
+                ->getQuery()
+                ->execute();
+
+            foreach($images as $groupImageInfo) {
+                $return[$groupImageInfo['id']]['imageCount'] = $groupImageInfo['imageCount'];
+            }
+
+            return $return;
+        }
+
+        return array();
+    }
+
+    public function findGroupMemberCountsIn($ids)
+    {
+        if (count($ids) > 0) {
+            $qb = $this->createQueryBuilder('g')
+                ->select('g.id', 'COUNT(m.id) as membercount')
+                ->leftJoin('g.members', 'm')
+                ->andWhere('g.id IN (:ids)')
+                ->setParameter('ids', $ids)
+                ->groupBy('g.id');
+
+            return $qb->getQuery()->execute();
+        }
+
+        return array();
+    }
+
+    public function findGroupStats(array $filters = array())
+    {
+        return $this->findGroupStatsQB($filters)->getQuery()->execute();
     }
 
     public function findMostRecentlyCreatedGroupsForSite($site, $limit=8)
@@ -342,13 +412,12 @@ class GroupRepository extends EntityRepository
         $date->modify(sprintf('-%d sec', $minutes));
 
         $qb = $this->createQueryBuilder('g')
-            ->addSelect('s')
-            ->leftJoin('g.sites', 's')
             ->addOrderBy('g.facebookLikesUpdatedAt', 'ASC')
-            ->andWhere('g.facebookLikesUpdatedAt >= :date')
+            ->addOrderBy('g.id', 'ASC')
+            ->andWhere('g.facebookLikesUpdatedAt <= :date OR g.facebookLikesUpdatedAt IS NULL')
             ->setParameter('date', $date);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->iterate();
     }
 
     public function findAllGroupsWhereIdInForSite($groupIds, $site)

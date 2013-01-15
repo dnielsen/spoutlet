@@ -56,9 +56,7 @@
                         {% if giveaway.allowMachineCodeSubmit %}
                             <div style="margin-bottom: 10px;">
                                 {% if is_granted('ROLE_USER') %}
-                                    {% if has_user_applied_to_giveaway(giveaway) %}
-                                        {{ 'platformd.sweepstakes.entered.message' | trans }}
-                                    {% else %}
+                                    {% if can_user_apply_to_giveaway(giveaway) %}
                                         <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">
                                             <div class="form-error">{{ 'no_machine_code_submitted' | trans }}</div>
                                             <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
@@ -66,6 +64,8 @@
 
                                             <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
                                         </form>
+                                    {% else %}
+                                        {{ 'platformd.sweepstakes.entered.message' | trans }}
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -99,9 +99,11 @@
 
 
                 </div><!-- giveaway-info -->
-                {% if commentsEnabled %}
-                {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": giveaway.slug, 'page': app.request.query.get('page', 1) } %}
+
+                {% if site_has_feature('COMMENTS') %}
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
                 {% endif %}
+
             </div><!-- left -->
 
             <div class="clear">

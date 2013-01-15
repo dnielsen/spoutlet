@@ -112,6 +112,10 @@ SpoutletBundle_admin_wallpapers:
     resource: "@SpoutletBundle/Resources/config/routing/admin_wallpaper.yml"
     prefix:   /admin/wallpapers
 
+SpoutletBundle_comments:
+    resource: "@SpoutletBundle/Resources/config/routing/comments.yml"
+    prefix: /comments
+
 SpoutletBundle_admin_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/admin_gallery.yml"
     prefix:   /admin/galleries

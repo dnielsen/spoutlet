@@ -16,11 +16,13 @@ class CountryAgeRestrictionRuleset
     const PARENT_TYPE_DEAL          = 'deal';
     const PARENT_TYPE_SWEEPSTAKE    = 'sweepstake';
     const PARENT_TYPE_CONTEST       = 'contest';
+    const PARENT_TYPE_GIVEAWAY      = 'giveaway';
 
     private static $validParentTypes = array(
         self::PARENT_TYPE_DEAL,
         self::PARENT_TYPE_SWEEPSTAKE,
         self::PARENT_TYPE_CONTEST,
+        self::PARENT_TYPE_GIVEAWAY,
     );
 
     /**

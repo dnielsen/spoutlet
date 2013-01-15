@@ -10,6 +10,10 @@ admin_giveaway_export_machine_codes:
     pattern: /{id}/export
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:export }
 
+admin_giveaway_export_approved_and_denied_machine_codes:
+    pattern: /{id}/exportDenied
+    defaults: { _controller: GiveawayBundle:GiveawayAdmin:exportApprovedAndDenied }
+
 admin_giveaway_edit:
     pattern: /edit/{id}
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:edit }

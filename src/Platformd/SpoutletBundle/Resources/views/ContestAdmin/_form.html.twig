@@ -53,6 +53,7 @@
     <fieldset>
         <legend>d) Restrictions</legend>
         <div class="game-page-form">
+            <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
             <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
                 {# see the CSS file this explanation #}
                 <li class="dummy"></li>

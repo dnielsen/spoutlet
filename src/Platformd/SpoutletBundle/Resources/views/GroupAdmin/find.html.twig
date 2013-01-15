@@ -9,11 +9,15 @@
         {% include 'SpoutletBundle:GroupAdmin:_findForm.html.twig' %}
         <div style="margin-left: 160px">
             <button type="submit" class="btn btn-primary" formnovalidate>Search</button>
-            <a href="{{ path('admin_group_find') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+            <a href="{{ path('admin_group_filter_reset') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
     <div>
-        <p>Search Results: {{ results | length }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_summary') }}">Export</a></span></p>
+        <p>Search Results: {{ results.nbResults }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_summary') }}">Export</a></span></p>
+
+        {% if results.haveToPaginate %}
+            {{ pagerfanta(results, 'twitter_bootstrap') }}
+        {% endif %}
 
         <table class="table table-striped table-bordered tablesorter">
             <thead>
@@ -39,20 +43,49 @@
             <tbody>
                 {% for group in results %}
                     <tr>
-                        <td><a href="{{ group.GroupLink }}" target="_blank">{{ group.GroupName }}</a></td>
+                        <td>
+                            {% if group.deleted %}
+                            <a href="{{ path('group_edit', {'id': group.id}) }}" target="_blank">{{ group.name }}</a></td>
+                        {% else %}
+                            <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
+                        {% endif %}
                         <td>{{ group.Category }}</td>
-                        <td>{{ group.Type }}</td>
-                        <td>{{ group.Region }}</td>
-                        <td>{{ group.CreatedAt | date('m/d/Y') }}</td>
-                        <td>{{ group.Status }}</td>
-                        <td>{{ group.Organizer }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.GroupId })  }}">{{ group.MemberCount }}</a></td>
-                        <td>{{ group.NewMemberCount }}</td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.GroupId })  }}">{{ group.VideoCount }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.GroupId })  }}">{{ group.ImageCount }}</a></td>
-                        <td><a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.GroupId })  }}">{{ group.NewsArticleCount }}</a></td>
-                        <td>{{ group.FacebookLikes }}</td>
-                        <td>{{ group.LeftMemberCount }}</td>
+                        <td>{{ group.isPublic() ? 'Public' : 'Private' }}</td>
+                        <td>{{ group.region }}</td>
+                        <td>{{ group.createdAt | date('m/d/Y') }}</td>
+                        <td>{{ group.getDeleted() ? 'Inactive' : 'Active' }}</td>
+                        <td>{{ group.owner.username }}</td>
+                        <td>
+                            {% if group.id in memberCounts|keys and memberCounts[group.id] != "0" %}
+                                <a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ memberCounts[group.id] }}</a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td>{{ group.newMemberCount }}</td>
+                        <td>
+                            {% if group.id in mediaCounts|keys and mediaCounts[group.id]['videoCount'] != "0" %}
+                                <a href="{{ path('admin_group_export', { "type" : "videos", "groupId" : group.id })  }}">{{ mediaCounts[group.id]['videoCount'] }}</a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if group.id in mediaCounts|keys and mediaCounts[group.id]['imageCount'] != "0" %}
+                                <a href="{{ path('admin_group_export', { "type" : "images", "groupId" : group.id })  }}">{{ mediaCounts[group.id]['imageCount'] }}</a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if group.id in mediaCounts|keys and mediaCounts[group.id]['newsCount'] != "0" %}
+                                <a href="{{ path('admin_group_export', { "type" : "newsArticles", "groupId" : group.id })  }}">{{ mediaCounts[group.id]['newsCount'] }}</a>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td>{{ group.facebookLikes }}</td>
+                        <td>{{ group.leftMemberCount }}</td>
 
                     </tr>
                 {% else %}
@@ -64,6 +97,11 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% if results.haveToPaginate %}
+            {{ pagerfanta(results, 'twitter_bootstrap') }}
+        {% endif %}
+
     </div>
 </div>
 

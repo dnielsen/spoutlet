@@ -9,7 +9,6 @@
 
 {{ form_errors(form) }}
 
-<div class="row-fluid">
     <fieldset>
         <legend>a) Basic Information</legend>
         <div class="row-fluid first">
@@ -54,6 +53,7 @@
     <fieldset>
         <legend>d) Restrictions</legend>
         <div class="game-page-form">
+            <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
             <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
                 {# see the CSS file this explanation #}
                 <li class="dummy"></li>
@@ -75,7 +75,6 @@
                 {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
             </div>
     </fieldset>
-</div>
 
 <div style="display: none;">
     {{ form_row(form.ruleset) }}

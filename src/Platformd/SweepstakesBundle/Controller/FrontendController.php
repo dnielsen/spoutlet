@@ -40,12 +40,15 @@ class FrontendController extends Controller
             $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
         }
 
+        $countries = $sweepstakes->getRuleset() ? $sweepstakes->getRuleset()->getAllowedCountries() : 'all countries';
+        $ageRestrictions = $sweepstakes->getRuleset() ? $sweepstakes->getRuleset()->areThereAgeRestrictions() : null;
+
         return array(
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
-            'countries' => $sweepstakes->getRuleset()->getAllowedCountries(),
-            'ageRestrictions' => $sweepstakes->getRuleset()->areThereAgeRestrictions(),
+            'countries' => $countries,
+            'ageRestrictions' => $ageRestrictions,
         );
     }
 
@@ -87,7 +90,7 @@ class FrontendController extends Controller
         $user           = $this->getUser();
         $country        = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
             return $this->redirectToShow($sweepstakes);
         }

@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
 use Platformd\UserBundle\Entity\User;
+use Platformd\MediaBundle\Imagine\Cache\Resolver\AmazonS3Resolver;
 
 /**
  * Gallery controller.
@@ -28,7 +29,7 @@ class GalleryController extends Controller
 {
     public function indexAction()
     {
-        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMedia(5);
+        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMediaForSite($this->getCurrentSite(), 5);
         $options = $this->getFilterOptions();
 
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
@@ -375,22 +376,27 @@ class GalleryController extends Controller
         $em->persist($media);
         $em->flush();
 
-        $referer = parse_url($request->headers->get('referer'));
-        $pathArr = explode('/', $referer['path']);
+        if ($request->headers->get('referer') != null) {
+            $referer = parse_url($request->headers->get('referer'));
+            $pathArr = explode('/', $referer['path']);
 
-        if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
-            $returnType = $pathArr[2];
+            if ($pathArr[1] == "app_dev.php" || $pathArr[1] == "app_test.php") {
+                $returnType = $pathArr[2];
+            } else {
+                $returnType = $pathArr[1];
+            }
+
+            if ($returnType == "contests") {
+
+                $contest = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
+                $crumb = $contest ? array('value' => $request->headers->get('referer'), 'text' => $contest->getName()) : null;
+
+            } else {
+                $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+            }
         } else {
-            $returnType = $pathArr[1];
-        }
-
-        if ($returnType == "contests") {
-
-            $contest = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
-            $crumb = $contest ? array('value' => $request->headers->get('referer'), 'text' => $contest->getName()) : null;
-
-        } else {
-            $crumb = $this->getGalleryBreadCrumb($request->headers->get('referer'), $media->getGalleries());
+            $returnType = "galleries";
+            $crumb = null;
         }
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
@@ -670,7 +676,7 @@ class GalleryController extends Controller
         switch ($type) {
             case 'featured':
                 # get featured media
-                $medias = $repo->findFeaturedMedia();
+                $medias = $repo->findFeaturedMediaForSite($this->getCurrentSite());
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -738,7 +744,59 @@ class GalleryController extends Controller
 
     public function featuredMediaFeedAction(Request $request)
     {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['site'])) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Site not specified.")));
+            return $response;
+        }
+
+        $em         = $this->getEntityManager();
+        $subdomain  = $params['site'];
+
+        $siteRepo           = $em->getRepository('SpoutletBundle:Site');
+        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+
+        $site   = $siteRepo->findOneBySubDomain($subdomain);
+
+        if (!$site) {
+            $response->setContent(json_encode(array("success" => false, "message" => "Invalid site specified.")));
+            return $response;
+        }
+
+        $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+        $featuredMedia = array();
+
+        if ($media) {
+            $counter = 0;
+            foreach($media as $mediaItem) {
+                $s3 = $this->get('platformd.media.imagine.cache.resolver.amazon_s3');
+                $featuredMedia[$counter]['thumbnail']   = $s3->getBrowserPath($mediaItem->getImage()->getFilename(), 'image_thumb', true);
+                $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                $counter++;
+            }
+        } else {
+            $featuredMedia = null;
+        }
+
+        $response->setContent(json_encode(array(
+            "success" => true,
+            "media"   => $featuredMedia
+        )));
+
+        return $response;
     }
 
     private function getEntityManager()

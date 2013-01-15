@@ -9,16 +9,16 @@
                         {% if media.hasUserVoted(app.user) == false %}
                             {% if contest.isVotable %}
                                 <div class="thumbnail-vote-caption">
-                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">Quick Vote</a>
+                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                 </div>
                             {% else %}
                                 <div class="thumbnail-vote-caption">
-                                    <a href="javascript:void(0);">Voting Closed!</a>
+                                    <a href="javascript:void(0);">{{ 'galleries.voting_closed_caption' | trans }}</a>
                                 </div>
                             {% endif %}
                         {% else %}
                             <div class="thumbnail-vote-caption">
-                                <a href="javascript:void(0);">Already Voted!</a>
+                                <a href="javascript:void(0);">{{ 'galleries.already_voted_caption' | trans }}</a>
                             </div>
                         {% endif %}
                     {% endif %}
@@ -30,4 +30,3 @@
             </div>
         </div>
     {% endfor %}
-{% endif %}

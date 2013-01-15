@@ -13,6 +13,8 @@ use DateTime;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Symfony\Component\Form\FormError;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
+use Symfony\Component\Form\FormBuilder;
 
 class GiveawayAdminController extends Controller
 {
@@ -73,11 +75,61 @@ class GiveawayAdminController extends Controller
         return $this->generateMachineCodeCsvResponse($machineCodes, $giveaway->getSlug());
     }
 
-    /**
-     * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry[] $machineCodes
-     * @param $baseFilename
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
+    public function exportApprovedAndDeniedAction($id)
+    {
+
+        $giveaway = $this->getGiveawayRepo()->find($id);
+
+        if (!$giveaway) {
+            throw $this->createNotFoundException('No giveaway found for id '.$id);
+        }
+
+        $machineCodes = $this->getMachineCodeRepository()->findApprovedAndDeniedForGiveaway($giveaway);
+
+        return $this->generateApprovedAndDeniedMachineCodeCsvResponse($machineCodes, $giveaway->getSlug());
+    }
+
+    private function generateApprovedAndDeniedMachineCodeCsvResponse(array $machineCodes, $baseFilename)
+    {
+        // generate CSV content from the rows of data
+        $factory = new CsvResponseFactory();
+
+        $factory->addRow(array(
+                'First Name',
+                'Last Name',
+                'Email',
+                'Submitted Date',
+                'Machine Code',
+                'Approval/Denied Action',
+                'Approval/Denied Date',
+                'Notification Email Sent'
+        ));
+
+        foreach ($machineCodes as $entry) {
+
+            $status                         = $entry->getStatus();
+            $statusDate                     = $entry->getStatus() == MachineCodeEntry::STATUS_APPROVED ? $entry->getApprovedAt() : $entry->getDeniedAt();
+            $statusDateFormatted            = $statusDate ? $statusDate->format('Y-m-d H:i:s') : "-";
+            $notificationDate               = $entry->getNotificationEmailSentAt();
+            $notificationStatusFormatted    = $notificationDate ? "yes" : "no";
+
+            $factory->addRow(array(
+                    $entry->getUser()->getFirstname(),
+                    $entry->getUser()->getLastname(),
+                    $entry->getUser()->getEmail(),
+                    $entry->getCreated()->format('Y-m-d H:i:s'),
+                    $entry->getMachineCode(),
+                    $status,
+                    $statusDateFormatted,
+                    $notificationStatusFormatted
+            ));
+        }
+
+        $filename = sprintf('%s-Denied-Entries-%s.csv', $baseFilename, date('Y-m-d'));
+
+        return $factory->createResponse($filename);
+    }
+
     private function generateMachineCodeCsvResponse(array $machineCodes, $baseFilename)
     {
         // generate CSV content from the rows of data
@@ -173,7 +225,7 @@ class GiveawayAdminController extends Controller
 
                         continue;
                     }
-                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKeyForGiveaway($user, $giveaway);
+                    $machineCodes = $this->getMachineCodeRepository()->findPendingUserEntriesForGiveaway($user, $giveaway);
 
                     if (count($machineCodes) == 0) {
                         $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
@@ -254,7 +306,7 @@ class GiveawayAdminController extends Controller
                         continue;
                     }
 
-                    $machineCodes = $this->getMachineCodeRepository()->findAssignedToUserWithoutGiveawayKeyForGiveaway($user, $giveaway);
+                    $machineCodes = $this->getMachineCodeRepository()->findPendingUserEntriesForGiveaway($user, $giveaway);
 
                     if (count($machineCodes) == 0) {
                         $form->addError(new FormError('No submitted code found for email %email%', array('%email%' => $email)));
@@ -265,7 +317,7 @@ class GiveawayAdminController extends Controller
                     // pop up the first one, ideally there's only one
                     $machineCode = $machineCodes[0];
 
-                    $this->getGiveawayManager()->denyMachineCode($machineCode);
+                    $this->getGiveawayManager()->denyMachineCode($machineCode, $this->getCurrentSite());
 
                     $successEmails[] = $email;
                 }
@@ -375,6 +427,35 @@ class GiveawayAdminController extends Controller
         $giveaway = $giveawayForm->getData();
         $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
+
+        $ruleset    = $giveaway->getRuleset();
+        $rules      = $ruleset->getRules();
+
+        $newRulesArray = array();
+
+        $defaultAllow = true;
+
+        foreach ($rules as $rule) {
+            if ($rule->getMinAge() || $rule->getMaxAge() || $rule->getCountry()) {
+                $rule->setRuleset($ruleset);
+                $newRulesArray[] = $rule;
+
+                $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+            }
+        }
+
+        $oldRules = $this->getEntityManager()->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+        if ($oldRules) {
+            foreach ($oldRules as $oldRule) {
+                if (!in_array($oldRule, $newRulesArray)) {
+                    $oldRule->setRuleset(null);
+                }
+            }
+        }
+
+        $giveaway->getRuleset()->setParentType('giveaway');
+        $giveaway->getRuleset()->setDefaultAllow($defaultAllow);
 
         $this
             ->get('platformd.events_manager')

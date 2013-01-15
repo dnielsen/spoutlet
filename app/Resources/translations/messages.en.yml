@@ -195,8 +195,19 @@ platformd:
         back: Go Back
 
     comment:
-        login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
+        add_your_comment: Add Your Comment
+        login_to_comment: To post a comment, please <a href="%login_url%">log in.</a>
         comments: Comments
+        sort_by: Sort By:
+        sort_by_votes: Votes
+        sort_by_newest: Most Recent
+        sort_by_oldest: Oldest
+        add_comment: Add Comment
+        login_to_reply: Login to Reply
+        reply: Reply
+        more_replies: More Replies
+        points: Points:
+        post: Post
         date_format: %month%/%day%/%year%
 
     user:
@@ -234,7 +245,7 @@ platformd:
         account:
             account_home: Account Home
             edit_account: Edit Account
-            change_password: Change Password
+            change_password: Change Pass
             profile:      Profile
             # checked up until here
             registered_events: Registered Events
@@ -248,18 +259,20 @@ platformd:
             media: Media
             media_upload: Upload
             my_media: My Media
+            sign_out: Sign Out
 
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
         get_key:  GET KEY
+        not_eligible: Sorry, you are not eligible to participate in this giveaway.
         no_keys_left: There are no keys available for this giveaway
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
-        in_process_2: please allow at least 10 days for it to be posted into your account.
-        in_process_3: If after 10 days it has not been posted, please email
+        in_process_1: If you have registered for a key giveaway and your status is showing as “Pending”,
+        in_process_2: please allow at least 2 weeks for it to be posted into your account.
+        in_process_3: If after 2 weeks it has not been posted, please email
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -277,7 +290,7 @@ platformd:
             active:   Active
             blank_value: Choose status
         show:
-            availaible_keys: Availaible keys: %%count%%
+            availaible_keys: Available keys: %%count%%
         giveaways_listings:
             giveaways: Giveaways
         assigned:
@@ -407,7 +420,7 @@ submit_machine_code: Apply
 machine_code: System Tag
 no_machine_code_submitted: Please enter your system tag number.
 
-pending: In Process
+pending: Pending
 denied: Denied
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
@@ -416,11 +429,36 @@ email:
     giveaway_machine_code_approve: |
         Hi %userFirstName%,
 
-        Thank you for registering for %giveawayName%. Your key is posted to your ALIENWARE ARENA account (%accountUrl%) and is now ready to use.
+        Thank you for registering for the %giveawayName%.
 
-        If you have any questions, please feel free to email us at japan@alienwarearena.com.
+        The key has been posted to your Alienware Arena account and can be accessed from here:
+        (%accountUrl%)
 
-        -ALIENWARE ARENA
+        If you have any questions, please email us at %subDomain%@alienwarearena.com.
+
+        Thank you,
+        - Alienware Arena Team
+
+    giveaway_machine_code_deny: |
+        Hello %userFirstName%,
+
+        Thank you for registering for the %giveawayName%.
+
+        Unfortunately, the system tag you entered does not match an Alienware system that qualifies to receive a key for this promotion. This may be due to your Alienware system being purchased before the promotion start date, or an incorrectly entered system tag.
+
+        The system tag you entered is: %systemTag%
+
+        If the system tag you entered is incorrect, please access the link below to re-enter the 7-digit number:
+        %giveawayUrl%
+
+        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you reqiure further assistance, please email us at %subDomain%@alienwarearena.com.
+
+        Thank you,
+        - Alienware Arena Team
+
+    subject:
+        giveaway_machine_code_approve:  %giveawayName% System Tag Approval
+        giveaway_machine_code_deny:     %giveawayName% System Tag Error
 
 # admin stuff
 translations_admin: Translations Admin
@@ -492,6 +530,7 @@ deal_show_expired: This deal is no longer available.
 deal_time_remaining: Time Remaining:
 deal_comments: Deals Comments
 deal_comments_posted_on: Posted on
+deal_not_eligible: Sorry, you are not eligible to participate in this deal.
 choose_country: Choose your country
 
 featured_deals: Alienware Arena Featured Deals
@@ -621,8 +660,19 @@ galleries:
     no_images_found: No images found...
     already_voted: You have already voted on this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
+    login_to_vote_linked: Please <a href="%login_url%">login</a> to vote
+    login_to_vote: Login to Vote!
+    quick_vote_caption: Quick Vote
+    voting_closed_caption: Voting Closed!
+    already_voted_caption: Already Voted!
+    by: by:
+    submit_no_groups: You are not a member of any groups at this time.
+    likes: Likes
+    dislikes: Dislikes
+    cast_your_vote: Cast your vote:
 
 contests:
+    contests: Contests
     index_page_title_long: Alienware Arena Contests
     index_page_title: Contests
     show_page_overview: Overview
@@ -665,4 +715,8 @@ contests:
     submit_group: Submit Selected Groups
     submit_groups_how_many_so_far: These are the groups you have entered so far.
     contest_not_eligible: Sorry, you are not eligible to enter this contest.
+    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
+    image_part_of_contest: This image is part of a contest.
+    voting_begins: Voting begins
+    no_longer_available: This contest is no longer available.
 

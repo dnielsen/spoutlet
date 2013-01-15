@@ -107,6 +107,12 @@ class MachineCodeEntry
      */
     protected $updated;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $siteAppliedFrom;
+
     public function __construct(Giveaway $giveaway, $code)
     {
         $this->giveaway = $giveaway;
@@ -254,5 +260,15 @@ class MachineCodeEntry
     public function setNotificationEmailSentAt($notificationEmailSentAt)
     {
         $this->notificationEmailSentAt = $notificationEmailSentAt;
+    }
+
+    public function getSiteAppliedFrom()
+    {
+        return $this->siteAppliedFrom;
+    }
+
+    public function setSiteAppliedFrom($siteAppliedFrom)
+    {
+         $this->siteAppliedFrom = $siteAppliedFrom;
     }
 }
