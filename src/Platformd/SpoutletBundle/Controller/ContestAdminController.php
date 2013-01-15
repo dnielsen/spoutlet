@@ -30,11 +30,13 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($site);
+        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite());
+        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite());
 
         return $this->render('SpoutletBundle:ContestAdmin:list.html.twig', array(
-            'contests' => $contests,
-            'site'     => $site,
+            'imageContests' => $imageContests,
+            'groupContests' => $groupContests,
+            'site'          => $site,
         ));
     }
 

@@ -274,7 +274,9 @@ class ContestController extends Controller
         $em->persist($entry);
         $em->flush();
 
-        $response->setContent(json_encode(array("success" => true, "details" => "Your groups have been successfully submitted!")));
+        $this->setFlash('success', $this->trans('contests.entry_success'));
+
+        $response->setContent(json_encode(array("success" => true, "details" => $this->trans('contests.entry_success'))));
         return $response;
     }
 

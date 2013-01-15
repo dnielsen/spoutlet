@@ -944,12 +944,24 @@ Alienware Arena Team
         $group  = new Group();
         $form   = $this->createForm(new GroupType($this->getUser(), $group), $group);
 
+        if($previous = $this->getReturnUrl($request)) {
+            $request->getSession()->set(
+                'ContestReturnUrl',
+                $previous
+            );
+        }
+
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
             } catch(ApiException $e) {
+            }
+
+            if($return = $request->getSession()->get('ContestReturnUrl')) {
+                $request->getSession()->remove('ContestReturnUrl');
+                return $this->redirect($return);
             }
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
@@ -1125,5 +1137,10 @@ Alienware Arena Team
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    private function getReturnUrl(Request $request)
+    {
+        return  $request->query->get('return');
     }
 }

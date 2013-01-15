@@ -55,7 +55,7 @@
 
 .group-contest-content .group-list-item {
     margin: 5px 3px 5px 3px;
-    background: #1D1D1D url('/bundles/spoutlet/images/form-ic-error.png') no-repeat;
+    background: #1D1D1D;
     background-position: 125px 120px;
     padding: 5px;
     border: 1px solid #4A4A4A;
@@ -63,7 +63,7 @@
 }
 
 .group-contest-content .group-list-item:hover {
-    background: #4A4A4A url('/bundles/spoutlet/images/form-ic-error.png') no-repeat;
+    background: #4A4A4A;
     background-position: 125px 120px;
     cursor: pointer;
 }

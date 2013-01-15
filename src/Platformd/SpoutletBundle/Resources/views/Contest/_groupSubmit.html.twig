@@ -44,7 +44,7 @@
 			</div>
 			<p>
 				{% if contest.maxEntries > 1%}
-					{{ 'contests.submit_group_instructions_multiple_entries' | trans | format(contest.maxEntries, entriesLeft) | raw }}
+					{{ 'contests.submit_group_instructions_multiple_entries' | trans | format(contest.maxEntries, path('group_new') ~ '?return=' ~ app.request.getUri | url_encode, entriesLeft) | raw }}
 				{% else %}
 					{{ 'contests.submit_group_instructions_single_entry' | trans | format(contest.maxEntries, entriesLeft) | raw }}
 				{% endif %}
@@ -53,14 +53,14 @@
 				{% if groups | length > 0 %}
 					{% for group in groups %}
 						<div class="group-list-item" data-id="{{ group.id }}">
-				            <a href="{{ path('group_show', { slug: group.slug}) }}">
+				            <a href="{{ path('group_show', { slug: group.slug}) }}" target="_blank">
 				                {% if group.thumbNail %}
 				                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
 				                {% else %}
 				                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
 				                {% endif %}
 				            </a>
-				            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+				            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}" target="_blank">
 				                {{ group.name }}
 				            </a>
 				            <div class="details">
@@ -70,11 +70,12 @@
 				        </div>
 					{% endfor %}
 				{% elseif groups | length == 0 and groupsEntered.count == 0 %}
-					{{ 'contests.no_groups_found' | trans | format(path('group_new')) | raw }}
+					{{ 'contests.no_groups_found' | trans | format(path('group_new') ~ '?return=' ~ app.request.getUri | url_encode) | raw }}
 				{% endif %}
 			</div>
-			<div style="padding: 10px 0 10px 0;text-align:center;">
+			<div style="padding: 10px 0 10px 0;">
 				<button id="submit-groups" class="btn" {% if entriesLeft == 0 %}disabled="disabled"{% endif %}>{{ 'save' | trans }}</button>
+				<button id="cancel" class="btn" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">{{ 'galleries.cancel' | trans }}</button>
 			</div>
 		</div>
     </div>
@@ -86,25 +87,35 @@
 </div>
 <script type="text/javascript">
 	$(function () {
+		$('#cancel').delegate('','click change',function(){
+            window.location = $(this).attr('rel');
+            return false;
+        });
+
 		$('.group-list-item').click(function (e) {
 			var entriesLeft = parseInt($('#entries-left').text());
 			var entries = $('.entered').length;
 			var maxEntries = {{ contest.maxEntries }};
 
-			if(!$(this).hasClass('entered')) {
-				if($(this).hasClass('selected')) {
-					$(this).removeClass('selected');
-					if(entriesLeft < (maxEntries - entries)) {
-						entriesLeft++;
-						$('#entries-left').text(entriesLeft);
-					}
-				} else {
-					if(entriesLeft > 0) {
-						$(this).addClass('selected');
-						entriesLeft--;
-						$('#entries-left').text(entriesLeft);
+			if(maxEntries > 1) {
+				if(!$(this).hasClass('entered')) {
+					if($(this).hasClass('selected')) {
+						$(this).removeClass('selected');
+						if(entriesLeft < (maxEntries - entries)) {
+							entriesLeft++;
+							$('#entries-left').text(entriesLeft);
+						}
+					} else {
+						if(entriesLeft > 0) {
+							$(this).addClass('selected');
+							entriesLeft--;
+							$('#entries-left').text(entriesLeft);
+						}
 					}
 				}
+			} else {
+				$('.group-list-item').removeClass('selected');
+				$(this).addClass('selected');
 			}
 		});
 
@@ -129,7 +140,12 @@
 				contentType: 'application/json',
 				success: function(data) {
 					if(data.success) {
-						window.location = '{{ path('contest_submit', {'slug' : contest.slug }) }}';
+						var entriesLeft = parseInt($('#entries-left').text());
+						if(entriesLeft == 0) {
+							window.location = '{{ path('contest_vote', {'slug' : contest.slug }) }}';
+						} else {
+							window.location = '{{ path('contest_submit', {'slug' : contest.slug }) }}';
+						}
 					}
 				},
 				error: function(e, s, t) {

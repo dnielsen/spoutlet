@@ -26,6 +26,7 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
 
@@ -321,6 +322,10 @@
                 window.location = $(this).attr('rel');
                 return false;
             });
+
+            $('.group-index-link').truncate({
+                width: 115
+            })
 
             $('#galleryImages').MultiFile({
                 max: {{ entriesLeft }},

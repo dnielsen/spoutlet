@@ -697,8 +697,8 @@ contests:
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
     submit_groups_title: Select Your Group
-    submit_group_instructions_multiple_entries: Select %s groups from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
-    submit_group_instructions_single_entry: Select one group from the list below to enter into this contest. You have <span id="entries-left">%s</span> left.
+    submit_group_instructions_multiple_entries: Select %s group(s) from the list below or <a href="%s">create</a> a new group. You have <span id="entries-left">%s</span> left.
+    submit_group_instructions_single_entry: Select one group from the list below to enter into this contest. <div style="display:none;">You have <span id="entries-left">%s</span> left.</div>
     no_winners: No winners have been selected yet. Please check back later.
     place: Place
     entry_period: Entry Period
@@ -719,4 +719,5 @@ contests:
     image_part_of_contest: This image is part of a contest.
     voting_begins: Voting begins
     no_longer_available: This contest is no longer available.
+    entry_success: Your group is entered into the contest.
 
