@@ -192,6 +192,8 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->flush();
 
+        $this->removeUserArp($comment);
+
         $commentCount = $comment->getParent() ? $params['commentCount'] : $params['commentCount'] - 1;
 
         $threadId = $comment->getThread()->getId();
@@ -405,6 +407,24 @@ class CommentsController extends Controller
         }
 
         return $url;
+    }
+
+    private function removeUserArp($comment)
+    {
+        $threadId = $comment->getThread()->getId();
+        $tag = null;
+
+        if(strlen(stristr($threadId, 'gallery')) > 0) {
+            $tag = 'nukephotocomment';
+        }
+
+        if($tag) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+        }
     }
 
     private function giveUserArp($comment)
