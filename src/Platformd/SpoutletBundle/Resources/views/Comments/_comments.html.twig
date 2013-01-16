@@ -170,6 +170,7 @@
             $('.report-options').hide();
             var id = $(this).attr('data-id');
             $('#choices-' + id).toggle('fast');
+            window.getSelection().removeAllRanges()
         });
 
         $('.report-options-link').click(function (event) {

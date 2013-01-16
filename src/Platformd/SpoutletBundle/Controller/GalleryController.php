@@ -203,6 +203,7 @@ class GalleryController extends Controller
             $em->flush();
         }
 
+        $this->setFlash('success', sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages));
         $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages);
 
         $response->setContent(json_encode(array(
