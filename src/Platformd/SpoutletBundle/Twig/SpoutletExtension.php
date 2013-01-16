@@ -181,7 +181,13 @@ class SpoutletExtension extends Twig_Extension
         $parsedUrl = parse_url($link);
 
         $parts = explode('.', $parsedUrl['host']);
-        $parts[0] = $subdomain;
+
+        if (strpos($parts[0], 'staging')) {
+            $parts[0] = $subdomain.'staging';
+        } else {
+            $parts[0] = $subdomain;
+        }
+
         $host = implode('.', $parts);
 
         $query = array_key_exists('query', $parsedUrl) != "" ? "?".$parsedUrl['query'] : '';
