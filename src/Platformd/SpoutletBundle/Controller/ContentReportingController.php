@@ -56,12 +56,12 @@ class ContentReportingController extends Controller
         }
 
         if (!($user instanceof User)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to report content.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.must_be_logged_in'))));
             return $response;
         }
 
         if ($lastReport && $lastReport > new \DateTime('-1 hour')) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You may only report one item per hour.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.once_per_hour'))));
             return $response;
         }
 

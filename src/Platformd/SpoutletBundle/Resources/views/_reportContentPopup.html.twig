@@ -1,4 +1,4 @@
-<div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;" title="Report Content">
+<div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;" title="{{ 'content_reporting.report_content' | trans }}">
     <input type="hidden" id="report-id-{{ reportContentType }}" />
     <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
     <div style="height: 120px;">
@@ -6,10 +6,10 @@
         The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
         </div>
         <div id="report-options">
-            <input class="report-option" type="radio" name="reason" value="inappropriate_content"> Inappropriate content <br />
-            <input class="report-option" type="radio" name="reason" value="spam"> Spam <br />
-            <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> Violates intellectual property <br />
-            <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> Harassment
+            <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | trans }} <br />
+            <input class="report-option" type="radio" name="reason" value="spam"> {{ 'content_reporting.spam' | trans }} <br />
+            <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> {{ 'content_reporting.violates_intellectual_property' | trans }} <br />
+            <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.harassment' | trans }}
         </div>
     </div>
     <button id="submit-report-{{ reportContentType }}">Submit</button>

@@ -61,6 +61,9 @@ platformd:
         more_replies: Más respuestas
         points: Puntos:
         post: Puesto
+        delete: Borrar
+        edit: Editar
+        no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
 
 age_confirm:
@@ -69,6 +72,19 @@ age_confirm:
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
 confirm: Confirmar
+
+forms:
+    required_fields: Campos Requeridos
+
+content_reporting:
+    report: Informar
+    report_content: Notificar sobre contenido
+    inappropriate_content: Contenido inapropiado
+    spam: Spam
+    violates_intellectual_property: Viole la propiedad intelectual
+    harassment: Acoso
+    must_be_logged_in: Debe iniciar sesión informar sobre contenidos.
+    once_per_hour: Sólo se puede reportar un artículo por hora.
 
 error:
     fill_in_birthday: Por favor, escriba su cumpleaños!
@@ -221,14 +237,14 @@ galleries:
     ineligible_due_to_contest: No puedes votar en este momento, ya que esta imagen es parte de un concurso en cual no eres elegible para votar.
     login_to_vote_linked:  <a href="%login_url%">Inicia sesión</a> para votar
     login_to_vote: ¡Inicia sesión para votar!
-    quick_vote_caption: Quick Vote
-    voting_closed_caption: Voting Closed!
-    already_voted_caption: Already Voted!
+    quick_vote_caption: Voto rápido
+    voting_closed_caption: ¡Votación Cerrada!
+    already_voted_caption: ¡Ya votaste!
     by: por:
-    submit_no_groups: You are not a member of any groups at this time.
-    likes: Likes
-    dislikes: Dislikes
-    cast_your_vote: Cast your vote:
+    submit_no_groups: No hay grupos.
+    likes: Gustos
+    dislikes: Disgustos
+    cast_your_vote: Emite tu voto:
 
 contests:
     contests: Concursos
@@ -265,8 +281,8 @@ contests:
     congratulations_winners: ¡Felicidades a los Ganadores!
     winners_page_congrats: ¡Felicidades a los Ganadores!
     contest_not_eligible: Lo sentimos, pero no eres elegible para participar en este concurso.
-    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
-    image_part_of_contest: This image is part of a contest.
-    voting_begins: Voting begins
-    no_longer_available: This contest is no longer available.
+    ongoing_contest_alert: ¡Esta imagen forma parte de un concurso! ¡Coloca tu voto en la sección Detalles de Foto ahora!
+    image_part_of_contest: Esta imagen forma parte de un concurso.
+    voting_begins: Período de Votación:
+    no_longer_available: Este concurso ya no está disponible
 

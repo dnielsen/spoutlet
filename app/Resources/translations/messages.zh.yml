@@ -401,6 +401,19 @@ age_confirm:
     message: The content is intended for mature audiences. Please confirm your age below
 confirm: Confirm
 
+forms:
+    required_fields: required fields
+
+content_reporting:
+    report: Report
+    report_content: Report Content
+    inappropriate_content: Inappropriate content
+    spam: Spam
+    violates_intellectual_property: Violates Intellectual Property
+    harassment: Harassment
+    must_be_logged_in: You must be logged in to report content.
+    once_per_hour: You may only report one item per hour.
+
 error:
     fill_in_birthday: Please fill in your birthday!
 

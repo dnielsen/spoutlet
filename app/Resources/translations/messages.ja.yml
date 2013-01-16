@@ -205,6 +205,9 @@ platformd:
         more_replies: さらに返信
         points: ポイント
         post: 投稿する
+        delete: 消す
+        edit: 編集
+        no_more_posts: これ以上の投稿はありません
         date_format: %year%年%month%月%day%日
 
     user:
@@ -454,6 +457,19 @@ age_confirm:
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
 confirm: 確認
+
+forms:
+    required_fields: required fields
+
+content_reporting:
+    report: レポート
+    report_content: Report Content
+    inappropriate_content: 不適切な内容
+    spam: スパム
+    violates_intellectual_property: 知的財産を侵害する
+    harassment: 嫌がらせ
+    must_be_logged_in: あなたは内容を報告するためにログインする必要があります
+    once_per_hour: あなたは1時間あたり1項目を報告できます。
 
 error:
     fill_in_birthday: 誕生日をご記入ください

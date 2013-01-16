@@ -211,6 +211,9 @@ platformd:
         more_replies: More Replies
         points: Points:
         post: Post
+        no_more_posts: No more posts to show.
+        delete: Delete
+        edit: Edit
         date_format: %month%/%day%/%year%
 
     user:
@@ -475,6 +478,19 @@ age_confirm:
     content_for_mature_audiences: Content Intended for Mature Audiences
     too_young_message: Sorry, we are unable to provide you with access at this time
 confirm: Confirm
+
+forms:
+    required_fields: Required Fields
+
+content_reporting:
+    report: Report
+    report_content: Report Content
+    inappropriate_content: Inappropriate content
+    spam: Spam
+    violates_intellectual_property: Violates Intellectual Property
+    harassment: Harassment
+    must_be_logged_in: You must be logged in to report content.
+    once_per_hour: You may only report one item per hour.
 
 error:
     fill_in_birthday: Please fill in your birthday!
