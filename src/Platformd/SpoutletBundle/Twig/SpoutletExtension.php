@@ -664,9 +664,22 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+    private function GetGroupsLink($locale)
+    {
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.groups').'</a>';
+        $url            = $this->container->get('router')->generate('gallery_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
     private function GetPhotosLink($locale)
     {
-        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.photos').'</a>';
+        $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.photos').'</a>';
         $url            = $this->container->get('router')->generate('gallery_index');
 
         switch($locale) {
@@ -679,7 +692,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetContestsLink($locale)
     {
-        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.contests').'</a>';
+        $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.contests').'</a>';
         $url            = $this->container->get('router')->generate('contest_index');
 
         switch($locale) {
