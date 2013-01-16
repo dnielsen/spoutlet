@@ -18,7 +18,7 @@
                     {% if item[0].getContentType == 'GroupVideo' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Video (external YouTube link)</h1>
@@ -27,7 +27,7 @@
                     {% elseif item[0].getContentType == 'GroupImage' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Image</h1>
@@ -36,7 +36,7 @@
                     {% elseif item[0].getContentType == 'GroupNews' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Article</h1>
@@ -69,7 +69,7 @@
                     {% elseif item[0].getContentType == 'Comment' %}
 
                         <h1>Thread</h1>
-                        <div><a href="{{ item[0].thread.permalink }}" target="_blank">Click to view thread</a></div>
+                        <div><a href="{{ change_link_subdomain(item[0].thread.permalink | absolute_url, item.subdomain) }}" target="_blank">Click to view thread</a></div>
                         <h1>Comment</h1>
                         <div>{{ item[0].body }}</div>
                         <h1>Author</h1>

@@ -118,7 +118,8 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'endsWith'
             ),
-            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice')
+            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice'),
+            'change_link_subdomain'     => new Twig_Function_Method($this, 'changeLinkSubdomain'),
         );
     }
 
@@ -169,6 +170,26 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return (substr($haystack, -$length) === $needle);
+    }
+
+    public function changeLinkSubdomain($link, $subdomain)
+    {
+        if(parse_url($link, PHP_URL_SCHEME) == '') {
+            return $link;
+        }
+
+        $parsedUrl = parse_url($link);
+
+        $parts = explode('.', $parsedUrl['host']);
+        $parts[0] = $subdomain;
+        $host = implode('.', $parts);
+
+        $query = array_key_exists('query', $parsedUrl) != "" ? "?".$parsedUrl['query'] : '';
+        $anchor = array_key_exists('fragment', $parsedUrl) != "" ? "#".$parsedUrl['fragment'] : '';
+
+        $url = $parsedUrl['scheme'].'://'.$host.$parsedUrl['path'].$query.$anchor;
+
+        return $url;
     }
 
     /**

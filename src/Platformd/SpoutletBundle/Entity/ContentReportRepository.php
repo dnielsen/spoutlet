@@ -23,8 +23,9 @@ class ContentReportRepository extends EntityRepository
         }
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
+            LEFT JOIN report.site site
             WHERE report.deleted = false
             GROUP BY item
             ORDER BY reportCount DESC, report.reportedAt
@@ -40,8 +41,9 @@ class ContentReportRepository extends EntityRepository
         }
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
+            LEFT JOIN report.site site
             WHERE item.deleted = false AND
             report.deleted = true
             GROUP BY item
@@ -61,8 +63,9 @@ class ContentReportRepository extends EntityRepository
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
             LEFT JOIN item.contentReports report
+            LEFT JOIN report.site site
             WHERE item.deleted = true AND report.deleted = true
             GROUP BY item
             HAVING reportCount > 0
