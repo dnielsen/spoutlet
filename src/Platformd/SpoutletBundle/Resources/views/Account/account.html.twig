@@ -13,7 +13,7 @@
             <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | trans({
                 "%username%" : app.user.username
             }) }}</h2>
-            
+
             <p>
                 {{ 'platformd.account_page.account.hello_user' | trans({
                     '%firstname%': (app.user.firstName|default(app.user.username)),
@@ -30,9 +30,9 @@
             </p>
             {% endif %}
 
-            <p>{{ "platformd.account_page.account.ready_to_game" | trans }}</p> 
-            
-            <p>{{ "platformd.account_page.account.warning" | trans }}</p> 
+            <p>{{ "platformd.account_page.account.ready_to_game" | trans }}</p>
+
+            <p>{{ "platformd.account_page.account.warning" | trans }}</p>
 
             <p>{{ "platformd.account_page.account.under_construction" | trans }}</p>
         </div>
@@ -42,4 +42,9 @@
 </div>
 
 <div class="clear"></div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
 {% endblock %}

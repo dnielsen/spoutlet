@@ -1,0 +1,28 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Galleries</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for gallery in galleries %}
+        <tr>
+            <td><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">{{ gallery.name }}</a></td>
+            <td>
+                <a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">edit</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_gallery_new') }}">
+    Create a new entry
+</a>
+{% endblock %}

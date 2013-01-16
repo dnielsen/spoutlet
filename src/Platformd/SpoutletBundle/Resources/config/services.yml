@@ -198,3 +198,23 @@ services:
             - @pagerfanta.view.default
         public: false
         tags: [{ name: pagerfanta.view, alias: spoutlet }]
+
+    platformd.form.transformer.html_purifier_basic:
+        class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
+        arguments:
+            - "@exercise_html_purifier.editor_basic"
+
+    platformd.form.transformer.html_purifier_admin:
+        class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
+        arguments:
+            - "@exercise_html_purifier.editor_admin"
+
+    platformd.form.type.purified_textarea_field:
+        class: Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType
+        arguments:
+            - "@platformd.form.transformer.html_purifier_basic"
+            - "@platformd.form.transformer.html_purifier_admin"
+            - "@security.context"
+        tags:
+            - { name: form.type, alias: purifiedTextarea }
+

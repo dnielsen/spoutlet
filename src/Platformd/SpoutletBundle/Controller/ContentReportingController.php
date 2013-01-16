@@ -135,8 +135,16 @@ class ContentReportingController extends Controller
                 $itemType = ucfirst($item->getCategory());
                 break;
 
-            default:
+            case 'Group':
                 $itemType = "Group ".str_replace('Group', '', $type);
+                break;
+
+            case 'Comment':
+                $itemType = "Comment";
+                break;
+
+            default:
+                $itemType = "Unknown";
                 break;
         }
 
@@ -154,11 +162,14 @@ class ContentReportingController extends Controller
                 $name = $item->getTitle();
         }
 
+
+        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
+
         $subject            = "Your Content Has Been Flagged";
         $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
 
 Type: %s
-Name:  %s
+Content:  %s
 Reason: %s
 
 The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.

@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Locale\Locale;
 use Platformd\SpoutletBundle\Entity\Deal;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -122,8 +123,9 @@ class DealController extends Controller
             return $this->redirect($dealShow);
         }
 
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
+        // check that they pass the new style age-country restriction ruleset
+        if ($deal->getRuleset() && !$deal->getRuleset()->doesUserPassRules($user, $country)) {
+            $this->setFlash('error', 'deal_not_eligible');
             return $this->redirect($dealShow);
         }
 

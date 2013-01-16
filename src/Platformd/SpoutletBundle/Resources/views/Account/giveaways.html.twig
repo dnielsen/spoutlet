@@ -1,6 +1,6 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+{% block title %}{{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}{% endblock %}
 
 {% block content %}
 <div class="std_2col control_panel">
@@ -8,7 +8,13 @@
         <div class="pad">
             <div class="widget-header">
                 <div class="widget-title">
-                    <h2>{{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}</h2>
+                    <h2>
+                        {% if get_current_site().subDomain == "mysg" %}
+                            My System Tag Giveaway Keys
+                        {% else %}
+                            {{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}
+                        {% endif %}
+                    </h2>
                 </div>
             </div>
             <div class="widget-content">
@@ -29,7 +35,7 @@
                                         {{ keyRequest.value | nl2br }}
                                     {% else %}
                                         <em>
-                                            {{ keyRequest.status | trans }}
+                                            {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
                                         </em>
                                     {% endif %}
                                 </td>
@@ -39,7 +45,16 @@
                                     {% endif %}
                                 </td>
                                 <td class="nowrap">
-                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': keyRequest.giveaway.locale} ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+
+                                    {% if keyRequest.site != null %}
+                                        {% set site = keyRequest.site %}
+                                    {% elseif keyRequest.giveaway.locale != null %}
+                                        {% set site = keyRequest.site %}
+                                    {% else %}
+                                        {% set site = get_current_site().defaultLocale %}
+                                    {% endif %}
+
+                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': site } ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -48,7 +63,9 @@
                     </table>
                 </div>
             </div>
-            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}</div>
+            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}
+                {% if get_current_site().subDomain == "mysg" %}<a href="mailto:mysg@alienwarearena.com">mysg@alienwarearena.com</a>{% endif %}
+            </div>
             <div class="widget-footer">
                 &nbsp;
             </div>
@@ -57,4 +74,8 @@
 
     <div class="clear"></div>
 </div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
 {% endblock %}

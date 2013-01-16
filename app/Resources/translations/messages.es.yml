@@ -26,12 +26,17 @@ platformd:
             events: Eventos
             video: Vídeos
             news: Novedades
+            articles: Artículos
+            announcements: Anuncios
             arp: ARP
             media: Medios
             forums: Foros
             sweeps: Sweeps
+            groups: Grupos
             wallpapers: Explorar
             microsoft: Microsoft
+            photos: Galería de Fotos
+            contests: Concursos
 
         bottom_menu:
             contact_us: Contáctenos
@@ -104,6 +109,148 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
+platformd.user.account.photos: Mis Imágenes
+platformd.account_page.photos.my_photos: Mis Imágenes
+platformd.account_page.photos.submit: Enviar Imágenes
+
 wallpapers: Fondo de pantalla
 exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
+
+galleries:
+    navigation_label: Galería de Fotos
+    index_page_title: Galerías
+    index_page_header: Fotos de Alienware Arena
+    index_page_no_media_found: Ningun foto fue encontrada.
+    submit_photo_page_title: Enviar Imágenes
+    submit_photo_page_header: Enviar Imágenes
+    submit_photo_now: ¡Envia tus imágenes ahora!
+    submit_photo_blockUI_message: Tus imágenes se están cargando. Por favor espere ...
+    submit_photo_publish_blockUI_message: Tus imágenes se están publicando. Por favor espere ...
+
+    submit_photo_step1: Paso 1 de 2:
+    submit_photo_step1_detail: Enviar Imágenes
+    submit_photo_step1_instructions: Todas las presentaciones de imágenes deben cumplir con los siguientes requisitos para ser publicado en el sitio web. Favor de leer con cuidado y asegurar que cumplen todos los requisitos.
+
+    submit_photo_file_restrictions: |
+        <p><span style="font-weight:bold;">Alienware Arena Normas de Archivo para Productos de Imágen.</span></p>
+        <p>Requisitos Técnicos:</p>
+        <ul><li>Archivos admitidos: JPG, GIF y PNG.</li>
+        <li>Tamaño máximo de archivo es de 5 MB por imágen.</li></ul>
+        <p>Alienware Areana mantiene las siguientes normas de productos de imagen:</p>
+        <ul><li>Ningún imágen comercial sin el consentimiento por escrito del propietario.</li>
+        <li>Ningún material sin derechos de autor. </li>
+        <li>Ningún imágen de personas 13 años de edad o menor.</li>
+        <li>Solo imágenes relacionadas a Gaming.</li>
+        <li>Materiales pornográficos y ofensivos no están permitidos.</li></ul>
+        <p>Alienware Arena, iGames y sus afiliados reservan el derecho de eliminar fotos sin notificación si es que no cumplen con las restricciones.</p>
+        <p>Al publicar o enviar una foto que concedes a iGames y sus afiliados y titulares de licencias perpetuas derecho irrevocable y la licencia con derecho a sublicenciar, para usar, reproducir, mostrar, realizar, adaptar, modificar, sublicenciar, distribuir, sea distribuido, y promover la imagen de cualquier forma, en cualquier lugar y para cualquier propósito.</p>
+
+    submit_photo_add: Añadir
+    submit_photo_publish_share: ¡Gracias! Tus imágenes han sido pubicadas.
+    submit_photo_publish_share_2: ¡Comparte fotos con tus amigos!
+    submit_photo_share: Compartir Fotos
+    submit_share: Compartir
+    submit_photo_my_photos: Mis Imágenes
+
+    submit_photo_step2: Paso 2 de 2:
+    submit_photo_step2_detail: Selecciona la imágen para proporcionar más detalles.
+    submit_photo_image_name: Nombre de Imagen*
+    submit_photo_image_desc: Descripción*
+    submit_photo_image_galleries: Galerías*
+    submit_photo_groups: Grupos
+    submit_photo_button_publish: Publicar
+
+    submit_photo_publish_success: ¡Exito!
+    submit_photo_upload_success: Tus imágenes fueros cargadas exitosamente.
+    submit_photo_publish_message: Tus fotos fueron publicadas exitosamente.
+
+    show_photo_details_label: Detalles de Foto
+    show_photo_details_upload_on: Cargada En
+    show_photo_details_views: Visitas:
+    show_photo_details_points: Puntos:
+
+    delete_photo_error_message: La foto no fue borrada.
+    delete_photo_success_message: Tu foto fue borrada exitosamente.
+
+    show_photo_vote_label: Votos
+
+    gallery_filter_option_latest: Más recien
+    gallery_filter_option_popular: Popular
+    gallery_filter_option_featured: Destacados
+
+    gallery_see_all: Ver todos
+
+    gallery_go_to_galleries: Casa de Galería
+    group_images: Group Images
+
+    publish_photo_error: ¡Error! Debes proporcionar detalles para cada foto para pder publicarlas en nuestras galerías. Selecciona la foto para completar los detalles.
+    publish_photo_error_id: ID de Medios hace falta.
+    publish_photo_error_title: Favor de proporcionar un título.
+    publish_photo_error_desc: Favor de proporcionar una descripción.
+    publish_photo_error_gallery: Debes seleccionar al menos una galería.
+    vote_now: Vota Ahora
+    vote_success: ¡Gracias por Votar!
+    more_images_from: Más imágenes de
+    save_images: Guardar Imágen
+    save_image: Guardar
+    delete_image: Borrar Imágen
+    upload_images: Subir
+    cancel: Cancelar
+    publish_photo_multiple_message: %s de %s imágenes publicadas.
+    publish_photo_multiple_message_more: Algunas de tus imágenes no fueron publicadas. Selecciona las imágenes de abajo para completar los campos resaltados.
+    publish_photo_multiple_message_gallery_or_group_required: Debes seleccionar al menos una galería o grupo para colocar tu imágen.
+    no_images_found: No encontramos imágenes
+    already_voted: Ya has votado por esta imágen.
+    ineligible_due_to_contest: No puedes votar en este momento, ya que esta imagen es parte de un concurso en cual no eres elegible para votar.
+    login_to_vote_linked:  <a href="%login_url%">Inicia sesión</a> para votar
+    login_to_vote: ¡Inicia sesión para votar!
+    quick_vote_caption: Quick Vote
+    voting_closed_caption: Voting Closed!
+    already_voted_caption: Already Voted!
+    by: por:
+    submit_no_groups: You are not a member of any groups at this time.
+    likes: Likes
+    dislikes: Dislikes
+    cast_your_vote: Cast your vote:
+
+contests:
+    contests: Concursos
+    index_page_title_long: Concursos de Alienware Arena
+    index_page_title: Concursos
+    show_page_overview: Resumen
+    show_page_instructions: Cómo Ingresar
+    show_page_enter_contest: Ingresar
+    show_page_submit_photos: Someter Imágenes
+    show_page_contest: Concurso
+    show_page_winners: Ganadores
+    show_page_official_rules: Reglas Oficiales
+    show_page_vote_now: Vota Ahora
+    show_page_agree_text: He leído y acepto las <a id="contest-official-rules" href="javascript:void(0);">Reglas del Concurso</a>.
+    vote_page_instruction: Instrucción de voto
+    inform_user_entrycount: En ese momento has introducido %entryCount% entrada, pero todavía puedes entrar a más.|En ese momento has introducido %entryCount% entradas, pero todavía puedes entrar a más.
+    enter_page_success: Ahora has entrado en %s. Por favor, somete tu %s(s) para el concurso.
+    enter_page_already_entered: Ya has entrado en esta concurso.
+    enter_page_you_must_agree: Por favor, acepta las Reglas Oficiales antes de entrar en el concurso
+    submit_page_no_entry: Debes entrar al concurso antes de poder enviar %ss.
+    submit_page_entry_max_reached: Has introducido el número máximo de fotos para este concurso.
+    submit_page_submission_ended: Sumisiónes ya no seran aceptadas.
+    submit_page_back_to_contest: Regresar al Concurso
+    no_winners: Ningun ganador ha sido seleccionado todavia, por favor vuelva más tarde.
+    place: Lugar
+    entry_period: Período de Entrada
+    vote_period: Período de Votación
+    no_contests: No hay concursos.
+    photos_max: Puedes enviar un máximo de %s foto(s) para este concurso.
+    photo_submission_message: Todos los envíos de fotos deben cumplir con los siguientes requisitos para ser publicadas a la página. Favor de leer con cuidado par asegurar que las fotos cumple todos los requisitos.
+    igames_disclaimer: By posting or submitting a photo you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
+    photo_submissions_left: Puedes enviar un máximo de %s fotos para este concurso.
+    photo_submissions_unlimited: Puedes enviar tantas fotos como quieras para este concurso.
+    congratulations_winners: ¡Felicidades a los Ganadores!
+    winners_page_congrats: ¡Felicidades a los Ganadores!
+    contest_not_eligible: Lo sentimos, pero no eres elegible para participar en este concurso.
+    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
+    image_part_of_contest: This image is part of a contest.
+    voting_begins: Voting begins
+    no_longer_available: This contest is no longer available.
+

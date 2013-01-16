@@ -1,0 +1,379 @@
+{% set subDomain = get_current_site().subDomain %}
+{% set isJapanOrChina = (subDomain == "japan" or subDomain == "china") %}
+
+{% set isAdmin = app.user ? (app.user.getIsOrganizer or app.user.getIsSuperAdmin) : false %}
+
+{% if comments | length > 0 %}
+    {% for commentArray in comments %}
+        {% set comment = commentArray[0] %}
+        {% if comment.parent is null and comment.deleted == false %}
+            <div id="post-id-{{ comment.id }}">
+                <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
+                    <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
+                    <div class="comment-author" style="z-index:1000;">
+                        <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+
+                        {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ comment.author.cevoUserId %}
+
+                        <div class="author-link"><a href="{{ cevoAccountUrl }}">{{ comment.author.username }}</a></div>
+                        <!--  Placeholders for ARP/Level when we handle this ourselves
+                            <div class="author-level">Level 7</div>
+                            <div class="level-img"><div>5477 ARP</div></div>
+                        -->
+                    </div>
+                    <div class="comment-body">
+                        <div class="comment-errors" id="comment-errors-{{ comment.id }}"></div>
+                        <div class="editable" id="comment-body-{{ comment.id }}" style="padding-bottom: 20px;">{{ comment.body | nl2br }}</div>
+                    </div>
+
+                    <div class="comment-footer">
+
+                        <div class="comment-vote">
+                            {% set upVotes = comment.getUpVoteCount %}
+                            {% set downVotes = comment.getDownVoteCount %}
+
+                            <div style="display:inline-table;">
+                                <span id="comment-upvotes-{{ comment.id }}">{{ upVotes }}</span>
+                                <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{{ comment.id }}" data-votetype="up"></a>
+                            </div>
+                            <div style="display:inline-table;">
+                                <span id="comment-downvotes-{{ comment.id }}">{{ downVotes }}</span>
+                                <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
+                            </div>
+                            <div style="display:inline-table; margin-left: 10px;">
+                                <span id="comment-points-{{ comment.id }}">{{ 'platformd.comment.points' | trans }} {{ (upVotes - downVotes) | number_format(0, '.', ',') }}</span>
+                            </div>
+                        </div>
+
+                        <div class="comment-at" title="{{ comment.createdAt | date }}Z" style="margin-left: 90px;"></div>
+
+                        <div class="options" data-id="{{ comment.id }}" style="right:0;">
+                            <div class="choices" id="choices-{{ comment.id }}">
+                                <ul>
+                                    <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | trans }}</a></li>
+                                    {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Edit</a></li>{% endif %}
+                                    {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">Delete</a></li>{% endif %}
+                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Report</a></li>
+                                    <div class="report-options" id="report-options-{{ comment.id }}">
+                                        <ul>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                        </ul>
+                                    </div>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
+                    <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
+                    <div class="comment-replies" id="comment-replies-{{ comment.id }}">
+                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
+                    </div>
+
+                    {% set replyCounter = 0 %}
+                    {% for reply in comment.replies %}
+                        {% if reply.deleted == false %}
+                            {% set replyCounter = replyCounter + 1 %}
+                            <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
+                                <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
+                                <div class="reply-body">
+
+                                    {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ reply.author.cevoUserId %}
+
+                                    <a href="{{ cevoAccountUrl }}">{{ reply.author.username }}</a>
+                                    <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
+                                </div>
+                                <div class="comment-footer">
+                                    <div class="replied-at" title="{{ reply.createdAt | date }}Z"></div>
+                                    <div class="options more-replies" data-id="{{ reply.id }}">
+                                       <div class="choices" id="choices-{{ reply.id }}">
+                                            <ul>
+                                                {% if isAdmin or app.user == reply.author %}<li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">Edit</a></li>{% endif %}
+                                                {% if isAdmin or app.user == reply.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">Delete</a></li>{% endif %}
+                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">Report</a></li>
+                                                <div class="report-options" id="report-options-{{ reply.id }}">
+                                                    <ul>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                                    </ul>
+                                                </div>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if replyCounter   > 3 %}
+                    <div class="more-comments" id="more-comments-{{ comment.id }}">
+                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">{{ 'platformd.comment.more_replies' | trans }}</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+<script type="text/javascript">
+    $(function () {
+
+        $('html').click(function() {
+            $('.choices').hide();
+            $('.report-options').hide();
+         });
+
+        {% if offset is defined %}
+            $('#more-comments-loader').attr('data-offset', {{ offset }})
+        {% endif %}
+
+        $('.comment-reply-link').click(function() {
+
+            $('.choices').hide();
+
+            {% if app.user %}
+
+                var id = $(this).attr('data-id');
+                $('#replies-'+id+' > .comment-tri').removeClass('hidden');
+                $('#comment-replies-'+id).slideDown();
+                $('#reply-text-'+id).focus();
+                $('#replies-'+id+' > .first').removeClass('first');
+
+            {% else %}
+
+                document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+
+            {% endif %}
+
+        });
+
+        $('.comment-at').timeago();
+        $('.replied-at').timeago();
+        $('.author-link > a').truncate({width: 84});
+
+        $('.comment-replies textarea').keyup(function() {
+            $(this).css('height', '1px');
+            $(this).css('height', (parseInt($(this).prop('scrollHeight'))-12)+"px");
+        });
+
+        $('.options').click(function (event) {
+            event.stopPropagation();
+            $('.choices').hide();
+            $('.report-options').hide();
+            var id = $(this).attr('data-id');
+            $('#choices-' + id).toggle('fast');
+            window.getSelection().removeAllRanges()
+        });
+
+        $('.report-options-link').click(function (event) {
+            event.stopPropagation();
+            var id = $(this).attr('data-id');
+            $('#report-options-' + id).toggle('fast');
+        });
+
+        $('.choices').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $('.report-options').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $('.more-comments-link').click(function () {
+            var commentId = $(this).attr('data-id');
+            $('#more-comments-' + commentId).hide();
+            $('#replies-' + commentId + ' > .hidden').hide().removeClass('hidden').fadeIn();
+        });
+
+        $('.comment-reply-link').click(function () {
+            var id = $(this).attr('data-id');
+            if ($('#reply-text-' + id).val() == "") {
+                return false;
+            }
+
+            $('.thread').block({message: null});
+            var reply = {
+                'thread' : '{{ thread }}',
+                'body' : $('#reply-text-' + id).val(),
+                'parent' : id,
+                'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
+            };
+            $.ajax({
+                url: '{{ path('comments_new') }}',
+                type: 'post',
+                data: JSON.stringify(reply),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            });
+        });
+
+        $('.report-link').click(function (event) {
+            {% if app.user %}
+            $('.thread').block({message: null});
+            var contentId = $(this).attr('data-id');
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'ContentId' : contentId,
+                    'Reason' : $(this).attr('data-reason'),
+                    'ContentType' : "Comment"
+                }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if(data.success) {
+                        $('#post-id-' + contentId).fadeOut();
+                    } else {
+                        alert(data.messageForUser);
+                    }
+                    $('.choices').hide();
+                    $('.report-options').hide();
+                    $('.thread').unblock();
+                }
+            })
+            {% else %}
+            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+            {% endif %}
+        });
+
+
+        var toggleEdit = function(element, id, text) {
+            if(element.find('.comment-edit-textarea').length == 0) {
+                element.text('');
+                element.append("<textarea class='comment-edit-textarea' id='comment-edit-" +  id + "' required='required' />");
+                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>Save</button>");
+
+                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>Cancel</button>");
+
+                $('#comment-edit-cancel-' + id).click(function () {
+                   toggleEdit(element, id, text);
+                });
+
+                $('#comment-edit-save-' + id).click(function () {
+                    var comment = {
+                        'id' : id,
+                        'body': $('#comment-edit-' + id).val()
+                    };
+                    $.ajax({
+                        url: '{{ path('comments_edit') }}',
+                        type: 'post',
+                        data: JSON.stringify(comment),
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        success: function (data) {
+                            if(data.success) {
+                                element.html(data.details);
+                                if($('#comment-errors-' + id).is(':visible')) {
+                                    $('#comment-errors-' + id).fadeOut();
+                                }
+                            } else {
+                                $('#comment-errors-' + id).text(data.details);
+                                $('#comment-errors-' + id).fadeIn();
+                            }
+
+                        }
+                    });
+                });
+
+                $('#comment-edit-' + id).val(text);
+            } else {
+                htmlText = text.replace(/(\r\n|\n\r|\r|\n)/g, "<br>");
+                element.html(htmlText);
+                if($('#comment-errors-' + id).is(':visible')) {
+                    $('#comment-errors-' + id).fadeOut();
+                }
+            }
+        }
+
+        $('.edit-options-link').click(function (event) {
+            var contentId = $(this).attr('data-id');
+            toggleEdit($('#comment-body-' + contentId), contentId, $('#comment-body-' + contentId).text());
+            $('#choices-' + contentId).toggle('fast');
+        });
+
+        $('.delete-link').click(function (event) {
+
+            $('.choices').hide();
+
+            var answer = confirm("Are you sure you want to delete this comment?")
+            if (!answer){
+                return false;
+            }
+
+            $('.thread').block({message: null});
+            var commentId = $(this).attr('data-id');
+            $.ajax({
+                url: '{{ path('comments_delete') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'commentId' : commentId,
+                    'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
+                }),
+                contentType: 'application/json',
+                success: function(html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            })
+        });
+
+        $('.comment-voting-button').click(function () {
+            var commentId = $(this).attr('data-id');
+            var voteType  = $(this).attr('data-votetype');
+            $('#comment-wrapper-' + commentId).block({message: null});
+            $.ajax({
+                url: '{{ path('comments_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : commentId,
+                    'voteType' : voteType,
+                    'contentType' : 'Comment'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(data.success) {
+                        reloadComments();
+                    } else {
+                        if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
+                            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+                        } else {
+                            alert(data.messageForUser);
+                        }
+                    }
+                    $('#comment-wrapper-' + commentId).unblock();
+                }
+            })
+        });
+
+        function reloadComments()
+        {
+            $('.thread').block({message: null});
+            var data = {
+                'thread' : '{{ thread }}',
+                'method' : $('#comment-sort-method').val(),
+                'commentLimit' : parseInt($('#more-comments-loader').attr('data-offset'))
+            };
+            $.ajax({
+                url: '{{ path('comments_sort_thread') }}',
+                type: 'post',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('.thread').html(html);
+                    $('.thread').unblock();
+                }
+            });
+        }
+    });
+</script>

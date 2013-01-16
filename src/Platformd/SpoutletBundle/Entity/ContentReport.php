@@ -93,6 +93,13 @@ class ContentReport
     protected $groupVideo = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GalleryMedia")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $galleryMedia = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -112,6 +119,13 @@ class ContentReport
      */
 
     protected $groupDiscussionPost = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $comment = null;
+
 
     /**
      * Get id
@@ -195,6 +209,16 @@ class ContentReport
         $this->groupVideo = $value;
     }
 
+    public function getGalleryMedia()
+    {
+        return $this->galleryMedia;
+    }
+
+    public function setGalleryMedia($value)
+    {
+        $this->galleryMedia = $value;
+    }
+
     public function getGroup()
     {
         return $this->group;
@@ -204,6 +228,7 @@ class ContentReport
     {
         $this->group = $value;
     }
+
 
     public function getGroupDiscussion()
     {
@@ -223,6 +248,16 @@ class ContentReport
     public function getGroupDiscussionPost()
     {
         return $this->groupDiscussionPost;
+    }
+
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    public function setComment($value)
+    {
+        $this->comment = $value;
     }
 
     public function getSite()

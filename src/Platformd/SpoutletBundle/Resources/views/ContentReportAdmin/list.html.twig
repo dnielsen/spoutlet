@@ -18,7 +18,7 @@
                     {% if item[0].getContentType == 'GroupVideo' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Video (external YouTube link)</h1>
@@ -27,21 +27,20 @@
                     {% elseif item[0].getContentType == 'GroupImage' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Image</h1>
-                        <div><img src="{{ item[0].image.filenamegamepage | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
+                        <div><img src="{{ item[0].image.filename | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
 
                     {% elseif item[0].getContentType == 'GroupNews' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>
                         <h1>Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Article</h1>
                         <div>{{ item[0].article }}</div>
-
                     {% elseif item[0].getContentType == 'GroupDiscussion' %}
 
                         <h1>Group</h1>
@@ -60,11 +59,40 @@
                         <h1>Message</h1>
                         <div>{{ item[0].content }}</div>
 
+                    {% elseif item[0].getContentType == 'GalleryMedia' %}
+
+                        <h1>Title</h1>
+                        <div>{{ item[0].title }}</div>
+                        <h1>Uploaded By</h1>
+                        <div>{{ item[0].author.username }}</div>
+
+                        {% if item[0].getCategory == 'image' %}
+
+                            <h1>Image</h1>
+                            <div><img src="{{ media_path(item[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
+
+                        {% elseif item[0].getCategory == 'video' %}
+
+                            <h1>Video (external YouTube link)</h1>
+                            <div><a href="http://www.youtube.com/watch?v={{ item[0].youtubeId }}" target='_blank'>Watch Video</a></div>
+
+                        {% endif %}
+
                     {% elseif item[0].getContentType == 'Group' %}
                         <h1>Group</h1>
                         <div><a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a></div>
 
+                    {% elseif item[0].getContentType == 'Comment' %}
+
+                        <h1>Thread</h1>
+                        <div><a href="{{ change_link_subdomain(item[0].thread.permalink | absolute_url, item.subdomain) }}" target="_blank">Click to view thread</a></div>
+                        <h1>Comment</h1>
+                        <div>{{ item[0].body }}</div>
+                        <h1>Author</h1>
+                        <div>{{ item[0].author.username }}</div>
+
                     {% endif %}
+
                 </td>
                 <td>
                     <div style="color: red; font-weight: bold;">{{ item[0].contentReports.count }}</div>
@@ -114,7 +142,7 @@
 <p>
     {% if mode == "manage" %}
         <ul>
-            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View archived complaints</a></li>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View reinstated content</a></li>
             <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "deletedContent" }) }}">View removed content</a></li>
         </ul>
     {% elseif mode == "archived" %}
@@ -125,7 +153,7 @@
     {% elseif mode == "deletedContent" %}
          <ul>
             <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "manage" }) }}">View new complaints</a></li>
-            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View archived complaints</a></li>
+            <li><a href="{{ path('admin_content_reports_with_mode', { 'mode' : "archived" }) }}">View reinstated content</a></li>
         </ul>
     {% endif %}
 </p>

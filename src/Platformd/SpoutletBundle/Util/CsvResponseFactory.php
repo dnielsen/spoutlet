@@ -34,7 +34,7 @@ class CsvResponseFactory
         $response = new Response($data);
         $response->headers->set('Cache-Control', 'public');
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', "attachment; filename*=UTF-8''" . $filename);
+        $response->headers->set('Content-Disposition', "attachment; filename*=UTF-8''" . urlencode($filename));
         $response->headers->set('Content-Length', strlen($data));
 
         return $response;

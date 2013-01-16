@@ -120,14 +120,14 @@
                                 <label>{{ 'eligibility' | trans }}</label>
                                 <ol class="eligibility-list">
                                     <li>{{ 'open_to_legal_residents' | trans({
-                                        '%countries%': sweepstakes.allowedCountryNames | join(', ')
-                                    }) }}</li>
+                                        '%countries%': countries }) }}</li>
+
+                                    {#{% if ageRestrictions == true %}
                                     <li>
-                                        {{ 'age_or_older_as_of_date' | trans({
-                                            '%age%': sweepstakes.minimumAgeRequirement,
-                                            '%as_of_date%': ('sweepstakes_date_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray))
-                                        })}}
+                                        Age restrictions may apply depending on your country
                                     </li>
+                                    {% endif %}#}
+
                                 </ol>
                             </li>
                         </ul>
@@ -139,7 +139,11 @@
                     </div><!-- giveaway-details -->
 
                 </div><!-- giveaway-info -->
-                    {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": sweepstakes.slug, 'page': app.request.query.get('page', 1) } %}
+
+                {% if site_has_feature('COMMENTS') %}
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
+                {% endif %}
+
             </div><!-- left -->
 
             <div class="clear">

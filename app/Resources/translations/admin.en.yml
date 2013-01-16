@@ -1,6 +1,7 @@
 tenant_site: Site
 approve_codes: Approve Tags
 export_pending_machine_codes: Export pending system tags
+export_approved_and_denied_machine_codes: Export approved & denied system tags
 english: English
 notes: Notes
 no_translation_provided: no translation provided

@@ -13,6 +13,7 @@ use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
 use Platformd\SpoutletBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -179,6 +180,12 @@ Alienware Arena Team
 
         $em->remove($application);
         $em->flush();
+
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
 
         $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
 
@@ -353,7 +360,16 @@ Alienware Arena Team
         $this->getGroupManager()->saveGroup($group);
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
-         $this->setFlash('success', 'You have successfully joined this group!');
+
+        if($group->getIsPublic()) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('joingroup');
+            } catch (ApiException $e) {
+
+            }
+        }
+
+        $this->setFlash('success', 'You have successfully joined this group!');
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
@@ -489,7 +505,7 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
-            ->add('article', 'textarea', array(
+            ->add('article', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
             ))
             ->getForm();
@@ -532,7 +548,7 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
-            ->add('article', 'textarea', array(
+            ->add('article', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
             ))
             ->getForm();
@@ -606,6 +622,43 @@ Alienware Arena Team
         ));
     }
 
+    public function showImageAction ($id)
+    {
+        $groupImageRepo = $this->getGroupImageRepository();
+        $groupImage     = $groupImageRepo->find($id);
+
+        if ($groupImage) {
+            $group = $groupImage->getGroup();
+
+            $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+            $otherMedia     = $groupImageRepo->findAllGroupImagesNewestFirstExcept($group, $id);
+
+            $otherMediaPerPage = 3;
+            $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);
+
+            $otherMediaPages = array();
+            $offset = 0;
+            for($i = 0; $i < $pageCount; $i++)
+            {
+                $otherMediaPages[] = array_slice($otherMedia, $offset, $otherMediaPerPage);
+                $offset += $otherMediaPerPage;
+            }
+
+            $galleryMedia   = $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia')->findOneByImage($groupImage->getImage()->getId());
+
+            return $this->render('SpoutletBundle:Group:showImage.html.twig', array(
+                'media'             => $groupImage,
+                'group'             => $group,
+                'otherMediaPages'   => $otherMediaPages,
+                'galleryMediaItem'  => $galleryMedia,
+            ));
+        }
+
+        $this->setFlash('error', 'Group image not found!');
+        return $this->redirect($this->generateUrl('groups'));
+    }
+
     public function addImageAction($id, Request $request)
     {
         $group = $this->getGroup($id);
@@ -626,6 +679,12 @@ Alienware Arena Team
                 $groupImage->setGroup($group);
 
                 $this->getGroupManager()->saveGroupImage($groupImage);
+
+                try {
+                    $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto');
+                } catch (ApiException $e) {
+
+                }
 
                 $this->setFlash('success', 'Image posted successfully.');
 
@@ -752,6 +811,14 @@ Alienware Arena Team
                 $groupVideo->setYouTubeThumb($this->getYoutubeThumb($groupVideo->getYouTubeVideoId()));
 
                 $this->getGroupManager()->saveGroupVideo($groupVideo);
+
+                $api = $this->getCEVOApiManager();
+
+                try {
+                    $response = $api->GiveUserXp('submitgroupvideo');
+                } catch (ApiException $e) {
+
+                }
 
                 $this->setFlash('success', 'New video posted successfully.');
 
@@ -1175,6 +1242,11 @@ Alienware Arena Team
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
+            } catch(ApiException $e) {
+            }
+
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
@@ -1352,5 +1424,10 @@ Alienware Arena Team
     private function getGroupDiscussionPostRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupDiscussionPost');
+    {}
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

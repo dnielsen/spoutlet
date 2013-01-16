@@ -59,13 +59,25 @@ assetic:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
-        charset:  UTF8
+        default_connection: default
+        connections:
+            default:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %database_name%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
+
+            acl:
+                driver:   %database_driver%
+                host:     %database_host%
+                port:     %database_port%
+                dbname:   %acl_database_name%
+                user:     %database_user%
+                password: %database_password%
+                charset:  UTF8
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
@@ -171,7 +183,7 @@ parameters:
         es: Spanish
 
     # important to setup the translation DB loader to load things for these domains
-    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
+    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators, galleries]
 
     email_destination_override: false
     email_destination_override_with: ""
@@ -400,6 +412,8 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [204, 114], mode: inset }
+                relative_resize: { widen: 204 }
+                crop: { start: [0, 0], size: [204, 114] }
 
         image_thumb_small:
             quality: 100
@@ -411,9 +425,52 @@ liip_imagine:
             filters:
                 thumbnail: { size: [400, 400], mode: inset }
 
+        nivo_slider:
+            quality: 100
+            filters:
+                relative_resize: { widen: 636, heighten: 295 }
+                crop: { start: [0, 0], size: [636, 295] }
+
+        media_photo_thumb:
+            quality: 100
+            filters:
+                relative_resize: { widen: 135, heighten: 80 }
+                crop: { start: [0, 0], size: [135, 80] }
+
+        media_photo_thumb_square:
+            quality: 100
+            filters:
+                relative_resize: { widen: 150, heighten: 150 }
+                crop: { start: [0, 0], size: [92, 92] }
+
+        gallery_image_square:
+            quality: 100
+            filters:
+                relative_resize: { widen: 400, heighten: 400 }
+                crop: { start: [0, 0], size: [300, 300] }
+
+        media_photo_show:
+            quality: 100
+            filters:
+                relative_resize: { widen: 636 }
+
+        media_contest_winner:
+            quality: 100
+            filters:
+                relative_resize: { widen: 300, heighten: 250 }
+                crop: { start: [0, 0], size: [300, 250] }
+
+
 knp_time: ~
 
 spoutlet:
     elasticache_servers:
         %memcached_server1_ip%: %memcached_server1_port%
 
+exercise_html_purifier:
+    default:
+        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+    editor_basic:
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li
+    editor_admin:
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, *[style]

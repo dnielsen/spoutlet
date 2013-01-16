@@ -264,3 +264,67 @@ table.uploadedFiles td {
 #change-password table {
     width: 500px;
 }
+
+.scrollable {
+    /* required settings */
+    position:relative;
+    overflow:hidden;
+}
+
+.scrollable .items {
+    /* this cannot be too large */
+    width:20000em;
+    position: absolute;
+}
+
+.items .items-wrapper {
+    width: 950px;
+    height: 800px;
+    float: left;
+}
+
+.account-image-item {
+    display: inline-table;
+    width: 177px;
+    height: 130px;
+    margin: 5px;
+}
+
+.account-image-image img {
+    width: 177px;
+    height: 107px;
+}
+
+.account-image-title {
+    width: 177px;
+    color: #17B8F8;
+}
+
+.account-image-actions {
+    font-size: 0.8em;
+}
+
+#scroll-actions {
+    text-align: center;
+}
+
+#scroll-actions a.image-scroll-prev {
+    margin-left: 30px;
+    float: left;
+}
+
+#scroll-actions a.image-scroll-next {
+    margin-right: 30px;
+    float: right;
+}
+
+.browse {
+    cursor: pointer;
+}
+
+.account-image-pagination {
+    text-align: center;
+    position: absolute;
+    bottom: 15px;
+    width: 950px;
+}

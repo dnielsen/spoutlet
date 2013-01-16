@@ -1,0 +1,59 @@
+gallery_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:Gallery:index }
+
+gallery_featured_media_feed:
+    pattern: /featured-feed
+    defaults: { _controller: SpoutletBundle:Gallery:featuredMediaFeed, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+gallery_index_data:
+    pattern: /gallery-data
+    defaults: { _controller: SpoutletBundle:Gallery:galleryData, site: ~ }
+
+gallery_submit:
+    pattern: /submit-image
+    defaults: { _controller: SpoutletBundle:Gallery:submit, site: ~ }
+
+gallery_upload:
+    pattern: /upload
+    defaults: { _controller: SpoutletBundle:Gallery:upload, site: ~ }
+
+gallery_edit_photos:
+    pattern: /photos
+    defaults: { _controller: SpoutletBundle:Gallery:editPhotos, site: ~ }
+
+gallery_publish_photo:
+    pattern: /publish
+    defaults: { _controller: SpoutletBundle:Gallery:publish, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+gallery_publish_multiple_photos:
+    pattern: /publish-multiple
+    defaults: { _controller: SpoutletBundle:Gallery:publishMultiple, site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+gallery_media_vote:
+    pattern:  /vote
+    defaults: { _controller: "SpoutletBundle:Gallery:vote" }
+    requirements:
+        _format: json
+        _method: POST
+
+gallery_media_show:
+    pattern: /photo/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:show, site: ~ }
+
+gallery_gallery_show:
+    pattern: /{slug}/{sort}
+    defaults: { _controller: SpoutletBundle:Gallery:gallery, site: ~, sort: 'latest' }
+
+gallery_share_photo:
+    pattern: /share/photo
+    defaults: { _controller: SpoutletBundle:Gallery:sharePhoto, site: ~ }

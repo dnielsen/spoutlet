@@ -5,7 +5,11 @@
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
 
 {% if canAdd %}
-    <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
+    {% if site_has_feature('PHOTOS') %}
+        <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
+    {% else %}
+        <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
+    {% endif %}
 {% endif %}
 {% if pages | length > 0 %}
     <div class="scrollable" id="scrollable-images" style="height: 550px; width: 600px;background: #191919;">
@@ -16,8 +20,8 @@
                 {% for image in imageList %}
                     <div class="group-image-item">
                         <div class="group-image-image">
-                            <a href="{{ image.image.filename | imagine_filter('lightbox_medium') }}" title="{{ image.title }}" img-data="{{ image.image.id }}" rel="lightbox[{{ group.name }}]" style="border:none;">
-                                <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" rel="lightbox" />
+                            <a href="{{ path('group_image_show', { id: image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
+                                <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
                             </a>
                         </div>
                         <div class="group-image-title">

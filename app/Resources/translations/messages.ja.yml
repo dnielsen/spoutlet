@@ -152,13 +152,13 @@ platformd:
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
         account:
             welcome_to_control: 管理画面へようこそ
-            hello_user: "Hello %firstname%! あなたはというユーザー名でログインされました %username%."
+            hello_user: "こんにちは %username%."
             ready_to_game: |
                 このALIENWARE ARENA管理画面はARENAに参加する際の主要ツールが準備されています。 現在、イベントサインア
                 ップをしコメントを残すことができます。もし何か問題が起こった場 合は、いつでもARENAサポートチームへコンタ
                 クトしてください。
             warning: 注意： 誰にもパスワードを教えてないでください！あなたに代わって勝手なコメントを残し問題を引き起こすかもしれません。ALIENWARE ARENAはその責任を負うことができません。
-            under_construction: "注：ALIENWARE ARENAは現在工事中です。機能がまだ有効になっていない場合は、しばらくしてからお戻りください。"
+            under_construction: ""
             change_your_password: パスワードの変更
         giveaway:
             your_giveaway_keys: 取得済みキー
@@ -240,6 +240,7 @@ platformd:
             help: お問い合わせ
             game_ids: ゲームID
             tournaments: トーナメント
+            sign_out: ログアウト
 
     giveaway:
         giveaway: プレゼント
@@ -250,7 +251,7 @@ platformd:
         already_assigned: 既にギブアウェイキーを取得しています。
         view_giveaway_site: プレゼント
         in_process_1: キーコード取得に登録された場合、あなたのステータスは「進行中」と表示されます。
-        in_process_2: あなたのアカウントに反映されるまで10日ほど時間がかかります。
+        in_process_2: あなたのアカウントに反映されるまで2週間ほど時間がかかります。
         in_process_3: この期間を過ぎても反映されない場合は<a href='mailto:japan@alienwarearena.com'>japan@alienwarearena.com</a>までメールにてお知らせください。
         admin:
             title: ギブアウェイ管理
@@ -408,25 +409,27 @@ email:
 
         - ALIENWARE ARENA チーム
 
+
     giveaway_machine_code_deny: |
+
         こんにちは%userLastName%様,
 
         この度は「%giveawayName%」にご登録いただき誠にありがとうございます。
+
         ご登録頂いたサービスタグナンバーのパソコンは、ご購入時期に相違があるため、本キャンペーンの対象外となります。
         誠に申し訳ございませんが、本キャンペーンのお申し込みは無効となりますので、ご了承ください。
+
         ご登録頂いたサービスタグナンバー: %systemTag%
-        恐れ入りますが、サービスタグナンバーを再度ご確認の上、以下の3つの情報を添えてjapan@alienwarearena.comまで、Ｅメールにてご連絡をお願いいたします。
 
-        1)        ALIENWARE ARENAに登録した際のユーザー名
-        2)        ALIENWARE ARENAに登録した際のEメールアドレス
-        3)        パソコンのサービスタグナンバー(7桁)
-
-        Eメール受領後に再照合し、10日前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
+        正しいサービスタグナンバーをご確認後、再度ご登録される場合は、こちらのページからお手続きください。
+        %giveawayUrl%
 
         万一、サービスタグナンバーに誤りが無かった場合やご質問等ございましたら下記Eメールアドレスまでご連絡ください。
-        japan@alienwarearena.com.
+        japan@alienwarearena.com
 
-        - ALIENWARE ARENA チーム
+        Eメール受領後に再照合し、2週間前後で個人アカウントページ内に特典アイテム取得用コードが届きます。
+
+         - ALIENWARE ARENA チーム
 
     subject:
         giveaway_machine_code_approve:  %giveawayName%のお知らせ
@@ -494,6 +497,52 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
+platformd.user.account.photos: My Photos
+platformd.account_page.photos.my_photos: My Photos
+platformd.account_page.photos.submit: Submit Photo
+
 wallpapers: Wallpapers
 exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download
+
+galleries:
+    navigation_label: Photo Gallery
+    index_page_title: Galleries
+    index_page_header: ALIENWARE ARENA PHOTOS
+    submit_photo_page_title: Submit Image
+    submit_photo_page_header: Submit Image
+
+    submit_photo_step1: Step 1:
+    submit_photo_step1_detail: Submit Image
+    submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
+    submit_photo_file_restrictions: File Restrictions
+    submit_photo_restriction1: Only gaming related images. Everything else will get deleted without notice.
+    submit_photo_restriction2: No copyrighted material.
+    submit_photo_restriction3: No images of children ages 13 and under.
+    submit_photo_restriction4: Max file size per image is 5MB.
+    submit_photo_restriction5: Files supported: JPG, GIF and PNG.
+
+    submit_photo_add: Add
+    submit_photo_publish_share: Your photos are published. Share these awesome photos with your friends!
+    submit_photo_share: Share Photos
+
+    submit_photo_step2: Step 2:
+    submit_photo_step2_detail: Click on an image to provide details.
+    submit_photo_image_name: Image Name:
+    submit_photo_image_desc: Description:
+    submit_photo_image_galleries: Galleries:
+    submit_photo_button_publish: Publish
+    submit_photo_publish_success: Success!
+    submit_photo_publish_message: Your photos were published successfully.
+
+    show_photo_details_label: Photo Details
+    show_photo_details_upload_on: Uploaded On
+    show_photo_details_views: Views:
+
+    show_photo_vote_label: Vote
+
+    gallery_filter_option_latest: Latest
+    gallery_filter_option_popular: Popular
+    gallery_filter_option_featured: Featured
+
+    gallery_see_all: See All

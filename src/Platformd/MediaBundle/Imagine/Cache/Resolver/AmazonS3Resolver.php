@@ -59,6 +59,21 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
         return $response;
     }
 
+    protected function getObjectUrl($targetPath)
+    {
+        if ($this->bucket == "platformd") {
+            $cf = "media.alienwarearena.com";
+        } else {
+            $cf = "mediastaging.alienwarearena.com";
+        }
+
+        $url        = $this->storage->get_object_url($this->bucket, $targetPath, 0, $this->objUrlOptions);
+        $parts      = parse_url($url);
+        $urlHost    = $parts['host'];
+
+        return str_replace($urlHost, $cf, $url);
+    }
+
     public function getBrowserPath($targetPath, $filter, $absolute = false)
     {
         $objectPath     = $this->getObjectPath($targetPath, $filter);

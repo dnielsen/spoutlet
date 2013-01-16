@@ -162,6 +162,30 @@ class ApiManager
         return $this->userId;
     }
 
+    public function getCevoSessionId()
+    {
+        $sessionId = '';
+
+        if(isset($_COOKIE['aw_session'])) {
+            $parts = explode('$', $_COOKIE['aw_session']);
+            $sessionId = $parts[1];
+        }
+
+        return $sessionId;
+    }
+
+    public function getCevoUserId()
+    {
+        $userId = '';
+
+        if(isset($_COOKIE['aw_session'])) {
+            $parts = explode('$', $_COOKIE['aw_session']);
+            $userId = $parts[0];
+        }
+
+        return $userId;
+    }
+
     /**
      * Makes an API request and returns the array response
      *
@@ -170,10 +194,10 @@ class ApiManager
      * @return mixed
      * @throws \LogicException
      */
-    private function makeRequest($action, array $params = array())
+    private function makeRequest($action, array $params = array(), $useCevoAuth=false)
     {
         $params['_method'] = $action;
-        $params['_user_id'] = $this->getUserId();
+        $params['_user_id'] = $useCevoAuth ? $this->getCevoUserId() : $this->getUserId();
 
         $url = $this->authManager->generateCevoUrl(self::API_ENDPOINT, null, false);
 
@@ -185,7 +209,7 @@ class ApiManager
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 
-        $phpSess = sprintf('PHPSESSID=%s;', $this->getSessionId());
+        $phpSess = sprintf('PHPSESSID=%s;', $useCevoAuth ? $this->getCevoSessionId() : $this->getSessionId());
         curl_setopt($ch, CURLOPT_COOKIE, $phpSess);
 
         $output = curl_exec($ch);
@@ -220,6 +244,35 @@ class ApiManager
         }
 
         return $jsonArr;
+    }
+
+    /**
+     * creategroup          | +3 | Create a new group
+     * submitgroupvideo     | +2 | Submit an approved video to your group
+     * submitgroupphoto     | +2 | Submit an approved photo to your group
+     * groupnewscomment     | +1 | Comment on a group news post (currently there is no way to comment on a group news post)
+     * groupcommentreply    | +1 | Reply to a group comment thread (see above)
+     * joingroup            | +1 | Join a group
+     * groupnuke            | -5 | Group nuked
+     * photofeature         | +10| Photo is Featured
+     * photosubmit          | +3 | Submit an approved photo to the gallery
+     * photocomment         | +1 | Comment on a photo
+     * photocommentremoved  | -5 | Comment removed
+     * nukephoto            | -5 | Photo removed
+     *
+     * First param, $award is a string. See above list of allowed awards. Second param is $user_id. If it is not specified
+     * it will use the currently logged in user.
+     *
+     * @param $award string
+     * @param @user_id int
+     * @return array
+     */
+    public function GiveUserXp($award, $user_id = null)
+    {
+        $uid = isset($user_id) ? $user_id : $this->getCevoUserId();
+
+        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award), true);
+        return $response;
     }
 
     private function logError($message)

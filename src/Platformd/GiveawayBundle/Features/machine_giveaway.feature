@@ -23,7 +23,7 @@ Feature: Machine Code Giveaway
             Then I should not see "System Tag"
         When I go to "/account/profile/giveaways"
             Then I should see "Machine Giveaway"
-                And I should see "In Process"
+                And I should see "Pending"
 
     Scenario: I can see my giveaway key after being approved
         Given I am authenticated
@@ -32,4 +32,3 @@ Feature: Machine Code Giveaway
         When I go to "/account/profile/giveaways"
         Then I should see "Machine Giveaway"
             And I should see "123456"
-            And I should not see "In Process"

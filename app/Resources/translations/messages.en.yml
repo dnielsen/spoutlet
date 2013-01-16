@@ -5,7 +5,7 @@ platformd:
     homepage:
         news_title: News
 
-    create_account_or_login: Create or login to an Alienware Arena account.
+    create_account_or_login: Create or log in to an Alienware Arena account.
 
     alienware: Alienware
 
@@ -71,19 +71,24 @@ platformd:
             events: Events
             video: Videos
             news: News
+            articles: Articles
+            announcements: Announcements
             media: Media
             arp: ARP
             forums: Forums
             sweeps: SWEEPS
             wallpapers: Wallpapers
             microsoft: Microsoft
+            groups: Groups
+            photos: Image Gallery
+            contests: Contests
 
         page_content:
             featured: Featured
             giveaways: Giveaways
             all: All
             see_more: See More
-            photo_gallery: Photo Gallery
+            photo_gallery: Image Gallery
             view_all: View All
             competitions: Competitions
             hot_stories: Hot Stories
@@ -193,8 +198,19 @@ platformd:
         back: Go Back
 
     comment:
-        login_to_comment: You are not logged in. To leave a message, please <a href="%login_url%">log in</a> to comment on this post.
+        add_your_comment: Add Your Comment
+        login_to_comment: To post a comment, please <a href="%login_url%">log in.</a>
         comments: Comments
+        sort_by: Sort By:
+        sort_by_votes: Votes
+        sort_by_newest: Most Recent
+        sort_by_oldest: Oldest
+        add_comment: Add Comment
+        login_to_reply: Log in to Reply
+        reply: Reply
+        more_replies: More Replies
+        points: Points:
+        post: Post
         date_format: %month%/%day%/%year%
 
     user:
@@ -232,7 +248,7 @@ platformd:
         account:
             account_home: Account Home
             edit_account: Edit Account
-            change_password: Change Password
+            change_password: Change Pass
             profile:      Profile
             # checked up until here
             registered_events: Registered Events
@@ -243,18 +259,23 @@ platformd:
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
+            media: Media
+            media_upload: Upload
+            my_media: My Media
+            sign_out: Sign Out
 
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
         get_key:  GET KEY
+        not_eligible: Sorry, you are not eligible to participate in this giveaway.
         no_keys_left: There are no keys available for this giveaway
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
         already_assigned: You were already assigned a key for this giveaway
         view_giveaway_site: View Giveaway Site
-        in_process_1: If you have registered for a key giveaway and your status is showing as “in process”,
-        in_process_2: please allow at least 10 days for it to be posted into your account.
-        in_process_3: If after 10 days it has not been posted, please email
+        in_process_1: If you have registered for a key giveaway and your status is showing as “Pending”,
+        in_process_2: please allow at least 2 weeks for it to be posted into your account.
+        in_process_3: If after 2 weeks it has not been posted, please email
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -272,7 +293,7 @@ platformd:
             active:   Active
             blank_value: Choose status
         show:
-            availaible_keys: Availaible keys: %%count%%
+            availaible_keys: Available keys: %%count%%
         giveaways_listings:
             giveaways: Giveaways
         assigned:
@@ -348,7 +369,7 @@ registration_opens: Registration Opens
 registration_closes: Registration Closes
 open_to_legal_residents: Open to legal residents in %countries%
 age_or_older_as_of_date: %age% years or older as of %as_of_date%
-platformd.create_account_or_login_sweepstakes: Create an account or login
+platformd.create_account_or_login_sweepstakes: Create an account or log in
 platformd.sweepstakes.entered.message: Thanks for your participation!
 na: N/A
 instructions: Instructions
@@ -402,7 +423,7 @@ submit_machine_code: Apply
 machine_code: System Tag
 no_machine_code_submitted: Please enter your system tag number.
 
-pending: In Process
+pending: Pending
 denied: Denied
 # probably not shown on the frontend (for machine code giveaways, key is shown)
 approved: Approved
@@ -411,11 +432,36 @@ email:
     giveaway_machine_code_approve: |
         Hi %userFirstName%,
 
-        Thank you for registering for %giveawayName%. Your key is posted to your ALIENWARE ARENA account (%accountUrl%) and is now ready to use.
+        Thank you for registering for the %giveawayName%.
 
-        If you have any questions, please feel free to email us at japan@alienwarearena.com.
+        The key has been posted to your Alienware Arena account and can be accessed from here:
+        (%accountUrl%)
 
-        -ALIENWARE ARENA
+        If you have any questions, please email us at %subDomain%@alienwarearena.com.
+
+        Thank you,
+        - Alienware Arena Team
+
+    giveaway_machine_code_deny: |
+        Hello %userFirstName%,
+
+        Thank you for registering for the %giveawayName%.
+
+        Unfortunately, the system tag you entered does not match an Alienware system that qualifies to receive a key for this promotion. This may be due to your Alienware system being purchased before the promotion start date, or an incorrectly entered system tag.
+
+        The system tag you entered is: %systemTag%
+
+        If the system tag you entered is incorrect, please access the link below to re-enter the 7-digit number:
+        %giveawayUrl%
+
+        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you reqiure further assistance, please email us at %subDomain%@alienwarearena.com.
+
+        Thank you,
+        - Alienware Arena Team
+
+    subject:
+        giveaway_machine_code_approve:  %giveawayName% System Tag Approval
+        giveaway_machine_code_deny:     %giveawayName% System Tag Error
 
 # admin stuff
 translations_admin: Translations Admin
@@ -487,6 +533,7 @@ deal_show_expired: This deal is no longer available.
 deal_time_remaining: Time Remaining:
 deal_comments: Deals Comments
 deal_comments_posted_on: Posted on
+deal_not_eligible: Sorry, you are not eligible to participate in this deal.
 choose_country: Choose your country
 
 featured_deals: Alienware Arena Featured Deals
@@ -516,6 +563,9 @@ platformd.user.account.messages: Messages
 platformd.user.account.match_client: Match Client
 platformd.user.account.match_lobby: Match Lobby
 
+platformd.user.account.gallery: My Gallery
+platformd.account_page.photos.submit: Submit Images
+
 groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
 groups.opengraph.title: Alienware Arena Groups - Join Now!
 wallpapers: Wallpapers
@@ -523,3 +573,143 @@ exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download
 platformd.groups.category.location: Location
 platformd.groups.category.topic: Topic
+
+platformd.show_more: Show More
+platformd.show_less: Show Less
+
+galleries:
+    navigation_label: Image Gallery
+    index_page_title: Galleries
+    index_page_header: ALIENWARE ARENA IMAGES
+    index_page_no_media_found: No images were found.
+    submit_photo_page_title: Submit Images
+    submit_photo_page_header: Submit Images
+    submit_photo_now: Submit your own images now!
+    submit_photo_blockUI_message: Your images are uploading. Please wait...
+    submit_photo_publish_blockUI_message: Your images are being published. Please wait...
+
+    submit_photo_step1: Step 1 of 2:
+    submit_photo_step1_detail: Submit Images
+    submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
+
+    submit_photo_file_restrictions: |
+        <p><span style="font-weight:bold;">Alienware Arena File Standards for Product Images</span></p>
+        <p>Technical Requirements:</p>
+        <ul><li>Files supported: JPG, GIF and PNG.</li>
+        <li>Max file size per image is 5MB.</li></ul>
+        <p>Alienware Arena maintains the following site product image standards:</p>
+        <ul><li>No commercial images without written consent of the owner.</li>
+        <li>No copyrighted material.</li>
+        <li>No images of children ages 13 years and under.</li>
+        <li>Gaming-related images only.</li>
+        <li>Pornographic and offensive materials are not allowed.</li></ul>
+        <p>Alienware Arena, iGames and its affliliates reserve the right to delete images without notice that do not comply with restrictions.</p>
+        <p>By posting or submitting an image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
+
+    submit_photo_add: Add
+    submit_photo_publish_share: Thanks! Your images have been published.
+    submit_photo_publish_share_2: Share your images with your friends!
+    submit_photo_share: Share Images
+    submit_share: Share
+    submit_photo_my_photos: My Images
+
+    submit_photo_step2: Step 2 of 2:
+    submit_photo_step2_detail: Click on an image to provide details.
+    submit_photo_image_name: Image Name*
+    submit_photo_image_desc: Description*
+    submit_photo_image_galleries: Galleries*
+    submit_photo_groups: Groups
+    submit_photo_button_publish: Publish
+
+    submit_photo_publish_success: Success!
+    submit_photo_upload_success: Your images were uploaded successfully.
+    submit_photo_publish_message: Your images were published successfully.
+
+    show_photo_details_label: Image Details
+    show_photo_details_upload_on: Uploaded On
+    show_photo_details_views: Views:
+    show_photo_details_points: Points:
+
+    delete_photo_error_message: Image was not deleted.
+    delete_photo_success_message: Your image was deleted successfully.
+
+    show_photo_vote_label: Votes
+
+    gallery_filter_option_latest: Latest
+    gallery_filter_option_popular: Popular
+    gallery_filter_option_featured: Featured
+
+    gallery_see_all: See All
+
+    gallery_go_to_galleries: Gallery Home
+    group_images: Group Images
+
+    publish_photo_error: Error! You must provide details for each image in order to publish them in our galleries. Click on the image to fill out the details.
+    publish_photo_error_id: Media ID is missing.
+    publish_photo_error_title: Please provide a title.
+    publish_photo_error_desc: Please provide a description.
+    publish_photo_error_gallery: You must select at least one gallery.
+    vote_now: Vote Now
+    vote_success: Thanks for voting!
+    more_images_from: More images from
+    save_images: Save Images
+    save_image: Save
+    delete_image: Delete Image
+    upload_images: Upload
+    cancel: Cancel
+    publish_photo_multiple_message: %s of %s images are published.
+    publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
+    publish_photo_multiple_message_gallery_or_group_required: You must select at least one gallery or group to place your image in.
+    no_images_found: No images found...
+    already_voted: You have already voted on this image.
+    ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
+    login_to_vote_linked: Please <a href="%login_url%">log in</a> to vote.
+    login_to_vote: Log In to Vote!
+    quick_vote_caption: Quick Vote
+    voting_closed_caption: Voting Closed!
+    already_voted_caption: Already Voted!
+    by: by:
+    submit_no_groups: You are not a member of any groups at this time.
+    likes: Likes
+    dislikes: Dislikes
+    cast_your_vote: Cast your vote:
+
+contests:
+    contests: Contests
+    index_page_title_long: Alienware Arena Contests
+    index_page_title: Contests
+    show_page_overview: Overview
+    show_page_instructions: How to Enter
+    show_page_enter_contest: Enter
+    show_page_submit_photos: Submit Images
+    show_page_contest: Contest
+    show_page_winners: Winners
+    show_page_official_rules: Official Rules
+    show_page_vote_now: Vote Now
+    show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
+    vote_page_instruction: Voting Instructions
+    inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
+    enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
+    enter_page_already_entered: You have already entered this contest.
+    enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
+    submit_page_no_entry: You must enter the contest before you can submit %ss.
+    submit_page_entry_max_reached: You have entered the maximum number of images for this contest.
+    submit_page_submission_ended: Submissions are no longer being accepted.
+    submit_page_back_to_contest: Back to Contest
+    no_winners: No winners have been selected yet. Please check back later.
+    place: Place
+    entry_period: Entry Period
+    vote_period: Voting Period
+    no_contests: There are no contests.
+    photos_max: You can submit a maximum of %s image(s) for this contest.
+    photo_submission_message: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements
+    igames_disclaimer: By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
+    photo_submissions_left: You can submit a maximum of %s images for this contest.
+    photo_submissions_unlimited: You can submit as many images as you like for this contest.
+    congratulations_winners: Congratulations To The Winners!
+    winners_page_congrats: Congratulations To The Winners!
+    contest_not_eligible: Sorry, you are not eligible to enter this contest.
+    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Image Details section now!
+    image_part_of_contest: This image is part of a contest.
+    voting_begins: Voting begins
+    no_longer_available: This contest is no longer available.

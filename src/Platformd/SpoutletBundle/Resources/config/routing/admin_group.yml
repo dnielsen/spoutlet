@@ -3,6 +3,11 @@ admin_group_filter:
     defaults: { _controller: "SpoutletBundle:GroupAdmin:filter" }
     requirements: { _method: POST }
 
+admin_group_filter_reset:
+    pattern: /metrics/find-groups/reset
+    defaults: { _controller: "SpoutletBundle:GroupAdmin:filterReset" }
+    requirements: { _method: GET }
+
 admin_group_find:
     pattern: /metrics/find-groups
     defaults: { _controller: "SpoutletBundle:GroupAdmin:find" }

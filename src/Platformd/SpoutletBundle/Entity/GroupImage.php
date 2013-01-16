@@ -254,7 +254,7 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
      */
     public function  getLinkableRouteName()
     {
-        return 'group_view_image';
+        return 'group_image_show';
     }
 
     /**
@@ -265,8 +265,7 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getGroup()->getId(),
-            'imageId' => $this->getId()
+            'id' => $this->getId(),
         );
     }
 

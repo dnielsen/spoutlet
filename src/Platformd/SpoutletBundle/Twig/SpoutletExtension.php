@@ -40,6 +40,7 @@ class SpoutletExtension extends Twig_Extension
             'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
             'wrap' => new Twig_Filter_Method($this, 'wrap'),
             'add_links' => new Twig_Filter_Method($this, 'addLinks'),
+            'add_ordinal_suffix' => new Twig_Filter_Method($this, 'addOrdinalSuffix'),
         );
     }
 
@@ -83,6 +84,11 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'getCurrentSite'
                 ),
+            'can_user_apply_to_giveaway'  => new Twig_Function_Method(
+
+                $this,
+                'canUserApplyToGiveaway'
+            ),
             'has_user_applied_to_giveaway'  => new Twig_Function_Method(
                 $this,
                 'hasUserAppliedToGiveaway'
@@ -112,7 +118,8 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'endsWith'
             ),
-            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice')
+            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice'),
+            'change_link_subdomain'     => new Twig_Function_Method($this, 'changeLinkSubdomain'),
         );
     }
 
@@ -165,6 +172,32 @@ class SpoutletExtension extends Twig_Extension
         return (substr($haystack, -$length) === $needle);
     }
 
+    public function changeLinkSubdomain($link, $subdomain)
+    {
+        if(parse_url($link, PHP_URL_SCHEME) == '') {
+            return $link;
+        }
+
+        $parsedUrl = parse_url($link);
+
+        $parts = explode('.', $parsedUrl['host']);
+
+        if (strpos($parts[0], 'staging')) {
+            $parts[0] = $subdomain.'staging';
+        } else {
+            $parts[0] = $subdomain;
+        }
+
+        $host = implode('.', $parts);
+
+        $query = array_key_exists('query', $parsedUrl) != "" ? "?".$parsedUrl['query'] : '';
+        $anchor = array_key_exists('fragment', $parsedUrl) != "" ? "#".$parsedUrl['fragment'] : '';
+
+        $url = $parsedUrl['scheme'].'://'.$host.$parsedUrl['path'].$query.$anchor;
+
+        return $url;
+    }
+
     /**
      * @return string
      */
@@ -183,6 +216,20 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return $base.$path;
+    }
+
+    /**
+     * @return string
+     */
+    public function addOrdinalSuffix($num) {
+        if (!in_array(($num % 100),array(11,12,13))){
+          switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+          }
+        }
+        return $num.'th';
     }
 
      /**
@@ -281,6 +328,15 @@ class SpoutletExtension extends Twig_Extension
      * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
      * @return bool
      */
+    public function canUserApplyToGiveaway(Giveaway $giveaway)
+    {
+        if (!$user = $this->getCurrentUser()) {
+            return false;
+        }
+
+        return $this->getGiveawayManager()->canUserApplyToGiveaway($user, $giveaway);
+    }
+
     public function hasUserAppliedToGiveaway(Giveaway $giveaway)
     {
         if (!$user = $this->getCurrentUser()) {
@@ -340,6 +396,8 @@ class SpoutletExtension extends Twig_Extension
             case 'USER_PROFILE':                    return $this->GetUserProfileLink($locale);
             case 'USER_GIVEAWAY':                   return $this->GetUserGiveawayLink($locale);
             case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
+            case 'PHOTOS':                          return $this->GetPhotosLink($locale);
+            case 'CONTESTS':                        return $this->GetContestsLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -487,6 +545,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, '/japan');
             case 'zh':      return sprintf($format, '/china');
             case 'en_US':   return sprintf($format, '');
+            case 'en_SG':   return sprintf($format, '/sg');
 
             default:        return false;
         }
@@ -609,9 +668,17 @@ class SpoutletExtension extends Twig_Extension
 
             case 'ja':      return sprintf($format, $internalUrl);
             case 'zh':      return sprintf($format, $internalUrl);
+            case 'en_SG':
+
+                return '<li class="more">
+                    <a class="blue" style="background: url(\'/bundles/spoutlet/images/nav-arrow-1.png\') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">Giveaways</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="http://www.alienwarearena.com/sg/account/my-giveaway-keys/">Giveaway Keys</a></li>
+                        <li><a href="'.$this->container->get('router')->generate('accounts_giveaways').'">System Tag Keys</a></li>
+                    </ul>
+                </li>';
 
             case 'es':
-            case 'en_SG':
             case 'en_AU':
             case 'en_GB':
             case 'en_IN':
@@ -621,6 +688,45 @@ class SpoutletExtension extends Twig_Extension
                 return sprintf($format, $externalUrl);
 
             default:        return false;
+        }
+    }
+
+    private function GetGroupsLink($locale)
+    {
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.groups').'</a>';
+        $url            = $this->container->get('router')->generate('gallery_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
+    private function GetPhotosLink($locale)
+    {
+        $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.photos').'</a>';
+        $url            = $this->container->get('router')->generate('gallery_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
+        }
+    }
+
+    private function GetContestsLink($locale)
+    {
+        $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.contests').'</a>';
+        $url            = $this->container->get('router')->generate('contest_index');
+
+        switch($locale) {
+
+            default:
+
+                return sprintf($format, $url);
         }
     }
 
@@ -658,6 +764,7 @@ class SpoutletExtension extends Twig_Extension
         $demoOnly = in_array($locale, array('en'));
         $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
         $china = in_array($locale, array('zh'));
+        $northAmericaEuropeLatamOnly = in_array($locale, array('en_US', 'en_GB', 'es', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -674,6 +781,9 @@ class SpoutletExtension extends Twig_Extension
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
             case 'MICROSOFT':                   return !$japan;
+            case 'PHOTOS':                      return $northAmericaOrEurope;
+            case 'CONTESTS':                    return $northAmericaOrEurope;
+            case 'COMMENTS':                    return $northAmericaOrEurope;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

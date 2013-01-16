@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.1              |"
+echo "|  Alienware Arena Reset Script v1.2              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -70,6 +70,18 @@ echo "  - Loading fixtures..."
 
 ./app/console doctrine:fixtures:load --append > /dev/null
 
+echo "  - Dropping ACL database..."
+
+./app/console doctrine:database:drop --connection="acl" --force > /dev/null
+
+echo "  - Creating ACL database..."
+
+./app/console doctrine:database:create --connection="acl" > /dev/null
+
+echo "  - Initialising ACL structure..."
+
+./app/console init:acl > /dev/null
+
 echo
 echo "Resetting test database:"
 echo "  - Dropping database..."
@@ -89,6 +101,18 @@ echo "  - Loading fixtures..."
 # Note: this needs to be --append, because some database data comes from the migrations
 
 ./app/console doctrine:fixtures:load --append --env=test > /dev/null
+
+echo "  - Dropping ACL database..."
+
+./app/console doctrine:database:drop --env=test --connection="acl" --force > /dev/null
+
+echo "  - Creating ACL database..."
+
+./app/console doctrine:database:create --env=test --connection="acl" > /dev/null
+
+echo "  - Initialising ACL structure..."
+
+./app/console init:acl --env=test > /dev/null
 
 echo
 echo "Clearing caches:"

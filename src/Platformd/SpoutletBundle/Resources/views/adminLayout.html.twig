@@ -40,7 +40,7 @@
                 'bundles/spoutlet/js/jquery.multiselect.min.js'
                 'bundles/spoutlet/js/jquery.multiselect.filter.min.js'
 		        'ckeditor/ckeditor.js'
-		        'ckeditor/config.js'
+		        'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
 		        'flot/jquery.flot.js'
 		        output='js/packed/admin.js'
@@ -58,6 +58,10 @@
         </title>
 
         {% include 'SpoutletBundle::_analytics.html.twig' %}
+
+        <script type="text/javascript">
+            CKEDITOR.config.customConfig = 'config.admin.js';
+        </script>
 	</head>
 	<body>
 
@@ -135,6 +139,25 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="{{ path('admin_gallery_index') }}">Gallery Mangement</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_gallery_new') }}">Add new gallery</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_featured_index') }}">Featured content</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_contest_index') }}">Contests</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_contest_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             {% endif %}
 
@@ -200,12 +223,14 @@
                     {% if is_granted('ROLE_STATS_ADMIN') %}
                         <h5>Stats</h5>
                         <ul>
+                            <li><a href="{{ path('admin_contest_metrics') }}">Contests</a></li>
                             <li><a href="{{ path('admin_giveaway_metrics') }}">Giveaway</a></li>
                             <li><a href="{{ path('admin_deal_metrics') }}">Deals</a></li>
                             <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
                             <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
                             <li><a href="{{ path('admin_group_discussion_find') }}">Find Discussions</a></li>
+                            <li><a href="{{ path('admin_image_find') }}">Find Images</a></li>
                         </ul>
                     {% endif %}
 
@@ -226,6 +251,13 @@
                     <div class="alert alert-success">
                         <i class="icon-ok"></i>
                         {{ app.session.getflash('success') | trans }}
+                    </div>
+                {% endif %}
+
+                {% if app.session.hasFlash('error') %}
+                    <div class="alert alert-error">
+                        <i class="icon-ok"></i>
+                        {{ app.session.getflash('error') | trans }}
                     </div>
                 {% endif %}
 
