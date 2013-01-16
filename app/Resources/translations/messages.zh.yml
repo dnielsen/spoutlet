@@ -189,8 +189,23 @@ platformd:
         back: 创建新事件
 
     comment:
-        login_to_comment: 你没有登录。留言请先登录。
+        add_your_comment: 添加您的评论
+        login_to_comment: 要发表评论，请<a href="%login_url%">登录</a>
         comments: 评论
+        sort_by: 排序方式：
+        sort_by_votes: 投票
+        sort_by_newest: 最近的
+        sort_by_oldest: 以往的
+        add_comment: 发表评论
+        login_to_reply: 登录以回复
+        reply: 回复
+        more_replies: 更多回复
+        points: 积分
+        post: 发布
+        no_more_posts: No more posts to show.
+        delete: Delete
+        edit: Edit
+        date_format: %month%/%day%/%year%
 
     user:
         login_header: 输入登陆信息
