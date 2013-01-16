@@ -288,9 +288,8 @@
 
                         initMedia();
 
-                        $.unblockUI();
-
                         if(published.length == 0 && unpublished.length > 0) {
+                            $.unblockUI();
                             if((data.errors.indexOf("galleries") != -1) || (data.errors == 'galleries')) {
                                 $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_gallery_or_group_required' | trans }}');
                             } else {
