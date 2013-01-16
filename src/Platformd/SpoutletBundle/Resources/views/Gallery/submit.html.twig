@@ -250,11 +250,13 @@
                     controlstentType: 'application/json',
                     success: function (data) {
                         if(data.success) {
-                            $('#publish-success-message').text(data.message);
-                            $('#flash-publish-success').fadeIn();
-
                             var unpublished = data.unpublished;
                             var published = data.published;
+
+                            if (published.length > 0) {
+                                $('#publish-success-message').text(data.message);
+                                $('#flash-publish-success').fadeIn();
+                            }
 
                             var len = medias.length;
                             while(len--) {
@@ -270,8 +272,17 @@
                         }
 
                         initMedia();
-                        $.unblockUI();
-                        window.location = '{{ path('gallery_share_photo') }}';
+
+                        if(published.length == 0 && unpublished.length > 0) {
+                            $.unblockUI();
+                            if((data.errors.indexOf("galleries") != -1) || (data.errors == 'galleries')) {
+                                $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_gallery_or_group_required' | trans }}');
+                            } else {
+                                $('#media-form-error-msg').text('{{ 'galleries.publish_photo_multiple_message_more' | trans }}');
+                            }
+                        } else {
+                            window.location = '{{ path('gallery_share_photo') }}';
+                        }
                     }
                 });
 
