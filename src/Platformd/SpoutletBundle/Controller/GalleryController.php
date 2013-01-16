@@ -173,6 +173,11 @@ class GalleryController extends Controller
             {
                 $published[] = $id;
                 $media->setPublished(true);
+                try {
+                    $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('photosubmit', $media->getAuthor()->getCevoUserId());
+                } catch(ApiException $e) {
+
+                }
             } else {
                 $unpublished[] = $id;
                 $allErrors[] = $errors;
@@ -192,6 +197,11 @@ class GalleryController extends Controller
                         $groupImage->setAuthor($user);
 
                         $em->persist($groupImage);
+                        try {
+                            $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto', $media->getAuthor()->getCevoUserId());
+                        } catch(ApiException $e) {
+
+                        }
                     }
                 }
             }

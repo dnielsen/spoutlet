@@ -4,7 +4,7 @@ imports:
 parameters:
     # This says to use the current host, but prefix the URLs with this
     # this allows us to fake CEVO's api right on our own site
-    cevo_base_url: /cevo/api/stub
+    cevo_base_url: http://alienwarearena.com
 
     sender_email_address: "noreply@alienwarearena.com"
 

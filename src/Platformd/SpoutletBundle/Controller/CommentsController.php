@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Form\Type\CommentType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -70,6 +71,8 @@ class CommentsController extends Controller
         $comment->setBody($body);
         $comment->setThread($thread);
         $comment->setCreatedAt(new \DateTime('now'));
+
+        $this->giveUserArp($comment);
 
         $thread->incrementCommentCount();
 
@@ -402,5 +405,28 @@ class CommentsController extends Controller
         }
 
         return $url;
+    }
+
+    private function giveUserArp($comment)
+    {
+        $threadId = $comment->getThread()->getId();
+        $tag = null;
+
+        if(strlen(stristr($threadId, 'gallery')) > 0) {
+            $tag = 'photocomment';
+        }
+
+        if($tag) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+        }
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }
