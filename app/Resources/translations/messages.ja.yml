@@ -192,8 +192,19 @@ platformd:
         back: Go Back
 
     comment:
-        login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
+        add_your_comment: あなたのコメントを追加する
+        login_to_comment: コメントを投稿するには<a href="%login_url%">ログイン</a>してください。
         comments: コメント
+        sort_by: 並べ替え
+        sort_by_votes: 票
+        sort_by_newest: 新しい
+        sort_by_oldest: 古い
+        add_comment: コメントを追加する
+        login_to_reply: 返信するにはログインしてください
+        reply: 返信
+        more_replies: さらに返信
+        points: ポイント
+        post: 投稿する
         date_format: %year%年%month%月%day%日
 
     user:
