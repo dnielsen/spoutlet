@@ -35,7 +35,7 @@
                         </td>
                         <td class="replies png">{{ discussion.replyCount }} <br />Replies</td>
                         <td class="views png">{{ discussion.viewCount }} <br />Views</td>
-                        <td class="last"><a href="#">So and so</a> <br />2 Weeks Ago</td>
+                        <td class="last"><span class="last-update" title="{{ discussion.updatedAt | date }}"><span></td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -51,9 +51,12 @@
         </div>
 
         {# Ajax Pager Widget #}
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
+
         <script type="text/javascript">
 
             jQuery(document).ready(function() {
+                $('.last-update').timeago();
                 var content = $('.featured-content-category#content-group-news');
 
                 $('#pager').pagerUi({
