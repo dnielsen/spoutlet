@@ -54,10 +54,6 @@
         <div class="left" id="group-discussion-form-wrapper">
             <h1>Add a reply</h1>
 
-            <h3 id="discussion-reply">
-                Replying to:
-            </h3>
-
             <h4>{{ discussion.title }}</h4>
             <div id="discussion-details">
                 {{ discussion.content }}
@@ -75,7 +71,7 @@
                         {{ form_row(replyForm.content) }}
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>
-                            <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">Cancel</button>
+                            <button id="cancel" class="btn btn-primary" rel="{{ path('group_view_discussion', { id: group.id, discussionId: discussion.id}) }}" style="margin-left: 10px;">Cancel</button>
                         </div>
                     </div>
 

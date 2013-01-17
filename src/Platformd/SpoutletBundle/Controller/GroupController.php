@@ -1013,7 +1013,9 @@ Alienware Arena Team
         return $this->render('SpoutletBundle:Group:editDiscussion.html.twig', array(
             'group' => $group,
             'discussionForm' => $form->createView(),
-            'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('id' => $id, 'discussionId' => $discussionId)))
+            'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('id' => $id, 'discussionId' => $discussionId)),
+            'discussionId' => $discussionId
+            )
         );
     }
 
@@ -1424,7 +1426,7 @@ Alienware Arena Team
     private function getGroupDiscussionPostRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupDiscussionPost');
-    {}
+    }
 
     private function getCEVOApiManager()
     {

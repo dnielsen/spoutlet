@@ -1,9 +1,9 @@
 @charset "UTF-8";
 /* CSS Document */
 
-#boardList { width:100%; }
+#boardList { width:100%; height: 506px;}
 #boardList table { width:621px; border-spacing:2px; border-collapse: separate;}
-#boardList table td { margin:1px; }
+#boardList table td { margin:1px; height: 32px;}
 #boardList .sectionHeader { background:url(/bundles/spoutlet/images/discussions/section-bg.png) top right no-repeat; padding:0; height:42px; }
 #boardList .sectionHeader h2 { color:#ffffff; font-weight:bold; font-size:16px; margin:0; padding:8px 0 5px 55px; }
 
@@ -25,8 +25,12 @@
 
 #boardList .forumTopic td {padding:3px 10px; }
 #boardList .forumTopic .icon { width:48px; text-align:center; background:none;  }
-#boardList .forumTopic .name h3 { margin:0; padding:2px 0; color:#ffffff; font-size:15px; font-weight:bold; }
+#boardList .forumTopic .name { width: 300px;}
+#boardList .forumTopic .name h3 { margin:0; padding:2px 0; color:#ffffff; font-size:13px; font-weight:bold; }
 #boardList .forumTopic .name p { font-size:11px; font-weight:normal; color:#ffffff; margin:0; }
+#boardList .forumTopic .replies { width: 60px; text-align: center;}
+#boardList .forumTopic .views { width: 60px; text-align: center;}
+#boardList .forumTopic .last { width: 80px; text-align: center;}
 #boardList .forumTopic .topics { font-size:11px; color:#ffffff; margin:0; text-align:center; }
 #boardList .forumTopic .last h4 { font-size:11px; color:#ffffff; margin:0; }
 #boardList .forumTopic .last p { font-size:11px; color:#ffffff; margin:0; }

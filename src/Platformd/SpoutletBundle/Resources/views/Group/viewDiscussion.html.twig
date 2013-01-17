@@ -63,7 +63,7 @@
                         <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
                     {% endif %}
                     <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a> |
-                    <a href="{{ path('group_reply_discussion', { 'id': group.id , 'discussionId' : discussion.id }) }}">Add reply</a>
+                    <a href="{{ path('group_reply_discussion', { 'id': group.id , 'discussionId' : discussion.id }) }}">Reply</a>
                 </div>
 
                 <div id="comment_{{ discussion.id }}" class="forumComment row1" style="float: left;padding:0">

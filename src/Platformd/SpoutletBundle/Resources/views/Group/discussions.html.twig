@@ -10,44 +10,38 @@
     {% if isAllowedToManageDiscussions %}
         <div class="discussions-manager-actions">
             {% if group.discussionsEnabled == true %}
-                Discussions are currently enabled for this group<br>
                 <a href="{{ path('group_disable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to disable discussions for this group?');">Disable Discussions for this group</a>
             {% else %}
-                Discussions are currently disabled for this group<br>
                 <a href="{{ path('group_enable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to enable discussions for this group?');">Enable Discussions for this group</a>
             {% endif %}
         </div>
     {% endif %}
 
     {% if canAdd %}
-        <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Create new discussion</a>
+        <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit Topic</a>
     {% endif %}
 
     {% if results | length > 0 %}
-        <div id="scrollable-discussions" style="height: 490px; width: 100%;background: #191919;">
-            <div class="items">
-                <div class="items-wrapper">
-                    <div id="boardList">
-                        <table>
-                            <tbody>
-                            {% for discussion in results %}
-                                <tr class="forumTopic {% if (loop.index) is divisibleby(2) %}row2{% else %}row1{% endif %}">
-                                    <td class="icon"><img class="png" src="{{ asset('bundles/spoutlet/images/discussions/aw-reg.png') }}"></td>
-                                    <td class="name png">
-                                        <h3>
-                                            <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
-                                        </h3>
-                                    </td>
-                                    <td class="replies png">{{ discussion.replyCount }} Replies</td>
-                                    <td class="views png">{{ discussion.viewCount }} Views</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+
+        <div id="boardList">
+            <table>
+                <tbody>
+                {% for discussion in results %}
+                    <tr class="forumTopic {% if (loop.index) is divisibleby(2) %}row2{% else %}row1{% endif %}">
+                        <td class="name png">
+                            <h3>
+                                <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
+                            </h3>
+                        </td>
+                        <td class="replies png">{{ discussion.replyCount }} <br />Replies</td>
+                        <td class="views png">{{ discussion.viewCount }} <br />Views</td>
+                        <td class="last"><a href="#">So and so</a> <br />2 Weeks Ago</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
+
 
         <div class="pagerfanta" id="pager" style="float:right;">
             {{ pagerfanta(pager, 'spoutlet', {
@@ -67,7 +61,7 @@
                 });
 
                 $('.name.png > h3 > a').truncate({
-                    width: 280
+                    width: 480
                 });
             });
 

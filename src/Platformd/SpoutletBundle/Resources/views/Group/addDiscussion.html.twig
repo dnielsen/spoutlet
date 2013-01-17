@@ -51,7 +51,7 @@
                 {{ form_row(discussionForm.content) }}
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary" formnovalidate>Post Discussion</button>
-                    <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">Cancel</button>
+                    <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { slug: group.slug}) ~ '#discussions' }}" style="margin-left: 10px;">Cancel</button>
                 </div>
             </div>
 

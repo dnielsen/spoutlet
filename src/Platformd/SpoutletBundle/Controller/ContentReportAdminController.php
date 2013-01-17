@@ -27,27 +27,32 @@ class ContentReportAdminController extends Controller
         $allowArchived = $mode == "archived";
 
         if ($mode == "archived") {
-            $comments    = $repo->getContentReportTypeForAllSitesArchived("Comment");
-            $groupNews   = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
-            $galleryMedia = $repo->getContentReportTypeForAllSitesArchived("GalleryMedia");
-            $groups      = $repo->getContentReportTypeForAllSitesArchived("Group");
+            $comments               = $repo->getContentReportTypeForAllSitesArchived("Comment");
+            $groupNews              = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
+            $galleryMedia           = $repo->getContentReportTypeForAllSitesArchived("GalleryMedia");
+            $groups                 = $repo->getContentReportTypeForAllSitesArchived("Group");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussionPost");
         } elseif ($mode == "deletedContent") {
-            $comments    = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
-            $groupNews   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
-            $galleryMedia = $repo->getContentReportTypeForAllSitesDeletedContent("GalleryMedia");
-            $groups      = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
+            $comments               = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
+            $groupNews              = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
+            $galleryMedia           = $repo->getContentReportTypeForAllSitesDeletedContent("GalleryMedia");
+            $groups                 = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussionPost");
         } elseif ($mode == "manage") {
-            $comments    = $repo->getContentReportTypeForAllSites("Comment");
-            $groupNews   = $repo->getContentReportTypeForAllSites("GroupNews");
-            $groupVideos = $repo->getContentReportTypeForAllSites("GroupVideo");
-            $groupImages = $repo->getContentReportTypeForAllSites("GroupImage");
-
-            $galleryMedia = $repo->getContentReportTypeForAllSites("GalleryMedia");
-            $groups      = $repo->getContentReportTypeForAllSites("Group");
+            $comments               = $repo->getContentReportTypeForAllSites("Comment");
+            $groupNews              = $repo->getContentReportTypeForAllSites("GroupNews");
+            $groupVideos            = $repo->getContentReportTypeForAllSites("GroupVideo");
+            $groupImages            = $repo->getContentReportTypeForAllSites("GroupImage");
+            $galleryMedia           = $repo->getContentReportTypeForAllSites("GalleryMedia");
+            $groups                 = $repo->getContentReportTypeForAllSites("Group");
+            $groupDiscussions       = $repo->getContentReportTypeForAllSites("GroupDiscussion");
+            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
         }
 
         $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups);
@@ -120,6 +125,20 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
             $type = 'GalleryMedia';
             $id = $galleryMedia->getId();
+        } else if ($groupDiscussion) {
+            $groupDiscussion->setDeleted(false);
+            $groupDiscussion->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroupDiscussion($groupDiscussion);
+            $type = 'GroupDiscussion';
+            $id = $groupDiscussion->getId();
+            $reportedItem = $groupDiscussion;
+        } else if ($groupDiscussionPost) {
+            $groupDiscussionPost->setDeleted(false);
+            $groupDiscussionPost->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
+            $type = 'GroupDiscussionPost';
+            $id = $groupDiscussionPost->getId();
+            $reportedItem = $groupDiscussionPost;
         } else if ($group) {
             $group->setDeleted(false);
             $group->setDeletedReason(null);
@@ -155,12 +174,14 @@ class ContentReportAdminController extends Controller
 
         $report = $repo->find($contentReportId);
 
-        $groupVideo = $report->getGroupVideo();
-        $groupNews = $report->getGroupNews();
-        $groupImage = $report->getGroupImage();
-        $galleryMedia = $report->getGalleryMedia();
-        $group          = $report->getGroup();
-        $comment    = $report->getComment();
+        $groupVideo             = $report->getGroupVideo();
+        $groupNews              = $report->getGroupNews();
+        $groupImage             = $report->getGroupImage();
+        $galleryMedia           = $report->getGalleryMedia();
+        $group                  = $report->getGroup();
+        $comment                = $report->getComment();
+        $groupDiscussion        = $report->getGroupDiscussion();
+        $groupDiscussionPost    = $report->getGroupDiscussionPost();
 
         if ($groupVideo) {
 
@@ -216,6 +237,20 @@ class ContentReportAdminController extends Controller
             $em->persist($comment);
             $repo->deleteAllContentReportsForComment($comment);
 
+        } else if ($groupDiscussion) {
+
+            $groupDiscussion->setDeleted(true);
+            $groupDiscussion->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($groupDiscussion);
+            $repo->deleteAllContentReportsForGroupDiscussion($groupDiscussion);
+
+        } else if ($groupDiscussionPost) {
+
+            $groupDiscussionPost->setDeleted(true);
+            $groupDiscussionPost->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($groupDiscussionPost);
+            $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -237,12 +272,14 @@ class ContentReportAdminController extends Controller
 
         $report = $repo->find($contentReportId);
 
-        $groupVideo = $report->getGroupVideo();
-        $groupNews = $report->getGroupNews();
-        $groupImage = $report->getGroupImage();
-        $galleryMedia = $report->getGalleryMedia();
-        $group          = $report->getGroup();
-        $comment    = $report->getComment();
+        $groupVideo             = $report->getGroupVideo();
+        $groupNews              = $report->getGroupNews();
+        $groupImage             = $report->getGroupImage();
+        $galleryMedia           = $report->getGalleryMedia();
+        $group                  = $report->getGroup();
+        $comment                = $report->getComment();
+        $groupDiscussion        = $report->getGroupDiscussion();
+        $groupDiscussionPost    = $report->getGroupDiscussionPost();
 
         if ($groupVideo) {
 
@@ -292,6 +329,24 @@ class ContentReportAdminController extends Controller
             $type = 'Comment';
             $id = $comment->getId();
 
+        } else if ($groupDiscussion) {
+
+            $groupDiscussion->setDeleted(false);
+            $groupDiscussion->setDeletedReason(null);
+            $em->persist($groupDiscussion);
+            $type = 'GroupDiscussion';
+            $id = $groupDiscussion->getId();
+            $reportedItem = $groupDiscussion;
+
+        } else if ($groupDiscussionPost) {
+
+            $groupDiscussionPost->setDeleted(false);
+            $groupDiscussionPost->setDeletedReason(null);
+            $em->persist($groupDiscussionPost);
+            $type = 'GroupDiscussionPost';
+            $id = $groupDiscussionPost->getId();
+            $reportedItem = $groupDiscussionPost;
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -325,6 +380,10 @@ class ContentReportAdminController extends Controller
 
             case 'Comment':
                 $itemType = "Comment";
+                break;
+
+            case 'GroupDiscussionPost':
+                $name = 'post id:' . $item->getId();
                 break;
 
             default:

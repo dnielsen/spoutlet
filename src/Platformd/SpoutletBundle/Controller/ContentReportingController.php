@@ -130,6 +130,9 @@ class ContentReportingController extends Controller
 
         $reason = ucwords(str_replace('_', ' ', $reason));
 
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+
         switch ($type) {
             case 'GalleryMedia':
                 $itemType = ucfirst($item->getCategory());
@@ -143,23 +146,13 @@ class ContentReportingController extends Controller
                 $itemType = "Comment";
                 break;
 
-            default:
-                $itemType = "Unknown";
-                break;
-        }
-
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
-
-        switch ($type) {
-            case 'Group':
-                $name = $item->getName();
-                break;
             case 'GroupDiscussionPost':
                 $name = 'post id:' . $item->getId();
                 break;
+
             default:
-                $name = $item->getTitle();
+                $itemType = "Unknown";
+                break;
         }
 
 
