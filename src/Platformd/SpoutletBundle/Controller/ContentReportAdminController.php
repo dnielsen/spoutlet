@@ -316,35 +316,30 @@ class ContentReportAdminController extends Controller
 
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = ucfirst($item->getCategory());
-                break;
-
-            case 'Group':
-                $itemType = "Group ".str_replace('Group', '', $type);
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey(ucfirst($item->getCategory())));
+                $name = $item->getTitle();
                 break;
 
             case 'Comment':
-                $itemType = "Comment";
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getBody();
+                break;
+
+            case 'Group':
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getName();
                 break;
 
             default:
-                $itemType = "Unknown";
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getTitle();
                 break;
         }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
-        $subject            = "Your Content is Restored";
-        $message            = sprintf("This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
-
-Type: %s
-Content: %s
-
-
-Alienware Arena Team
-
-", $itemType, $name);
+        $subject            = $this->trans('content_reporting.restored_email_title');
+        $message            = sprintf($this->trans('content_reporting.restored_email'), $itemType, $name);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

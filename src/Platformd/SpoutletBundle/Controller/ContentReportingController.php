@@ -119,44 +119,34 @@ class ContentReportingController extends Controller
 
         $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
 
-        $reason = ucwords(str_replace('_', ' ', $reason));
+        $reason = $this->trans('content_reporting.'.$reason);
 
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = ucfirst($item->getCategory());
-                break;
-
-            case 'Group':
-                $itemType = "Group ".str_replace('Group', '', $type);
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey(ucfirst($item->getCategory())));
+                $name = $item->getTitle();
                 break;
 
             case 'Comment':
-                $itemType = "Comment";
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getBody();
+                break;
+
+            case 'Group':
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getName();
                 break;
 
             default:
-                $itemType = "Unknown";
+                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $name = $item->getTitle();
                 break;
         }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
-        $subject            = "Your Content Has Been Flagged";
-        $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
-
-Type: %s
-Content:  %s
-Reason: %s
-
-The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
-
-Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
-
-
-Alienware Arena Team
-
-", $itemType, $name, $reason);
+        $subject            = $this->trans('content_reporting.reported_email_title');
+        $message            = sprintf($this->trans('content_reporting.reported_email'), $itemType, $name, $reason);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

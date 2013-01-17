@@ -463,13 +463,45 @@ forms:
 
 content_reporting:
     report: レポート
-    report_content: Report Content
+    report_content: レポート
     inappropriate_content: 不適切な内容
     spam: スパム
     violates_intellectual_property: 知的財産を侵害する
     harassment: 嫌がらせ
     must_be_logged_in: あなたは内容を報告するためにログインする必要があります
     once_per_hour: あなたは1時間あたり1項目を報告できます。
+    report_type_group: Group
+    report_type_image: Image
+    report_type_video: ビデオ
+    report_type_comment: コメント
+    report_type_group_image: Group Image
+    report_type_group_news: Group News
+    report_type_group_video: Group Video
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    reported_email_title: あなたの投稿にフラグが設定されています
+    reported_email: |
+        ALIENWARE ARENAに投稿された内容に不適切とされるフラグが付いており、確認を必要としています。
+
+        タイプ：%s
+        内容：%s
+        理由：%s
+
+        投稿は、一時的にALIENWARE ARENAから削除され、72時間以内にスタッフによって確認されます。内容が利用規約に違反していない場合
+        はウェブサイトで有効となり、あなたは更新案内の自動送信メールを受信します。
+
+        ご不明な点がございましたら、contact@alienwarearena.comまでご連絡ください。
+
+        ALIENWARE ARENA チーム
+    restored_email_title: あなたの投稿が復元されます
+    restored_email: |
+        これは、以下の投稿が利用規約に違反していないことをお知らせする自動送信メールです。投稿はALIENWARE ARENA で有効になりました。
+
+        タイプ：%s
+        内容：%s
+
+        ALIENWARE ARENA チーム
 
 error:
     fill_in_birthday: 誕生日をご記入ください

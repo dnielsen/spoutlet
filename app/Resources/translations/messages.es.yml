@@ -85,6 +85,37 @@ content_reporting:
     harassment: Acoso
     must_be_logged_in: Debe iniciar sesión informar sobre contenidos.
     once_per_hour: Sólo se puede reportar un artículo por hora.
+    report_type_group: Grupo
+    report_type_image: Imagen
+    report_type_video: Vídeo
+    report_type_comment: Comentario
+    report_type_group_image: Imagen del Grupo
+    report_type_group_news: Group News
+    report_type_group_video: Video de Grupo
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    reported_email_title: Tu Contenido ha Sido Marcado
+    reported_email: |
+        Un artículo publicado en Alienware Arena ha sido marcada como inapropiada y requiere revisión.
+
+        Tipo: %s
+        Contenido:  %s
+        Razón: %s
+
+        El contenido ha sido retirado temporalmente de  Alienware Arena y será revisado por nuestro personal dentro de 72 horas.  Si el contenido no viola nuestros Términos de servicio, lo vamos a permitir en nuestro sitio web y recibirás un correo electrónico automatizado con esta actualización.
+
+        Gracias por tu paciencia.  Si tienes cualquier pregunta, por favor contáctenos en contact@alienwarearena.com.
+
+        Equipo Alienware Arena
+    restored_email_title: Tu contenido ha sido restaurado
+    restored_email: |
+        Este es un mensaje automatizado para informarle que el contenido a continuación no viola los Términos de servicio y ha sido restaurado en Alienware Arena.
+
+        Tipo: %s
+        Contenido: %s
+
+        Equipo Alienware Arena
 
 error:
     fill_in_birthday: Por favor, escriba su cumpleaños!
