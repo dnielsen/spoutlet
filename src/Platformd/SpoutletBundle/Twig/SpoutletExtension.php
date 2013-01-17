@@ -118,10 +118,10 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'endsWith'
             ),
-            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice')
+            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice'),
+            'cevo_account_link'         => new Twig_Function_Method($this, 'cevoAccountLink'),
         );
     }
-
 
     public function getCurrentSite() {
 
@@ -158,6 +158,38 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return sprintf('%s/media/%s', $cf, $media->getFilename());
+    }
+
+    public function cevoAccountLink($username)
+    {
+        $userManager    = $this->container->get('fos_user.user_manager');
+        $user           = $userManager->loadUserByUsername($username);
+        $cevoUserId     = $user->getCevoUserId();
+        $locale         = $this->container->get('session')->getLocale();
+
+        switch ($locale) {
+            case 'ja':
+                $subdomain = '/japan';
+                break;
+
+            case 'zh':
+                $subdomain = '/china';
+                break;
+
+            case 'es':
+                $subdomain = '/latam';
+                break;
+
+            default:
+                $subdomain = '';
+                break;
+        }
+
+        if ($cevoUserId && $cevoUserId > 0) {
+            return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
+        }
+
+        return 'http://www.alienwarearena.com/account/profile';
     }
 
     public function endsWith($haystack, $needle) {
