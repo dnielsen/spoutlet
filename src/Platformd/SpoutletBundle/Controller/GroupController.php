@@ -1058,11 +1058,42 @@ Alienware Arena Team
         $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 10, $page);
         $groupDiscussionPosts = $pager->getCurrentPageResults();
 
+
+        $groupDiscussionPost = new GroupDiscussionPost();
+        $form = $this->createFormBuilder($groupDiscussionPost)
+            ->add('content', 'textarea', array('label' => 'Message'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupDiscussionPost->setGroupDiscussion($groupDiscussion);
+
+                $this->getGroupManager()->saveGroupDiscussionPost($groupDiscussionPost);
+
+                $this->setFlash('success', 'Your reply posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_view_discussion', array(
+                    'id' => $id,
+                    'discussionId' => $discussionId
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
         return $this->render('SpoutletBundle:Group:viewDiscussion.html.twig', array(
             'discussion' => $groupDiscussion,
             'discussionPosts' => $groupDiscussionPosts,
             'group' => $group,
-            'pager' => $pager
+            'pager' => $pager,
+            'replyForm' => $form->createView(),
+            'replyFormAction' => $this->generateUrl('group_reply_discussion', array(
+                'id' => $id,
+                'discussionId' => $discussionId
+            )),
         ));
     }
 

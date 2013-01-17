@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* CSS Document */
 
-#boardList { width:100%; height: 506px;}
+#boardList { width:100%;}
 #boardList table { width:621px; border-spacing:2px; border-collapse: separate;}
 #boardList table td { margin:1px; height: 32px;}
 #boardList .sectionHeader { background:url(/bundles/spoutlet/images/discussions/section-bg.png) top right no-repeat; padding:0; height:42px; }
@@ -86,4 +86,21 @@
 
 .group-discussion-actions {
     padding: 0 0 10px 0;
+}
+
+#discussion-reply-form {
+    float: left;
+    width: 100%;
+    margin: 15px 0 0 0;
+}
+
+#discussion-reply-form textarea {
+    width: 485px;
+    height: 180px;
+}
+
+.reply-form-actions {
+    width: 485px;
+    padding: 18px 0 18px 0;
+    text-align: center;
 }

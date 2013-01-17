@@ -62,8 +62,7 @@
                     {% if canEdit %}
                         <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
                     {% endif %}
-                    <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a> |
-                    <a href="{{ path('group_reply_discussion', { 'id': group.id , 'discussionId' : discussion.id }) }}">Reply</a>
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a>
                 </div>
 
                 <div id="comment_{{ discussion.id }}" class="forumComment row1" style="float: left;padding:0">
@@ -153,6 +152,25 @@
                         }) }}
                     </div>
                 </div>
+                <div id="discussion-reply-form">
+                <form action="{{ replyFormAction }}" method="post" {{ form_enctype(replyForm) }} class="form-horizontal">
+
+                    {% form_theme replyForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+                    {% form_theme replyForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+                    {{ form_errors(replyForm) }}
+
+                    <div class="span8" style="margin-left: 145px;">
+                        {{ form_widget(replyForm.content) }}
+                        <div class="reply-form-actions">
+                            <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>
+                        </div>
+                    </div>
+
+                    {{ form_rest(replyForm) }}
+
+                </form>
+            </div>
             </div>
         </div>
     </div>

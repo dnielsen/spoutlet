@@ -6,24 +6,13 @@
 {% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
 
 <div id="discussion-content-scroll" style="height: 550px;">
-
-    {% if isAllowedToManageDiscussions %}
-        <div class="discussions-manager-actions">
-            {% if group.discussionsEnabled == true %}
-                <a href="{{ path('group_disable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to disable discussions for this group?');">Disable Discussions for this group</a>
-            {% else %}
-                <a href="{{ path('group_enable_discussions', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to enable discussions for this group?');">Enable Discussions for this group</a>
-            {% endif %}
-        </div>
-    {% endif %}
-
     {% if canAdd %}
         <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit Topic</a>
     {% endif %}
 
     {% if results | length > 0 %}
 
-        <div id="boardList">
+        <div id="boardList" {% if canAdd %}style="height:518px;"{% else %}style="height:534px;"{% endif %}>
             <table>
                 <tbody>
                 {% for discussion in results %}
