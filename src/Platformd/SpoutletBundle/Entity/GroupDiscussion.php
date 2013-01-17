@@ -83,6 +83,7 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
      * @var string $content
      *
      * @ORM\Column(name="content", type="text", nullable=true)
+     * @Assert\NotNull
      */
     private $content;
 

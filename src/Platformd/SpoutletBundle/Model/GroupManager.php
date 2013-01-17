@@ -199,6 +199,7 @@ class GroupManager
         if (!$groupDiscussion->getAuthor()) {
             $user = $this->securityContext->getToken()->getUser();
             $groupDiscussion->setAuthor($user);
+            $groupDiscussion->setLastUpdatedBy($user);
         }
 
         $this->em->persist($groupDiscussion);

@@ -950,7 +950,11 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($groupDiscussion)
             ->add('title', 'text', array('label' => 'Discussion Name'))
-            ->add('content', 'textarea', array('label' => 'Content', 'help'  => 'Give a description for your discussion.'))
+            ->add('content', 'textarea', array(
+                'label' => 'Content',
+                'help'  => 'Give a description for your discussion.',
+                'required' => true
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -1090,7 +1094,7 @@ Alienware Arena Team
             'group' => $group,
             'pager' => $pager,
             'replyForm' => $form->createView(),
-            'replyFormAction' => $this->generateUrl('group_reply_discussion', array(
+            'replyFormAction' => $this->generateUrl('group_view_discussion', array(
                 'id' => $id,
                 'discussionId' => $discussionId
             )),

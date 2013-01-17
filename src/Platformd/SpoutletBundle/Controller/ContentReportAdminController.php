@@ -55,7 +55,7 @@ class ContentReportAdminController extends Controller
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
         }
 
-        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups);
+        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts);
 
         usort($allReports, function($a, $b) {
 
@@ -383,7 +383,7 @@ class ContentReportAdminController extends Controller
                 break;
 
             case 'GroupDiscussionPost':
-                $name = 'post id:' . $item->getId();
+                $name = 'Post' . $item->getContent();
                 break;
 
             default:
