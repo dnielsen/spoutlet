@@ -127,7 +127,7 @@
                 <div class="widget-content">
                     <div class="photo-author">
                         <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
-                        <div class="photo-author-link"><a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
+                        <div class="photo-author-link"><a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                     </div>
 
                     {% if isVotable %}

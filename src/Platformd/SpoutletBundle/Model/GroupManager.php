@@ -180,13 +180,15 @@ class GroupManager
 
         $results = json_decode(curl_exec($curl), true);
 
-        foreach($results as $result)
-        {
-            if(isset($result))
+        if ($results) {
+            foreach($results as $result)
             {
-                if(array_key_exists('likes', $result))
+                if(isset($result))
                 {
-                    $total += $result['likes'];
+                    if(array_key_exists('likes', $result))
+                    {
+                        $total += $result['likes'];
+                    }
                 }
             }
         }

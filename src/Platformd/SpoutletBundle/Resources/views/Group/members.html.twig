@@ -23,7 +23,7 @@
             <div class="widget-title">Members</div>
         </div>
         <div class="widget-content">
-            <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
+            <table style="width: 100%;" class="tablesorter">
                 <tbody>
                 <tr>
                     {% if canRemove %}
@@ -39,7 +39,7 @@
                     </td>
                     {% endif %}
                     <td>
-                        <a href="{{ path('accounts_profile', {username: group.owner.username}) }}">{{ group.owner.username }}</a>
+                        <a href="{{ cevo_account_link(group.owner.username) }}">{{ group.owner.username }}</a>
                     </td>
                     <td>
                         {{ group.createdAt|date('M j, Y') }}
@@ -54,7 +54,7 @@
                         </td>
                         {% endif %}
                         <td>
-                            <a href="{{ path('accounts_profile', {username: member['username']}) }}">{{ member['username'] }}</a>
+                            <a href="{{ cevo_account_link(member['username']) }}">{{ member['username'] }}</a>
                         </td>
                         <td>
                             {{ member['created_at']|date('M j, Y') }}

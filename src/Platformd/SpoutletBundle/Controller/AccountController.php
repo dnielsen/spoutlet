@@ -23,20 +23,33 @@ class AccountController extends Controller
 
         $locale = $this->getLocale();
 
-        if (in_array($locale, array('zh', 'ja'))) {
+        switch ($locale) {
+            case 'ja':
+                $subdomain = '/japan';
+                break;
 
-            if ($user) {
-                $cevoUserId = $user->getCevoUserId();
+            case 'zh':
+                $subdomain = '/china';
+                break;
 
-                if ($cevoUserId && $cevoUserId > 0) {
-                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $locale == "ja" ? "japan" : "china" , $cevoUserId));
-                }
-            }
+            case 'es':
+                $subdomain = '/latam';
+                break;
 
-            return $this->redirect('http://www.alienwarearena.com/account/profile');
+            default:
+                $subdomain = '';
+                break;
         }
 
-		return $this->render('FOSUserBundle:Profile:show.html.twig', array('user' => $user));
+        if ($user) {
+            $cevoUserId = $user->getCevoUserId();
+
+            if ($cevoUserId && $cevoUserId > 0) {
+                return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+            }
+        }
+
+        return $this->redirect('http://www.alienwarearena.com/account/profile');
 	}
 
 

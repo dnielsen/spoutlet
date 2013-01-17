@@ -41,7 +41,7 @@
                         </div>
                         <div style="width:135px;">
                             <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                            <div>by: <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
+                            <div>by: <a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                         </div>
                     </div>
                 {% endfor %}
