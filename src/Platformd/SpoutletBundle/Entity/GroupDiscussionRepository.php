@@ -94,5 +94,4 @@ class GroupDiscussionRepository extends EntityRepository
 
         return $qb;
     }
-
 }

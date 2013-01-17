@@ -108,6 +108,25 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
      */
     private $viewCount = 0;
 
+    /**
+     * Last person to have updated the thread
+     *
+     * @var \Platformd\UserBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $lastUpdatedBy;
+
+    /**
+     * Last post id
+     *
+     * @var int
+     *
+     * @ORM\Column(name="last_post_id", type="integer", nullable=true)
+     */
+    private $lastPostId = 0;
+
     public function __construct()
     {
         $this->contentReports = new ArrayCollection();
@@ -345,5 +364,25 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     public function incViewCount($inc)
     {
         $this->viewCount += $inc;
+    }
+
+    public function getLastUpdatedBy()
+    {
+        return $this->lastUpdatedBy;
+    }
+
+    public function setLastUpdatedBy($value)
+    {
+        $this->lastUpdatedBy = $value;
+    }
+
+    public function getLastPostId()
+    {
+        return $this->lastPostId;
+    }
+
+    public function setLastPostId($value)
+    {
+        $this->lastPostId = $value;
     }
 }

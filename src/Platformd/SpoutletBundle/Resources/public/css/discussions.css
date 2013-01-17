@@ -28,9 +28,9 @@
 #boardList .forumTopic .name { width: 300px;}
 #boardList .forumTopic .name h3 { margin:0; padding:2px 0; color:#ffffff; font-size:13px; font-weight:bold; }
 #boardList .forumTopic .name p { font-size:11px; font-weight:normal; color:#ffffff; margin:0; }
-#boardList .forumTopic .replies { width: 60px; text-align: center;}
-#boardList .forumTopic .views { width: 60px; text-align: center;}
-#boardList .forumTopic .last { width: 80px; text-align: center;}
+#boardList .forumTopic .replies { width: 40px; text-align: center;}
+#boardList .forumTopic .views { width: 40px; text-align: center;}
+#boardList .forumTopic .last { width: 100px; text-align: left;}
 #boardList .forumTopic .topics { font-size:11px; color:#ffffff; margin:0; text-align:center; }
 #boardList .forumTopic .last h4 { font-size:11px; color:#ffffff; margin:0; }
 #boardList .forumTopic .last p { font-size:11px; color:#ffffff; margin:0; }
@@ -47,7 +47,7 @@
 
 #topicBreadcrumb { background:transparent url(/bundles/spoutlet/images/discussions/section-bg.png) no-repeat scroll right top; height:42px; }
 #topicBreadcrumb h3 { color:#FFFFFF; font-size:16px; font-weight:bold; margin:0; padding:12px 0 5px 55px; }
-#topicView h1 { font-size:36px; font-weight:normal; color:#00789e; padding-left:15px; }
+#topicView h1 { font-size:26px; font-weight:normal; color:#00789e; padding-left:15px; }
 
 #topicComments { width:640px; float:left;}
 

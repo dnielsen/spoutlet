@@ -249,6 +249,14 @@ class GroupManager
             $this->em->flush();
         }
 
+        $groupDiscussion = $groupDiscussionPost->getGroupDiscussion();
+        $groupDiscussion->setLastUpdatedBy($groupDiscussionPost->getAuthor());
+        $groupDiscussion->setLastPostId($groupDiscussionPost->getId());
+
+        $this->em->persist($groupDiscussion);
+
+        $this->em->flush();
+
         // We dispatch our GroupDiscussionPostEvent
         $this->eventDispatcher->dispatch($eventName, $event);
     }

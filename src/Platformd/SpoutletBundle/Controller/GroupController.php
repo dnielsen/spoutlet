@@ -1055,7 +1055,7 @@ Alienware Arena Team
 
         $page = $request->query->get('page', 1);
 
-        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 3, $page);
+        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 10, $page);
         $groupDiscussionPosts = $pager->getCurrentPageResults();
 
         return $this->render('SpoutletBundle:Group:viewDiscussion.html.twig', array(

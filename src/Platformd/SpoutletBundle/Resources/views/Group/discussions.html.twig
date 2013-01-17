@@ -35,7 +35,10 @@
                         </td>
                         <td class="replies png">{{ discussion.replyCount }} <br />Replies</td>
                         <td class="views png">{{ discussion.viewCount }} <br />Views</td>
-                        <td class="last"><span class="last-update" title="{{ discussion.updatedAt | date }}"><span></td>
+                        <td class="last">
+                            <span class="last-update" title="{{ discussion.updatedAt | date }}"></span>
+                            - <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id}) ~ '#comment_' ~ discussion.lastPostId }}">{{ discussion.lastUpdatedBy.username }}</a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
