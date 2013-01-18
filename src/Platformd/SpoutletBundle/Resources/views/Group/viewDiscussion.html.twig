@@ -85,7 +85,7 @@
                             </div>
                             <div class="forumNumber png">1</div>
                             <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
-                                <span class="posted-at" title="{{ discussion.createdAt | date }}"></span>
+                                <span class="posted-at" title="{{ discussion.createdAt | date ~ 'Z' }}"></span>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                                             </div>
                                             <div class="forumNumber png">{{ loop.index + 1 }}</div>
                                             <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
-                                                <span class="posted-at" title="{{ discussionPost.created | date }}"></span>
+                                                <span class="posted-at" title="{{ discussionPost.created | date ~ 'Z' }}"></span>
 
                                                 {% if (canDelete or app.user == discussionPost.author) %}
                                                     <a href="{{ path('group_delete_discussion_post', { 'id' : discussionPost.id }) }}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
