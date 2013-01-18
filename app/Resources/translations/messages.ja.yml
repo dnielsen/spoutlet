@@ -463,7 +463,10 @@ forms:
 
 content_reporting:
     report: レポート
-    report_content: レポート
+    report_content: 報告内容
+    submit: 出品
+    cancel: キャンセル
+    close: キャンセル
     inappropriate_content: 不適切な内容
     spam: スパム
     violates_intellectual_property: 知的財産を侵害する
@@ -480,6 +483,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
+    report_success: "内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでcontact@alienwarearena.comまで送付してください。
     reported_email_title: あなたの投稿にフラグが設定されています
     reported_email: |
         ALIENWARE ARENAに投稿された内容に不適切とされるフラグが付いており、確認を必要としています。

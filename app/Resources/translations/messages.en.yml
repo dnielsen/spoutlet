@@ -487,6 +487,9 @@ content_reporting:
     report_content: Report Content
     inappropriate_content: Inappropriate content
     spam: Spam
+    submit: Submit
+    cancel: Cancel
+    close: Close
     violates_intellectual_property: Violates Intellectual Property
     harassment: Harassment
     must_be_logged_in: You must be logged in to report content.
@@ -501,6 +504,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
+    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
     reported_email: |
         An item posted on Alienware Arena has been flagged as inappropriate and requires review.

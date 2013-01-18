@@ -3,7 +3,7 @@
     <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
     <div style="height: 120px;">
         <div id="report-response" style="display:none;">
-        The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+        {{ 'content_reporting.report_success' | trans }}
         </div>
         <div id="report-options">
             <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | trans }} <br />
@@ -12,8 +12,8 @@
             <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.harassment' | trans }}
         </div>
     </div>
-    <button id="submit-report-{{ reportContentType }}">Submit</button>
-    <button id="close-dialog-{{ reportContentType }}" style="float: right;">Cancel</button>
+    <button id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | trans }}</button>
+    <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -37,7 +37,7 @@
             $('.report-option').prop('checked', false);
             $('#report-response').hide();
             $('#report-options').show();
-            $('#close-dialog-{{ reportContentType }}').text('Cancel');
+            $('#close-dialog-{{ reportContentType }}').text('{{ "content_reporting.close" | trans }}');
             $('#submit-report-{{ reportContentType }}').show();
             reportDialog.dialog('open');
         });
