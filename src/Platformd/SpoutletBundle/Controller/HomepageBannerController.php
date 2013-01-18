@@ -27,7 +27,7 @@ class HomepageBannerController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($site);
 
-        $banners = $this->getBannerRepo()->findForSite($site);
+        $banners = $this->getBannerRepo()->findAllForSite($site);
 
         return $this->render('SpoutletBundle:HomepageBanner:list.html.twig', array(
             'banners' => $banners

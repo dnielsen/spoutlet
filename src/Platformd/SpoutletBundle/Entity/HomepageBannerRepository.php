@@ -32,6 +32,19 @@ class HomepageBannerRepository extends EntityRepository
             ->execute(array($locale));
     }
 
+    public function findAllForSite($site)
+    {
+        $qb = $this
+            ->createQueryBuilder('h')
+            ->leftJoin('h.sites', 's')
+            ->where('s.id = :siteId')
+            ->addOrderBy('h.position', 'ASC')
+            ->addOrderBy('h.created', 'DESC')
+            ->setParameter('siteId', $site->getId());
+
+        return $qb->getQuery()->execute();
+    }
+
     public function findForSite($site, $limit=null)
     {
         $qb = $this
