@@ -167,6 +167,11 @@ class GiveawayAdminController extends Controller
             throw $this->createNotFoundException('No giveaway for that id');
         }
 
+        $test   = $giveaway->getTestOnly();
+        if ($test === null) {
+            $giveaway->setTestOnly(0);
+        }
+
         $this->setupEmptyRedemptionInstructions($giveaway);
 
         $form = $this->createForm(new GiveawayType(), $giveaway);

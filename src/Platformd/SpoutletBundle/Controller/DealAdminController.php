@@ -85,6 +85,11 @@ class DealAdminController extends Controller
             throw $this->createNotFoundException('Unable to find deal.');
         }
 
+        $test   = $deal->getTestOnly();
+        if ($test === null) {
+            $deal->setTestOnly(0);
+        }
+
         $editForm   = $this->createForm(new DealType(), $deal);
         $deleteForm = $this->createDeleteForm($id);
 
