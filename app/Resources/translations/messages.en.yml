@@ -211,6 +211,9 @@ platformd:
         more_replies: More Replies
         points: Points:
         post: Post
+        no_more_posts: No more posts to show.
+        delete: Delete
+        edit: Edit
         date_format: %month%/%day%/%year%
 
     user:
@@ -475,6 +478,58 @@ age_confirm:
     content_for_mature_audiences: Content Intended for Mature Audiences
     too_young_message: Sorry, we are unable to provide you with access at this time
 confirm: Confirm
+
+forms:
+    required_fields: Required Fields
+
+content_reporting:
+    report: Report
+    report_content: Report Content
+    inappropriate_content: Inappropriate content
+    spam: Spam
+    submit: Submit
+    cancel: Cancel
+    close: Close
+    violates_intellectual_property: Violates Intellectual Property
+    harassment: Harassment
+    must_be_logged_in: You must be logged in to report content.
+    once_per_hour: You may only report one item per hour.
+    report_type_group: Group
+    report_type_image: Image
+    report_type_video: Video
+    report_type_comment: Comment
+    report_type_group_image: Group Image
+    report_type_group_news: Group News
+    report_type_group_video: Group Video
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+    reported_email_title: Your Content Has Been Flagged
+    reported_email: |
+        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+
+        Type: %s
+        Content:  %s
+        Reason: %s
+
+        The content has been temporarily removed from Alienware Arena and will be
+        reviewed by our Staff within 72 hours.  If the content does not violate
+        our Terms of Service, we will enable it on our website and you will
+        receive an automated email with this update.
+
+        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+        Alienware Arena Team
+
+    restored_email_title: Your Content is Restored
+    restored_email: |
+        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
+
+        Type: %s
+        Content: %s
+
+        Alienware Arena Team
 
 error:
     fill_in_birthday: Please fill in your birthday!
