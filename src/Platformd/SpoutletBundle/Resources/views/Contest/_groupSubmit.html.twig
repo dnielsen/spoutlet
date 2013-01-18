@@ -20,8 +20,17 @@
     	<div class="group-contest-content">
 			<h3>{{ 'contests.submit_groups_title' | trans }}{% if contest.maxEntries > 1 %}s{% endif %}</h3>
 			<div>
+				{% if groupsEntered.count == contest.maxEntries %}
+					<div style="width:290px;padding:5px 0;">
+	                    <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-exclamation-sign"></i>
+	                        <em><span style="color: #ff0000;">{{ 'contests.submit_page_entry_max_reached_groups' | trans}}</span></em>
+	                    </p>
+	                </div>
+				{% endif %}
 				{% if groupsEntered.count > 0 %}
-					<p>{{ 'contests.submit_groups_how_many_so_far' | trans }}</p>
+					<p>
+						{{ 'contests.submit_groups_how_many_so_far' | trans }}
+					</p>
 				{% endif %}
 				{% for group in groupsEntered %}
 					<div class="group-list-item entered selected" data-id="{{ group.id }}">

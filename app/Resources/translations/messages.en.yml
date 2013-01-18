@@ -752,6 +752,7 @@ contests:
     enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
     submit_page_no_entry: You must enter the contest before you can submit %ss.
     submit_page_entry_max_reached: You have entered the maximum number of images for this contest.
+    submit_page_entry_max_reached_groups: You have entered the maximum number of groups for this contest.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
     submit_groups_title: Select Your Group
@@ -775,7 +776,9 @@ contests:
     contest_not_eligible: Sorry, you are not eligible to enter this contest.
     ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Image Details section now!
     image_part_of_contest: This image is part of a contest.
+    group_part_of_contest: This group is part of a contest.
     voting_begins: Voting begins
     no_longer_available: This contest is no longer available.
     entry_success: Your group is entered into the contest.
+
 

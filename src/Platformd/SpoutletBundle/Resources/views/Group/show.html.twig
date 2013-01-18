@@ -98,6 +98,15 @@
                     </tr>
                     {% endif %}
                 </table>
+                {% if isEntered %}
+                    <div style="width:290px;">
+                        <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                            <em>{{ 'contests.group_part_of_contest' | trans }}<br /><br />
+                                <a href="{{ path('contest_show', { 'slug' : contest.slug }) }}" target="_blank">{{ contest.name }}</a>
+                            </em>
+                        </p>
+                    </div>
+                {% endif %}
                 <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
                 <div id="group-like-wrapper">
                     <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>

@@ -925,6 +925,7 @@ Alienware Arena Team
             'groupVideos'   => $groupVideos,
             'isEntered'     => $isEntered,
             'contestCount'  => $contestMemberCount,
+            'contest'       => $contest,
         ));
     }
 
