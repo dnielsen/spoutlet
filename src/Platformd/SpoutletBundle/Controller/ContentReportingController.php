@@ -136,6 +136,12 @@ class ContentReportingController extends Controller
                 $owner = $item->getOwner();
                 break;
 
+            case 'GroupDiscussionPost':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getContent();
+                $owner = $item->getOwner();
+                break;
+
             default:
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getTitle();
