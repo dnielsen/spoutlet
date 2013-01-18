@@ -418,6 +418,10 @@ class CommentsController extends Controller
             $tag = 'nukephotocomment';
         }
 
+        if(strlen(stristr($thread, 'group')) > 0) {
+            $tag = 'nukeforumreply';
+        }
+
         if($tag) {
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
@@ -434,6 +438,10 @@ class CommentsController extends Controller
 
         if(strlen(stristr($threadId, 'gallery')) > 0) {
             $tag = 'photocomment';
+        }
+
+        if(strlen(stristr($thread, 'group')) > 0) {
+            $tag = 'replytothread';
         }
 
         if($tag) {
