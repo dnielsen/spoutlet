@@ -143,18 +143,22 @@ class GalleryController extends Controller
         }
 
         $params = json_decode($content, true);
+
+        $totalImages = $params['totalImages'];
+        $medias      = $params['medias'];
+
         $em     = $this->getEntityManager();
 
         $unpublished = array();
         $published   = array();
         $allErrors   = array();
 
-        foreach ($params as $param) {
-            $id          = (int) $param['id'];
-            $title       = $param['title'];
-            $description = $param['description'];
-            $gals        = $param['galleries'];
-            $groups      = $param['groups'];
+        foreach ($medias as $submission) {
+            $id          = (int) $submission['id'];
+            $title       = $submission['title'];
+            $description = $submission['description'];
+            $gals        = $submission['galleries'];
+            $groups      = $submission['groups'];
 
             $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
@@ -199,7 +203,8 @@ class GalleryController extends Controller
             $em->flush();
         }
 
-        $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), count($params));
+        $this->setFlash('success', sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages));
+        $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages);
 
         $response->setContent(json_encode(array(
             "success" => true,

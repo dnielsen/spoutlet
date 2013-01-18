@@ -192,8 +192,22 @@ platformd:
         back: Go Back
 
     comment:
-        login_to_comment: ログインされていません。最初に<a href="%login_url%">ログイン</a>してからメッセージを残してください。
+        add_your_comment: あなたのコメントを追加する
+        login_to_comment: コメントを投稿するには<a href="%login_url%">ログイン</a>してください。
         comments: コメント
+        sort_by: 並べ替え
+        sort_by_votes: 票
+        sort_by_newest: 新しい
+        sort_by_oldest: 古い
+        add_comment: コメントを追加する
+        login_to_reply: 返信するにはログインしてください
+        reply: 返信
+        more_replies: さらに返信
+        points: ポイント
+        post: 投稿する
+        delete: 消す
+        edit: 編集
+        no_more_posts: これ以上の投稿はありません
         date_format: %year%年%month%月%day%日
 
     user:
@@ -443,6 +457,55 @@ age_confirm:
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
 confirm: 確認
+
+forms:
+    required_fields: required fields
+
+content_reporting:
+    report: レポート
+    report_content: 報告内容
+    submit: 出品
+    cancel: キャンセル
+    close: キャンセル
+    inappropriate_content: 不適切な内容
+    spam: スパム
+    violates_intellectual_property: 知的財産を侵害する
+    harassment: 嫌がらせ
+    must_be_logged_in: あなたは内容を報告するためにログインする必要があります
+    once_per_hour: あなたは1時間あたり1項目を報告できます。
+    report_type_group: Group
+    report_type_image: Image
+    report_type_video: ビデオ
+    report_type_comment: コメント
+    report_type_group_image: Group Image
+    report_type_group_news: Group News
+    report_type_group_video: Group Video
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    report_success: 内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでcontact@alienwarearena.comまで送付してください。
+    reported_email_title: あなたの投稿にフラグが設定されています
+    reported_email: |
+        ALIENWARE ARENAに投稿された内容に不適切とされるフラグが付いており、確認を必要としています。
+
+        タイプ：%s
+        内容：%s
+        理由：%s
+
+        投稿は、一時的にALIENWARE ARENAから削除され、72時間以内にスタッフによって確認されます。内容が利用規約に違反していない場合
+        はウェブサイトで有効となり、あなたは更新案内の自動送信メールを受信します。
+
+        ご不明な点がございましたら、contact@alienwarearena.comまでご連絡ください。
+
+        ALIENWARE ARENA チーム
+    restored_email_title: あなたの投稿が復元されます
+    restored_email: |
+        これは、以下の投稿が利用規約に違反していないことをお知らせする自動送信メールです。投稿はALIENWARE ARENA で有効になりました。
+
+        タイプ：%s
+        内容：%s
+
+        ALIENWARE ARENA チーム
 
 error:
     fill_in_birthday: 誕生日をご記入ください

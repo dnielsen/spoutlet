@@ -39,8 +39,8 @@
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.news' | trans }}</a>
                         <ul>
-                            <li><a href="http://www.alienwarearena.com/articles/">Articles</a></li>
-                            <li><a href="http://www.alienwarearena.com/news/">Announcements</a></li>
+                            <li><a href="http://www.alienwarearena.com/articles/">{{ 'platformd.layout.main_menu.articles' | trans }}</a></li>
+                            <li><a href="http://www.alienwarearena.com/news/">{{ 'platformd.layout.main_menu.announcements' | trans }}</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -79,7 +79,7 @@
                 {% if site_has_feature('GROUPS') %}
                     <li class="more">
                         <a class="blue">
-                            <span style="color: #ff5711;padding-right: 2px;">{{ 'deals_new' | trans }}</span>Groups
+                            {{ 'platformd.layout.main_menu.groups' | trans }}
                         </a>
                         <ul>
                             <li>

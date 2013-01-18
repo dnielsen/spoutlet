@@ -14,6 +14,20 @@
     <meta property="og:description" content="{{ media.description }}" />
 {% endblock %}
 
+{% if site_has_feature('PHOTOS') %}
+    {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
+        {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
+    {% elseif app.session.locale == 'es' %}
+        {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries-es.jpg') %}
+    {% else %}
+        {% set bgImage = null %}
+    {% endif %}
+{% else %}
+    {% set bgImage = null %}
+{% endif %}
+
+{% block page_background_image bgImage %}
+
 {% block content %}
 <div style="min-height:400px;">
     <h3 style="text-align:center;color:#fff;margin-top: 50px;font-weight:bold;font-size:24px;">{{ 'galleries.submit_photo_publish_share' | trans }}<br />

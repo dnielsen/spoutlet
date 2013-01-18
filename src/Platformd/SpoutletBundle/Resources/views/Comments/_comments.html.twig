@@ -51,15 +51,15 @@
                             <div class="choices" id="choices-{{ comment.id }}">
                                 <ul>
                                     <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | trans }}</a></li>
-                                    {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Edit</a></li>{% endif %}
-                                    {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">Delete</a></li>{% endif %}
-                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">Report</a></li>
+                                    {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | trans }}</a></li>{% endif %}
+                                    {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">{{ 'platformd.comment.delete' | trans }}</a></li>{% endif %}
+                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'content_reporting.report' | trans }}</a></li>
                                     <div class="report-options" id="report-options-{{ comment.id }}">
                                         <ul>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">Spam</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.harassment' | trans }}</a></li>
                                         </ul>
                                     </div>
                                 </ul>
@@ -93,15 +93,15 @@
                                     <div class="options more-replies" data-id="{{ reply.id }}">
                                        <div class="choices" id="choices-{{ reply.id }}">
                                             <ul>
-                                                {% if isAdmin or app.user == reply.author %}<li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">Edit</a></li>{% endif %}
-                                                {% if isAdmin or app.user == reply.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">Delete</a></li>{% endif %}
-                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">Report</a></li>
+                                                {% if isAdmin or app.user == reply.author %}<li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | trans }}</a></li>{% endif %}
+                                                {% if isAdmin or app.user == reply.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">{{ 'platformd.comment.delete' | trans }}</a></li>{% endif %}
+                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | trans }}</a></li>
                                                 <div class="report-options" id="report-options-{{ reply.id }}">
                                                     <ul>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">Inappropriate content</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">Spam</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">Violates intellectual property</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">Harassment</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.harassment' | trans }}</a></li>
                                                     </ul>
                                                 </div>
                                             </ul>
@@ -170,6 +170,7 @@
             $('.report-options').hide();
             var id = $(this).attr('data-id');
             $('#choices-' + id).toggle('fast');
+            window.getSelection().removeAllRanges()
         });
 
         $('.report-options-link').click(function (event) {

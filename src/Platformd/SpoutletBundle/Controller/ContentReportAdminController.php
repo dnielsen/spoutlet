@@ -312,39 +312,45 @@ class ContentReportAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
-
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = ucfirst($item->getCategory());
-                break;
-
-            case 'Group':
-                $itemType = "Group ".str_replace('Group', '', $type);
+                $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
 
             case 'Comment':
-                $itemType = "Comment";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getBody();
+                $owner = $item->getAuthor();
+                break;
+
+            case 'Group':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getOwner();
+                break;
+
+            case 'GroupDiscussionPost':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getContent();
+                $owner = $item->getOwner();
                 break;
 
             default:
-                $itemType = "Unknown";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
         }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
-        $subject            = "Your Content is Restored";
-        $message            = sprintf("This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
-
-Type: %s
-Content: %s
-
-
-Alienware Arena Team
-
-", $itemType, $name);
+        $emailTo            = $owner->getEmail();
+        $emailLocale        = $owner->getLocale() ? : 'en';
+        $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
+        $subject            = $this->trans('content_reporting.restored_email_title', array(), 'messages', $emailLocale);
+        $message            = sprintf($this->trans('content_reporting.restored_email', array(), 'messages', $emailLocale), $itemType, $name);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

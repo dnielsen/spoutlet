@@ -5,7 +5,7 @@
     {% for media in medias %}
         {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
         {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}" style="text-align:left;{% if not isFirstInRow %}margin: 0 0 0 18px;{% endif %}">
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media[0].id }) }}">
                     <img class="media-thumb" title="{{ media[0].title }}" src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
@@ -44,7 +44,7 @@
     {% for media in medias %}
         {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
         {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
-        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
+        <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}" style="text-align:left;{% if not isFirstInRow %}margin: 0 0 0 18px;{% endif %}">
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                     <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
@@ -76,7 +76,7 @@
                 <div>{{ 'galleries.by' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
             </div>
             <div class="image-actions">
-                <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Report</a>
+                <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">{{ 'content_reporting.report' | trans }}</a>
             </div>
         </div>
     {% else %}
