@@ -117,36 +117,40 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
-
-        $reason = $this->trans('content_reporting.'.$reason);
-
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = $this->trans(ContentReport::getTypeTranslationKey(ucfirst($item->getCategory())));
+                $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
                 $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
 
             case 'Comment':
-                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getBody();
+                $owner = $item->getAuthor();
                 break;
 
             case 'Group':
-                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
+                $owner = $item->getOwner();
                 break;
 
             default:
-                $itemType = $this->trans(ContentReport::getTypeTranslationKey($type));
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
         }
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
-        $subject            = $this->trans('content_reporting.reported_email_title');
-        $message            = sprintf($this->trans('content_reporting.reported_email'), $itemType, $name, $reason);
+        $emailTo            = $owner->getEmail();
+        $emailLocale        = $owner->getLocale() ? : 'en';
+        $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
+        $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
+        $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
+        $message            = sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason);
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
