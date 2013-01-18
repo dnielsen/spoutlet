@@ -21,17 +21,31 @@ class HomepageBannerRepository extends EntityRepository
             ;
     }
 
-    /**
-     *
-     */
     public function findForLocale($locale)
     {
-        
+
         return $this
             ->createQueryBuilder('h')
             ->where('h.locale = ?0')
             ->orderBy('h.position', 'ASC')
             ->getQuery()
             ->execute(array($locale));
+    }
+
+    public function findForSite($site, $limit=null)
+    {
+        $qb = $this
+            ->createQueryBuilder('h')
+            ->leftJoin('h.sites', 's')
+            ->where('s.id = :siteId')
+            ->addOrderBy('h.position', 'ASC')
+            ->addOrderBy('h.created', 'DESC')
+            ->setParameter('siteId', $site->getId());
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->execute();
     }
 }

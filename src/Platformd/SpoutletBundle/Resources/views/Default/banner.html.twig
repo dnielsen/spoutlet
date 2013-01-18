@@ -5,14 +5,14 @@
 
     <div class="ad-controls">
     </div>
-  
+
     <div class="ad-nav">
         <div class="ad-thumbs">
             <ul class="ad-thumb-list">
             {% for index, banner in banners %}
                 <li>
                     <a href="{{ media_path(banner, { "size" : "banner" }) }}">
-                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" />
+                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
                     </a>
                 </li>
             {% endfor %}
@@ -53,22 +53,27 @@ jQuery(function($) {
     callbacks: {
       afterImageVisible: function() {
 
-        var 
+        var
           current = this.images[this.current_index].thumb,
           url = $("img[src='" + current + "']").data("url");
-        
-        /** 
+          newWindow = $("img[src='" + current + "']").data("new");
+
+        /**
          * Redirects user to a specific URL
-         * 
+         *
          * @param event
          */
         function handleFullsizeClick(event) {
           event.stopPropagation();
           event.preventDefault();
 
-          window.location = url;
+          if (newWindow) {
+            window.open(url);
+          } else {
+            window.location = url;
+          }
         }
-        
+
         if (url) {
           $("div.ad-image img").css("cursor", "pointer").bind("click", handleFullsizeClick);
         } else {

@@ -26,8 +26,7 @@ class HomepageBanner
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length=5)
-     * @Assert\NotBlank
+     * @ORM\Column(name="locale", type="string", length=5, nullable=true)
      */
     private $locale;
 
@@ -86,11 +85,22 @@ class HomepageBanner
      */
     protected $updated;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinTable(name="homepage_banner_site")
+     */
+    private $sites;
+
+    /**
+     * @Assert\NotNull
+     * @ORM\Column(name="new_window", type="boolean")
+     */
+    private $newWindow = false;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -110,7 +120,7 @@ class HomepageBanner
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -130,7 +140,7 @@ class HomepageBanner
     /**
      * Get thumb
      *
-     * @return string 
+     * @return string
      */
     public function getThumb()
     {
@@ -150,7 +160,7 @@ class HomepageBanner
     /**
      * Get banner
      *
-     * @return string 
+     * @return string
      */
     public function getBanner()
     {
@@ -170,7 +180,7 @@ class HomepageBanner
     /**
      * Get position
      *
-     * @return integer 
+     * @return integer
      */
     public function getPosition()
     {
@@ -190,7 +200,7 @@ class HomepageBanner
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
     public function getUrl()
     {
@@ -227,5 +237,35 @@ class HomepageBanner
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    public function getSites()
+    {
+        return $this->sites;
+    }
+
+    public function setSites($sites)
+    {
+        $this->sites = $sites;
+    }
+
+    public function getNewWindow()
+    {
+        return $this->newWindow;
+    }
+
+    public function setNewWindow($newWindow)
+    {
+        $this->newWindow = $newWindow;
+    }
+
+    public function getSiteList()
+    {
+        $siteList = '';
+        foreach ($this->getSites() as $site) {
+            $siteList .=  '['.$site->getName().']';
+        }
+
+        return $siteList;
     }
 }

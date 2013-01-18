@@ -5,7 +5,6 @@ namespace Platformd\SpoutletBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\File\File;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 
 class HomepageBannerType extends AbstractType
 {
@@ -15,11 +14,26 @@ class HomepageBannerType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('thumb_file', 'file', array('required' => false))
-            ->add('banner_file', 'file', array('required' => false))
+            ->add('thumb_file', 'file', array(
+                'required' => false,
+                'help'  => 'Recommended Size: 634x183px',
+            ))
+            ->add('banner_file', 'file', array(
+                'required' => false,
+                'help'  => 'Recommended Size: Size: 120x60px',
+            ))
             ->add('position')
             ->add('url')
-            ->add('locale', new SiteChoiceType())
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name'
+            ))
+            ->add('newWindow', 'choice', array(
+                'choices'   => array(1 => 'Yes', 0 => 'No',),
+                'label'     => 'Open In New Window?',
+            ))
         ;
     }
 
