@@ -112,10 +112,10 @@ class DealController extends Controller
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
 
         $canTest = $deal->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
-        if (!$deal->getStatus() == "published" && !$canTest) {
+        if ($deal->getStatus() != "published" && !$canTest) {
             $this->setFlash('error', 'deal_not_eligible');
 
-            return $this->redirectToShow($dealShow);
+            return $this->redirect($dealShow);
         }
 
         if ($dealCodeRepo->doesUserHaveCodeForDeal($user, $deal)) {
