@@ -44,6 +44,15 @@ class SweepstakesAdminType extends EventType
         $builder->add('game', null, array('empty_value' => 'N/A'));
 
     	$builder->add('content', 'textarea');
+
+        $builder->add('testOnly', 'choice', array(
+            'choices' => array(
+                1 => 'Yes',
+                0 => 'No',
+            ),
+            'label' => 'Allow admin testing?',
+            'help'  => 'This allows admins to still test the operation of the sweepstakes IF it is unpublished',
+        ));
     }
 
 

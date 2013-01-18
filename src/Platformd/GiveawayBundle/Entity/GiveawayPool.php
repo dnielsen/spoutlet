@@ -53,7 +53,7 @@ class GiveawayPool extends Pool
      */
     public function isTotallyActive()
     {
-        return $this->getIsActive() && $this->getGiveaway() && $this->getGiveaway()->isActive();
+        return $this->getIsActive() && $this->getGiveaway() && ($this->getGiveaway()->isActive() || $this->getGiveaway()->getTestOnly());
     }
 
 

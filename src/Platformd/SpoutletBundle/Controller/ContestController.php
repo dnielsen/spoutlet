@@ -249,7 +249,8 @@ class ContestController extends Controller
             throw $this->createNotFoundException('Contest not found.');
         }
 
-        if($contest->getStatus() != 'published')
+        $canTest = $contest->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if($contest->getStatus() != 'published' && !$canTest)
         {
             throw $this->createNotFoundException('Contest not found.');
         }
