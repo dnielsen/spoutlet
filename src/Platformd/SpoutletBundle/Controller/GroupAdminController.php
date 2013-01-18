@@ -64,36 +64,6 @@ class GroupAdminController extends Controller
         $filters = $this->getFilterFormData();
         $qb = $groupRepo->findGroupStatsQB($filters);
 
-        if ($group->getDeleted()) {
-            $row['GroupLink']       = $this->container->get('router')->generate('group_edit', array('id' => $group->getId()));;
-        } else {
-            $row['GroupLink']       = $this->container->get('router')->generate('group_show', array('slug' => $group->getSlug()));;
-        }
-
-        $row['GroupId']             = $group->getId();
-        $row['GroupName']           = $group->getName();
-        $row['Category']            = $group->getCategory();
-        $row['Type']                = $group->getIsPublic() ? 'Public' : 'Private';
-
-        $row['Region']              = "";
-
-        if ($group->getAllLocales()) {
-            $row['Region']          = 'All Sites';
-        } else {
-            foreach ($group->getSites() as $site) {
-                $row['Region'] .=  '['.$site->getName().']';
-            }
-        }
-
-        $row['CreatedAt']           = $group->getCreatedAt();
-        $row['Status']              = $group->getDeleted() ? 'Inactive' : 'Active';
-        $row['Organizer']           = $group->getOwner()->getUsername();
-        $row['MemberCount']         = $group->getMembers()->count();
-        $row['VideoCount']          = $group->getVideos()->count();
-        $row['ImageCount']          = $group->getImages()->count();
-        $row['NewsArticleCount']    = $group->getNewsArticles()->count();
-        $row['DiscussionCount']     = $group->getDiscussions()->count();
-
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
         $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
