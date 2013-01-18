@@ -64,16 +64,18 @@ class ContestRepository extends EntityRepository
         return $result ? true : false;
     }
 
-    public function findAllByCategoryAndSite($category, $site)
+    public function findAllByCategoryAndSite($category, $site, $status=array('published'))
     {
-        return $this->createSiteQueryBuilder($site)
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
             ->andWhere('c.votingEnd > :today')
             ->andWhere('c.category = :category')
             ->orderBy('c.votingEnd', 'DESC')
             ->setParameter('category', $category)
-            ->setParameter('today', new \DateTime('now'))
-            ->getQuery()
-            ->execute();
+            ->setParameter('today', new \DateTime('now'));
+
+        return $qb->getQuery()->execute();
     }
 
     public function findAllByCategory($category)
@@ -99,7 +101,9 @@ class ContestRepository extends EntityRepository
     {
         return $this->createSiteQueryBuilder($site)
             ->andWhere('c.votingEnd < :today')
+            ->andWhere('c.status = :status')
             ->setParameter('today', new \DateTime('now'))
+            ->setParameter('status', 'published')
             ->getQuery()
             ->execute();
     }
@@ -110,6 +114,8 @@ class ContestRepository extends EntityRepository
         return $qb->leftJoin('c.entries', 'e')
             ->leftJoin('e.groups', 'eg')
             ->where($qb->expr()->in('eg.id', array($group->getId())))
+            ->andWhere('c.status = :status')
+            ->setParameter('status', 'published')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
