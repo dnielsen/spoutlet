@@ -116,7 +116,7 @@
             success: function(data)
             {
                 if(data.message == "no_more_comments") {
-                    $('#more-comments-loader').html({{ 'platformd.comment.no_more_posts' | trans }});
+                    $('#more-comments-loader').html('{{ "platformd.comment.no_more_posts" | trans }}');
                     $('.comment-wrapper:last').addClass('no-more-comments');
                 } else if(data.message == "error") {
                     $('#more-comments-loader').html('An error has occurred during loading.');
