@@ -40,15 +40,10 @@ class FrontendController extends Controller
             $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
         }
 
-        $countries = $sweepstakes->getRuleset() ? $sweepstakes->getRuleset()->getAllowedCountries() : 'all countries';
-        $ageRestrictions = $sweepstakes->getRuleset() ? $sweepstakes->getRuleset()->areThereAgeRestrictions() : null;
-
         return array(
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
-            'countries' => $countries,
-            'ageRestrictions' => $ageRestrictions,
         );
     }
 

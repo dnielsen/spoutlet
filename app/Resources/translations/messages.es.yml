@@ -4,6 +4,11 @@ platformd:
     not_found:
         title: Page not found
         body: We're sorry - but we can't find the page you're looking for
+
+    flash:
+        error_title: ¡Error!
+        success_title: ¡Exito!
+
     layout:
 
         region:

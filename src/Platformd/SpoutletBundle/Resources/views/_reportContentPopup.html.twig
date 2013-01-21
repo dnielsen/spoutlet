@@ -18,6 +18,8 @@
 <script type="text/javascript">
     $(function () {
 
+        $('.content-report-dialog-wrapper').detach();
+
         var reportDialog = $('#report-content-dialog-{{ reportContentType }}').dialog({
             autoOpen: false,
             modal: true,
@@ -25,6 +27,7 @@
             width: 350,
             draggable: false,
             resizable: false,
+            dialogClass: 'content-report-dialog-wrapper',
             close: function (e, ui) {
 
             }
@@ -66,6 +69,11 @@
         $('#close-dialog-{{ reportContentType }}').click(function () {
             reportDialog.dialog('close');
         });
+
+        $('#report-content-dialog-{{ reportContentType }}').each(function() {
+            if (!$(this).parent().hasClass('content-report-dialog-wrapper')) {
+                $(this).detach();
+            }
+        });
     });
 </script>
-

@@ -12,8 +12,18 @@
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
 {% if site_has_feature('PHOTOS') %}
-    {% block page_background_image asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
+    {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
+        {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
+    {% elseif app.session.locale == 'es' %}
+        {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries-es.jpg') %}
+    {% else %}
+        {% set bgImage = null %}
+    {% endif %}
+{% else %}
+    {% set bgImage = null %}
 {% endif %}
+
+{% block page_background_image bgImage %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
