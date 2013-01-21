@@ -72,7 +72,7 @@
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
                     <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
                     <div class="comment-replies" id="comment-replies-{{ comment.id }}">
-                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
+                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
                     </div>
 
                     {% set replyCounter = 0 %}
@@ -162,7 +162,7 @@
 
         $('.comment-replies textarea').keyup(function() {
             $(this).css('height', '1px');
-            $(this).css('height', (parseInt($(this).prop('scrollHeight'))-12)+"px");
+            $(this).css('height', (parseInt($(this).prop('scrollHeight')))+"px");
         });
 
         $('.options').click(function (event) {
@@ -194,7 +194,7 @@
             $('#replies-' + commentId + ' > .hidden').hide().removeClass('hidden').fadeIn();
         });
 
-        $('.comment-reply-link').click(function () {
+        $('.comment-post-reply-link').click(function () {
             var id = $(this).attr('data-id');
             if ($('#reply-text-' + id).val() == "") {
                 return false;
@@ -307,7 +307,7 @@
 
             $('.choices').hide();
 
-            var answer = confirm("Are you sure you want to delete this comment?")
+            var answer = confirm("{{ 'platformd.comment.delete_confirm' | trans }}")
             if (!answer){
                 return false;
             }
