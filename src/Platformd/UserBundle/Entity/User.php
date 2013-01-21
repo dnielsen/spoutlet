@@ -607,7 +607,6 @@ class User extends BaseUser
 
     public function getAvatar()
     {
-
         return $this->avatar;
     }
 
