@@ -1,4 +1,4 @@
-/* comments */
+    /* comments */
 
 .thread {
     width: 100%;
@@ -163,6 +163,7 @@
     min-width: 180px;
     position: absolute;
     display: none;
+    z-index: 100;
 }
 
 .comment-wrapper .report-options {

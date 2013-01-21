@@ -123,6 +123,7 @@
     {% endfor %}
 {% endif %}
 
+<script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
 <script type="text/javascript">
     $(function () {
 
@@ -252,9 +253,9 @@
             if(element.find('.comment-edit-textarea').length == 0) {
                 element.text('');
                 element.append("<textarea class='comment-edit-textarea' id='comment-edit-" +  id + "' required='required' />");
-                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>Save</button>");
+                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>{{ 'platformd.comment.submit' | trans }}</button>");
 
-                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>Cancel</button>");
+                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>{{ 'platformd.comment.cancel' | trans }}</button>");
 
                 $('#comment-edit-cancel-' + id).click(function () {
                    toggleEdit(element, id, text);

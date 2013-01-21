@@ -63,6 +63,8 @@ platformd:
         post: Puesto
         delete: Borrar
         edit: Editar
+        submit: Enviar
+        cancel: Cancelar
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
 

@@ -205,6 +205,8 @@ platformd:
         no_more_posts: No more posts to show.
         delete: Delete
         edit: Edit
+        submit: 提交
+        cancel: Cancel
         date_format: %month%/%day%/%year%
 
     user:
