@@ -208,7 +208,7 @@ platformd:
         edit: Edit
         submit: 提交
         cancel: Cancel
-        date_format: %month%/%day%/%year%
+        date_format: %year%年%month%月%day%日
 
     user:
         login_header: 输入登陆信息
