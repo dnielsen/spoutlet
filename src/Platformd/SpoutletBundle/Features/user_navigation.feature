@@ -64,7 +64,7 @@ Feature: User Navigation
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                 |                                                                    |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/           |                                                                    |
       | Media >> My Gallery           | /app_test.php/account/profile/photos                      | http://na.alienwarearena.local/app_test.php/account/profile/photos |
-      | Sign out                      | /app_test.php/logout                                      | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fna.alienwarearena.local%2Fapp_test.php%2F |
+      | Sign Out                      | /app_test.php/logout                                      | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fna.alienwarearena.local%2Fapp_test.php%2F |
 
   Scenario: The "Europe" site's user navigation menu has the correct items
     Given I am on the "Europe" site
@@ -81,7 +81,7 @@ Feature: User Navigation
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                       |                                                                    |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                 |                                                                    |
       | Media >> My Gallery           | /app_test.php/account/profile/photos                            | http://eu.alienwarearena.local/app_test.php/account/profile/photos |
-      | Sign out                      | /app_test.php/logout                                            | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Feu.alienwarearena.local%2Fapp_test.php%2F |
+      | Sign Out                      | /app_test.php/logout                                            | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Feu.alienwarearena.local%2Fapp_test.php%2F |
 
   Scenario: The "India" site's user navigation menu has the correct items
     Given I am on the "India" site
@@ -95,8 +95,7 @@ Feature: User Navigation
       | My Giveaways                  | http://www.alienwarearena.com/in/account/my-giveaway-keys/        |             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                         |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                   |             |
-      | Media >> My Gallery           | /app_test.php/account/profile/photos                              | http://in.alienwarearena.local/app_test.php/account/profile/photos            |
-      | Sign out                      | /app_test.php/logout                                              | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fin.alienwarearena.local%2Fapp_test.php%2F |
+      | Sign Out                      | /app_test.php/logout                                              | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fin.alienwarearena.local%2Fapp_test.php%2F |
 
   Scenario: The "Singapore" site's user navigation menu has the correct items
     Given I am on the "Singapore" site
@@ -113,8 +112,7 @@ Feature: User Navigation
       | Tournaments >> Game IDs       | http://www.alienwarearena.com/account/ids/                    |             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                     |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |             |
-      | Media >> My Gallery           | /app_test.php/account/profile/photos                          | http://mysg.alienwarearena.local/app_test.php/account/profile/photos            |
-      | Sign out                      | /app_test.php/logout                                          | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fmysg.alienwarearena.local%2Fapp_test.php%2F |
+      | Sign Out                      | /app_test.php/logout                                          | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fmysg.alienwarearena.local%2Fapp_test.php%2F |
 
   Scenario: The "Australia / New Zealand" site's user navigation menu has the correct items
     Given I am on the "Australia / New Zealand" site
@@ -128,5 +126,4 @@ Feature: User Navigation
       | My Giveaways                  | http://www.alienwarearena.com/anz/account/my-giveaway-keys/   |             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                     |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |             |
-      | Media >> My Gallery           | /app_test.php/account/profile/photos                          | http://anz.alienwarearena.local/app_test.php/account/profile/photos            |
-      | Sign out                      | /app_test.php/logout                                          | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fanz.alienwarearena.local%2Fapp_test.php%2F |
+      | Sign Out                      | /app_test.php/logout                                          | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fanz.alienwarearena.local%2Fapp_test.php%2F |

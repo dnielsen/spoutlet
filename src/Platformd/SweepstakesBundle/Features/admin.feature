@@ -15,7 +15,6 @@ Feature: Sweepstake Admin
                 | External URL          | http://www.google.com |
                 | Starts at             | 06/05/2012            |
                 | Ends at               | 06/15/2012            |
-                | Eligible Countries    | US                    |
                 | Official Rules        | the rules!            |
                 | Content               | the release!          |
             And I select "Skyrim" from "Game"
