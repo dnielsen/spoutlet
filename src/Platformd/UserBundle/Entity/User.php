@@ -25,6 +25,8 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
  */
 class User extends BaseUser
 {
+    public $currentPassword;
+
     /**
      * @var integer $id
      *

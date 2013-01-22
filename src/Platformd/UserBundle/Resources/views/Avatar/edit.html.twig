@@ -23,11 +23,23 @@
 
 <form action="{{ path('user_avatar_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form">
     <input type="hidden" name="_method" value="PUT" />
-    {{ form_widget(form.userAvatars) }}
-    {{ form_errors(form.userAvatars) }}
+    {{ form_errors(form) }}
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.avatars'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_widget(form.userAvatars) }}
+        {{ form_errors(form.userAvatars) }}
+        <a class="button" href="#" id="user-avatar-add">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_row(form.currentPassword) }}
+        {{ form_row(form.plainPassword) }}
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_row(form.subscribedGamingNews) }}
+    </fieldset>
     {{ form_rest(form) }}
-
-    <a href="#" id="user-avatar-add">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
 
     <div>
         <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />

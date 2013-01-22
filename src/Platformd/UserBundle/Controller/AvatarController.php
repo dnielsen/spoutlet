@@ -13,7 +13,7 @@ class AvatarController extends Controller
 {
     public function editAction()
     {
-        $form = $this->createForm(new AccountSettingsType, $this->getUser());
+        $form = $this->createForm($this->getFormType(), $this->getUser());
 
         return $this->render('FOSUserBundle:Avatar:edit.html.twig', array(
             'form' => $form->createView(),
@@ -22,7 +22,7 @@ class AvatarController extends Controller
 
     public function updateAction(Request $request)
     {
-        $form = $this->createForm(new AccountSettingsType, $this->getUser());
+        $form = $this->createForm($this->getFormType(), $this->getUser());
         $form->bindRequest($request);
 
         if ($form->isValid()) {
@@ -46,6 +46,11 @@ class AvatarController extends Controller
         $this->get('session')->setFlash('success', 'Avatar selection saved');
 
         return $this->redirect($this->generateUrl('user_avatar_edit'));
+    }
+
+    private function getFormType()
+    {
+        return new AccountSettingsType($this->get('security.encoder_factory')->getEncoder($this->getUser()));
     }
 
     private function findAvatarOr404($id, User $user)
