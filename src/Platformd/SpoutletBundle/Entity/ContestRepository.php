@@ -64,7 +64,7 @@ class ContestRepository extends EntityRepository
         return $result ? true : false;
     }
 
-    public function findAllByCategoryAndSite($category, $site, $status=array('published'))
+    public function findAllByCategoryAndSiteWithVotingPeriod($category, $site, $status=array('published'))
     {
         $qb = $this->createSiteQueryBuilder($site);
 
@@ -74,6 +74,18 @@ class ContestRepository extends EntityRepository
             ->orderBy('c.votingEnd', 'DESC')
             ->setParameter('category', $category)
             ->setParameter('today', new \DateTime('now'));
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllByCategoryAndSite($category, $site, $status=array('published'))
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
+            ->andWhere('c.category = :category')
+            ->orderBy('c.votingEnd', 'DESC')
+            ->setParameter('category', $category);
 
         return $qb->getQuery()->execute();
     }

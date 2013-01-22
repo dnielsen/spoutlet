@@ -31,7 +31,7 @@ class ContestController extends Controller
             if($category == 'expired') {
                 $contests = $this->getContestRepository()->findAllExpiredBySite($site);
             } else {
-                $contests = $this->getContestRepository()->findAllByCategoryAndSite($category, $site);
+                $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($category, $site);
             }
         } else {
             $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
@@ -50,7 +50,7 @@ class ContestController extends Controller
         if($filter == 'expired') {
             $contests = $this->getContestRepository()->findAllExpiredBySite($site);
         } else {
-            $contests = $this->getContestRepository()->findAllByCategoryAndSite($filter, $site);
+            $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($filter, $site);
         }
 
         return $this->render('SpoutletBundle:Contest:_contests.html.twig', array(
