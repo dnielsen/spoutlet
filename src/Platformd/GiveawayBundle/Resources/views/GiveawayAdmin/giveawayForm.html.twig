@@ -59,10 +59,11 @@
         </ul>
     </div>
 
-    <legend>d) Content</legend>
+    <legend>d) Description</legend>
 
     <div class="form_row">
         {{ form_errors(form.content) }}
+        {{ form_label(form.content) }}
         {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
     </div>
 
