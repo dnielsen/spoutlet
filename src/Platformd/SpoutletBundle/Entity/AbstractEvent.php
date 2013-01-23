@@ -222,6 +222,12 @@ abstract class AbstractEvent implements LinkableInterface
      */
     protected $sitifiedAt;
 
+    /**
+     * @ORM\Column(name="test_only", type="boolean", nullable=true)
+     *
+     */
+    protected $testOnly = false;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -674,6 +680,16 @@ abstract class AbstractEvent implements LinkableInterface
     public function setRuleset($ruleset)
     {
         $this->ruleset = $ruleset;
+    }
+
+    public function getTestOnly()
+    {
+        return $this->testOnly;
+    }
+
+    public function setTestOnly($testOnly)
+    {
+        $this->testOnly = $testOnly;
     }
 
     /**

@@ -111,6 +111,13 @@ class DealController extends Controller
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
 
+        $canTest = $deal->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if ($deal->getStatus() != "published" && !$canTest) {
+            $this->setFlash('error', 'deal_not_eligible');
+
+            return $this->redirect($dealShow);
+        }
+
         if ($dealCodeRepo->doesUserHaveCodeForDeal($user, $deal)) {
             $this->setFlash('error', 'deal_redeem_user_already_redeemed');
             return $this->redirect($dealShow);

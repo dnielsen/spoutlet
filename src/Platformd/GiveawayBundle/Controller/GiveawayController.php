@@ -40,12 +40,16 @@ class GiveawayController extends Controller
             $assignedKey = null;
         }
 
+        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+
+        $availableKeys = ($giveaway->getStatus() == "active" || $canTest) ? $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool) : 0;
+
         $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
 
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $instruction,
-            'available_keys'    => $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool),
+            'available_keys'    => $availableKeys,
             'assignedKey'       => $assignedKey,
         ));
     }
@@ -70,6 +74,13 @@ class GiveawayController extends Controller
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
+
+        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if (!$giveaway->getStatus() == "active" && !$canTest) {
+            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+
+            return $this->redirectToShow($giveawayShow);
+        }
 
         // make sure this is the type of giveaway that actually allows this
         if (!$giveaway->allowKeyFetch()) {
@@ -154,6 +165,13 @@ class GiveawayController extends Controller
         $user = $this->getUser();
 
         $giveaway = $this->findGiveaway($slug);
+
+        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if (!$giveaway->getStatus() == "active" && !$canTest) {
+            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+
+            return $this->redirectToShow($giveawayShow);
+        }
 
         // make sure this is the type of giveaway that actually allows this
         if (!$giveaway->allowMachineCodeSubmit()) {

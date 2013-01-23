@@ -272,6 +272,12 @@ class Deal implements LinkableInterface, CommentableInterface
      */
     protected $sitifiedAt;
 
+    /**
+     * @ORM\Column(name="test_only", type="boolean", nullable=true)
+     *
+     */
+    protected $testOnly = false;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
@@ -889,6 +895,16 @@ class Deal implements LinkableInterface, CommentableInterface
     public function setRuleset($ruleset)
     {
         $this->ruleset = $ruleset;
+    }
+
+    public function getTestOnly()
+    {
+        return $this->testOnly;
+    }
+
+    public function setTestOnly($testOnly)
+    {
+        $this->testOnly = $testOnly;
     }
 
     /**
