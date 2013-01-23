@@ -40,7 +40,7 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
      * @var string $title
      *
      * @ORM\Column(name="title", type="string", length=255)
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Please provide text in this field.")
      */
     private $title;
 
@@ -83,7 +83,7 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
      * @var string $content
      *
      * @ORM\Column(name="content", type="text", nullable=true)
-     * @Assert\NotNull
+     * @Assert\NotNull(message="Please provide text in this field.")
      */
     private $content;
 
