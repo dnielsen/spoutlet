@@ -62,7 +62,7 @@ class DealRepository extends EntityRepository
      */
     public function findOneBySlugForSite($slug, $site)
     {
-        return $this->createSiteQueryBuilder($site)
+        return $this->createSiteQueryBuilder($site, false)
             ->andWhere('d.slug = :slug')
             ->setParameter('slug', $slug)
             ->getQuery()

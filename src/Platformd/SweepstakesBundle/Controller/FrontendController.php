@@ -58,7 +58,8 @@ class FrontendController extends Controller
         $sweepstakes = $this->findSweepstakes($slug, false);
 
         // if we're not even published yet, definitely don't let them!
-        if (!$sweepstakes->getPublished()) {
+        $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if (!$sweepstakes->getPublished() && !$canTest) {
             $this->setFlash('error', 'sweeps_not_open');
 
             return $this->redirectToShow($sweepstakes);
@@ -119,13 +120,15 @@ class FrontendController extends Controller
      */
     private function findSweepstakes($slug, $restrictUnpublished = true)
     {
-        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlug($slug, $this->getCurrentSite());
+        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlugWithoutPublished($slug, $this->getCurrentSite());
 
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
         }
 
-        if ($restrictUnpublished && !$sweepstakes->getPublished()) {
+        $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+
+        if (($restrictUnpublished && !$sweepstakes->getPublished()) || !$canTest) {
             throw $this->createNotFoundException('But this sweepstakes is not published! '.$slug);
         }
 

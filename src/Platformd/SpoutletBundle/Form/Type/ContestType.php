@@ -92,7 +92,15 @@ class ContestType extends AbstractType
             ->add('status', 'choice', array(
                 'choices'   =>  $this->getStatusChoices()
             ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
+            ->add('testOnly', 'choice', array(
+                'choices' => array(
+                    1 => 'Yes',
+                    0 => 'No',
+                ),
+                'label' => 'Allow admin testing?',
+                'help'  => 'This allows admins to still test the operation of the contest IF it is unpublished',
+            ));
     }
 
     public function getName()
