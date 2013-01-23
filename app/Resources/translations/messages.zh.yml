@@ -202,12 +202,12 @@ platformd:
         more_replies: 更多回复
         points: 积分
         post: 发布
-        no_more_posts: No more posts to show.
-        delete: Delete
+        no_more_posts: 不可以显示更多的发布
+        delete: 删除
         delete_confirm: Are you sure you want to delete this comment?
-        edit: Edit
+        edit: 编辑
         submit: 提交
-        cancel: Cancel
+        cancel: 关闭
         date_format: %year%年%month%月%day%日
 
     user:
@@ -423,52 +423,51 @@ forms:
     required_fields: required fields
 
 content_reporting:
-    report: Report
-    report_content: Report Content
-    inappropriate_content: Inappropriate content
-    spam: Spam
-    submit: Submit
-    cancel: Cancel
-    close: Close
-    violates_intellectual_property: Violates Intellectual Property
-    harassment: Harassment
-    must_be_logged_in: You must be logged in to report content.
-    once_per_hour: You may only report one item per hour.
+    report: 报告
+    report_content: 报告内容
+    inappropriate_content: 不适当的内容
+    spam: 垃圾邮件
+    submit: 提交
+    cancel: 关闭
+    close: 关闭
+    violates_intellectual_property: 违反知识产权
+    harassment: 骚扰
+    must_be_logged_in: 您必须登录才可报告内容
+    once_per_hour: 您只可以每小时报告项目一次
     report_type_group: Group
     report_type_image: Image
     report_type_video: Video
-    report_type_comment: Comment
+    report_type_comment: 评论
     report_type_group_image: Group Image
     report_type_group_news: Group News
     report_type_group_video: Group Video
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
-    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
-    reported_email_title: Your Content Has Been Flagged
+    report_success: 内容已被暂时移除，我们的工作人员将审查。如果你的报告有更多的信息，请将其他详细信息用电子邮件发给我们 contact@alienwarearena.com。
+    reported_email_title: 您的内容已被标记
     reported_email: |
-        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+        一个ALIENWARE ARENA上发布的项目已被标记为不当，并需要审查。
 
-        Type: %s
-        Content:  %s
-        Reason: %s
+        类型：%s
+        内容：%s
+        原因：%s
 
-        The content has been temporarily removed from Alienware Arena and will be
-        reviewed by our Staff within 72 hours.  If the content does not violate
-        our Terms of Service, we will enable it on our website and you will
-        receive an automated email with this update.
+        内容在ALIENWARE ARENA 内已被暂时删除，我们的工作人员将在72小时内审查。如果内容不违反
+        我们的服务条款，我们将在我们的网站上恢复，你会收到此更新的自动发送的电子邮件。
 
-        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+        感谢您的耐心等待。如果您有任何疑问，请联系我们contact@alienwarearena.com。
 
-        Alienware Arena Team
-    restored_email_title: Your Content is Restored
+        ALIENWARE ARENA队伍
+
+    restored_email_title: 您的内容恢复
     restored_email: |
-        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
+        这是一个自动发送邮件，告知您下面的内容不违反我们的服务条款，并已在ALIENWARE竞技场上恢复。
 
-        Type: %s
-        Content: %s
+        类型：%s
+        内容：%s
 
-        Alienware Arena Team
+        ALIENWARE竞技场队伍
 
 error:
     fill_in_birthday: Please fill in your birthday!
