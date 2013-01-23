@@ -7,7 +7,7 @@
 {% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
 {% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
-{% set openGraphThumb       = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+{% set openGraphThumb       = media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
