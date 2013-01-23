@@ -208,6 +208,14 @@ class CommentsController extends Controller
         $em         = $this->getDoctrine()->getEntityManager();
         $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
 
+        $correctPermalink = $this->generateUrl($object->getLinkableRouteName(), $object->getLinkableRouteParameters()).'#comments';
+
+        if ($thread->getPermalink() != $correctPermalink) {
+            $thread->setPermalink($correctPermalink);
+            $em->persist($thread);
+            $em->flush();
+        }
+
         if (!$thread) {
             $thread = $this->createThread($threadId, $object);
         }
