@@ -171,9 +171,13 @@ class Controller extends BaseController
      * @param string $domain
      * @return mixed
      */
-    protected function trans($key, $params = array(), $domain = 'messages')
+    protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
     {
-        return $this->container->get('translator')->trans($key, $params, $domain);
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
+
+        return $this->container->get('translator')->trans($key, $params, $domain, $locale);
     }
 
     /**

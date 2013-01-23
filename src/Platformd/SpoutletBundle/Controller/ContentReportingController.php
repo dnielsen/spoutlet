@@ -58,12 +58,12 @@ class ContentReportingController extends Controller
         }
 
         if (!($user instanceof User)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to report content.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.must_be_logged_in'))));
             return $response;
         }
 
         if ($lastReport && $lastReport > new \DateTime('-1 hour')) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You may only report one item per hour.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.once_per_hour'))));
             return $response;
         }
 
@@ -133,28 +133,38 @@ class ContentReportingController extends Controller
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
 
+
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = ucfirst($item->getCategory());
-                break;
-
-            case 'Group':
-                $itemType = "Group ".str_replace('Group', '', $type);
+                $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
 
             case 'Comment':
-                $itemType = "Comment";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getBody();
+                $owner = $item->getAuthor();
+                break;
+
+            case 'Group':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getOwner();
                 break;
 
             case 'GroupDiscussionPost':
-                $name = 'post id:' . $item->getId();
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getContent();
+                $owner = $item->getOwner();
                 break;
 
             default:
-                $itemType = "Unknown";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
         }
-
 
         $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
 
@@ -173,6 +183,15 @@ Thank you for your patience.  Should you have any questions, please contact us a
 Alienware Arena Team
 
 ", $itemType, $name, $reason);
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+        $emailTo            = $owner->getEmail();
+        $emailLocale        = $owner->getLocale() ? : 'en';
+        $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
+        $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
+        $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
+        $message            = sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason);
+
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

@@ -4,6 +4,11 @@ platformd:
     not_found:
         title: Page not found
         body: We're sorry - but we can't find the page you're looking for
+
+    flash:
+        error_title: ¡Error!
+        success_title: ¡Exito!
+
     layout:
 
         region:
@@ -47,12 +52,79 @@ platformd:
             link: "¿Busca un equipo poderoso? <br/> ¡Encuéntrelo en Alienware!"
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
 
+    comment:
+        add_your_comment: Añada tu comentario
+        login_to_comment: Para poner un comentario, favor de <a href="%login_url%">iniciar sesión.</a>
+        comments: Comentarios
+        sort_by: Ordenar por:
+        sort_by_votes: Votos
+        sort_by_newest: Más Reciente
+        sort_by_oldest: Más Antigua
+        add_comment: Añadir comentario
+        login_to_reply: Inicia sesión para responder
+        reply: Responder
+        more_replies: Más respuestas
+        points: Puntos:
+        post: Puesto
+        delete: Borrar
+        edit: Editar
+        no_more_posts: No hay ningún tema más para mostrar.
+        date_format: %month%/%day%/%year%
+
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.
     message: El contenido está dirigido a un público maduro.
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
 confirm: Confirmar
+
+forms:
+    required_fields: Campos Requeridos
+
+content_reporting:
+    report: Informar
+    report_content: Notificar sobre contenido
+    submit: Enviar
+    cancel: Cancelar
+    close: Cancelar
+    inappropriate_content: Contenido inapropiado
+    spam: Spam
+    violates_intellectual_property: Viole la propiedad intelectual
+    harassment: Acoso
+    must_be_logged_in: Debe iniciar sesión informar sobre contenidos.
+    once_per_hour: Sólo se puede reportar un artículo por hora.
+    report_type_group: Grupo
+    report_type_image: Imagen
+    report_type_video: Vídeo
+    report_type_comment: Comentario
+    report_type_group_image: Imagen del Grupo
+    report_type_group_news: Group News
+    report_type_group_video: Video de Grupo
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    report_success: El contenido ha sido retirado temporalmente y será revisado por nuestro personal. Si tienes información adicional para tu informe, por favor envíenos un correo electrónico a contact@alienwarearena.com con los detalles adicionales.
+    reported_email_title: Tu Contenido ha Sido Marcado
+    reported_email: |
+        Un artículo publicado en Alienware Arena ha sido marcada como inapropiada y requiere revisión.
+
+        Tipo: %s
+        Contenido:  %s
+        Razón: %s
+
+        El contenido ha sido retirado temporalmente de  Alienware Arena y será revisado por nuestro personal dentro de 72 horas.  Si el contenido no viola nuestros Términos de servicio, lo vamos a permitir en nuestro sitio web y recibirás un correo electrónico automatizado con esta actualización.
+
+        Gracias por tu paciencia.  Si tienes cualquier pregunta, por favor contáctenos en contact@alienwarearena.com.
+
+        Equipo Alienware Arena
+    restored_email_title: Tu contenido ha sido restaurado
+    restored_email: |
+        Este es un mensaje automatizado para informarle que el contenido a continuación no viola los Términos de servicio y ha sido restaurado en Alienware Arena.
+
+        Tipo: %s
+        Contenido: %s
+
+        Equipo Alienware Arena
 
 error:
     fill_in_birthday: Por favor, escriba su cumpleaños!
@@ -205,14 +277,14 @@ galleries:
     ineligible_due_to_contest: No puedes votar en este momento, ya que esta imagen es parte de un concurso en cual no eres elegible para votar.
     login_to_vote_linked:  <a href="%login_url%">Inicia sesión</a> para votar
     login_to_vote: ¡Inicia sesión para votar!
-    quick_vote_caption: Quick Vote
-    voting_closed_caption: Voting Closed!
-    already_voted_caption: Already Voted!
+    quick_vote_caption: Voto rápido
+    voting_closed_caption: ¡Votación Cerrada!
+    already_voted_caption: ¡Ya votaste!
     by: por:
-    submit_no_groups: You are not a member of any groups at this time.
-    likes: Likes
-    dislikes: Dislikes
-    cast_your_vote: Cast your vote:
+    submit_no_groups: No hay grupos.
+    likes: Gustos
+    dislikes: Disgustos
+    cast_your_vote: Emite tu voto:
 
 contests:
     contests: Concursos
@@ -249,8 +321,8 @@ contests:
     congratulations_winners: ¡Felicidades a los Ganadores!
     winners_page_congrats: ¡Felicidades a los Ganadores!
     contest_not_eligible: Lo sentimos, pero no eres elegible para participar en este concurso.
-    ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Photo Details section now!
-    image_part_of_contest: This image is part of a contest.
-    voting_begins: Voting begins
-    no_longer_available: This contest is no longer available.
+    ongoing_contest_alert: ¡Esta imagen forma parte de un concurso! ¡Coloca tu voto en la sección Detalles de Foto ahora!
+    image_part_of_contest: Esta imagen forma parte de un concurso.
+    voting_begins: Período de Votación:
+    no_longer_available: Este concurso ya no está disponible
 

@@ -189,8 +189,23 @@ platformd:
         back: 创建新事件
 
     comment:
-        login_to_comment: 你没有登录。留言请先登录。
+        add_your_comment: 添加您的评论
+        login_to_comment: 要发表评论，请<a href="%login_url%">登录</a>
         comments: 评论
+        sort_by: 排序方式：
+        sort_by_votes: 投票
+        sort_by_newest: 最近的
+        sort_by_oldest: 以往的
+        add_comment: 发表评论
+        login_to_reply: 登录以回复
+        reply: 回复
+        more_replies: 更多回复
+        points: 积分
+        post: 发布
+        no_more_posts: No more posts to show.
+        delete: Delete
+        edit: Edit
+        date_format: %month%/%day%/%year%
 
     user:
         login_header: 输入登陆信息
@@ -400,6 +415,57 @@ age_confirm:
     headline: Please Confirm Your Date of Birth
     message: The content is intended for mature audiences. Please confirm your age below
 confirm: Confirm
+
+forms:
+    required_fields: required fields
+
+content_reporting:
+    report: Report
+    report_content: Report Content
+    inappropriate_content: Inappropriate content
+    spam: Spam
+    submit: Submit
+    cancel: Cancel
+    close: Close
+    violates_intellectual_property: Violates Intellectual Property
+    harassment: Harassment
+    must_be_logged_in: You must be logged in to report content.
+    once_per_hour: You may only report one item per hour.
+    report_type_group: Group
+    report_type_image: Image
+    report_type_video: Video
+    report_type_comment: Comment
+    report_type_group_image: Group Image
+    report_type_group_news: Group News
+    report_type_group_video: Group Video
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+    reported_email_title: Your Content Has Been Flagged
+    reported_email: |
+        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+
+        Type: %s
+        Content:  %s
+        Reason: %s
+
+        The content has been temporarily removed from Alienware Arena and will be
+        reviewed by our Staff within 72 hours.  If the content does not violate
+        our Terms of Service, we will enable it on our website and you will
+        receive an automated email with this update.
+
+        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+        Alienware Arena Team
+    restored_email_title: Your Content is Restored
+    restored_email: |
+        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
+
+        Type: %s
+        Content: %s
+
+        Alienware Arena Team
 
 error:
     fill_in_birthday: Please fill in your birthday!
