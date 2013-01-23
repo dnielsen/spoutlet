@@ -212,6 +212,14 @@ class CommentsController extends Controller
             $thread = $this->createThread($threadId, $object);
         }
 
+        $correctPermalink = $this->generateUrl($object->getLinkableRouteName(), $object->getLinkableRouteParameters()).'#comments';
+
+        if ($thread->getPermalink() != $correctPermalink) {
+            $thread->setPermalink($correctPermalink);
+            $em->persist($thread);
+            $em->flush();
+        }
+
         $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
 
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
