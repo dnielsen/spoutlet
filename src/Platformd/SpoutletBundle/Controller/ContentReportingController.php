@@ -126,14 +126,6 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
-
-        $reason = ucwords(str_replace('_', ' ', $reason));
-
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
-
-
         switch ($type) {
             case 'GalleryMedia':
                 $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
