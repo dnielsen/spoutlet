@@ -612,6 +612,9 @@ class User extends BaseUser
     {
         $userAvatar->setUser($this);
         $this->userAvatars->add($userAvatar);
+        if ($userAvatar->getMedia()->getFileObject()) {
+            $userAvatar->setApproved(false);
+        }
     }
 
     public function removeUserAvatar(UserAvatar $userAvatar)
