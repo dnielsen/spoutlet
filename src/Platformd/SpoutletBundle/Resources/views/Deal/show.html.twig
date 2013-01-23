@@ -151,13 +151,15 @@
             {% endif %}
         </div>
     </div>
-    <div class="std_2col">
-        <div class="left">
-            {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
+    {% if site_has_feature('COMMENTS') %}
+        <div class="std_2col">
+            <div class="left">
+                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
+            </div>
+            <div class="right">
+            </div>
         </div>
-        <div class="right">
-        </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}

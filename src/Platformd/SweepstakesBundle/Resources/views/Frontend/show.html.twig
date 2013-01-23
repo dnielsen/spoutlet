@@ -144,7 +144,11 @@
                     </div><!-- giveaway-details -->
 
                 </div><!-- giveaway-info -->
-                    {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": sweepstakes.slug, 'page': app.request.query.get('page', 1) } %}
+
+                {% if site_has_feature('COMMENTS') %}
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
+                {% endif %}
+
             </div><!-- left -->
 
             <div class="clear">
