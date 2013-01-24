@@ -204,7 +204,7 @@ platformd:
         post: 发布
         no_more_posts: 不可以显示更多的发布
         delete: 删除
-        delete_confirm: Are you sure you want to delete this comment?
+        delete_confirm: 您确定要删除这条评论吗？
         edit: 编辑
         submit: 提交
         cancel: 关闭
