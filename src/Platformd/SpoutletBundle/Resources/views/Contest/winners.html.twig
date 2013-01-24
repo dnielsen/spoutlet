@@ -29,11 +29,7 @@
                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ winner.name }}" title="{{ winner.name }}" />
                         {% endif %}
                     </a>
-<<<<<<< Updated upstream
-                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.owner.username}) }}">{{ winner.owner.username }}</a></p>
-=======
                     <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ cevo_account_link(winner.owner.username) }}">{{ winner.owner.username }}</a></p>
->>>>>>> Stashed changes
                     {% endif %}
                 </div>
 
