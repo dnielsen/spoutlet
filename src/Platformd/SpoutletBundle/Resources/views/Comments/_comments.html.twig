@@ -123,7 +123,10 @@
     {% endfor %}
 {% endif %}
 
-<script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+{% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+{% endif %}
+
 <script type="text/javascript">
     $(function () {
 
