@@ -257,7 +257,7 @@ class ApiManager
      * photofeature         | +10| Photo is Featured
      * photosubmit          | +3 | Submit an approved photo to the gallery
      * photocomment         | +1 | Comment on a photo
-     * photocommentremoved  | -5 | Comment removed
+     * nukephotocomment     | -5 | Comment removed
      * nukephoto            | -5 | Photo removed
      *
      * First param, $award is a string. See above list of allowed awards. Second param is $user_id. If it is not specified
