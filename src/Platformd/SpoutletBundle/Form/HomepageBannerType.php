@@ -16,13 +16,12 @@ class HomepageBannerType extends AbstractType
         $builder
             ->add('thumb_file', 'file', array(
                 'required' => false,
-                'help'  => 'Recommended Size: 634x183px',
+                'help'  => 'Recommended Size: 120x60px',
             ))
             ->add('banner_file', 'file', array(
                 'required' => false,
-                'help'  => 'Recommended Size: Size: 120x60px',
+                'help'  => 'Recommended Size: Size: 634x183px',
             ))
-            ->add('position')
             ->add('url')
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
