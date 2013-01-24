@@ -46,6 +46,7 @@ Feature: User Navigation
       | My Giveaways                  | http://www.alienwarearena.com/latam/account/my-giveaway-keys/   |             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                       |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                 |             |
+      | Media >> My Gallery           | /app_test.php/account/profile/photos                            | http://latam.alienwarearena.local/app_test.php/account/profile/photos |
       | Sign Out                      | /app_test.php/logout                                            | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Flatam.alienwarearena.local%2Fapp_test.php%2F |
 
   Scenario: The "North America" site's user navigation menu has the correct items
