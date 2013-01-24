@@ -20,7 +20,9 @@
                     <a href="{{ path('gallery_media_show', {id : winner.id}) }}">
                         <img src="{{ winner.image.filename | imagine_filter('gallery_image_square') }}" alt="{{ winner.title }}" />
                     </a>
-                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ path('accounts_profile', {username: winner.author.username}) }}">{{ winner.author.username }}</a></p>
+                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}:
+                        <a href="{{ cevo_account_link(winner.author.username) }}">{{ winner.author.username }}</a>
+                    </p>
                     {% elseif contest.category == 'group' %}
                     <a href="{{ path('group_show', {slug : winner.slug}) }}">
                         {% if winner.thumbNail %}
