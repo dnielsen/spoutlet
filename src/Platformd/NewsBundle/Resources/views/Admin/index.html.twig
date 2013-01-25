@@ -49,6 +49,8 @@
 <a class="btn btn-primary" href="{{ path('NewsBundle_admin_new') }}">{{ "platformd.admin.news.create" | trans }}</a>
 
 {% if news.haveToPaginate %}
+    {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+    {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
     {{ pagerfanta(news, 'default', {'routeName' : 'NewsBundle_admin_homepage'}) }}
 {% endif %}
 

@@ -52,6 +52,8 @@
     {% endif %}
 
     {% if pager.haveToPaginate %}
+        {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+        {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
         {{ pagerfanta(pager, 'default', {'routeName' : 'Platformd_UserBundle_admin_index'}) }}
     {% endif %}
 
