@@ -36,9 +36,12 @@
 
 
         <div class="pagerfanta" id="pager" style="float:right;">
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
             {{ pagerfanta(pager, 'spoutlet', {
                 'previous_message': '',
                 'next_message': '',
+                'routeName': 'group_discussions'
             }) }}
         </div>
 
@@ -61,11 +64,6 @@
             });
 
         </script>
-
-        {#<div id="scroll-actions" style="margin-top: 10px;">#}
-            {#<a class="prev browse" style="float: left;">Previous</a>#}
-            {#<a class="next browse" style="float: right;">See More</a>#}
-        {#</div>#}
 
     {% else %}
         <div style="height: 500px; width: 600px;">

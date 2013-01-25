@@ -56,8 +56,8 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     /**
      * @var \DateTime $createdAt
      *
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 

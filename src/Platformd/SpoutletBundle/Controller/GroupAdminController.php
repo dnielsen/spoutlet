@@ -443,6 +443,7 @@ class GroupAdminController extends Controller
             'Video',
             'Photo',
             'News',
+            'Discussions',
             'Likes',
             'Leaves',
         ));
@@ -497,6 +498,7 @@ class GroupAdminController extends Controller
                 $group->getVideos()->count(),
                 $group->getImages()->count(),
                 $group->getNewsArticles()->count(),
+                $group->getDiscussions()->count(),
                 $group->getFacebookLikes(),
                 $leftMemberCount,
             ));

@@ -37,7 +37,7 @@
                             {% set region = region ~ '[' ~ site.name ~ ']' %}
                         {% endfor %}
                     {% endif %}
-                    {% set status = (groupDiscussion.deleted) ? 'Active' : 'Inactive' %}
+                    {% set status = (groupDiscussion.deleted == false ) ? 'Active' : 'Inactive' %}
                     <tr>
                         <td>{{ groupDiscussion.title }}</td>
                         <td>{{ groupDiscussion.group.name }}</td>
