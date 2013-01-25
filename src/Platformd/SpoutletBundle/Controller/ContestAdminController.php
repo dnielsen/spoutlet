@@ -86,6 +86,11 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
+        $test   = $contest->getTestOnly();
+        if ($test === null) {
+            $contest->setTestOnly(0);
+        }
+
         $editForm   = $this->createForm(new ContestType(), $contest);
 
         if ($this->processForm($editForm, $request)) {

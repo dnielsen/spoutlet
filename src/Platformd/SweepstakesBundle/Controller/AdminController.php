@@ -58,6 +58,11 @@ class AdminController extends Controller
             throw $this->createNotFoundException('No sweepstakes for that id');
         }
 
+        $test   = $sweepstakes->getTestOnly();
+        if ($test === null) {
+            $sweepstakes->setTestOnly(0);
+        }
+
         $form = $this->createForm(new SweepstakesAdminType(), $sweepstakes);
 
         if($request->getMethod() == 'POST')

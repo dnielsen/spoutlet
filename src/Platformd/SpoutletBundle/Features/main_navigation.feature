@@ -43,9 +43,11 @@ Feature: Main Navigation
       | Juegos >> Más Juegos        | /app_test.php/games/                           | http://latam.alienwarearena.local/app_test.php/age/verify  |
       | Eventos                     | http://www.alienwarearena.com/latam/event/     |                                                            |
       | Novedades >> Artículos      | http://www.alienwarearena.com/articles/        |                                                            |
-      | Novedades >> Anuncios      | http://www.alienwarearena.com/news/            |                                                            |
+      | Novedades >> Anuncios       | http://www.alienwarearena.com/news/            |                                                            |
       | Medios >> Vídeos            | http://video.alienwarearena.com/               |                                                            |
       | Medios >> Explorar          | /app_test.php/wallpapers                       | http://latam.alienwarearena.local/app_test.php/wallpapers  |
+      | Medios >> NewGalería de Fotos   | /app_test.php/galleries/                   | http://latam.alienwarearena.local/app_test.php/galleries/  |
+      | Medios >> NewConcursos      | /app_test.php/contests/                        | http://latam.alienwarearena.local/app_test.php/contests/   |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
       | ARP                         | /app_test.php/arp                              | http://www.alienwarearena.com/arp/sweepstakes/             |
       | Microsoft                   | /app_test.php/microsoft                        | http://www.alienwarearena.com/microsoft                    |

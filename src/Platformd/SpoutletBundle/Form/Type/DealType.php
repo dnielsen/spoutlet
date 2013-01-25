@@ -102,6 +102,14 @@ class DealType extends AbstractType
             ->add('bottomColor', 'hidden', array(
                 'label' => 'Bottom background color',
                 'help' => 'Enter the color in hexadecimal format. Ex: #C030FF (must include hash symbol).'
+            ))
+            ->add('testOnly', 'choice', array(
+                'choices' => array(
+                    1 => 'Yes',
+                    0 => 'No',
+                ),
+                'label' => 'Allow admin testing?',
+                'help'  => 'This allows admins to still test the operation of the deal IF it is unpublished',
             ));
 
             $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));

@@ -210,6 +210,12 @@ class Contest implements LinkableInterface
      */
     protected $winners;
 
+    /**
+     * @ORM\Column(name="test_only", type="boolean", nullable=true)
+     *
+     */
+    protected $testOnly = false;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -616,6 +622,16 @@ class Contest implements LinkableInterface
     public function setWinners($winners)
     {
         $this->winners = $winners;
+    }
+
+    public function getTestOnly()
+    {
+        return $this->testOnly;
+    }
+
+    public function setTestOnly($testOnly)
+    {
+        $this->testOnly = $testOnly;
     }
 
     public function getRedemptionInstructionsArray()
