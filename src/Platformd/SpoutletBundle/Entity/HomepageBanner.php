@@ -92,10 +92,20 @@ class HomepageBanner
     private $sites;
 
     /**
+     * @ORM\Column(name="sites_positions", type="array", nullable=true)
+     */
+    private $sitesPositions;
+
+    /**
      * @Assert\NotNull
      * @ORM\Column(name="new_window", type="boolean")
      */
     private $newWindow = false;
+
+    public function __construct()
+    {
+        $this->sitesPositions = array();
+    }
 
     /**
      * Get id
@@ -247,6 +257,16 @@ class HomepageBanner
     public function setSites($sites)
     {
         $this->sites = $sites;
+    }
+
+    public function getSitesPositions()
+    {
+        return $this->sitesPositions;
+    }
+
+    public function setSitesPositions($sitesPositions)
+    {
+        $this->sitesPositions = $sitesPositions;
     }
 
     public function getNewWindow()

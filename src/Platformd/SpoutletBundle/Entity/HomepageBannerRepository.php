@@ -32,33 +32,36 @@ class HomepageBannerRepository extends EntityRepository
             ->execute(array($locale));
     }
 
-    public function findAllForSite($site)
-    {
-        $qb = $this
-            ->createQueryBuilder('h')
-            ->leftJoin('h.sites', 's')
-            ->where('s.id = :siteId')
-            ->addOrderBy('h.position', 'ASC')
-            ->addOrderBy('h.created', 'DESC')
-            ->setParameter('siteId', $site->getId());
-
-        return $qb->getQuery()->execute();
-    }
-
     public function findForSite($site, $limit=null)
     {
         $qb = $this
             ->createQueryBuilder('h')
             ->leftJoin('h.sites', 's')
             ->where('s.id = :siteId')
-            ->addOrderBy('h.position', 'ASC')
-            ->addOrderBy('h.created', 'DESC')
             ->setParameter('siteId', $site->getId());
 
         if ($limit) {
             $qb->setMaxResults($limit);
         }
 
-        return $qb->getQuery()->execute();
+        $results = $qb->getQuery()->execute();
+
+        $positions = array();
+        $bannersList = array();
+        $banners = array();
+
+        foreach($results as $banner) {
+            $sitesPositions = $banner->getSitesPositions();
+            $positions[$banner->getId()] = $sitesPositions[$site->getId()];
+            $bannersList[$banner->getId()] = $banner;
+        }
+
+        asort($positions);
+
+        foreach($positions as $bannerId => $value) {
+            $banners[] = $bannersList[$bannerId];
+        }
+
+        return $banners;
     }
 }

@@ -27,10 +27,11 @@ class HomepageBannerController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($site);
 
-        $banners = $this->getBannerRepo()->findAllForSite($site);
+        $banners = $this->getBannerRepo()->findForSite($site);
 
         return $this->render('SpoutletBundle:HomepageBanner:list.html.twig', array(
-            'banners' => $banners
+            'banners' => $banners,
+            'site' => $site->getId(),
         ));
     }
 
@@ -48,7 +49,17 @@ class HomepageBannerController extends Controller
 
             if ($form->isValid()) {
 
+                $sitesPositions = $banner->getSitesPositions();
+
+                foreach ($banner->getSites() as $site) {
+                    $sitesPositions[$site->getId()] = 0;
+                }
+
+                $banner->setSitesPositions($sitesPositions);
+
                 $this->getManager()->save($banner);
+
+                $this->moveAllBannersDown($banner);
 
                 $this->setFlash('success', 'success');
                 return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
@@ -72,10 +83,21 @@ class HomepageBannerController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $sitesPositions = $banner->getSitesPositions();
+
         $sites = $banner->getSites();
         if (!$sites) {
             $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($banner->getLocale());
-            $banner->getSites()->add(array($site));
+            $banner->getSites()->add($site);
+            $sitesPositions[$site->getId()] = 0;
+        }
+
+        foreach ($banner->getSites() as $site) {
+            if (array_key_exists($site->getId(), $sitesPositions)) {
+                continue;
+            }
+
+            $sitesPositions[$site->getId()] = 0;
         }
 
         $form = $this->createForm(new HomepageBannerType(), $banner);
@@ -98,10 +120,14 @@ class HomepageBannerController extends Controller
         ));
     }
 
-    public function moveAction($id, $direction)
+    public function moveAction($id, $site, $direction)
     {
-        $banner = $this->getBannerRepo()->find($id);
-        $referer = $this->getRequest()->headers->get('referer');
+        $em         = $this->getDoctrine()->getEntityManager();
+        $bannerRepo = $this->getBannerRepo();
+        $site       = $em->getRepository('SpoutletBundle:Site')->find($site);
+
+        $banner     = $bannerRepo->find($id);
+        $referer    = $this->getRequest()->headers->get('referer');
 
         if ($referer) {
             $returnUrl = $referer;
@@ -114,19 +140,19 @@ class HomepageBannerController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $position = $banner->getPosition();
+        $positions = $banner->getSitesPositions();
 
         switch ($direction) {
             case 'up':
-                if ($position < 1) {
+                if ($positions[$site->getId()] < 1) {
                     $this->setFlash('error', 'This item cannot move any higher!');
                     return $this->redirect($returnUrl);
                 }
-                $position--;
+                $positions[$site->getId()]--;
                 break;
 
             case 'down':
-                $position++;
+                $positions[$site->getId()]++;
                 break;
 
             default:
@@ -134,14 +160,77 @@ class HomepageBannerController extends Controller
                 break;
         }
 
-        $banner->setPosition($position);
+        $banner->setSitesPositions($positions);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $this->repositionBanners($banner, $site, $direction);
+
         $em->persist($banner);
         $em->flush();
 
         $this->setFlash('success', 'Item moved!');
         return $this->redirect($returnUrl);
+    }
+
+    private function moveAllBannersDown($banner)
+    {
+        $bannerRepo         = $this->getBannerRepo();
+        $em                 = $this->getDoctrine()->getEntityManager();
+
+        foreach ($banner->getSites() as $site) {
+            $allBannersForSite  = $bannerRepo->findForSite($site);
+
+            foreach ($allBannersForSite as $otherBanner) {
+
+                if ($otherBanner->getId() == $banner->getId()) {
+                    continue;
+                }
+
+                $otherBannerPositions = $otherBanner->getSitesPositions();
+                $otherBannerPositions[$site->getId()]++;
+                $otherBanner->setSitesPositions($otherBannerPositions);
+
+                $em->persist($otherBanner);
+            }
+        }
+
+        $em->flush();
+    }
+
+    private function repositionBanners($banner, $site, $direction)
+    {
+        $bannerRepo = $this->getBannerRepo();
+        $allBannersForSite = $bannerRepo->findForSite($site);
+
+        $positions = $banner->getSitesPositions();
+
+        foreach ($allBannersForSite as $otherBanner) {
+
+            if ($otherBanner->getId() == $banner->getId()) {
+                continue;
+            }
+
+            $otherBannerPositions = $otherBanner->getSitesPositions();
+
+            if ($otherBannerPositions[$site->getId()] == $positions[$site->getId()]) {
+
+                switch ($direction) {
+                    case 'up':
+                        $otherBannerPositions[$site->getId()]++;
+                        break;
+
+                    default:
+                        $otherBannerPositions[$site->getId()]--;
+                        break;
+                }
+
+                $otherBanner->setSitesPositions($otherBannerPositions);
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($otherBanner);
+                $em->flush();
+
+                return;
+            }
+        }
     }
 
     public function deleteAction($id)

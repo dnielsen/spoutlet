@@ -37,7 +37,7 @@ admin_homepage_banner_new:
     defaults: { _controller: SpoutletBundle:HomepageBanner:new }
 
 admin_homepage_banner_move:
-    pattern: /admin/homepage-banners/move/{id}/{direction}
+    pattern: /admin/homepage-banners/move/{id}/{site}/{direction}
     defaults: { _controller: SpoutletBundle:HomepageBanner:move }
 
 admin_homepage_banner_edit:
