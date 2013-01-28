@@ -97,8 +97,14 @@ class HomepageBannerController extends Controller
                 continue;
             }
 
-            $sitesPositions[$site->getId()] = 0;
+            $sitesPositions[$site->getId()] = $banner->getPosition() ? : 0;
+
+            if ($sitesPositions[$site->getId()] == 0) {
+                $this->moveBannersDown($banner, $site);
+            }
         }
+
+        $banner->setSitesPositions($sitesPositions);
 
         $form = $this->createForm(new HomepageBannerType(), $banner);
 
@@ -169,6 +175,29 @@ class HomepageBannerController extends Controller
 
         $this->setFlash('success', 'Item moved!');
         return $this->redirect($returnUrl);
+    }
+
+    private function moveBannersDown($banner, $site)
+    {
+        $bannerRepo         = $this->getBannerRepo();
+        $em                 = $this->getDoctrine()->getEntityManager();
+
+        $allBannersForSite  = $bannerRepo->findForSite($site);
+
+        foreach ($allBannersForSite as $otherBanner) {
+
+            if ($otherBanner->getId() == $banner->getId()) {
+                continue;
+            }
+
+            $otherBannerPositions = $otherBanner->getSitesPositions();
+            $otherBannerPositions[$site->getId()]++;
+            $otherBanner->setSitesPositions($otherBannerPositions);
+
+            $em->persist($otherBanner);
+        }
+
+        $em->flush();
     }
 
     private function moveAllBannersDown($banner)
