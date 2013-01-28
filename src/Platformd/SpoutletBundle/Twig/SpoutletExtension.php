@@ -440,6 +440,8 @@ class SpoutletExtension extends Twig_Extension
             case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
             case 'PHOTOS':                          return $this->GetPhotosLink($locale);
             case 'CONTESTS':                        return $this->GetContestsLink($locale);
+            case 'CONTESTS_IMAGE':                   return $this->GetContestsLink($locale, 'image');
+            case 'CONTESTS_GROUP':                   return $this->GetContestsLink($locale, 'group');
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -759,10 +761,10 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
-    private function GetContestsLink($locale)
+    private function GetContestsLink($locale, $category=null)
     {
         $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.contests').'</a>';
-        $url            = $this->container->get('router')->generate('contest_index');
+        $url            = $category == null ? $this->container->get('router')->generate('contest_index') : $this->container->get('router')->generate('contest_index', array('category' => $category));
 
         switch($locale) {
 
