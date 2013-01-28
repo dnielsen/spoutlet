@@ -40,10 +40,6 @@ class HomepageBannerRepository extends EntityRepository
             ->where('s.id = :siteId')
             ->setParameter('siteId', $site->getId());
 
-        if ($limit) {
-            $qb->setMaxResults($limit);
-        }
-
         $results = $qb->getQuery()->execute();
 
         $positions = array();
@@ -62,6 +58,6 @@ class HomepageBannerRepository extends EntityRepository
             $banners[] = $bannersList[$bannerId];
         }
 
-        return $banners;
+        return $limit ? array_slice($banners, 0, $limit) : $banners;
     }
 }
