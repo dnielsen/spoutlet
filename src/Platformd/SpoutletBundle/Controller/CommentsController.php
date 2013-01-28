@@ -72,13 +72,13 @@ class CommentsController extends Controller
         $comment->setThread($thread);
         $comment->setCreatedAt(new \DateTime('now'));
 
-        $this->giveUserArp($comment);
-
         $thread->incrementCommentCount();
 
         $em->persist($comment);
         $em->persist($thread);
         $em->flush();
+
+        $this->giveUserArp($comment);
 
         $this->createAcl($comment);
 
@@ -448,7 +448,7 @@ class CommentsController extends Controller
             $tag = 'photocomment';
         }
 
-        if(strlen(stristr($thread, 'group')) > 0) {
+        if(strlen(stristr($threadId, 'group')) > 0) {
             $tag = 'replytothread';
         }
 
