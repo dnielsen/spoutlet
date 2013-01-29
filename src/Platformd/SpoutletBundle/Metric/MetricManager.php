@@ -235,7 +235,6 @@ class MetricManager
                         $date->modify('midnight');
 
                     } else {
-                        echo 'not';
                         // We make sure all metrics are fully processed
                         $this->completeGroupMetrics($group);
 
