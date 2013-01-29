@@ -4,9 +4,7 @@
     {{ 'platformd.deal_pool.admin.create' | trans }}
 </h1>
 
-<a href="{{ path('admin_deal_pool_index', {'dealId': dealId}) }}">{{ 'platformd.navigation.back' | trans }}</a>
-
-<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form dealForm">
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form dealForm form-horizontal">
 
     {{ form_errors(form) }}
 
@@ -24,5 +22,7 @@
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn btn-primary" value="{{ "platformd.deal_pool.admin.save_deal_pool" | trans }}" formnovalidate />
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{{ "platformd.deal_pool.admin.save_deal_pool" | trans }}" formnovalidate />
+    </div>
 </form>

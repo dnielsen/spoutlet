@@ -3,10 +3,8 @@
 <h1>
     {{ 'platformd.giveaway_pool.admin.create' | trans }}
 </h1>
-    
-<a href="{{ path('admin_giveaway_pool_index', {'giveaway': giveawayId}) }}">{{ 'platformd.navigation.back' | trans }}</a>
 
-<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm form-horizontal">
 
     {{ form_errors(form) }}
 

@@ -350,54 +350,45 @@ class GiveawayAdminController extends Controller
         /** @var $metricManager \Platformd\SpoutletBundle\Metric\MetricManager */
         $metricManager = $this->container->get('platformd.metric_manager');
 
-        $giveaways = $this->getGiveawayRepo()->findAllOrderedByNewest();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
-            ->add('results_range', 'choice', array(
-                'choices' => array(
-                    '7'  => 'Last 7 days',
-                    '30' => 'Last 30 days',
-                    ''   => 'All time',
-                ))
-            )
-            ->add('status', 'choice', array(
-                'choices' => array(
-                    1 => 'Totally Enabled Giveaways',
-                    0 => 'Disabled Giveaways',
-                )
+            ->add('giveaway', 'entity', array(
+                'class' => 'GiveawayBundle:Giveaway',
+                'property' => 'name',
+                'empty_value' => 'All Giveaways'
             ))
             ->getForm()
         ;
 
-        // default filtering stuff
-        $since = null;
-        $onlyEnabled = true;
+         // default filtering stuff
+        $from   = null;
+        $to     = null;
+        $giveaway   = null;
 
         $requestData = $request->query->get($filterForm->getName());
         if (!empty($requestData)) {
             $filterForm->bindRequest($request);
             if ($filterForm->isValid()) {
-                $data = $filterForm->getData();
-                $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
+                $data   = $filterForm->getData();
 
-                $onlyEnabled = ($data['status'] == 1);
+                $from   = $data['startDate'] ? : null;
+                $to     = $data['endDate'] ? : null;
+                $giveaway   = $data['giveaway'] ? : null;
             }
         }
 
-        $giveawayMetrics = array();
-        foreach($giveaways as $giveaway) {
-            /*
-             * Filter results: Skip giveway if
-             *     a) We only want enabled giveaways and this giveaway is *not* active/enabled
-             *     b) We only want disabled giveaways and this giveaway *is* active/enabled
-             */
-            if (($onlyEnabled && !$giveaway->isActive()) || (!$onlyEnabled && $giveaway->isActive())) {
-                continue;
-            }
+        if ($giveaway == null) {
+            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest();
+        } else {
+            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest();
+        }
 
-            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $since);
+        $giveawayMetrics = array();
+
+        foreach($giveaways as $giveaway) {
+            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
         }
 
         return array(

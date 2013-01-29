@@ -6,8 +6,10 @@
 
 <div class="pull-right filter-form-wrapper">
     <form action="{{ path('admin_deal_metrics') }}" method="GET">
-        {{ form_widget(form.results_range) }}
-        {{ form_widget(form.status) }}
+        {{ form_widget(form.deal) }}
+        From {{ form_widget(form.startDate) }}
+        To {{ form_widget(form.endDate) }}
+        <button type="submit" class="btn btn-primary" formnovalidate style="margin-top:-9px;">Filter</button>
     </form>
 </div>
 
@@ -32,7 +34,7 @@
                 {% endif %}
 
                 {% if site == 'Europe' %}
-                    <th>EMEA</th>
+                    <th>EUR</th>
                 {% endif %}
 
                 {% if site == 'Singapore' %}
@@ -80,13 +82,5 @@
         {% endfor %}
     </tbody>
 </table>
-
-<script>
-    jQuery(document).ready(function() {
-        jQuery('.filter-form-wrapper select').change(function() {
-            $(this).closest('form').submit();
-        });
-    });
-</script>
 
 {% endblock %}

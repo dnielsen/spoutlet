@@ -7,8 +7,10 @@
 
 <div class="pull-right filter-form-wrapper">
     <form action="{{ path('admin_giveaway_metrics') }}" method="GET">
-        {{ form_widget(form.results_range) }}
-        {{ form_widget(form.status) }}
+        {{ form_widget(form.giveaway) }}
+        From {{ form_widget(form.startDate) }}
+        To {{ form_widget(form.endDate) }}
+        <button type="submit" class="btn btn-primary" formnovalidate style="margin-top:-9px;">Filter</button>
     </form>
 </div>
 
@@ -20,7 +22,41 @@
             <th>Total Assigned</th>
             <th>Keys Left</th>
             {% for site in sites %}
-                <th>{{ site }}</th>
+                {% if site == 'North America' %}
+                    <th>NA</th>
+                {% endif %}
+
+                {% if site == 'India' %}
+                    <th>IN</th>
+                {% endif %}
+
+                {% if site == 'Latin America' %}
+                    <th>LATAM</th>
+                {% endif %}
+
+                {% if site == 'Europe' %}
+                    <th>EUR</th>
+                {% endif %}
+
+                {% if site == 'Singapore' %}
+                    <th>MY/SG</th>
+                {% endif %}
+
+                {% if site == 'Australia / New Zealand' %}
+                    <th>ANZ</th>
+                {% endif %}
+
+                {% if site == 'China' %}
+                    <th>CN</th>
+                {% endif %}
+
+                {% if site == 'Japan' %}
+                    <th>JP</th>
+                {% endif %}
+
+                {% if site == 'Demo' %}
+                    <th>Demo</th>
+                {% endif %}
             {% endfor %}
         </tr>
     </thead>
@@ -46,13 +82,5 @@
         {% endfor %}
     </tbody>
 </table>
-
-<script>
-    jQuery(document).ready(function() {
-        jQuery('.filter-form-wrapper select').change(function() {
-            $(this).closest('form').submit();
-        });
-    });
-</script>
 
 {% endblock %}
