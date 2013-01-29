@@ -62,7 +62,7 @@ class ContestController extends Controller
     {
         $user = $this->getCurrentUser();
 
-        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug, 'status' => 'published'));
+        $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
 
         $this->ensureContestIsValid($contest);
 
