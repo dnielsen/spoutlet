@@ -96,33 +96,34 @@ class Contest implements LinkableInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
      * @ORM\JoinTable(name="pd_contest_site")
+     * @Assert\NotNull
      */
     private $sites;
 
     /**
      * @var datetime $submission_start
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="submission_start", type="datetime")
      */
     private $submissionStart;
 
     /**
      * @var datetime $submission_end
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="submission_end", type="datetime")
      */
     private $submissionEnd;
 
     /**
      * @var datetime $voting_start
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="voting_start", type="datetime")
      */
     private $votingStart;
 
     /**
      * @var datetime $voting_end
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="voting_end", type="datetime")
      */
     private $votingEnd;
@@ -144,21 +145,21 @@ class Contest implements LinkableInterface
 
     /**
      * @var text $rules
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="rules", type="text")
      */
     private $rules;
 
     /**
      * @var text $entry_instructions
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="entry_instructions", type="text")
      */
     private $entryInstructions;
 
     /**
      * @var text $vote_instructions
-     *
+     * @Assert\NotNull
      * @ORM\Column(name="vote_instructions", type="text")
      */
     private $voteInstructions;
