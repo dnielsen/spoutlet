@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormError;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Symfony\Component\Form\FormBuilder;
+use Doctrine\ORM\EntityRepository;
 
 class GiveawayAdminController extends Controller
 {
@@ -357,7 +358,11 @@ class GiveawayAdminController extends Controller
             ->add('giveaway', 'entity', array(
                 'class' => 'GiveawayBundle:Giveaway',
                 'property' => 'name',
-                'empty_value' => 'All Giveaways'
+                'empty_value' => 'All Giveaways',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.name', 'ASC');
+                },
             ))
             ->getForm()
         ;

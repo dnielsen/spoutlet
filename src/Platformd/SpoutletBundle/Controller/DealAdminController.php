@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use DateTime;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Deal admin controller.
@@ -123,7 +124,11 @@ class DealAdminController extends Controller
             ->add('deal', 'entity', array(
                 'class' => 'SpoutletBundle:Deal',
                 'property' => 'name',
-                'empty_value' => 'All Deals'
+                'empty_value' => 'All Deals',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.name', 'ASC');
+                },
             ))
             ->getForm()
         ;
