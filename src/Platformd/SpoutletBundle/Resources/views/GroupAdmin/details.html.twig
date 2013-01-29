@@ -114,7 +114,7 @@
                 <td>{{ discussionMetricsArray['activeUsers'] }}</td>
                 <td>{{ discussionMetricsArray['avgDiscussions'] }}</td>
                 <td>{{ discussionMetricsArray['avgReplies'] }}</td>
-                <td><a href="{{ path('admin_group_discussion_summary_export', { 'id' : group.id , 'from': from|date('m/d/Y'), 'thru': thru|date('m/d/Y')}) }}">Report</a></td>
+                <td><a href="{{ path('admin_group_discussion_summary_export', { 'id' : group.id , 'from': from|date('m/d/Y'), 'thru': thru|date('m/d/Y')}) }}">Download Report</a></td>
             </tr>
         </tbody>
     </table>

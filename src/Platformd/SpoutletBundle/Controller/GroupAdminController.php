@@ -271,7 +271,12 @@ class GroupAdminController extends Controller
      */
     public function findDiscussionAction(Request $request)
     {
+        $request = $this->getRequest();
+        $page = $request->query->get('page', 1);
+
         $this->addFindDiscussionsBreadcrumb();
+
+        $this->resetDiscussionFilterFormData();
 
         $data = new DiscussionFindWrapper();
         $form = $this->createForm(new DiscussionFindType(), $data);
@@ -280,18 +285,26 @@ class GroupAdminController extends Controller
             $form->bindRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
+                $this->setDiscussionsFilterFormData(array(
+                    'discussionName' => $data->getDiscussionName(),
+                    'deleted' => $data->getDeleted(),
+                    'sites' => $data->getSites(),
+                    'from' => $data->getFrom(),
+                    'thru' => $data->getThru()
+                ));
             }
         }
 
-        $results = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion')->findDiscussionStats(array(
+        $pager = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion')->findDiscussionStats(array(
             'discussionName' => $data->getDiscussionName(),
             'deleted' => $data->getDeleted(),
             'sites' => $data->getSites(),
             'from' => $data->getFrom(),
-            'thru' => $data->getThru()
+            'thru' => $data->getThru(),
+            'page' => $page
         ));
 
-        foreach ($results as $groupDiscussion) {
+        foreach ($pager->getCurrentPageResults() as $groupDiscussion) {
             $group = $groupDiscussion->getGroup();
             if ($group->getAllLocales()) {
                 $group->Region = 'All Sites';
@@ -304,9 +317,83 @@ class GroupAdminController extends Controller
         }
 
         return $this->render('SpoutletBundle:GroupAdmin:findDiscussion.html.twig', array(
-            'results' => $results,
+            'pager' => $pager,
             'form' => $form->createView(),
         ));
+    }
+
+    private function resetDiscussionFilterFormData()
+    {
+        $this->setDiscussionsFilterFormData(array());
+    }
+
+    private function getDiscussionsFilterFormData()
+    {
+        $session = $this->getRequest()->getSession();
+        return $session->get('discussionsFormValues', array());
+    }
+
+    private function setDiscussionsFilterFormData($data)
+    {
+        $session = $this->getRequest()->getSession();
+        $session->set('discussionsFormValues', $data);
+    }
+
+
+    public function discussionSummaryAction() {
+
+        return $this->generateGroupsDiscussionsSummaryCsv();
+    }
+
+    private function generateGroupsDiscussionsSummaryCsv()
+    {
+        $factory = new CsvResponseFactory();
+        $groupDiscussionRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion');
+
+        $factory->addRow(array(
+            'Discussion Name',
+            'Group',
+            'Region',
+            'Created',
+            'Status',
+            'Author',
+            'Replies',
+            'Views',
+        ));
+
+        $filters = array_merge(
+            array('discussionName' => '', 'deleted' => '', 'sites' => array(), 'from' => '', 'thru' => ''),
+            $this->getDiscussionsFilterFormData()
+        );
+
+        $results = $groupDiscussionRepo->findDiscussionStats($filters);
+
+        foreach ($results as $discussion) {
+
+            $region = '';
+            if ($discussion->getGroup()->getAllLocales()) {
+                $region          = 'All Sites';
+            } else {
+                foreach ($discussion->getGroup()->getSites() as $site) {
+                   $region .=  '['.$site->getName().']';
+                }
+            }
+
+            $status = $discussion->getDeleted() ? 'Inactive' : 'Active';
+
+            $factory->addRow(array(
+                $discussion->getTitle(),
+                $discussion->getGroup()->getName(),
+                $region,
+                $discussion->getCreatedAt()->format('Y-m-d H:i:s'),
+                $status,
+                $discussion->getAuthor()->getUsername(),
+                $discussion->getReplyCount(),
+                $discussion->getViewCount(),
+            ));
+        }
+
+        return $factory->createResponse('Groups_Discussions_Summary.csv');
     }
 
     /**
@@ -374,6 +461,82 @@ class GroupAdminController extends Controller
         }
 
         $factory->addRow($dataRow);
+
+        return $factory->createResponse('Group_Discussion_Detailed'. $groupDiscussion->getId() .'.csv');
+    }
+
+    /**
+     * Generates a spreadsheet for a discussion with content for all replies
+     *
+     * @param $id
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function generateGroupDiscussionRepliesCsvAction($id, Request $request)
+    {
+        $groupDiscussionRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GroupDiscussion');
+
+        $groupDiscussion = $groupDiscussionRepo->find($id);
+
+        if(!$groupDiscussion) {
+            throw $this->createNotFoundException('Unable to find discussion.');
+        }
+
+        $factory = new CsvResponseFactory();
+
+        $group = $groupDiscussion->getGroup();
+        $region = '';
+        if ($group->getAllLocales()) {
+            $region = 'All Sites';
+        } else {
+            foreach ($group->getSites() as $site) {
+                $region .= '[' . $site->getName() . ']';
+            }
+        }
+
+        $firstRow = array(
+            'Discussion Name',
+            'Region',
+            'Group Name',
+            'Views',
+            'Replies',
+            'Author Username',
+            'Creation Date',
+        );
+        $factory->addRow($firstRow);
+
+        $secondRow = array(
+            $groupDiscussion->getTitle(),
+            $region,
+            $group->getName(),
+            $groupDiscussion->getViewCount(),
+            $groupDiscussion->getReplyCount(),
+            $groupDiscussion->getAuthor()->getUsername(),
+            date_format($groupDiscussion->getCreatedAt(), 'Y/m/d')
+        );
+        $factory->addRow($secondRow);
+
+        $factory->addRow(array());
+        $factory->addRow(array('Replies'));
+
+        $fourthRow = array(
+            'Username',
+            'Creation Date',
+            'Content'
+        );
+        $factory->addRow($fourthRow);
+
+        $groupDiscussionPostRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:GroupDiscussionPost');
+        $groupDiscussionPosts = $groupDiscussionPostRepo->getDiscussionPosts($groupDiscussion);
+
+        foreach ($groupDiscussionPosts as $groupDiscussionPost) {
+            $dataRow = array(
+                $groupDiscussionPost->getAuthor()->getUsername(),
+                date_format($groupDiscussionPost->getCreated(), 'Y/m/d'),
+                $groupDiscussionPost->getContent()
+            );
+
+            $factory->addRow($dataRow);
+        }
 
         return $factory->createResponse('Group_Discussion_Detailed'. $groupDiscussion->getId() .'.csv');
     }

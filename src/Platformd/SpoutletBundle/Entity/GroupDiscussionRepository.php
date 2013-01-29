@@ -48,7 +48,13 @@ class GroupDiscussionRepository extends EntityRepository
 
         $qb = $this->getFindDiscussionsQB($filters['discussionName'], $filters['deleted'], $filters['sites'], $filters['from'], $filters['thru']);
 
-        $sql = $qb->getQuery()->getSQL();
+        if (isset($filters['page'])) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage(10)->setCurrentPage($filters['page']);
+
+            return $pager;
+        }
 
         return $qb->getQuery()->execute();
     }

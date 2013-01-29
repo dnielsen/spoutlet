@@ -27,4 +27,16 @@ class GroupDiscussionPostRepository extends EntityRepository
 
         return $pager;
     }
+
+    public function getDiscussionPosts($discussion)
+    {
+        $qb = $this->createQueryBuilder('gdp')
+            ->where('gdp.groupDiscussion = :discussionId')
+            ->andWhere('gdp.deleted = false')
+            ->setParameter('discussionId', $discussion->getId())
+            ->orderBy('gdp.created', 'DESC')
+        ;
+
+        return $qb->getQuery()->execute();
+    }
 }
