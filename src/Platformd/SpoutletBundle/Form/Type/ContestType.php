@@ -29,10 +29,11 @@ class ContestType extends AbstractType
                 'url_prefix' => '/contest/'
             ))
             ->add('sites', 'entity', array(
+                'required' => true,
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'property' => 'name',
             ))
             ->add('submissionStart', 'datetime', array(
                 'label'     => 'Submission Starts:',
@@ -69,6 +70,7 @@ class ContestType extends AbstractType
                 'with_remove_checkbox' => true,
             ))
             ->add('rules', 'textarea', array(
+                'required' => true,
                 'attr'  => array('class' => 'ckeditor'),
             ))
             ->add('entryInstructions', 'textarea', array(
