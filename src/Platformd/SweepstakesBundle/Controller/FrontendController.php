@@ -128,7 +128,7 @@ class FrontendController extends Controller
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
-        if (($restrictUnpublished && !$sweepstakes->getPublished()) || !$canTest) {
+        if (($restrictUnpublished && !$sweepstakes->getPublished()) && !$canTest) {
             throw $this->createNotFoundException('But this sweepstakes is not published! '.$slug);
         }
 
