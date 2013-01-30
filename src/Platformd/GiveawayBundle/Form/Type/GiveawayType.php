@@ -20,7 +20,7 @@ class GiveawayType extends AbstractType
     	$builder->add('content', 'purifiedTextarea', array(
             'label' => 'Description',
             'attr' => array(
-                'class': 'ckeditor'
+                'class' => 'ckeditor'
             )
         ));
     	$builder->add('giveawayType', 'choice', array(
