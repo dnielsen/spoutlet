@@ -170,7 +170,7 @@ class UserManager extends BaseUserManager
 
     private function getClientIpAddress()
     {
-        if (!$this->container) {
+        if (!$this->container || !$this->container->isScopeActive('request')) {
             return false;
         }
 
