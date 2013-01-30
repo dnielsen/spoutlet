@@ -29,6 +29,10 @@
                 {{ form_row(form.featured) }}
             {% endif %}
 
+            {% if form.discussionsEnabled is defined %}
+                {{ form_row(form.discussionsEnabled) }}
+            {% endif %}
+
             <div id="group-location-controls">
                 {{ form_row(form.location) }}
             </div>

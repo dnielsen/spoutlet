@@ -12,7 +12,10 @@
             <a href="{{ path('admin_group_filter_reset') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
-    <div>
+
+</div>
+
+<div>
         <p>Search Results: {{ results.nbResults }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_summary') }}">Export</a></span></p>
 
         {% if results.haveToPaginate %}
@@ -32,14 +35,14 @@
                     <th>Status</th>
                     <th>Organizer</th>
                     <th>Total Members</th>
-
                     <th>New members</th>
                     <th>Video</th>
                     <th>Photo</th>
                     <th>News</th>
+                    <th>Discussions</th>
                     <th>Likes</th>
                     <th>Leave Group</th>
-
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,13 +89,14 @@
                                 0
                             {% endif %}
                         </td>
+                        <td><a href="{{ path('admin_group_export', { "type" : "discussions", "groupId" : group.id })  }}">{{ group.discussions.count }}</a></td>
                         <td>{{ group.facebookLikes }}</td>
                         <td>{{ group.leftMemberCount }}</td>
-
+                        <td><a href="{{ path('admin_group_details', {"id": group.id }) }}">View Detailed Metrics</a></td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="14">
+                        <td colspan="15">
                             No groups found.
                         </td>
                     </tr>
@@ -107,6 +111,5 @@
         {% endif %}
 
     </div>
-</div>
 
 {% endblock %}

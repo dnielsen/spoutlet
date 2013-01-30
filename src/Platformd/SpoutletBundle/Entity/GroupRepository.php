@@ -221,6 +221,29 @@ class GroupRepository extends EntityRepository
         return $result[0][0];
     }
 
+    public function getGroupDiscussionsForExport($groupId)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.discussions', 'd')
+            ->leftJoin('d.author', 'a')
+            ->leftJoin('d.contentReports', 'c')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'd', 'd.title', 'd.createdAt', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        $result = $qb->getQuery()->execute();
+
+        if (!$result || count($result) < 1) {
+            return null;
+        }
+
+        if (!$result[0][0] || $result[0][0]->getId() < 1) {
+            return null;
+        }
+
+        return $result[0][0];
+    }
+
     public function findGroupStatsQB(array $filters = array())
     {
         $filters = array_merge(
