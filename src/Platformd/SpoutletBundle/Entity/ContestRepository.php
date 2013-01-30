@@ -20,12 +20,14 @@ class ContestRepository extends EntityRepository
             ->execute();
     }
 
-    public function findAllForSiteByDate($site)
+    public function findAllForSiteByDate($site, $status=array('published'))
     {
-        return $this->createQueryBuilder('c')
-            ->leftJoin('c.sites', 's')
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb->leftJoin('c.sites', 's')
             ->where('c.votingEnd > :today')
             ->andWhere('s.defaultLocale = :site')
+            ->andWhere($qb->expr()->in('c.status', $status))
             ->setParameter('site', $site)
             ->setParameter('today', new \DateTime('now'))
             ->orderBy('c.votingEnd', 'DESC')
