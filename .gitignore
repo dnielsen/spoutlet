@@ -13,3 +13,4 @@
 /web/video
 /web/media/*
 VERSION
+/external_data/ip2location/overrideCountry
