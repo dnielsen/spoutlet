@@ -27,10 +27,7 @@
             </td>
             <td>{{ banner.url }}</td>
             <td>
-                <div style="float: left;display:inline-table;">
-                    {{ banner.sitesPositions[site] }}
-                </div>
-                <div style="float: right;">
+                <div style="text-align:center;">
                     {% if banner.sitesPositions[site] > 0 %}<a href="{{ path('admin_homepage_banner_move', { id : banner.id, direction: "up", site: site }) }}" class="arrow-button up"></a>{% endif %}
                     <a href="{{ path('admin_homepage_banner_move', { id : banner.id, direction: "down", site: site }) }}" class="arrow-button down"></a>
                 </div>
