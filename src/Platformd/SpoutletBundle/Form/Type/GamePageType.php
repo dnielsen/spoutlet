@@ -47,19 +47,19 @@ class GamePageType extends AbstractType
                 'image_label'   => 'Background Image',
                 'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
             ))
-            ->add('aboutGame', null, array(
+            ->add('aboutGame', 'purifiedTextarea', array(
                 'label' => 'About the Game',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('keyFeature1', null, array(
+            ->add('keyFeature1', 'purifiedTextarea', array(
                 'label' => 'Key Feature 1',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('keyFeature2', null, array(
+            ->add('keyFeature2', 'purifiedTextarea', array(
                 'label' => 'Key Feature 2',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('keyFeature3', null, array(
+            ->add('keyFeature3', 'purifiedTextarea', array(
                 'label' => 'Key Feature 3',
                 'attr'  => array('class' => 'ckeditor')
             ))
@@ -95,7 +95,7 @@ class GamePageType extends AbstractType
                 'label' => 'Game Feed Headline',
                 'help'  => 'Must include game title in the context for SEO purposes.'
             ))
-            ->add('legalVerbiage', null, array(
+            ->add('legalVerbiage', 'purifiedTextarea', array(
                 'label' => 'Legal Verbiage',
                 'attr'  => array('class' => 'ckeditor')
             ))

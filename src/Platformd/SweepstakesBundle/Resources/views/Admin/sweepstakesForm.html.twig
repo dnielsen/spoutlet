@@ -48,7 +48,7 @@
             <div class="form_row">
                 {{ form_label(form.officialRules) }}
                 {{ form_errors(form.officialRules) }}
-                {{ form_widget(form.officialRules, { 'attr': { 'class': 'ckeditor' } }) }}
+                {{ form_widget(form.officialRules) }}
             </div>
     </fieldset>
     <fieldset>
@@ -73,7 +73,7 @@
             <div class="form_row">
                 {{ form_label(form.content) }}
                 {{ form_errors(form.content) }}
-                {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
+                {{ form_widget(form.content) }}
             </div>
     </fieldset>
 

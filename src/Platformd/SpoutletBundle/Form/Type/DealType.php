@@ -63,7 +63,7 @@ class DealType extends AbstractType
                 'with_remove_checkbox' => true
             ))
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
-            ->add('description', null, array(
+            ->add('description', 'purifiedTextarea', array(
                 'label' => 'Description',
                 'attr'  => array('class' => 'ckeditor')
             ))

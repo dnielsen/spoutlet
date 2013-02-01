@@ -69,15 +69,15 @@ class ContestType extends AbstractType
                 'image_help'  => 'Recommended size: 950px x 160px with 40px on bottom of banner for submenu overlay.',
                 'with_remove_checkbox' => true,
             ))
-            ->add('rules', 'textarea', array(
+            ->add('rules', 'purifiedTextarea', array(
                 'required' => true,
                 'attr'  => array('class' => 'ckeditor'),
             ))
-            ->add('entryInstructions', 'textarea', array(
+            ->add('entryInstructions', 'purifiedTextarea', array(
                 'label'     => 'Instructions for contestants',
                 'attr'  => array('class' => 'ckeditor'),
             ))
-            ->add('voteInstructions', 'textarea', array(
+            ->add('voteInstructions', 'purifiedTextarea', array(
                 'label'     => 'Instructions for voters',
                 'attr'  => array('class' => 'ckeditor'),
             ))
