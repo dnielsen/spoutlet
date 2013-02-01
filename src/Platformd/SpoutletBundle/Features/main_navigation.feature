@@ -19,19 +19,6 @@ Feature: Main Navigation
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
 
-  Scenario: The "China" site's main navigation menu has the correct items
-    Given I am on the "China" site
-    When I go to "/app_test.php/games/"
-    Then the main navigation menu should be:
-      | Link              | Target                      | Destination                                                    |
-      | 首页              | /app_test.php/               | http://china.alienwarearena.local/app_test.php/               |
-      | 关于ALIENWARE     | http://alienware.com.cn/     |                                                               |
-      | 活动              | /app_test.php/events/        | http://china.alienwarearena.local/app_test.php/events/        |
-      | 新闻              | /app_test.php/news           | http://china.alienwarearena.local/app_test.php/news           |
-      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video                       |
-      | 媒体 >> 壁纸下载    | /app_test.php/wallpapers    | http://china.alienwarearena.local/app_test.php/wallpapers      |
-      | 微软              | /app_test.php/microsoft      | http://china.alienwarearena.local/app_test.php/microsoft      |
-
   Scenario: The "Latin America" site's main navigation menu has the correct items
     Given I am on the "Latin America" site
     When I go to "/app_test.php/games/"
