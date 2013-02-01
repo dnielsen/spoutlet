@@ -299,13 +299,13 @@
           ).hover(
             function() {
               if(!$(this).is('.ad-active') && context.settings.thumb_opacity < 1) {
-                $(this).find('img').fadeTo(300, 1);
+                $(this).find('img').fadeTo(0, 1);
               };
               context.preloadImage(i);
             },
             function() {
               if(!$(this).is('.ad-active') && context.settings.thumb_opacity < 1) {
-                $(this).find('img').fadeTo(300, context.settings.thumb_opacity);
+                $(this).find('img').fadeTo(0, context.settings.thumb_opacity);
               };
             }
           );
