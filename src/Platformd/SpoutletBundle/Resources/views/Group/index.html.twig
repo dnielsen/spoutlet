@@ -25,21 +25,21 @@
                 <div id="featured-groups">
                     {% for group in featuredGroups %}
                         <div class="group-list-item">
-                            <a href="{{ path('group_show', { slug: group.slug}) }}">
-                                {% if group.thumbNail %}
-                                <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                            <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                                {% if group[0].thumbNail %}
+                                <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% else %}
-                                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% endif %}
                             </a>
-                            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
-                                {{ group.name }}
+                            <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                                {{ group[0].name }}
                             </a>
                             <div class="details">
-                                <div class="item-detail">Members: {{ group.members.count }}</div>
-                                <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                <div class="item-detail">Members: {{ group['memberCount'] }}</div>
+                                <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
                                 <div class="report-group-caption">
-                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
                                 </div>
                             </div>
                         </div>
@@ -56,21 +56,21 @@
                         {% for groupList in page %}
                             {% for group in groupList %}
                                 <div class="group-list-item">
-                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
-                                        {% if group.thumbNail %}
-                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                                        {% if group[0].thumbNail %}
+                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
-                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
-                                        {{ group.name }}
+                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                                        {{ group[0].name }}
                                     </a>
                                     <div class="details">
-                                        <div class="item-detail">Members: {{ group.members.count }}</div>
-                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="item-detail">Members: {{ group['memberCount'] }}</div>
+                                        <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
                                         <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
                                         </div>
                                     </div>
                                 </div>
@@ -94,21 +94,21 @@
                         {% for groupList in page %}
                             {% for group in groupList %}
                                 <div class="group-list-item">
-                                    <a href="{{ path('group_show', { slug: group.slug}) }}">
-                                        {% if group.thumbNail %}
-                                        <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                                        {% if group[0].thumbNail %}
+                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
-                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% endif %}
                                     </a>
-                                    <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
-                                        {{ group.name }}
+                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                                        {{ group[0].name }}
                                     </a>
                                     <div class="details">
-                                        <div class="item-detail">Members: {{ group.members.count }}</div>
-                                        <div class="item-detail">Organizer: {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</div>
+                                        <div class="item-detail">Members: {{ group['memberCount'] }}</div>
+                                        <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
                                         <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group.id }}">Report this Group</a>
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
                                         </div>
                                     </div>
                                 </div>
