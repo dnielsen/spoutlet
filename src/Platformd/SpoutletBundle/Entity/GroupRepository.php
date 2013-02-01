@@ -76,7 +76,7 @@ class GroupRepository extends EntityRepository
     public function findGroupsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')
-            ->select('g, COUNT(m.id) memberCount')
+            ->select('g, COUNT(DISTINCT(m.id)) memberCount')
             ->leftJoin('g.members', 'm')
             ->leftJoin('g.sites', 's')
             ->where('g.category = :category')
@@ -421,7 +421,7 @@ class GroupRepository extends EntityRepository
     public function findAllFeaturedGroupsForSite($site)
     {
         $qb = $this->createQueryBuilder('g')
-            ->select('g, COUNT(m.id) memberCount')
+            ->select('g, COUNT(DISTINCT(m.id)) memberCount')
             ->leftJoin('g.sites', 's')
             ->leftJoin('g.members', 'm')
             ->where('g.featured = true')
