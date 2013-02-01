@@ -55,7 +55,7 @@ services:
         class: Platformd\SpoutletBundle\Metric\MetricManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            # this should NOT be hardcoded
+            # TODO this should NOT be hardcoded
             - %platformd_sites%
 
     # the custom slug constraint for AbstractEvent
@@ -119,6 +119,38 @@ services:
             - "@session"
             - "@knp_media.util.media_util"
             - "@security.context"
+            - "@event_dispatcher"
+        scope: request
+
+    # activity manager service
+    platformd.model.activity_manager:
+        class: Platformd\SpoutletBundle\Model\ActivityManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    platformd.listener.group_discussion_listener:
+        class: Platformd\SpoutletBundle\EventListener\GroupDiscussionListener
+        arguments:
+            - "@platformd.model.group_manager"
+        tags:
+            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
+            - { name: kernel.event_listener, event: awa.content.reinstate, method: onAddToDiscussion }
+            - { name: kernel.event_listener, event: awa.discussionPost.delete, method: onRemoveFromDiscussion }
+            - { name: kernel.event_listener, event: awa.content.report, method: onRemoveFromDiscussion }
+        scope: request
+
+    platformd.listener.global_activity_listener:
+        class: Platformd\SpoutletBundle\EventListener\GlobalActivityListener
+        arguments:
+            - "@platformd.model.activity_manager"
+        tags:
+            - { name: kernel.event_listener, event: awa.group.join, method: onGroupJoin }
+            - { name: kernel.event_listener, event: awa.group.leave, method: onGroupLeave }
+            - { name: kernel.event_listener, event: awa.discussion.create, method: onDiscussionCreate }
+            - { name: kernel.event_listener, event: awa.discussion.view, method: onDiscussionView }
+            - { name: kernel.event_listener, event: awa.discussion.delete, method: onDiscussionDelete }
+            - { name: kernel.event_listener, event: awa.content.report, method: onReportDiscussion }
+            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
         scope: request
 
     platformd.doctrine.locales_relationship_listener:
@@ -160,6 +192,13 @@ services:
     platformd.cache.memcached:
         class: Memcached
 
+    pagerfanta.view.spoutlet:
+        class: Platformd\SpoutletBundle\Pagerfanta\View\SpoutletView
+        arguments:
+            - @pagerfanta.view.default
+        public: false
+        tags: [{ name: pagerfanta.view, alias: spoutlet }]
+
     platformd.form.transformer.html_purifier_basic:
         class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
         arguments:
@@ -178,3 +217,4 @@ services:
             - "@security.context"
         tags:
             - { name: form.type, alias: purifiedTextarea }
+

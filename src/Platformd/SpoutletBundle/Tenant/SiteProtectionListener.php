@@ -48,6 +48,7 @@ class SiteProtectionListener
         // media galleries
         '^/galleries',
         '^/contests',
+        '^/contest',
         '^/giveaways',
     );
 

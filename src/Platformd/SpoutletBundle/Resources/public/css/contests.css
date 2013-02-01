@@ -38,12 +38,6 @@
     text-shadow:2px 2px 5px #000000;
 }
 
-#contest-header li a.vote-now {
-    color: #ff5711;
-    text-transform: capitalize;
-    text-shadow:2px 2px 5px #000000;
-}
-
 .contest-winner-wrapper {
     width:300px;
     margin-right: 10px;
@@ -53,4 +47,45 @@
 
 #contest-entries {
     margin-top: 15px;
+}
+
+.group-contest-content {
+    min-height: 500px;
+}
+
+.group-contest-content .group-list-item {
+    margin: 5px 3px 5px 3px;
+    background: #1D1D1D;
+    background-position: 125px 120px;
+    padding: 5px;
+    border: 1px solid #4A4A4A;
+    border-radius: 3px;
+}
+
+.group-contest-content .group-list-item:hover {
+    background: #4A4A4A;
+    background-position: 125px 120px;
+    cursor: pointer;
+}
+
+.group-contest-content .group-list-item.selected {
+    background: #1D1D1D url('/bundles/spoutlet/images/form-ic-success.png') no-repeat;
+    background-position: 125px 120px;
+    cursor: pointer;
+}
+
+#entries-left {
+    color: #ff5711;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.group-list-item.contest {
+    margin: 0 0 0 22px;
+    padding: 5px 0 0 0;
+}
+
+.group-list-item.contest.first {
+    margin: 0;
+    padding: 5px 0 0 0;
 }

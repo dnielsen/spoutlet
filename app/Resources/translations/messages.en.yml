@@ -212,6 +212,9 @@ platformd:
         more_replies: More Replies
         points: Points:
         post: Post
+        no_more_posts: No more posts to show.
+        delete: Delete
+        edit: Edit
         date_format: %month%/%day%/%year%
 
     user:
@@ -477,6 +480,58 @@ age_confirm:
     too_young_message: Sorry, we are unable to provide you with access at this time
 confirm: Confirm
 
+forms:
+    required_fields: Required Fields
+
+content_reporting:
+    report: Report
+    report_content: Report Content
+    inappropriate_content: Inappropriate content
+    spam: Spam
+    submit: Submit
+    cancel: Cancel
+    close: Close
+    violates_intellectual_property: Violates Intellectual Property
+    harassment: Harassment
+    must_be_logged_in: You must be logged in to report content.
+    once_per_hour: You may only report one item per hour.
+    report_type_group: Group
+    report_type_image: Image
+    report_type_video: Video
+    report_type_comment: Comment
+    report_type_group_image: Group Image
+    report_type_group_news: Group News
+    report_type_group_video: Group Video
+    report_type_group_discussion: Group Discussion
+    report_type_group_discussion_post: Group Discussion Post
+    report_type_unknown: Unknown
+    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+    reported_email_title: Your Content Has Been Flagged
+    reported_email: |
+        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+
+        Type: %s
+        Content:  %s
+        Reason: %s
+
+        The content has been temporarily removed from Alienware Arena and will be
+        reviewed by our Staff within 72 hours.  If the content does not violate
+        our Terms of Service, we will enable it on our website and you will
+        receive an automated email with this update.
+
+        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+        Alienware Arena Team
+
+    restored_email_title: Your Content is Restored
+    restored_email: |
+        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
+
+        Type: %s
+        Content: %s
+
+        Alienware Arena Team
+
 error:
     fill_in_birthday: Please fill in your birthday!
 
@@ -686,7 +741,10 @@ contests:
     show_page_contest: Contest
     show_page_winners: Winners
     show_page_official_rules: Official Rules
-    show_page_vote_now: Vote Now
+    show_page_see_more_contests: More Contests
+    show_page_vote_now: View Entries
+    show_page_entries: Entries
+    show_page_my_entries: Enter
     show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
     vote_page_instruction: Voting Instructions
     inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
@@ -695,8 +753,12 @@ contests:
     enter_page_you_must_agree: Please agree to the Official Rules before entering the contest.
     submit_page_no_entry: You must enter the contest before you can submit %ss.
     submit_page_entry_max_reached: You have entered the maximum number of images for this contest.
+    submit_page_entry_max_reached_groups: You have entered the maximum number of groups for this contest.
     submit_page_submission_ended: Submissions are no longer being accepted.
     submit_page_back_to_contest: Back to Contest
+    submit_groups_title: Select Your Group
+    submit_group_instructions_multiple_entries: Select %s group(s) from the list below or <a href="%s">create</a> a new group. You have <span id="entries-left">%s</span> left.
+    submit_group_instructions_single_entry: Select one group from the list below to enter into this contest. <div style="display:none;">You have <span id="entries-left">%s</span> left.</div>
     no_winners: No winners have been selected yet. Please check back later.
     place: Place
     entry_period: Entry Period
@@ -709,8 +771,15 @@ contests:
     photo_submissions_unlimited: You can submit as many images as you like for this contest.
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
+    no_groups_found: No groups found. You must be the owner of at least one group to enter this contest. Click <a href="%s" target="_blank">here</a> to create one now!
+    submit_group: Submit Selected Groups
+    submit_groups_how_many_so_far: These are the groups you have entered so far.
     contest_not_eligible: Sorry, you are not eligible to enter this contest.
     ongoing_contest_alert: This image is part of an ongoing contest! Place your vote in the Image Details section now!
     image_part_of_contest: This image is part of a contest.
+    group_part_of_contest: This group is part of a contest.
     voting_begins: Voting begins
     no_longer_available: This contest is no longer available.
+    entry_success: Your group is entered into the contest.
+
+

@@ -1,7 +1,3 @@
-contest_index:
-    pattern: /
-    defaults: { _controller: SpoutletBundle:Contest:index }
-
 contest_show:
     pattern: /{slug}
     defaults: { _controller: SpoutletBundle:Contest:show }
@@ -14,8 +10,15 @@ contest_submit:
     pattern: /submit/{slug}
     defaults: { _controller: SpoutletBundle:Contest:submit }
 
+contest_submit_group:
+    pattern: /submit-group/{slug}
+    defaults: { _controller: SpoutletBundle:Contest:groupSubmit }
+    requirements:
+        _format: json
+        _method: POST
+
 contest_vote:
-    pattern: /vote/{slug}
+    pattern: /entries/{slug}
     defaults: { _controller: SpoutletBundle:Contest:vote }
 
 contest_rules_show:
@@ -25,4 +28,3 @@ contest_rules_show:
 contest_winners:
     pattern: /winners/{slug}
     defaults: { _controller: SpoutletBundle:Contest:winners }
-

@@ -21,12 +21,39 @@ use Platformd\UserBundle\Entity\User;
 
 class ContestController extends Controller
 {
-    public function indexAction()
+    public function indexAction($category=null)
     {
         $site = $this->getCurrentSite();
-        $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
+
+        $contests = null;
+
+        if($category) {
+            if($category == 'expired') {
+                $contests = $this->getContestRepository()->findAllExpiredBySite($site);
+            } else {
+                $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($category, $site);
+            }
+        } else {
+            $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
+        }
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
+            'contests' => $contests,
+            'category' => $category,
+        ));
+    }
+
+    public function filteredContestsAction($filter)
+    {
+        $site = $this->getCurrentSite();
+
+        if($filter == 'expired') {
+            $contests = $this->getContestRepository()->findAllExpiredBySite($site);
+        } else {
+            $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($filter, $site);
+        }
+
+        return $this->render('SpoutletBundle:Contest:_contests.html.twig', array(
             'contests' => $contests,
         ));
     }
@@ -141,12 +168,6 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $form       = $this->createForm(new SubmitImageType($user));
-
-        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user, $contest);
-        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
-        $groups     = $this->getGroupRepository()->getAllGroupsForUser($user);
-
         $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
 
         if(!$entry)
@@ -155,12 +176,16 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
+        $form       = $this->createForm(new SubmitImageType($user));
+        $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user, $contest);
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
+        $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllOwnedGroupsForContest($user, $entry, $this->getCurrentSite());
         $mediaCount = $entry->getMedias()
             ->filter(function($x) {
                 return $x->getDeleted() != 1;
             });
 
-        $entriesLeft        = $contest->getMaxEntries() - count($mediaCount);
+        $entriesLeft        = $contest->getCategory() == 'image' ? $contest->getMaxEntries() - count($mediaCount) : $contest->getMaxEntries() - count($entry->getGroups());
         $isUnlimited        = $contest->getMaxEntries() == 0;
         $submissionEnded    = new \DateTime("now") > $contest->getSubmissionEnd();
 
@@ -200,7 +225,59 @@ class ContestController extends Controller
             'isUnlimited'       => $isUnlimited,
             'submissionEnded'   => $submissionEnded,
             'groups'            => $groups,
+            'groupsEntered'     => $entry->getGroups()
         ));
+    }
+
+    public function groupSubmitAction($slug, Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        if (!$this->isGranted('ROLE_USER')) {
+            $response->setContent(json_encode(array("success" => false, "Authorization failed.")));
+            return $response;
+        }
+
+        $params = array();
+        $content = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "details" => "There were no details sent.")));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['slug']) || !isset($params['groups'])) {
+            $response->setContent(json_encode(array("success" => false, "details" => "There was some missing information.")));
+            return $response;
+        }
+
+        $user       = $this->getCurrentUser();
+        $contest    = $this->getContestRepository()->findOneBy(array('slug' => $params['slug']));
+
+        $entry = $this->getContestEntryRepository()->findOneByUserAndContest($user, $contest);
+
+        if(!$entry)
+        {
+            $response->setContent(json_encode(array("success" => false, "details" => "There was no entry found.")));
+            return $response;
+        }
+
+        $em              = $this->getEntityManager();
+        $postedGroups    = $params['groups'];
+        $groups          = $this->getGroupRepository()->getAllGroupsForUser($user);
+        $groupsForEntry  = $this->getGroupRepository()->findAllGroupsWhereIdInForSite($postedGroups, $this->getCurrentSite());
+
+        $entry->setGroups($groupsForEntry);
+        $em->persist($entry);
+        $em->flush();
+
+        $this->setFlash('success', $this->trans('contests.entry_success'));
+
+        $response->setContent(json_encode(array("success" => true, "details" => $this->trans('contests.entry_success'))));
+        return $response;
     }
 
     public function voteAction($slug)
@@ -210,10 +287,20 @@ class ContestController extends Controller
         $this->ensureContestIsValid($contest);
 
         $medias = $this->getGalleryMediaRepository()->findMediaForContest($contest);
+        $entries = $this->getContestEntryRepository()->findGroupsByContest($contest);
+
+        $groups = array();
+
+        foreach ($entries as $entry) {
+            foreach ($entry->getGroups() as $group) {
+                array_push($groups, $group);
+            }
+        }
 
         return $this->render('SpoutletBundle:Contest:vote.html.twig', array(
             'contest' => $contest,
             'medias'  => $medias,
+            'groups'  => $groups,
         ));
     }
 
@@ -234,7 +321,7 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $winners = $this->getGalleryMediaRepository()->findMediaForContestWinners($contest);
+        $winners = $contest->getCategory() == 'image' ? $this->getGalleryMediaRepository()->findMediaForContestWinners($contest) : $this->getGroupRepository()->findGroupWinnersForContest($contest);
 
         return $this->render('SpoutletBundle:Contest:winners.html.twig', array(
             'contest' => $contest,
@@ -249,7 +336,8 @@ class ContestController extends Controller
             throw $this->createNotFoundException('Contest not found.');
         }
 
-        if($contest->getStatus() != 'published')
+        $canTest = $contest->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        if($contest->getStatus() != 'published' && !$canTest)
         {
             throw $this->createNotFoundException('Contest not found.');
         }

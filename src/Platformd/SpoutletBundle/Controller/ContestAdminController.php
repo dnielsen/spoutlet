@@ -30,11 +30,13 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $contests = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($site);
+        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite(), Contest::getValidStatuses());
+        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite(), Contest::getValidStatuses());
 
         return $this->render('SpoutletBundle:ContestAdmin:list.html.twig', array(
-            'contests' => $contests,
-            'site'     => $site,
+            'imageContests' => $imageContests,
+            'groupContests' => $groupContests,
+            'site'          => $site,
         ));
     }
 
@@ -86,6 +88,11 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
+        $test   = $contest->getTestOnly();
+        if ($test === null) {
+            $contest->setTestOnly(0);
+        }
+
         $editForm   = $this->createForm(new ContestType(), $contest);
 
         if ($this->processForm($editForm, $request)) {
@@ -106,7 +113,10 @@ class ContestAdminController extends Controller
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
+        $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
+        $memberActionRepo   = $em->getRepository('SpoutletBundle:GroupMembershipAction');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
+
 
         if (!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -115,7 +125,25 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb()->addChild($contest->getSlug());
         $this->getBreadcrumbs()->addChild('Select Winners');
 
-        $entries = $galleryMediaRepo->findMediaForContest($contest);
+        switch($contest->getCategory()) {
+            case 'image':
+                $entries = $galleryMediaRepo->findMediaForContest($contest);
+                break;
+            case 'group':
+                $contestEntries = $contestEntryRepo->findGroupsByContest($contest);
+
+                $entries = array();
+
+                foreach ($contestEntries as $entry) {
+                    foreach ($entry->getGroups() as $group) {
+                        $members = $memberActionRepo->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+                        array_push($entries, array('group' => $group, 'member_count' => $members));
+                    }
+                }
+                break;
+        }
+
+
 
         $voteData = $voteRepo->getVotesForContest($contest);
         $likes = array();
@@ -173,20 +201,28 @@ class ContestAdminController extends Controller
 
     public function metricsAction()
     {
-        $em         = $this->getDoctrine()->getEntityManager();
-        $contests   = $em->getRepository('SpoutletBundle:Contest')->findAllAlphabetically();
-        $voteResult = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
-        $entryCounts = array();
-        $votes       = array();
+        $em              = $this->getDoctrine()->getEntityManager();
+        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite());
+        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite());
+        $voteResult      = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
+
+        $entryCounts      = array();
+        $groupEntryCounts = array();
+        $votes            = array();
 
         $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
         $mediaCounts        = $contestEntryRepo->findMediaCountsForContests();
+        $groupCounts        = $contestEntryRepo->findGroupCountsForContests();
 
         foreach ($mediaCounts as $count) {
             $entryCounts[$count['id']] = $count['entry_count'];
+        }
+
+        foreach ($groupCounts as $count) {
+            $groupEntryCounts[$count['id']] = $count['entry_count'];
         }
 
         foreach ($voteResult as $vote) {
@@ -194,8 +230,10 @@ class ContestAdminController extends Controller
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:metrics.html.twig', array(
-            'contests'      => $contests,
+            'imageContests' => $imageContests,
+            'groupContests' => $groupContests,
             'entryCounts'   => $entryCounts,
+            'groupEntryCounts' => $groupEntryCounts,
             'votes'         => $votes,
         ));
     }
@@ -205,6 +243,47 @@ class ContestAdminController extends Controller
         $contestEntryRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
         $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
         $contest            = $contestRepo->findOneBySlug($slug);
+
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Contests', array(
+            'route' => 'admin_contest_metrics'
+        ));
+        $this->getBreadcrumbs()->addChild($contest->getName());
+        $this->getBreadcrumbs()->addChild('Entries');
+
+        if($contest->getCategory() == 'image') {
+            return $this->renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+        } elseif ($contest->getCategory() == 'group') {
+            return $this->renderGroupMetrics($contest, $contestEntryRepo, $contestRepo, $slug);
+        }
+
+    }
+
+    private function renderGroupMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
+    {
+        $groups = array();
+
+        if(!$contest) {
+            throw $this->createNotFoundException('Unable to find contest.');
+        }
+
+        $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
+
+        foreach ($entries as $entry) {
+            foreach($entry->getGroups() as $group) {
+                array_push($groups, $group);
+            }
+        }
+
+        return $this->render('SpoutletBundle:ContestAdmin:groupEntries.html.twig', array(
+            'contest'   => $contest,
+            'entries'   => $entries,
+            'slug'      => $slug,
+        ));
+    }
+
+    private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
+    {
         $likes              = array();
         $upVotes            = array();
         $downVotes          = array();
@@ -213,7 +292,7 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
-        $entries            = $contestEntryRepo->findAllNotDeletedForContest($contest);
+        $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
 
         foreach ($entries as $entry) {
             foreach ($entry->getMedias() as $media) {
@@ -239,12 +318,7 @@ class ContestAdminController extends Controller
             }
         }
 
-        $this->getBreadcrumbs()->addChild('Metrics');
-        $this->getBreadcrumbs()->addChild('Contests', array(
-            'route' => 'admin_contest_metrics'
-        ));
-        $this->getBreadcrumbs()->addChild($contest->getName());
-        $this->getBreadcrumbs()->addChild('Entries');
+
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
             'contest'   => $contest,

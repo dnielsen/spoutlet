@@ -29,10 +29,11 @@ class ContestType extends AbstractType
                 'url_prefix' => '/contest/'
             ))
             ->add('sites', 'entity', array(
+                'required' => true,
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'property' => 'name',
             ))
             ->add('submissionStart', 'datetime', array(
                 'label'     => 'Submission Starts:',
@@ -69,6 +70,7 @@ class ContestType extends AbstractType
                 'with_remove_checkbox' => true,
             ))
             ->add('rules', 'textarea', array(
+                'required' => true,
                 'attr'  => array('class' => 'ckeditor'),
             ))
             ->add('entryInstructions', 'textarea', array(
@@ -92,7 +94,15 @@ class ContestType extends AbstractType
             ->add('status', 'choice', array(
                 'choices'   =>  $this->getStatusChoices()
             ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
+            ->add('testOnly', 'choice', array(
+                'choices' => array(
+                    1 => 'Yes',
+                    0 => 'No',
+                ),
+                'label' => 'Allow admin testing?',
+                'help'  => 'This allows admins to still test the operation of the contest IF it is unpublished',
+            ));
     }
 
     public function getName()

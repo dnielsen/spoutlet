@@ -82,6 +82,11 @@ class GroupType extends AbstractType
                     'label' => 'Featured',
                     'help'  => 'Check this checkbox to make this group featured on the groups homepage.',
                 ));
+
+                $builder->add('discussionsEnabled', 'checkbox', array(
+                    'label' => 'Discussions',
+                    'help'  => 'Check this checkbox to enabled discussions for this group.',
+                ));
             }
     }
 

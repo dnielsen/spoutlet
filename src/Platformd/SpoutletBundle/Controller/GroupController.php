@@ -6,16 +6,20 @@ use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
+use Platformd\SpoutletBundle\Entity\GroupDiscussion;
+use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
 use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
+use Platformd\SpoutletBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Form\Type\GroupType;
+use Platformd\SpoutletBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Group controller.
@@ -308,6 +312,12 @@ Alienware Arena Team
         $group->getMembers()->removeElement($user);
         $group->getUserMembershipActions()->add($leaveAction);
 
+        // TODO Add a service layer for managing groups and dispatching such events
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        $event = new GroupEvent($group, $user);
+        $dispatcher->dispatch(GroupEvents::GROUP_LEAVE, $event);
+
         $this->getGroupManager()->saveGroup($group);
 
         $this->setFlash('success', 'You have successfully left this group!');
@@ -332,6 +342,7 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'JoinGroup');
 
+        // TODO This should probably be refactored to use the global activity table
         $joinAction = new GroupMembershipAction();
         $joinAction->setGroup($group);
         $joinAction->setUser($user);
@@ -339,6 +350,12 @@ Alienware Arena Team
 
         $group->getMembers()->add($user);
         $group->getUserMembershipActions()->add($joinAction);
+
+        // TODO Add a service layer for managing groups and dispatching such events
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        $event = new GroupEvent($group, $user);
+        $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
         $this->getGroupManager()->saveGroup($group);
 
@@ -881,6 +898,333 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
     }
 
+    public function discussionsAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+        $request = $this->getRequest();
+        $page = $request->query->get('page', 1);
+
+        $pager = $this->getGroupDiscussionRepository()->getDiscussionsForGroupMostRecentFirst($group, 11, $page);
+        $results = $pager->getCurrentPageResults();
+
+        return $this->render('SpoutletBundle:Group:discussions.html.twig', array(
+            'group' => $group,
+            'results' => $results,
+            'pager' => $pager,
+        ));
+    }
+
+    public function enableDiscussionsAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        $this->ensureAllowed($group, 'ManageDiscussions');
+
+        $group->setDiscussionsEnabled(true);
+        $this->getGroupManager()->saveGroup($group);
+
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+    }
+
+    public function disableDiscussionsAction($id)
+    {
+        $group = $this->getGroup($id);
+
+        $this->ensureAllowed($group, 'ManageDiscussions');
+
+        $group->setDiscussionsEnabled(false);
+        $this->getGroupManager()->saveGroup($group);
+
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+    }
+
+    public function addDiscussionAction($id, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'AddDiscussion');
+
+        $groupDiscussion = new GroupDiscussion();
+
+        $form = $this->createFormBuilder($groupDiscussion)
+            ->add('title', 'text', array('label' => 'Discussion Name'))
+            ->add('content', 'textarea', array(
+                'label' => 'Content',
+                'help'  => 'Give a description for your discussion.',
+                'required' => true
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupDiscussion->setGroup($group);
+
+                $this->getGroupManager()->createGroupDiscussion($groupDiscussion);
+
+                $this->setFlash('success', 'New discussion posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:addDiscussion.html.twig', array(
+            'group' => $group,
+            'discussionForm' => $form->createView(),
+            'discussionFormAction' => $this->generateUrl('group_add_discussion', array('id' => $id)),
+        ));
+    }
+
+    public function editDiscussionAction($id, $discussionId, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'EditDiscussion');
+
+        $discussion = $this->getGroupDiscussionRepository()->find($discussionId);
+
+        if (!$discussion) {
+            $this->setFlash('error', 'Discussion does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        }
+
+        $form = $this->createFormBuilder($discussion)
+            ->add('title', 'text', array('label' => 'Discussion Name'))
+            ->add('content', 'textarea', array('label' => 'Content', 'help'  => 'Give a description for your discussion.'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $discussion->setGroup($group);
+
+                $this->getGroupManager()->updateGroupDiscussion($discussion);
+
+                $this->setFlash('success', 'Discussion updated successfully.');
+
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:editDiscussion.html.twig', array(
+            'group' => $group,
+            'discussionForm' => $form->createView(),
+            'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('id' => $id, 'discussionId' => $discussionId)),
+            'discussionId' => $discussionId
+            )
+        );
+    }
+
+    public function deleteDiscussionAction($id, $discussionId, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'DeleteDiscussion');
+
+        $discussion = $this->getGroupDiscussionRepository()->find($discussionId);
+
+        if (!$discussion) {
+            $this->setFlash('error', 'Discussion does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        }
+
+        $this->getGroupManager()->deleteGroupDiscussion($discussion);
+
+        $this->setFlash('success', 'Discussion was deleted successfully!');
+
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+    }
+
+    public function viewDiscussionAction($id, $discussionId, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ViewDiscussion');
+
+        $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
+
+        if (!$groupDiscussion) {
+            $this->setFlash('error', 'Discussion does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        }
+
+        // We increment viewCount
+        $this->getGroupManager()->viewGroupDiscussion($groupDiscussion, $request->getSession(), $this->getCurrentUser());
+
+        $page = $request->query->get('page', 1);
+
+        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 10, $page);
+        $groupDiscussionPosts = $pager->getCurrentPageResults();
+
+
+        $groupDiscussionPost = new GroupDiscussionPost();
+        $form = $this->createFormBuilder($groupDiscussionPost)
+            ->add('content', 'textarea', array('label' => 'Message'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupDiscussionPost->setGroupDiscussion($groupDiscussion);
+
+                $this->getGroupManager()->saveGroupDiscussionPost($groupDiscussionPost);
+
+                $this->setFlash('success', 'Your reply posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_view_discussion', array(
+                    'id' => $id,
+                    'discussionId' => $discussionId
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:viewDiscussion.html.twig', array(
+            'discussion' => $groupDiscussion,
+            'discussionPosts' => $groupDiscussionPosts,
+            'group' => $group,
+            'pager' => $pager,
+            'replyForm' => $form->createView(),
+            'replyFormAction' => $this->generateUrl('group_view_discussion', array(
+                'id' => $id,
+                'discussionId' => $discussionId
+            )),
+        ));
+    }
+
+    public function replyDiscussionAction($id, $discussionId, Request $request)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ViewDiscussion');
+
+        $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
+
+        if (!$groupDiscussion) {
+            $this->setFlash('error', 'Discussion does not exist!');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        }
+
+        $groupDiscussionPost = new GroupDiscussionPost();
+
+        $form = $this->createFormBuilder($groupDiscussionPost)
+            ->add('content', 'textarea', array('label' => 'Message'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $groupDiscussionPost->setGroupDiscussion($groupDiscussion);
+
+                $this->getGroupManager()->saveGroupDiscussionPost($groupDiscussionPost);
+
+                $this->setFlash('success', 'Your reply posted successfully.');
+
+                return $this->redirect($this->generateUrl('group_view_discussion', array(
+                    'id' => $id,
+                    'discussionId' => $discussionId
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:replyDiscussion.html.twig', array(
+            'group' => $group,
+            'discussion' => $groupDiscussion,
+            'replyForm' => $form->createView(),
+            'replyFormAction' => $this->generateUrl('group_reply_discussion', array(
+                'id' => $id,
+                'discussionId' => $discussionId
+            )),
+        ));
+    }
+
+    public function editDiscussionPostAction($id, Request $request)
+    {
+        $groupDiscussionPost = $this->getGroupDiscussionPostRepository()->find($id);
+
+        if (!$groupDiscussionPost) {
+            throw new NotFoundHttpException('Discussion Post does not exist!');
+        }
+
+        $groupDiscussion    = $groupDiscussionPost->getGroupDiscussion();
+        $group              = $groupDiscussion->getGroup();
+
+        // If user is not post owner, then we check if they have group admin rights
+        if ($this->getCurrentUser() !== $groupDiscussionPost->getAuthor()) {
+            $this->ensureAllowed($group, 'EditDiscussion');
+        }
+
+        $form = $this->createFormBuilder($groupDiscussionPost)
+            ->add('content', 'textarea', array('label' => 'Message'))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $this->getGroupManager()->saveGroupDiscussionPost($groupDiscussionPost);
+
+                $this->setFlash('success', 'You edited the reply successfully.');
+
+                return $this->redirect($this->generateUrl('group_view_discussion', array(
+                    'id' => $group->getId(),
+                    'discussionId' => $groupDiscussion->getId()
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('SpoutletBundle:Group:replyDiscussion.html.twig', array(
+            'group' => $group,
+            'discussion' => $groupDiscussion,
+            'replyForm' => $form->createView(),
+            'replyFormAction' => $this->generateUrl('group_edit_discussion_post', array(
+                'id' => $id,
+                'discussionId' => $groupDiscussion->getId()
+            )),
+        ));
+    }
+
+    public function deleteDiscussionPostAction($id, Request $request)
+    {
+        $groupDiscussionPost = $this->getGroupDiscussionPostRepository()->find($id);
+
+        if (!$groupDiscussionPost) {
+            throw new NotFoundHttpException('Discussion Post does not exist!');
+        }
+
+        $groupDiscussion    = $groupDiscussionPost->getGroupDiscussion();
+        $group              = $groupDiscussion->getGroup();
+
+        // If user is not post owner, then we check if they have group admin rights
+        if ($this->getCurrentUser() !== $groupDiscussionPost->getAuthor()) {
+            $this->ensureAllowed($group, 'DeleteDiscussion');
+        }
+
+        $this->getGroupManager()->deleteGroupDiscussionPost($groupDiscussionPost);
+
+        $this->setFlash('success', 'Discussion Post was deleted successfully!');
+
+        return $this->redirect($this->generateUrl('group_view_discussion', array(
+            'id' => $group->getId(),
+            'discussionId' => $groupDiscussion->getId()
+        )));
+    }
+
     public function aboutAction($id)
     {
         $group = $this->getGroup($id);
@@ -893,8 +1237,9 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $this->addGroupsBreadcrumb();
-        $user = $this->getCurrentUser();
-        $group = $this->getGroupBySlug($slug);
+
+        $user   = $this->getCurrentUser();
+        $group  = $this->getGroupBySlug($slug);
 
         if ($group->getDeleted()) {
             $this->setFlash('error', 'Sorry, this group does not exist.');
@@ -903,16 +1248,28 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroup', false);
 
-        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
-        $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
+        $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
 
-        $commentTotal = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $contest = $this->getContestRepository()->findContestByGroup($group);
+
+        $contestMemberCount = 0;
+        $isEntered = false;
+
+        if($contest != null) {
+            $contestMemberCount = $this->getMemberActionRepository()->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+            $isEntered = $contest->getVotingEnd() > new \DateTime('now');
+        }
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'commentTotal' => $commentTotal,
-            'group' => $group,
-            'groupNews' => $groupNews,
-            'groupVideos' => $groupVideos,
+            'commentTotal'  => $commentTotal,
+            'group'         => $group,
+            'groupNews'     => $groupNews,
+            'groupVideos'   => $groupVideos,
+            'isEntered'     => $isEntered,
+            'contestCount'  => $contestMemberCount,
+            'contest'       => $contest,
         ));
     }
 
@@ -932,12 +1289,24 @@ Alienware Arena Team
         $group  = new Group();
         $form   = $this->createForm(new GroupType($this->getUser(), $group), $group);
 
+        if($previous = $this->getReturnUrl($request)) {
+            $request->getSession()->set(
+                'ContestReturnUrl',
+                $previous
+            );
+        }
+
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The group was created!');
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
             } catch(ApiException $e) {
+            }
+
+            if($return = $request->getSession()->get('ContestReturnUrl')) {
+                $request->getSession()->remove('ContestReturnUrl');
+                return $this->redirect($return);
             }
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
@@ -1071,6 +1440,9 @@ Alienware Arena Team
         return $this->getBreadcrumbs();
     }
 
+    /**
+     * @return \Platformd\SpoutletBundle\Model\GroupManager
+     */
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
@@ -1100,8 +1472,39 @@ Alienware Arena Team
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
     }
 
+    private function getContestRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:Contest');
+    }
+
+    private function getMemberActionRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupMembershipAction');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\GroupDiscussionRepository
+     */
+    private function getGroupDiscussionRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupDiscussion');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\GroupDiscussionPostRepository
+     */
+    private function getGroupDiscussionPostRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupDiscussionPost');
+    }
+
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    private function getReturnUrl(Request $request)
+    {
+        return  $request->query->get('return');
     }
 }

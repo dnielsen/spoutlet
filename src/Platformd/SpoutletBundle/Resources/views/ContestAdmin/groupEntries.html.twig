@@ -1,0 +1,89 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>Contest Entries</h1>
+
+{% if (contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s')) and (contest.winners == null) %}
+
+    <p class="alert alert-info help"><i class="icon-info-sign"></i>
+        This contest has now finished but a winner has not yet been chosen. Click <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">here</a> to choose a winner!
+    </p>
+
+{% endif %}
+
+<a class="btn btn-primary" href="{{ path('admin_contest_entries_export', { 'slug' : slug }) }}" style="margin-bottom: 10px;">Export</a>
+
+<form action="{{ path('admin_contest_entries_update', { 'slug' : slug }) }}" method="post" class="form-horizontal">
+
+    <table class="table table-striped table-bordered tablesorter">
+        <thead>
+            <tr>
+                <th>Group</th>
+                <th>URL</th>
+                <th>Owner</th>
+                <th>Entry Date</th>
+                <th>IP Address</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% if entries | length > 0 %}
+            {% for entry in entries %}
+                {% for group in entry.groups %}
+                    <tr>
+                        <td>
+                            {% if group.thumbNail %}
+                            <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
+                            {% else %}
+                            <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
+                            {% endif %}
+                        </td>
+                        <td><a href="{{ path('group_show', { slug: group.slug}) }}">{{ group.name }}</a></td>
+                        <td>{{ group.owner.username }}</td>
+                        <td>{{ entry.created | date }}</td>
+                        <td>{{ entry.ipAddress }}</td>
+                        <td>{{ group.owner.country }}</td>
+                        <td>
+                            <div class="admin-contest-remove-entry">
+                                <label for "contest_entry_delete[{{ group.id }}]">Remove from Contest</label>
+                                <input type="checkbox" id="contest_entry_delete[{{ group.id }}]" name="contest_entry_delete[{{ group.id }}]" />
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan=11>No entries found!</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary update-entries" formnovalidate>Submit</button>
+    <a href="{{ path('admin_contest_entries', { 'slug' : slug }) }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+</form>
+
+<script type="text/javascript">
+    jQuery(function($) {
+        $("button.update-entries").bind("click", function(event) {
+            if (!confirm("Are you sure you wish to remove the selected entries?")) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                return false;
+            }
+
+            $("<form />", { "method":"post", "action":$(this).attr("href")})
+                .appendTo(jQuery('body'))
+                .submit()
+                .remove()
+            ;
+        })
+    });
+</script>
+
+{% endblock %}

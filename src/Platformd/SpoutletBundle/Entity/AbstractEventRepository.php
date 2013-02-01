@@ -199,6 +199,29 @@ class AbstractEventRepository extends EntityRepository
         return $result && count($result) > 0 ? $result[0] : null;
     }
 
+    public function findOneBySlugWithoutPublished($slug, $site)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->leftJoin('e.sites', 's')
+            ->andWhere("e.slug = :slug")
+            ->setParameter('slug', $slug)
+            ->setMaxResults(1);
+
+        if (is_string($site)) {
+            $qb->andWhere('s.name = :site')
+                ->setParameter('site', $site);
+
+        } else {
+            $qb->andWhere('s = :site')
+                ->setParameter('site', $site);
+        }
+
+        $result = $qb->getQuery()
+                ->getResult();
+
+        return $result && count($result) > 0 ? $result[0] : null;
+    }
+
     public function findAllWithoutLocaleOrderedByNewest()
     {
         return $this->createQueryBuilder('e')

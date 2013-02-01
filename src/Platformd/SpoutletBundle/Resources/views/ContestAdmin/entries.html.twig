@@ -4,7 +4,7 @@
 
 <h1>Contest Entries</h1>
 
-{% if (contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s')) and (contest.winner == null) %}
+{% if (contest.votingEnd | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s')) and (contest.winners == null) %}
 
     <p class="alert alert-info help"><i class="icon-info-sign"></i>
         This contest has now finished but a winner has not yet been chosen. Click <a href="{{ path('admin_contest_select_winner', { 'slug' : contest.slug }) }}">here</a> to choose a winner!

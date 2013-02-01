@@ -22,6 +22,7 @@
         <div class="span6">
             {{ form_row(form.sites) }}
             {{ form_row(form.status) }}
+            {{ form_row(form.testOnly) }}
             {{ form_row(form.giveawayType) }}
         </div>
     </div>
@@ -59,10 +60,11 @@
         </ul>
     </div>
 
-    <legend>d) Content</legend>
+    <legend>d) Description</legend>
 
     <div class="form_row">
         {{ form_errors(form.content) }}
+        {{ form_label(form.content) }}
         {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
     </div>
 

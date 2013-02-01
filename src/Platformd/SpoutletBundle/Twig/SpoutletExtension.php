@@ -118,11 +118,21 @@ class SpoutletExtension extends Twig_Extension
                 $this,
                 'endsWith'
             ),
-            'media_path_nice'           => new Twig_Function_Method($this, 'mediaPathNice'),
-            'change_link_subdomain'     => new Twig_Function_Method($this, 'changeLinkSubdomain'),
+            'media_path_nice'           => new Twig_Function_Method(
+                $this,
+                'mediaPathNice'
+            ),
+            'cevo_account_link'         => new Twig_Function_Method(
+                $this,
+                'cevoAccountLink'
+            ),
+
+            'change_link_subdomain'     => new Twig_Function_Method(
+                $this,
+                'changeLinkSubdomain'
+            ),
         );
     }
-
 
     public function getCurrentSite() {
 
@@ -159,6 +169,38 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return sprintf('%s/media/%s', $cf, $media->getFilename());
+    }
+
+    public function cevoAccountLink($username)
+    {
+        $userManager    = $this->container->get('fos_user.user_manager');
+        $user           = $userManager->loadUserByUsername($username);
+        $cevoUserId     = $user->getCevoUserId();
+        $locale         = $this->container->get('session')->getLocale();
+
+        switch ($locale) {
+            case 'ja':
+                $subdomain = '/japan';
+                break;
+
+            case 'zh':
+                $subdomain = '/china';
+                break;
+
+            case 'es':
+                $subdomain = '/latam';
+                break;
+
+            default:
+                $subdomain = '';
+                break;
+        }
+
+        if ($cevoUserId && $cevoUserId > 0) {
+            return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
+        }
+
+        return 'http://www.alienwarearena.com/account/profile';
     }
 
     public function endsWith($haystack, $needle) {
@@ -398,6 +440,8 @@ class SpoutletExtension extends Twig_Extension
             case 'SOCIAL_MEDIA_STRIP':              return $this->GetSocialMediaStripForHeaderAndFooter($locale);
             case 'PHOTOS':                          return $this->GetPhotosLink($locale);
             case 'CONTESTS':                        return $this->GetContestsLink($locale);
+            case 'CONTESTS_IMAGE':                   return $this->GetContestsLink($locale, 'image');
+            case 'CONTESTS_GROUP':                   return $this->GetContestsLink($locale, 'group');
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -717,10 +761,10 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
-    private function GetContestsLink($locale)
+    private function GetContestsLink($locale, $category=null)
     {
         $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.contests').'</a>';
-        $url            = $this->container->get('router')->generate('contest_index');
+        $url            = $category == null ? $this->container->get('router')->generate('contest_index') : $this->container->get('router')->generate('contest_index', array('category' => $category));
 
         switch($locale) {
 
@@ -781,9 +825,9 @@ class SpoutletExtension extends Twig_Extension
             case 'GROUPS':                      return $northAmericaOrEurope;
             case 'WALLPAPERS':                  return !$japan;
             case 'MICROSOFT':                   return !$japan;
-            case 'PHOTOS':                      return $northAmericaOrEurope;
-            case 'CONTESTS':                    return $northAmericaOrEurope;
-            case 'COMMENTS':                    return $northAmericaOrEurope;
+            case 'PHOTOS':                      return $northAmericaEuropeLatamOnly;
+            case 'CONTESTS':                    return $northAmericaEuropeLatamOnly;
+            case 'COMMENTS':                    return $northAmericaEuropeLatamOnly;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

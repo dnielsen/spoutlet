@@ -17,7 +17,12 @@ class GiveawayType extends AbstractType
     {
         $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType(), array('label' => 'URL'));
-    	$builder->add('content', 'textarea');
+    	$builder->add('content', 'purifiedTextarea', array(
+            'label' => 'Description',
+            'attr' => array(
+                'class' => 'ckeditor'
+            )
+        ));
     	$builder->add('giveawayType', 'choice', array(
     			'choices' => Giveaway::getTypeChoices(),
                 'label' => 'Giveaway Type'
@@ -40,6 +45,14 @@ class GiveawayType extends AbstractType
         ));
         $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'));
         $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
+        $builder->add('testOnly', 'choice', array(
+            'choices' => array(
+                1 => 'Yes',
+                0 => 'No',
+            ),
+            'label' => 'Allow admin testing?',
+            'help'  => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
+        ));
     }
 
     public function getName()

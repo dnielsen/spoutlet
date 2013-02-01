@@ -2,6 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\ContentReportEvents;
+use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
@@ -56,12 +58,12 @@ class ContentReportingController extends Controller
         }
 
         if (!($user instanceof User)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You must be logged in to report content.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.must_be_logged_in'))));
             return $response;
         }
 
         if ($lastReport && $lastReport > new \DateTime('-1 hour')) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You may only report one item per hour.")));
+            $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.once_per_hour'))));
             return $response;
         }
 
@@ -106,6 +108,13 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
+        /* Disabled at present as causing issues with reporting.
+        // We dispatch an event for further stuff like maintaining counts
+        $eventName = ContentReportEvents::REPORT;
+        $event = new ContentReportEvent($reportedItem, $this->getUser());
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        */
+
         $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
@@ -117,31 +126,40 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
-        $emailTo = $type == 'Group' ? $item->getOwner()->getEmail() : $item->getAuthor()->getEmail();
-
-        $reason = ucwords(str_replace('_', ' ', $reason));
-
         switch ($type) {
             case 'GalleryMedia':
-                $itemType = ucfirst($item->getCategory());
-                break;
-
-            case 'Group':
-                $itemType = "Group ".str_replace('Group', '', $type);
+                $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
 
             case 'Comment':
-                $itemType = "Comment";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getBody();
+                $owner = $item->getAuthor();
+                break;
+
+            case 'Group':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getOwner();
+                break;
+
+            case 'GroupDiscussionPost':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getContent();
+                $owner = $item->getOwner();
                 break;
 
             default:
-                $itemType = "Unknown";
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
                 break;
         }
 
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
         $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
+
         $subject            = "Your Content Has Been Flagged";
         $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
 
@@ -157,6 +175,15 @@ Thank you for your patience.  Should you have any questions, please contact us a
 Alienware Arena Team
 
 ", $itemType, $name, $reason);
+        $fromEmail          = $this->container->getParameter('sender_email_address');
+        $fromName           = $this->container->getParameter('sender_email_name');
+        $emailTo            = $owner->getEmail();
+        $emailLocale        = $owner->getLocale() ? : 'en';
+        $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
+        $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
+        $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
+        $message            = sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason);
+
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

@@ -66,7 +66,7 @@
                             <li>{{ site_link('PHOTOS') }}</li>
                             {% endif %}
                             {% if site_has_feature('CONTESTS') %}
-                            <li>{{ site_link('CONTESTS') }}</li>
+                            <li>{{ site_link('CONTESTS_IMAGE') }}</li>
                             {% endif %}
                         </ul>
                     </li>
@@ -91,6 +91,9 @@
                             <li>
                                 <a href="{{ path('group_new') }}">Create Group</a>
                             </li>
+                            {% if site_has_feature('CONTESTS') %}
+                            <li>{{ site_link('CONTESTS_GROUP') }}</li>
+                            {% endif %}
                         </ul>
                     </li>
                 {% endif %}

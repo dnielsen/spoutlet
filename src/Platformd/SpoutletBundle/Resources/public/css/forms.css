@@ -40,11 +40,11 @@ textarea {
 
 a.btn {
     display: inline-block;
-    padding: 12px 15px;
+    padding: 9px 0px;
     line-height: normal;
     position: relative;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: normal;
     color: #fff;
     background: #0094B4;
     background: -moz-linear-gradient(#0094B4,#00596e);
@@ -958,7 +958,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 label {

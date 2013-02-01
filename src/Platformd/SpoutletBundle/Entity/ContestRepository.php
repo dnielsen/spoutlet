@@ -20,12 +20,14 @@ class ContestRepository extends EntityRepository
             ->execute();
     }
 
-    public function findAllForSiteByDate($site)
+    public function findAllForSiteByDate($site, $status=array('published'))
     {
-        return $this->createQueryBuilder('c')
-            ->leftJoin('c.sites', 's')
+        $qb = $this->createQueryBuilder('c');
+
+        return $qb->leftJoin('c.sites', 's')
             ->where('c.votingEnd > :today')
             ->andWhere('s.defaultLocale = :site')
+            ->andWhere($qb->expr()->in('c.status', $status))
             ->setParameter('site', $site)
             ->setParameter('today', new \DateTime('now'))
             ->orderBy('c.votingEnd', 'DESC')
@@ -62,5 +64,74 @@ class ContestRepository extends EntityRepository
             ->execute();
 
         return $result ? true : false;
+    }
+
+    public function findAllByCategoryAndSiteWithVotingPeriod($category, $site, $status=array('published'))
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
+            ->andWhere('c.votingEnd > :today')
+            ->andWhere('c.category = :category')
+            ->orderBy('c.votingEnd', 'DESC')
+            ->setParameter('category', $category)
+            ->setParameter('today', new \DateTime('now'));
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllByCategoryAndSite($category, $site, $status=array('published'))
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
+            ->andWhere('c.category = :category')
+            ->orderBy('c.votingEnd', 'DESC')
+            ->setParameter('category', $category);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllByCategory($category)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.category = :category')
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllByCategoryOrderdByVoteEnding($category, $sortDir='DESC')
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.category = :category')
+            ->orderBy('c.votingEnd', $sortDir)
+            ->setParameter('category', $category)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findAllExpiredBySite($site)
+    {
+        return $this->createSiteQueryBuilder($site)
+            ->andWhere('c.votingEnd < :today')
+            ->andWhere('c.status = :status')
+            ->setParameter('today', new \DateTime('now'))
+            ->setParameter('status', 'published')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function findContestByGroup($group)
+    {
+        $qb = $this->createQueryBuilder('c');
+        return $qb->leftJoin('c.entries', 'e')
+            ->leftJoin('e.groups', 'eg')
+            ->where($qb->expr()->in('eg.id', array($group->getId())))
+            ->andWhere('c.status = :status')
+            ->setParameter('status', 'published')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

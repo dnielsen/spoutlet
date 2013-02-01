@@ -25,6 +25,19 @@ class ContentReport
         'individual_harrassing_me',
     );
 
+    static private $typeTranslationMap = array(
+        'Group' => 'content_reporting.report_type_group',
+        'GroupVideo' => 'content_reporting.report_type_group_video',
+        'GroupNews' => 'content_reporting.report_type_group_news',
+        'GroupImage' => 'content_reporting.report_type_group_image',
+        'GroupDiscussion' => 'content_reporting.report_type_group_discussion',
+        'GroupDiscussionPost' => 'content_reporting.report_type_group_discussion_post',
+        'Image' => 'content_reporting.report_type_image',
+        'Video' => 'content_reporting.report_type_video',
+        'Comment' => 'content_reporting.report_type_comment',
+        'Unknown' => 'content_reporting.report_type_unknown',
+    );
+
     /**
      * @var integer $id
      *
@@ -107,11 +120,25 @@ class ContentReport
     protected $group = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\ManyToOne(targetEntity="GroupDiscussion")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
+    protected $groupDiscussion = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GroupDiscussionPost")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupDiscussionPost = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
     protected $comment = null;
+
 
     /**
      * Get id
@@ -215,6 +242,27 @@ class ContentReport
         $this->group = $value;
     }
 
+
+    public function getGroupDiscussion()
+    {
+        return $this->groupDiscussion;
+    }
+
+    public function setGroupDiscussion($groupDiscussion)
+    {
+        $this->groupDiscussion = $groupDiscussion;
+    }
+
+    public function setGroupDiscussionPost($groupDiscussionPost)
+    {
+        $this->groupDiscussionPost = $groupDiscussionPost;
+    }
+
+    public function getGroupDiscussionPost()
+    {
+        return $this->groupDiscussionPost;
+    }
+
     public function getComment()
     {
         return $this->comment;
@@ -252,5 +300,14 @@ class ContentReport
     public function getReason()
     {
         return $this->reason;
+    }
+
+    static public function getTypeTranslationKey($type)
+    {
+        if (array_key_exists($type, self::$typeTranslationMap)) {
+            return self::$typeTranslationMap[$type];
+        }
+
+        return self::$typeTranslationMap['Unknown'];
     }
 }

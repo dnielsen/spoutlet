@@ -76,7 +76,7 @@
                 <div>{{ 'galleries.by' | trans }} <a href="{{ path('accounts_profile', {username: media.author.username}) }}">{{ media.author.username }}</a></div>
             </div>
             <div class="image-actions">
-                <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Report</a>
+                <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">{{ 'content_reporting.report' | trans }}</a>
             </div>
         </div>
     {% else %}

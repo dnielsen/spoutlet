@@ -115,10 +115,15 @@ echo "  - Initialising ACL structure..."
 ./app/console init:acl --env=test > /dev/null
 
 echo
+echo "Changing cache ownership..."
+
+sudo chown -R `whoami`:`whoami` app/cache/ > /dev/null
+
+echo
 echo "Clearing caches:"
 echo "  - Production..."
 
-./app/console cache:clear --no-debug > /dev/null
+./app/console cache:clear --no-debug --env=prod > /dev/null
 
 echo "  - Development..."
 

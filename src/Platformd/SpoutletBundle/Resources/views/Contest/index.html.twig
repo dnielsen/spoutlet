@@ -4,15 +4,51 @@
 
 {% block content %}
 <h2 style="color:#fff;">{{ 'contests.index_page_title_long' | trans }}</h2>
-{% for contest in contests %}
-<div class="contest-wrapper">
-    <h3><a href="{{ path('contest_show', {slug: contest.slug}) }}">{{ contest.name }}</a></h3>
-    <h6 style="font-size:10px;">{{ 'contests.entry_period' | trans }}: {{ contest.submissionStart | date('M d, Y')}} - {{ contest.submissionEnd | date('M d, Y')}}
-        <br />
-        {{ 'contests.vote_period' | trans }}: {{ contest.votingStart | date('M d, Y')}} - {{ contest.votingEnd | date('M d, Y')}}
-    </h6>
+<input type="hidden" id="category" value="{{ category }}" />
+<div class="styled-select">
+    <select id="filter-select">
+        <option value="none">- Select a Category -</option>
+        <option value="image">Images</option>
+        <option value="group">Groups</option>
+        <option value="expired">Expired</option>
+    </select>
 </div>
-{% else %}
-<p>{{ 'contests.no_contests' | trans }}</p>
-{% endfor %}
+<div class="contest-list">
+{% include "SpoutletBundle:Contest:_contests.html.twig" with {"contests": contests} %}
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+
+            var category = $('#category').val();
+
+            switch (category) {
+                case 'image':
+                    $('#filter-select').val('image');
+                    break;
+                case 'group':
+                    $('#filter-select').val('group');
+                    break;
+                case 'expired':
+                    $('#filter-select').val('expired');
+                    break;
+                default:
+                    $('#filter-select').val('none');
+                    break;
+            }
+
+            $('#filter-select').change(function () {
+                var c = $(this).val() == 'none' ? '' : '/' + $(this).val();
+                location.href = '{{ path('contest_index') }}' + c;
+            });
+        });
+    </script>
 {% endblock %}

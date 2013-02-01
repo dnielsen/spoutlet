@@ -42,6 +42,7 @@
 		        'ckeditor/ckeditor.js'
 		        'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
+		        'flot/jquery.flot.js'
 		        output='js/packed/admin.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -228,6 +229,7 @@
                             <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
                             <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
+                            <li><a href="{{ path('admin_group_discussion_find') }}">Find Discussions</a></li>
                             <li><a href="{{ path('admin_image_find') }}">Find Images</a></li>
                         </ul>
                     {% endif %}

@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="right">
-        <div class="widget-33">
+        <div class="widget-33" style="height:auto;">
             <div class="widget-header">
                 <div class="widget-title">
                     {{ 'contests.show_page_instructions' | trans }}
@@ -75,7 +75,7 @@
                                             </div>
                                             {% endif %}
 
-                                            <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_submit_photos' | trans }}</button>
+                                            <button id="btn-submit-photos" style="margin-top: 10px;">{{ 'contests.show_page_enter_contest' | trans }}</button>
 
                                         </div>
                                     {% else %}
@@ -89,7 +89,7 @@
                             {% else %}
                                 <div style="padding: 10px 0px;">
                                     <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                        <em>{{ 'contests.no_longer_available' | trans }}</em>
+                                        <em>{{ 'contests.submit_page_submission_ended' | trans }}</em>
                                     </p>
                                 </div>
                             {% endif %}

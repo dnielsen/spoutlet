@@ -100,6 +100,6 @@ class DealPool extends Pool
      */
     public function isTotallyActive()
     {
-        return $this->getIsActive() && $this->getDeal() && $this->getDeal()->isActive();
+        return $this->getIsActive() && $this->getDeal() && ($this->getDeal()->isActive() || $this->getDeal()->getTestOnly());
     }
 }

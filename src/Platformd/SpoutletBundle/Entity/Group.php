@@ -45,9 +45,9 @@ class Group implements LinkableInterface, ReportableContentInterface
         self::DELETED_BY_REPORT_ADMIN,
     );
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageApplications');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageApplications');
-    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'LeaveGroup');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
+    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
     static private $applicantIsAllowedTo         = array('ViewGroup');
@@ -214,6 +214,18 @@ class Group implements LinkableInterface, ReportableContentInterface
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $images;
+
+    /**
+     * @var boolean $deleted
+     * @ORM\Column(type="boolean")
+     */
+    private $discussionsEnabled = true;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupDiscussion", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $discussions;
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="group")
@@ -869,6 +881,32 @@ class Group implements LinkableInterface, ReportableContentInterface
             array(),
             null
         );
+    }
+
+    public function setDiscussions($discussions)
+    {
+        $this->discussions = $discussions;
+    }
+
+    public function getDiscussions()
+    {
+        return $this->discussions;
+    }
+
+    /**
+     * @param boolean $discussionsEnabled
+     */
+    public function setDiscussionsEnabled($discussionsEnabled)
+    {
+        $this->discussionsEnabled = $discussionsEnabled;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDiscussionsEnabled()
+    {
+        return $this->discussionsEnabled;
     }
 
     /**

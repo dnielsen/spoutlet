@@ -116,20 +116,7 @@
                                     {{ 'na' | trans }}
                                 {% endif %}
                             </li>
-                            <li>
-                                <label>{{ 'eligibility' | trans }}</label>
-                                <ol class="eligibility-list">
-                                    <li>{{ 'open_to_legal_residents' | trans({
-                                        '%countries%': countries }) }}</li>
 
-                                    {#{% if ageRestrictions == true %}
-                                    <li>
-                                        Age restrictions may apply depending on your country
-                                    </li>
-                                    {% endif %}#}
-
-                                </ol>
-                            </li>
                         </ul>
 
                         <label>{{ 'instructions' |trans }}</label><br/>

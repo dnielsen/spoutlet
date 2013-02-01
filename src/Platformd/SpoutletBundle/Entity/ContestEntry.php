@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Contest;
+use Platformd\SpoutletBundle\Entity\Group;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -81,9 +82,17 @@ class ContestEntry
      */
     private $medias;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Group")
+     * @ORM\JoinTable(name="pd_contest_entry_groups", joinColumns={@ORM\JoinColumn(name="contest_entry_id", referencedColumnName="id")}, inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")})
+     */
+    private $groups;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     /**
@@ -190,6 +199,16 @@ class ContestEntry
         $this->medias = $medias;
     }
 
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    public function setGroups($value)
+    {
+        $this->groups = $value;
+    }
+
     public function getDeleted()
     {
         return $this->deleted;
@@ -211,6 +230,11 @@ class ContestEntry
     }
 
     public function addMedia(GalleryMedia $value)
+    {
+        $this->medias->add($value);
+    }
+
+    public function addGroup(Group $value)
     {
         $this->medias->add($value);
     }

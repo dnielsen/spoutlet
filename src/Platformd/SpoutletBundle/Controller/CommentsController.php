@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Form\Type\CommentType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -76,6 +77,8 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->persist($thread);
         $em->flush();
+
+        $this->giveUserArp($comment);
 
         $this->createAcl($comment);
 
@@ -189,6 +192,8 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->flush();
 
+        $this->removeUserArp($comment);
+
         $commentCount = $comment->getParent() ? $params['commentCount'] : $params['commentCount'] - 1;
 
         $threadId = $comment->getThread()->getId();
@@ -210,6 +215,14 @@ class CommentsController extends Controller
 
         if (!$thread) {
             $thread = $this->createThread($threadId, $object);
+        }
+
+        $correctPermalink = $this->generateUrl($object->getLinkableRouteName(), $object->getLinkableRouteParameters()).'#comments';
+
+        if ($thread->getPermalink() != $correctPermalink) {
+            $thread->setPermalink($correctPermalink);
+            $em->persist($thread);
+            $em->flush();
         }
 
         $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
@@ -402,5 +415,54 @@ class CommentsController extends Controller
         }
 
         return $url;
+    }
+
+    private function removeUserArp($comment)
+    {
+        $threadId = $comment->getThread()->getId();
+        $tag = null;
+
+        if(strlen(stristr($threadId, 'gallery')) > 0) {
+            $tag = 'nukephotocomment';
+        }
+
+        if(strlen(stristr($thread, 'group')) > 0) {
+            $tag = 'nukeforumreply';
+        }
+
+        if($tag) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+        }
+    }
+
+    private function giveUserArp($comment)
+    {
+        $threadId = $comment->getThread()->getId();
+        $tag = null;
+
+        if(strlen(stristr($threadId, 'gallery')) > 0) {
+            $tag = 'photocomment';
+        }
+
+        if(strlen(stristr($threadId, 'group')) > 0) {
+            $tag = 'replytothread';
+        }
+
+        if($tag) {
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+        }
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

@@ -29,4 +29,26 @@ class GroupMembershipActionRepository extends EntityRepository
 
         return count($total);
     }
+
+    public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('gma');
+        $qb->where('gma.group = :group');
+        $qb->andWhere('gma.action = :action1 OR gma.action = :action2');
+        $qb->setParameter('group', $group);
+        $qb->setParameter('action1', 'JOINED');
+        $qb->setParameter('action2', 'JOINED_APPLICATION_ACCEPTED');
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('gma.createdAt >= :fromDate')
+               ->andWhere('gma.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+
+        $total = $qb->getQuery()->getResult();
+
+        return count($total);
+    }
 }

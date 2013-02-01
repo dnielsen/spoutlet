@@ -7,7 +7,7 @@
 {% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
 {% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
-{% set openGraphThumb       = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+{% set openGraphThumb       = media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
@@ -203,7 +203,7 @@
 
                     <div id="widget-footer">
                         <p>
-                            <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">Report</a>
+                            <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">{{ 'content_reporting.report' | trans }}</a>
                         </p>
                     </div>
                     {% if app.user is not null %}
@@ -263,16 +263,6 @@
     <script src="{{ asset('bundles/spoutlet/js/jquery.imagesloaded.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
-
-            $('.gallery-media-thumb-small').hover(
-                function () {
-
-                    $(this).addClass('active');
-                },
-                function () {
-                    $(this).removeClass('active');
-                }
-            );
 
             $('#main-photo').imagesLoaded(function () {
                 $(this).fadeIn('slow');
