@@ -1,0 +1,70 @@
+{% set reportContentType    = 'GroupEvent' %}
+{% set canManageEvents      = (app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
+
+<div id="event-content-scroll" style="height: 550px;">
+
+    {% if mode == 'upcoming' %}
+        <h2>Upcoming Events</h2>
+    {% else %}
+        <h2>Past Events</h2>
+    {% endif %}
+
+    {% if groupEvents is defined %}
+
+        {% for event in groupEvents %}
+
+            <div class="group-event-item" id="event-item-{{ event.id }}">
+                <div class="group-event-date">
+                    {{ event.getDateRangeString }}
+                </div>
+
+                <div class="group-event-details">
+                    <div class="group-event-title"><a href="{{ path('group_event_show', { groupId : group.id, event : event.id }) }}">{{ event.name }}</a></div>
+                    <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}, {{ event.timezone }}</div>
+                    <div class="group-event-location"><strong>Where:</strong>
+                        {% if event.online %}
+                            Online
+                        {% else %}
+                            {{ event.location }}, {{ event.address }}
+                        {% endif %}
+                    </div>
+                    <div class="group-event-actions">
+                        {% if canManageEvents == true %}
+                            <a href="{{ path('group_event_edit', { 'groupId' : group.id, 'event' : event.id })}}">Edit</a> |
+                            <a href="{{ path('group_event_delete', { 'groupId' : group.id, 'event' : event.id })}}">Delete</a> |
+                        {% endif %}
+                        <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>No group events yet... please come back later!</p>
+        {% endfor %}
+    {% else %}
+        <p>No group events yet... please come back later!</p>
+    {% endif %}
+
+    {% if mode == 'upcoming' %}
+        <h3><a id="show-past-events-link" href="javascript:void(0)">Past Events</a></h3>
+    {% else %}
+        <h3><a id="show-upcoming-events-link" href="javascript:void(0)">Upcoming Events</a></h3>
+    {% endif %}
+
+
+
+</div>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+
+<script type="text/javascript">
+    $(function () {
+        $('#event-content-scroll').mCustomScrollbar();
+
+        $('#show-past-events-link').click(function () {
+            $('a#group-events-past').trigger('click');
+        });
+
+        $('#show-upcoming-events-link').click(function () {
+            $('a#group-events').trigger('click');
+        });
+    });
+</script>

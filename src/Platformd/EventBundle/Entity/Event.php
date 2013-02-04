@@ -610,4 +610,18 @@ abstract class Event
     {
         return $this->registrationOption;
     }
+
+    public function getDateRangeString()
+    {
+        $startsAtDate = $this->getStartsAt()->format('M d');
+        $startsAtYear = $this->getStartsAt()->format('Y');
+        $endsAtDate = $this->getEndsAt()->format('M d');
+        $endsAtYear = $this->getEndsAt()->format('Y');
+
+        if ($startsAtYear == $endsAtYear) {
+            return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$EndsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+        } else {
+            return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+        }
+    }
 }

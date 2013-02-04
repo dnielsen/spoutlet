@@ -353,3 +353,31 @@ button#join-group-button:hover {
 .group-list-item .report-group-caption a {
     font-size: 10px;
 }
+
+.group-event-item {
+    margin: 20px;
+}
+
+.group-event-date {
+    display:inline-table;
+    width: 200px;
+}
+
+.group-event-details {
+    display:inline-table;
+    width: 350px;
+}
+
+.group-event-title,
+.group-event-location {
+    padding-bottom: 10px;
+}
+
+.group-upcoming-events,
+.group-past-events {
+    padding-top: 10px;
+}
+
+.group-event-list-link {
+    padding-left: 10px;
+}
