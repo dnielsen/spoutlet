@@ -29,7 +29,7 @@
             <td>
                 <div style="text-align:center;">
                     {% if banner.sitesPositions[site] > 0 %}<a href="{{ path('admin_homepage_banner_move', { id : banner.id, direction: "up", site: site }) }}" class="arrow-button up"></a>{% endif %}
-                    <a href="{{ path('admin_homepage_banner_move', { id : banner.id, direction: "down", site: site }) }}" class="arrow-button down"></a>
+                    {% if loop.last == false %}<a href="{{ path('admin_homepage_banner_move', { id : banner.id, direction: "down", site: site }) }}" class="arrow-button down"></a>{% endif %}
                 </div>
             </td>
             <td>{{ banner.newWindow ? 'Yes' : 'No' }}</td>
