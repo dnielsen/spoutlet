@@ -1,0 +1,3 @@
+group_event_new:
+    pattern: /groups/{slug}/event/new
+    defaults: { _controller:"EventBundle:GroupEvent:new", site: ~ }

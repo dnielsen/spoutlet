@@ -51,6 +51,17 @@ class GroupManager
     }
 
     /**
+     * Find one by
+     *
+     * @param $criteria
+     * @return object
+     */
+    public function getGroupBy($criteria)
+    {
+        return $this->getRepository()->findOneBy($criteria);
+    }
+
+    /**
      * Call this to save a Group
      *
      * This must be used instead of persisting it directly
@@ -347,6 +358,11 @@ class GroupManager
     public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
     {
         return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
+    }
+
+    public function getAllGroupsForUser(User $user)
+    {
+        return $this->getRepository()->getAllGroupsForUser($user);
     }
 
     /**

@@ -1,0 +1,7 @@
+services:
+    platformd_event.service.group_event:
+        class: Platformd\EventBundle\Service\GroupEventService
+        arguments:
+            - @platformd_event.repository.group_event
+            - @event_filesystem
+            - @event_dispatcher

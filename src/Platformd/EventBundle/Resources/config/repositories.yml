@@ -1,0 +1,10 @@
+parameters:
+    platformd_event.entity.group_event.class: Platformd\EventBundle\Entity\GroupEvent
+    platformd_event.repository.group_event.class: Platformd\EventBundle\Repository\GroupEventRepository
+
+services:
+    platformd_event.repository.group_event:
+        class: %platformd_event.repository.group_event.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+            - %platformd_event.entity.group_event.class%

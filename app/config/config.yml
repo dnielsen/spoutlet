@@ -118,6 +118,9 @@ fos_user:
         user_manager: platformd_user.manager
         mailer:       platformd_user.mailer
 
+vich_geographical:
+    db_driver: orm
+
 parameters:
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false

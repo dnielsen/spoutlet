@@ -1,0 +1,10 @@
+parameters:
+    platformd_event.form.type.group_event.class: Platformd\EventBundle\Form\Type\GroupEventType
+
+services:
+    platformd_event.form.type.group_event:
+        class: %platformd_event.form.type.group_event.class%
+        arguments:
+            - @security.context
+        tags:
+            - { name: form.type, alias: groupEvent }
