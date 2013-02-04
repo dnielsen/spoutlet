@@ -76,13 +76,16 @@ class GroupRepository extends EntityRepository
     public function findGroupsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
+            ->leftJoin('g.members', 'm')
             ->leftJoin('g.sites', 's')
             ->where('g.category = :category')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
-            ->orderBy('g.createdAt', 'DESC');
+            ->orderBy('g.createdAt', 'DESC')
+            ->groupBy('g.id');
 
         return $qb->getQuery()->execute();
     }
@@ -418,17 +421,21 @@ class GroupRepository extends EntityRepository
     public function findAllFeaturedGroupsForSite($site)
     {
         $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
             ->leftJoin('g.sites', 's')
+            ->leftJoin('g.members', 'm')
             ->where('g.featured = true')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('g.featuredAt', 'DESC')
             ->distinct('g.id')
             ->setMaxResults(4)
-            ->setParameter('site', $site);
+            ->setParameter('site', $site)
+            ->groupBy('g.id');
 
         return $qb->getQuery()->execute();
     }
+
     public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
     {
         $date = new \DateTime;

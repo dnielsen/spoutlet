@@ -164,7 +164,7 @@ class DefaultController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:HomepageBanner')
-            ->findForLocale($this->getLocale());
+            ->findForSite($this->getCurrentSite(), 5);
 
         return $this->render('SpoutletBundle:Default:banner.html.twig', array('banners' => $banners));
     }

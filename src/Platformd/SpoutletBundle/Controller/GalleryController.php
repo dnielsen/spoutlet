@@ -762,23 +762,16 @@ class GalleryController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $params   = array();
         $content  = $request->getContent();
 
-        if (empty($content)) {
-            $response->setContent(json_encode(array("success" => false, "message" => "Some required information was not passed.")));
-            return $response;
-        }
+        $subdomain = $request->request->get('_site');
 
-        $params = json_decode($content, true);
-
-        if (!isset($params['site'])) {
-            $response->setContent(json_encode(array("success" => false, "message" => "Site not specified.")));
+        if (!$subdomain) {
+            $response->setContent(json_encode(array("error" => "Site not specified.")));
             return $response;
         }
 
         $em         = $this->getEntityManager();
-        $subdomain  = $params['site'];
 
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
@@ -786,7 +779,7 @@ class GalleryController extends Controller
         $site   = $siteRepo->findOneBySubDomain($subdomain);
 
         if (!$site) {
-            $response->setContent(json_encode(array("success" => false, "message" => "Invalid site specified.")));
+            $response->setContent(json_encode(array("error" => "Invalid site specified.")));
             return $response;
         }
 

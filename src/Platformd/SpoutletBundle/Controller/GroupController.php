@@ -1427,7 +1427,7 @@ Alienware Arena Team
 
     private function getTotalCommentCountForGroup($groupId) {
         return $this->getEntityManager()
-            ->getRepository('CommentBundle:Thread')
+            ->getRepository('SpoutletBundle:Thread')
             ->getTotalCommentsByThreadId($groupId);
     }
 

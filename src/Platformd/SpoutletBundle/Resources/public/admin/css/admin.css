@@ -240,3 +240,31 @@ input[type="checkbox"] {
   float: left;
   margin: 3px 5px 0 0;
 }
+
+a.arrow-button {
+    width: 29px;
+    height: 29px;
+    margin: 0 3px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+a.up {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 0;
+}
+
+a.up:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 0 29px;
+}
+
+a.down {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 29px 0;
+}
+
+a.down:hover {
+    background: url('/bundles/spoutlet/images/vote_sprite.png');
+    background-position: 29px 29px;
+}
