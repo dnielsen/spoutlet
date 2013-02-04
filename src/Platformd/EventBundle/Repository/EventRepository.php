@@ -14,11 +14,11 @@ abstract class EventRepository extends EntityRepository
      * @param \Doctrine\ORM\EntityManager $entityManager
      * @param \Doctrine\ORM\Mapping\ClassMetadata $class
      */
-    public function __construct(EntityManager $entityManager, $class)
+    /*public function __construct(EntityManager $entityManager, $class)
     {
         $metadata = $entityManager->getClassMetadata($class);
         parent::__construct($entityManager, $metadata);
-    }
+    }*/
 
     /**
      * Persists Event in the DB

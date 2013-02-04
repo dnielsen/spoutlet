@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Platformd\EventBundle\Entity\GroupEvent
  *
  * @ORM\Table(name="group_event")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\EventBundle\Repository\GroupEventRepository")
  */
 class GroupEvent extends Event
 {
