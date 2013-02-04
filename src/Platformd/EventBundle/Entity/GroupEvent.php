@@ -51,6 +51,15 @@ class GroupEvent extends Event
     protected $sites;
 
     /**
+     * Event attendees
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="group_events_attendees")
+     */
+    protected $attendees;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -122,5 +131,16 @@ class GroupEvent extends Event
     public function getPrivate()
     {
         return $this->private;
+    }
+
+    /**
+     * used to dynamically generate routes within twig files to allow multiple event types to be
+     * mixed and displayed together
+     *
+     *  @return string
+     */
+    public function getEventPrefix()
+    {
+        return 'group_event_';
     }
 }

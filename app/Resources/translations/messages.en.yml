@@ -1,4 +1,6 @@
 edit: Edit
+submit: Submit
+cancel: Cancel
 
 platformd:
 
@@ -116,7 +118,18 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: My Events
+            organizer: Organizer
+            attendees: Attendees
+            actions: Actions
+            my_events: My Events
+            your_owned_events: My Event Listings
+            your_registered_events: Events I'm Registered In
+            your_past_events: My Past Events
+            rsvp:
+                dialog_title: Event RSVP
+                change_rsvp: Change RSVP
+                attending: Attending
+                not_attending: Not Attending
             current_events: Current Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events

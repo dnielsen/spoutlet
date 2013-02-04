@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\SpoutletBundle\Entity\User;
 
 class AccountController extends Controller
 {
@@ -62,7 +63,16 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        return $this->render('SpoutletBundle:Account:events.html.twig');
+        $groupEventRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
+        $events         = $groupEventRepo->getEventListForUser($this->getUser());
+        $ownedEvents    = $groupEventRepo->getEventListForUser($this->getUser(), true);
+        $pastEvents     = $groupEventRepo->getPastEventListForUser($this->getUser());
+
+        return $this->render('SpoutletBundle:Account:events.html.twig', array(
+            'events'        => $events,
+            'ownedEvents'   => $ownedEvents,
+            'pastEvents'    => $pastEvents,
+        ));
     }
 
     public function videosAction()

@@ -828,6 +828,7 @@ class SpoutletExtension extends Twig_Extension
             case 'PHOTOS':                      return $northAmericaEuropeLatamOnly;
             case 'CONTESTS':                    return $northAmericaEuropeLatamOnly;
             case 'COMMENTS':                    return $northAmericaEuropeLatamOnly;
+            case 'EVENTS':                      return true;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

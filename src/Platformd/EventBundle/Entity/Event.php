@@ -175,7 +175,6 @@ abstract class Event
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinTable(name="events_attendees")
      */
     protected $attendees;
 

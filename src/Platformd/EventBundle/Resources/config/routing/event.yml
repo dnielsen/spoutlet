@@ -1,3 +1,17 @@
+group_event_rsvp:
+    pattern: /group-events/ajax/rsvp
+    defaults: { _controller:"EventBundle:GroupEvent:rsvpAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+group_event_delete:
+    pattern: /group-events/ajax/delete
+    defaults: { _controller:"EventBundle:GroupEvent:deleteAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
 group_event_new:
     pattern: /groups/{slug}/event/new
     defaults: { _controller:"EventBundle:GroupEvent:new", site: ~ }

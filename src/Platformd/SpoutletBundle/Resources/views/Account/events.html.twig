@@ -1,42 +1,78 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+{% block title %}{{ "platformd.events.event_listings.my_events" | trans }}{% endblock %}
 
 {% block content %}
 <div class="std_2col control_panel">
     <div class="left">
         <div class="pad">
             <div class="std_1col">
-                <div class="widget-100">
+
+                <div class="widget-100" style="margin-bottom:20px;">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ "platformd.events.event_listings.your_owned_events" | trans }}
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'EventBundle::_eventList.html.twig' with {
+                            'events': ownedEvents,
+                            'no_events_message': no_events_message,
+                        } %}
+                    </div>
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="widget-100" style="margin-bottom:20px;">
                     <div class="widget-header">
                         <div class="widget-title">
                             {{ "platformd.events.event_listings.your_registered_events" | trans }}
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_messages %}{% trans %}platformd.account_page.events.no_registered_events{% endtrans %}{% endset %}
-                        {% set no_events_pre_message = 'platformd.account_page.events.join_event_message' | trans({
-                            '%events_url%': path('events_index')
-                        }) %}
-                        {% include 'SpoutletBundle:Events:eventList.html.twig' with {
-                            'events': app.user.events,
-                            'no_events_message': no_events_messages,
-                            'no_events_pre_message': no_events_pre_message
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'EventBundle::_eventList.html.twig' with {
+                            'events': events,
+                            'no_events_message': no_events_message,
                         } %}
                     </div>
-
                     <div class="widget-footer">
                         &nbsp;
                     </div>
-                </div><br />
+                </div>
+
+                <div class="widget-100" style="margin-bottom:20px;">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ "platformd.events.event_listings.your_past_events" | trans }}
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'EventBundle::_eventList.html.twig' with {
+                            'events': pastEvents,
+                            'no_events_message': no_events_message,
+                        } %}
+                    </div>
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     <div class="clear"></div>
 </div>
+
+{% include 'EventBundle::_rsvpDialog.html.twig' %}
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}

@@ -64,6 +64,53 @@ class GroupEventController extends Controller
         ));
     }
 
+    public function rsvpAjaxAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['id']) || !isset($params['rsvp'])) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $id     = (int) $params['id'];
+        $rsvp   = $params['rsvp'];
+
+        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to RSVP to an event')));
+            return $response;
+        }
+
+        $groupEventRepo = $this->getGroupEventRepository();
+        $groupEvent     = $groupEventRepo->find($id);
+        $user           = $this->getUser();
+
+        if (!$groupEvent) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
+            return $response;
+        }
+
+        $groupEvent->getAttendees()->removeElement($user);
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $em->persist($groupEvent);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
+
     /**
      * @return GroupManager
      */
@@ -78,5 +125,10 @@ class GroupEventController extends Controller
     private function getEventService()
     {
         return $this->get('platformd_event.service.group_event');
+    }
+
+    private function getGroupEventRepository()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GroupEvent');
     }
 }
