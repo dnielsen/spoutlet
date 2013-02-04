@@ -13,6 +13,8 @@ class ContentReportRepository extends EntityRepository
         'Group',
         'Comment',
         'GalleryMedia',
+        'GroupDiscussion',
+        'GroupDiscussionPost',
     );
 
     public function getContentReportTypeForAllSites($type)
@@ -211,6 +213,42 @@ class ContentReportRepository extends EntityRepository
         $reports = $em->createQuery('
             SELECT report, c FROM SpoutletBundle:ContentReport report
             LEFT JOIN report.comment c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForGroupDiscussion($content) {
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupDiscussion c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForGroupDiscussionPost($content) {
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupDiscussionPost c
             WHERE report.deleted = false
             AND c = :content
             ')

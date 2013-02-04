@@ -172,10 +172,11 @@ platformd:
     # used only in the admin area
     homepage_banner:
         banners:
-            title: Homepage banners
+            title: Rotator
             thumb: Thumb
             full: Banner
             url: URL
+            new_window: New Window
         admin:
             create: Create a new homepage banner
             edit: Edit

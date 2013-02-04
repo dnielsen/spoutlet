@@ -120,11 +120,25 @@ class ContentReport
     protected $group = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\ManyToOne(targetEntity="GroupDiscussion")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
+    protected $groupDiscussion = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="GroupDiscussionPost")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupDiscussionPost = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
     protected $comment = null;
+
 
     /**
      * Get id
@@ -226,6 +240,27 @@ class ContentReport
     public function setGroup($value)
     {
         $this->group = $value;
+    }
+
+
+    public function getGroupDiscussion()
+    {
+        return $this->groupDiscussion;
+    }
+
+    public function setGroupDiscussion($groupDiscussion)
+    {
+        $this->groupDiscussion = $groupDiscussion;
+    }
+
+    public function setGroupDiscussionPost($groupDiscussionPost)
+    {
+        $this->groupDiscussionPost = $groupDiscussionPost;
+    }
+
+    public function getGroupDiscussionPost()
+    {
+        return $this->groupDiscussionPost;
     }
 
     public function getComment()

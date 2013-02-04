@@ -21,19 +21,6 @@ Feature: User Navigation
       | トーナメント >> ゲームID   | http://www.alienwarearena.com/japan/account/ids/      |                                                                           |                       |
       | ログアウト               | /app_test.php/logout                                  | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/japan/cmd/account/logout?return=http%3A%2F%2Fjapan.alienwarearena.local%2Fapp_test.php%2F | |
 
-  Scenario: The "China" site's user navigation menu has the correct items
-    Given I am on the "China" site
-    When I go to "/app_test.php/account"
-    Then the user navigation menu should be:
-      | Link             | Target                                                 | Destination                                                                            | CompareWithRedirects |
-      | 账户首页          | http://alienwarearena.com/account/                     |                                                                                        |                      |
-      | 修改密码          | http://alienwarearena.com/account/password/            |                                                                                        |                      |
-      | 个人形象          | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/china/member/55                                          | yes                  |
-      | 我的活动          | http://www.alienwarearena.com/china/account/events/    |                                                                                        |                      |
-      | 获取赠品          | /app_test.php/account/profile/giveaways                | http://china.alienwarearena.local/app_test.php/account/profile/giveaways               |                      |
-      | 比赛 >> 游戏IDs   | http://www.alienwarearena.com/china/account/ids/       |                                                                                        |                      |
-      | 退出              | /app_test.php/logout                                  | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/china/cmd/account/logout?return=http%3A%2F%2Fchina.alienwarearena.local%2Fapp_test.php%2F | |
-
   Scenario: The "Latin America" site's user navigation menu has the correct items
     Given I am on the "Latin America" site
     When I go to "/app_test.php/account"

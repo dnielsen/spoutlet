@@ -21,17 +21,43 @@ class HomepageBannerRepository extends EntityRepository
             ;
     }
 
-    /**
-     *
-     */
     public function findForLocale($locale)
     {
-        
+
         return $this
             ->createQueryBuilder('h')
             ->where('h.locale = ?0')
             ->orderBy('h.position', 'ASC')
             ->getQuery()
             ->execute(array($locale));
+    }
+
+    public function findForSite($site, $limit=null)
+    {
+        $qb = $this
+            ->createQueryBuilder('h')
+            ->leftJoin('h.sites', 's')
+            ->where('s.id = :siteId')
+            ->setParameter('siteId', $site->getId());
+
+        $results = $qb->getQuery()->execute();
+
+        $positions = array();
+        $bannersList = array();
+        $banners = array();
+
+        foreach($results as $banner) {
+            $sitesPositions = $banner->getSitesPositions();
+            $positions[$banner->getId()] = $sitesPositions[$site->getId()];
+            $bannersList[$banner->getId()] = $banner;
+        }
+
+        asort($positions);
+
+        foreach($positions as $bannerId => $value) {
+            $banners[] = $bannersList[$bannerId];
+        }
+
+        return $limit ? array_slice($banners, 0, $limit) : $banners;
     }
 }

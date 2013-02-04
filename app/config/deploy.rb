@@ -48,6 +48,14 @@ after "deploy:finalize_update" do
 
 end
 
+after "deploy:create_symlink" do
+
+  run "sudo chown -R `whoami`:`whoami` #{deploy_to}/releases/"
+
+end
+
+after "deploy", "deploy:cleanup"
+
 # Custom recipes
 namespace :deploy do
   desc "Write the date to a VERSION file"

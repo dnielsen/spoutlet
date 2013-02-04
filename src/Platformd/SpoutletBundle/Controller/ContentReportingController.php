@@ -2,6 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\ContentReportEvents;
+use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
@@ -106,6 +108,13 @@ class ContentReportingController extends Controller
 
         $em->flush();
 
+        /* Disabled at present as causing issues with reporting.
+        // We dispatch an event for further stuff like maintaining counts
+        $eventName = ContentReportEvents::REPORT;
+        $event = new ContentReportEvent($reportedItem, $this->getUser());
+        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        */
+
         $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
@@ -149,6 +158,23 @@ class ContentReportingController extends Controller
                 break;
         }
 
+        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
+
+        $subject            = "Your Content Has Been Flagged";
+        $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+
+Type: %s
+Content:  %s
+Reason: %s
+
+The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+
+Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+
+
+Alienware Arena Team
+
+", $itemType, $name, $reason);
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
         $emailTo            = $owner->getEmail();
@@ -157,6 +183,7 @@ class ContentReportingController extends Controller
         $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
         $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
         $message            = sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason);
+
 
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }

@@ -19,19 +19,6 @@ Feature: Main Navigation
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
 
-  Scenario: The "China" site's main navigation menu has the correct items
-    Given I am on the "China" site
-    When I go to "/app_test.php/games/"
-    Then the main navigation menu should be:
-      | Link              | Target                      | Destination                                                    |
-      | 首页              | /app_test.php/               | http://china.alienwarearena.local/app_test.php/               |
-      | 关于ALIENWARE     | http://alienware.com.cn/     |                                                               |
-      | 活动              | /app_test.php/events/        | http://china.alienwarearena.local/app_test.php/events/        |
-      | 新闻              | /app_test.php/news           | http://china.alienwarearena.local/app_test.php/news           |
-      | 媒体 >> 视频      |  /video                       | http://china.alienwarearena.local/video                       |
-      | 媒体 >> 壁纸下载    | /app_test.php/wallpapers    | http://china.alienwarearena.local/app_test.php/wallpapers      |
-      | 微软              | /app_test.php/microsoft      | http://china.alienwarearena.local/app_test.php/microsoft      |
-
   Scenario: The "Latin America" site's main navigation menu has the correct items
     Given I am on the "Latin America" site
     When I go to "/app_test.php/games/"
@@ -47,7 +34,7 @@ Feature: Main Navigation
       | Medios >> Vídeos            | http://video.alienwarearena.com/               |                                                            |
       | Medios >> Explorar          | /app_test.php/wallpapers                       | http://latam.alienwarearena.local/app_test.php/wallpapers  |
       | Medios >> NewGalería de Fotos   | /app_test.php/galleries/                   | http://latam.alienwarearena.local/app_test.php/galleries/  |
-      | Medios >> NewConcursos      | /app_test.php/contests/                        | http://latam.alienwarearena.local/app_test.php/contests/   |
+      | Medios >> NewConcursos      | /app_test.php/contests/image                   | http://latam.alienwarearena.local/app_test.php/contests/image   |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
       | ARP                         | /app_test.php/arp                              | http://www.alienwarearena.com/arp/sweepstakes/             |
       | Microsoft                   | /app_test.php/microsoft                        | http://www.alienwarearena.com/microsoft                    |
@@ -69,13 +56,13 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                                     |
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
       | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers              |
-      | Media >> NewImage Gallery   | /app_test.php/galleries/                        | http://na.alienwarearena.local/app_test.php/galleries/               |
-      | Media >> NewContests        | /app_test.php/contests/                         | http://na.alienwarearena.local/app_test.php/contests/               |
+      | Media >> NewImage Gallery   | /app_test.php/galleries/                        | http://na.alienwarearena.local/app_test.php/galleries/              |
+      | Media >> NewContests        | /app_test.php/contests/image                    | http://na.alienwarearena.local/app_test.php/contests/image          |
       | Deals                       | /app_test.php/deal/                             | http://na.alienwarearena.local/app_test.php/deal/                   |
-      | NewGroups >> All Groups     | /app_test.php/groups/                           | http://na.alienwarearena.local/app_test.php/groups/                 |
-      | NewGroups >> My Groups      | /app_test.php/account/profile/groups            | http://na.alienwarearena.local/app_test.php/account/profile/groups  |
-      | NewGroups >> Create Group   | /app_test.php/groups/new/                        | http://na.alienwarearena.local/app_test.php/groups/new/              |
-      | NewGroups >> Contests       | /app_test.php/contests/                         | http://na.alienwarearena.local/app_test.php/contests/               |
+      | Groups >> All Groups        | /app_test.php/groups/                           | http://na.alienwarearena.local/app_test.php/groups/                 |
+      | Groups >> My Groups         | /app_test.php/account/profile/groups            | http://na.alienwarearena.local/app_test.php/account/profile/groups  |
+      | Groups >> Create Group      | /app_test.php/groups/new/                       | http://na.alienwarearena.local/app_test.php/groups/new/             |
+      | Groups >> NewContests       | /app_test.php/contests/group                    | http://na.alienwarearena.local/app_test.php/contests/group          |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
       | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
@@ -98,12 +85,12 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                                                                          | http://eu.alienwarearena.local/app_test.php/wallpapers  |
       | Media >> NewImage Gallery   | /app_test.php/galleries/                                                                          | http://eu.alienwarearena.local/app_test.php/galleries/  |
-      | Media >> NewContests        | /app_test.php/contests/                                                                           | http://eu.alienwarearena.local/app_test.php/contests/   |
+      | Media >> NewContests        | /app_test.php/contests/image                                                                      | http://eu.alienwarearena.local/app_test.php/contests/image   |
       | Deals                       | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
-      | NewGroups >> All Groups     | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
-      | NewGroups >> My Groups      | /app_test.php/account/profile/groups                                                              | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
-      | NewGroups >> Create Group   | /app_test.php/groups/new/                                                                          | http://eu.alienwarearena.local/app_test.php/groups/new/             |
-      | NewGroups >> Contests       | /app_test.php/contests/                         | http://eu.alienwarearena.local/app_test.php/contests/               |
+      | Groups >> All Groups        | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
+      | Groups >> My Groups         | /app_test.php/account/profile/groups                                                              | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
+      | Groups >> Create Group      | /app_test.php/groups/new/                                                                          | http://eu.alienwarearena.local/app_test.php/groups/new/             |
+      | Groups >> NewContests       | /app_test.php/contests/group                                                                      | http://eu.alienwarearena.local/app_test.php/contests/group               |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                                                                           | http://www.alienwarearena.com/microsoft                 |

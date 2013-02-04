@@ -17,7 +17,12 @@ class GiveawayType extends AbstractType
     {
         $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType(), array('label' => 'URL'));
-    	$builder->add('content', 'textarea');
+    	$builder->add('content', 'purifiedTextarea', array(
+            'label' => 'Description',
+            'attr' => array(
+                'class' => 'ckeditor'
+            )
+        ));
     	$builder->add('giveawayType', 'choice', array(
     			'choices' => Giveaway::getTypeChoices(),
                 'label' => 'Giveaway Type'

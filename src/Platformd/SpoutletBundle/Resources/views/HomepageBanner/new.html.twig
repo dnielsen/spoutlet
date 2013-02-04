@@ -1,10 +1,10 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block content %}
-    <h1>Add a new homepage banner</h1>
-    
+    <h1>Add a new rotator image</h1>
+
     <form method="post" action="{{ path('admin_homepage_banner_new') }}" {{ form_enctype(form) }} class="form admin-homepage-banner-form">
-        {% include 'SpoutletBundle:HomepageBanner:_form.html.twig' with { 
+        {% include 'SpoutletBundle:HomepageBanner:_form.html.twig' with {
             "form"      : form
         } %}
     </form>

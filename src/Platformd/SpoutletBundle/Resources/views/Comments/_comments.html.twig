@@ -72,7 +72,7 @@
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
                     <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
                     <div class="comment-replies" id="comment-replies-{{ comment.id }}">
-                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
+                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
                     </div>
 
                     {% set replyCounter = 0 %}
@@ -193,7 +193,7 @@
             $('#replies-' + commentId + ' > .hidden').hide().removeClass('hidden').fadeIn();
         });
 
-        $('.comment-reply-link').click(function () {
+        $('.comment-post-reply-link').click(function () {
             var id = $(this).attr('data-id');
             if ($('#reply-text-' + id).val() == "") {
                 return false;
@@ -214,6 +214,7 @@
                 success: function (html, status, req) {
                     $('.thread').html(html);
                     $('.thread').unblock();
+                    $('.comment-count').text(parseInt($('.comment-count').text())+1);
                 }
             });
         });

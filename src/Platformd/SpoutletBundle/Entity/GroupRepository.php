@@ -76,13 +76,16 @@ class GroupRepository extends EntityRepository
     public function findGroupsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
+            ->leftJoin('g.members', 'm')
             ->leftJoin('g.sites', 's')
             ->where('g.category = :category')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
-            ->orderBy('g.createdAt', 'DESC');
+            ->orderBy('g.createdAt', 'DESC')
+            ->groupBy('g.id');
 
         return $qb->getQuery()->execute();
     }
@@ -205,6 +208,29 @@ class GroupRepository extends EntityRepository
             ->leftJoin('n.author', 'a')
             ->leftJoin('n.contentReports', 'c')
             ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'n', 'n.title', 'n.createdAt', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $groupId);
+
+        $result = $qb->getQuery()->execute();
+
+        if (!$result || count($result) < 1) {
+            return null;
+        }
+
+        if (!$result[0][0] || $result[0][0]->getId() < 1) {
+            return null;
+        }
+
+        return $result[0][0];
+    }
+
+    public function getGroupDiscussionsForExport($groupId)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.discussions', 'd')
+            ->leftJoin('d.author', 'a')
+            ->leftJoin('d.contentReports', 'c')
+            ->select('g', 'a.username', 'a.id', 'a.firstname', 'a.lastname', 'a.email', 'g.name', 'a.country', 'd', 'd.title', 'd.createdAt', 'c', '(SELECT MAX(ma.createdAt) FROM SpoutletBundle:GroupMembershipAction ma WHERE ma.group = g AND ma.user = a.id)')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $groupId);
 
@@ -395,17 +421,21 @@ class GroupRepository extends EntityRepository
     public function findAllFeaturedGroupsForSite($site)
     {
         $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
             ->leftJoin('g.sites', 's')
+            ->leftJoin('g.members', 'm')
             ->where('g.featured = true')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('g.featuredAt', 'DESC')
             ->distinct('g.id')
             ->setMaxResults(4)
-            ->setParameter('site', $site);
+            ->setParameter('site', $site)
+            ->groupBy('g.id');
 
         return $qb->getQuery()->execute();
     }
+
     public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
     {
         $date = new \DateTime;

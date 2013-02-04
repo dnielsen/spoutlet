@@ -1,0 +1,115 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#boardList { width:100%;}
+#boardList table { width:621px; border-spacing:2px; border-collapse: separate;}
+#boardList table td { margin:1px; height: 32px;}
+#boardList .sectionHeader { background:url(/bundles/spoutlet/images/discussions/section-bg.png) top right no-repeat; padding:0; height:42px; }
+#boardList .sectionHeader h2 { color:#ffffff; font-weight:bold; font-size:16px; margin:0; padding:8px 0 5px 55px; }
+
+#boardList .sectionItem td {padding:3px 10px; }
+#boardList .sectionItem .icon { width:48px; text-align:center; background:none;  }
+#boardList .sectionItem .name h2 { margin:0; padding:2px 0; color:#ffffff; font-size:15px; font-weight:bold; }
+#boardList .sectionItem .name h3 { margin:0; padding:2px 0; color:#ffffff; font-size:15px; font-weight:bold; }
+#boardList .sectionItem .name p { font-size:11px; font-weight:normal; color:#ffffff; margin:0; }
+#boardList .sectionItem .topics { font-size:11px; color:#ffffff; margin:0; text-align:center; }
+#boardList .sectionItem .last h4 { font-size:11px; color:#ffffff; margin:0; }
+#boardList .sectionItem .last p { font-size:11px; color:#ffffff; margin:0; }
+
+#boardList .row1 td { background: #292929; }
+#boardList .row2 td { background: #212121; }
+
+
+/** topic list **/
+
+
+#boardList .forumTopic td {padding:3px 10px; }
+#boardList .forumTopic .icon { width:48px; text-align:center; background:none;  }
+#boardList .forumTopic .name { width: 300px;}
+#boardList .forumTopic .name h3 { margin:0; padding:2px 0; color:#ffffff; font-size:13px; font-weight:bold; }
+#boardList .forumTopic .name p { font-size:11px; font-weight:normal; color:#ffffff; margin:0; }
+#boardList .forumTopic .replies { width: 40px; text-align: center;}
+#boardList .forumTopic .views { width: 40px; text-align: center;}
+#boardList .forumTopic .last { width: 100px; text-align: left;}
+#boardList .forumTopic .topics { font-size:11px; color:#ffffff; margin:0; text-align:center; }
+#boardList .forumTopic .last h4 { font-size:11px; color:#ffffff; margin:0; }
+#boardList .forumTopic .last p { font-size:11px; color:#ffffff; margin:0; }
+
+.upLevel { float:right; width:100px; height:18px; background:url(/bundles/spoutlet/images/discussions/up-level.gif) top right no-repeat;  margin-top:8px; margin-right:12px; }
+.upLevel a { display:block; width:100%; padding:4px 0; color:#ffffff; }
+
+.pageList td { padding:5px; text-align:right; }
+#topicView .pageList, #commentsView .pageList { padding:5px; text-align:right; word-spacing:3px; }
+.currentPage { font-weight:bold; }
+/** comment list **/
+
+#topicView { width:640px; padding-right:32px; float:left; }
+
+#topicBreadcrumb { background:transparent url(/bundles/spoutlet/images/discussions/section-bg.png) no-repeat scroll right top; height:42px; }
+#topicBreadcrumb h3 { color:#FFFFFF; font-size:16px; font-weight:bold; margin:0; padding:12px 0 5px 55px; }
+#topicView h1 { font-size:26px; font-weight:normal; color:#00789e; padding-left:15px; }
+
+#topicComments { width:640px; float:left;}
+
+/* Tiny Editor */
+
+#topicPoll { width:550px;  margin:0 auto; }
+#poll-wrapper { background: url(/bundles/spoutlet/images/discussions/poll-body-bg.png) top left repeat-y; }
+#topicPoll  .question { font-size: 18px;  color:#009cda; background: url(/bundles/spoutlet/images/discussions/poll-top-bg.png) top left no-repeat; padding: 15px;  }
+#topicPoll  .question span { font-weight:bold; }
+#topicPoll .askPoll table { margin:0 auto; padding-bottom:15px; padding-top:15px; }
+#topicPoll .askPoll tr { padding-bottom: 10px; }
+#topicPoll .askPoll th { padding: 10px 0; font-style:italic; }
+#topicPoll .askPoll .radio { padding-right:10px; }
+#topicPollBottom { width:550px; height:22px; background:url(/bundles/spoutlet/images/discussions/poll-bottom-bg.png) top left no-repeat; margin:0 auto; }
+
+
+#topicPoll .pollResults td { padding-bottom:5px; }
+#topicPoll .pollResults table { margin:0 auto; }
+#topicPoll .pollResults .percent { text-align:center; padding:0 10px 5px 10px; }
+#topicPoll .pollResults .count { text-align:right; }
+#topicPoll .pollResults .question { padding-bottom:15px; }
+#topicPoll .pollResults p { margin:0 auto; }
+
+#topicPoll .users { text-align:center; font-weight:bold; font-style:italic; padding-bottom:10px; }
+
+#topicPoll .bar { width:200px; }
+#topicPoll .bar div { height:16px; background:url(/bundles/spoutlet/images/discussions/poll-bar-bg.gif) top left repeat-x; }
+#topicPoll .pollResults .text { padding-right:10px; }
+
+#topicPoll .pollResults em { color:#30EAF7; }
+#topicPoll .voted { padding-top:15px; font-style:italic; }
+
+#sectionAddPoll .startButton { text-align:center; }
+
+#voteSpinner { text-align:center; padding:0px; height:22px; }
+
+.group-discussion-actions {
+    padding: 0 0 10px 0;
+}
+
+#discussion-reply-form {
+    float: left;
+    width: 100%;
+    margin: 15px 0 0 0;
+}
+
+#discussion-reply-form textarea {
+    width: 485px;
+    height: 180px;
+}
+
+.reply-form-actions {
+    width: 485px;
+    padding: 18px 0 18px 0;
+    text-align: center;
+}
+
+#form_content {
+    width: 440px;
+    height: 180px;
+}
+
+#form_title {
+    width: 440px;
+}

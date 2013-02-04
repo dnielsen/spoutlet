@@ -1,0 +1,75 @@
+{% set reportContentType    = 'GroupDiscussion' %}
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddDiscussion') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditDiscussion') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteDiscussion') %}
+{% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
+
+<div id="discussion-content-scroll" style="height: 550px;">
+    {% if canAdd %}
+        <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit Topic</a>
+    {% endif %}
+
+    {% if results | length > 0 %}
+
+        <div id="boardList" {% if canAdd %}style="height:518px;"{% else %}style="height:534px;"{% endif %}>
+            <table>
+                <tbody>
+                {% for discussion in results %}
+                    <tr class="forumTopic {% if (loop.index) is divisibleby(2) %}row2{% else %}row1{% endif %}">
+                        <td class="name png">
+                            <h3>
+                                <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
+                            </h3>
+                        </td>
+                        <td class="replies png">{{ discussion.replyCount }} <br />Replies</td>
+                        <td class="views png">{{ discussion.viewCount }} <br />Views</td>
+                        <td class="last">
+                            <span class="last-update" title="{{ discussion.updatedAt | date ~ 'Z'}}"></span>
+                            - <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id}) ~ '#comment_' ~ discussion.lastPostId }}">{{ discussion.lastUpdatedBy.username }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="pagerfanta" id="pager" style="float:right;">
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'spoutlet', {
+                'previous_message': '',
+                'next_message': '',
+                'routeName': 'group_discussions'
+            }) }}
+        </div>
+
+        {# Ajax Pager Widget #}
+        <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
+
+        <script type="text/javascript">
+
+            jQuery(document).ready(function() {
+                $('.last-update').timeago();
+                var content = $('.featured-content-category#content-group-news');
+
+                $('#pager').pagerUi({
+                    'target': content
+                });
+
+                $('.name.png > h3 > a').truncate({
+                    width: 480
+                });
+            });
+
+        </script>
+
+    {% else %}
+        <div style="height: 500px; width: 600px;">
+            <p>No discussions yet... please come back later!</p>
+        </div>
+    {% endif %}
+
+</div>
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

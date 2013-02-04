@@ -1,14 +1,40 @@
 <?php
 
 namespace Platformd\SpoutletBundle\Metric;
-use Doctrine\ORM\EntityManager;
-use Platformd\GiveawayBundle\Entity\Giveaway;
-use DateTime;
+
+use DateTime,
+    DateTimeZone
+;
+
 use Symfony\Component\Form\FormFactoryInterface;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Doctrine\ORM\EntityManager;
+
+use Platformd\GiveawayBundle\Entity\Giveaway,
+    Platformd\SpoutletBundle\Entity\Deal,
+    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\SpoutletBundle\Entity\GroupDiscussion,
+    Platformd\SpoutletBundle\Entity\SiteRepository,
+    Platformd\SpoutletBundle\Entity\Metric\GroupMetric,
+    Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetric
+;
 
 class MetricManager
 {
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\SiteRepository
+     */
+    private $siteRepository;
+
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\GlobalActivityRepository
+     */
+    private $globalActivityRepository;
+
+    /**
+     * @var \Platformd\UserBundle\Entity\UserRepository
+     */
+    private $userRepo;
+
     /**
      * @var \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
      */
@@ -20,9 +46,24 @@ class MetricManager
     private $dealCodeRepository;
 
     /**
-     * @var \Platformd\UserBundle\Entity\UserRepository
+     * @var \Platformd\SpoutletBundle\Entity\GroupRepository
      */
-    private $userRepo;
+    private $groupRepository;
+
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\Metric\GroupMetricRepository
+     */
+    private $groupMetricRepository;
+
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\GroupDiscussionRepository
+     */
+    private $groupDiscussionRepository;
+
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetricRepository
+     */
+    private $groupDiscussionMetricRepository;
 
     /**
      * An array of all available site keys and their names
@@ -33,9 +74,15 @@ class MetricManager
 
     public function __construct(EntityManager $em, array $sites)
     {
+        $this->siteRepository = $em->getRepository('SpoutletBundle:Site');
+        $this->userRepo = $em->getRepository('UserBundle:User');
+        $this->globalActivityRepository = $em->getRepository('SpoutletBundle:GlobalActivity');
         $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
         $this->dealCodeRepository = $em->getRepository('SpoutletBundle:DealCode');
-        $this->userRepo = $em->getRepository('UserBundle:User');
+        $this->groupRepository = $em->getRepository('SpoutletBundle:Group');
+        $this->groupMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupMetric');
+        $this->groupDiscussionRepository = $em->getRepository('SpoutletBundle:GroupDiscussion');
+        $this->groupDiscussionMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupDiscussionMetric');
         $this->sites = $sites;
     }
 
@@ -159,6 +206,278 @@ class MetricManager
 
         return $data;
     }
+
+    /**
+     * Generates group metrics
+     *
+     * @param \DateTime $date
+     * @return array
+     */
+    public function generateGroupMetrics($full = false)
+    {
+        foreach ($this->sites as $key => $name) {
+
+            $site   = $this->siteRepository->findOneBy(array('name' => $name));
+
+            // We fetch all groups for this site
+            $groups = $this->groupRepository->findAllGroupsRelevantForSite($site);
+
+            if (count($groups) > 0) {
+                foreach ($groups as $group) {
+                    /** @var GroupMetric $lastMetric */
+                    $lastMetric = $this->groupMetricRepository->findLastMetricForGroup($group);
+
+                    if ($full || empty($lastMetric)) {
+                        $this->groupMetricRepository->deleteAllFromGroup($group);
+
+                        /** @var DateTime $date */
+                        $date = $this->globalActivityRepository->getOriginOfTimes();
+                        $date->modify('midnight');
+
+                    } else {
+                        // We make sure all metrics are fully processed
+                        $this->completeGroupMetrics($group);
+
+                        $date = $lastMetric->getDate();
+                        $date->modify('+1 day');
+                    }
+
+                    $this->generateGroupMetricsFromDate($group, $date);
+                }
+            }
+        }
+    }
+
+    /**
+     * Processes one metric
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Metric\GroupMetric $groupMetric
+     */
+    private function processGroupMetric(GroupMetric $groupMetric)
+    {
+        $start = $groupMetric->getDate();
+        $thru = clone $start;
+        $thru->modify('+1 day');
+
+        $groupMetric->setNewDiscussions($this->globalActivityRepository->getCountNewGroupDiscussions($groupMetric->getGroup(), $start, $thru));
+        $groupMetric->setDeletedDiscussions($this->globalActivityRepository->getCountDeletedGroupDiscussions($groupMetric->getGroup(), $start, $thru));
+        $groupMetric->setNewMembers($this->globalActivityRepository->getCountNewGroupMembers($groupMetric->getGroup(), $start, $thru));
+
+        $this->groupMetricRepository->save($groupMetric);
+    }
+
+    /**
+     * Checks if all existing metrics are fully processed,
+     * if not - processes them
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     */
+    private function completeGroupMetrics(Group $group)
+    {
+        $incompleteGroupMetrics = $this->groupMetricRepository->findIncompleteMetricsForGroup($group);
+
+        if (count($incompleteGroupMetrics) > 0) {
+            foreach ($incompleteGroupMetrics as $incompleteGroupMetric) {
+                $this->processGroupMetric($incompleteGroupMetric);
+            }
+        }
+    }
+
+    /**
+     * Generate Group Metrics
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \DateTime $date
+     */
+    private function generateGroupMetricsFromDate(Group $group, DateTime $date)
+    {
+        $today = new DateTime('today midnight', new DateTimeZone('UTC'));
+
+        while ($date <= $today) {
+            $groupMetric = new GroupMetric($group);
+            $groupMetric->setDate($date);
+
+            $this->processGroupMetric($groupMetric);
+
+            $date->modify('+1 day');
+        }
+    }
+
+    /**
+     * Get an array of metrics for a specified period of time
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \DateTime $from
+     * @param \DateTime $thru
+     * @return mixed
+     */
+    public function getGroupMetricsForPeriod(Group $group, DateTime $from = null, DateTime $thru = null)
+    {
+        $from = $from ? $from : new DateTime('-1 month midnight', new DateTimeZone('UTC'));
+        $thru = $thru ? $thru : new DateTime('today midnight', new DateTimeZone('UTC'));
+
+        return $this->groupMetricRepository->findMetricsForPeriod($group, $from, $thru);
+    }
+
+    /**
+     * Creates a discussions metrics summary array for a specific group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \DateTime $from
+     * @param \DateTime $thru
+     */
+    public function getDiscussionMetricsForGroup(Group $group, DateTime $from, DateTime $thru)
+    {
+        $arr = array(
+            'replies' => 0,
+            'repliesAdded' => 0,
+            'activeUsers' => 0,
+            'discussionsAdded' => 0,
+            'discussionsDeleted' => 0
+        );
+
+        $numberOfDays = $thru->diff($from)->days;
+
+        $arr['discussions'] = $group->getDiscussions()->count();
+
+        $groupMetrics = $this->groupMetricRepository->findMetricsForPeriod($group, $from, $thru);
+        foreach ($groupMetrics as $groupMetric) {
+            $arr['discussionsAdded'] += $groupMetric->getNewDiscussions();
+            $arr['discussionsDeleted'] += $groupMetric->getDeletedDiscussions();
+        }
+
+        foreach($group->getDiscussions() as $discussion) {
+            $arr['replies'] += $discussion->getReplyCount();
+
+            $discussionMetrics = $this->groupDiscussionMetricRepository->findMetricsForPeriod($discussion, $from, $thru);
+            foreach ($discussionMetrics as $discussionMetric) {
+                $arr['repliesAdded'] += $discussionMetric->getReplies();
+                $arr['activeUsers'] += $discussionMetric->getActiveUsers();
+            }
+        }
+
+        $arr['avgDiscussions'] = round(($arr['discussionsAdded'] / $numberOfDays), 1);
+        $arr['avgReplies'] = round(($arr['repliesAdded'] / $numberOfDays), 1);
+
+        return $arr;
+    }
+
+    /**
+     * Creates a detailed
+     *
+     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param $from
+     * @param $thru
+     */
+    public function getDiscussionMetricsDetails(GroupDiscussion $groupDiscussion, DateTime $from = null, DateTime $thru = null)
+    {
+        $arr = array(
+            'replies' => 0,
+            'activeUsers' => 0,
+            'views' => 0
+        );
+
+        $discussionMetrics = $this->groupDiscussionMetricRepository->findMetricsForPeriod($groupDiscussion, $from, $thru);
+
+        foreach ($discussionMetrics as $discussionMetric) {
+            $arr['replies'] += $discussionMetric->getReplies();
+            $arr['activeUsers'] += $discussionMetric->getActiveUsers();
+            $arr['views'] += $discussionMetric->getViews();
+        }
+
+        return $arr;
+    }
+
+    /**
+     * Generates group discussions metrics
+     *
+     * @param \DateTime $date
+     * @return array
+     */
+    public function generateGroupDiscussionMetrics($full = null)
+    {
+        foreach ($this->sites as $key => $name) {
+
+            $site   = $this->siteRepository->findOneBy(array('name' => $name));
+
+            // We fetch all group discussions for this site
+            $groupDiscussions = $this->groupDiscussionRepository->findAllGroupDiscussionsRelevantForSite($site);
+
+            if (count($groupDiscussions) > 0) {
+                foreach ($groupDiscussions as $groupDiscussion) {
+                    /** @var GroupMetric $lastMetric */
+                    $lastMetric = $this->groupDiscussionMetricRepository->findLastMetricForGroup($groupDiscussion);
+
+                    if ($full || empty($lastMetric)) {
+                        $this->groupDiscussionMetricRepository->deleteAllFromGroupDiscussion($groupDiscussion);
+
+                        /** @var DateTime $date */
+                        $date = $this->globalActivityRepository->getOriginOfTimes();
+                        $date->modify('midnight');
+
+                    } else {
+                        // We make sure all metrics are fully processed
+                        $this->completeGroupDiscussionMetrics($groupDiscussion);
+
+                        $date = $lastMetric->getDate();
+                        $date->modify('+1 day');
+                    }
+
+                    $this->generateGroupDiscussionMetricsFromDate($groupDiscussion, $date);
+                }
+            }
+        }
+    }
+
+    private function completeGroupDiscussionMetrics(GroupDiscussion $groupDiscussion)
+    {
+        $incompleteGroupDiscussionMetrics = $this->groupDiscussionMetricRepository->findIncompleteMetricsForGroupDiscussion($groupDiscussion);
+
+        if (count($incompleteGroupDiscussionMetrics) > 0) {
+            foreach ($incompleteGroupDiscussionMetrics as $incompleteGroupDiscussionMetric) {
+                $this->processGroupDiscussionMetric($incompleteGroupDiscussionMetric);
+            }
+        }
+    }
+
+    /**
+     * Processes one metric
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetric $groupDiscussionMetric
+     */
+    private function processGroupDiscussionMetric(GroupDiscussionMetric $groupDiscussionMetric)
+    {
+        $start = $groupDiscussionMetric->getDate();
+        $thru = clone $start;
+        $thru->modify('+1 day');
+
+        $groupDiscussionMetric->setReplies($this->globalActivityRepository->getCountGroupDiscussionReplies($groupDiscussionMetric->getGroupDiscussion(), $start, $thru));
+        $groupDiscussionMetric->setViews($this->globalActivityRepository->getCountGroupDiscussionViews($groupDiscussionMetric->getGroupDiscussion(), $start, $thru));
+        $groupDiscussionMetric->setActiveUsers($this->globalActivityRepository->getCountGroupDiscussionActiveUsers($groupDiscussionMetric->getGroupDiscussion(), $start, $thru));
+
+        $this->groupDiscussionMetricRepository->save($groupDiscussionMetric);
+    }
+
+    /**
+     * Generate Group Metrics
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \DateTime $date
+     */
+    private function generateGroupDiscussionMetricsFromDate(GroupDiscussion $groupDiscussion, DateTime $date)
+    {
+        $today = new DateTime('today midnight', new DateTimeZone('UTC'));
+
+        while ($date <= $today) {
+            $groupDiscussionMetric = new GroupDiscussionMetric($groupDiscussion);
+            $groupDiscussionMetric->setDate($date);
+
+            $this->processGroupDiscussionMetric($groupDiscussionMetric);
+
+            $date->modify('+1 day');
+        }
+    }
+
 
     /**
      * @param FormFactoryInterface $formFactory

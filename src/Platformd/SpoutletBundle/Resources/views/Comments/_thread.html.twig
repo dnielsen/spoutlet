@@ -75,6 +75,7 @@
                     $('.thread').html(html);
                     $('.thread').unblock();
                     $('#new-comment-body').val('');
+                    $('.comment-count').text(parseInt($('.comment-count').text())+1);
                 }
             });
         });
