@@ -36,6 +36,10 @@ admin_homepage_banner_new:
     pattern: /admin/homepage-banners/new
     defaults: { _controller: SpoutletBundle:HomepageBanner:new }
 
+admin_homepage_banner_move:
+    pattern: /admin/homepage-banners/move/{id}/{site}/{direction}
+    defaults: { _controller: SpoutletBundle:HomepageBanner:move }
+
 admin_homepage_banner_edit:
     pattern: /admin/homepage-banners/edit/{id}
     defaults: { _controller: SpoutletBundle:HomepageBanner:edit }
@@ -47,6 +51,10 @@ admin_homepage_banner_delete:
     defaults: { _controller: SpoutletBundle:HomepageBanner:delete }
     requirements:
         id: \d+
+
+admin_homepage_banner_list:
+    pattern: /admin/homepage-banners/{site}
+    defaults: { _controller: SpoutletBundle:HomepageBanner:list }
 
 admin_locale_to_sites_migration:
     pattern: /admin/migrate-locales-to-sites
