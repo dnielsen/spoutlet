@@ -7,21 +7,59 @@
 {% block content %}
 
 <div class="event-show-page">
-    <div class="std_2col" style="padding:0 0 10px 0">
-        <div class="left">
-
-        </div>
-        <div class="right">
-
-        </div>
-    </div>
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
+            <div class="widget-66">
+                <div class="widget-header" style="padding-bottom:10px;">
+                    <div class="widget-title">
+                        <div class="event-heading-title" style="padding-bottom: 10px;">{{ event.name }}</div>
+                    </div>
+                    <div class="event-heading-date">{{ event.dateRangeString }}</div>
+                    <div class="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}, {{ event.timezone }}</div>
+                </div>
+                <div class="widget-content">
+                    <div class="event-content">{{ event.content }}</div>
+                </div>
+            </div>
+
+            {% if site_has_feature('COMMENTS') %}
+                <div class="event-comments" style="margin-top:15px;">
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.threadId, 'object' : event } %}
+                </div>
+            {% endif %}
 
         </div>
 
         <div class="right">
+
+            <div class="widget-33" style="height: auto;">
+                <div class="widget-header">
+                    <div class="widget-title">Event Details</div>
+                </div>
+                <div class="widget-content">
+
+                    <div id="media-social" style="margin-top: 0px; margin-bottom: 5px; text-align:center;">
+                        <div class="fb-like"
+                            data-send="false"
+                            data-width="300"
+                            data-layout="button_count"
+                            data-show-faces="false"
+                            data-colorscheme="dark"
+                            style="vertical-align:top;zoom:1;*display:inline">
+                        </div>
+                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    </div>
+
+                    <div class="event-organizer"><strong>Organizer: </strong><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></div>
+                    <div class="event-attendee-count"><strong>Attending: </strong>{{ attendeeCount }}</div>
+
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ event.id }}">{{ 'content_reporting.report' | trans }}</a>
+
+                </div>
+            </div>
 
         </div>
 

@@ -19,4 +19,14 @@ class GroupEventService extends EventService
     {
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
     }
+
+    public function findEventsForUser(User $user, $whereIsOrganizer = false)
+    {
+        return $this->repository->getEventListForUser($user, $whereIsOrganizer);
+    }
+
+    public function findPastEventsForUser(User $user)
+    {
+        return $this->repository->getPastEventListForUser($user);
+    }
 }

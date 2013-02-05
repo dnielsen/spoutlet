@@ -54,4 +54,57 @@ class GroupEventRepository extends EventRepository
             ->andWhere($alias.'.published = 1')
             ->andWhere($alias.'.approved = 1');
     }
+
+    /**
+     * Returns list of events that the user is registered for or owns
+     *
+     * @param \Platformd\SpoutletBundle\Entity\User $user
+     * @param boolean $whereIsOrganizer
+     */
+    public function getEventListForUser(User $user, $whereIsOrganizer = false)
+    {
+        $qb = $this->createQueryBuilder('ge')
+            ->select('ge', 'count(a.id) attendeeCount')
+            ->leftJoin('ge.attendees', 'a')
+            ->andWhere('ge.endsAt >= :now')
+            ->groupBy('ge.id')
+            ->setParameters(array(
+                'user' => $user,
+                'now' => new \DateTime('now'),
+            ));
+
+        $this->addActiveClauses($qb);
+
+        if ($whereIsOrganizer) {
+            $qb->andWhere('ge.user = :user');
+        } else {
+            $qb->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
+                ->andWhere('ge.user <> :user');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns list of past events that the user is registered for
+     *
+     * @param \Platformd\SpoutletBundle\Entity\User $user
+     */
+    public function getPastEventListForUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('ge')
+            ->select('ge', 'count(a.id) attendeeCount')
+            ->leftJoin('ge.attendees', 'a')
+            ->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
+            ->andWhere('ge.endsAt < :now')
+            ->groupBy('ge.id')
+            ->setParameters(array(
+                'user' => $user,
+                'now' => new \DateTime('now'),
+            ));
+
+        $this->addActiveClauses($qb);
+
+        return $qb->getQuery()->getResult();
+    }
 }

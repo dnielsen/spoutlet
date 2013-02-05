@@ -241,4 +241,28 @@ class GroupEvent extends Event
     {
         return 'GroupEvent';
     }
+
+    public function getThreadId()
+    {
+        return 'group-event-'.$this->getId();
+    }
+
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    public function getLinkableRouteName()
+    {
+        return 'group_event_view';
+    }
+
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'eventSlug' => $this->getSlug(),
+            'groupSlug' => $this->getGroup()->getSlug(),
+        );
+    }
+
 }

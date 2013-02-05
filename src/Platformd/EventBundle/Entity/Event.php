@@ -17,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo,
 use Platformd\SpoutletBundle\Entity\Game,
     Platformd\SpoutletBundle\Entity\ContentReport,
     Platformd\SpoutletBundle\Model\ReportableContentInterface,
+    Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\UserBundle\Entity\User
 ;
 
@@ -28,7 +29,7 @@ use DateTime;
  * @ORM\MappedSuperclass
  * @Vich\Geographical
  */
-abstract class Event implements ReportableContentInterface
+abstract class Event implements ReportableContentInterface, LinkableInterface
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';

@@ -106,13 +106,8 @@ class EventService
         }
     }
 
-    public function findEventsForUser(User $user, $whereIsOrganizer = false)
+    public function getAttendeeCount($event)
     {
-        return $this->repository->getEventListForUser($user, $whereIsOrganizer);
-    }
-
-    public function findPastEventsForUser(User $user)
-    {
-        return $this->repository->getPastEventListForUser($user);
+        return $this->repository->getAttendeeCount($event);
     }
 }
