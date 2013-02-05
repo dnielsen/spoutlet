@@ -136,10 +136,11 @@ class GroupEvent extends Event
     /**
      * used to dynamically generate routes within twig files to allow multiple event types to be
      * mixed and displayed together
+     * e.g. group_event_edit, group_event_delete
      *
      *  @return string
      */
-    public function getEventPrefix()
+    public function getEventRoutePrefix()
     {
         return 'group_event_';
     }

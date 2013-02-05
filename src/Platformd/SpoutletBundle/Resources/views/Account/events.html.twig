@@ -16,7 +16,7 @@
                     </div>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
-                        {% include 'EventBundle::_eventList.html.twig' with {
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': ownedEvents,
                             'no_events_message': no_events_message,
                         } %}
@@ -34,7 +34,7 @@
                     </div>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
-                        {% include 'EventBundle::_eventList.html.twig' with {
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': events,
                             'no_events_message': no_events_message,
                         } %}
@@ -52,7 +52,7 @@
                     </div>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
-                        {% include 'EventBundle::_eventList.html.twig' with {
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': pastEvents,
                             'no_events_message': no_events_message,
                         } %}
