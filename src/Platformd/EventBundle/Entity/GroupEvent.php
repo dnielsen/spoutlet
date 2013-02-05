@@ -143,5 +143,16 @@ class GroupEvent extends Event
     public function getEventRoutePrefix()
     {
         return 'group_event_';
+
+    }
+
+    /**
+     * Content type for the purposes of content reporting
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        return 'GroupEvent';
     }
 }

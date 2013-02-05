@@ -227,4 +227,9 @@ class GroupDiscussionPost implements ReportableContentInterface
     {
         return $this->groupDiscussion;
     }
+
+    public function getClass()
+    {
+        return get_class($this);
+    }
 }
