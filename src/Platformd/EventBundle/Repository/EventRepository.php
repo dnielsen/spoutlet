@@ -50,6 +50,8 @@ abstract class EventRepository extends EntityRepository
                 'now' => new \DateTime('now'),
             ));
 
+        $this->addActiveClauses($qb);
+
         if ($whereIsOrganizer) {
             $qb->andWhere('e.user = :user');
         } else {
@@ -78,6 +80,15 @@ abstract class EventRepository extends EntityRepository
                 'now' => new \DateTime('now'),
             ));
 
+        $this->addActiveClauses($qb);
+
         return $qb->getQuery()->getResult();
+    }
+
+    private function addActiveClauses($qb, $alias='e')
+    {
+        return $qb->andWhere($alias.'.deleted = 0')
+            ->andWhere($alias.'.published = 1')
+            ->andWhere($alias.'.approved = 1');
     }
 }

@@ -14,6 +14,8 @@ class GroupEventRepository extends EventRepository
             ->orderBy('ge.startsAt')
             ->setParameter('now', new \DateTime('now'));
 
+        $this->addActiveClauses($qb);
+
         if ($limit) {
             $qb->setMaxResults($limit);
         }
@@ -28,6 +30,8 @@ class GroupEventRepository extends EventRepository
             ->orderBy('ge.endsAt', 'DESC')
             ->setParameter('now', new \DateTime('now'));
 
+        $this->addActiveClauses($qb);
+
         if ($limit) {
             $qb->setMaxResults($limit);
         }
@@ -37,13 +41,13 @@ class GroupEventRepository extends EventRepository
 
     public function getEventCountForGroup(Group $group)
     {
-        $result = $this->getBaseGroupQueryBuilder($group)
+        $qb = $this->getBaseGroupQueryBuilder($group)
             ->select('count(ge.id)')
-            ->groupBy('g.id')
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->groupBy('g.id');
 
-        return $result;
+        $this->addActiveClauses($qb);
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     private function getBaseGroupQueryBuilder(Group $group, $alias = 'ge')
@@ -54,5 +58,12 @@ class GroupEventRepository extends EventRepository
             ->setParameter('group', $group);
 
         return $qb;
+    }
+
+    private function addActiveClauses($qb, $alias='ge')
+    {
+        return $qb->andWhere($alias.'.deleted = 0')
+            ->andWhere($alias.'.published = 1')
+            ->andWhere($alias.'.approved = 1');
     }
 }

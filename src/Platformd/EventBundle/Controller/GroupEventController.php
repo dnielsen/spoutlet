@@ -111,6 +111,60 @@ class GroupEventController extends Controller
         return $response;
     }
 
+    public function deleteAjaxAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $params = json_decode($content, true);
+
+        if (!isset($params['id'])) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
+            return $response;
+        }
+
+        $id = (int) $params['id'];
+
+        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to delete an event')));
+            return $response;
+        }
+
+        $groupEventRepo = $this->getGroupEventRepository();
+        $groupEvent     = $groupEventRepo->find($id);
+        $user           = $this->getUser();
+
+        if (!$groupEvent) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
+            return $response;
+        }
+
+        if ($user != $groupEvent->getUser() || $user->getAdminLevel() === null) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not authorized to delete this event.")));
+            return $response;
+        }
+
+        $groupEvent->setDeleted(true);
+
+        $deletedReason = ($user == $groupEvent->getUser()) ? GroupEvent::DELETED_BY_OWNER : GroupEvent::DELETED_BY_ADMIN;
+        $groupEvent->setDeletedReason($deletedReason);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($groupEvent);
+        $em->flush();
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
+
     /**
      * @return GroupManager
      */

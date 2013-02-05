@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 class ContentReportRepository extends EntityRepository
 {
     private static $validTypes = array(
-        'GroupEvent'
+        'GroupEvent',
         'GroupImage',
         'GroupNews',
         'GroupVideo',

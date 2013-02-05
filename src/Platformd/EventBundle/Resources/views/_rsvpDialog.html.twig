@@ -1,6 +1,7 @@
 <div id="event-rsvp-dialog" class="rsvp-wrapper" style="display: none; padding-top: 25px; height: 100px" title="{{ 'platformd.events.event_listings.rsvp.dialog_title' | trans }}">
     <div class="rsvp-dialog-content">
         <input type="hidden" id="event-id" />
+        <input type="hidden" id="event-type" />
         <input type="hidden" id="event-rsvp-route" />
         <div style="margin-left:80px;">
             <div class="rsvp-selection-wrapper" style="margin-top:0;">
@@ -36,8 +37,10 @@
 
         $('.change-rsvp-link').click(function () {
             var eventId = $(this).attr('data-id');
+            var type = $(this).attr('data-contenttype');
             var route = $(this).attr('data-route');
             $('#event-id').val(eventId);
+            $('#event-type').val(type);
             $('#event-rsvp-route').val(route);
             $('.rsvp-selection-wrapper').show();
             $('#rsvp-response').hide();
@@ -71,7 +74,7 @@
                     if (data.success) {
                         rsvpDialog.dialog('close');
                         if ($('input:radio[name=rsvp]:checked').val() == 0) {
-                            $('#event-'+$('#event-id').val()).fadeOut();
+                            $('#event-'+$('#event-type').val()+$('#event-id').val()).fadeOut();
                         }
                     } else {
                         $('.rsvp-response').text(data.errorMessage);

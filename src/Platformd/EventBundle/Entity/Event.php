@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo,
 ;
 
 use Platformd\SpoutletBundle\Entity\Game,
+    Platformd\SpoutletBundle\Entity\ContentReport,
     Platformd\SpoutletBundle\Model\ReportableContentInterface,
     Platformd\UserBundle\Entity\User
 ;
@@ -32,7 +33,17 @@ abstract class Event implements ReportableContentInterface
     const REGISTRATION_DISABLED     = 'event.registration.disabled';
     const REGISTRATION_3RD_PARTY    = 'event.registration.3rdparty';
 
+    const DELETED_BY_OWNER  = 'by_owner';
+    const DELETED_BY_ADMIN  = 'by_admin';
+
     const PREFIX_PATH_BANNER = 'banner/';
+
+    static private $validDeletedReasons = array(
+        self::DELETED_BY_OWNER,
+        self::DELETED_BY_ADMIN,
+        ContentReport::DELETED_BY_REPORT,
+        ContentReport::DELETED_BY_REPORT_ADMIN,
+    );
 
     /**
      * Event's name
@@ -236,7 +247,7 @@ abstract class Event implements ReportableContentInterface
 
     /**
      * @var boolean $deleted
-     * @ORM\Column(=type="boolean")
+     * @ORM\Column(type="boolean")
      */
 
     private $deleted = false;
@@ -666,9 +677,13 @@ abstract class Event implements ReportableContentInterface
         return $this->deleted;
     }
 
-    public function setDeletedReason($deletedReason)
+    public function setDeletedReason($value)
     {
-        $this->deletedReason = $deletedReason;
+        if ($value && !in_array($value, self::$validDeletedReasons)) {
+            throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
+        }
+
+        $this->deletedReason = $value;
     }
 
     public function getDeletedReason()
