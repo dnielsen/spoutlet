@@ -63,10 +63,11 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        $groupEventRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
-        $events         = $groupEventRepo->getEventListForUser($this->getUser());
-        $ownedEvents    = $groupEventRepo->getEventListForUser($this->getUser(), true);
-        $pastEvents     = $groupEventRepo->getPastEventListForUser($this->getUser());
+        $groupEventService = $this->get('platformd_event.service.group_event');
+
+        $events         = $groupEventService->findEventsForUser($this->getUser());
+        $ownedEvents    = $groupEventService->findEventsForUser($this->getUser(), true);
+        $pastEvents     = $groupEventService->findPastEventsForUser($this->getUser());
 
         return $this->render('SpoutletBundle:Account:events.html.twig', array(
             'events'        => $events,

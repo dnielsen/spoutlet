@@ -4,6 +4,7 @@ namespace Platformd\EventBundle\Service;
 
 use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
+    Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents
 ;
@@ -72,22 +73,26 @@ class EventService
      * Finds events by criteria
      *
      * @param $criteria
+     * @param array $orderBy
+     * @param $limit
+     * @param $offset
      * @return array
      */
-    public function findBy($criteria)
+    public function findBy($criteria, array $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->repository->findBy($criteria);
+        return $this->repository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
      * Find one event by criteria
      *
      * @param $criteria
+     * @param array $orderBy
      * @return object
      */
-    public function findOneby($criteria)
+    public function findOneby($criteria, array $orderBy = null)
     {
-        return $this->repository->findOneBy($criteria);
+        return $this->repository->findOneBy($criteria, $orderBy);
     }
 
     /**
@@ -99,5 +104,15 @@ class EventService
         if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
             $event->setBannerImage(null);
         }
+    }
+
+    public function findEventsForUser(User $user, $whereIsOrganizer = false)
+    {
+        return $this->repository->getEventListForUser($user, $whereIsOrganizer);
+    }
+
+    public function findPastEventsForUser(User $user)
+    {
+        return $this->repository->getPastEventListForUser($user);
     }
 }

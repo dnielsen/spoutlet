@@ -170,15 +170,3 @@ group_events:
 group_past_events:
     pattern: /{id}/past-events
     defaults: { _controller: "SpoutletBundle:Group:pastEvents", site: ~ }
-
-group_event_show:
-    pattern: /{groupId}/events/{event}
-    defaults: { _controller: "SpoutletBundle:Group:showEvent", site: ~ }
-
-group_event_edit:
-    pattern: /{groupId}/events/{event}/edit
-    defaults: { _controller: "SpoutletBundle:Group:editEvent", site: ~ }
-
-group_event_delete:
-    pattern: /{groupId}/events/{event}/delete
-    defaults: { _controller: "SpoutletBundle:Group:deleteEvent", site: ~ }

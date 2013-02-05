@@ -162,9 +162,8 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEventRepo = $this->getGroupEventRepository();
-        $groupEvent     = $groupEventRepo->find($id);
-        $user           = $this->getUser();
+        $groupEvent = $this->getGroupEventService()->findOne($id);
+        $user       = $this->getUser();
 
         if (!$groupEvent) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
@@ -172,10 +171,7 @@ class GroupEventController extends Controller
         }
 
         $groupEvent->getAttendees()->removeElement($user);
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $em->persist($groupEvent);
-        $em->flush();
+        $this->getGroupEventService()->updateEvent($groupEvent);
 
         $response->setContent(json_encode(array("success" => true)));
         return $response;
@@ -208,8 +204,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEventRepo = $this->getGroupEventRepository();
-        $groupEvent     = $groupEventRepo->find($id);
+        $groupEvent = $this->getGroupEventService()->findOne($id);
         $user           = $this->getUser();
 
         if (!$groupEvent) {
@@ -224,9 +219,7 @@ class GroupEventController extends Controller
 
         $groupEvent->setPublished(false);
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($groupEvent);
-        $em->flush();
+        $this->getGroupEventService()->updateEvent($groupEvent);
 
         $response->setContent(json_encode(array("success" => true)));
         return $response;
@@ -246,10 +239,5 @@ class GroupEventController extends Controller
     private function getGroupEventService()
     {
         return $this->get('platformd_event.service.group_event');
-    }
-
-    private function getGroupEventRepository()
-    {
-        return $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GroupEvent');
     }
 }

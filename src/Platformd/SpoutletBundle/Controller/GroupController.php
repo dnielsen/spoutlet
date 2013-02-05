@@ -488,7 +488,7 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupEvents = $this->getGroupEventRepository()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $groupEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
 
         return $this->render('SpoutletBundle:Group:events.html.twig', array(
             'group'         => $group,
@@ -502,7 +502,7 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupEvents = $this->getGroupEventRepository()->findPastEventsForGroupMostRecentFirst($group);
+        $groupEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
         return $this->render('SpoutletBundle:Group:events.html.twig', array(
             'group'         => $group,
@@ -1297,8 +1297,8 @@ Alienware Arena Team
         $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
         $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
-        $upcomingEvents = $this->getGroupEventRepository()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
-        $pastEvents     = $this->getGroupEventRepository()->findPastEventsForGroupMostRecentFirst($group, 5);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 5);
 
         $contest = $this->getContestRepository()->findContestByGroup($group);
 
@@ -1522,9 +1522,12 @@ Alienware Arena Team
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
     }
 
-    private function getGroupEventRepository()
+    /**
+     * @return \Platformd\EventBundle\Service\GroupEventService
+     */
+    private function getGroupEventService()
     {
-        return $this->getEntityManager()->getRepository('EventBundle:GroupEvent');
+        return $this->get('platformd_event.service.group_event');
     }
 
     private function getContestRepository()

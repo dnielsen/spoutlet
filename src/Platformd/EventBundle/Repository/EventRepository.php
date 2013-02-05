@@ -85,7 +85,7 @@ class EventRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    private function addActiveClauses($qb, $alias='e')
+    protected function addActiveClauses($qb, $alias='e')
     {
         return $qb->andWhere($alias.'.deleted = 0')
             ->andWhere($alias.'.published = 1')

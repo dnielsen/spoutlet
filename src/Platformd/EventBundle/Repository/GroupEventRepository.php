@@ -39,28 +39,16 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getEventCountForGroup(Group $group)
-    {
-        $qb = $this->getBaseGroupQueryBuilder($group)
-            ->select('count(ge.id)')
-            ->groupBy('g.id');
-
-        $this->addActiveClauses($qb);
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
-
     private function getBaseGroupQueryBuilder(Group $group, $alias = 'ge')
     {
         $qb = $this->createQueryBuilder($alias)
-            ->leftJoin($alias.'.groups', 'g')
-            ->andWhere('g = :group')
+            ->andWhere($alias.'.group = :group')
             ->setParameter('group', $group);
 
         return $qb;
     }
 
-    private function addActiveClauses($qb, $alias='ge')
+    protected function addActiveClauses($qb, $alias='ge')
     {
         return $qb->andWhere($alias.'.deleted = 0')
             ->andWhere($alias.'.published = 1')
