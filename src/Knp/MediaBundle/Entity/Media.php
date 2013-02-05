@@ -49,6 +49,7 @@ abstract class Media
      *     maxSizeMessage = "Please upload an image that's 2 megabytes or smaller",
      *     groups = {"subject_image"}
      * )
+     * @Assert\Image(mimeTypes={"image/jpeg", "image/jpg", "image/png", "image/gif"}, mimeTypesMessage="This is not a valid image file.")
      */
     protected $fileObject;
 
