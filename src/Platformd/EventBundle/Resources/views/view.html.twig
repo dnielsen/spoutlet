@@ -1,0 +1,33 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% set reportContentType    = event.contentType %}
+
+{% block title event.name %}
+
+{% block content %}
+
+<div class="event-show-page">
+    <div class="std_2col" style="padding:0 0 10px 0">
+        <div class="left">
+
+        </div>
+        <div class="right">
+
+        </div>
+    </div>
+
+    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+        <div class="left">
+
+        </div>
+
+        <div class="right">
+
+        </div>
+
+    </div>
+</div>
+
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+
+{% endblock %}
