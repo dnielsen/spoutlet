@@ -1,5 +1,6 @@
 parameters:
     platformd_event.form.type.group_event.class: Platformd\EventBundle\Form\Type\GroupEventType
+    platformd_event.form.type.group_event_wrapper.class: Platformd\EventBundle\Form\Type\GroupEventWrapperType
 
 services:
     platformd_event.form.type.group_event:
@@ -8,3 +9,10 @@ services:
             - @security.context
         tags:
             - { name: form.type, alias: groupEvent }
+
+    platformd_event.form.type.group_event_wrapper:
+        class: %platformd_event.form.type.group_event_wrapper.class%
+        arguments:
+            - @security.context
+        tags:
+            - { name: form.type, alias: groupEventWrapper }

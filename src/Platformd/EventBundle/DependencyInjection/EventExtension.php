@@ -24,5 +24,6 @@ class EventExtension extends Extension
         $loader->load('services.yml');
         $loader->load('repositories.yml');
         $loader->load('forms.yml');
+        $loader->load('validation.yml');
     }
 }

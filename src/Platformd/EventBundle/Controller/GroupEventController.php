@@ -3,6 +3,7 @@
 namespace Platformd\EventBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller,
+    Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Model\GroupManager
 ;
 
@@ -25,34 +26,33 @@ class GroupEventController extends Controller
      */
     public function newAction($slug, Request $request)
     {
-//        $user   = $this->getUser();
-//        $groups = $this->getGroupManager()->getAllGroupsForUser($user);
-//
-//        // If User does not belong to a group, we ask them to create one
-//        if (count($groups) == 0) {
-//            $this->setFlash('error', 'You must join or create a group before you can create an event!');
-//
-//            return $this->redirect($this->generateUrl('groups'));
-//        }
+        /** @var Group $group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $slug));
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        $form = $this->createForm('groupEvent', new GroupEvent());
+        $groupEvent = new GroupEvent($group);
+
+        $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
 
+                /** @var GroupEvent $groupEvent */
                 $groupEvent = $form->getData();
+                $groupEvent->setUser($this->getUser());
 
-                $this->getEventService()->createEvent($groupEvent);
+                $this->getGroupEventService()->createEvent($groupEvent);
                 $this->setFlash('success', 'New event posted successfully');
 
-                return $this->redirect($this->generateUrl('group_event_view'));
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                    'groupSlug' => $group->getSlug(),
+                    'eventSlug' => $groupEvent->getSlug()
+                )));
             } else {
                 $this->setFlash('error', 'Something went wrong');
             }
@@ -61,6 +61,76 @@ class GroupEventController extends Controller
         return $this->render('EventBundle:GroupEvent:new.html.twig', array(
             'form' => $form->createView(),
             'group' => $group
+        ));
+    }
+
+    public function editAction($groupSlug, $eventSlug, Request $request)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $form = $this->createForm('groupEvent', $groupEvent);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                /** @var GroupEvent $groupEvent */
+                $groupEvent = $form->getData();
+                $groupEvent->setUser($this->getUser());
+
+                $this->getGroupEventService()->updateEvent($groupEvent);
+                $this->setFlash('success', 'New event posted successfully');
+
+                return $this->redirect($this->generateUrl('group_event_edit', array(
+                    'groupSlug' => $group->getSlug(),
+                    'eventSlug' => $groupEvent->getSlug()
+                )));
+            } else {
+                $this->setFlash('error', 'Something went wrong');
+            }
+        }
+
+        return $this->render('EventBundle:GroupEvent:edit.html.twig', array(
+            'form' => $form->createView(),
+            'group' => $group,
+            'event' => $groupEvent
+        ));
+    }
+
+    public function viewAction($groupSlug, $eventSlug)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        return $this->render('EventBundle:GroupEvent:view.html.twig', array(
+            'group' => $group,
+            'event' => $groupEvent
         ));
     }
 
@@ -73,9 +143,9 @@ class GroupEventController extends Controller
     }
 
     /**
-     * @return \Platformd\EventBundle\Service\EventService
+     * @return \Platformd\EventBundle\Service\GroupEventService
      */
-    private function getEventService()
+    private function getGroupEventService()
     {
         return $this->get('platformd_event.service.group_event');
     }

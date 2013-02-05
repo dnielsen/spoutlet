@@ -2,15 +2,23 @@
 
 namespace Platformd\EventBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection
+;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Vich\GeographicalBundle\Annotation as Vich;
+
+use Platformd\SpoutletBundle\Entity\Group,
+    Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug
+;
 
 /**
  * Platformd\EventBundle\Entity\GroupEvent
  *
  * @ORM\Table(name="group_event")
  * @ORM\Entity
+ * @AssertUniqueSlug()
+ * @Vich\Geographical(on="update")
  */
 class GroupEvent extends Event
 {
@@ -30,19 +38,19 @@ class GroupEvent extends Event
      * @var boolean $private
      * @ORM\Column(name="private", type="boolean")
      */
-    protected $private;
+    protected $private = false;
 
     /**
      * Groups the event pertains to
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Group")
-     * @ORM\JoinTable(name="group_events_groups")
+     * @var Group
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $groups;
+    protected $group;
 
     /**
-     * Sites the event pertains to
+     * Sites this event belongs to - override default sites defined in group if set
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
@@ -51,29 +59,57 @@ class GroupEvent extends Event
     protected $sites;
 
     /**
+     * The complete address like "1021 Washington Drive, San Francisco, CA United States"
+     *
+     * @var string $address
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     */
+    protected $address;
+
+    /**
+     * This gets value from Google Location service
+     *
+     * @var float
+     * @ORM\Column(type="decimal", scale=7, nullable=true)
+     */
+    protected $latitude;
+
+    /**
+     * This gets value from Google Location service
+     *
+     * @var float
+     * @ORM\Column(type="decimal", scale=7, nullable=true)
+     */
+    protected $longitude;
+
+    /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(Group $group)
     {
-        $this->groups = new ArrayCollection();
-        $this->sites  = new ArrayCollection();
+        $this->group = $group;
+        $this->sites = new ArrayCollection();
+        foreach ($this->getGroup()->getSites() as $site) {
+            $this->sites->add($site);
+        }
+
         parent::__construct();
     }
 
     /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $groups
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
      */
-    public function setGroups($groups)
+    public function setGroup(Group $group)
     {
-        $this->groups = $groups;
+        $this->group = $group;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Platformd\SpoutletBundle\Entity\Group
      */
-    public function getGroups()
+    public function getGroup()
     {
-        return $this->groups;
+        return $this->group;
     }
 
     /**
@@ -93,6 +129,22 @@ class GroupEvent extends Event
     }
 
     /**
+     * @param boolean $private
+     */
+    public function setPrivate($private)
+    {
+        $this->private = $private;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPrivate()
+    {
+        return $this->private;
+    }
+
+    /**
      * @param \Doctrine\Common\Collections\ArrayCollection $sites
      */
     public function setSites($sites)
@@ -109,18 +161,52 @@ class GroupEvent extends Event
     }
 
     /**
-     * @param boolean $private
+     * @param string $address
      */
-    public function setPrivate($private)
+    public function setAddress($address)
     {
-        $this->private = $private;
+        $this->address = $address;
     }
 
     /**
-     * @return boolean
+     * @Vich\GeographicalQuery
+     *
+     * @return string
      */
-    public function getPrivate()
+    public function getAddress()
     {
-        return $this->private;
+        return $this->address;
+    }
+
+    /**
+     * @param float $latitude
+     */
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * @param float $longitude
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 }

@@ -347,6 +347,12 @@ platformd:
                 mmo:        MMO
         facebook_fanpage: Facebook Fan Page
 
+    event:
+        registration:
+            enabled: "I would like to manage event registration on this website"
+            disabled: "Please list my event only"
+            3rdparty: "Link event listing to 3rd party website"
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"

@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager,
 
 use Platformd\EventBundle\Entity\Event;
 
-abstract class EventRepository extends EntityRepository
+class EventRepository extends EntityRepository
 {
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager

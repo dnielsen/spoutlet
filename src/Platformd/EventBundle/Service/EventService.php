@@ -10,16 +10,19 @@ use Platformd\EventBundle\Repository\EventRepository,
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-use Gaufrette\Filesystem;
+use Knp\MediaBundle\Util\MediaUtil;
 
-abstract class EventService
+class EventService
 {
     /**
      * @var EventRepository
      */
     protected $repository;
 
-    protected $filesystem;
+    /**
+     * @var MediaUtil
+     */
+    protected $mediaUtil;
 
     /**
      * @var EventDispatcher
@@ -28,12 +31,12 @@ abstract class EventService
 
     public function __construct(
         EventRepository $repository,
-        Filesystem $filesystem,
+        MediaUtil $mediaUtil,
         EventDispatcher $dispatcher
     )
     {
         $this->repository   = $repository;
-        $this->filesystem   = $filesystem;
+        $this->mediaUtil    = $mediaUtil;
         $this->dispatcher   = $dispatcher;
     }
 
@@ -42,8 +45,9 @@ abstract class EventService
      */
     public function createEvent(Event $event)
     {
+        $this->handleMedia($event);
+
         $this->repository->saveEvent($event);
-        $this->updateBannerImage($event);
 
         // We dispatch an event for further tasks
         $event = new EventEvent($event);
@@ -55,8 +59,9 @@ abstract class EventService
      */
     public function updateEvent(Event $event)
     {
+        $this->handleMedia($event);
+
         $this->repository->saveEvent($event);
-        $this->updateBannerImage($event);
 
         // We dispatch an event for further tasks
         $event = new EventEvent($event);
@@ -64,21 +69,35 @@ abstract class EventService
     }
 
     /**
-     * Update an event's banner image
+     * Finds events by criteria
+     *
+     * @param $criteria
+     * @return array
+     */
+    public function findBy($criteria)
+    {
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
+     * Find one event by criteria
+     *
+     * @param $criteria
+     * @return object
+     */
+    public function findOneby($criteria)
+    {
+        return $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * Saves Banner to image farm
      *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
-    protected function updateBannerImage(Event $event)
-    {
-        $file = $event->getBannerImageFile();
-
-        if (null == $file) {
-            return;
+    protected function handleMedia(Event $event) {
+        if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
+            $event->setBannerImage(null);
         }
-
-        $filename = sha1($event->getId().'-'.uniqid()).'.'.$file->guessExtension();
-        // prefix repeated in BannerPathResolver
-        $this->filesystem->write(Event::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
-        $event->setBannerImage($filename);
     }
 }

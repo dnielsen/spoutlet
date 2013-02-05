@@ -1,7 +1,14 @@
 services:
+    platformd_event.service.event:
+        class: Platformd\EventBundle\Service\EventService
+        arguments:
+            - @platformd_event.repository.event
+            - @knp_media.util.media_util
+            - @event_dispatcher
+
     platformd_event.service.group_event:
         class: Platformd\EventBundle\Service\GroupEventService
         arguments:
             - @platformd_event.repository.group_event
-            - @event_filesystem
+            - @knp_media.util.media_util
             - @event_dispatcher

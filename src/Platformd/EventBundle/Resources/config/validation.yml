@@ -1,0 +1,14 @@
+services:
+    platformd.validation.event_unique_slug_validator:
+        class: Platformd\EventBundle\Validator\EventUniqueSlugValidator
+        arguments:
+            - "@platformd_event.service.event"
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.validator.event.unique_slug }
+
+    platformd.validation.group_event_unique_slug_validator:
+        class: Platformd\EventBundle\Validator\GroupEventUniqueSlugValidator
+        arguments:
+            - "@platformd_event.service.group_event"
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.validator.group_event.unique_slug }

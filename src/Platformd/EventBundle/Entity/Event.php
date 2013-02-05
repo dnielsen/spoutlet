@@ -24,14 +24,13 @@ use DateTime;
  * Base Event
  *
  * @ORM\MappedSuperclass
+ * @Vich\Geographical
  */
 abstract class Event
 {
-    const REGISTRATION_ENABLED      = "event.registration.enabled";
-    const REGISTRATION_DISABLED     = 'event.registration.disabled';
-    const REGISTRATION_3RD_PARTY    = 'event.registration.3rdparty';
-
-    const PREFIX_PATH_BANNER = 'banner/';
+    const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
+    const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
+    const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
 
     /**
      * Event's name
@@ -73,17 +72,13 @@ abstract class Event
     protected $user;
 
     /**
-     * @ORM\Column(name="bannerImage", type="string", length=255, nullable=true)
+     * Banner Image for event
+     *
+     * @var \Platformd\MediaBundle\Entity\Media
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $bannerImage;
-
-    /**
-     * @Assert\File(
-     *   maxSize="6000000",
-     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
-     * )
-     */
-    protected $bannerImageFile;
 
     /**
      * Event registration option (enabled, disabled, 3rd party)
@@ -92,7 +87,7 @@ abstract class Event
      * @Assert\NotBlank()
      * @ORM\Column(name="registration_option", type="string", length=255)
      */
-    protected $registrationOption;
+    protected $registrationOption = self::REGISTRATION_ENABLED;
 
     /**
      * Whether event is published
@@ -140,6 +135,7 @@ abstract class Event
      * The timezone this event is taking place in
      *
      * @var string
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $timezone = 'UTC';
@@ -156,6 +152,7 @@ abstract class Event
      * Game this event relates to
      *
      * @var Game
+     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -257,6 +254,7 @@ abstract class Event
     }
 
     /**
+     * @Vich\GeographicalQuery
      * @return string
      */
     public function getAddress()
@@ -288,16 +286,6 @@ abstract class Event
     public function getBannerImage()
     {
         return $this->bannerImage;
-    }
-
-    public function setBannerImageFile($bannerImageFile)
-    {
-        $this->bannerImageFile = $bannerImageFile;
-    }
-
-    public function getBannerImageFile()
-    {
-        return $this->bannerImageFile;
     }
 
     /**
@@ -573,26 +561,6 @@ abstract class Event
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Returns array of all available options
-     *
-     * @return array
-     */
-    public static function getRegistrationOptions($admin = false)
-    {
-        $array = array(
-            self::REGISTRATION_ENABLED => 'I would like to manage event registration on this website',
-            self::REGISTRATION_DISABLED => 'Please list my event only'
-        );
-
-        if ($admin) {
-            $array[self::REGISTRATION_3RD_PARTY] = 'Link my event to 3rd party website';
-        }
-
-        return $array;
-
     }
 
     /**

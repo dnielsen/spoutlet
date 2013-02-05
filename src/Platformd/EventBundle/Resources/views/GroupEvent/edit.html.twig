@@ -1,0 +1,27 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>Edit Event: {{ event.name }}</h1>
+
+    <form action="{{ path('group_event_edit', {'groupSlug': group.slug, 'eventSlug': event.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'EventBundle:GroupEvent:_form.html.twig' %}
+
+        <div class="form-actions" style="float: left;">
+            <button type="submit" class="btn btn-primary" formnovalidate>Update</button>
+            <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+
+            jQuery('input.datetime-picker').datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                showSecond: true
+            });
+
+        });
+    </script>
+
+{% endblock %}

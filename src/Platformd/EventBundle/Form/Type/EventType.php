@@ -7,10 +7,10 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\Security\Core\SecurityContextInterface
 ;
 
-use Platformd\SpoutletBundle\Form\Type\SlugType;
-
-use Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
-    Platformd\EventBundle\Entity\Event
+use Platformd\SpoutletBundle\Form\Type\SlugType,
+    Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
+    Platformd\EventBundle\Entity\Event,
+    Platformd\MediaBundle\Form\Type\MediaType
 ;
 
 class EventType extends AbstractType
@@ -37,8 +37,9 @@ class EventType extends AbstractType
 
         $builder
             ->add('name', 'text')
-            ->add('bannerImageFile', 'file', array(
-                'help' => 'Resolution 950x120, jpeg or png formats',
+            ->add('bannerImage', new MediaType(), array(
+                'image_label'   => 'Event Banner',
+                'image_help'    => 'Resolution 950x120, jpeg or png formats',
                 'required' => false
             ))
             ->add('slug', new SlugType(), array('label' => 'URL'))
@@ -103,6 +104,6 @@ class EventType extends AbstractType
 
     public function getName()
     {
-        return 'awa_event';
+        return 'platformd_event';
     }
 }

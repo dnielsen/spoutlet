@@ -1,3 +1,11 @@
 group_event_new:
     pattern: /groups/{slug}/event/new
     defaults: { _controller:"EventBundle:GroupEvent:new", site: ~ }
+
+group_event_edit:
+    pattern: /groups/{groupSlug}/event/edit/{eventSlug}
+    defaults: { _controller:"EventBundle:GroupEvent:edit", site: ~ }
+
+group_event_view:
+    pattern: /groups/{groupSlug}/event/{eventSlug}
+    defaults: { _controller:"EventBundle:GroupEvent:view", site: ~ }
