@@ -83,6 +83,15 @@ class GroupEvent extends Event
     protected $longitude;
 
     /**
+     * Event attendees
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="group_events_attendees")
+     */
+    protected $attendees;
+
+    /**
      * Constructor
      */
     public function __construct(Group $group)
@@ -208,5 +217,28 @@ class GroupEvent extends Event
     public function getLongitude()
     {
         return $this->longitude;
+    }
+
+    /**
+     * used to dynamically generate routes within twig files to allow multiple event types to be
+     * mixed and displayed together
+     * e.g. group_event_edit, group_event_delete
+     *
+     *  @return string
+     */
+    public function getEventRoutePrefix()
+    {
+        return 'group_event_';
+
+    }
+
+    /**
+     * Content type for the purposes of content reporting
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        return 'GroupEvent';
     }
 }

@@ -15,7 +15,18 @@
         {% for item in items %}
             <tr>
                 <td>
-                    {% if item[0].getContentType == 'GroupVideo' %}
+                    {% if item[0].getContentType == 'GroupEvent' %}
+
+                        <h1>Title</h1>
+                        <div>{{ item[0].name }}</div>
+                        <h1>Time</h1>
+                        <div>{{ item[0].dateRangeString }}</div>
+                        <h1>Where</h1>
+                        <div>{{ item[0].online ? "Online" : item[0].location ~ ", " ~ item[0].address }}</div>
+                        <h1>Details</h1>
+                        <div>{{ item[0].content }}</div>
+
+                    {% elseif item[0].getContentType == 'GroupVideo' %}
 
                         <h1>Group</h1>
                         <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug(), '_locale' : item.locale }) }}">{{ item[0].group.name }}</a></div>

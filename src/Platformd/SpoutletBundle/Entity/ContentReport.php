@@ -18,6 +18,9 @@ use Platformd\SpoutletBundle\Entity\Site;
 class ContentReport
 {
 
+    const DELETED_BY_REPORT         = 'REPORTED_PENDING_INVESTIGATION';
+    const DELETED_BY_REPORT_ADMIN   = 'REPORTED_AND_REMOVED_BY_ADMIN';
+
     static private $validReasons = array(
         'inappropriate_content',
         'spam',
@@ -36,6 +39,19 @@ class ContentReport
         'Video' => 'content_reporting.report_type_video',
         'Comment' => 'content_reporting.report_type_comment',
         'Unknown' => 'content_reporting.report_type_unknown',
+        'GroupEvent' => 'content_reporting.report_type_group_event',
+    );
+
+    static private $typeClassMap = array(
+        'GroupEvent' => 'EventBundle:GroupEvent',
+        'GroupImage' => 'SpoutletBundle:GroupImage',
+        'GroupNews' => 'SpoutletBundle:GroupNews',
+        'GroupVideo' => 'SpoutletBundle:GroupVideo',
+        'Group' => 'SpoutletBundle:Group',
+        'Comment' => 'SpoutletBundle:Comment',
+        'GalleryMedia' => 'SpoutletBundle:GalleryMedia',
+        'GroupDiscussion' => 'SpoutletBundle:GroupDiscussion',
+        'GroupDiscussionPost' => 'SpoutletBundle:GroupDiscussionPost',
     );
 
     /**
@@ -139,6 +155,13 @@ class ContentReport
      */
     protected $comment = null;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupEvent = null;
 
     /**
      * Get id
@@ -273,6 +296,16 @@ class ContentReport
         $this->comment = $value;
     }
 
+    public function getGroupEvent()
+    {
+        return $this->groupEvent;
+    }
+
+    public function setGroupEvent($value)
+    {
+        $this->groupEvent = $value;
+    }
+
     public function getSite()
     {
         return $this->site;
@@ -309,5 +342,14 @@ class ContentReport
         }
 
         return self::$typeTranslationMap['Unknown'];
+    }
+
+    static public function getTypeClass($type)
+    {
+        if (array_key_exists($type, self::$typeClassMap)) {
+            return self::$typeClassMap[$type];
+        }
+
+        return false;
     }
 }

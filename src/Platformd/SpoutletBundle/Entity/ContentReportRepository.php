@@ -3,10 +3,12 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Platformd\SpoutletBundle\Entity\ContentReport;
 
 class ContentReportRepository extends EntityRepository
 {
     private static $validTypes = array(
+        'GroupEvent',
         'GroupImage',
         'GroupNews',
         'GroupVideo',
@@ -24,8 +26,10 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE report.deleted = false
@@ -42,8 +46,10 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = false AND
@@ -62,10 +68,12 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = true AND report.deleted = true
@@ -108,6 +116,25 @@ class ContentReportRepository extends EntityRepository
             ')
             ->setParameter('site', $site)
             ->execute();
+    }
+
+    public function deleteAllContentReportsForGroupEvent($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupEvent c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
     }
 
     public function deleteAllContentReportsForGroupNews($content) {

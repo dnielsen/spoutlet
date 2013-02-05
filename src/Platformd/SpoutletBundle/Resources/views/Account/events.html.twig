@@ -1,42 +1,137 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+{% block title %}{{ "platformd.events.event_listings.my_events" | trans }}{% endblock %}
 
 {% block content %}
 <div class="std_2col control_panel">
     <div class="left">
         <div class="pad">
             <div class="std_1col">
-                <div class="widget-100">
+
+                <div class="widget-100" style="margin-bottom:20px;">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ "platformd.events.event_listings.your_owned_events" | trans }}
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                            'events': ownedEvents,
+                            'no_events_message': no_events_message,
+                        } %}
+                    </div>
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="widget-100" style="margin-bottom:20px;">
                     <div class="widget-header">
                         <div class="widget-title">
                             {{ "platformd.events.event_listings.your_registered_events" | trans }}
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_messages %}{% trans %}platformd.account_page.events.no_registered_events{% endtrans %}{% endset %}
-                        {% set no_events_pre_message = 'platformd.account_page.events.join_event_message' | trans({
-                            '%events_url%': path('events_index')
-                        }) %}
-                        {% include 'SpoutletBundle:Events:eventList.html.twig' with {
-                            'events': app.user.events,
-                            'no_events_message': no_events_messages,
-                            'no_events_pre_message': no_events_pre_message
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                            'events': events,
+                            'no_events_message': no_events_message,
                         } %}
                     </div>
-
                     <div class="widget-footer">
                         &nbsp;
                     </div>
-                </div><br />
+                </div>
+
+                <div class="widget-100" style="margin-bottom:20px;">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            {{ "platformd.events.event_listings.your_past_events" | trans }}
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                            'events': pastEvents,
+                            'no_events_message': no_events_message,
+                        } %}
+                    </div>
+                    <div class="widget-footer">
+                        &nbsp;
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     <div class="clear"></div>
 </div>
+
+{% include 'EventBundle::_rsvpDialog.html.twig' %}
+
+<script type="text/javascript">
+    $(function () {
+        $('.event-owner-actions').change(function () {
+
+            switch($(this).children('option:selected').val()) {
+
+                case 'contact':
+                    break;
+
+                case 'edit':
+                    break;
+
+                case 'disable':
+                    var answer = confirm("Are you sure you want to disable this event?")
+                    if (!answer){
+                        return false;
+                    }
+
+                    var route = $(this).children('option:selected').attr('data-route');
+                    var id = $(this).attr('data-id');
+                    var type = $(this).attr('data-contenttype');
+
+                    $.blockUI({
+                        message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="padding:15px 0 15px 0;" />',
+                        css: {
+                            backgroundColor: '#252525',
+                            border: '3px solid #009CDA',
+                            color: '#B3B3B3',
+                        }
+                    });
+
+                    $.ajax({
+                        url: route,
+                        type: 'post',
+                        data: JSON.stringify({
+                            'id' : id
+                        }),
+                        contentType: 'json',
+                        success: function(data) {
+                            if (!data.success) {
+                                alert(data.errorMessage);
+                                $.unblockUI();
+                            } else {
+                                $.unblockUI();
+                                $('#event-'+type+'-'+id).fadeOut();
+                            }
+                        }
+                    });
+
+                    break;
+
+                default:
+                    break;
+            }
+        });
+    });
+</script>
+
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}

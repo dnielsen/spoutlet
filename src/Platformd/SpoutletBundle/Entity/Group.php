@@ -950,6 +950,11 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->facebookLikesUpdatedAt = new \DateTime;
     }
 
+    public function getClass()
+    {
+        return get_class($this);
+    }
+
     public function getLeftMemberCount()
     {
         return $this->getMembershipActions()->filter(function($x) {

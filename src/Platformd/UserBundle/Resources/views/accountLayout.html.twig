@@ -19,7 +19,9 @@
                 <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
             {% endif %}
 
-            {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
+            {% if site_has_feature('EVENTS') %}
+                <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+            {% endif %}
 
             {% if app.session.locale == 'en_SG' %}
                 {{ giveaway_link | raw }}

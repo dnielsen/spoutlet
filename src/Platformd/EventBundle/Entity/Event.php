@@ -15,6 +15,8 @@ use Gedmo\Mapping\Annotation as Gedmo,
 ;
 
 use Platformd\SpoutletBundle\Entity\Game,
+    Platformd\SpoutletBundle\Entity\ContentReport,
+    Platformd\SpoutletBundle\Model\ReportableContentInterface,
     Platformd\UserBundle\Entity\User
 ;
 
@@ -26,11 +28,21 @@ use DateTime;
  * @ORM\MappedSuperclass
  * @Vich\Geographical
  */
-abstract class Event
+abstract class Event implements ReportableContentInterface
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
+
+    const DELETED_BY_OWNER  = 'by_owner';
+    const DELETED_BY_ADMIN  = 'by_admin';
+
+    static private $validDeletedReasons = array(
+        self::DELETED_BY_OWNER,
+        self::DELETED_BY_ADMIN,
+        ContentReport::DELETED_BY_REPORT,
+        ContentReport::DELETED_BY_REPORT_ADMIN,
+    );
 
     /**
      * Event's name
@@ -172,7 +184,6 @@ abstract class Event
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinTable(name="events_attendees")
      */
     protected $attendees;
 
@@ -227,12 +238,33 @@ abstract class Event
     protected $updatedAt;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $deletedReason;
+
+    /**
+     * @var boolean $deleted
+     * @ORM\Column(type="boolean")
+     */
+
+    private $deleted = false;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupEvent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+    protected $contentReports;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->attendees = new ArrayCollection();
-        $this->createdAt = new DateTime();
+        $this->attendees        = new ArrayCollection();
+        $this->contentReports   = new ArrayCollection();
+        $this->createdAt        = new DateTime();
     }
 
     /**
@@ -577,5 +609,58 @@ abstract class Event
     public function getRegistrationOption()
     {
         return $this->registrationOption;
+    }
+
+    public function getDateRangeString()
+    {
+        $startsAtDate = $this->getStartsAt()->format('M d');
+        $startsAtYear = $this->getStartsAt()->format('Y');
+        $endsAtDate = $this->getEndsAt()->format('M d');
+        $endsAtYear = $this->getEndsAt()->format('Y');
+
+        if ($startsAtYear == $endsAtYear) {
+            return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+        } else {
+            return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+        }
+    }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
+    }
+
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    public function setDeletedReason($value)
+    {
+        if ($value && !in_array($value, self::$validDeletedReasons)) {
+            throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
+        }
+
+        $this->deletedReason = $value;
+    }
+
+    public function getDeletedReason()
+    {
+        return $this->deletedReason;
+    }
+
+    public function getClass()
+    {
+        return get_class($this);
     }
 }

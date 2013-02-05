@@ -483,6 +483,52 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
     }
 
+    public function eventsAction($id)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+        $groupEvents = $this->getGroupEventRepository()->findUpcomingEventsForGroupMostRecentFirst($group);
+
+        return $this->render('SpoutletBundle:Group:events.html.twig', array(
+            'group'         => $group,
+            'groupEvents'   => $groupEvents,
+            'mode'          => 'upcoming',
+        ));
+    }
+
+    public function pastEventsAction($id)
+    {
+        $group = $this->getGroup($id);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+        $groupEvents = $this->getGroupEventRepository()->findPastEventsForGroupMostRecentFirst($group);
+
+        return $this->render('SpoutletBundle:Group:events.html.twig', array(
+            'group'         => $group,
+            'groupEvents'   => $groupEvents,
+            'mode'          => 'past',
+        ));
+    }
+
+    public function showEventAction($groupId, $event)
+    {
+        $slug = $this->getGroup($groupId)->getSlug();
+        return $this->showAction($slug);
+    }
+
+    public function editEventAction($groupId, $event)
+    {
+        $slug = $this->getGroup($groupId)->getSlug();
+        return $this->showAction($slug);
+    }
+
+    public function deleteEventAction($groupId, $event)
+    {
+        $slug = $this->getGroup($groupId)->getSlug();
+        return $this->showAction($slug);
+    }
+
     public function newsAction($id, Request $request)
     {
         $group = $this->getGroup($id);
@@ -1251,6 +1297,8 @@ Alienware Arena Team
         $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
         $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $upcomingEvents = $this->getGroupEventRepository()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
+        $pastEvents     = $this->getGroupEventRepository()->findPastEventsForGroupMostRecentFirst($group, 5);
 
         $contest = $this->getContestRepository()->findContestByGroup($group);
 
@@ -1263,13 +1311,15 @@ Alienware Arena Team
         }
 
         return $this->render('SpoutletBundle:Group:show.html.twig', array(
-            'commentTotal'  => $commentTotal,
-            'group'         => $group,
-            'groupNews'     => $groupNews,
-            'groupVideos'   => $groupVideos,
-            'isEntered'     => $isEntered,
-            'contestCount'  => $contestMemberCount,
-            'contest'       => $contest,
+            'commentTotal'      => $commentTotal,
+            'group'             => $group,
+            'groupNews'         => $groupNews,
+            'groupVideos'       => $groupVideos,
+            'isEntered'         => $isEntered,
+            'contestCount'      => $contestMemberCount,
+            'contest'           => $contest,
+            'upcomingEvents'    => $upcomingEvents,
+            'pastEvents'        => $pastEvents,
         ));
     }
 
@@ -1470,6 +1520,11 @@ Alienware Arena Team
     private function getGroupVideoRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:GroupVideo');
+    }
+
+    private function getGroupEventRepository()
+    {
+        return $this->getEntityManager()->getRepository('EventBundle:GroupEvent');
     }
 
     private function getContestRepository()

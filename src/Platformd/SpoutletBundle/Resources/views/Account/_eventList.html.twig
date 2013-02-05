@@ -1,0 +1,39 @@
+<table style="width:100%; border-collapse:separate; border-spacing: 5px;">
+    <thead>
+        <tr>
+            <th style="width:10%">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
+            <th>{{ 'platformd.events.event_listings.event' | trans }}</th>
+            <th style="width:10%">{{ 'platformd.events.event_listings.organizer' | trans }}</th>
+            <th style="width:10%">{{ 'platformd.events.event_listings.attendees' | trans }}</th>
+            <th style="width:15%">{{ 'platformd.events.event_listings.actions' | trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+            <tr id="event-{{ event[0].contentType }}-{{ event[0].id }}">
+                <td>{{ event[0].startsAt | date('M d, Y') }}</td>
+                <td><a href="javascript:void(0);">{{  event[0].name }}</a></td>
+                <td><a href="{{ cevo_account_link(event[0].user.username) }}">{{ event[0].user.username }}</a></td>
+                <td>{{ event.attendeeCount }}</td>
+                <td>
+                    {% if event[0].user == app.user %}
+                        <select class="event-owner-actions" data-id="{{ event[0].id }}" data-contenttype="{{ event[0].contentType }}" style="width:130px;">
+                            <option></option>
+                            <option value="contact" data-route="{#{{ path(event[0].eventRoutePrefix ~ "contact") }}#}">Contact Attendees</option>
+                            <option value="edit" data-route="{#{{ path(event[0].eventRoutePrefix ~ "edit") }}#}">Copy Event</option>
+                            <option value="disable" data-route="{{ path(event[0].eventRoutePrefix ~ "disable") }}">Disable Event</option>
+                        </select>
+                    {% else %}
+                        <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event[0].id }}" data-route="{{ path(event[0].eventRoutePrefix ~ "rsvp") }}" data-contenttype="{{ event[0].contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td style="text-align:center; padding:20px 0;" colspan="5">
+                    {% if no_events_message is defined %}<strong>{{ no_events_message }}</strong>{% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

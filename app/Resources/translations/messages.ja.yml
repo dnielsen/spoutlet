@@ -104,7 +104,12 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: 参加済みイベント
+            organizer: Organizer
+            attendees: Attendees
+            action: Action
+            your_owned_events: My Event Listings
+            your_registered_events: Events I'm Registered In
+            your_past_events: My Past Events
             current_events: 現在のイベント
             current_and_upcoming_events: 現在および将来のイベント
             more_current_events: 現在のイベントをもっと表示
