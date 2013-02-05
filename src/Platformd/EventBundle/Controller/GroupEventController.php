@@ -111,7 +111,7 @@ class GroupEventController extends Controller
         return $response;
     }
 
-    public function deleteAjaxAction(Request $request)
+    public function disableAjaxAction(Request $request)
     {
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
@@ -152,10 +152,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent->setDeleted(true);
-
-        $deletedReason = ($user == $groupEvent->getUser()) ? GroupEvent::DELETED_BY_OWNER : GroupEvent::DELETED_BY_ADMIN;
-        $groupEvent->setDeletedReason($deletedReason);
+        $groupEvent->setPublished(false);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($groupEvent);

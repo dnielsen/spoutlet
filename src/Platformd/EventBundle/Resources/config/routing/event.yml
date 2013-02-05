@@ -5,9 +5,9 @@ group_event_rsvp:
         _format: json
         _method: POST
 
-group_event_delete:
-    pattern: /group-events/ajax/delete
-    defaults: { _controller:"EventBundle:GroupEvent:deleteAjax", site: ~ }
+group_event_disable:
+    pattern: /group-events/ajax/disable
+    defaults: { _controller:"EventBundle:GroupEvent:disableAjax", site: ~ }
     requirements:
         _format: json
         _method: POST

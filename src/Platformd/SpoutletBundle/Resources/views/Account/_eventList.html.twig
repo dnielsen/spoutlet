@@ -21,7 +21,7 @@
                             <option></option>
                             <option value="contact" data-route="{#{{ path(event[0].eventRoutePrefix ~ "contact") }}#}">Contact Attendees</option>
                             <option value="edit" data-route="{#{{ path(event[0].eventRoutePrefix ~ "edit") }}#}">Copy Event</option>
-                            <option value="delete" data-route="{{ path(event[0].eventRoutePrefix ~ "delete") }}">Delete Event</option>
+                            <option value="disable" data-route="{{ path(event[0].eventRoutePrefix ~ "disable") }}">Disable Event</option>
                         </select>
                     {% else %}
                         <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event[0].id }}" data-route="{{ path(event[0].eventRoutePrefix ~ "rsvp") }}" data-contenttype="{{ event[0].contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>
