@@ -123,4 +123,14 @@ class GroupEvent extends Event
     {
         return $this->private;
     }
+
+    /**
+     * Content type for the purposes of content reporting
+     *
+     * @return string
+     */
+    public function getContentType()
+    {
+        return 'GroupEvent';
+    }
 }

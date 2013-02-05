@@ -294,6 +294,11 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
         return 'group_view_video';
     }
 
+    public function getClass()
+    {
+        return get_class($this);
+    }
+
     /**
      * Returns an array route parameters to link to this object
      *

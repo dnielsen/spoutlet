@@ -278,6 +278,11 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
         );
     }
 
+    public function getClass()
+    {
+        return get_class($this);
+    }
+
      /**
      * Used to return the commenting thread id that should be used for this group new article
      */

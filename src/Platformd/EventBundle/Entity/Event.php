@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo,
 ;
 
 use Platformd\SpoutletBundle\Entity\Game,
+    Platformd\SpoutletBundle\Model\ReportableContentInterface,
     Platformd\UserBundle\Entity\User
 ;
 
@@ -25,7 +26,7 @@ use DateTime;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Event
+abstract class Event implements ReportableContentInterface
 {
     const REGISTRATION_ENABLED      = "event.registration.enabled";
     const REGISTRATION_DISABLED     = 'event.registration.disabled';
@@ -230,12 +231,33 @@ abstract class Event
     protected $updatedAt;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $deletedReason;
+
+    /**
+     * @var boolean $deleted
+     * @ORM\Column(=type="boolean")
+     */
+
+    private $deleted = false;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupEvent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+    protected $contentReports;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->attendees = new ArrayCollection();
-        $this->createdAt = new DateTime();
+        $this->attendees        = new ArrayCollection();
+        $this->contentReports   = new ArrayCollection();
+        $this->createdAt        = new DateTime();
     }
 
     /**
@@ -624,4 +646,40 @@ abstract class Event
             return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
         }
     }
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
+    }
+
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    public function setDeletedReason($deletedReason)
+    {
+        $this->deletedReason = $deletedReason;
+    }
+
+    public function getDeletedReason()
+    {
+        return $this->deletedReason;
+    }
+
+    public function getClass()
+    {
+        return get_class($this);
+    }
+
 }

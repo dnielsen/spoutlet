@@ -49,6 +49,8 @@ class ContentReportingController extends Controller
         $user   = $this->getCurrentUser();
         $site   = $this->getCurrentSite();
 
+        $fullClassName  = $params['Class'] ?: 'Platformd\\SpoutletBundle\\Entity\\'.$type;;
+
         $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
         $lastReport = $contentReportRepo->getLastReportDateForUser($user);
 
@@ -67,7 +69,7 @@ class ContentReportingController extends Controller
             return $response;
         }
 
-        $fullClassName      = 'Platformd\\SpoutletBundle\\Entity\\'.$type;
+        //$fullClassName      = 'Platformd\\SpoutletBundle\\Entity\\'.$type;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';
 
         if (!class_exists($fullClassName) || !in_array($fullInterfaceName, class_implements($fullClassName))) {
@@ -102,7 +104,7 @@ class ContentReportingController extends Controller
 
         $reportedItem = $em->getRepository('SpoutletBundle:'.$type)->find($id);
         $reportedItem->setDeleted(true);
-        $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+        $reportedItem->setDeletedReason(ContentReport::DELETED_BY_REPORT);
 
         $em->persist($reportedItem);
 
@@ -140,6 +142,7 @@ class ContentReportingController extends Controller
                 break;
 
             case 'Group':
+            case 'GroupEvent':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getOwner();
