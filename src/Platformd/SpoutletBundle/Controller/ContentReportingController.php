@@ -49,8 +49,6 @@ class ContentReportingController extends Controller
         $user   = $this->getCurrentUser();
         $site   = $this->getCurrentSite();
 
-        $fullClassName  = $params['Class'] ?: 'Platformd\\SpoutletBundle\\Entity\\'.$type;;
-
         $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
         $lastReport = $contentReportRepo->getLastReportDateForUser($user);
 
@@ -69,14 +67,16 @@ class ContentReportingController extends Controller
             return $response;
         }
 
-        //$fullClassName      = 'Platformd\\SpoutletBundle\\Entity\\'.$type;
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $fullClassName = $em->getClassMetadata(ContentReport::getTypeClass($type))->getName();;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';
 
         if (!class_exists($fullClassName) || !in_array($fullInterfaceName, class_implements($fullClassName))) {
             return new Response(json_encode(array("success" => false, "messageForUser" => "Valid content type not given.")));
         }
 
-        $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('SpoutletBundle:%s', $type))->find($id);
+        $content = $this->getDoctrine()->getEntityManager()->getRepository($fullClassName)->find($id);
 
         if (!$content) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Could not find the content that you are reporting (perhaps it has been removed already).")));
@@ -98,35 +98,31 @@ class ContentReportingController extends Controller
 
         $report->$setType($content);
 
-        $em = $this->getDoctrine()->getEntityManager();
-
         $em->persist($report);
 
-        $reportedItem = $em->getRepository('SpoutletBundle:'.$type)->find($id);
-        $reportedItem->setDeleted(true);
-        $reportedItem->setDeletedReason(ContentReport::DELETED_BY_REPORT);
+        $content->setDeleted(true);
+        $content->setDeletedReason(ContentReport::DELETED_BY_REPORT);
 
-        $em->persist($reportedItem);
+        $em->persist($content);
 
         $em->flush();
 
         /* Disabled at present as causing issues with reporting.
         // We dispatch an event for further stuff like maintaining counts
         $eventName = ContentReportEvents::REPORT;
-        $event = new ContentReportEvent($reportedItem, $this->getUser());
+        $event = new ContentReportEvent($content, $this->getUser());
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         */
 
-        $this->sendUserReportedNotificationEmail($id, $type, $reason);
+        $this->sendUserReportedNotificationEmail($content, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
     }
 
-    private function sendUserReportedNotificationEmail($id, $type, $reason)
+    private function sendUserReportedNotificationEmail($item, $type, $reason)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
 
         switch ($type) {
             case 'GalleryMedia':
@@ -142,10 +138,16 @@ class ContentReportingController extends Controller
                 break;
 
             case 'Group':
-            case 'GroupEvent':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getOwner();
+                break;
+
+            case 'GroupEvent':
+                case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
                 break;
 
             case 'GroupDiscussionPost':

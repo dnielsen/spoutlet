@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Platformd\SpoutletBundle\Entity\ContentReport;
 
 class ContentReportRepository extends EntityRepository
 {
@@ -25,8 +26,10 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE report.deleted = false
@@ -43,8 +46,10 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = false AND
@@ -63,10 +68,12 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
+        $type = ContentReport::getTypeClass($type);
+
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM SpoutletBundle:%s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = true AND report.deleted = true
