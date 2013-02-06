@@ -3,3 +3,26 @@
 <div class="game-page-form">
     {{ form_widget(form) }}
 </div>
+
+{# @TODO put that in a form_theme if possible - could not find that #}
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var $i = 0;
+        $('#groupEvent_translations > .control-group > label').each(function (){
+            switch ($i) {
+                case 0:
+                    $(this).text('JAPANESE');
+                    break;
+                case 1:
+                    $(this).text('CHINESE');
+                    break;
+                case 2:
+                    $(this).text("SPANISH");
+                    break;
+            }
+            $i++;
+        });
+
+    });
+</script>

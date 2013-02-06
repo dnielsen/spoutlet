@@ -4,7 +4,7 @@
 
     <h1>Edit Event: {{ event.name }}</h1>
 
-    <form action="{{ path('group_event_edit', {'groupSlug': group.slug, 'eventSlug': event.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('group_event_edit', {'groupSlug': group.slug, 'eventId': event.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GroupEvent:_form.html.twig' %}
 
         <div class="form-actions" style="float: left;">

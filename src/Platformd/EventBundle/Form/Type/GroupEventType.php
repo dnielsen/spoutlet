@@ -12,10 +12,10 @@ class GroupEventType extends EventType
 
         $builder->add('private', 'choice', array(
             'choices' => array(
-                0 => 'Private Event',
-                1 => 'Public Event'
+                0 => 'platformd.event.form.choice.private_event',
+                1 => 'platformd.event.form.choice.public_event'
             ),
-            'label' => 'Is this a public or private event',
+            'label' => 'platformd.event.form.private_public',
             'expanded' => true
         ));
     }

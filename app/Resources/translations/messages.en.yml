@@ -361,6 +361,35 @@ platformd:
         facebook_fanpage: Facebook Fan Page
 
     event:
+        form:
+            name: "Name"
+            banner_image: "Banner Image"
+            url: "URL"
+            description: "Description"
+            game: "Game"
+            event_type: "Event Type"
+            location: "Location"
+            address: "Address"
+            starts_at: "Starts At"
+            ends_at: "Ends At"
+            timezone: "Timezone"
+            display_timezone: "Display Timezone"
+            external_url: "External Url"
+            event_options: "Event Options"
+            sites: "Sites"
+            private_public: "Is this a public or private event"
+
+            choice:
+                private_event: "Private Event"
+                public_event: "Public Event"
+                online_event: "Online Event"
+                physical_event: "Enter Location Address"
+
+            help:
+                address: "Example: 1021 Washington Drive, San Francisco, CA, United States"
+                banner_image: "Resolution 950x120, jpeg or png formats"
+                external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
+
         registration:
             enabled: "I would like to manage event registration on this website"
             disabled: "Please list my event only"

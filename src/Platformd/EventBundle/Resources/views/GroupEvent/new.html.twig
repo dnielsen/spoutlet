@@ -4,7 +4,7 @@
 
     <h1>Create Event</h1>
 
-    <form action="{{ path('group_event_new', {'slug': group.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('group_event_new', {'groupSlug': group.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GroupEvent:_form.html.twig' %}
 
         <div class="form-actions" style="float: left;">
@@ -14,9 +14,9 @@
     </form>
 
     <script type="text/javascript">
-        jQuery(document).ready(function() {
+        $(document).ready(function() {
 
-            jQuery('input.datetime-picker').datetimepicker({
+            $('input.datetime-picker').datetimepicker({
                 dateFormat: 'yy-mm-dd',
                 showSecond: true
             });

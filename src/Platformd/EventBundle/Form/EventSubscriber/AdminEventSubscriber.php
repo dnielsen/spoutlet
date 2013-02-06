@@ -11,7 +11,10 @@ use Symfony\Component\Form\Event\DataEvent,
 
 use Doctrine\ORM\EntityRepository;
 
-use Platformd\EventBundle\Entity\Event;
+use Platformd\EventBundle\Entity\Event,
+    Platformd\EventBundle\Form\Type\GroupEventTranslationType
+;
+
 
 class AdminEventSubscriber implements EventSubscriberInterface
 {
@@ -47,11 +50,11 @@ class AdminEventSubscriber implements EventSubscriberInterface
                     Event::REGISTRATION_3RD_PARTY => 'platformd.event.registration.3rdparty'
                 ),
                 'expanded' => true,
-                'label' => 'Event options'
+                'label' => 'platformd.event.form.event_options'
             )));
             $form->add($this->factory->createNamed('text', 'externalUrl', null, array(
-                'label' => 'External URL',
-                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page.',
+                'label' => 'platformd.event.form.external_url',
+                'help' => 'platformd.event.form.help.external_url',
                 'required' => false
             )));
 
@@ -72,7 +75,16 @@ class AdminEventSubscriber implements EventSubscriberInterface
                       },
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'property' => 'name',
+                'label' => 'platformd.event.form.sites'
+            )));
+
+            $form->add($this->factory->createNamed('collection', 'translations', null, array(
+                'type' => new GroupEventTranslationType,
+                'allow_add'      => false,
+                'allow_delete'   => false,
+                'by_reference' => false,
+                'required' => false
             )));
         } else {
             $form->add($this->factory->createNamed('choice', 'registrationOption', null, array(
@@ -81,7 +93,7 @@ class AdminEventSubscriber implements EventSubscriberInterface
                     Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled'
                 ),
                 'expanded' => true,
-                'label' => 'Event options'
+                'label' => 'platformd.event.form.event_options'
             )));
         }
     }

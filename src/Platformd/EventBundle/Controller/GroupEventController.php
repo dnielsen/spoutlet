@@ -9,7 +9,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
 
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\EventType,
-    Platformd\EventBundle\Service\EventService
+    Platformd\EventBundle\Service\EventService,
+    Platformd\EventBundle\Entity\GroupEventTranslation
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -24,16 +25,23 @@ class GroupEventController extends Controller
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function newAction($slug, Request $request)
+    public function newAction($groupSlug, Request $request)
     {
         /** @var Group $group */
-        $group = $this->getGroupManager()->getGroupBy(array('slug' => $slug));
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
         }
 
         $groupEvent = new GroupEvent($group);
+
+        // TODO improve this
+        $siteLocalesForTranslation = array('ja', 'zh', 'es');
+        foreach ($siteLocalesForTranslation as $locale) {
+            $site = $this->getSiteFromLocale($locale);
+            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+        }
 
         $form = $this->createForm('groupEvent', $groupEvent);
 
@@ -64,7 +72,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function editAction($groupSlug, $eventSlug, Request $request)
+    public function editAction($groupSlug, $eventId, Request $request)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -74,7 +82,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug
+            'id' => $eventId
         ));
 
         if (!$groupEvent) {
@@ -97,7 +105,7 @@ class GroupEventController extends Controller
 
                 return $this->redirect($this->generateUrl('group_event_edit', array(
                     'groupSlug' => $group->getSlug(),
-                    'eventSlug' => $groupEvent->getSlug()
+                    'eventId' => $groupEvent->getId()
                 )));
             } else {
                 $this->setFlash('error', 'Something went wrong');

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM,
 use Vich\GeographicalBundle\Annotation as Vich;
 
 use Platformd\SpoutletBundle\Entity\Group,
+    Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug
 ;
 
@@ -39,6 +40,11 @@ class GroupEvent extends Event
      * @ORM\Column(name="private", type="boolean")
      */
     protected $private = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\GroupEventTranslation", mappedBy="translatable", cascade={"all"})
+     */
+    protected $translations;
 
     /**
      * Groups the event pertains to
@@ -96,13 +102,41 @@ class GroupEvent extends Event
      */
     public function __construct(Group $group)
     {
-        $this->group = $group;
-        $this->sites = new ArrayCollection();
+        $this->group        = $group;
+        $this->translations = new ArrayCollection();
+        $this->sites        = new ArrayCollection();
+
         foreach ($this->getGroup()->getSites() as $site) {
             $this->sites->add($site);
         }
 
         parent::__construct();
+    }
+
+    public function __call($method, array $arguments = array())
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = call_user_func_array(array($translation, $method), $arguments);
+        }
+
+        return $value;
+    }
+
+    private function translate(Site $locale = null)
+    {
+        $currentLocale = $locale ?: $this->getCurrentLocale();
+
+        return $this->translations->filter(function($translation) use($currentLocale) {
+            return $translation->getLocale() === $currentLocale;
+        })->first();
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     /**
@@ -240,5 +274,42 @@ class GroupEvent extends Event
     public function getContentType()
     {
         return 'GroupEvent';
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $attendees
+     */
+    public function setAttendees($attendees)
+    {
+        $this->attendees = $attendees;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getAttendees()
+    {
+        return $this->attendees;
+    }
+
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+    }
+
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(GroupEventTranslation $translation)
+    {
+        $this->translations->add($translation);
+        $translation->setTranslatable($this);
+    }
+
+    public function removeTranslation(GroupEventTranslation $translation)
+    {
+        $this->translations->removeElement($translation);
     }
 }

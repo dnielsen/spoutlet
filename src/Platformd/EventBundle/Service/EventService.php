@@ -46,7 +46,7 @@ class EventService
      */
     public function createEvent(Event $event)
     {
-        $this->handleMedia($event);
+//        $this->handleMedia($event);
 
         $this->repository->saveEvent($event);
 
@@ -60,7 +60,7 @@ class EventService
      */
     public function updateEvent(Event $event)
     {
-        $this->handleMedia($event);
+//        $this->handleMedia($event);
 
         $this->repository->saveEvent($event);
 

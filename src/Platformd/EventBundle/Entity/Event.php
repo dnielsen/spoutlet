@@ -87,7 +87,7 @@ abstract class Event implements ReportableContentInterface
      * Banner Image for event
      *
      * @var \Platformd\MediaBundle\Entity\Media
-     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"all"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $bannerImage;
