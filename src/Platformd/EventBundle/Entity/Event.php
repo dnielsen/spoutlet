@@ -225,7 +225,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      *
      * @var \DateTime $created
      * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="created_at")
      */
     protected $createdAt;
 
@@ -233,7 +233,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * Updated At
      *
      * @var \DateTime $updated
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", name="updated_at")
      * @Gedmo\Timestampable(on="update")
      */
     protected $updatedAt;

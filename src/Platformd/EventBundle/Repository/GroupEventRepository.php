@@ -4,6 +4,7 @@ namespace Platformd\EventBundle\Repository;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\EventBundle\Repository\EventRepository;
+use Platformd\UserBundle\Entity\User;
 
 class GroupEventRepository extends EventRepository
 {
@@ -104,6 +105,18 @@ class GroupEventRepository extends EventRepository
             ));
 
         $this->addActiveClauses($qb);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getPendingApprovalEvents(Group $group, User $user)
+    {
+        $qb = $this->createQueryBuilder('ge')
+            ->select('ge', 'g')
+            ->leftJoin('ge.group', 'g')
+            ->where('ge.approved = false')
+            ->orderBy('ge.createdAt', 'DESC')
+            ;
 
         return $qb->getQuery()->getResult();
     }

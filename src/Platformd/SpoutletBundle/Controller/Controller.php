@@ -40,6 +40,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected function getSecurity()
+    {
+        return $this->get('security.context');
+    }
+
+    /**
      * @return \Platformd\GiveawayBundle\Entity\GiveawayRepository
      */
     protected function getGiveawayRepo()

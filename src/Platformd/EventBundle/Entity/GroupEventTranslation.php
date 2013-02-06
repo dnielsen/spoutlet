@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="group_event_translation")
  */
 class GroupEventTranslation
 {
@@ -21,14 +22,12 @@ class GroupEventTranslation
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
-     * @Assert\NotNull
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $name;
 
     /**
-     * @ORM\Column(type="text")
-     * @Assert\NotNull
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $content;
 

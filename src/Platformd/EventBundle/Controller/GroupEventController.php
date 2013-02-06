@@ -15,7 +15,9 @@ use Platformd\EventBundle\Entity\GroupEvent,
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException,
+    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
 ;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -72,6 +74,9 @@ class GroupEventController extends Controller
         ));
     }
 
+    /**
+     * Only event owner can edit their event
+     */
     public function editAction($groupSlug, $eventId, Request $request)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
@@ -87,6 +92,14 @@ class GroupEventController extends Controller
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $securityContext = $this->getSecurity();
+
+        // check for edit access
+        if (false === $securityContext->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
         }
 
         $form = $this->createForm('groupEvent', $groupEvent);
@@ -142,6 +155,34 @@ class GroupEventController extends Controller
             'group'         => $group,
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
+        ));
+    }
+
+    /**
+     * Lists all events pending approval
+     * Only for group owner
+     *
+     * @param $groupSlug
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function pendingApprovalListAction($groupSlug)
+    {
+        /** @var $group Group */
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $pendingApprovals = $this->getGroupEventService()->getPendingApprovalEvents($group, $this->getUser());
+
+        return $this->render('EventBundle:GroupEvent:pending.html.twig', array(
+            'pendingApprovals' => $pendingApprovals,
+            'group' => $group
         ));
     }
 

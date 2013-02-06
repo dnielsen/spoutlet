@@ -20,6 +20,10 @@ group_event_edit:
     pattern: /groups/{groupSlug}/event/edit/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:edit", site: ~ }
 
+group_event_pending_approval:
+    pattern: /groups/{groupSlug}/events/pending-approval
+    defaults: { _controller:"EventBundle:GroupEvent:pendingApprovalList", site: ~ }
+
 group_event_delete:
     pattern: /groups/{groupSlug}/event/delete/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:delete", site: ~ }
