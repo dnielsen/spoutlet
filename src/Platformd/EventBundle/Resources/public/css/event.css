@@ -28,7 +28,6 @@
 #event-attending-message {
     font-size: 18px;
     font-style: italic;
-    padding-bottom: 10px;
 }
 
 #event-location-name {
@@ -41,5 +40,9 @@
 
 #event-banner {
     width: 950px;
-    height: 160px;
+    height: 120px;
+}
+
+#event-registration-button {
+    padding: 2px 0;
 }

@@ -335,4 +335,12 @@ class GroupEvent extends Event
             'groupSlug' => $this->getGroup()->getSlug(),
         );
     }
+
+    public function getModifyRouteParameters()
+    {
+        return array(
+            'eventId' => $this->getId(),
+            'groupSlug' => $this->getGroup()->getSlug(),
+        );
+    }
 }

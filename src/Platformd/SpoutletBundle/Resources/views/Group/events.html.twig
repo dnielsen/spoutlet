@@ -36,8 +36,8 @@
                     </div>
                     <div class="group-event-actions">
                         {% if canManageEvents == true %}
-                            <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventSlug' : event.slug })}}">Edit</a> |
-                            <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventSlug' : event.slug })}}">Delete</a> |
+                            <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
+                            <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
                         {% endif %}
                         <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
                     </div>

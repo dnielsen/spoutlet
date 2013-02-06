@@ -19,7 +19,9 @@
 <div id="event-show-page">
 
     {% if event.bannerImage %}
-        <div id="event-banner" style="background:url('{{ media_path(event.bannerImage) }}') top left no-repeat;">
+        <div class="std_1col">
+            <div id="event-banner" style="background:url('{{ media_path(event.bannerImage) }}') top left no-repeat;">
+        </div>
     {% endif %}
 
     <div class="std_2col" style="padding:10px 0 0 0;">
@@ -126,10 +128,10 @@
 
 <script type="text/javascript">
     $(function () {
+
         $('#register-link').click(function () {
-            $('#event-registration-button').fadeOut();
-            $('#event-details-widget').block({
-                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+            $('#register-link').block({
+                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
                 css: {
                     border: 'none',
                     background: 'transparent'
@@ -146,9 +148,10 @@
                 }),
                 contentType: 'json',
                 success: function(data) {
-                    $('#event-details-widget').unblock();
+                    $('#register-link').unblock();
 
                     if (data.success) {
+                        $('#event-registration-button').hide();
                         $('#event-attending-message').fadeIn();
                         $('#event-rsvp-link').fadeIn();
                         $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
