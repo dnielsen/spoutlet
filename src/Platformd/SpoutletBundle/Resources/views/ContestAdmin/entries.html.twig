@@ -39,6 +39,7 @@
         {% if entries | length > 0 %}
             {% for entry in entries %}
                 {% for media in entry.medias %}
+                    {% if not media.deleted %}
                     <tr>
                         <td><img src="{{ media_path(media.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ media.title }}" /></td>
                         <td><a href="{{ media_path_nice(media.image) }}">{{ media_path_nice(media.image) }}</a></td>
@@ -63,6 +64,7 @@
                             </div>
                         </td>
                     </tr>
+                    {% endif %}
                 {% endfor %}
             {% endfor %}
         {% else %}
