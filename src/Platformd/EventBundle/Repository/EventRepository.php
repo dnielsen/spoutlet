@@ -36,7 +36,23 @@ class EventRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('e')
             ->select('COUNT(a.id) attendeeCount')
-            ->leftJoin('e.attendees', 'a');
+            ->leftJoin('e.attendees', 'a')
+            ->andWhere('e = :event')
+            ->setParameter('event', $event);
+
+        return $qb->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function isUserAttending(Event $event, User $user)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('COUNT(a.id) attendeeCount')
+            ->leftJoin('e.attendees', 'a')
+            ->andWhere('e = :event')
+            ->andWhere('a = :user')
+            ->setParameter('event', $event)
+            ->setParameter('user', $user);
 
         return $qb->getQuery()
             ->getSingleScalarResult();

@@ -121,12 +121,16 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug
+            'slug' => $eventSlug,
+            'published' => true,
+            'deleted' => false,
         ));
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
         }
+
+        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
 
@@ -134,6 +138,7 @@ class GroupEventController extends Controller
             'group'         => $group,
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
+            'isAttending'   => $isAttending,
         ));
     }
 
@@ -165,7 +170,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent = $this->getGroupEventService()->findOne($id);
+        $groupEvent = $this->getGroupEventService()->find($id);
         $user       = $this->getUser();
 
         if (!$groupEvent) {
@@ -173,10 +178,19 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent->getAttendees()->removeElement($user);
-        $this->getGroupEventService()->updateEvent($groupEvent);
+        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $user);
 
-        $response->setContent(json_encode(array("success" => true)));
+        if ($rsvp == 0 && $isAttending) {
+             $groupEvent->getAttendees()->removeElement($user);
+             $this->getGroupEventService()->updateEvent($groupEvent);
+        } elseif ($rsvp > 0 && !$isAttending) {
+            $groupEvent->getAttendees()->add($user);
+            $this->getGroupEventService()->updateEvent($groupEvent);
+        }
+
+        $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
+
+        $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;
     }
 
@@ -207,7 +221,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent = $this->getGroupEventService()->findOne($id);
+        $groupEvent = $this->getGroupEventService()->find($id);
         $user           = $this->getUser();
 
         if (!$groupEvent) {

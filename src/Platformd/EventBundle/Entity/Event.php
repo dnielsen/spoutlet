@@ -659,9 +659,4 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     {
         return $this->deletedReason;
     }
-
-    public function getClass()
-    {
-        return get_class($this);
-    }
 }

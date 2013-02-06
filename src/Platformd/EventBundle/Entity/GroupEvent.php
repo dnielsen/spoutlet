@@ -226,7 +226,7 @@ class GroupEvent extends Event
      *
      *  @return string
      */
-    public function getEventRoutePrefix()
+    public function getRoutePrefix()
     {
         return 'group_event_';
 

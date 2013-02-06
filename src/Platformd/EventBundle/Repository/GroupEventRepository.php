@@ -4,6 +4,7 @@ namespace Platformd\EventBundle\Repository;
 
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\EventBundle\Repository\EventRepository;
+use Platformd\UserBundle\Entity\User;
 
 class GroupEventRepository extends EventRepository
 {
@@ -11,6 +12,7 @@ class GroupEventRepository extends EventRepository
     {
         $qb = $this->getBaseGroupQueryBuilder($group)
             ->andWhere('ge.endsAt > :now')
+            ->andWhere('ge.published = 1')
             ->orderBy('ge.startsAt')
             ->setParameter('now', new \DateTime('now'));
 
@@ -27,6 +29,7 @@ class GroupEventRepository extends EventRepository
     {
         $qb = $this->getBaseGroupQueryBuilder($group)
             ->andWhere('ge.endsAt < :now')
+            ->andWhere('ge.published = 1')
             ->orderBy('ge.endsAt', 'DESC')
             ->setParameter('now', new \DateTime('now'));
 
@@ -51,7 +54,6 @@ class GroupEventRepository extends EventRepository
     protected function addActiveClauses($qb, $alias='ge')
     {
         return $qb->andWhere($alias.'.deleted = 0')
-            ->andWhere($alias.'.published = 1')
             ->andWhere($alias.'.approved = 1');
     }
 
@@ -79,7 +81,8 @@ class GroupEventRepository extends EventRepository
             $qb->andWhere('ge.user = :user');
         } else {
             $qb->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
-                ->andWhere('ge.user <> :user');
+                ->andWhere('ge.user <> :user')
+                ->andWhere('ge.published = 1');
         }
 
         return $qb->getQuery()->getResult();
@@ -97,6 +100,7 @@ class GroupEventRepository extends EventRepository
             ->leftJoin('ge.attendees', 'a')
             ->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
             ->andWhere('ge.endsAt < :now')
+            ->andWhere('ge.published = 1')
             ->groupBy('ge.id')
             ->setParameters(array(
                 'user' => $user,

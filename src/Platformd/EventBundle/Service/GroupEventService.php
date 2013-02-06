@@ -5,7 +5,8 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group
+    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\UserBundle\Entity\User
 ;
 
 class GroupEventService extends EventService

@@ -1,0 +1,41 @@
+#event-heading-title {
+    padding-bottom: 10px;
+}
+
+.event-comments {
+    margin-top: 15px;
+}
+
+#event-location-online {
+    font-style: italic;
+}
+
+#event-location-map {
+    padding: 10px 0;
+}
+
+#event-heading-date,
+#event-heading-time {
+    color: #b3b3b3;
+    margin-left: 20px;
+}
+
+#event-registration {
+    margin: 10px 0;
+    text-align: center;
+}
+
+#event-attending-message {
+    font-size: 18px;
+    font-style: italic;
+    padding-bottom: 10px;
+}
+
+#event-location-name {
+    margin: 0 0 5px 10px;
+}
+
+#event-location-address {
+    margin-left: 10px;
+}
+
