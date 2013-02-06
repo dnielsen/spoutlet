@@ -18,6 +18,10 @@
 
 <div id="event-show-page">
 
+    {% if event.bannerImage %}
+        <div id="event-banner" style="background:url('{{ media_path(event.bannerImage) }}') top left no-repeat;">
+    {% endif %}
+
     <div class="std_2col" style="padding:10px 0 0 0;">
         <div class="left">
             <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:130px; margin-bottom:5px;">

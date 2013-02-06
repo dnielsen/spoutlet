@@ -2,19 +2,19 @@
 
 namespace Platformd\SpoutletBundle\Util;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SiteUtil
 {
-    public function __construct(EntityManager $em, Request $request)
+    public function __construct(EntityManager $em, ContainerInterface $container)
     {
         $this->em = $em;
-        $this->request = $request;
+        $this->container = $container;
     }
 
     public function getCurrentSite()
     {
-        $currentHost    = $this->request->getHost();
+        $currentHost    = $this->container->get('request')->getHost();
         $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
 
         return $this->getSiteFromSubDomain($subDomain);
@@ -22,5 +22,10 @@ class SiteUtil
 
     public function getSiteFromSubDomain($subDomain) {
         return $this->em->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
+    public function getAllSites()
+    {
+        return $this->em->getRepository('SpoutletBundle:Site')->findAll();
     }
 }
