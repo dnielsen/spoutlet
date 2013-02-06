@@ -163,6 +163,32 @@ class GroupEventController extends Controller
         ));
     }
 
+    public function contactAction($groupSlug, $eventSlug)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+            'published' => true,
+            'deleted' => false,
+            'approved' => true,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        return $this->render('EventBundle::contact.html.twig', array(
+            'group'         => $group,
+            'event'         => $groupEvent,
+        ));
+    }
+
     /**
      * Lists all events pending approval
      * Only for group owner

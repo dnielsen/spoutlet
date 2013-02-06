@@ -1,0 +1,65 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title event.name %}
+
+{% block content %}
+
+<div id="event-contact-page">
+
+    {% if event.bannerImage %}
+        <div class="std_1col">
+            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat;">
+        </div>
+    {% endif %}
+
+    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header" style="padding-bottom:10px;">
+                    <div class="widget-title">
+                        <div id="event-contact-title">Contact Attendees By Email</div>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div id="event-content">{{ event.content | raw }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right">
+
+            <div class="widget-33" id="event-details-widget" style="height: auto;">
+                <div class="widget-header">
+                    <div class="widget-title">{{ event.attendees.count }} Attending</div>
+                </div>
+                <div class="widget-content">
+
+                    <div id="event-attendee-list">
+                        {% for attendee in event.attendees %}
+                            <div class="event-attendee">
+                                <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                            </div>
+                        {% else %}
+                            No attendees!
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+        {{ parent() }}
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+
+{% endblock %}

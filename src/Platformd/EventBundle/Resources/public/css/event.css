@@ -46,3 +46,8 @@
 #event-registration-button {
     padding: 2px 0;
 }
+
+#event-attendee-list img {
+    width: 64px;
+    height: 64px;
+}
