@@ -29,7 +29,9 @@
             resizable: false,
             dialogClass: 'content-report-dialog-wrapper',
             close: function (e, ui) {
-                location.reload(true);
+                if (reported) {
+                    location.reload(true);
+                }
             }
         });
 
@@ -43,6 +45,8 @@
             $('#submit-report-{{ reportContentType }}').show();
             reportDialog.dialog('open');
         });
+
+        var reported = false;
 
         $('#submit-report-{{ reportContentType }}').click(function () {
             $('#report-options').fadeOut();
@@ -60,6 +64,7 @@
                     $('#report-response').fadeIn();
                     $('#close-dialog-{{ reportContentType }}').text('OK');
                     $('#submit-report-{{ reportContentType }}').hide();
+                    reported = true;
                 }
             })
 

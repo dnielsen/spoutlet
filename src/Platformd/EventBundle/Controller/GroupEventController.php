@@ -136,9 +136,12 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        return $this->render('EventBundle:GroupEvent:view.html.twig', array(
-            'group' => $group,
-            'event' => $groupEvent
+        $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
+
+        return $this->render('EventBundle::view.html.twig', array(
+            'group'         => $group,
+            'event'         => $groupEvent,
+            'attendeeCount' => $attendeeCount,
         ));
     }
 
