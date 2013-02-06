@@ -36,15 +36,19 @@ class EventType extends AbstractType
         $adminEventSubscriber = new AdminEventSubscriber($builder->getFormFactory(), $this->security);
 
         $builder
-            ->add('name', 'text')
+            ->add('name', 'text', array(
+                'label' => 'platformd.event.form.name'
+            ))
             ->add('bannerImage', new MediaType(), array(
-                'image_label'   => 'Event Banner',
-                'image_help'    => 'Resolution 950x120, jpeg or png formats',
+                'image_label'   => 'platformd.event.form.banner_image',
+                'image_help'    => 'platformd.event.form.help.banner_image',
                 'required' => false
             ))
-            ->add('slug', new SlugType(), array('label' => 'URL'))
+            ->add('slug', new SlugType(), array(
+                'label' => 'platformd.event.form.url'
+            ))
             ->add('content', 'purifiedTextarea', array(
-                'label' => 'Description',
+                'label' => 'platformd.event.form.description',
                 'attr' => array(
                     'class' => 'ckeditor'
                 )
@@ -52,41 +56,46 @@ class EventType extends AbstractType
             ->add('game', 'entity', array(
                 'class'     => 'SpoutletBundle:Game',
                 'property'  => 'name',
-                'empty_value' => 'N/A'
+                'empty_value' => 'N/A',
+                'label' => 'platformd.event.form.game'
             ))
             ->add('online', 'choice', array(
                 'choices'   => array(
-                    1 => 'Online Event',
-                    0 => 'Enter Location Address'
+                    1 => 'platformd.event.form.choice.online_event',
+                    0 => 'platformd.event.form.choice.physical_event'
                 ),
                 'required'  => false,
                 'expanded' => true,
-                'label' => 'Event Type'
+                'label' => 'platformd.event.form.event_type'
             ))
             ->add('location', 'text', array(
-                'required' => false
+                'required' => false,
+                'label' => 'platformd.event.form.location'
             ))
             ->add('address', 'text', array(
                 'required' => false,
-                'help' => 'Example: 1021 Washington Drive, San Francisco, CA, United States'
+                'help' => 'platformd.event.form.help.address',
+                'label' => 'platformd.event.form.address'
             ))
             ->add('startsAt', 'datetime', array(
-                'label' => 'Starts At',
+                'label' => 'platformd.event.form.starts_at',
                 'widget' => 'single_text',
                 'attr' => array(
                     'class' => 'datetime-picker',
                 )
             ))
             ->add('endsAt', 'datetime', array(
-                'label' => 'Ends At',
+                'label' => 'platformd.event.form.ends_at',
                 'widget' => 'single_text',
                 'attr' => array(
                     'class' => 'datetime-picker',
                 )
             ))
-            ->add('timezone', 'timezone')
+            ->add('timezone', 'timezone', array(
+                'label' => 'platformd.event.form.timezone'
+            ))
             ->add('displayTimezone', 'checkbox', array(
-                'label' => 'Display Timezone',
+                'label' => 'platformd.event.form.display_timezone',
 
             ))
             ->addEventSubscriber($adminEventSubscriber)

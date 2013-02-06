@@ -6,10 +6,17 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Event\EventEvent,
-    Platformd\EventBundle\EventEvents
+    Platformd\EventBundle\EventEvents,
+    Platformd\SpoutletBundle\Entity\Group
 ;
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcher,
+    Symfony\Component\Security\Core\SecurityContextInterface,
+    Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
+    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
+    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
+    Symfony\Component\Security\Acl\Permission\MaskBuilder
+;
 
 use Knp\MediaBundle\Util\MediaUtil;
 
@@ -30,15 +37,22 @@ class EventService
      */
     protected $dispatcher;
 
+    /**
+     * @var AclProvider
+     */
+    protected $aclProvider;
+
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
-        EventDispatcher $dispatcher
+        EventDispatcher $dispatcher,
+        AclProvider $aclProvider
     )
     {
         $this->repository   = $repository;
         $this->mediaUtil    = $mediaUtil;
         $this->dispatcher   = $dispatcher;
+        $this->aclProvider  = $aclProvider;
     }
 
     /**
@@ -49,6 +63,14 @@ class EventService
         $this->handleMedia($event);
 
         $this->repository->saveEvent($event);
+
+        // ACLs
+        $objectIdentity = ObjectIdentity::fromDomainObject($event);
+        $acl = $this->aclProvider->createAcl($objectIdentity);
+        $securityIdentity = UserSecurityIdentity::fromAccount($event->getUser());
+
+        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $this->aclProvider->updateAcl($acl);
 
         // We dispatch an event for further tasks
         $event = new EventEvent($event);
@@ -115,15 +137,39 @@ class EventService
         if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
             $event->setBannerImage(null);
         }
+
+
     }
 
+    /**
+     * Gets the count of attendees for an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
     public function getAttendeeCount($event)
     {
         return $this->repository->getAttendeeCount($event);
     }
 
+    /**
+     * Returns whether a user is registered to attend an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
     public function isUserAttending(Event $event, User $user)
     {
         return $this->repository->isUserAttending($event, $user);
+    }
+
+    /**
+     * Retrieves all Events pending approval for a certain group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function getPendingApprovalEvents(Group $group, User $user)
+    {
+        return $this->repository->getPendingApprovalEvents($group, $user);
     }
 }

@@ -9,12 +9,15 @@ use Platformd\SpoutletBundle\Controller\Controller,
 
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\EventType,
-    Platformd\EventBundle\Service\EventService
+    Platformd\EventBundle\Service\EventService,
+    Platformd\EventBundle\Entity\GroupEventTranslation
 ;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException,
+    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
 ;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -24,16 +27,23 @@ class GroupEventController extends Controller
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function newAction($slug, Request $request)
+    public function newAction($groupSlug, Request $request)
     {
         /** @var Group $group */
-        $group = $this->getGroupManager()->getGroupBy(array('slug' => $slug));
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
         }
 
         $groupEvent = new GroupEvent($group);
+
+        // TODO improve this
+        $siteLocalesForTranslation = array('ja', 'zh', 'es');
+        foreach ($siteLocalesForTranslation as $locale) {
+            $site = $this->getSiteFromLocale($locale);
+            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+        }
 
         $form = $this->createForm('groupEvent', $groupEvent);
 
@@ -64,7 +74,10 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function editAction($groupSlug, $eventSlug, Request $request)
+    /**
+     * Only event owner can edit their event
+     */
+    public function editAction($groupSlug, $eventId, Request $request)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -74,11 +87,19 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug
+            'id' => $eventId
         ));
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $securityContext = $this->getSecurity();
+
+        // check for edit access
+        if (false === $securityContext->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
         }
 
         $form = $this->createForm('groupEvent', $groupEvent);
@@ -97,7 +118,7 @@ class GroupEventController extends Controller
 
                 return $this->redirect($this->generateUrl('group_event_edit', array(
                     'groupSlug' => $group->getSlug(),
-                    'eventSlug' => $groupEvent->getSlug()
+                    'eventId' => $groupEvent->getId()
                 )));
             } else {
                 $this->setFlash('error', 'Something went wrong');
@@ -139,6 +160,34 @@ class GroupEventController extends Controller
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
             'isAttending'   => $isAttending,
+        ));
+    }
+
+    /**
+     * Lists all events pending approval
+     * Only for group owner
+     *
+     * @param $groupSlug
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function pendingApprovalListAction($groupSlug)
+    {
+        /** @var $group Group */
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $pendingApprovals = $this->getGroupEventService()->getPendingApprovalEvents($group, $this->getUser());
+
+        return $this->render('EventBundle:GroupEvent:pending.html.twig', array(
+            'pendingApprovals' => $pendingApprovals,
+            'group' => $group
         ));
     }
 

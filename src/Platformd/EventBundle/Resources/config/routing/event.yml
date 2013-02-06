@@ -13,15 +13,19 @@ group_event_disable:
         _method: POST
 
 group_event_new:
-    pattern: /groups/{slug}/event/new
+    pattern: /groups/{groupSlug}/event/new
     defaults: { _controller:"EventBundle:GroupEvent:new", site: ~ }
 
 group_event_edit:
-    pattern: /groups/{groupSlug}/event/edit/{eventSlug}
+    pattern: /groups/{groupSlug}/event/edit/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:edit", site: ~ }
 
+group_event_pending_approval:
+    pattern: /groups/{groupSlug}/events/pending-approval
+    defaults: { _controller:"EventBundle:GroupEvent:pendingApprovalList", site: ~ }
+
 group_event_delete:
-    pattern: /groups/{groupSlug}/event/delete/{eventSlug}
+    pattern: /groups/{groupSlug}/event/delete/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:delete", site: ~ }
 
 group_event_view:
