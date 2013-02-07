@@ -56,7 +56,7 @@
 
             <h4>{{ discussion.title }}</h4>
             <div id="discussion-details">
-                {{ discussion.content }}
+                {{ discussion.content | raw }}
             </div>
 
             <div id="discussion-reply-form">
@@ -67,7 +67,7 @@
 
                     {{ form_errors(replyForm) }}
 
-                    <div class="span7">
+                    <div class="span7" style="width: 610px;">
                         {{ form_row(replyForm.content) }}
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>

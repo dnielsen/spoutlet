@@ -79,6 +79,9 @@
 		<script type="text/javascript">
 
 		    $(document).ready(function(){
+                $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
+                $('a[href*="alienwarearena"]').attr('target','');
+
 		        $("ul.sf-menu").supersubs({
 		            minWidth:   12,
 		            maxWidth:   27,

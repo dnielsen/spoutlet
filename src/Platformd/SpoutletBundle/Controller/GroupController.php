@@ -1175,7 +1175,10 @@ Alienware Arena Team
         }
 
         $form = $this->createFormBuilder($groupDiscussionPost)
-            ->add('content', 'textarea', array('label' => 'Message'))
+            ->add('content', 'purifiedTextarea', array(
+                'label' => 'Message',
+                'attr'  => array('class' => 'ckeditor'),
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
