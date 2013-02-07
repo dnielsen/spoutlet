@@ -40,6 +40,10 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
         $existingEvents     = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
         $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
 
@@ -113,6 +117,10 @@ class GroupEventController extends Controller
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
         $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $eventId));
