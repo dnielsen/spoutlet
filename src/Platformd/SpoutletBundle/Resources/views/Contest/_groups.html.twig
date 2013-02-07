@@ -2,14 +2,14 @@
     {% for group in groups %}
         {% set isFirstInRow = (loop.index - 1) is divisibleby(4) or loop.first  %}
         <div class="group-list-item contest{% if isFirstInRow %} first{% endif %}">
-            <a href="{{ path('group_show', { slug: group.slug}) }}" target="_blank">
+            <a href="{{ path('group_show', { slug: group.slug}) }}">
                 {% if group.thumbNail %}
                 <img src="{{ media_path(group.thumbNail) }}" alt="{{ group.name }}" title="{{ group.name }}" />
                 {% else %}
                 <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                 {% endif %}
             </a>
-            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}" target="_blank">
+            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
                 {{ group.name }}
             </a>
             <div class="details">
