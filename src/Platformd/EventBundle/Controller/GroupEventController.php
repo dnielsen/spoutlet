@@ -41,21 +41,20 @@ class GroupEventController extends Controller
         }
 
         $existingEvents     = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
-        $importId           = $request->get('existing_event_select');
-        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $importId));
+        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
 
         if ($importedGroupEvent) {
-            $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
-        } else {
-            $groupEvent = new GroupEvent($group);
+            return $this->redirect($this->generateUrl('group_event_new_import', array('groupSlug' => $group->getSlug(), 'eventId' => $importedGroupEvent->getId())));
+        }
 
-            // We add translations by hand
-            // TODO improve this
-            $siteLocalesForTranslation = array('ja', 'zh', 'es');
-            foreach ($siteLocalesForTranslation as $locale) {
-                $site = $this->getSiteFromLocale($locale);
-                $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
-            }
+        $groupEvent = new GroupEvent($group);
+
+        // We add translations by hand
+        // TODO improve this
+        $siteLocalesForTranslation = array('ja', 'zh', 'es');
+        foreach ($siteLocalesForTranslation as $locale) {
+            $site = $this->getSiteFromLocale($locale);
+            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
         }
 
         // Event is automatically approved if user is group organizer or super admin
@@ -99,7 +98,68 @@ class GroupEventController extends Controller
         return $this->render('EventBundle:GroupEvent:new.html.twig', array(
             'form' => $form->createView(),
             'group' => $group,
-            'existingEvents' => $existingEvents
+            'existingEvents' => $existingEvents,
+            'importedGroupEvent' => $importedGroupEvent
+        ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function newFromImportAction($groupSlug, $eventId, Request $request)
+    {
+        /** @var Group $group */
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $eventId));
+
+        if (!$importedGroupEvent) {
+            throw new NotFoundHttpException('Event to import from does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
+
+        $form = $this->createForm('groupEvent', $groupEvent);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                /** @var GroupEvent $groupEvent */
+                $groupEvent = $form->getData();
+                $groupEvent->setUser($this->getUser());
+
+                $this->getGroupEventService()->createEvent($groupEvent);
+
+                if ($groupEvent->isApproved()) {
+                    $this->setFlash('success', 'New event posted successfully');
+
+                    return $this->redirect($this->generateUrl('group_event_view', array(
+                        'groupSlug' => $group->getSlug(),
+                        'eventSlug' => $groupEvent->getSlug()
+                    )));
+                } else {
+                    $this->setFlash('success', 'New event posted successfully and is ending approval from Group Organizer');
+
+                    return $this->redirect($this->generateUrl('group_show', array(
+                        'slug' => $group->getSlug()
+                    )) . '#events');
+                }
+
+            } else {
+                $this->setFlash('error', 'Something went wrong');
+            }
+        }
+
+        return $this->render('EventBundle:GroupEvent:new.html.twig', array(
+            'form' => $form->createView(),
+            'group' => $group,
+            'importedGroupEvent' => $importedGroupEvent
         ));
     }
 

@@ -108,7 +108,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * @var boolean $published
      * @ORM\Column(name="published", type="boolean")
      */
-    protected $published = false;
+    protected $published = true;
 
     /**
      * Whether event has been approved by Admin

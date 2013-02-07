@@ -63,7 +63,7 @@ class GroupEventRepository extends EventRepository
      * @param \Platformd\SpoutletBundle\Entity\User $user
      * @param boolean $whereIsOrganizer
      */
-    public function getEventListForUser(User $user, $whereIsOrganizer = false)
+    public function getUpcomingEventListForUser(User $user, $whereIsOrganizer = false)
     {
         $qb = $this->createQueryBuilder('ge')
             ->select('ge', 'count(a.id) attendeeCount')

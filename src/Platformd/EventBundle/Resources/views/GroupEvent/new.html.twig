@@ -2,9 +2,9 @@
 
 {% block content %}
 
-    <h1>Create Event</h1>
+    <h1>Create Event {% if importedGroupEvent %} from: {{ importedGroupEvent.name }} {% endif %}</h1>
 
-    {% if existingEvents|length > 0 %}
+    {% if existingEvents is defined and existingEvents|length > 0 %}
         <form action="{{ path('group_event_new', {'groupSlug': group.slug }) }}" method="post" class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Import From Past Event (Optional): </label>
@@ -19,7 +19,8 @@
         </form>
     {% endif %}
 
-    <form action="{{ path('group_event_new', {'groupSlug': group.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% set post_route = (importedGroupEvent) ? path('group_event_new_import', {'groupSlug': group.slug, 'eventId': importedGroupEvent.id }) : path('group_event_new', {'groupSlug': group.slug }) %}
+    <form action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GroupEvent:_form.html.twig' %}
 
         <div class="form-actions" style="float: left;">
