@@ -130,6 +130,7 @@ class GroupEventController extends Controller
         }
 
         $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
+        $groupEvent->setGroup($group);
 
         $form = $this->createForm('groupEvent', $groupEvent);
 
