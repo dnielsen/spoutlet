@@ -10,7 +10,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\EventType,
     Platformd\EventBundle\Service\EventService,
-    Platformd\EventBundle\Entity\GroupEventTranslation
+    Platformd\EventBundle\Entity\GroupEventTranslation,
+    Platformd\EventBundle\Entity\GroupEventEmail
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -163,7 +164,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function contactAction($groupSlug, $eventSlug)
+    public function contactAction($groupSlug, $eventSlug, Request $request)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -183,10 +184,45 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
+        $email = new GroupEventEmail();
+
+        $form = $this->createFormBuilder($email)
+            ->add('subject', 'text')
+            ->add('recipients', 'text')
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $email->setGroupEvent($groupEvent);
+
+                $sendCount = $this->getGroupEventService()->sendEmail($email);
+
+                $this->setFlash('success', 'Email sent to %d attendees.', $sendCount);
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                    'groupSlug' => $groupSlug(),
+                    'eventSlug' => $groupEvent->getSlug()
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
         return $this->render('EventBundle::contact.html.twig', array(
-            'group'         => $group,
-            'event'         => $groupEvent,
+            'group' => $group,
+            'event' => $groupEvent,
+            'form'  => $form->createView(),
         ));
+    }
+
+    public function emailPreviewAction($groupSlug, $eventSlug, Request $request)
+    {
+        return $this->viewAction($groupSlug, $eventSlug);
     }
 
     /**

@@ -1,4 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
+{% form_theme form 'EventBundle::form_theme.html.twig' %}
 
 {% block title event.name %}
 
@@ -21,7 +22,14 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    <div id="event-content">{{ event.content | raw }}</div>
+                    <form action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                        {{ form_widget(form) }}
+                        <div class="form-actions" style="float: left;">
+                            <a href="{{ path(event.getRoutePrefix ~ 'email_preview', event.linkableRouteParameters) }}" target="_blank" class="btn btn-primary">Preview</a>
+                            <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+                            <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -36,14 +44,24 @@
                 <div class="widget-content">
 
                     <div id="event-attendee-list">
+                        <hr class="faded" style="margin: 10px 0;" />
+                        <div class="event-attendee">
+                            <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
+                            <a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a>
+                            <span id="event-host-tag">Event Host</span>
+                        </div>
                         {% for attendee in event.attendees %}
-                            <div class="event-attendee">
-                                <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
-                                <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
-                            </div>
+                            {% if event.user != attendee %}
+                                <hr class="faded" style="margin: 10px 0;" />
+                                <div class="event-attendee">
+                                    <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                    <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                </div>
+                            {% endif %}
                         {% else %}
                             No attendees!
                         {% endfor %}
+                        <hr class="faded" style="margin: 10px 0;" />
                     </div>
 
                 </div>

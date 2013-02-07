@@ -32,6 +32,12 @@ group_event_contact:
     pattern: /groups/{groupSlug}/event/contact/{eventSlug}
     defaults: { _controller:"EventBundle:GroupEvent:contact", site: ~ }
 
+group_event_email_preview:
+    pattern: /groups/{groupSlug}/event/contact-preview/{eventSlug}
+    defaults: { _controller:"EventBundle:GroupEvent:emailPreview", site: ~ }
+    requirements:
+        _method: POST
+
 group_event_view:
     pattern: /groups/{groupSlug}/event/{eventSlug}
     defaults: { _controller:"EventBundle:GroupEvent:view", site: ~ }
