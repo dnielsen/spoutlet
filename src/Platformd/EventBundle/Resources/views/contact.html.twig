@@ -5,73 +5,85 @@
 
 {% block content %}
 
-<div id="event-contact-page">
+    <div id="event-contact-page">
 
-    {% if event.bannerImage %}
-        <div class="std_1col">
-            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat;">
-        </div>
-    {% endif %}
-
-    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
-        <div class="left">
-            <div class="widget-66">
-                <div class="widget-header" style="padding-bottom:10px;">
-                    <div class="widget-title">
-                        <div id="event-contact-title">Contact Attendees By Email</div>
-                    </div>
-                </div>
-                <div class="widget-content">
-                    <form action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-                        {{ form_widget(form) }}
-                        <div class="form-actions" style="float: left;">
-                            <a href="{{ path(event.getRoutePrefix ~ 'email_preview', event.linkableRouteParameters) }}" target="_blank" class="btn btn-primary">Preview</a>
-                            <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
-                            <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+        {% if event.bannerImage %}
+            <div class="std_1col">
+                <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat;">
             </div>
+        {% endif %}
 
-        </div>
-
-        <div class="right">
-
-            <div class="widget-33" id="event-details-widget" style="height: auto;">
-                <div class="widget-header">
-                    <div class="widget-title">{{ event.attendees.count }} Attending</div>
-                </div>
-                <div class="widget-content">
-
-                    <div id="event-attendee-list">
-                        <hr class="faded" style="margin: 10px 0;" />
-                        <div class="event-attendee">
-                            <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
-                            <a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a>
-                            <span id="event-host-tag">Event Host</span>
+        <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+            <div class="left">
+                <div class="widget-66">
+                    <div class="widget-header" style="padding-bottom:10px;">
+                        <div class="widget-title">
+                            <div id="event-contact-title">Contact Attendees By Email</div>
                         </div>
-                        {% for attendee in event.attendees %}
-                            {% if event.user != attendee %}
-                                <hr class="faded" style="margin: 10px 0;" />
-                                <div class="event-attendee">
-                                    <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
-                                    <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            No attendees!
-                        {% endfor %}
-                        <hr class="faded" style="margin: 10px 0;" />
                     </div>
-
+                    <div class="widget-content">
+                        <form action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                            {{ form_widget(form) }}
+                            <div class="form-actions" style="float: left;">
+                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>Create</button>
+                                <button type="submit" id="submit" class="btn btn-primary" formnovalidate>Create</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
             </div>
 
-        </div>
+            <div class="right">
 
+                <div class="widget-33" id="event-details-widget" style="height: auto;">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ event.attendees.count }} Attending</div>
+                    </div>
+                    <div class="widget-content">
+
+                        <div id="event-attendee-list">
+                            <hr class="faded" style="margin: 10px 0;" />
+                            <div class="event-attendee">
+                                <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
+                                <a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a>
+                                <span id="event-host-tag">Event Host</span>
+                            </div>
+                            {% for attendee in event.attendees %}
+                                {% if event.user != attendee %}
+                                    <hr class="faded" style="margin: 10px 0;" />
+                                    <div class="event-attendee">
+                                        <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                        <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                No attendees!
+                            {% endfor %}
+                            <hr class="faded" style="margin: 10px 0;" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
     </div>
-</div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#preview').click(function(){
+                $('#my-form').attr('target', '_blank');
+            });
+
+            $('#submit').click(function(){
+                $('#my-form').removeAttr('target');
+            });
+        });
+    </script>
 
 {% endblock %}
 

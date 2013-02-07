@@ -52,7 +52,6 @@ abstract class EventEmail
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="SET NULL")
-     * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $recipients;
 

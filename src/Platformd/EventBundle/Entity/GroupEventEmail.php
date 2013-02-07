@@ -20,7 +20,6 @@ class GroupEventEmail extends EventEmail
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinTable(name="group_event_email_recipient")
-     * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $recipients;
 

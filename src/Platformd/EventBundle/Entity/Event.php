@@ -185,6 +185,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\OrderBy({"username"})
      */
     protected $attendees;
 
