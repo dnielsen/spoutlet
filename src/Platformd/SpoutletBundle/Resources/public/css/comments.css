@@ -1,4 +1,4 @@
-/* comments */
+    /* comments */
 
 .thread {
     width: 100%;
@@ -163,6 +163,7 @@
     min-width: 180px;
     position: absolute;
     display: none;
+    z-index: 100;
 }
 
 .comment-wrapper .report-options {
@@ -205,6 +206,8 @@
     height: 16px;
     vertical-align: middle;
     display: inline-block;
+    float:right;
+    margin-right: 10px;
 }
 
 .comment-reply {
@@ -294,7 +297,7 @@
 
 .comment-replies textarea {
     height: 18px;
-    width: 550px;
+    width: 520px;
     overflow-y: hidden;
     margin-bottom: 2px;
 }
