@@ -47,6 +47,13 @@ class GroupEvent extends Event
     protected $translations;
 
     /**
+     * @var Site
+     */
+    protected $currentLocale;
+
+    protected $defaultLocale = 'en';
+
+    /**
      * Groups the event pertains to
      *
      * @var Group
@@ -113,18 +120,6 @@ class GroupEvent extends Event
         parent::__construct();
     }
 
-    public function __call($method, array $arguments = array())
-    {
-        $translation = $this->translate();
-
-        $value = null;
-        if ($translation) {
-            $value = call_user_func_array(array($translation, $method), $arguments);
-        }
-
-        return $value;
-    }
-
     private function translate(Site $locale = null)
     {
         $currentLocale = $locale ?: $this->getCurrentLocale();
@@ -137,6 +132,58 @@ class GroupEvent extends Event
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * Overrides default to add translation
+     *
+     * @return string
+     */
+    public function getName()
+    {
+
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getName();
+        }
+
+        return $value ?: $this->name;
+    }
+
+    /**
+     * Overrides default to add translation
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getContent();
+        }
+
+        return $value ?: $this->content;
+    }
+
+    /**
+     * Overrides default to add translation
+     *
+     * @return \Platformd\MediaBundle\Entity\Media
+     */
+    public function getBannerImage()
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getBannerImage();
+        }
+
+        return $value ?: $this->bannerImage;
     }
 
     /**
@@ -294,7 +341,9 @@ class GroupEvent extends Event
 
     public function setTranslations($translations)
     {
-        $this->translations = $translations;
+        foreach ($translations as $translation) {
+            $this->addTranslation($translation);
+        }
     }
 
     public function getTranslations()
@@ -342,5 +391,15 @@ class GroupEvent extends Event
             'eventId' => $this->getId(),
             'groupSlug' => $this->getGroup()->getSlug(),
         );
+    }
+
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale ?: $this->defaultLocale;
+    }
+
+    public function setCurrentLocale(Site $locale = null)
+    {
+        $this->currentLocale = $locale;
     }
 }

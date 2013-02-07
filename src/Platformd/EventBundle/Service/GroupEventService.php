@@ -37,7 +37,6 @@ class GroupEventService extends EventService
         $clonedGroupEvent->setAddress($groupEvent->getAddress());
         $clonedGroupEvent->setCreatedAt($groupEvent->getCreatedAt());
         $clonedGroupEvent->setPrivate($groupEvent->getPrivate());
-        $clonedGroupEvent->setGroup($groupEvent->getGroup());
 
         $clonedGroupEvent->setTranslations(new ArrayCollection());
         foreach ($groupEvent->getTranslations() as $translation) {

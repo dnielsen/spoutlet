@@ -21,6 +21,7 @@ class EventExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('doctrine.yml');
         $loader->load('forms.yml');
         $loader->load('listeners.yml');
         $loader->load('repositories.yml');
