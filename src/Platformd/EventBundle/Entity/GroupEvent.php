@@ -260,7 +260,7 @@ class GroupEvent extends Event
      *
      *  @return string
      */
-    public function getEventRoutePrefix()
+    public function getRoutePrefix()
     {
         return 'group_event_';
 
@@ -332,6 +332,14 @@ class GroupEvent extends Event
     {
         return array(
             'eventSlug' => $this->getSlug(),
+            'groupSlug' => $this->getGroup()->getSlug(),
+        );
+    }
+
+    public function getModifyRouteParameters()
+    {
+        return array(
+            'eventId' => $this->getId(),
             'groupSlug' => $this->getGroup()->getSlug(),
         );
     }

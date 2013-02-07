@@ -1,3 +1,9 @@
+imports:
+    - { resource: "forms.yml" }
+    - { resource: "map.yml" }
+    - { resource: "repositories.yml" }
+    - { resource: "validation.yml" }
+
 services:
     platformd_event.service.event:
         class: Platformd\EventBundle\Service\EventService

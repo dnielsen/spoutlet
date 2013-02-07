@@ -43,6 +43,7 @@
             $('#event-type').val(type);
             $('#event-rsvp-route').val(route);
             $('.rsvp-selection-wrapper').show();
+            $('.rsvp-buttons').show();
             $('#rsvp-response').hide();
 
             rsvpDialog.dialog('open');
@@ -60,21 +61,31 @@
 
             });
 
+            rsvp = $('input:radio[name=rsvp]:checked').val();
+
             $.ajax({
                 url: $('#event-rsvp-route').val(),
                 type: 'post',
                 data: JSON.stringify({
                     'id' : $('#event-id').val(),
-                    'rsvp' : $('input:radio[name=rsvp]:checked').val()
+                    'rsvp' : rsvp
                 }),
                 contentType: 'json',
                 success: function(data) {
-                    $('.rsvp-dialog-content').unblock();
+                    $('#event-rsvp-dialog').unblock();
 
                     if (data.success) {
                         rsvpDialog.dialog('close');
-                        if ($('input:radio[name=rsvp]:checked').val() == 0) {
-                            $('#event-'+$('#event-type').val()+$('#event-id').val()).fadeOut();
+                        if (rsvp == 0) {
+                            $('.event-list #event-'+$('#event-type').val()+$('#event-id').val()).fadeOut();
+                            $('#event-show-page #event-attending-message').hide();
+                            $('#event-show-page #event-rsvp-link').hide();
+                            $('#event-show-page #event-registration-button').fadeIn();
+                            $('#event-show-page #event-attendee-count-'+$('#event-id').val()).text(parseInt(data.attendeeCount));
+                        } else {
+                            $('#event-show-page #event-registration-button').hide();
+                            $('#event-show-page #event-attending-message').fadeIn();
+                            $('#event-show-page #event-attendee-count-'+$('#event-id').val()).text(parseInt(data.attendeeCount));
                         }
                     } else {
                         $('.rsvp-response').text(data.errorMessage);

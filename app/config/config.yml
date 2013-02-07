@@ -8,6 +8,7 @@ imports:
     - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
     - { resource: "@MediaBundle/Resources/config/services.yml" }
     - { resource: "@CommentBundle/Resources/config/services.yml" }
+    - { resource: "@EventBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~

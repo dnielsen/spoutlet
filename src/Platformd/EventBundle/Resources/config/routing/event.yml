@@ -32,6 +32,10 @@ group_event_delete:
     pattern: /groups/{groupSlug}/event/delete/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:delete", site: ~ }
 
+group_event_contact:
+    pattern: /groups/{groupSlug}/event/contact/{eventSlug}
+    defaults: { _controller:"EventBundle:GroupEvent:contact", site: ~ }
+
 group_event_view:
     pattern: /groups/{groupSlug}/event/{eventSlug}
     defaults: { _controller:"EventBundle:GroupEvent:view", site: ~ }

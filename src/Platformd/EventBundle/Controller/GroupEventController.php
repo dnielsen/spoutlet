@@ -173,7 +173,9 @@ class GroupEventController extends Controller
         /** @var $groupEvent GroupEvent */
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug
+            'slug' => $eventSlug,
+            'published' => true,
+            'deleted' => false,
         ));
 
         if (!$groupEvent) {
@@ -188,12 +190,41 @@ class GroupEventController extends Controller
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
+        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
+
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
 
         return $this->render('EventBundle::view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
+            'isAttending'   => $isAttending,
+        ));
+    }
+
+    public function contactAction($groupSlug, $eventSlug)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+            'published' => true,
+            'deleted' => false,
+            'approved' => true,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        return $this->render('EventBundle::contact.html.twig', array(
+            'group'         => $group,
+            'event'         => $groupEvent,
         ));
     }
 
@@ -288,7 +319,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent = $this->getGroupEventService()->findOne($id);
+        $groupEvent = $this->getGroupEventService()->find($id);
         $user       = $this->getUser();
 
         if (!$groupEvent) {
@@ -296,10 +327,19 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent->getAttendees()->removeElement($user);
-        $this->getGroupEventService()->updateEvent($groupEvent);
+        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $user);
 
-        $response->setContent(json_encode(array("success" => true)));
+        if ($rsvp == 0 && $isAttending) {
+             $groupEvent->getAttendees()->removeElement($user);
+             $this->getGroupEventService()->updateEvent($groupEvent);
+        } elseif ($rsvp > 0 && !$isAttending) {
+            $groupEvent->getAttendees()->add($user);
+            $this->getGroupEventService()->updateEvent($groupEvent);
+        }
+
+        $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
+
+        $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;
     }
 
@@ -330,7 +370,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $groupEvent = $this->getGroupEventService()->findOne($id);
+        $groupEvent = $this->getGroupEventService()->find($id);
         $user           = $this->getUser();
 
         if (!$groupEvent) {

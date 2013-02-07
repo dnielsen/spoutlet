@@ -103,6 +103,17 @@ class EventService
     }
 
     /**
+     * Finds one event by id
+     *
+     * @param $id
+     * @return \Platformd\EventBundle\Entity\Event
+     */
+    public function find($id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
      * Finds events by criteria
      *
      * @param $criteria
@@ -139,9 +150,25 @@ class EventService
         }
     }
 
+    /**
+     * Gets the count of attendees for an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
     public function getAttendeeCount($event)
     {
         return $this->repository->getAttendeeCount($event);
+    }
+
+    /**
+     * Returns whether a user is registered to attend an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function isUserAttending(Event $event, User $user)
+    {
+        return $this->repository->isUserAttending($event, $user);
     }
 
     /**

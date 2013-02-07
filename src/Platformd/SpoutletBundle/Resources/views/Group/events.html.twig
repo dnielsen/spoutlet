@@ -26,7 +26,7 @@
 
                 <div class="group-event-details">
                     <div class="group-event-title"><a href="{{ path('group_event_view', { 'groupSlug' : group.slug, 'eventSlug' : event.slug }) }}">{{ event.name }}</a></div>
-                    <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}, {{ event.timezone }}</div>
+                    <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezone }}{% endif %}</div>
                     <div class="group-event-location"><strong>Where:</strong>
                         {% if event.online %}
                             Online
@@ -36,8 +36,8 @@
                     </div>
                     <div class="group-event-actions">
                         {% if canManageEvents == true %}
-                            <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventSlug' : event.slug })}}">Edit</a> |
-                            <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventSlug' : event.slug })}}">Delete</a> |
+                            <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
+                            <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
                         {% endif %}
                         <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
                     </div>

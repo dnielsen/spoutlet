@@ -1,0 +1,5 @@
+services:
+    platformd_event.service.map.location:
+        class: Platformd\EventBundle\Map\LocationMap
+        tags:
+            - { name: vichgeo.map, alias: location }

@@ -78,9 +78,8 @@
             switch($(this).children('option:selected').val()) {
 
                 case 'contact':
-                    break;
-
                 case 'edit':
+                    window.location($(this).children('option:selected').attr('data-route'));
                     break;
 
                 case 'disable':
@@ -112,11 +111,8 @@
                         success: function(data) {
                             if (!data.success) {
                                 alert(data.errorMessage);
-                                $.unblockUI();
-                            } else {
-                                $.unblockUI();
-                                $('#event-'+type+'-'+id).fadeOut();
                             }
+                            $.unblockUI();
                         }
                     });
 

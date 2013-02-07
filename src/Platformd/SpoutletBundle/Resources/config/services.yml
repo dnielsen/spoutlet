@@ -90,8 +90,7 @@ services:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@request"
-        scope: request
+            - "@service_container"
 
     platformd.model.game_page_manager:
         class: Platformd\SpoutletBundle\Model\GamePageManager
@@ -218,3 +217,9 @@ services:
         tags:
             - { name: form.type, alias: purifiedTextarea }
 
+    platformd.doctrine.listener.group:
+        class: Platformd\SpoutletBundle\Doctrine\Listener\GroupListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }

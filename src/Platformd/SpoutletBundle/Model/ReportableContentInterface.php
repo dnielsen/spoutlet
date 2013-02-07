@@ -12,5 +12,4 @@ interface ReportableContentInterface
     function setDeletedReason($deletedReason);
     function getDeletedReason();
     function getContentType();
-    function getClass();
 }

@@ -24,6 +24,7 @@ use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface
 {

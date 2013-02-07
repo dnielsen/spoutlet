@@ -68,6 +68,9 @@
 		    {% endjavascripts %}
         {% endblock %}
 
+        {{ vichgeo_include_js() }}
+        {{ vichgeo_include_css() }}
+
         <title>
             {%- if block('title') -%}
                 {{ block('title') }} | {{ 'platformd.layout.title_suffix' | trans }}
