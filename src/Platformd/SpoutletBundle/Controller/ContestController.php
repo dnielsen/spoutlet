@@ -79,7 +79,7 @@ class ContestController extends Controller
             $countryRepo    = $this->getCountryRepository();
             $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
 
-            if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
                 $isEligible = false;
             }
 

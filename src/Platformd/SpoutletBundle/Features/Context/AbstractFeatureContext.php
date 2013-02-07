@@ -19,6 +19,8 @@ use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\SpoutletBundle\Entity\Contest;
+use Platformd\SpoutletBundle\Entity\Gallery;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 
@@ -846,6 +848,44 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Then /^I should be on the contest called "([^"]*)" in "([^"]*)"$/
+     */
+    public function iShouldBeOnTheContestCalledIn($contestName, $locale)
+    {
+        $em     = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+
+        if (!$site) {
+            throw new \Exception(sprintf('Site not found for locale "%s"', $locale));
+        }
+
+        $contest   = $em->getRepository('SpoutletBundle:Contest')->findOneByName($contestName);
+
+        if (!$contest) {
+            throw new \Exception('Could not find the contest in the database');
+        }
+
+        if (!$contest->getSites()->contains($site)){
+            throw new \Exception('Contest is not enabled on this site');
+        }
+
+        $session    = $this->getSession();
+        $currentUrl = $session->getCurrentUrl();
+        $slug       = $contest->getSlug();
+
+        if (strpos($currentUrl, $slug) === false) {
+            throw new \Exception(sprintf('Not currently on the Contest.  Expected URL was "%s" but currently on "%s"', $slug, $currentUrl));
+        }
+
+        $statusCode = $session->getStatusCode();
+        $httpOk = 200;
+
+        if ($statusCode != $httpOk) {
+            throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
+        }
+    }
+
+    /**
      * Used to click on the frontend "show" URL when in an admin list section
      *
      * @Given /^I click on the URL for "([^"]*)"$/
@@ -1038,6 +1078,119 @@ class AbstractFeatureContext extends MinkContext
             ->saveDeal($deal);
 
         return $deal;
+    }
+
+    /**
+     * @Given /^there is a gallery called "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsAGalleryCalledIn($galleryName, $locale)
+    {
+        $em = $this->getEntityManager();
+
+        if ($gallery = $em->getRepository('SpoutletBundle:Gallery')->findOneBy(array('name' => $galleryName))) {
+            $em->remove($gallery);
+            $em->flush();
+        }
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $locale));
+        $category = $em->getRepository('SpoutletBundle:GalleryCategory')->findOneBy(array('name' => 'image'));
+
+        $gallery = new Gallery();
+        $gallery->setName($galleryName);
+        $gallery->setSites(array($site));
+        $gallery->setDeleted(false);
+        $gallery->setCategories(array($category));
+
+        $em->persist($gallery);
+        $em->flush();
+
+        return $gallery;
+    }
+
+    /**
+     * @Given /^there is a contest called "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsAContestCalledIn($contestName, $locale)
+    {
+        $em = $this->getEntityManager();
+
+        if ($contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('name' => $contestName))) {
+            $em->remove($contest);
+            $em->flush();
+        }
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $locale));
+
+        $contest = new Contest();
+        $contest->setName($contestName);
+        $contest->setSites(array($site));
+        $contest->setSubmissionStart(new \DateTime('-1 day'));
+        $contest->setSubmissionEnd(new \DateTime('+1 day'));
+        $contest->setVotingStart(new \DateTime('-1 day'));
+        $contest->setVotingEnd(new \DateTime('+1 day'));
+        $contest->setCategory('image');
+        $contest->setRules('Rules');
+        $contest->setEntryInstructions('Entry Instructions');
+        $contest->setVoteInstructions('Vote Instructions');
+        $contest->setStatus(Contest::STATUS_PUBLISHED);
+        $contest->setRedemptionInstructionsArray(array('Do something'));
+        $contest->setMaxEntries(0);
+
+        $em->persist($contest);
+        $em->flush();
+
+        return $contest;
+    }
+
+    /**
+     * @Given /^there is an expired contest called "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsAnExpiredContestCalledIn($contestName, $locale)
+    {
+        $em = $this->getEntityManager();
+
+        $contest = $this->thereIsAContestCalledIn($contestName, $locale);
+        $contest->setSubmissionStart(new \DateTime('-2 days'));
+        $contest->setSubmissionEnd(new \DateTime('-1 day'));
+        $contest->setVotingStart(new \DateTime('-2 days'));
+        $contest->setVotingEnd(new \DateTime('-1 day'));
+
+        $em->persist($contest);
+        $em->flush();
+
+        return $contest;
+    }
+
+    /**
+     * @Given /^there is an unstarted contest called "([^"]*)" in "([^"]*)"$/
+     */
+    public function thereIsAnUnstartedContestCalledIn($contestName, $locale)
+    {
+        $em = $this->getEntityManager();
+
+        $contest = $this->thereIsAContestCalledIn($contestName, $locale);
+        $contest->setSubmissionStart(new \DateTime('+2 days'));
+        $contest->setSubmissionEnd(new \DateTime('+3 days'));
+        $contest->setVotingStart(new \DateTime('+2 days'));
+        $contest->setVotingEnd(new \DateTime('+3 days'));
+
+        $em->persist($contest);
+        $em->flush();
+
+        return $contest;
+    }
+
+
+    /**
+     * Used in the admin to count rows in a table sith the specified id
+     *
+     * @Then /^I should see (\d+) data rows in "([^"]*)"$/
+     */
+    public function iShouldSeeDataRowsIn($num, $id)
+    {
+        $rows = $this->getPage()->findAll('css', 'table#'.$id.' tbody tr');
+
+        assertEquals($num, count($rows));
     }
 
     /**
