@@ -20,7 +20,7 @@
                         {% if event[0].user == app.user %}
                             <select class="event-owner-actions" data-id="{{ event[0].id }}" data-contenttype="{{ event[0].contentType }}" style="width:130px;">
                                 <option></option>
-                                <option value="contact" data-route="{{ path(event[0].routePrefix ~ "contact", event.getLinkableRouteParameters) }}">Contact Attendees</option>
+                                <option value="contact" data-route="{{ path(event[0].routePrefix ~ "contact", event[0].getLinkableRouteParameters) }}">Contact Attendees</option>
                                 <option value="edit" data-route="{{ path(event[0].routePrefix ~ "edit", event[0].getModifyRouteParameters) }}">Edit Event</option>
                                 <option value="disable" data-route="{{ path(event[0].routePrefix ~ "disable") }}">Disable Event</option>
                             </select>
