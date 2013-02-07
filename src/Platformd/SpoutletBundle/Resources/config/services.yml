@@ -86,7 +86,7 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
-    platford.model.site_util:
+    platformd.model.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
