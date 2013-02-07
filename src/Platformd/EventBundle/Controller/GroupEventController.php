@@ -20,7 +20,11 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
 ;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use JMS\SecurityExtraBundle\Annotation\Secure;
+
+use DateTime;
 
 class GroupEventController extends Controller
 {
@@ -36,18 +40,32 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        $groupEvent = new GroupEvent($group);
+        $existingEvents     = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
+        $importId           = $request->get('existing_event_select');
+        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $importId));
 
-        // TODO improve this
-        $siteLocalesForTranslation = array('ja', 'zh', 'es');
-        foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->getSiteFromLocale($locale);
-            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+        if ($importedGroupEvent) {
+            $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
+        } else {
+            $groupEvent = new GroupEvent($group);
+
+            // We add translations by hand
+            // TODO improve this
+            $siteLocalesForTranslation = array('ja', 'zh', 'es');
+            foreach ($siteLocalesForTranslation as $locale) {
+                $site = $this->getSiteFromLocale($locale);
+                $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+            }
+        }
+
+        // Event is automatically approved if user is group organizer or super admin
+        if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+            $groupEvent->setApproved(true);
         }
 
         $form = $this->createForm('groupEvent', $groupEvent);
 
-        if ($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST' && !$importedGroupEvent) {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
@@ -57,12 +75,22 @@ class GroupEventController extends Controller
                 $groupEvent->setUser($this->getUser());
 
                 $this->getGroupEventService()->createEvent($groupEvent);
-                $this->setFlash('success', 'New event posted successfully');
 
-                return $this->redirect($this->generateUrl('group_event_view', array(
-                    'groupSlug' => $group->getSlug(),
-                    'eventSlug' => $groupEvent->getSlug()
-                )));
+                if ($groupEvent->isApproved()) {
+                    $this->setFlash('success', 'New event posted successfully');
+
+                    return $this->redirect($this->generateUrl('group_event_view', array(
+                        'groupSlug' => $group->getSlug(),
+                        'eventSlug' => $groupEvent->getSlug()
+                    )));
+                } else {
+                    $this->setFlash('success', 'New event posted successfully and is ending approval from Group Organizer');
+
+                    return $this->redirect($this->generateUrl('group_show', array(
+                        'slug' => $group->getSlug()
+                    )) . '#events');
+                }
+
             } else {
                 $this->setFlash('error', 'Something went wrong');
             }
@@ -70,7 +98,8 @@ class GroupEventController extends Controller
 
         return $this->render('EventBundle:GroupEvent:new.html.twig', array(
             'form' => $form->createView(),
-            'group' => $group
+            'group' => $group,
+            'existingEvents' => $existingEvents
         ));
     }
 
@@ -134,12 +163,14 @@ class GroupEventController extends Controller
 
     public function viewAction($groupSlug, $eventSlug)
     {
+        /** @var $group Group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
         }
 
+        /** @var $groupEvent GroupEvent */
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
             'slug' => $eventSlug
@@ -147,6 +178,14 @@ class GroupEventController extends Controller
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (!$groupEvent->isApproved()) {
+            if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+            }
+        } elseif (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ViewEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
@@ -178,12 +217,47 @@ class GroupEventController extends Controller
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
-        $pendingApprovals = $this->getGroupEventService()->getPendingApprovalEvents($group, $this->getUser());
+        $pendingApprovals = $this->getGroupEventService()->getPendingApprovalEventsForGroup($group);
 
         return $this->render('EventBundle:GroupEvent:pending.html.twig', array(
             'pendingApprovals' => $pendingApprovals,
             'group' => $group
         ));
+    }
+
+    /**
+     * Approves a Group Event
+     */
+    public function approveAction($groupSlug, $eventId)
+    {
+        /** @var $group Group */
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $this->getGroupEventService()->approveEvent($groupEvent);
+
+        $this->setFlash('success', 'Event has been approved');
+
+        return $this->redirect($this->generateUrl('group_event_pending_approval', array(
+            'groupSlug' => $group->getSlug()
+        )));
     }
 
     public function rsvpAjaxAction(Request $request)

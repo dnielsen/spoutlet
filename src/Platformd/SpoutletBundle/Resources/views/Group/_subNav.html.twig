@@ -9,7 +9,7 @@
             <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
         {% endif %}
         {% if group.isAllowedTo(app.user, site, 'ApproveEvent') %}
-            <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Events Approvals</a></li>
+            <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Event Approvals</a></li>
         {% endif %}
         {% if group.isAllowedTo(app.user, site, 'LeaveGroup') %}
             <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>

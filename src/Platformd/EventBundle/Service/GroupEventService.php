@@ -6,11 +6,41 @@ use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group
+    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\UserBundle\Entity\User
 ;
+
+use DateTime;
 
 class GroupEventService extends EventService
 {
+    public function cloneGroupEvent(GroupEvent $groupEvent)
+    {
+        $clonedGroupEvent = new GroupEvent($groupEvent->getGroup());
+
+        $clonedGroupEvent->setContent($groupEvent->getContent());
+        $clonedGroupEvent->setUser($groupEvent->getUser());
+        $clonedGroupEvent->setBannerImage($groupEvent->getBannerImage());
+        $clonedGroupEvent->setRegistrationOption($groupEvent->getRegistrationOption());
+        $clonedGroupEvent->setPublished($groupEvent->getPublished());
+        $clonedGroupEvent->setOnline($groupEvent->getOnline());
+        $clonedGroupEvent->setStartsAt(new DateTime());
+        $clonedGroupEvent->setEndsAt(new DateTime());
+        $clonedGroupEvent->setTimezone($groupEvent->getTimezone());
+        $clonedGroupEvent->setDisplayTimezone($groupEvent->getDisplayTimezone());
+        $clonedGroupEvent->setGame($groupEvent->getGame());
+        $clonedGroupEvent->setExternalUrl($groupEvent->getExternalUrl());
+        $clonedGroupEvent->setLocation($groupEvent->getLocation());
+        $clonedGroupEvent->setAddress($groupEvent->getAddress());
+        $clonedGroupEvent->setCreatedAt($groupEvent->getCreatedAt());
+        $clonedGroupEvent->setPrivate($groupEvent->getPrivate());
+        $clonedGroupEvent->setTranslations($groupEvent->getTranslations());
+        $clonedGroupEvent->setGroup($groupEvent->getGroup());
+        $clonedGroupEvent->setSites($groupEvent->getSites());
+
+        return $clonedGroupEvent;
+    }
+
     public function findUpcomingEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         return $this->repository->findUpcomingEventsForGroupMostRecentFirst($group, $limit);
@@ -21,9 +51,14 @@ class GroupEventService extends EventService
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
     }
 
-    public function findEventsForUser(User $user, $whereIsOrganizer = false)
+    public function findAllOwnedEventsForUser(User $user)
     {
-        return $this->repository->getEventListForUser($user, $whereIsOrganizer);
+        return $this->repository->getAllOwnedEventsForUser($user);
+    }
+
+    public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)
+    {
+        return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
     }
 
     public function findPastEventsForUser(User $user)

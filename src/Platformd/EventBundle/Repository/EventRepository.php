@@ -32,6 +32,23 @@ class EventRepository extends EntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * Returns all events that a user has ever created
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @return array
+     */
+    public function getAllOwnedEventsForUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e')
+            ->where('e.user = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function getAttendeeCount($event)
     {
         $qb = $this->createQueryBuilder('e')
