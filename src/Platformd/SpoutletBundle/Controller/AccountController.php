@@ -3,7 +3,8 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Platformd\SpoutletBundle\Entity\User;
+use Platformd\UserBundle\Entity\User;
+use Platformd\EventBundle\Service\GroupEventService;
 
 class AccountController extends Controller
 {
@@ -63,10 +64,11 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
+        /** @var $groupEventService GroupEventService */
         $groupEventService = $this->get('platformd_event.service.group_event');
 
-        $events         = $groupEventService->findEventsForUser($this->getUser());
-        $ownedEvents    = $groupEventService->findEventsForUser($this->getUser(), true);
+        $events         = $groupEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
         $pastEvents     = $groupEventService->findPastEventsForUser($this->getUser());
 
         return $this->render('SpoutletBundle:Account:events.html.twig', array(

@@ -247,7 +247,6 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * @var boolean $deleted
      * @ORM\Column(type="boolean")
      */
-
     private $deleted = false;
 
     /**
@@ -309,6 +308,11 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     public function getApproved()
     {
         return $this->approved;
+    }
+
+    public function isApproved()
+    {
+        return $this->getApproved();
     }
 
     public function setBannerImage($bannerImage)
@@ -501,13 +505,13 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     /**
      * @param string $slug
      */
-    public function setSlug($slug)
+    public function setSlug($slug, $force = false)
     {
         // don't let the slug be blanked out
         // this allows the user to not enter a slug in the form. The slug
         // will be generated from the name, but not overridden by that blank
         // slug value
-        if (!$slug) {
+        if (!$slug && !$force) {
             return;
         }
 

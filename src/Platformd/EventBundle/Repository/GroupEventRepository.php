@@ -112,14 +112,16 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getPendingApprovalEvents(Group $group, User $user)
+    public function getPendingApprovalEventsForGroup(Group $group)
     {
         $qb = $this->createQueryBuilder('ge')
             ->select('ge', 'g')
             ->leftJoin('ge.group', 'g')
             ->where('ge.approved = false')
+            ->andWhere('ge.group = :group')
+            ->setParameter('group', $group)
             ->orderBy('ge.createdAt', 'DESC')
-            ;
+        ;
 
         return $qb->getQuery()->getResult();
     }

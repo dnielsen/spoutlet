@@ -395,6 +395,23 @@ platformd:
             disabled: "Please list my event only"
             3rdparty: "Link event listing to 3rd party website"
 
+        email:
+            approved:
+                title: Your Event Has Been Approved
+                message: |
+                    Congratulations, your event %eventName% has been approved!
+
+                    Event Summary:
+                    Name: %eventName%
+                    Group: %groupName%
+                    Type: %eventType%
+
+                    Your event is now visible on Alienware Arena.
+
+                    Should you have any questions, please contact us at contact@alienwarearena.com.
+
+                    Alienware Arena Team
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"

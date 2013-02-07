@@ -33,23 +33,32 @@
         <table style="width: 100%;" class="table table-striped table-bordered tablesorter">
             <tbody><tr>
                 <th style="width:15%;">Action</th>
+                <th style="width:15%;">Event Name</th>
+                <th style="width:15%;">Type</th>
+                <th style="width:15%;">Dates</th>
                 <th style="width:15%;">Username</th>
-                <th style="width:15%;">Date</th>
-                <th style="width:55%;">Reason</th>
+                <th style="width:15%;">Created</th>
             </tr>
             {% for event in pendingApprovals %}
                 <tr class="eventListGroup_lan">
                     <td>
-                        {{ event.name }}
+                        <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}" target="_blank">{{ event.name }}</a>
+                    </td>
+                    <td>
+                        {% set type = (event.online) ? 'Online' : 'Location' %}
+                        {{ type }}
+                    </td>
+                    <td>
+                        From {{ event.startsAt | date('m/d/Y') }} to {{ event.endsAt | date('m/d/Y') }}
                     </td>
                     <td>
                         {{ event.user.username }}
                     </td>
                     <td>
-                        {{ event.createdAt | date('F d, Y') }}
-                    </td>
-                    <td>
-                        {{ event.startsAt | date('F d, Y') }}
+                        {{ event.createdAt | date('m/d/Y') }}
                     </td>
                 </tr>
             {% else %}
@@ -64,66 +73,32 @@
     </div>
     <div class="widget-footer">&nbsp;</div>
 </div>
-<div id="accept-member-dialog" title="Accept Member" style="display:none;">
-    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="accept-text">Are you sure you want to accept '{0}' to join your group?</span></p>
-</div>
-<div id="reject-member-dialog" title="Reject Member" style="display:none;">
-    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="reject-text">Are you sure you want to reject '{0}' from joining your group?</span></p>
+<div id="approve-event-dialog" title="Approve Event" style="display:none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="approve-text">Are you sure you want to approve '{0}' to display on your group?</span></p>
 </div>
 
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    {#<script type="text/javascript">#}
-        {#$(function () {#}
-            {#$('#cancel').delegate('','click change',function(){#}
-                {#window.location = $(this).attr('rel');#}
-                {#return false;#}
-            {#});#}
+<script type="text/javascript">
+    $('.approve-event').click(function () {
+        var eventname = $(this).attr('event-name');
+        var path = $(this).attr('data-path');
+        var text = $('#approve-text').text().replace('{0}', eventname);
 
-            {#$('.accept-member').click(function () {#}
-                {#var username = $(this).attr('user-name');#}
-                {#var path = $(this).attr('data-path');#}
-                {#var text = $('#accept-text').text().replace('{0}', username);#}
+        $('#approve-text').text(text);
+        $('#approve-event-dialog').dialog({
+            modal: true,
+            resizable: false,
+            movable: false,
+            height: 150,
+            buttons: {
+                "Yes": function() {
+                    document.location = path;
+                },
+                "No": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+</script>
 
-                {#$('#accept-text').text(text);#}
-                {#$('#accept-member-dialog').dialog({#}
-                    {#modal: true,#}
-                    {#resizable: false,#}
-                    {#movable: false,#}
-                    {#height: 150,#}
-                    {#buttons: {#}
-                        {#"Yes": function() {#}
-                            {#document.location = path;#}
-                        {#},#}
-                        {#"No": function() {#}
-                            {#$(this).dialog("close");#}
-                        {#}#}
-                    {#}#}
-                {#});#}
-            {#});#}
-
-            {#$('.reject-member').click(function () {#}
-                {#var username = $(this).attr('user-name');#}
-                {#var path = $(this).attr('data-path');#}
-                {#var text = $('#reject-text').text().replace('{0}', username);#}
-
-                {#$('#reject-text').text(text);#}
-                {#$('#reject-member-dialog').dialog({#}
-                    {#modal: true,#}
-                    {#resizable: false,#}
-                    {#movable: false,#}
-                    {#height: 150,#}
-                    {#buttons: {#}
-                        {#"Yes": function() {#}
-                            {#document.location = path;#}
-                        {#},#}
-                        {#"No": function() {#}
-                            {#$(this).dialog("close");#}
-                        {#}#}
-                    {#}#}
-                {#});#}
-            {#});#}
-        {#});#}
-    {#</script>#}
 {% endblock %}

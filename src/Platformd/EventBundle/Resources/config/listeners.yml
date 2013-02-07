@@ -1,0 +1,12 @@
+services:
+    platformd.event.listener.group_event_listener:
+            class: Platformd\EventBundle\EventListener\GroupEventListener
+            arguments:
+                - "@translator"
+                - "@platformd.model.site_util"
+                - "@platformd.model.email_manager"
+                - %sender_email_address%
+                - %sender_email_name%
+            tags:
+                - { name: kernel.event_listener, event: platofrmd.event.approve, method: onApprove }
+            scope: request

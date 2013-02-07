@@ -91,6 +91,17 @@ class EventService
         $this->dispatcher->dispatch(EventEvents::EVENT_UPDATE, $event);
     }
 
+    public function approveEvent(Event $event)
+    {
+        $event->setApproved(true);
+
+        $this->updateEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new EventEvent($event);
+        $this->dispatcher->dispatch(EventEvents::EVENT_APPROVE, $event);
+    }
+
     /**
      * Finds one event by id
      *
@@ -137,8 +148,6 @@ class EventService
         if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
             $event->setBannerImage(null);
         }
-
-
     }
 
     /**
@@ -166,10 +175,9 @@ class EventService
      * Retrieves all Events pending approval for a certain group
      *
      * @param \Platformd\SpoutletBundle\Entity\Group $group
-     * @param \Platformd\UserBundle\Entity\User $user
      */
-    public function getPendingApprovalEvents(Group $group, User $user)
+    public function getPendingApprovalEventsForGroup(Group $group)
     {
-        return $this->repository->getPendingApprovalEvents($group, $user);
+        return $this->repository->getPendingApprovalEventsForGroup($group);
     }
 }
