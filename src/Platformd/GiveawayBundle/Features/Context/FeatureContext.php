@@ -188,10 +188,10 @@ class FeatureContext extends AbstractFeatureContext
         $this->setSitehost('demo');
         $this->NavigateTo('giveaway_show', array('slug' => $giveaway->getSlug()), true);
         if ($not) {
-            assertNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Availabile keys: 0')));
+            assertNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Available keys: 0')));
         }
         else {
-            assertNotNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Availaible keys: 0')));
+            assertNotNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Available keys: 0')));
         }
     }
 

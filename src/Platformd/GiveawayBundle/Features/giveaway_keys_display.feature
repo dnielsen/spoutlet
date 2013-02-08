@@ -14,7 +14,7 @@ Feature: Giveaway keys display
                 | Name          | keygiveaway name          |
                 | Status        | active                    |
                 | Giveaway Type | key_giveaway              |
-                | Content       | content                   |
+                | Description   | content                   |
             And I attach the file "foo.jpg" to "Banner Image"
             And I check the "Demo" option for "Sites"
             And I select "Skyrim" from "Game"
@@ -31,7 +31,7 @@ Feature: Giveaway keys display
                 | Name          | keygiveaway name          |
                 | Status        | active                    |
                 | Giveaway Type | key_giveaway              |
-                | Content       | content                   |
+                | Description   | content                   |
             And I attach the file "foo.jpg" to "Banner Image"
             And I check the "Demo" option for "Sites"
             And I select "Skyrim" from "Game"
