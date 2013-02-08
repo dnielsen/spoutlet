@@ -36,7 +36,7 @@
             {{ form_errors(discussionForm) }}
 
 
-            <div class="span7 edit-discussion">
+            <div class="span7 edit-discussion" style="width: 610px;">
                 {{ form_row(discussionForm.title) }}
                 {{ form_row(discussionForm.content) }}
                 <div class="form-actions">
@@ -58,6 +58,7 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/groups.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

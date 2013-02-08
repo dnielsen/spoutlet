@@ -95,14 +95,14 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <div class="page_navigation" style="float: left;margin:15px 0 0 0;"></div>
+            <div class="page_navigation" style="float: right;margin:15px 0 0 0;"></div>
         </div>
-        <div style="width:100%;padding:15px 0 15px 0;text-align:center; float: left;">
-        <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
-    </div>
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        <div style="width:100%;padding:15px 0 15px 0;text-align:center; float: left;">
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+        </div>
     </div>
 </div>
 {% endblock %}

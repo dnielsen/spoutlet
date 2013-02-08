@@ -950,10 +950,11 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($groupDiscussion)
             ->add('title', 'text', array('label' => 'Discussion Name'))
-            ->add('content', 'textarea', array(
+            ->add('content', 'purifiedTextarea', array(
                 'label' => 'Content',
                 'help'  => 'Give a description for your discussion.',
-                'required' => true
+                'required' => true,
+                'attr'  => array('class' => 'ckeditor'),
             ))
             ->getForm();
 
@@ -995,7 +996,11 @@ Alienware Arena Team
 
         $form = $this->createFormBuilder($discussion)
             ->add('title', 'text', array('label' => 'Discussion Name'))
-            ->add('content', 'textarea', array('label' => 'Content', 'help'  => 'Give a description for your discussion.'))
+            ->add('content', 'purifiedTextarea', array(
+                    'label' => 'Content',
+                    'help'  => 'Give a description for your discussion.',
+                    'attr'  => array('class' => 'ckeditor'),
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -1065,7 +1070,10 @@ Alienware Arena Team
 
         $groupDiscussionPost = new GroupDiscussionPost();
         $form = $this->createFormBuilder($groupDiscussionPost)
-            ->add('content', 'textarea', array('label' => 'Message'))
+            ->add('content', 'purifiedTextarea', array(
+                    'label' => 'Message',
+                    'attr'  => array('class' => 'ckeditor'),
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -1167,7 +1175,10 @@ Alienware Arena Team
         }
 
         $form = $this->createFormBuilder($groupDiscussionPost)
-            ->add('content', 'textarea', array('label' => 'Message'))
+            ->add('content', 'purifiedTextarea', array(
+                'label' => 'Message',
+                'attr'  => array('class' => 'ckeditor'),
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
