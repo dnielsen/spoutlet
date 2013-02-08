@@ -70,10 +70,11 @@ class DealCodeRepository extends CodeRepository
      *
      * @param \Platformd\SpoutletBundle\Entity\Deal $deal
      * @param $site
-     * @param \DateTime $since
+     * @param \DateTime $from
+     * @param \DateTime $to
      * @return integer
      */
-    public function getAssignedForDealAndSite(Deal $deal, $site, DateTime $since = null)
+    public function getAssignedForDealAndSite(Deal $deal, $site, $from, $to)
     {
         $qb  = $this->createForDealQueryBuilder($deal);
         $this->addAssignedQueryBuilder($qb);
@@ -83,9 +84,15 @@ class DealCodeRepository extends CodeRepository
             ->setParameter('site', $site)
         ;
 
-        if ($since) {
-            $qb->andWhere('k.assignedAt >= :since')
-                ->setParameter('since', $since)
+        if ($from) {
+            $qb->andWhere('k.assignedAt >= :from')
+                ->setParameter('from', $from)
+            ;
+        }
+
+        if ($to) {
+            $qb->andWhere('k.assignedAt <= :to')
+                ->setParameter('to', $to)
             ;
         }
 

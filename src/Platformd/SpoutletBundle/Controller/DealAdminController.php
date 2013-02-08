@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use DateTime;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Deal admin controller.
@@ -116,48 +117,49 @@ class DealAdminController extends Controller
         /** @var $metricManager \Platformd\SpoutletBundle\Metric\MetricManager */
         $metricManager = $this->container->get('platformd.metric_manager');
 
-        $deals = $this->getDealManager()->findAllOrderedByNewest();
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Deals');
 
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
-            ->add('status', 'choice', array(
-            'choices' => array(
-                1 => 'Published Deals',
-                0 => 'Unpublished Deals',
-            )
-        ))
+            ->add('deal', 'entity', array(
+                'class' => 'SpoutletBundle:Deal',
+                'property' => 'name',
+                'empty_value' => 'All Deals',
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('d')
+                        ->orderBy('d.name', 'ASC');
+                },
+            ))
             ->getForm()
         ;
 
         // default filtering stuff
-        $since = null;
-        $onlyEnabled = true;
+        $from   = null;
+        $to     = null;
+        $deal   = null;
 
         $requestData = $request->query->get($filterForm->getName());
         if (!empty($requestData)) {
             $filterForm->bindRequest($request);
             if ($filterForm->isValid()) {
-                $data = $filterForm->getData();
-                $since = ($range = $data['results_range']) ? new DateTime(sprintf('%s days ago', $range)) : null;
+                $data   = $filterForm->getData();
 
-                $onlyEnabled = ($data['status'] == 1);
+                $from   = $data['startDate'] ? : null;
+                $to     = $data['endDate'] ? : null;
+                $deal   = $data['deal'] ? : null;
             }
+        }
+
+        if ($deal == null) {
+            $deals  = $this->getDealManager()->findAllOrderedByNewest();
+        } else {
+            $deals  = $deal ? array($deal) : $this->getDealManager()->findAllOrderedByNewest();
         }
 
         $dealMetrics = array();
         /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
         foreach($deals as $deal) {
-            /*
-             * Filter results: Skip giveway if
-             *     a) We only want enabled giveaways and this giveaway is *not* active/enabled
-             *     b) We only want disabled giveaways and this giveaway *is* active/enabled
-             */
-            if (($onlyEnabled && !$deal->isPublished()) || (!$onlyEnabled && $deal->isPublished())) {
-                continue;
-            }
-
-            $dealMetrics[] = $metricManager->createDealReport($deal, $since);
+            $dealMetrics[] = $metricManager->createDealReport($deal, $from, $to);
         }
 
         return $this->render('SpoutletBundle:DealAdmin:metrics.html.twig', array(

@@ -56,7 +56,7 @@ class GiveawayKeyRepository extends CodeRepository
      * @param \DateTime $since
      * @return integer
      */
-    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, DateTime $since = null)
+    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, $from, $to)
     {
         $qb  = $this->createForGiveawayQueryBuilder($giveaway);
         $this->addAssignedQueryBuilder($qb);
@@ -66,9 +66,15 @@ class GiveawayKeyRepository extends CodeRepository
             ->setParameter('site', $site)
         ;
 
-        if ($since) {
-            $qb->andWhere('k.assignedAt >= :since')
-                ->setParameter('since', $since)
+        if ($from) {
+            $qb->andWhere('k.assignedAt >= :from')
+                ->setParameter('from', $from)
+            ;
+        }
+
+        if ($to) {
+            $qb->andWhere('k.assignedAt <= :to')
+                ->setParameter('to', $to)
             ;
         }
 
