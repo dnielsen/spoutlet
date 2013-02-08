@@ -6,6 +6,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Event\EventEvent,
+    Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\SpoutletBundle\Entity\Group
 ;
@@ -56,6 +57,8 @@ class EventService
     }
 
     /**
+     * Create and event
+     *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
     public function createEvent(Event $event)
@@ -78,6 +81,8 @@ class EventService
     }
 
     /**
+     * Update an event
+     *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
     public function updateEvent(Event $event)
@@ -91,6 +96,11 @@ class EventService
         $this->dispatcher->dispatch(EventEvents::EVENT_UPDATE, $event);
     }
 
+    /**
+     * Approve an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
     public function approveEvent(Event $event)
     {
         $event->setApproved(true);
@@ -100,6 +110,72 @@ class EventService
         // We dispatch an event for further tasks
         $event = new EventEvent($event);
         $this->dispatcher->dispatch(EventEvents::EVENT_APPROVE, $event);
+    }
+
+    /**
+     * Cancel an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
+    public function cancelEvent(Event $event)
+    {
+        $event->setActive(false);
+
+        $this->updateEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new EventEvent($event);
+        $this->dispatcher->dispatch(EventEvents::EVENT_CANCEL, $event);
+    }
+
+    /**
+     * Activate an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
+    public function activateEvent(Event $event)
+    {
+        $event->setActive(true);
+
+        $this->updateEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new EventEvent($event);
+        $this->dispatcher->dispatch(EventEvents::EVENT_ACTIVATE, $event);
+    }
+
+    /**
+     * Registers a user to an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function register(Event $event, User $user)
+    {
+        $event->getAttendees()->add($user);
+
+        $this->repository->saveEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new RegistrationEvent($event, $user);
+        $this->dispatcher->dispatch(EventEvents::EVENT_UNREGISTER, $event);
+    }
+
+    /**
+     * Unregisters a user to an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function unregister(Event $event, User $user)
+    {
+        $event->getAttendees()->removeElement($user);
+
+        $this->repository->saveEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new RegistrationEvent($event, $user);
+        $this->dispatcher->dispatch(EventEvents::EVENT_UNREGISTER, $event);
     }
 
     /**

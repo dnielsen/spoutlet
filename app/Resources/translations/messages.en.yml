@@ -411,6 +411,18 @@ platformd:
                     Should you have any questions, please contact us at contact@alienwarearena.com.
 
                     Alienware Arena Team
+            cancel:
+                title: %eventName% has been canceled
+                message: |
+                    This is an automated email to inform you that %eventName% has been cancelled.
+
+                    Alienware Arena Team
+            activate:
+                title: %eventName% is active again
+                message: |
+                    This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Alienware Arena Team
 
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"

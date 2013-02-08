@@ -192,10 +192,8 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        $securityContext = $this->getSecurity();
-
         // check for edit access
-        if (false === $securityContext->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
         {
             throw new AccessDeniedException();
         }
@@ -360,6 +358,78 @@ class GroupEventController extends Controller
         )));
     }
 
+    /**
+     * Sets an event as canceled
+     * Triggers email notifications
+     *
+     * @param $eventId
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+    public function cancelAction($eventId)
+    {
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (
+            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+        ) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        if (!$groupEvent->getActive()) {
+            $this->setFlash('error', 'Event is already canceled!');
+        } else {
+            $this->getGroupEventService()->cancelEvent($groupEvent);
+
+            $this->setFlash('success', 'Event has been canceled successfully and attendees will be notified!');
+        }
+
+        return $this->redirect($this->generateUrl('group_event_edit', array(
+            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'eventId' => $groupEvent->getId()
+        )));
+    }
+
+    public function activateAction($eventId)
+    {
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (
+            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+        ) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        if ($groupEvent->getActive()) {
+            $this->setFlash('error', 'Event is already active!');
+        } else {
+            $this->getGroupEventService()->activateEvent($groupEvent);
+
+            $this->setFlash('success', 'Event has been activated successfully and attendees will be notified!');
+        }
+
+        return $this->redirect($this->generateUrl('group_event_edit', array(
+            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'eventId' => $groupEvent->getId()
+        )));
+    }
+
     public function rsvpAjaxAction(Request $request)
     {
         $response = new Response();
@@ -399,11 +469,14 @@ class GroupEventController extends Controller
         $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $user);
 
         if ($rsvp == 0 && $isAttending) {
-             $groupEvent->getAttendees()->removeElement($user);
-             $this->getGroupEventService()->updateEvent($groupEvent);
+            $this->getGroupEventService()->unregister($groupEvent, $user);
+//
+//            $groupEvent->getAttendees()->removeElement($user);
+//            $this->getGroupEventService()->updateEvent($groupEvent);
         } elseif ($rsvp > 0 && !$isAttending) {
-            $groupEvent->getAttendees()->add($user);
-            $this->getGroupEventService()->updateEvent($groupEvent);
+            $this->getGroupEventService()->register($groupEvent, $user);
+//            $groupEvent->getAttendees()->add($user);
+//            $this->getGroupEventService()->updateEvent($groupEvent);
         }
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
