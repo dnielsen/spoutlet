@@ -2,25 +2,35 @@
 
 namespace Platformd\SpoutletBundle\Model;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\SpoutletBundle\GroupEvents;
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\GroupDiscussion;
 use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
+use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
+use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
 use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
-use Platformd\SpoutletBundle\GroupEvents;
-use Doctrine\ORM\EntityManager;
-use Platformd\SpoutletBundle\Entity\GamePageLocale;
-use Symfony\Component\HttpFoundation\Session;
-use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\SpoutletBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\CEVOBundle\Api\ApiManager;
+use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
+
+use Doctrine\ORM\EntityManager;
+
+use Knp\MediaBundle\Util\MediaUtil;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Manager for Group:
@@ -37,15 +47,29 @@ class GroupManager
 
     private $mediaUtil;
 
+    private $siteUtil;
+
+    private $CEVOApiManager;
+
     private $securityContext;
 
     private $eventDispatcher;
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        EntityManager $em,
+        Session $session,
+        MediaUtil $mediaUtil,
+        SiteUtil $siteUtil,
+        ApiManager $CEVOApiManager,
+        SecurityContextInterface $securityContext,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
+        $this->siteUtil = $siteUtil;
+        $this->CEVOApiManager = $CEVOApiManager;
         $this->securityContext = $securityContext;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -97,6 +121,86 @@ class GroupManager
         if ($flush) {
             $this->em->flush();
         }
+    }
+
+    /**
+     * Automatically makes a user join a group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function autoJoinGroup(Group $group, User $user)
+    {
+        if ($group->isMember($user) || $group->isOwner($user)) {
+            throw new \Exception('You are already a member of this group!');
+        }
+
+        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        // TODO This should probably be refactored to use the global activity table
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+        $group->getMembers()->add($user);
+        $group->getUserMembershipActions()->add($joinAction);
+
+        $event = new GroupEvent($group, $user);
+        $this->eventDispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+        $this->saveGroup($group);
+
+        if ($group->getIsPublic()) {
+            try {
+                $this->CEVOApiManager->GiveUserXp('joingroup');
+            } catch (ApiException $e) {
+                // We do nothing
+            }
+        }
+    }
+
+    /**
+     * Automatically makes a user apply to a group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws \Exception
+     */
+    public function autoApplyToGroup(Group $group, User $user)
+    {
+        if ($group->isMember($user) || $group->isOwner($user)) {
+            throw new \Exception('You are already a member of this group!');
+        }
+
+        /** @var $applicationRepo \Platformd\SpoutletBundle\Entity\GroupApplicationRepository */
+        $applicationRepo = $this->em->getRepository('SpoutletBundle:GroupApplication');
+
+        $application = $applicationRepo->findOneBy(array(
+            'group' => $group,
+            'user' => $user
+        ));
+
+        if ($application->getGroup() && ($application->getGroup()->getId() == $group->getId())) {
+            throw new \Exception('You have already applied to this group!');
+        }
+
+        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'ApplyToGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $application = new GroupApplication();
+
+        $application->setGroup($group);
+        $application->setApplicant($user);
+        $application->setSite($this->getCurrentSite());
+        $application->setReason('This is an automated application because user has registered for an event belonging to this group.');
+
+        $this->em->persist($application);
+        $this->em->flush();
     }
 
     public function saveGroupNews(GroupNews $groupNews, $flush = true)
@@ -363,6 +467,11 @@ class GroupManager
     public function getAllGroupsForUser(User $user)
     {
         return $this->getRepository()->getAllGroupsForUser($user);
+    }
+
+    private function getCurrentSite()
+    {
+        return $this->siteUtil->getCurrentSite();
     }
 
     /**

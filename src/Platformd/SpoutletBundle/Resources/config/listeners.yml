@@ -1,0 +1,52 @@
+services:
+    platformd.listener.group_discussion_listener:
+        class: Platformd\SpoutletBundle\EventListener\GroupDiscussionListener
+        arguments:
+            - "@platformd.model.group_manager"
+        tags:
+            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
+            - { name: kernel.event_listener, event: awa.content.reinstate, method: onAddToDiscussion }
+            - { name: kernel.event_listener, event: awa.discussionPost.delete, method: onRemoveFromDiscussion }
+            - { name: kernel.event_listener, event: awa.content.report, method: onRemoveFromDiscussion }
+        scope: request
+
+    platformd.listener.global_activity_listener:
+        class: Platformd\SpoutletBundle\EventListener\GlobalActivityListener
+        arguments:
+            - "@platformd.model.activity_manager"
+        tags:
+            - { name: kernel.event_listener, event: awa.group.join, method: onGroupJoin }
+            - { name: kernel.event_listener, event: awa.group.leave, method: onGroupLeave }
+            - { name: kernel.event_listener, event: awa.discussion.create, method: onDiscussionCreate }
+            - { name: kernel.event_listener, event: awa.discussion.view, method: onDiscussionView }
+            - { name: kernel.event_listener, event: awa.discussion.delete, method: onDiscussionDelete }
+            - { name: kernel.event_listener, event: awa.content.report, method: onReportDiscussion }
+            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
+        scope: request
+
+    platformd.age.insufficient_age_listener:
+        class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
+        arguments:
+            - "@router"
+            - "@platformd.age.age_manager"
+            - "@templating"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+        scope: request
+
+    platformd.tenant.site_protection_listener:
+        class: Platformd\SpoutletBundle\Tenant\SiteProtectionListener
+        arguments:
+            - "%allowed_sites%"
+            - "@pd.cevo.cevo_auth_manager"
+            - %allow_cevo_forwarding%
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    platformd.listener.group_event_registration_listener:
+        class: Platformd\SpoutletBundle\EventListener\GroupEventRegistrationListener
+        arguments:
+            - "@platformd.model.group_manager"
+        tags:
+            - { name: kernel.event_listener, event: awa.event.register, method: onRegister }
+        scope: request
