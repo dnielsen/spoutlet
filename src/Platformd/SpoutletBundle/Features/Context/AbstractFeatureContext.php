@@ -186,9 +186,9 @@ class AbstractFeatureContext extends MinkContext
         );
     }
 
-    public function NavigateTo($namedRoute, $parameters)
+    public function NavigateTo($namedRoute, $parameters, $absolute = false)
     {
-        $url = $this->getContainer()->get('router')->generate($namedRoute, $parameters);
+        $url = $this->getContainer()->get('router')->generate($namedRoute, $parameters, $absolute);
         $this->getSession()->visit($url);
     }
 
