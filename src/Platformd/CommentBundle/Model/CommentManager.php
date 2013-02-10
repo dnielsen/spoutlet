@@ -104,7 +104,7 @@ class CommentManager extends BaseCommentManager
 
             $dealId = $pieces[1];
             $deal = $this->em
-                ->getRepository('SpoutletBundle:Deal')
+                ->getRepository('GiveawayBundle:Deal')
                 ->find($dealId)
             ;
 

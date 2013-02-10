@@ -1,8 +1,9 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity\Repository;
 
 use \Platformd\SpoutletBundle\Entity\Game as Game;
+use \Platformd\GiveawayBundle\Entity\Deal;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
@@ -12,9 +13,6 @@ class DealRepository extends EntityRepository
 {
     /**
      * Includes unpublished Deals
-     *
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
      */
     public function findAllForSiteNewestFirst($site)
     {
@@ -25,9 +23,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findAllOrderedByNewest()
     {
         return $this->createQueryBuilder('d')
@@ -37,15 +32,8 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * Get all published deals for this site and game
-     *
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findAllPublishedForSiteNewestFirstForGame($site, Game $game)
     {
-
         $qb = $this->createSiteQueryBuilder($site, true);
         $qb = $this->addActiveQueryBuilder($qb);
         $qb = $this->addGameQueryBuilder($qb, $game);
@@ -55,11 +43,6 @@ class DealRepository extends EntityRepository
             ->execute();
     }
 
-    /**
-     * @param string $slug
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal
-     */
     public function findOneBySlugForSite($slug, $site)
     {
         return $this->createSiteQueryBuilder($site, false)
@@ -70,11 +53,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * @param string $name
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal
-     */
     public function findOneByNameForSite($name, $site)
     {
         return $this->createSiteQueryBuilder($site)
@@ -85,12 +63,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * Returns the "featured" deals
-     *
-     * @param $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findFeaturedDealsForSite($site)
     {
         $qb = $this->createSiteQueryBuilder($site);
@@ -104,13 +76,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * Finds all active deals, except for those "featured", which are passed in
-     *
-     * @param string $site
-     * @param array $featuredDeals
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findAllActiveNonFeatureDealsForSite($site, array $featuredDeals)
     {
         $qb = $this->createSiteQueryBuilder($site);
@@ -126,12 +91,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-        /**
-     * Finds all active deals, except for those "featured", which are passed in
-     *
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findAllActiveDealsForSite($site)
     {
         $qb = $this->createSiteQueryBuilder($site);
@@ -143,12 +102,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * Finds all expired deals
-     *
-     * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findExpiredDealsForSite($site, $maxResults = 4)
     {
         $qb = $this->createSiteQueryBuilder($site);
@@ -161,10 +114,6 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    /**
-     * @param $site
-     * @return \Doctrine\ORM\QueryBuilder
-     */
     private function createSiteQueryBuilder($site, $returnOnlyPublished = true)
     {
         $qb = $this->createQueryBuilder('d')
@@ -185,12 +134,6 @@ class DealRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Adds the "is published" parts to a query
-     *
-     * @param null|QueryBuilder $qb
-     * @return \Doctrine\ORM\QueryBuilder|null|QueryBuilder
-     */
     private function addPublishedQueryBuilder(QueryBuilder $qb = null)
     {
         if ($qb === null) {
@@ -204,12 +147,6 @@ class DealRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Adds game to a query
-     *
-     * @param null|QueryBuilder $qb
-     * @return \Doctrine\ORM\QueryBuilder|null|QueryBuilder
-     */
     private function addGameQueryBuilder(QueryBuilder $qb = null, Game $game)
     {
         if ($qb === null) {
@@ -222,16 +159,13 @@ class DealRepository extends EntityRepository
     }
 
     /**
- * Adds a query builder to return only "active" deals:
- *      * deals that have already started
- *      * deals that have not expired
- *
- * This allows both the startsAt and endsAt to be null, which implies
- * that the Deal is active
- *
- * @param QueryBuilder|null $qb
- * @return \Doctrine\ORM\QueryBuilder|null
- */
+     * Adds a query builder to return only "active" deals:
+     *      * deals that have already started
+     *      * deals that have not expired
+     *
+     * This allows both the startsAt and endsAt to be null, which implies
+     * that the Deal is active
+     */
     private function addActiveQueryBuilder(QueryBuilder $qb = null)
     {
         if ($qb === null) {
@@ -251,9 +185,6 @@ class DealRepository extends EntityRepository
      *      * deals that have expired
      *
      * This is the opposite of addActiveQueryBuilder
-     *
-     * @param QueryBuilder|null $qb
-     * @return \Doctrine\ORM\QueryBuilder|null
      */
     private function addExpiredQueryBuilder(QueryBuilder $qb = null)
     {
@@ -267,10 +198,6 @@ class DealRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * @param QueryBuilder $qb
-     * @return \Doctrine\ORM\QueryBuilder
-     */
     private function addOrderByQuery(QueryBuilder $qb)
     {
         $qb->addOrderBy('d.createdAt', 'DESC');
@@ -281,10 +208,6 @@ class DealRepository extends EntityRepository
     /**
      * Utility function that takes an array of entities and returns
      * an array of their ids
-     *
-     * @static
-     * @param array $objects
-     * @return array
      */
     static private function objectsToIdsArray(array $objects)
     {

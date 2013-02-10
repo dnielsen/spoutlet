@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayPool
  *
- * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayPoolRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="giveaway_pool")
  */
-class GiveawayPool extends Pool
+class GiveawayPool extends AbstractPool
 {
     /**
      * Many to one with Giveaway

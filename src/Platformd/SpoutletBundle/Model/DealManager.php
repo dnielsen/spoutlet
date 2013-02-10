@@ -3,9 +3,8 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Platformd\SpoutletBundle\Entity\GamePage;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Deal;
 use Doctrine\ORM\EntityManager;
-use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Knp\MediaBundle\Util\MediaUtil;
 
 /**
@@ -26,14 +25,6 @@ class DealManager
         $this->mediaUtil = $mediaUtil;
     }
 
-    /**
-     * Call this to save a Deal
-     *
-     * This must be used instead of persisting it directly
-     *
-     * @param Deal $deal
-     * @param bool $flush
-     */
     public function saveDeal(Deal $deal, $flush = true)
     {
         $this->em->persist($deal);
@@ -46,14 +37,6 @@ class DealManager
         }
     }
 
-    /**
-     * Finds all the Deal objects that are related to the given site.
-     *
-     * Orders them by newest first
-     *
-     * @param string $site The site/locale
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findAllForSiteNewestFirst($site)
     {
         return $this->getRepository()->findAllForSiteNewestFirst($site);
@@ -64,54 +47,31 @@ class DealManager
         return $this->getRepository()->findAllOrderedByNewest();
     }
 
-    /**
-     * @param string $slug
-     * @return \Platformd\SpoutletBundle\Entity\Deal
-     */
     public function findOneBySlug($slug, $site)
     {
         return $this->getRepository()->findOneBySlugForSite($slug, $site);
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findFeaturedDeals($site)
     {
         return $this->getRepository()->findFeaturedDealsForSite($site);
     }
 
-    /**
-     * @param array $featuredDeals
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findActiveNonFeaturedDeals(array $featuredDeals, $site)
     {
         return $this->getRepository()->findAllActiveNonFeatureDealsForSite($site, $featuredDeals);
     }
 
-    /**
-     * @param array $featuredDeals
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findActiveDeals($site)
     {
         return $this->getRepository()->findAllActiveDealsForSite($site);
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Deal[]
-     */
     public function findExpiredDeals($site)
     {
         return $this->getRepository()->findExpiredDealsForSite($site);
     }
 
-    /**
-     * Properly persists or unsets the media fields
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     */
     private function handleMediaFields(Deal $deal)
     {
         $mUtil = $this->mediaUtil;
@@ -133,11 +93,6 @@ class DealManager
         }
     }
 
-    /**
-     * Handles the gallery medias persistence
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     */
     private function handleMediaGallery(Deal $deal)
     {
         /** @var $media \Platformd\MediaBundle\Entity\Media */
@@ -149,11 +104,8 @@ class DealManager
         }
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\DealRepository
-     */
     private function getRepository()
     {
-        return $this->em->getRepository('SpoutletBundle:Deal');
+        return $this->em->getRepository('GiveawayBundle:Deal');
     }
 }

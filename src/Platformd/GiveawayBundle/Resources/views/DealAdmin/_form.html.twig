@@ -32,7 +32,7 @@
                 {{ form_errors(form.redemptionInstructionsArray) }}
 
                 <ol class="input">
-                    {% include 'SpoutletBundle:Deal:_steps.html.twig' with {'deal': deal} %}
+                    {% include 'GiveawayBundle:Deal:_steps.html.twig' with {'deal': deal} %}
                     {% for redemptionForm in form.redemptionInstructionsArray %}
                         <li>
                             {{ form_widget(redemptionForm) }}

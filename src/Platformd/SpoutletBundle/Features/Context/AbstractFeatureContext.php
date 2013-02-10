@@ -18,9 +18,9 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
 use Platformd\SpoutletBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\GamePage;
-use Platformd\SpoutletBundle\Entity\Deal;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\Gallery;
+use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\SpoutletBundle\Entity\GroupNews;
 
@@ -825,7 +825,7 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception(sprintf('Site not found for locale "%s"', $locale));
         }
 
-        $deal   = $em->getRepository('SpoutletBundle:Deal')->findOneByNameForSite($dealName, $site);
+        $deal   = $em->getRepository('GiveawayBundle:Deal')->findOneByNameForSite($dealName, $site);
 
         if (!$deal) {
             throw new \Exception('Could not find the deal in the database');
@@ -1061,7 +1061,7 @@ class AbstractFeatureContext extends MinkContext
     {
         $em = $this->getEntityManager();
 
-        if ($deal = $em->getRepository('SpoutletBundle:Deal')->findOneBy(array('name' => $dealName))) {
+        if ($deal = $em->getRepository('GiveawayBundle:Deal')->findOneBy(array('name' => $dealName))) {
             $em->remove($deal);
             $em->flush();
         }

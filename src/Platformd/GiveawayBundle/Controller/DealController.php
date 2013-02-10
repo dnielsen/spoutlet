@@ -1,12 +1,14 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GiveawayBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\Locale\Locale;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\DealCode;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DealController extends Controller
@@ -42,14 +44,11 @@ class DealController extends Controller
      */
     public function showAction($slug, Request $request)
     {
-        /*if ($slug == 'ravaged') {
-            return $this->render('SpoutletBundle:Deal:showRavaged.html.twig');
-        }*/
 
         $em                     = $this->getDoctrine()->getEntityManager();
         $site                   = $this->getCurrentSite();
-        $deal                   = $em->getRepository('SpoutletBundle:Deal')->findOneBySlug($slug, $site);
-        $dealCodeRepo           = $em->getRepository('SpoutletBundle:DealCode');
+        $deal                   = $em->getRepository('GiveawayBundle:Deal')->findOneBySlug($slug, $site);
+        $dealCodeRepo           = $em->getRepository('GiveawayBundle:DealCode');
         $countries              = Locale::getDisplayCountries('en');
 
         $user                   = $this->getUser();
@@ -102,8 +101,8 @@ class DealController extends Controller
 
         $em             = $this->getDoctrine()->getEntityManager();
         $site           = $this->getCurrentSite();
-        $dealCodeRepo   = $em->getRepository('SpoutletBundle:DealCode');
-        $dealPoolRepo   = $em->getRepository('SpoutletBundle:DealPool');
+        $dealCodeRepo   = $em->getRepository('GiveawayBundle:DealCode');
+        $dealPoolRepo   = $em->getRepository('GiveawayBundle:DealPool');
         $deal           = $this->getDealManager()->findOneBySlug($slug, $site);
         $clientIp       = $request->getClientIp(true);
         $user           = $this->getUser();

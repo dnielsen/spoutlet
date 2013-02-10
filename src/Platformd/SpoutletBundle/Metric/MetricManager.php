@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManager;
 
 use Platformd\GiveawayBundle\Entity\Giveaway,
-    Platformd\SpoutletBundle\Entity\Deal,
+    Platformd\GiveawayBundle\Entity\Deal,
     Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
@@ -41,7 +41,7 @@ class MetricManager
     private $giveawayKeyRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\DealCodeRepository
+     * @var \Platformd\GiveawayBundle\Entity\DealCodeRepository
      */
     private $dealCodeRepository;
 
@@ -78,7 +78,7 @@ class MetricManager
         $this->userRepo = $em->getRepository('UserBundle:User');
         $this->globalActivityRepository = $em->getRepository('SpoutletBundle:GlobalActivity');
         $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
-        $this->dealCodeRepository = $em->getRepository('SpoutletBundle:DealCode');
+        $this->dealCodeRepository = $em->getRepository('GiveawayBundle:DealCode');
         $this->groupRepository = $em->getRepository('SpoutletBundle:Group');
         $this->groupMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('SpoutletBundle:GroupDiscussion');
@@ -146,7 +146,7 @@ class MetricManager
      *   * sites
      *      site_key => # assigned
      *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @param \Platformd\GiveawayBundle\Entity\Deal $deal
      * @param \DateTime $since
      * @return array
      */

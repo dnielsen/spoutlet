@@ -1,19 +1,18 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity\Superclass;
+namespace Platformd\GiveawayBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Platformd\SpoutletBundle\Entity\Superclass\Pool;
+use Platformd\GiveawayBundle\Entity\AbstractPool as Pool;
 use Platformd\UserBundle\Entity\User;
 use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Doctrine\ORM\QueryBuilder;
-use DateTime;
 
 /**
  * Base repository for any entities that extend from the Code mapped superclass
  */
-abstract class CodeRepository extends EntityRepository
+abstract class AbstractCodeRepository extends EntityRepository
 {
     /**
      * Returns the number of keys that should "appear" to be available based on:
@@ -43,10 +42,6 @@ abstract class CodeRepository extends EntityRepository
         );
     }
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Code|null
-     */
     public function getUnassignedKey(Pool $pool = null)
     {
         // make sure this pool is active
@@ -66,9 +61,6 @@ abstract class CodeRepository extends EntityRepository
 
     /**
      * Returns the TRUE number of keys that have been assigned for the given pool
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return int
      */
     public function getAssignedForPool(Pool $pool)
     {
@@ -84,9 +76,6 @@ abstract class CodeRepository extends EntityRepository
 
     /**
      * Returns the TRUE number of keys that have NOTbeen assigned for the given pool
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return int
      */
     public function getUnassignedForPool(Pool $pool)
     {
@@ -102,9 +91,6 @@ abstract class CodeRepository extends EntityRepository
 
     /**
      * Returns the total number of keys for the given pool
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return int
      */
     public function getTotalForPool(Pool $pool)
     {
@@ -117,11 +103,6 @@ abstract class CodeRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * @param $id
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Code
-     */
     public function findOneByIdAndUser($id, User $user)
     {
         return $this
@@ -136,10 +117,6 @@ abstract class CodeRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @return array
-     */
     public function findAssignedToUser(User $user)
     {
         return $this
@@ -154,10 +131,6 @@ abstract class CodeRepository extends EntityRepository
 
     /**
      * Returns whether or not the given IP should be given more keys
-     *
-     * @param string $ip
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return bool
      */
     public function canIpHaveMoreKeys($ip, Pool $pool)
     {
@@ -183,9 +156,6 @@ abstract class CodeRepository extends EntityRepository
     /**
      * Whether or not a given pool should "appear" to have zero available
      * keys even if it has more
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     * @return bool
      */
     protected function shouldPoolExposeKeys(Pool $pool = null)
     {
@@ -202,10 +172,6 @@ abstract class CodeRepository extends EntityRepository
         return true;
     }
 
-    /**
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @return \Doctrine\ORM\QueryBuilder
-     */
     protected function addAssignedQueryBuilder(QueryBuilder $qb)
     {
         return $qb->andWhere('k.user IS NOT NULL');

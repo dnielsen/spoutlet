@@ -1,13 +1,13 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GiveawayBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\DealPool;
+use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\SpoutletBundle\Form\Type\DealPoolType;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Deal;
 use Symfony\Component\Locale\Locale;
 
 /**
@@ -29,10 +29,10 @@ class DealPoolAdminController extends Controller
         $this->addDealBreadcrumb($deal);
 
         $pools = $manager
-            ->getRepository('SpoutletBundle:DealPool')
+            ->getRepository('GiveawayBundle:DealPool')
             ->findBy(array('deal' => $deal->getId()));
 
-        return $this->render('SpoutletBundle:DealPoolAdmin:index.html.twig', array(
+        return $this->render('GiveawayBundle:DealPoolAdmin:index.html.twig', array(
             'pools'     => $pools,
             'deal'  => $deal,
             'codeRepo'   => $this->getDealCodeRepository(),
@@ -67,7 +67,7 @@ class DealPoolAdminController extends Controller
 
         $countries = Locale::getDisplayCountries('en');
 
-        return $this->render('SpoutletBundle:DealPoolAdmin:new.html.twig', array(
+        return $this->render('GiveawayBundle:DealPoolAdmin:new.html.twig', array(
             'form'      => $form->createView(),
             'dealId'  => $deal->getId(),
             'countries' => $countries
@@ -80,7 +80,7 @@ class DealPoolAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $pool = $manager->getRepository('SpoutletBundle:DealPool')
+        $pool = $manager->getRepository('GiveawayBundle:DealPool')
             ->findOneBy(array('id' => $poolId));
 
         if (!$pool) {
@@ -107,7 +107,7 @@ class DealPoolAdminController extends Controller
 
         $countries = Locale::getDisplayCountries('en');
 
-        return $this->render('SpoutletBundle:DealPoolAdmin:edit.html.twig', array(
+        return $this->render('GiveawayBundle:DealPoolAdmin:edit.html.twig', array(
             'pool' => $pool,
             'form' => $form->createView(),
             'dealId' => $dealId,
@@ -121,7 +121,7 @@ class DealPoolAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $pool = $manager->getRepository('SpoutletBundle:DealPool')
+        $pool = $manager->getRepository('GiveawayBundle:DealPool')
             ->findOneBy(array('id' => $poolId));
 
         if (!$pool) {
@@ -137,11 +137,6 @@ class DealPoolAdminController extends Controller
         )));
     }
 
-    /**
-     * Save a pool & add keys stored in the uploaded file
-     *
-     * @param \Platformd\SpoutletBundle\Form\Type\DealPoolType $pool
-     */
     protected function savePool(DealPool $pool)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -160,7 +155,7 @@ class DealPoolAdminController extends Controller
      * Retrieve a Deal using its id
      *
      * @param integer $id
-     * @return \Platformd\SpoutletBundle\Entity\Deal
+     * @return \Platformd\GiveawayBundle\Entity\Deal
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     protected function retrieveDealById($id)
@@ -168,7 +163,7 @@ class DealPoolAdminController extends Controller
         $deal = $this
             ->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SpoutletBundle:Deal')
+            ->getRepository('GiveawayBundle:Deal')
             ->findOneBy(array('id' => $id));
 
         if (!$deal) {
@@ -185,7 +180,7 @@ class DealPoolAdminController extends Controller
     protected function getDealCodeRepository()
     {
         return $this->getDoctrine()
-            ->getRepository('SpoutletBundle:DealCode')
+            ->getRepository('GiveawayBundle:DealCode')
         ;
     }
 

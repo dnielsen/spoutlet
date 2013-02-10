@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity\Superclass;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -12,7 +12,7 @@ Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Pool
+abstract class AbstractPool
 {
     /**
      * @var integer $id

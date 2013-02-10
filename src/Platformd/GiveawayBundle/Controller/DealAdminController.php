@@ -1,9 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GiveawayBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\SpoutletBundle\Form\Type\DealType;
+use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
@@ -23,7 +24,7 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb();
 
-        return $this->render('SpoutletBundle:DealAdmin:index.html.twig', array(
+        return $this->render('GiveawayBundle:DealAdmin:index.html.twig', array(
             'sites' => MultitenancyManager::getSiteChoices()
         ));
     }
@@ -42,7 +43,7 @@ class DealAdminController extends Controller
 
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
-        return $this->render('SpoutletBundle:DealAdmin:list.html.twig', array(
+        return $this->render('GiveawayBundle:DealAdmin:list.html.twig', array(
             'entities' => $deals,
             'site'     => $site,
         ));
@@ -65,7 +66,7 @@ class DealAdminController extends Controller
             return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $deal->getId())));
         }
 
-        return $this->render('SpoutletBundle:DealAdmin:new.html.twig', array(
+        return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
             'deal' => $deal,
             'form'   => $form->createView()
         ));
@@ -80,7 +81,7 @@ class DealAdminController extends Controller
         $this->addDealsBreadcrumb()->addChild('Edit Deal');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $deal = $em->getRepository('SpoutletBundle:Deal')->find($id);
+        $deal = $em->getRepository('GiveawayBundle:Deal')->find($id);
 
         if (!$deal) {
             throw $this->createNotFoundException('Unable to find deal.');
@@ -100,7 +101,7 @@ class DealAdminController extends Controller
             return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $id)));
         }
 
-        return $this->render('SpoutletBundle:DealAdmin:edit.html.twig', array(
+        return $this->render('GiveawayBundle:DealAdmin:edit.html.twig', array(
             'deal'      => $deal,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -114,7 +115,6 @@ class DealAdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
-        /** @var $metricManager \Platformd\SpoutletBundle\Metric\MetricManager */
         $metricManager = $this->container->get('platformd.metric_manager');
 
         $this->getBreadcrumbs()->addChild('Metrics');
@@ -122,7 +122,7 @@ class DealAdminController extends Controller
 
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('deal', 'entity', array(
-                'class' => 'SpoutletBundle:Deal',
+                'class' => 'GiveawayBundle:Deal',
                 'property' => 'name',
                 'empty_value' => 'All Deals',
                 'query_builder' => function(EntityRepository $er) {
@@ -157,12 +157,12 @@ class DealAdminController extends Controller
         }
 
         $dealMetrics = array();
-        /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
+        /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
         foreach($deals as $deal) {
             $dealMetrics[] = $metricManager->createDealReport($deal, $from, $to);
         }
 
-        return $this->render('SpoutletBundle:DealAdmin:metrics.html.twig', array(
+        return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(
             'metrics' => $dealMetrics,
             'sites'   => $metricManager->getSites(),
             'form'    => $filterForm->createView()
@@ -185,7 +185,7 @@ class DealAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                /** @var $deal \Platformd\SpoutletBundle\Entity\Deal */
+                /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
                 $deal = $form->getData();
 
                 $ruleset    = $deal->getRuleset();
@@ -251,9 +251,6 @@ class DealAdminController extends Controller
         return $this->getBreadcrumbs();
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Model\DealManager
-     */
     private function getDealManager()
     {
         return $this->get('platformd.model.deal_manager');

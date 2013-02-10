@@ -1,10 +1,11 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity\Superclass;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 /**
@@ -16,11 +17,9 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent;
  *
  * @ORM\MappedSuperclass
  */
-abstract class Code
+abstract class AbstractCode
 {
     /**
-     * @var integer $id
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -28,8 +27,6 @@ abstract class Code
     protected $id;
 
     /**
-     * @var string $value
-     *
      * @ORM\Column(name="value", type="string", length=255)
      */
     protected $value;
@@ -51,24 +48,9 @@ abstract class Code
      */
     protected $ipAddress;
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     */
-    abstract public function setPool(Pool $pool);
-
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Pool
-     */
+    abstract public function setPool(AbstractPool $pool);
     abstract public function getPool();
-
-    /**
-     * @param User $user
-     */
     abstract public function setUser(User $user);
-
-    /**
-     * @return User
-     */
     abstract public function getUser();
 
     public function __construct($value)
@@ -76,31 +58,16 @@ abstract class Code
         $this->setValue($value);
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set value
-     *
-     * @param string $value
-     */
     public function setValue($value)
     {
         $this->value = $value;
     }
 
-    /**
-     * Get value
-     *
-     * @return string
-     */
     public function getValue()
     {
         return $this->value;

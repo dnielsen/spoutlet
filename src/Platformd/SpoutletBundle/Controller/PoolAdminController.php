@@ -2,12 +2,12 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\DealPool;
+use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\SpoutletBundle\Form\Type\DealPoolType;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Deal;
 
 /**
 *
@@ -28,7 +28,7 @@ class DealPoolAdminController extends Controller
         $this->addDealBreadcrumb($deal);
 
         $pools = $manager
-            ->getRepository('SpoutletBundle:DealPool')
+            ->getRepository('GiveawayBundle:DealPool')
             ->findBy(array('deal' => $deal->getId()));
 
         return $this->render('SpoutletBundle:DealPoolAdmin:index.html.twig', array(
@@ -76,7 +76,7 @@ class DealPoolAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $pool = $manager->getRepository('SpoutletBundle:DealPool')
+        $pool = $manager->getRepository('GiveawayBundle:DealPool')
             ->findOneBy(array('id' => $pool));
 
         if (!$pool) {
@@ -114,7 +114,7 @@ class DealPoolAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $pool = $manager->getRepository('SpoutletBundle:DealPool')
+        $pool = $manager->getRepository('GiveawayBundle:DealPool')
             ->findOneBy(array('id' => $pool));
 
         if (!$pool) {
@@ -153,7 +153,7 @@ class DealPoolAdminController extends Controller
      * Retrieve a Deal using its id
      *
      * @param integer $id
-     * @return \Platformd\SpoutletBundle\Entity\Deal
+     * @return \Platformd\GiveawayBundle\Entity\Deal
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     protected function retrieveDealById($id)
@@ -161,7 +161,7 @@ class DealPoolAdminController extends Controller
         $deal = $this
             ->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SpoutletBundle:Deal')
+            ->getRepository('GiveawayBundle:Deal')
             ->findOneBy(array('id' => $id));
 
         if (!$deal) {
@@ -178,7 +178,7 @@ class DealPoolAdminController extends Controller
     protected function getDealCodeRepository()
     {
         return $this->getDoctrine()
-            ->getRepository('SpoutletBundle:DealCode')
+            ->getRepository('GiveawayBundle:DealCode')
         ;
     }
 

@@ -611,20 +611,6 @@ abstract class AbstractEvent implements LinkableInterface
     }
 
     /**
-     * Tries to get a friendly name for the event's timezone
-     *
-     * @return string
-     */
-    public function getTimezoneString()
-    {
-        $dtz = new \DateTimeZone($this->getTimezone());
-
-        $offset = $dtz->getOffset(new DateTime());
-
-        return isset(self::$timzoneCommonNames[$offset]) ? self::$timzoneCommonNames[$offset] : $dtz->getName();
-    }
-
-    /**
      * @param string $timezone
      */
     public function setTimezone($timezone)

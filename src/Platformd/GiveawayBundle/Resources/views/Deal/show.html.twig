@@ -62,7 +62,7 @@
         </div>
     </div>
     {% endif %}
-    {% include 'SpoutletBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
+    {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-details-wrapper">
 
@@ -116,7 +116,7 @@
                             </div>
                             <div id="deal-instructions">
                                 <ul>
-                                    {% include 'SpoutletBundle:Deal:_steps.html.twig' with {'deal': deal} %}
+                                    {% include 'GiveawayBundle:Deal:_steps.html.twig' with {'deal': deal} %}
                                     {% if  (redemptionSteps is not empty)  %}
                                     {% for redemptionStep in redemptionSteps %}
                                     <li>

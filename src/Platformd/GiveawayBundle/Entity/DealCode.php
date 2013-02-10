@@ -1,25 +1,22 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\SpoutletBundle\Entity\Superclass\Code;
-
+use Platformd\GiveawayBundle\Entity\AbstractCode;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
-use Platformd\SpoutletBundle\Entity\Superclass\Pool;
+
 
 /**
- * Platformd\SpoutletBundle\Entity\DealCode
- *
  * @ORM\Table(name="deal_code")
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\DealCodeRepository")
+ * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\DealCodeRepository")
  */
-class DealCode extends Code
+class DealCode extends AbstractCode
 {
     /**
      * @ORM\JoinColumn(name="pool", referencedColumnName="id", onDelete="CASCADE")
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\DealPool", inversedBy="dealCodes", cascade={"persist", "remove", "merge"})
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\DealPool", inversedBy="dealCodes", cascade={"persist", "remove", "merge"})
      */
     protected $pool;
 
@@ -32,23 +29,16 @@ class DealCode extends Code
     protected $user;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\Country
      * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     protected $country;
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     */
-    public function setPool(Pool $pool)
+    public function setPool(AbstractPool $pool)
     {
         $this->pool = $pool;
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Pool
-     */
     public function getPool()
     {
         return $this->pool;
@@ -62,33 +52,21 @@ class DealCode extends Code
         $this->setAssignedSite($site);
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return User
-     */
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Country
-     */
     public function getCountry()
     {
         return $this->country;
     }
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Country $country
-     */
     public function setCountry($country)
     {
         $this->country = $country;

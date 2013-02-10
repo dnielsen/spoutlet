@@ -76,7 +76,7 @@ class GamePageController extends Controller
 
         $dealRepo = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SpoutletBundle:Deal');
+            ->getRepository('GiveawayBundle:Deal');
 
         $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($this->getCurrentSite(), $gamePage->getGame());
         $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getCurrentSite());

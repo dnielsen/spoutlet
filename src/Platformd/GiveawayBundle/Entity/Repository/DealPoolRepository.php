@@ -1,12 +1,11 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 class DealPoolRepository extends EntityRepository
 {
-
     public function getAllPoolsForDealGivenCountry($deal, $country)
     {
         $qb = $this->createQueryBuilder('pool')

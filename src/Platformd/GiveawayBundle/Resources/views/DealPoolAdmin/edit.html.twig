@@ -1,11 +1,14 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.giveaway_pool.admin.create" | trans }}{% endblock %}
+{% block title %}{{ "platformd.giveaway_pool.admin.edit_pool" | trans }}{% endblock %}
 
 {% block content %}
-    {% include 'SpoutletBundle:DealPoolAdmin:_form.html.twig' with {
+    {% include 'GiveawayBundle:DealPoolAdmin:_form.html.twig' with {
         'form': form,
-        'route': path('admin_deal_pool_new', { "dealId" : dealId }),
-        'dealId': dealId
+        'route': path('admin_deal_pool_edit', {
+            "poolId"  : pool.id,
+            "dealId"  : pool.deal.id
+        }),
+    'dealId': pool.deal.id
     } %}
 {% endblock %}
 

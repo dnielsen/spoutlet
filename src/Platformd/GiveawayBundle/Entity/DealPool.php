@@ -1,8 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
-
-use Platformd\SpoutletBundle\Entity\Superclass\Pool;
+namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,18 +8,18 @@ use Symfony\Component\HttpFoundation\File\UploadedFile,
     Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Platformd\SpoutletBundle\Entity\DealPool
+ * Platformd\GiveawayBundle\Entity\DealPool
  *
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\DealPoolRepository")
+ * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\DealPoolRepository")
  * @ORM\Table(name="deal_pool")
  */
-class DealPool extends Pool
+class DealPool extends AbstractPool
 {
     /**
      * Many to one with Deal
      *
      * @var Deal
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Deal", inversedBy="dealPools")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Deal", inversedBy="dealPools")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $deal;
@@ -40,7 +38,7 @@ class DealPool extends Pool
     protected $allowedCountries;
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Deal
+     * @return \Platformd\GiveawayBundle\Entity\Deal
      */
     public function getDeal()
     {
@@ -48,7 +46,7 @@ class DealPool extends Pool
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @param \Platformd\GiveawayBundle\Entity\Deal $deal
      */
     public function setDeal($deal)
     {

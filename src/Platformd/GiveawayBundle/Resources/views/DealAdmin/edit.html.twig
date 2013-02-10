@@ -8,7 +8,7 @@
 </h1>
 
 <form action="{{ path('admin_deal_update', { 'id': deal.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {% include 'SpoutletBundle:DealAdmin:_form.html.twig' with {
+    {% include 'GiveawayBundle:DealAdmin:_form.html.twig' with {
         'form': edit_form
     } %}
 

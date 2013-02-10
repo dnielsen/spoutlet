@@ -1,23 +1,14 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GiveawayBundle\Entity\Repository;
 
-use Platformd\SpoutletBundle\Entity\Superclass\CodeRepository;
-use Platformd\SpoutletBundle\Entity\Deal;
+use Platformd\GiveawayBundle\Entity\Repository\AbstractCodeRepository;
+use Platformd\GiveawayBundle\Entity\Deal;
 use DateTime;
 use Platformd\UserBundle\Entity\User;
 
-/**
- * DealCode Repository
- */
-class DealCodeRepository extends CodeRepository
+class DealCodeRepository extends AbstractCodeRepository
 {
-    /**
-     * Returns the total number for codes for all pools across a deal
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return integer
-     */
     public function getTotalForDeal(Deal $deal)
     {
         return (int)$this
@@ -28,12 +19,6 @@ class DealCodeRepository extends CodeRepository
             ;
     }
 
-    /**
-     * Returns the total number of available codes for all pools across a deal
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return integer
-     */
     public function getTotalAvailableForDeal(Deal $deal)
     {
         return (int)$this
@@ -45,12 +30,6 @@ class DealCodeRepository extends CodeRepository
             ;
     }
 
-    /**
-     * Returns the total number of assigned codes across all pools of a deal
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return integer
-     */
     public function getAssignedForDeal(Deal $deal)
     {
         $qb  = $this->createForDealQueryBuilder($deal);
@@ -63,17 +42,6 @@ class DealCodeRepository extends CodeRepository
             ;
     }
 
-    /**
-     * Returns the total number of assigned codes for the given deal
-     * and site combination
-     *
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @param $site
-     * @param \DateTime $from
-     * @param \DateTime $to
-     * @return integer
-     */
     public function getAssignedForDealAndSite(Deal $deal, $site, $from, $to)
     {
         $qb  = $this->createForDealQueryBuilder($deal);
@@ -102,14 +70,6 @@ class DealCodeRepository extends CodeRepository
             ;
     }
 
-    /**
-     * Determines whether or not the given user has a code for any pool from
-     * the given Deal
-     *
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return bool
-     */
     public function doesUserHaveCodeForDeal(User $user, Deal $deal)
     {
         $count = (int)$this
@@ -128,13 +88,6 @@ class DealCodeRepository extends CodeRepository
         return $count > 0;
     }
 
-     /**
-     * Retrieves the deal code information for a user and deal
-     *
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return \Platormd\SpoutletBundle\Entity\DealCode
-     */
     public function getUserAssignedCodeForDeal(User $user, Deal $deal)
     {
         return $this
@@ -150,12 +103,6 @@ class DealCodeRepository extends CodeRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * Retrieves all deal codes a user
-     *
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @return \Platormd\SpoutletBundle\Entity\DealCode[]
-     */
     public function getUserAssignedCodes(User $user)
     {
         return $this
@@ -167,10 +114,6 @@ class DealCodeRepository extends CodeRepository
             ->execute();
     }
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
-     * @return \Doctrine\ORM\QueryBuilder
-     */
     private function createForDealQueryBuilder(Deal $deal)
     {
         return $this->createQueryBuilder('k')

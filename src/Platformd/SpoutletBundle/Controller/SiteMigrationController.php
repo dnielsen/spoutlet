@@ -27,7 +27,7 @@ class SiteMigrationController extends Controller
 
         $this->em                 = $this->getDoctrine()->getEntityManager();
         $this->abstractEventRepo  = $this->em->getRepository('SpoutletBundle:AbstractEvent');
-        $this->dealRepo           = $this->em->getRepository('SpoutletBundle:Deal');
+        $this->dealRepo           = $this->em->getRepository('GiveawayBundle:Deal');
         $this->newsRepo           = $this->em->getRepository('NewsBundle:News');
         $this->gamePageRepo       = $this->em->getRepository('SpoutletBundle:GamePage');
         $this->siteRepo           = $this->em->getRepository('SpoutletBundle:Site');
