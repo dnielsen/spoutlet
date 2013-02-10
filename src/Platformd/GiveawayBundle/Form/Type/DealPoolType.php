@@ -1,8 +1,9 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Form\Type;
+namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Platformd\SpoutletBundle\Form\Type\OpenGraphOverrideType;
 use Symfony\Component\Form\FormBuilder;
 
 /**

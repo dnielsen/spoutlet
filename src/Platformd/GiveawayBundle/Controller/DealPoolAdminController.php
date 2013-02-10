@@ -3,7 +3,7 @@
 namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\DealPool;
-use Platformd\SpoutletBundle\Form\Type\DealPoolType;
+use Platformd\GiveawayBundle\Form\Type\DealPoolType;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;

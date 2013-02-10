@@ -1,10 +1,11 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Form\Type;
+namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\Deal;
+use Platformd\SpoutletBundle\Form\Type\OpenGraphOverrideType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;

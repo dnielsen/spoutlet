@@ -1,9 +1,9 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\DealPool;
-use Platformd\SpoutletBundle\Form\Type\DealPoolType;
+use Platformd\GiveawayBundle\Form\Type\DealPoolType;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,11 +130,6 @@ class DealPoolAdminController extends Controller
         )));
     }
 
-    /**
-     * Save a pool & add keys stored in the uploaded file
-     *
-     * @param \Platformd\SpoutletBundle\Form\Type\DealPoolType $pool
-     */
     protected function savePool(DealPool $pool)
     {
         $em = $this->getDoctrine()->getEntityManager();
