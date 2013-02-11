@@ -5,7 +5,7 @@
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
     <meta property="og:title" content="{{ event.name }}" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="activity" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
     <meta property="og:image" content="http://alienwarearena.com/images/profile-default.png" />
@@ -66,7 +66,7 @@
                 </div>
                 <div class="widget-content" style="padding-left: 10px;">
 
-                    <div id="media-social" style="margin:10px 0; text-align:center;">
+                    <div id="media-social" style="margin:10px 0;">
                         <div class="fb-like"
                             data-send="false"
                             data-width="300"
