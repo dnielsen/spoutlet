@@ -22,7 +22,10 @@ use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\Gallery;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\SpoutletBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Entity\GroupNews;
+use Platformd\SpoutletBundle\Entity\Comment;
+use Platformd\SpoutletBundle\Entity\Thread;
 
 /**
  * Base Feature context.
@@ -82,32 +85,6 @@ class AbstractFeatureContext extends MinkContext
         $con
             ->prepare("INSERT INTO `country` VALUES (1,'AF','Afghanistan'),(2,'AX','[DO NOT USE] Åland Islands'),(3,'AL','Albania'),(4,'DZ','Algeria'),(5,'AS','American Samoa'),(6,'AD','Andorra'),(7,'AO','Angola'),(8,'AI','Anguilla'),(9,'AQ','Antarctica'),(10,'AG','Antigua and Barbuda'),(11,'AR','Argentina'),(12,'AM','Armenia'),(13,'AW','Aruba'),(14,'AC','[DO NOT USE] Ascension Island'),(15,'AU','Australia'),(16,'AT','Austria'),(17,'AZ','Azerbaijan'),(18,'BS','Bahamas'),(19,'BH','Bahrain'),(20,'BD','Bangladesh'),(21,'BB','Barbados'),(22,'BY','Belarus'),(23,'BE','Belgium'),(24,'BZ','Belize'),(25,'BJ','Benin'),(26,'BM','Bermuda'),(27,'BT','Bhutan'),(28,'BO','Bolivia'),(29,'BA','Bosnia and Herzegovina'),(30,'BW','Botswana'),(31,'BV','Bouvet Island'),(32,'BR','Brazil'),(33,'IO','British Indian Ocean Territory'),(34,'VG','British Virgin Islands'),(35,'BN','Brunei'),(36,'BG','Bulgaria'),(37,'BF','Burkina Faso'),(38,'BI','Burundi'),(39,'KH','Cambodia'),(40,'CM','Cameroon'),(41,'CA','Canada'),(42,'IC','[DO NOT USE] Canary Islands'),(43,'CV','Cape Verde'),(44,'KY','Cayman Islands'),(45,'CF','Central African Republic'),(46,'EA','[DO NOT USE] Ceuta and Melilla'),(47,'TD','Chad'),(48,'CL','Chile'),(49,'CN','China'),(50,'CX','Christmas Island'),(51,'CP','[DO NOT USE] Clipperton Island'),(52,'CC','Cocos [Keeling] Islands'),(53,'CO','Colombia'),(54,'KM','Comoros'),(55,'CG','Congo - Brazzaville'),(56,'CD','Congo - Kinshasa'),(57,'CK','Cook Islands'),(58,'CR','Costa Rica'),(59,'CI','Côte d’Ivoire'),(60,'HR','Croatia'),(61,'CU','Cuba'),(62,'CY','Cyprus'),(63,'CZ','Czech Republic'),(64,'DK','Denmark'),(65,'DG','[DO NOT USE] Diego Garcia'),(66,'DJ','Djibouti'),(67,'DM','Dominica'),(68,'DO','Dominican Republic'),(69,'EC','Ecuador'),(70,'EG','Egypt'),(71,'SV','El Salvador'),(72,'GQ','Equatorial Guinea'),(73,'ER','Eritrea'),(74,'EE','Estonia'),(75,'ET','Ethiopia'),(76,'EU','[DO NOT USE] European Union'),(77,'FK','Falkland Islands'),(78,'FO','Faroe Islands'),(79,'FJ','Fiji'),(80,'FI','Finland'),(81,'FR','France'),(82,'GF','French Guiana'),(83,'PF','French Polynesia'),(84,'TF','French Southern Territories'),(85,'GA','Gabon'),(86,'GM','Gambia'),(87,'GE','Georgia'),(88,'DE','Germany'),(89,'GH','Ghana'),(90,'GI','Gibraltar'),(91,'GR','Greece'),(92,'GL','Greenland'),(93,'GD','Grenada'),(94,'GP','Guadeloupe'),(95,'GU','Guam'),(96,'GT','Guatemala'),(97,'GG','[DO NOT USE] Guernsey'),(98,'GN','Guinea'),(99,'GW','Guinea-Bissau'),(100,'GY','Guyana'),(101,'HT','Haiti'),(102,'HM','Heard Island and McDonald Islands'),(103,'HN','Honduras'),(104,'HK','Hong Kong SAR China'),(105,'HU','Hungary'),(106,'IS','Iceland'),(107,'IN','India'),(108,'ID','Indonesia'),(109,'IR','Iran'),(110,'IQ','Iraq'),(111,'IE','Ireland'),(112,'IM','[DO NOT USE] Isle of Man'),(113,'IL','Israel'),(114,'IT','Italy'),(115,'JM','Jamaica'),(116,'JP','Japan'),(117,'JE','[DO NOT USE] Jersey'),(118,'JO','Jordan'),(119,'KZ','Kazakhstan'),(120,'KE','Kenya'),(121,'KI','Kiribati'),(122,'KW','Kuwait'),(123,'KG','Kyrgyzstan'),(124,'LA','Laos'),(125,'LV','Latvia'),(126,'LB','Lebanon'),(127,'LS','Lesotho'),(128,'LR','Liberia'),(129,'LY','Libya'),(130,'LI','Liechtenstein'),(131,'LT','Lithuania'),(132,'LU','Luxembourg'),(133,'MO','Macau SAR China'),(134,'MK','Macedonia'),(135,'MG','Madagascar'),(136,'MW','Malawi'),(137,'MY','Malaysia'),(138,'MV','Maldives'),(139,'ML','Mali'),(140,'MT','Malta'),(141,'MH','Marshall Islands'),(142,'MQ','Martinique'),(143,'MR','Mauritania'),(144,'MU','Mauritius'),(145,'YT','Mayotte'),(146,'MX','Mexico'),(147,'FM','Micronesia'),(148,'MD','Moldova'),(149,'MC','Monaco'),(150,'MN','Mongolia'),(151,'ME','Montenegro'),(152,'MS','Montserrat'),(153,'MA','Morocco'),(154,'MZ','Mozambique'),(155,'MM','Myanmar [Burma]'),(156,'NA','Namibia'),(157,'NR','Nauru'),(158,'NP','Nepal'),(159,'NL','Netherlands'),(160,'AN','Netherlands Antilles'),(161,'NC','New Caledonia'),(162,'NZ','New Zealand'),(163,'NI','Nicaragua'),(164,'NE','Niger'),(165,'NG','Nigeria'),(166,'NU','Niue'),(167,'NF','Norfolk Island'),(168,'KP','North Korea'),(169,'MP','Northern Mariana Islands'),(170,'NO','Norway'),(171,'OM','Oman'),(172,'QO','[DO NOT USE] Outlying Oceania'),(173,'PK','Pakistan'),(174,'PW','Palau'),(175,'PS','Palestinian Territories'),(176,'PA','Panama'),(177,'PG','Papua New Guinea'),(178,'PY','Paraguay'),(179,'PE','Peru'),(180,'PH','Philippines'),(181,'PN','Pitcairn Islands'),(182,'PL','Poland'),(183,'PT','Portugal'),(184,'PR','Puerto Rico'),(185,'QA','Qatar'),(186,'RE','Réunion'),(187,'RO','Romania'),(188,'RU','Russia'),(189,'RW','Rwanda'),(190,'BL','[DO NOT USE] Saint Barthélemy'),(191,'SH','Saint Helena'),(192,'KN','Saint Kitts and Nevis'),(193,'LC','Saint Lucia'),(194,'MF','[DO NOT USE] Saint Martin'),(195,'PM','Saint Pierre and Miquelon'),(196,'VC','Saint Vincent and the Grenadines'),(197,'WS','Samoa'),(198,'SM','San Marino'),(199,'ST','São Tomé and Príncipe'),(200,'SA','Saudi Arabia'),(201,'SN','Senegal'),(202,'RS','Serbia'),(203,'CS','[DO NOT USE] Serbia and Montenegro'),(204,'SC','Seychelles'),(205,'SL','Sierra Leone'),(206,'SG','Singapore'),(207,'SK','Slovakia'),(208,'SI','Slovenia'),(209,'SB','Solomon Islands'),(210,'SO','Somalia'),(211,'ZA','South Africa'),(212,'GS','South Georgia and the South Sandwich Islands'),(213,'KR','South Korea'),(214,'ES','Spain'),(215,'LK','Sri Lanka'),(216,'SD','Sudan'),(217,'SR','Suriname'),(218,'SJ','Svalbard and Jan Mayen'),(219,'SZ','Swaziland'),(220,'SE','Sweden'),(221,'CH','Switzerland'),(222,'SY','Syria'),(223,'TW','Taiwan'),(224,'TJ','Tajikistan'),(225,'TZ','Tanzania'),(226,'TH','Thailand'),(227,'TL','[DO NOT USE] Timor-Leste'),(228,'TG','Togo'),(229,'TK','Tokelau'),(230,'TO','Tonga'),(231,'TT','Trinidad and Tobago'),(232,'TA','[DO NOT USE] Tristan da Cunha'),(233,'TN','Tunisia'),(234,'TR','Turkey'),(235,'TM','Turkmenistan'),(236,'TC','Turks and Caicos Islands'),(237,'TV','Tuvalu'),(238,'UM','U.S. Minor Outlying Islands'),(239,'VI','U.S. Virgin Islands'),(240,'UG','Uganda'),(241,'UA','Ukraine'),(242,'AE','United Arab Emirates'),(243,'UK','United Kingdom'),(244,'US','United States'),(245,'UY','Uruguay'),(246,'UZ','Uzbekistan'),(247,'VU','Vanuatu'),(248,'VA','Vatican City'),(249,'VE','Venezuela'),(250,'VN','Vietnam'),(251,'WF','Wallis and Futuna'),(252,'EH','Western Sahara'),(253,'YE','Yemen'),(254,'ZM','Zambia'),(255,'ZW','Zimbabwe');")
             ->execute();
-    }
-
-    /**
-     * @Given /^I have the following groups:$/
-     */
-    public function iHaveTheFollowingGroups(TableNode $table)
-    {
-        $em = $this->getEntityManager();
-        $um = $this->getUserManager();
-
-        foreach ($table->getHash() as $data) {
-
-            $group = new Group();
-
-            $group->setName($data['name']);
-            $group->setOwner($um->findUserByUsername($data['owner']));
-            $group->setIsPublic($data['public'] == 'y');
-            $group->setAllLocales($data['all locales'] == 'y');
-            $group->setCategory($data['category']);
-            $group->setDescription('About this group...');
-            $group->setHowToJoin('How to join this group...');
-
-            $em->persist($group);
-        }
-
-        $em->flush();
     }
 
     /**
@@ -1108,76 +1085,357 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Given /^there is a contest called "([^"]*)" in "([^"]*)"$/
+     * @Given /^I have the following contests:$/
      */
-    public function thereIsAContestCalledIn($contestName, $locale)
+    public function iHaveTheFollowingContests(TableNode $table)
     {
         $em = $this->getEntityManager();
 
-        if ($contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('name' => $contestName))) {
-            $em->remove($contest);
+        $counter = 0;
+
+        foreach ($table->getHash() as $data) {
+
+            if (isset($data['name'])) {
+                if ($contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('name' => $data['name']))) {
+                    $em->remove($contest);
+                    $em->flush();
+                }
+
+                $contest = new Contest();
+                $contest->setName($data['name']);
+            } else {
+                $contest = new Contest();
+                $contest->setName('Default Contest'.$counter);
+            }
+
+            $contest->setSlug(isset($data['slug']) ? $data['slug'] : "default-contest-".$counter);
+
+            if (isset($data['site'])) {
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $data['site']));
+                $contest->setSites(array($site));
+            } else {
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => "en"));
+                $contest->setSites(array($site));
+            }
+
+            $contest->setSubmissionStart(   isset($data['submission_start'])    ? new \DateTime($data['submission_start'])  : new \DateTime('-2 days'));
+            $contest->setSubmissionEnd(     isset($data['submission_end'])      ? new \DateTime($data['submission_end'])    : new \DateTime('+2 days'));
+            $contest->setVotingStart(       isset($data['voting_start'])        ? new \DateTime($data['voting_start'])      : new \DateTime('-2 days'));
+            $contest->setVotingEnd(         isset($data['voting_end'])          ? new \DateTime($data['voting_end'])        : new \DateTime('+2 days'));
+            $contest->setCategory(          isset($data['category'])            ? $data['category']                         : "image");
+            $contest->setMaxEntries(        isset($data['max_entries'])         ? $data['max_entries']                      : 0);
+
+            if (isset($data['status']) && $data['status'] == Contest::STATUS_PUBLISHED) {
+                $contest->setStatus(Contest::STATUS_PUBLISHED);
+            } else {
+                $contest->setStatus(Contest::STATUS_UNPUBLISHED);
+            }
+
+            $contest->setRules('Rules');
+            $contest->setEntryInstructions('Entry Instructions');
+            $contest->setVoteInstructions('Vote Instructions');
+            $contest->setRedemptionInstructionsArray(array('Do something'));
+
+            $em->persist($contest);
             $em->flush();
+
+            $counter++;
+        }
+    }
+
+    /**
+     * @Given /^I have the following groups:$/
+     */
+    public function iHaveTheFollowingGroups(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+
+        $counter = 0;
+
+        foreach ($table->getHash() as $data) {
+
+            if (isset($data['name'])) {
+                if ($group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $data['name']))) {
+                    $em->remove($group);
+                    $em->flush();
+                }
+
+                $group = new Group();
+                $group->setName($data['name']);
+            } else {
+                $group = new Group();
+                $group->setName('Default Group '.$counter);
+            }
+
+            $group->setSlug(isset($data['slug']) ? $data['slug'] : "default-group-".$counter);
+
+            if (isset($data['site'])) {
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $data['site']));
+                $group->setSites(array($site));
+            } else {
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => "en"));
+                $group->setSites(array($site));
+            }
+
+            $group->setCategory(    isset($data['category'])    ? $data['category']             : "topic");
+            $group->setDescription( isset($data['description']) ? $data['description']          : "default description");
+            $group->setIsPublic(    isset($data['public'])      ? $data['public'] == "yes"      : 1);
+            $group->setFeatured(    isset($data['featured'])    ? $data['featured'] == "yes"    : 0);
+            $group->setFeaturedAt(  isset($data['featured'])    ? new \DateTime('now') : null);
+
+            $group->setCreatedAt(new \DateTime('now'));
+            $group->setUpdatedAt(new \DateTime('now'));
+
+            $owner = isset($data['owner']) ? $em->getRepository('UserBundle:User')->findOneBy(array('username' => $data['owner'])) : null;
+            $group->setOWner($owner ?: $this->getCurrentUser());
+
+            $this->getContainer()->get('platformd.model.group_manager')
+            ->saveGroup($group);
+
+            $counter++;
+        }
+    }
+
+     /**
+     * @Given /^the group "([^"]*)" has an outstanding application from "([^"]*)"$/
+     */
+    public function theGroupHasOutstandingApplication($groupName, $username)
+    {
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group) {
+
+            if (!$applicant = $this->getUserManager()->loadUserByUsername($username)) {
+                $applicant = $this->getUserManager()->createUser();
+                $applicant->setUsername($username);
+                $applicant->setPassword("password");
+                $applicant->setEmail("email@email.com");
+                $applicant->setCevoUserId(123);
+                $applicant->setCountry("UK");
+                $this->getUserManager()->updateUser($applicant);
+            }
+
+            $app = new GroupApplication();
+
+            $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $this->getCurrentSite()));
+
+            $app->setCreatedAt(new \DateTime('now'));
+            $app->setUpdatedAt(new \DateTime('now'));
+            $app->setApplicant($applicant);
+            $app->setGroup($group);
+            $app->setSite($site);
+            $app->setReason('Test application');
+
+            $em->persist($app);
+            $em->flush();
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+     /**
+     * @Given /^I add "([^"]*)" for group "([^"]*)"$/
+     */
+    public function iAddForGroup($mediaType, $groupName)
+    {
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group) {
+            switch ($mediaType) {
+                case 'news':
+                    $url = $this->getContainer()->get('router')->generate('group_add_news', array('id' => $group->getId()));
+                    $this->getSession()->visit($url);
+                    break;
+
+                case 'video':
+                    $url = $this->getContainer()->get('router')->generate('group_add_video', array('id' => $group->getId()));
+                    $this->getSession()->visit($url);
+                    break;
+
+                case 'discussion':
+                    $url = $this->getContainer()->get('router')->generate('group_add_discussion', array('id' => $group->getId()));
+                    $this->getSession()->visit($url);
+                    break;
+
+                default:
+                    throw new \Exception('Unknown media type: '.$mediaType);
+                    break;
+            }
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+    /**
+     * @Given /^I ([^"]*) an application to "([^"]*)"$/
+     */
+    public function iProcessAnApplicationTo($action, $groupName)
+    {
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group){
+
+            $applications = $em->getRepository('SpoutletBundle:GroupApplication')->findBy(array('group' => $group->getId()));
+
+            if ($applications) {
+                $application = $applications[0];
+            }
+
+           $url = $action == "accept"
+                ? $this->getContainer()->get('router')->generate('group_accept_application', array('id' => $group->getId(), 'applicationId' => $application->getId()))
+                : $url = $this->getContainer()->get('router')->generate('group_reject_application', array('id' => $group->getId(), 'applicationId' => $application->getId()));
+
+            $this->getSession()->visit($url);
+
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+    /**
+     * @Given /^I go to the "([^"]*)" page of "([^"]*)"$/
+     */
+    public function iGoToThePageOf($pageType, $groupName)
+    {
+        $route = "group_".$pageType;
+
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group){
+
+            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+            return array(
+                new When('I go to "'.$url.'"'),
+            );
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+
+    /**
+     * @Given /^I should see "([^"]*)" on the "([^"]*)" page of "([^"]*)"$/
+     */
+    public function iShouldSeeOnThePageOf($string, $pageType, $groupName)
+    {
+        $route = "group_".$pageType;
+
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group){
+
+            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+            return array(
+                new When('I go to "'.$url.'"'),
+                new Then('I should see "'.$string.'"'),
+            );
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+     /**
+     * @Given /^"([^"]*)" has the following members:$/
+     */
+    public function hasTheFollowingMembers($groupName, TableNode $table)
+    {
+        $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+
+        if ($group) {
+
+            foreach ($table->getHash() as $data) {
+
+                if (!$member = $this->getUserManager()->loadUserByUsername($data['username'])) {
+                    $member = $this->getUserManager()->createUser();
+                    $member->setUsername($data['username']);
+                    $member->setPassword("password");
+                    $member->setEmail("email@email.com");
+                    $member->setCevoUserId(123);
+                    $member->setCountry("UK");
+                    $this->getUserManager()->updateUser($member);
+                }
+
+                $group->getMembers()->add($member);
+                $em->persist($group);
+                $em->flush();
+            }
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+        }
+    }
+
+    /**
+     * @Then /^the "([^"]*)" count should be (\d+)$/
+     */
+    public function theCountShouldBe($string, $count)
+    {
+        $countLabel = $this->getPage()->find('css', sprintf('td:contains("%s")', $string));
+        if (!$countLabel) {
+            throw new \Exception('Cannot find a label named '.$string);
         }
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $locale));
+        $rowElements = $countLabel->getParent()->findAll('css', 'td');
 
-        $contest = new Contest();
-        $contest->setName($contestName);
-        $contest->setSites(array($site));
-        $contest->setSubmissionStart(new \DateTime('-1 day'));
-        $contest->setSubmissionEnd(new \DateTime('+1 day'));
-        $contest->setVotingStart(new \DateTime('-1 day'));
-        $contest->setVotingEnd(new \DateTime('+1 day'));
-        $contest->setCategory('image');
-        $contest->setRules('Rules');
-        $contest->setEntryInstructions('Entry Instructions');
-        $contest->setVoteInstructions('Vote Instructions');
-        $contest->setStatus(Contest::STATUS_PUBLISHED);
-        $contest->setRedemptionInstructionsArray(array('Do something'));
-        $contest->setMaxEntries(0);
-
-        $em->persist($contest);
-        $em->flush();
-
-        return $contest;
+        assertEquals($count, end($rowElements)->getText());
     }
 
     /**
-     * @Given /^there is an expired contest called "([^"]*)" in "([^"]*)"$/
+     * @Given /^group "([^"]*)" has the following comments:$/
      */
-    public function thereIsAnExpiredContestCalledIn($contestName, $locale)
+    public function hasTheFollowingComments($groupName, TableNode $table)
     {
         $em = $this->getEntityManager();
+        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
 
-        $contest = $this->thereIsAContestCalledIn($contestName, $locale);
-        $contest->setSubmissionStart(new \DateTime('-2 days'));
-        $contest->setSubmissionEnd(new \DateTime('-1 day'));
-        $contest->setVotingStart(new \DateTime('-2 days'));
-        $contest->setVotingEnd(new \DateTime('-1 day'));
+        if ($group) {
+            $thread     = $em->getRepository('SpoutletBundle:Thread')->find($group->getThreadId());
+            if (!$thread) {
+                $thread = new Thread();
+                $thread->setId($group->getThreadId());
+                $thread->setPermalink($this->getSession()->getCurrentUrl().'#comments');
 
-        $em->persist($contest);
-        $em->flush();
+                $em->persist($thread);
+                $em->flush();
+            }
 
-        return $contest;
+            foreach ($table->getHash() as $data) {
+
+                $user = $this->getUserManager()->loadUserByUsername($data['username']);
+
+                $comment = new Comment();
+                $comment->setThread($thread);
+                $comment->setAuthor($user ?: $this->getCurrentUser());
+                $comment->setBody(isset($data['comment']) ? $data['comment'] : "Default comment");
+                $comment->setCreatedAt(new \DateTime('now'));
+
+                $em->persist($comment);
+
+                $thread->incrementCommentCount();
+            }
+
+            $em->flush();
+
+        } else {
+            throw new \Exception('Cannot find the group called '.$groupName);
+
+        }
     }
 
     /**
-     * @Given /^there is an unstarted contest called "([^"]*)" in "([^"]*)"$/
+     * @Given /^I should see "([^"]*)" on "([^"]*)"$/
      */
-    public function thereIsAnUnstartedContestCalledIn($contestName, $locale)
+    public function iShouldSeeOn($string, $url)
     {
-        $em = $this->getEntityManager();
-
-        $contest = $this->thereIsAContestCalledIn($contestName, $locale);
-        $contest->setSubmissionStart(new \DateTime('+2 days'));
-        $contest->setSubmissionEnd(new \DateTime('+3 days'));
-        $contest->setVotingStart(new \DateTime('+2 days'));
-        $contest->setVotingEnd(new \DateTime('+3 days'));
-
-        $em->persist($contest);
-        $em->flush();
-
-        return $contest;
+        return array(
+            new When('I go to "'.$url.'"'),
+            new Then('I should see "'.$string.'"'),
+        );
     }
 
 

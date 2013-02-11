@@ -114,7 +114,7 @@ services:
             - "@knp_media.util.media_util"
             - "@security.context"
             - "@event_dispatcher"
-        scope: request
+
 
     # activity manager service
     platformd.model.activity_manager:
