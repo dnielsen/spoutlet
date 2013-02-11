@@ -46,7 +46,7 @@ Redesign Palette
 
 * { margin: 0; padding: 0; }
 body,html { font-family:Arial, Helvetica, sans-serif; color:#FFFFFF; font-size:12px; }
-body { background: url('/bundles/spoutlet/images/body-bg-gradient.png') repeat-x left 164px black; }
+body { background-color: #000; }
 
 /** GENERAL STYLES */
 
@@ -270,7 +270,9 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 .nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
 
-#content {  width: 950px; margin: 20px auto 0 auto; }
+#content-wrapper { width: 970px; margin:0px auto;}
+#content-background { width: 970px; float: left; background-color: #000;}
+#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px;}
 .wide-950 { width: 950px; margin: 0 auto; }
 
 
@@ -460,9 +462,13 @@ html body .lastBlurb { margin-bottom:0; }
 .ad_400x120 { padding:1px; width:122px; height:400px; background:#4a4a4a; }
 .ad_745x48 { text-align: center; clear: both;}
 .ad_745x48 img { margin-top: 20px; }
+.ad_728x90_wrapper { width: 970px; margin:0px auto; }
+.ad_728x90_background { width: 970px; float: left; background-color: #000; }
 .ad_728x90 { text-align: center; width: 728px; height: 90px; margin: 20px auto; clear: both; padding-top: 20px; padding: 1px; background: #4a4a4a; }
 
 /** footer **/
+#footer-wrapper { width: 970px; margin:0px auto; }
+#footer-background { width: 970px; float: left; background-color: #000; }
 #footer { clear:both; padding-top:40px; padding-bottom:20px; background:url(/bundles/spoutlet/images/footer-bg.gif) top left repeat-x; }
 #footer .nav { list-style:none; font-size:11px; color:#b3b3b3; line-height: 20px; margin: 0; padding: 0;}
 #footer .nav a { color:#b3b3b3; }
