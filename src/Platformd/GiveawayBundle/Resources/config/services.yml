@@ -8,3 +8,10 @@ services:
             - "@platformd.model.email_manager"
             - "%sender_email_address%"
             - "%sender_email_name%"
+
+    platformd.model.deal_manager:
+        class: Platformd\GiveawayBundle\Model\DealManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@knp_media.util.media_util"
+

@@ -24,11 +24,11 @@ giveaway_submit_machine_code:
     pattern: /giveaways/{slug}/machineCode
     defaults: { _controller: GiveawayBundle:Giveaway:machineCode }
 
-SpoutletBundle_admin_deal:
+GiveawayBundle_admin_deal:
     resource: "@GiveawayBundle/Resources/config/routing/admin_deal.yml"
     prefix:   /admin/deal
 
-SpoutletBundle_deal:
+GiveawayBundle_deal:
     resource: "@GiveawayBundle/Resources/config/routing/deal.yml"
     prefix:   /deal
 

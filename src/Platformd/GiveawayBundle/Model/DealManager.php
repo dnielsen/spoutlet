@@ -1,19 +1,11 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Model;
+namespace Platformd\GiveawayBundle\Model;
 
-use Platformd\SpoutletBundle\Entity\GamePage;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Doctrine\ORM\EntityManager;
 use Knp\MediaBundle\Util\MediaUtil;
 
-/**
- * Manager for GamePage:
- *
- *  * Handles our special logic for locales
- *  * Saves the media fields
- *  * saves the media gallery
- */
 class DealManager
 {
     private $em;
@@ -95,9 +87,7 @@ class DealManager
 
     private function handleMediaGallery(Deal $deal)
     {
-        /** @var $media \Platformd\MediaBundle\Entity\Media */
         foreach ($deal->getMediaGalleryMedias() as $media) {
-            // either persist it, or remove it from the collection
             if (!$this->mediaUtil->persistRelatedMedia($media)) {
                 $deal->getMediaGalleryMedias()->removeElement($media);
             }

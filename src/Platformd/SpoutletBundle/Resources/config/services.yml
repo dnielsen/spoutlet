@@ -106,12 +106,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
 
-    platformd.model.deal_manager:
-        class: Platformd\SpoutletBundle\Model\DealManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@knp_media.util.media_util"
-
     platformd.model.group_manager:
         class: Platformd\SpoutletBundle\Model\GroupManager
         arguments:
