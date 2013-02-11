@@ -4,11 +4,14 @@ namespace Platformd\EventBundle\Service;
 
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\Event,
+    Platformd\EventBundle\Entity\GroupEventTranslation,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\SpoutletBundle\Entity\Group,
     Platformd\UserBundle\Entity\User
 ;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 use DateTime;
 
@@ -34,11 +37,28 @@ class GroupEventService extends EventService
         $clonedGroupEvent->setAddress($groupEvent->getAddress());
         $clonedGroupEvent->setCreatedAt($groupEvent->getCreatedAt());
         $clonedGroupEvent->setPrivate($groupEvent->getPrivate());
-        $clonedGroupEvent->setTranslations($groupEvent->getTranslations());
-        $clonedGroupEvent->setGroup($groupEvent->getGroup());
-        $clonedGroupEvent->setSites($groupEvent->getSites());
+
+        $clonedGroupEvent->setTranslations(new ArrayCollection());
+        foreach ($groupEvent->getTranslations() as $translation) {
+            $clonedGroupEvent->getTranslations()->add($this->cloneTranslation($translation, $clonedGroupEvent));
+        }
+
+        $clonedGroupEvent->setSites(new ArrayCollection);
+        foreach($groupEvent->getSites() as $site) {
+            $clonedGroupEvent->getSites()->add($site);
+        }
 
         return $clonedGroupEvent;
+    }
+
+    protected function cloneTranslation(GroupEventTranslation $translation, GroupEvent $groupEvent)
+    {
+        $clonedGroupEventTranslation = clone($translation);
+
+        $clonedGroupEventTranslation->setId(null);
+        $clonedGroupEventTranslation->setTranslatable($groupEvent);
+
+        return $clonedGroupEventTranslation;
     }
 
     public function findUpcomingEventsForGroupMostRecentFirst(Group $group, $limit=null)

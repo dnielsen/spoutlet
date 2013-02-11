@@ -36,4 +36,44 @@ final class EventEvents
      * @var string
      */
     const EVENT_APPROVE = 'platformd.event.approve';
+
+    /**
+     * The platformd.event.cancel event is thrown each time an event gets canceled
+     *
+     * The event listener receives a Platformd\EventBundle\Event\EventEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_CANCEL = 'platformd.event.cancel';
+
+    /**
+     * The platformd.event.activate event is thrown each time an event gets activated
+     *
+     * The event listener receives a Platformd\EventBundle\Event\EventEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_ACTIVATE = 'platformd.event.activate';
+
+    /**
+     * The platformd.event.register event is thrown each time a user registers for an event
+     *
+     * The event listener receives a Platformd\EventBundle\Event\RegistrationEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_REGISTER = 'platformd.event.register';
+
+    /**
+     * The platformd.event.unregister event is thrown each time a user unregisters for an event
+     *
+     * The event listener receives a Platformd\EventBundle\Event\RegistrationEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_UNREGISTER = 'platformd.event.unregister';
 }

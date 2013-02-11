@@ -108,7 +108,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * @var boolean $published
      * @ORM\Column(name="published", type="boolean")
      */
-    protected $published = false;
+    protected $published = true;
 
     /**
      * Whether event has been approved by Admin
@@ -117,6 +117,14 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * @ORM\Column(name="approved", type="boolean")
      */
     protected $approved = false;
+
+    /**
+     * Whether the event is active or canceled
+     *
+     * @var boolean $active
+     * @ORM\Column(name="active", type="boolean")
+     */
+    protected $active = true;
 
     /**
      * Whether event is online or physical
@@ -663,5 +671,21 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     public function getDeletedReason()
     {
         return $this->deletedReason;
+    }
+
+    /**
+     * @param boolean $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

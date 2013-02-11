@@ -41,22 +41,25 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
         $existingEvents     = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
-        $importId           = $request->get('existing_event_select');
-        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $importId));
+        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
 
         if ($importedGroupEvent) {
-            $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
-        } else {
-            $groupEvent = new GroupEvent($group);
+            return $this->redirect($this->generateUrl('group_event_new_import', array('groupSlug' => $group->getSlug(), 'eventId' => $importedGroupEvent->getId())));
+        }
 
-            // We add translations by hand
-            // TODO improve this
-            $siteLocalesForTranslation = array('ja', 'zh', 'es');
-            foreach ($siteLocalesForTranslation as $locale) {
-                $site = $this->getSiteFromLocale($locale);
-                $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
-            }
+        $groupEvent = new GroupEvent($group);
+
+        // We add translations by hand
+        // TODO improve this
+        $siteLocalesForTranslation = array('ja', 'zh', 'es');
+        foreach ($siteLocalesForTranslation as $locale) {
+            $site = $this->getSiteFromLocale($locale);
+            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
         }
 
         // Event is automatically approved if user is group organizer or super admin
@@ -100,7 +103,73 @@ class GroupEventController extends Controller
         return $this->render('EventBundle:GroupEvent:new.html.twig', array(
             'form' => $form->createView(),
             'group' => $group,
-            'existingEvents' => $existingEvents
+            'existingEvents' => $existingEvents,
+            'importedGroupEvent' => $importedGroupEvent
+        ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function newFromImportAction($groupSlug, $eventId, Request $request)
+    {
+        /** @var Group $group */
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $eventId));
+
+        if (!$importedGroupEvent) {
+            throw new NotFoundHttpException('Event to import from does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
+        $groupEvent->setGroup($group);
+
+        $form = $this->createForm('groupEvent', $groupEvent);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                /** @var GroupEvent $groupEvent */
+                $groupEvent = $form->getData();
+                $groupEvent->setUser($this->getUser());
+
+                $this->getGroupEventService()->createEvent($groupEvent);
+
+                if ($groupEvent->isApproved()) {
+                    $this->setFlash('success', 'New event posted successfully');
+
+                    return $this->redirect($this->generateUrl('group_event_view', array(
+                        'groupSlug' => $group->getSlug(),
+                        'eventSlug' => $groupEvent->getSlug()
+                    )));
+                } else {
+                    $this->setFlash('success', 'New event posted successfully and is ending approval from Group Organizer');
+
+                    return $this->redirect($this->generateUrl('group_show', array(
+                        'slug' => $group->getSlug()
+                    )) . '#events');
+                }
+
+            } else {
+                $this->setFlash('error', 'Something went wrong');
+            }
+        }
+
+        return $this->render('EventBundle:GroupEvent:new.html.twig', array(
+            'form' => $form->createView(),
+            'group' => $group,
+            'importedGroupEvent' => $importedGroupEvent
         ));
     }
 
@@ -124,10 +193,8 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        $securityContext = $this->getSecurity();
-
         // check for edit access
-        if (false === $securityContext->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
         {
             throw new AccessDeniedException();
         }
@@ -327,6 +394,78 @@ class GroupEventController extends Controller
         )));
     }
 
+    /**
+     * Sets an event as canceled
+     * Triggers email notifications
+     *
+     * @param $eventId
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+    public function cancelAction($eventId)
+    {
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (
+            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+        ) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        if (!$groupEvent->getActive()) {
+            $this->setFlash('error', 'Event is already canceled!');
+        } else {
+            $this->getGroupEventService()->cancelEvent($groupEvent);
+
+            $this->setFlash('success', 'Event has been canceled successfully and attendees will be notified!');
+        }
+
+        return $this->redirect($this->generateUrl('group_event_edit', array(
+            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'eventId' => $groupEvent->getId()
+        )));
+    }
+
+    public function activateAction($eventId)
+    {
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (
+            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+        ) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        if ($groupEvent->getActive()) {
+            $this->setFlash('error', 'Event is already active!');
+        } else {
+            $this->getGroupEventService()->activateEvent($groupEvent);
+
+            $this->setFlash('success', 'Event has been activated successfully and attendees will be notified!');
+        }
+
+        return $this->redirect($this->generateUrl('group_event_edit', array(
+            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'eventId' => $groupEvent->getId()
+        )));
+    }
+
     public function rsvpAjaxAction(Request $request)
     {
         $response = new Response();
@@ -366,11 +505,14 @@ class GroupEventController extends Controller
         $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $user);
 
         if ($rsvp == 0 && $isAttending) {
-             $groupEvent->getAttendees()->removeElement($user);
-             $this->getGroupEventService()->updateEvent($groupEvent);
+            $this->getGroupEventService()->unregister($groupEvent, $user);
+//
+//            $groupEvent->getAttendees()->removeElement($user);
+//            $this->getGroupEventService()->updateEvent($groupEvent);
         } elseif ($rsvp > 0 && !$isAttending) {
-            $groupEvent->getAttendees()->add($user);
-            $this->getGroupEventService()->updateEvent($groupEvent);
+            $this->getGroupEventService()->register($groupEvent, $user);
+//            $groupEvent->getAttendees()->add($user);
+//            $this->getGroupEventService()->updateEvent($groupEvent);
         }
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
