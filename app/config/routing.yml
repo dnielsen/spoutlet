@@ -44,3 +44,6 @@ fos_comment_extra:
     resource: "@CommentBundle/Resources/config/routing_extra.yml"
     prefix:   "/comments"
 
+GameBundle:
+    resource: "@GameBundle/Resources/config/routing.yml"
+    prefix:   /

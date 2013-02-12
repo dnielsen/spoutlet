@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>
+    <i class="icon-pencil"></i>
+    Game edit
+</h1>
+
+<form action="{{ path('admin_game_update', { 'id': game.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {% include 'GameBundle:GameAdmin:_form.html.twig' with {
+        'form': edit_form
+    } %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_game') }}">
+    Back to the list
+</a>
+{% endblock %}

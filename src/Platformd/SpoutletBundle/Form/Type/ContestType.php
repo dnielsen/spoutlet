@@ -21,7 +21,7 @@ class ContestType extends AbstractType
                 'choices'   => self::getCategoryChoices(),
             ))
             ->add('game', 'entity', array(
-                'class'     => 'SpoutletBundle:Game',
+                'class'     => 'GameBundle:Game',
                 'property'  => 'name',
                 'empty_value' => 'N/A'
             ))

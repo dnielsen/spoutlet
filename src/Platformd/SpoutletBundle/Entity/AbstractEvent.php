@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
-use Platformd\SpoutletBundle\Entity\Game as Game;
+use Platformd\GameBundle\Entity\Game as Game;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 /**
@@ -191,7 +191,7 @@ abstract class AbstractEvent implements LinkableInterface
     protected $timezone = 'UTC';
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      * @var Game
      */
@@ -608,20 +608,6 @@ abstract class AbstractEvent implements LinkableInterface
     public function getTimezone()
     {
         return $this->timezone ? $this->timezone : 'UTC';
-    }
-
-    /**
-     * Tries to get a friendly name for the event's timezone
-     *
-     * @return string
-     */
-    public function getTimezoneString()
-    {
-        $dtz = new \DateTimeZone($this->getTimezone());
-
-        $offset = $dtz->getOffset(new DateTime());
-
-        return isset(self::$timzoneCommonNames[$offset]) ? self::$timzoneCommonNames[$offset] : $dtz->getName();
     }
 
     /**

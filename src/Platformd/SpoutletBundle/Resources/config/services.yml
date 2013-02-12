@@ -92,24 +92,12 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@service_container"
 
-    platformd.model.game_page_manager:
-        class: Platformd\SpoutletBundle\Model\GamePageManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@knp_media.util.media_util"
-
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager
         arguments:
             - "@service_container"
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
-
-    platformd.model.deal_manager:
-        class: Platformd\SpoutletBundle\Model\DealManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@knp_media.util.media_util"
 
     platformd.model.group_manager:
         class: Platformd\SpoutletBundle\Model\GroupManager
@@ -121,7 +109,7 @@ services:
             - "@pd.cevo.api.api_manager"
             - "@security.context"
             - "@event_dispatcher"
-        scope: request
+
 
     # activity manager service
     platformd.model.activity_manager:

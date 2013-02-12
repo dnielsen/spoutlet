@@ -11,7 +11,7 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
-use Platformd\SpoutletBundle\Entity\Game as Game;
+use Platformd\GameBundle\Entity\Game as Game;
 use Platformd\NewsBundle\Entity\News as News;
 /**
  * Feature context.

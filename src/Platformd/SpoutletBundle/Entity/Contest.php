@@ -86,8 +86,8 @@ class Contest implements LinkableInterface
     private $category;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\Game
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @var \Platformd\GameBundle\Entity\Game
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     private $game;

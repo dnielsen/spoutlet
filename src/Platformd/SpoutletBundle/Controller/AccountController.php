@@ -113,7 +113,7 @@ class AccountController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $dealCodes = $em->getRepository('SpoutletBundle:DealCode')
+        $dealCodes = $em->getRepository('GiveawayBundle:DealCode')
             ->getUserAssignedCodes($this->getUser())
         ;
 

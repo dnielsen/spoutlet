@@ -79,6 +79,12 @@ class Giveaway extends AbstractEvent
         'active' => 'platformd.giveaway.status.active',
     );
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $displayRemainingKeysNumber = true;
+
     public function __construct()
     {
         // auto-publish, this uses the "status" field instead
@@ -338,7 +344,7 @@ class Giveaway extends AbstractEvent
     public function getShowKeys()
     {
         // show the keys if its a traditional key giveaway
-        return $this->getGiveawayType() == self::TYPE_KEY_GIVEAWAY;
+        return $this->getGiveawayType() == self::TYPE_KEY_GIVEAWAY && $this->displayRemainingKeysNumber;
     }
 
     /**
@@ -377,5 +383,15 @@ class Giveaway extends AbstractEvent
     public function getLinkableRouteName()
     {
         return 'giveaway_show';
+    }
+
+    public function isDisplayRemainingKeysNumber()
+    {
+        return $this->displayRemainingKeysNumber;
+    }
+
+    public function setDisplayRemainingKeysNumber($displayRemainingKeysNumber)
+    {
+        $this->displayRemainingKeysNumber = $displayRemainingKeysNumber;
     }
 }

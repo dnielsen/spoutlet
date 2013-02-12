@@ -175,4 +175,29 @@ class FeatureContext extends AbstractFeatureContext
         $this->NavigateTo('admin_giveaway_edit', array('id' => $this->currentGiveaway->getId()));
     }
 
+    /**
+     * @Given /^Giveway "([^""]*)" should(?<not> not)? display remaining keys$/
+     */
+    public function givewayShouldDisplayRemainingKeys($name, $not = null)
+    {
+        $em = $this->getEntityManager();
+
+        $giveaway = $em->getRepository('Platformd\GiveawayBundle\Entity\Giveaway')->findOneByName($name);
+        assertNotNull($giveaway);
+
+        $this->setSitehost('demo');
+        $this->NavigateTo('giveaway_show', array('slug' => $giveaway->getSlug()), true);
+        if ($not) {
+            assertNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Available keys: 0')));
+        }
+        else {
+            assertNotNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Available keys: 0')));
+        }
+    }
+
+    protected function setSitehost($siteName)
+    {
+        $context = $this->getContainer()->get('router')->getContext();
+        $context->setHost($siteName.'.'.$context->getHost());
+    }
 }

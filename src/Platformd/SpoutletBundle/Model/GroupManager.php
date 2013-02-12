@@ -22,7 +22,8 @@ use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
 
 use Doctrine\ORM\EntityManager;
-
+use Platformd\GameBundle\Entity\GamePageLocale;
+use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

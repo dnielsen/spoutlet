@@ -123,6 +123,10 @@
     {% endfor %}
 {% endif %}
 
+{% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+{% endif %}
+
 <script type="text/javascript">
     $(function () {
 
@@ -161,7 +165,7 @@
 
         $('.comment-replies textarea').keyup(function() {
             $(this).css('height', '1px');
-            $(this).css('height', (parseInt($(this).prop('scrollHeight'))-12)+"px");
+            $(this).css('height', (parseInt($(this).prop('scrollHeight')))+"px");
         });
 
         $('.options').click(function (event) {
@@ -253,9 +257,9 @@
             if(element.find('.comment-edit-textarea').length == 0) {
                 element.text('');
                 element.append("<textarea class='comment-edit-textarea' id='comment-edit-" +  id + "' required='required' />");
-                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>Save</button>");
+                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>{{ 'platformd.comment.submit' | trans }}</button>");
 
-                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>Cancel</button>");
+                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>{{ 'platformd.comment.cancel' | trans }}</button>");
 
                 $('#comment-edit-cancel-' + id).click(function () {
                    toggleEdit(element, id, text);
@@ -307,7 +311,7 @@
 
             $('.choices').hide();
 
-            var answer = confirm("Are you sure you want to delete this comment?")
+            var answer = confirm("{{ 'platformd.comment.delete_confirm' | trans }}")
             if (!answer){
                 return false;
             }

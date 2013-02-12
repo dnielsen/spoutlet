@@ -1,0 +1,18 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>New Game</h1>
+
+<form action="{{ path('admin_game_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'GameBundle:GameAdmin:_form.html.twig' %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_game') }}">
+    Back to the list
+</a>
+{% endblock %}

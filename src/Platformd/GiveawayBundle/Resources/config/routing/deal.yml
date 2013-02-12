@@ -1,0 +1,15 @@
+deal_list:
+    pattern:  /
+    defaults: { _controller: "GiveawayBundle:Deal:index" }
+
+deal_show:
+    pattern:  /{slug}
+    defaults: { _controller: "GiveawayBundle:Deal:show" }
+
+deal_redeem:
+    pattern:  /{slug}/redeem
+    defaults: { _controller: "GiveawayBundle:Deal:redeem" }
+
+deal_repies:
+    pattern: /{slug}/replies
+    defaults: { _controller: "GiveawayBundle:Deal:commentReplies" }

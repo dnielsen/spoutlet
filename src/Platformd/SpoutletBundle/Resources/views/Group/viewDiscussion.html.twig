@@ -23,7 +23,7 @@
         $(function () {
            $('.posted-at').timeago();
            $('#reply-form').submit(function (e) {
-               var content = $('#form_content').val();
+               var content = $('#cke_form_content iframe').contents().find('body').text();
 
                 if(content == '')  {
                     $('.error').fadeIn();
@@ -77,7 +77,7 @@
                 <div id="comment_{{ discussion.id }}" class="forumComment row1" style="float: left;padding:0">
                     <div class="right" style="width: 494px;">
                         <div class="forumTextWrapper png">
-                            <div class="forumText">{{ discussion.content }}</div>
+                            <div class="forumText">{{ discussion.content | raw }}</div>
                         </div>
                         <div class="forumBottom png">
                             <div class="forumSig">
@@ -113,7 +113,7 @@
                                 <div id="comment_{{ discussionPost.id }}" class="forumComment {% if loop.index is divisibleby(2) %}row1{% else %}row2{% endif %}" style="float: left;margin-top: 19px;padding:0;">
                                     <div class="right" style="width: 494px;">
                                         <div class="forumTextWrapper png">
-                                            <div class="forumText">{{ discussionPost.content }}</div>
+                                            <div class="forumText">{{ discussionPost.content | raw }}</div>
                                         </div>
                                         <div class="forumBottom png">
                                             <div class="forumSig">
@@ -172,7 +172,7 @@
 
                     {{ form_errors(replyForm) }}
 
-                    <div class="span8" style="margin-left: 145px;">
+                    <div class="span8" style="margin-left: 145px;width:496px;">
                         <p class="error" style="color:#ff0000;display:none;">Please provide content for your reply.</p>
                         {{ form_widget(replyForm.content) }}
                         <div class="reply-form-actions">

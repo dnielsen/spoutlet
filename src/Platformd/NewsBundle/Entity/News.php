@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\MediaBundle\Entity\Media;
-use Platformd\SpoutletBundle\Entity\Game as Game;
+use Platformd\GameBundle\Entity\Game as Game;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -121,7 +121,7 @@ class News implements LinkableInterface
     protected $updated;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      * @var Game
      */

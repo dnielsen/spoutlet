@@ -5,8 +5,8 @@ namespace Platformd\SpoutletBundle\DataFixtures\ORM;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Platformd\SpoutletBundle\Entity\Game;
-use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\GameBundle\Entity\Game;
+use Platformd\GameBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Site;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -94,7 +94,7 @@ class LoadGames extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     * @return \Platformd\GameBundle\Model\GamePageManager
      */
     private function getGamePageManager()
     {
