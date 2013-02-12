@@ -2,15 +2,15 @@
 
 namespace Platformd\SpoutletBundle\EventListener;
 
-use Platformd\SpoutletBundle\Entity\GroupDiscussion;
-use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
-use Platformd\SpoutletBundle\Event\GroupEvent;
-use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
-use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
+use Platformd\GroupBundle\Entity\GroupDiscussion;
+use Platformd\GroupBundle\Entity\GroupDiscussionPost;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\Event\GroupDiscussionEvent;
+use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\Entity\Superclass\Activity;
 use Platformd\SpoutletBundle\Entity\GlobalActivity;
 use Platformd\SpoutletBundle\Entity\GlobalActivityRepository;
-use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\SpoutletBundle\Model\ActivityManager;
 use Platformd\SpoutletBundle\Event\ContentReportEvent;
 

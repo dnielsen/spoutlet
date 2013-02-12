@@ -2,11 +2,11 @@
 
 namespace Platformd\SpoutletBundle\EventListener;
 
-use Platformd\SpoutletBundle\Entity\GroupDiscussion;
-use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
-use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
+use Platformd\GroupBundle\Entity\GroupDiscussion;
+use Platformd\GroupBundle\Entity\GroupDiscussionPost;
+use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\Event\ContentReportEvent;
-use Platformd\SpoutletBundle\Model\GroupManager;
+use Platformd\GroupBundle\Model\GroupManager;
 use Symfony\Component\EventDispatcher\Event;
 
 class GroupDiscussionListener

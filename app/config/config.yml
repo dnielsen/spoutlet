@@ -5,6 +5,7 @@ imports:
     - { resource: "@CEVOBundle/Resources/config/security.yml" }
     - { resource: version.php }
     - { resource: "@GiveawayBundle/Resources/config/services.yml" }
+    - { resource: "@GroupBundle/Resources/config/services.yml" }
     - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
     - { resource: "@MediaBundle/Resources/config/services.yml" }
     - { resource: "@CommentBundle/Resources/config/services.yml" }

@@ -1,0 +1,12 @@
+military:
+    pattern: /groups/military
+    defaults: { _controller: SpoutletBundle:Default:military }
+
+GroupBundle_group:
+    resource: "@GroupBundle/Resources/config/routing/group.yml"
+    prefix:   /groups
+
+GroupBundle_admin_group:
+    resource: "@GroupBundle/Resources/config/routing/admin_group.yml"
+    prefix:   /admin/groups
+

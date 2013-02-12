@@ -5,11 +5,11 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\ContentReportEvents;
 use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
-use Platformd\SpoutletBundle\Entity\Group;
-use Platformd\SpoutletBundle\Entity\GroupNews;
-use Platformd\SpoutletBundle\Entity\GroupVideo;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupNews;
+use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\ContentReport;
-use Platformd\SpoutletBundle\Form\Type\GroupType;
+use Platformd\GroupBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,6 +66,8 @@ class ContentReportingController extends Controller
             $response->setContent(json_encode(array("success" => false, "messageForUser" => $this->trans('content_reporting.once_per_hour'))));
             return $response;
         }
+
+        $typeBundle         = $contentReportRepo->$
 
         $fullClassName      = 'Platformd\\SpoutletBundle\\Entity\\'.$type;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';

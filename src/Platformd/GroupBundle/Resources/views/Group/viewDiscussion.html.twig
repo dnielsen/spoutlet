@@ -1,0 +1,192 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% set site                 = get_current_site() %}
+{% set canAdd               = group.isAllowedTo(app.user, site, 'AddDiscussion') %}
+{% set canEdit              = group.isAllowedTo(app.user, site, 'EditDiscussion') %}
+{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteDiscussion') %}
+
+{% block title 'Groups - ' ~ group.name %}
+
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% if group.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+           $('.posted-at').timeago();
+           $('#reply-form').submit(function (e) {
+               var content = $('#cke_form_content iframe').contents().find('body').text();
+
+                if(content == '')  {
+                    $('.error').fadeIn();
+                    e.preventDefault();
+                    return;
+                }
+           });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
+{% endblock %}
+
+{% block content %}
+    <div class="std_1col" style="padding: 0;">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+            {% endif %}
+        </div>
+    </div>
+    <div class="std_1col" style="padding: 0;">
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
+    </div>
+    <div class="std_2col">
+        <div class="right">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
+        <div class="left" id="group-discussion-form-wrapper">
+            <div id="topicView">
+                <h1>{{ discussion.title }}</h1>
+
+
+                <div class="group-discussion-actions">
+                    {% if canDelete %}
+                        <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                    {% endif %}
+                    {% if canEdit %}
+                        <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
+                    {% endif %}
+                    <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a>
+                </div>
+
+                <div id="comment_{{ discussion.id }}" class="forumComment row1" style="float: left;padding:0">
+                    <div class="right" style="width: 494px;">
+                        <div class="forumTextWrapper png">
+                            <div class="forumText">{{ discussion.content | raw }}</div>
+                        </div>
+                        <div class="forumBottom png">
+                            <div class="forumSig">
+
+                            </div>
+                            <div class="forumNumber png">1</div>
+                            <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
+                                <span class="posted-at" title="{{ discussion.createdAt | date ~ 'Z' }}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="left">
+                        <div class="profileInfo png">
+                            <div class="profileAvatar">
+                                <span class="png"></span>
+                                <img src="{{ asset(get_avatar_url(discussion.author)) }}" alt="{{ discussion.author.username }}" />
+                            </div>
+                            <div class="profileName">
+                                <a href="{{ path('accounts_profile', {'username': discussion.author.username }) }}">
+                                    {{ discussion.author.username }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commentEnd">
+                    </div>
+                </div>
+                <div id="discussion-replies">
+                    <div id="discussion-post-list">
+                        <div id="topicComments" style="padding: 0;">
+                            {% for discussionPost in discussionPosts %}
+                                <a id="{{ discussionPost.id }}" class="anchorLink"></a>
+                                <div id="comment_{{ discussionPost.id }}" class="forumComment {% if loop.index is divisibleby(2) %}row1{% else %}row2{% endif %}" style="float: left;margin-top: 19px;padding:0;">
+                                    <div class="right" style="width: 494px;">
+                                        <div class="forumTextWrapper png">
+                                            <div class="forumText">{{ discussionPost.content | raw }}</div>
+                                        </div>
+                                        <div class="forumBottom png">
+                                            <div class="forumSig">
+
+                                            </div>
+                                            <div class="forumNumber png">{{ loop.index + 1 }}</div>
+                                            <div class="forumInfo" style="padding: 10px 10px 10px 20px;">
+                                                <span class="posted-at" title="{{ discussionPost.created | date ~ 'Z' }}"></span>
+
+                                                {% if (canDelete or app.user == discussionPost.author) %}
+                                                    <a href="{{ path('group_delete_discussion_post', { 'id' : discussionPost.id }) }}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                                                {% endif %}
+                                                {% if (canEdit or app.user == discussionPost.author) %}
+                                                    <a href="{{ path('group_edit_discussion_post', { 'id' : discussionPost.id }) }}">Edit</a> |
+                                                {% endif %}
+                                                <a href="javascript:void(0);" class="report-group-discussion-post" report-data="{{ discussionPost.id }}">Report</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="left">
+                                        <div class="profileInfo png">
+                                            <div class="profileAvatar">
+                                                <span class="png"></span>
+                                                <img src="{{ asset(get_avatar_url(discussionPost.author)) }}" alt="{{ discussionPost.author.username }}" />
+                                            </div>
+                                            <div class="profileName">
+                                                <a href="{{ path('accounts_profile', {'username': discussionPost.author.username }) }}">
+                                                    {{ discussionPost.author.username }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="commentEnd">
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% include 'GroupBundle:Group:_reportGroupDiscussionPostPopup.html.twig' %}
+                    </div>
+                    <div class="pager pagerfanta" id="pager-bottom" style="float: right; margin-top: 15px;">
+                        {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+                        {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+                        {{ pagerfanta(pager, 'spoutlet', {
+                            'previous_message': '',
+                            'next_message': '',
+                            'routeName': 'group_view_discussion'
+                        }) }}
+                    </div>
+                </div>
+                <div id="discussion-reply-form">
+                <form id="reply-form" action="{{ replyFormAction }}" method="post" {{ form_enctype(replyForm) }} class="form-horizontal">
+
+                    {% form_theme replyForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+                    {% form_theme replyForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+                    {{ form_errors(replyForm) }}
+
+                    <div class="span8" style="margin-left: 145px;width:496px;">
+                        <p class="error" style="color:#ff0000;display:none;">Please provide content for your reply.</p>
+                        {{ form_widget(replyForm.content) }}
+                        <div class="reply-form-actions">
+                            <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>
+                        </div>
+                    </div>
+
+                    {{ form_rest(replyForm) }}
+
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+    {% set reportContentType    = 'GroupDiscussion' %}
+    {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+{% endblock %}

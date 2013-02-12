@@ -11,11 +11,11 @@ use Doctrine\ORM\EntityManager;
 
 use Platformd\GiveawayBundle\Entity\Giveaway,
     Platformd\GiveawayBundle\Entity\Deal,
-    Platformd\SpoutletBundle\Entity\Group,
-    Platformd\SpoutletBundle\Entity\GroupDiscussion,
+    Platformd\GroupBundle\Entity\Group,
+    Platformd\GroupBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
-    Platformd\SpoutletBundle\Entity\Metric\GroupMetric,
-    Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetric
+    Platformd\GroupBundle\Entity\Metric\GroupMetric,
+    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric
 ;
 
 class MetricManager
@@ -46,22 +46,22 @@ class MetricManager
     private $dealCodeRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\GroupRepository
+     * @var \Platformd\GroupBundle\Entity\GroupRepository
      */
     private $groupRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\Metric\GroupMetricRepository
+     * @var \Platformd\GroupBundle\Entity\Metric\GroupMetricRepository
      */
     private $groupMetricRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\GroupDiscussionRepository
+     * @var \Platformd\GroupBundle\Entity\GroupDiscussionRepository
      */
     private $groupDiscussionRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetricRepository
+     * @var \Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetricRepository
      */
     private $groupDiscussionMetricRepository;
 
@@ -79,10 +79,10 @@ class MetricManager
         $this->globalActivityRepository = $em->getRepository('SpoutletBundle:GlobalActivity');
         $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
         $this->dealCodeRepository = $em->getRepository('GiveawayBundle:DealCode');
-        $this->groupRepository = $em->getRepository('SpoutletBundle:Group');
-        $this->groupMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupMetric');
-        $this->groupDiscussionRepository = $em->getRepository('SpoutletBundle:GroupDiscussion');
-        $this->groupDiscussionMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupDiscussionMetric');
+        $this->groupRepository = $em->getRepository('GroupBundle:Group');
+        $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
+        $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
+        $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
         $this->sites = $sites;
     }
 
@@ -251,7 +251,7 @@ class MetricManager
     /**
      * Processes one metric
      *
-     * @param \Platformd\SpoutletBundle\Entity\Metric\GroupMetric $groupMetric
+     * @param \Platformd\GroupBundle\Entity\Metric\GroupMetric $groupMetric
      */
     private function processGroupMetric(GroupMetric $groupMetric)
     {
@@ -270,7 +270,7 @@ class MetricManager
      * Checks if all existing metrics are fully processed,
      * if not - processes them
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      */
     private function completeGroupMetrics(Group $group)
     {
@@ -286,7 +286,7 @@ class MetricManager
     /**
      * Generate Group Metrics
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \DateTime $date
      */
     private function generateGroupMetricsFromDate(Group $group, DateTime $date)
@@ -306,7 +306,7 @@ class MetricManager
     /**
      * Get an array of metrics for a specified period of time
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \DateTime $from
      * @param \DateTime $thru
      * @return mixed
@@ -322,7 +322,7 @@ class MetricManager
     /**
      * Creates a discussions metrics summary array for a specific group
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \DateTime $from
      * @param \DateTime $thru
      */
@@ -365,7 +365,7 @@ class MetricManager
     /**
      * Creates a detailed
      *
-     * @param \Platformd\SpoutletBundle\Entity\GroupDiscussion $groupDiscussion
+     * @param \Platformd\GroupBundle\Entity\GroupDiscussion $groupDiscussion
      * @param $from
      * @param $thru
      */
@@ -443,7 +443,7 @@ class MetricManager
     /**
      * Processes one metric
      *
-     * @param \Platformd\SpoutletBundle\Entity\Metric\GroupDiscussionMetric $groupDiscussionMetric
+     * @param \Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric $groupDiscussionMetric
      */
     private function processGroupDiscussionMetric(GroupDiscussionMetric $groupDiscussionMetric)
     {
