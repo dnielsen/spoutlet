@@ -261,7 +261,7 @@ class GroupEventController extends Controller
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
 
-        return $this->render('EventBundle::view.html.twig', array(
+        return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
