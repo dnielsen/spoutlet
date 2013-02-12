@@ -48,7 +48,7 @@
                             <div class="event-attendee">
                                 <div class="event-hover-div"></div>
                                 <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
-                                <a href="{{ cevo_account_link(event.user.username) }}"><span class="username">{{ event.user.username }}</span></a>
+                                <a href="javascript:void(0);"><span class="username">{{ event.user.username }}</span></a>
                                 <span id="event-host-tag">Event Host</span>
                             </div>
                             {% for attendee in event.attendees %}
@@ -57,7 +57,7 @@
                                     <div class="event-attendee">
                                         <div class="event-hover-div"></div>
                                         <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
-                                        <a href="{{ cevo_account_link(attendee.username) }}"><span class="username">{{ attendee.username }}</span></a>
+                                        <a href="javascript:void(0);"><span class="username">{{ attendee.username }}</span></a>
                                     </div>
                                 {% endif %}
                             {% else %}
@@ -88,6 +88,12 @@
                 $('#event-contact-form').removeAttr('target');
             });
 
+            $('#cancel').click(function(e){
+                e.preventDefault();
+                var url = '{{ path("group_event_view", { "groupSlug": group.slug, "eventSlug": event.slug }) }}';
+                document.location.href = url;
+            });
+
             $('.event-attendee').hover(function() {
                 $(this).children('.event-hover-div').show();
             },
@@ -96,8 +102,22 @@
             });
 
             $('.event-attendee').click(function() {
-                var username = $(this).first('.username').text();
-                alert(username);
+                var username = $.trim($(this).find('.username').text());
+                var recipients = [];
+
+                if ($('#form_recipients').val()) {
+                    recipients = $('#form_recipients').val().split(',');
+                }
+
+                if ($.inArray(username, recipients) < 0) {
+                    if ($('#form_recipients').val()) {
+                        $('#form_recipients').val($('#form_recipients').val() + ',' + username);
+                    } else {
+                        $('#form_recipients').val(username);
+                    }
+
+                }
+
             });
 
         });

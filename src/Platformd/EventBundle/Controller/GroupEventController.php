@@ -295,7 +295,8 @@ class GroupEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
             ->add('recipients', 'text', array(
-                'help' => 'Leave blank to send to all attendees',
+                'read_only' => true,
+                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
@@ -323,8 +324,9 @@ class GroupEventController extends Controller
                     $recipientArr = explode(',', $email->getRecipients());
                     $userManager = $this->getUserManager();
 
-                    foreach ($recipentArr as $recipient) {
-                        if ($user = $userManager->loadUserByUsername($recipient) && $groupEvent->getAttendees()->contains($user)) {
+                    foreach ($recipientArr as $recipient) {
+                        $user = $userManager->loadUserByUsername($recipient);
+                        if ($user && $groupEvent->getAttendees()->contains($user)) {
                             $recipients[] = $user;
                         }
                     }
@@ -367,7 +369,8 @@ class GroupEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
             ->add('recipients', 'text', array(
-                'help' => 'Leave blank to send to all attendees',
+                'read_only' => true,
+                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
