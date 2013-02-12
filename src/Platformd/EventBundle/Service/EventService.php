@@ -5,10 +5,12 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
+    Platformd\UserBundle\Entity\EventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group
+    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\SpoutletBundle\Model\EmailManager
 ;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
@@ -43,17 +45,24 @@ class EventService
      */
     protected $aclProvider;
 
+    /**
+     * @var EmailManager
+     */
+    protected $emailManager;
+
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
         EventDispatcher $dispatcher,
-        AclProvider $aclProvider
+        AclProvider $aclProvider,
+        EmailManager $emailManager
     )
     {
         $this->repository   = $repository;
         $this->mediaUtil    = $mediaUtil;
         $this->dispatcher   = $dispatcher;
         $this->aclProvider  = $aclProvider;
+        $this->emailManager  = $emailManager;
     }
 
     /**
@@ -64,6 +73,8 @@ class EventService
     public function createEvent(Event $event)
     {
         $this->handleMedia($event);
+
+        $event->getAttendees()->add($event->getUser());
 
         $this->repository->saveEvent($event);
 
@@ -280,5 +291,10 @@ class EventService
     public function isUserAttending(Event $event, User $user)
     {
         return $this->repository->isUserAttending($event, $user);
+    }
+
+    public function saveEmail(EventEmail $email)
+    {
+        $this->repository->saveEmail($email);
     }
 }

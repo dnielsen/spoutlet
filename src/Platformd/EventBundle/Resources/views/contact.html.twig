@@ -22,11 +22,11 @@
                         </div>
                     </div>
                     <div class="widget-content">
-                        <form action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                        <form id="event-contact-form" action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
                             {{ form_widget(form) }}
-                            <div class="form-actions" style="float: left;">
-                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>Create</button>
-                                <button type="submit" id="submit" class="btn btn-primary" formnovalidate>Create</button>
+                            <div class="form-actions" style="padding-left: 100px;">
+                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>Preview</button>
+                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>Create</button>
                                 <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
                             </div>
                         </form>
@@ -44,24 +44,26 @@
                     <div class="widget-content">
 
                         <div id="event-attendee-list">
-                            <hr class="faded" style="margin: 10px 0;" />
+                            <hr class="faded" />
                             <div class="event-attendee">
+                                <div class="event-hover-div"></div>
                                 <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
-                                <a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a>
+                                <a href="{{ cevo_account_link(event.user.username) }}"><span class="username">{{ event.user.username }}</span></a>
                                 <span id="event-host-tag">Event Host</span>
                             </div>
                             {% for attendee in event.attendees %}
                                 {% if event.user != attendee %}
-                                    <hr class="faded" style="margin: 10px 0;" />
+                                    <hr class="faded" />
                                     <div class="event-attendee">
+                                        <div class="event-hover-div"></div>
                                         <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
-                                        <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                        <a href="{{ cevo_account_link(attendee.username) }}"><span class="username">{{ attendee.username }}</span></a>
                                     </div>
                                 {% endif %}
                             {% else %}
                                 No attendees!
                             {% endfor %}
-                            <hr class="faded" style="margin: 10px 0;" />
+                            <hr class="faded" />
                         </div>
 
                     </div>
@@ -75,13 +77,29 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             $('#preview').click(function(){
-                $('#my-form').attr('target', '_blank');
+                $('#event-contact-form').attr('action', '{{ path(event.getRoutePrefix ~ 'email_preview', event.linkableRouteParameters) }}');
+                $('#event-contact-form').attr('target', '_blank');
             });
 
             $('#submit').click(function(){
-                $('#my-form').removeAttr('target');
+                $('#event-contact-form').attr('action', '{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}');
+                $('#event-contact-form').removeAttr('target');
             });
+
+            $('.event-attendee').hover(function() {
+                $(this).children('.event-hover-div').show();
+            },
+            function() {
+                $(this).children('.event-hover-div').hide();
+            });
+
+            $('.event-attendee').click(function() {
+                var username = $(this).first('.username').text();
+                alert(username);
+            });
+
         });
     </script>
 

@@ -76,4 +76,14 @@ final class EventEvents
      * @var string
      */
     const EVENT_UNREGISTER = 'platformd.event.unregister';
+
+    /**
+     * The platformd.event.email event is thrown each time an event email is sent
+     *
+     * The event listener receives a Platformd\EventBundle\Event\EventEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_EMAIL = 'platformd.event.email';
 }

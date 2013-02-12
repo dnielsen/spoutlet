@@ -89,7 +89,7 @@ class GroupEvent extends Event implements ReportableContentInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinTable(name="group_events_attendees")
-     * @ORM\OrderBy({"username"})
+     * @ORM\OrderBy({"username" = "ASC"})
      */
     protected $attendees;
 

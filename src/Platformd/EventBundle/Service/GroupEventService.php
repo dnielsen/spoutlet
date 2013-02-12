@@ -5,6 +5,7 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Entity\GroupEventTranslation,
+    Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\SpoutletBundle\Entity\Group,
@@ -106,5 +107,24 @@ class GroupEventService extends EventService
                 $translation->setBannerImage(null);
             }
         }
+    }
+
+    public function sendEmail(GroupEventEmail $email)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+        $emailType  = "Group Event Mass Email";
+
+        $sendCount = 0;
+
+        foreach ($email->getRecipients() as $recipient) {
+            $emailTo = $recipient->getEmail();
+            $this->emailManager->sendEmail($emailTo, $subject, $message, $emailType);
+            $sendCount++;
+        }
+
+        $this->repository->saveEmail($email);
+
+        return $sendCount;
     }
 }

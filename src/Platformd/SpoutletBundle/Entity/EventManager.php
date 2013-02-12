@@ -77,7 +77,7 @@ class EventManager
     /**
      * Update an event's banner image
      *
-     * @param \Platformd\SpoutletBundle\Entity\Event $event
+     * @param \Platformd\SpoutletBundle\Entity\AbstractEvent $event
      */
     protected function updateBannerImage(AbstractEvent $event)
     {
@@ -96,7 +96,7 @@ class EventManager
     /**
      * Update an event's general image
      *
-     * @param \Platformd\SpoutletBundle\Entity\Event $event
+     * @param \Platformd\SpoutletBundle\Entity\AbstractEvent $event
      */
     protected function updateGeneralImage(AbstractEvent $event)
     {

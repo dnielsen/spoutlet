@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager,
 ;
 
 use Platformd\EventBundle\Entity\Event;
+use Platformd\EventBundle\Entity\EventEmail;
 use Platformd\UserBundle\Entity\User;
 
 class EventRepository extends EntityRepository
@@ -73,5 +74,16 @@ class EventRepository extends EntityRepository
 
         return $qb->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Persists EventEmail in the DB
+     *
+     * @param \Platformd\EventBundle\Entity\EventEmail $email
+     */
+    public function saveEmail(EventEmail $email)
+    {
+        $this->_em->persist($email);
+        $this->_em->flush();
     }
 }

@@ -294,7 +294,9 @@ class GroupEventController extends Controller
 
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
-            ->add('recipients', 'text')
+            ->add('recipients', 'text', array(
+                'help' => 'Leave blank to send to all attendees',
+            ))
             ->add('message', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
             ))
@@ -305,13 +307,45 @@ class GroupEventController extends Controller
 
             if ($form->isValid()) {
 
+                $email = $form->getData();
                 $email->setGroupEvent($groupEvent);
 
-                $sendCount = $this->getGroupEventService()->sendEmail($email);
+                $recipients = array();
 
-                $this->setFlash('success', 'Email sent to %d attendees.', $sendCount);
+                if ($email->getRecipients() === null) {
+
+                    foreach ($groupEvent->getAttendees() as $recipient) {
+                        $recipients[] = $recipient;
+                    }
+
+                } else {
+
+                    $recipientArr = explode(',', $email->getRecipients());
+                    $userManager = $this->getUserManager();
+
+                    foreach ($recipentArr as $recipient) {
+                        if ($user = $userManager->loadUserByUsername($recipient) && $groupEvent->getAttendees()->contains($user)) {
+                            $recipients[] = $user;
+                        }
+                    }
+                }
+
+                $email->setRecipients($recipients);
+
+                if (count($email->getRecipients()) > 0) {
+                    $sendCount = $this->getGroupEventService()->sendEmail($email);
+                } else {
+                    $this->setFlash('error', 'No valid recipients found.');
+                    return $this->redirect($this->generateUrl('group_event_contact', array(
+                        'groupSlug' => $groupSlug,
+                        'eventSlug' => $groupEvent->getSlug(),
+                        'form'  => $form->createView(),
+                    )));
+                }
+
+                $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
                 return $this->redirect($this->generateUrl('group_event_view', array(
-                    'groupSlug' => $groupSlug(),
+                    'groupSlug' => $groupSlug,
                     'eventSlug' => $groupEvent->getSlug()
                 )));
             }
@@ -328,7 +362,37 @@ class GroupEventController extends Controller
 
     public function emailPreviewAction($groupSlug, $eventSlug, Request $request)
     {
-        return $this->viewAction($groupSlug, $eventSlug);
+        $email = new GroupEventEmail();
+
+        $form = $this->createFormBuilder($email)
+            ->add('subject', 'text')
+            ->add('recipients', 'text', array(
+                'help' => 'Leave blank to send to all attendees',
+            ))
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $email = $form->getData();
+
+                return $this->render('EventBundle::contactPreview.html.twig', array(
+                    'subject' => $email->getSubject(),
+                    'message' => $email->getMessage(),
+                ));
+            }
+        }
+
+        $this->setFlash('error', 'There was an error previewing your email!');
+        return $this->redirect($this->generateUrl('group_event_contact', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $groupEvent->getSlug(),
+            'form'  => $form->createView(),
+        )));
     }
 
     /**

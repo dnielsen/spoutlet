@@ -49,6 +49,8 @@
 
 .event-attendee {
     position: relative;
+    margin: 10px 0;
+    cursor: pointer;
 }
 
 #event-attendee-list img {
@@ -83,4 +85,13 @@
 
 #event-contact-page .form-horizontal .controls {
     margin-left: 100px;
+}
+
+.event-hover-div {
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:none;
+    opacity:0.3;
+    background-color:#FFF;
 }

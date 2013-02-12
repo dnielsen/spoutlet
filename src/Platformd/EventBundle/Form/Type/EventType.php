@@ -54,7 +54,7 @@ class EventType extends AbstractType
                 )
             ))
             ->add('game', 'entity', array(
-                'class'     => 'SpoutletBundle:Game',
+                'class'     => 'GameBundle:Game',
                 'property'  => 'name',
                 'empty_value' => 'N/A',
                 'label' => 'platformd.event.form.game'
