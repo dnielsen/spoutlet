@@ -138,7 +138,7 @@ platformd:
             details: Details
             event: Event
             games: Games
-            hosted_by: Hosted by
+            hosted_by: Organizer
             location: Location
             upcoming_events: Upcoming Events
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."

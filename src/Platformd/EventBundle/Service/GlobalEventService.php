@@ -4,7 +4,8 @@ namespace Platformd\EventBundle\Service;
 
 use Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Entity\GlobalEvent,
-    Platformd\EventBundle\Entity\GlobalEventTranslation
+    Platformd\EventBundle\Entity\GlobalEventTranslation,
+    Platformd\GameBundle\Entity\Game
 ;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -69,5 +70,10 @@ class GlobalEventService extends EventService
     public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
     {
         return $this->repository->findPastEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
+    }
+
+    public function findEventsForGamePage(Site $site, Game $game, $published = true)
+    {
+        return $this->repository->findEventsForGamePage($site, $game, $published);
     }
 }

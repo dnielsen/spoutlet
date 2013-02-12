@@ -23,11 +23,11 @@
         {% for event in events %}
         <tr class="eventListGroup_online">
             <td style="width:121px;">
-                {{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}
+                {{ event.startsAt | date('M j, Y') }}
             </td>
             {# todo - refactor this next line somewhere else #}
             <td style="width:259px;">
-               {{ event | pd_link_full(event.name) }}
+               {{ event | pd_link_full(event.name, ['global-event-link']) }}
             </td>
             <td style="width:212px;">
                 {% if event.game is defined %}
@@ -44,10 +44,16 @@
                 {% endif %}
             </td>
             <td style="width:133px;">
-                {% if event.location is defined %}
-                    {{ event.location ? event.location : ('na'|trans) }}
+                {% if event.online %}
+                    Online
                 {% else %}
-                    {{ 'na'|trans }}
+                    {% if event.address is defined %}
+                        <span class="map-info" data-id="{{ event.id }}">{{ event.location ? event.location : ('na'|trans) }}</span>
+                        <input type="hidden" id="location-{{ event.id }}" value="{{ event.address }}" />
+                        <div>(<a href="javascript:void(0);" id="view-map-{{ event.id }}">view map</a>)</div>
+                    {% else %}
+                        {{ 'na'|trans }}
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>

@@ -889,3 +889,11 @@ hr.faded:before {
     top: 50%;
     z-index: 1;
 }
+
+.global-event-link {
+    color: #9BC744;
+}
+
+.global-event-link:hover {
+    color: #9BC744;
+}

@@ -3,7 +3,8 @@
 namespace Platformd\EventBundle\Repository;
 
 use Platformd\EventBundle\Repository\EventRepository,
-    Platformd\SpoutletBundle\Entity\Site
+    Platformd\SpoutletBundle\Entity\Site,
+    Platformd\GameBundle\Entity\Game
 ;
 
 use Pagerfanta\Pagerfanta,
@@ -94,6 +95,32 @@ class GlobalEventRepository extends EventRepository
 
             return $pager->getCurrentPageResults();
         }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param \Platformd\SpoutletBundle\Entity\Site $site
+     * @param \Platformd\GameBundle\Entity\Game $game
+     * @param bool $published
+     */
+    public function findEventsForGamePage(Site $site, Game $game, $published = true)
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->select('gE', 's')
+            ->leftJoin('gE.sites', 's')
+            ->leftJoin('gE.game', 'g')
+            ->where('gE.endsAt > :now')
+            ->andWhere('gE.published = :published')
+            ->andWhere('s = :site')
+            ->andWhere('g = :game')
+            ->orderBy('gE.createdAt', 'DESC')
+            ->setParameter('now', new DateTime('now'))
+            ->setParameter('published', $published)
+            ->setParameter('site', $site)
+            ->setParameter('game', $game)
+        ;
+
 
         return $qb->getQuery()->getResult();
     }

@@ -20,9 +20,9 @@
         <div class="widget-footer">
             <a href="{{ path('global_events_current') }}">{{ 'platformd.events.event_listings.more_current_events' | trans }}</a>
         </div>
-    </div><br />
+    </div>
 
-    <div class="widget-100">
+    <div class="widget-100" style="margin-top:15px;">
         <div class="widget-header">
             <div class="widget-title">
                 {{ 'platformd.events.event_listings.past_events' | trans }}
@@ -39,6 +39,61 @@
         <div class="widget-footer">
             <a href="{{ path('global_events_past') }}">{{ 'platformd.events.event_listings.more_past_Events' | trans }}</a>
         </div>
-    </div><br />
+    </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.map-info').each(function(i, v) {
+                var id = $(this).attr('data-id');
+
+                $('#view-map-' + id).qtip({
+                    content: {
+                        text: '<div class="google-map" id="map-' + id + '" style="width:300px;height:250px;"></div>',
+                        prerender: true
+                    },
+                    style: {
+                        width: 300,
+                        height: 250,
+                        border: { width: 2, radius: 5 },
+                        padding: 2,
+                        tip: true,
+                        name: 'dark'
+                    },
+                    position: {
+                        corner: {
+                            tooltip: 'bottomMiddle',
+                            target: 'topMiddle'
+                        }
+                    },
+                    hide: {
+                        fixed: true,
+                        when: {
+                            event: 'click'
+                        }
+                    },
+                    show: {
+                        fixed: true,
+                        when: {
+                            event: 'click'
+                        }
+                    }
+                });
+
+                $('#map-' + id).groupsmap({
+                   address : $('#location-' + id).val()
+                });
+            });
+
+            $('.map-info').each(function(i, v) {
+                var id = $(this).attr('data-id');
+
+            });
+
+        });
+    </script>
 {% endblock %}
