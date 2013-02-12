@@ -22,12 +22,12 @@
                         </div>
                     </div>
                     <div class="widget-content">
-                        <form id="event-contact-form" action="{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                        <form id="event-contact-form" action="{{ path('global_event_contact', { 'slug': event.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
                             {{ form_widget(form) }}
                             <div class="form-actions" style="padding-left: 100px;">
                                 <button type="submit" id="preview" class="btn btn-primary" formnovalidate>Preview</button>
                                 <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>Create</button>
-                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ path('global_events_index') }}" style="margin-left: 10px;">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -79,18 +79,18 @@
         $(document).ready(function() {
 
             $('#preview').click(function(){
-                $('#event-contact-form').attr('action', '{{ path(event.getRoutePrefix ~ 'email_preview', event.linkableRouteParameters) }}');
+                $('#event-contact-form').attr('action', '{{ path('global_event_email_preview', {'slug': event.slug }) }}');
                 $('#event-contact-form').attr('target', '_blank');
             });
 
             $('#submit').click(function(){
-                $('#event-contact-form').attr('action', '{{ path(event.getRoutePrefix ~ 'contact', event.linkableRouteParameters) }}');
+                $('#event-contact-form').attr('action', '{{ path('global_event_contact', {'slug': event.slug }) }}');
                 $('#event-contact-form').removeAttr('target');
             });
 
             $('#cancel').click(function(e){
                 e.preventDefault();
-                var url = '{{ path("group_event_view", { "groupSlug": group.slug, "eventSlug": event.slug }) }}';
+                var url = '{{ path("global_event_view", { "slug": event.slug }) }}';
                 document.location.href = url;
             });
 

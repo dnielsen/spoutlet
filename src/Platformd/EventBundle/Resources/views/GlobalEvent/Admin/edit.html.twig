@@ -1,0 +1,29 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}{{ "platformd.events.admin.edit" | trans }}{% endblock %}
+
+{% block content %}
+
+    <form action="{{ path('admin_events_new') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
+
+        <div class="form-actions" style="float: left;">
+            <button type="submit" class="btn btn-primary" formnovalidate>Save</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('input.datetime-picker').datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                showSecond: true
+            });
+
+        });
+    </script>
+{% endblock %}

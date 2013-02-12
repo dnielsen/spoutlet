@@ -302,4 +302,9 @@ class GlobalEvent extends Event
     {
         return $this->currentLocale;
     }
+
+    public function getThreadId()
+    {
+        return 'global-event-'.$this->getId();
+    }
 }

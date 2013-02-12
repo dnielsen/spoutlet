@@ -108,23 +108,4 @@ class GroupEventService extends EventService
             }
         }
     }
-
-    public function sendEmail(GroupEventEmail $email)
-    {
-        $subject    = $email->getSubject();
-        $message    = $email->getMessage();
-        $emailType  = "Group Event Mass Email";
-
-        $sendCount = 0;
-
-        foreach ($email->getRecipients() as $recipient) {
-            $emailTo = $recipient->getEmail();
-            $this->emailManager->sendEmail($emailTo, $subject, $message, $emailType);
-            $sendCount++;
-        }
-
-        $this->repository->saveEmail($email);
-
-        return $sendCount;
-    }
 }

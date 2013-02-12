@@ -1,98 +1,235 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block content %}
-    // view event page
-    // markup to be created
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ event.name }}" />
+    <meta property="og:type" content="activity" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="http://alienwarearena.com/images/profile-default.png" />
+    <meta property="og:description" content="{{ event.content }}" />
 {% endblock %}
 
-{# Here is the legacy code from the former events system #}
+{% block title event.name %}
 
-{#{% extends 'SpoutletBundle::layout.html.twig' %}#}
+{% block content %}
 
-{#{% block title event.name %}#}
+<div id="event-show-page">
 
-{#{% block content %}#}
-{#<div id="content">#}
-    {#<div class="std_1col">#}
-        {#{% if event.bannerImage %}#}
-            {#<div id="eventHeader" style="background:url('{{ asset(media_path(event)) }}') no-repeat;"></div>#}
-        {#{% endif %}#}
-    {#</div>#}
+    {% if event.bannerImage %}
+        <div class="std_1col">
+            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat;">
+        </div>
+    {% endif %}
 
-    {#<div class="std_2col">#}
-        {#&#123;&#35;#}
-            {#Removed temporarily, until we think about this feature more#}
-        {#<div class="right">#}
-            {#<div class="widget-33" id="giveaway-getkey">#}
-                {#<div class="widget-header">#}
-                    {#<div class="widget-title">{{ 'platformd.events.event_show.register' | trans }}</div>#}
-                {#</div>#}
+    {% if app.user == event.user or app.user.adminLevel == 'ROLE_SUPER_ADMIN' %}
 
-                {#<div class="widget-content">#}
-                    {#{% if app.user and app.user.events.contains(event) %}#}
-                    {#<p>{{ 'platformd.events.event_show.registered_event' | trans }}</p>#}
-                    {#<p><a href="{{ path('events_unregister', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.unregister_event" | trans }}</a></p>#}
-                    {#{% else %}#}
-                    {#<p><a href="{{ path('events_register', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.register_event" | trans }}</a></p>#}
-                    {#{% endif %}#}
+        <div class="std_2col" style="padding:10px 0 0 0;">
+            <div class="left">
+                <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="GlobalEvent" style="width:130px; margin-bottom:5px;">
+                    <option>Manage Event</option>
+                    <option value="contact">Contact Attendees</option>
+                    <option value="edit">Edit Event</option>
+                    <option value="disable">Disable Event</option>
+                </select>
+            </div>
+        </div>
 
-                    {#{% if not is_granted('IS_AUTHENTICATED_FULLY') %}#}
-                    {#<ol>#}
-                        {#<li><span class="item"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.create_account_or_login' | trans }}</a></span></li>#}
-                    {#</ol>#}
-                    {#{% endif %}#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-        {#&#35;&#125;#}
-        {#<div class="left">#}
-            {#<div class="widget-66" id="giveaway-info">#}
-                {#<div class="widget-header">#}
-                    {#<div class="widget-title controlled-spacing">{{ event.name }}</div>#}
-                {#</div>#}
-                {#<div id="giveaway-details" class="widget-content">#}
-                    {#<div>#}
-                        {#{% if event.startsAt %}#}
-                            {#<label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>#}
-                            {#<div id="starts_at">#}
-                                {#{{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}#}
-                                {#{% if event.displayTimezone %}#}
-                                    {#{{ event.timezoneString }}#}
-                                {#{% endif %}#}
-                            {#</div>#}
-                        {#{% endif %}#}
+    {% endif %}
 
-                        {#{% if event.endsAt %}#}
-                            {#<label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>#}
-                            {#<div id="ends_at">#}
-                                {#{{ 'sweepstakes_datetime_format' | trans(event.endsAtInTimezoneTranslationArray) }}#}
-                                {#{% if event.displayTimezone %}#}
-                                    {#{{ event.timezoneString }}#}
-                                {#{% endif %}#}
-                            {#</div>#}
-                        {#{% endif %}#}
+    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header" style="padding-bottom:10px;">
+                    <div class="widget-title">
+                        <div id="event-heading-title">{{ event.name }}</div>
+                    </div>
+                    <div id="event-heading-date">{{ event.dateRangeString }}</div>
+                    <div id="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezone }}{% endif %}</div>
+                </div>
+                <div class="widget-content">
+                    <div id="event-content">{{ event.content | raw }}</div>
+                </div>
+            </div>
 
-                        {#{% if event.cityCountryLocationString %}#}
-                            {#<label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>#}
-                            {#<div id="location">{{ event.cityCountryLocationString }}</div>#}
-                        {#{% endif %}#}
+            {% if site_has_feature('COMMENTS') %}
+                <div class="event-comments">
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.threadId, 'object' : event } %}
+                </div>
+            {% endif %}
 
-                        {#{% if event.hostedBy %}#}
-                            {#<label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>#}
-                            {#<div id="hostedBy">{{ event.hostedBy }}</div>#}
-                        {#{% endif %}#}
+        </div>
 
-                        {#{% if event.content %}#}
-                            {#<label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>#}
-                            {#<div id="contentDetails">{{ event.content | raw }}</div>#}
-                        {#{% endif %}#}
-                    {#</div>#}
-                {#</div>#}
-            {#</div>#}
-            {#{% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.slug, 'object' : event } %}#}
-        {#</div>#}
-    {#</div>#}
+        <div class="right">
 
-{#</div>#}
-{#{% endblock %}#}
+            <div class="widget-33" id="event-details-widget" style="height: auto;">
+                <div class="widget-header">
+                    <div class="widget-title">Event Details</div>
+                </div>
+                <div class="widget-content" style="padding-left: 10px;">
 
+                    <div id="media-social" style="margin:10px 0;">
+                        <div class="fb-like"
+                            data-send="false"
+                            data-width="300"
+                            data-layout="button_count"
+                            data-show-faces="false"
+                            data-colorscheme="dark"
+                            style="vertical-align:top;zoom:1;*display:inline">
+                        </div>
+                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware">Tweet</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    </div>
+
+                    <div id="event-organizer"><strong>Organizer: </strong><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></div>
+                    <div id="event-attendee-attendees"><strong>Attending: </strong><span id="event-attendee-count-{{ event.id }}">{{ attendeeCount }}</span></div>
+
+                    <div id="event-registration">
+                        {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
+                            <div id="event-registration-closed">Registration is no longer open for this event.</div>
+                        {% else %}
+                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("global_event_rsvp") }}" class="btn btn-primary">Register</a></div>
+
+                            <div id="registration-response" style="display:none;"></div>
+
+                            <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
+
+                            <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("global_event_rsvp") }}" data-contenttype="GlobalEvent">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="widget-33" id="event-location-widget" style="height: auto; margin-top:15px;">
+                <div class="widget-header">
+                    <div class="widget-title">Location</div>
+                </div>
+                <div class="widget-content">
+                    {% if event.online %}
+                        <div id="event-location-online">This is an online event.</div>
+                    {% else %}
+                        <div id="event-location-name">{{ event.location }}</div>
+                        <div id="event-location-address">{{ event.address }}</div>
+                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% include 'EventBundle::_rsvpDialog.html.twig' %}
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#register-link').click(function () {
+            $('#register-link').block({
+                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
+                css: {
+                    border: 'none',
+                    background: 'transparent'
+                }
+
+            });
+
+            $.ajax({
+                url: $(this).attr('data-route'),
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : {{ event.id }},
+                    'rsvp' : 1
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    $('#register-link').unblock();
+
+                    if (data.success) {
+                        $('#event-registration-button').hide();
+                        $('#event-attending-message').fadeIn();
+                        $('#event-rsvp-link').fadeIn();
+                        $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
+                    } else {
+                        $('#registration-response').text(data.errorMessage);
+                        $('.event-registration-button').fadeIn();
+                    }
+                    $('#registration-response').fadeIn();
+                }
+            })
+
+        });
+
+        $('.event-owner-actions').change(function () {
+
+            switch($(this).children('option:selected').val()) {
+
+                case 'contact':
+                     document.location.href = "{{ path("global_event_contact", { 'slug': event.slug }) }}";
+                     break;
+
+                case 'edit':
+                    document.location.href = "{{ path("admin_events_edit", { 'id': event.id }) }}";
+                    break;
+
+                case 'disable':
+                    var answer = confirm("Are you sure you want to disable this event? You can re-enable it from your control panel.")
+                    if (!answer){
+                        return false;
+                    }
+
+                    var route = "{{ path("global_event_disable") }}";
+
+                    $.blockUI({
+                        message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="padding:15px 0 15px 0;" />',
+                        css: {
+                            backgroundColor: '#252525',
+                            border: '3px solid #009CDA',
+                            color: '#B3B3B3',
+                        }
+                    });
+
+                    $.ajax({
+                        url: route,
+                        type: 'post',
+                        data: JSON.stringify({
+                            'id' : {{ event.id }}
+                        }),
+                        contentType: 'json',
+                        success: function(data) {
+                            if (!data.success) {
+                                alert(data.errorMessage);
+                            } else {
+                                alert("Event successfully disabled.");
+                                document.location.href = "{{ path('global_events_index') }}";
+                            }
+                            $.unblockUI();
+                        }
+                    });
+
+                    break;
+
+                default:
+                    break;
+            }
+        });
+    });
+
+</script>
+
+{% endblock %}
+
+{% block stylesheets %}
+
+        {{ parent() }}
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+
+{% endblock %}

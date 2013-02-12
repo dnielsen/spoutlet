@@ -262,8 +262,7 @@ class GroupEventController extends Controller
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
 
-        return $this->render('EventBundle::view.html.twig', array(
-            'group'         => $group,
+        return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
             'isAttending'   => $isAttending,
@@ -288,6 +287,12 @@ class GroupEventController extends Controller
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
         }
 
         $email = new GroupEventEmail();
@@ -355,7 +360,7 @@ class GroupEventController extends Controller
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
-        return $this->render('EventBundle::contact.html.twig', array(
+        return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
             'group' => $group,
             'event' => $groupEvent,
             'form'  => $form->createView(),
@@ -573,13 +578,8 @@ class GroupEventController extends Controller
 
         if ($rsvp == 0 && $isAttending) {
             $this->getGroupEventService()->unregister($groupEvent, $user);
-//
-//            $groupEvent->getAttendees()->removeElement($user);
-//            $this->getGroupEventService()->updateEvent($groupEvent);
         } elseif ($rsvp > 0 && !$isAttending) {
             $this->getGroupEventService()->register($groupEvent, $user);
-//            $groupEvent->getAttendees()->add($user);
-//            $this->getGroupEventService()->updateEvent($groupEvent);
         }
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
@@ -623,7 +623,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        if ($user != $groupEvent->getUser() || $user->getAdminLevel() === null) {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) || $user->getAdminLevel() === null) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not authorized to delete this event.")));
             return $response;
         }

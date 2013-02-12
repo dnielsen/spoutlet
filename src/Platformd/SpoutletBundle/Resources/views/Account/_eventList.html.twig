@@ -13,19 +13,19 @@
             {% for event in events %}
                 <tr id="event-{{ event[0].contentType }}-{{ event[0].id }}">
                     <td>{{ event[0].startsAt | date('M d, Y') }}</td>
-                    <td><a href="{{ path(event[0].routePrefix ~ "view", event[0].getLinkableRouteParameters) }}">{{  event[0].name }}</a></td>
+                    <td><a href="{{ path("group_event_view", event[0].getLinkableRouteParameters) }}">{{  event[0].name }}</a></td>
                     <td><a href="{{ cevo_account_link(event[0].user.username) }}">{{ event[0].user.username }}</a></td>
                     <td>{{ event.attendeeCount }}</td>
                     <td>
                         {% if event[0].user == app.user %}
                             <select class="event-owner-actions" data-id="{{ event[0].id }}" data-contenttype="{{ event[0].contentType }}" style="width:130px;">
                                 <option></option>
-                                <option value="contact" data-route="{{ path(event[0].routePrefix ~ "contact", event[0].getLinkableRouteParameters) }}">Contact Attendees</option>
-                                <option value="edit" data-route="{{ path(event[0].routePrefix ~ "edit", event[0].getModifyRouteParameters) }}">Edit Event</option>
-                                <option value="disable" data-route="{{ path(event[0].routePrefix ~ "disable") }}">Disable Event</option>
+                                <option value="contact" data-route="{{ path("group_event_contact", event[0].getLinkableRouteParameters) }}">Contact Attendees</option>
+                                <option value="edit" data-route="{{ path("group_event_edit", { 'eventId': event[0].id, "groupSlug": event[0].group.slug }) }}">Edit Event</option>
+                                <option value="disable" data-route="{{ path("group_event_disable") }}">Disable Event</option>
                             </select>
                         {% else %}
-                            <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event[0].id }}" data-route="{{ path(event[0].routePrefix ~ "rsvp") }}" data-contenttype="{{ event[0].contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>
+                            <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event[0].id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event[0].contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>
                         {% endif %}
                     </td>
                 </tr>

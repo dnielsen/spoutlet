@@ -24,16 +24,20 @@
         </div>
     {% endif %}
 
-    <div class="std_2col" style="padding:10px 0 0 0;">
-        <div class="left">
-            <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:130px; margin-bottom:5px;">
-                <option>Manage Event</option>
-                <option value="contact" data-route="{{ path(event.routePrefix ~ "contact", event.getLinkableRouteParameters) }}">Contact Attendees</option>
-                <option value="edit" data-route="{{ path(event.routePrefix ~ "edit", event.getModifyRouteParameters) }}">Edit Event</option>
-                <option value="disable" data-route="{{ path(event.routePrefix ~ "disable") }}">Disable Event</option>
-            </select>
+    {% if app.user == event.user or app.user.adminLevel == 'ROLE_SUPER_ADMIN' %}
+
+        <div class="std_2col" style="padding:10px 0 0 0;">
+            <div class="left">
+                <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:130px; margin-bottom:5px;">
+                    <option>Manage Event</option>
+                    <option value="contact" data-route="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</option>
+                    <option value="edit" data-route="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</option>
+                    <option value="disable" data-route="{{ path("group_event_disable") }}">Disable Event</option>
+                </select>
+            </div>
         </div>
-    </div>
+
+    {% endif %}
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
@@ -87,13 +91,13 @@
                         {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                             <div id="event-registration-closed">Registration is no longer open for this event.</div>
                         {% else %}
-                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path(event.routePrefix ~ "rsvp") }}" class="btn btn-primary">Register</a></div>
+                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
 
                             <div id="registration-response" style="display:none;"></div>
 
                             <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
 
-                            <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path(event.routePrefix ~ "rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
+                            <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
                         {% endif %}
                     </div>
 
@@ -116,6 +120,10 @@
                         <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
                     {% endif %}
                 </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
 
         </div>

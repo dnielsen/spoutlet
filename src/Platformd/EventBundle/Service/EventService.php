@@ -6,6 +6,8 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\EventEmail,
+    Platformd\UserBundle\Entity\GroupEventEmail,
+    Platformd\UserBundle\Entity\GlobalEventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
@@ -296,5 +298,24 @@ class EventService
     public function saveEmail(EventEmail $email)
     {
         $this->repository->saveEmail($email);
+    }
+
+    public function sendEmail(EventEmail $email)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+        $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
+
+        $sendCount = 0;
+
+        foreach ($email->getRecipients() as $recipient) {
+            $emailTo = $recipient->getEmail();
+            $this->emailManager->sendEmail($emailTo, $subject, $message, $emailType);
+            $sendCount++;
+        }
+
+        $this->repository->saveEmail($email);
+
+        return $sendCount;
     }
 }

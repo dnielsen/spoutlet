@@ -260,19 +260,6 @@ class GroupEvent extends Event implements ReportableContentInterface
     }
 
     /**
-     * used to dynamically generate routes within twig files to allow multiple event types to be
-     * mixed and displayed together
-     * e.g. group_event_edit, group_event_delete
-     *
-     *  @return string
-     */
-    public function getRoutePrefix()
-    {
-        return 'group_event_';
-
-    }
-
-    /**
      * Content type for the purposes of content reporting
      *
      * @return string
@@ -324,14 +311,6 @@ class GroupEvent extends Event implements ReportableContentInterface
     {
         return array(
             'eventSlug' => $this->getSlug(),
-            'groupSlug' => $this->getGroup()->getSlug(),
-        );
-    }
-
-    public function getModifyRouteParameters()
-    {
-        return array(
-            'eventId' => $this->getId(),
             'groupSlug' => $this->getGroup()->getSlug(),
         );
     }
