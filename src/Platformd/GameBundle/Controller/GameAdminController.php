@@ -1,9 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GameBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\Game;
-use Platformd\SpoutletBundle\Form\Type\GameType;
+use Platformd\GameBundle\Entity\Game;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\GameBundle\Form\Type\GameType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
@@ -22,9 +23,9 @@ class GameAdminController extends Controller
         $this->addGamesBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('SpoutletBundle:Game')->getAllGamesOrderedByName();
+        $entities = $em->getRepository('GameBundle:Game')->getAllGamesOrderedByName();
 
-        return $this->render('SpoutletBundle:GameAdmin:index.html.twig', array(
+        return $this->render('GameBundle:GameAdmin:index.html.twig', array(
             'entities' => $entities
         ));
     }
@@ -46,7 +47,7 @@ class GameAdminController extends Controller
             return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $game->getId())));
         }
 
-        return $this->render('SpoutletBundle:GameAdmin:new.html.twig', array(
+        return $this->render('GameBundle:GameAdmin:new.html.twig', array(
             'entity' => $game,
             'form'   => $form->createView()
         ));
@@ -61,7 +62,7 @@ class GameAdminController extends Controller
         $this->addGamesBreadcrumb()->addChild('Edit Game');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $game = $em->getRepository('SpoutletBundle:Game')->find($id);
+        $game = $em->getRepository('GameBundle:Game')->find($id);
 
         if (!$game) {
             throw $this->createNotFoundException('Unable to find Game game.');
@@ -76,7 +77,7 @@ class GameAdminController extends Controller
             return $this->redirect($this->generateUrl('admin_game_edit', array('id' => $id)));
         }
 
-        return $this->render('SpoutletBundle:GameAdmin:edit.html.twig', array(
+        return $this->render('GameBundle:GameAdmin:edit.html.twig', array(
             'game'      => $game,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -99,7 +100,7 @@ class GameAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                /** @var $game \Platformd\SpoutletBundle\Entity\Game */
+                /** @var $game \Platformd\GameBundle\Entity\Game */
                 $game = $form->getData();
                 $em->persist($game);
 

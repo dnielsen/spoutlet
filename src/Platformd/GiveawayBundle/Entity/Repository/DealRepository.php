@@ -2,7 +2,7 @@
 
 namespace Platformd\GiveawayBundle\Entity\Repository;
 
-use \Platformd\SpoutletBundle\Entity\Game as Game;
+use \Platformd\GameBundle\Entity\Game as Game;
 use \Platformd\GiveawayBundle\Entity\Deal;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;

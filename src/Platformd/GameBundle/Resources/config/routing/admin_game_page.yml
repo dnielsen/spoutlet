@@ -1,0 +1,28 @@
+# shows a chooser for locales
+admin_game_page:
+    pattern:  /
+    defaults: { _controller: "GameBundle:GamePageAdmin:index" }
+
+# show the true "list" page for a site
+admin_game_page_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "GameBundle:GamePageAdmin:list", site: ~ }
+
+admin_game_page_new:
+    pattern:  /new/{site}
+    defaults: { _controller: "GameBundle:GamePageAdmin:new", site: ~ }
+
+admin_game_page_create:
+    pattern:  /create/{site}
+    defaults: { _controller: "GameBundle:GamePageAdmin:new", site: ~ }
+    requirements: { _method: post }
+
+admin_game_page_edit:
+    pattern:  /{id}/edit/{site}
+    defaults: { _controller: "GameBundle:GamePageAdmin:edit", site: ~ }
+
+admin_game_page_update:
+    pattern:  /{id}/update/{site}
+    defaults: { _controller: "GameBundle:GamePageAdmin:edit", site: ~ }
+    requirements: { _method: post }
+

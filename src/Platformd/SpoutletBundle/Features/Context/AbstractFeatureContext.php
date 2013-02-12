@@ -16,8 +16,8 @@ use Behat\Behat\Context\Step\Then;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
-use Platformd\SpoutletBundle\Entity\Game;
-use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\GameBundle\Entity\Game;
+use Platformd\GameBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\Gallery;
 use Platformd\GiveawayBundle\Entity\Deal;
@@ -683,7 +683,7 @@ class AbstractFeatureContext extends MinkContext
      */
     public function thereIsAGameCalled($name)
     {
-        if ($game = $this->getEntityManager()->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $name))) {
+        if ($game = $this->getEntityManager()->getRepository('GameBundle:Game')->findOneBy(array('name' => $name))) {
             $this->getEntityManager()->remove($game);
             $this->getEntityManager()->flush();
         }
@@ -760,7 +760,7 @@ class AbstractFeatureContext extends MinkContext
     public function iShouldBeOnTheGamePageFor($gameName, $siteName)
     {
         $em     = $this->getEntityManager();
-        $game   = $em->getRepository('SpoutletBundle:Game')->findOneBy(array('name' => $gameName));
+        $game   = $em->getRepository('GameBundle:Game')->findOneBy(array('name' => $gameName));
 
         if (!$game) {
             throw new \Exception('Could not find game in the database');
@@ -768,7 +768,7 @@ class AbstractFeatureContext extends MinkContext
 
         $siteName = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($siteName);
 
-        $gamePage = $em->getRepository('SpoutletBundle:GamePage')->findOneByGame($game, $siteName);
+        $gamePage = $em->getRepository('GameBundle:GamePage')->findOneByGame($game, $siteName);
 
         if (!$gamePage) {
             throw new \Exception('Could not find the game page for this game in the database');

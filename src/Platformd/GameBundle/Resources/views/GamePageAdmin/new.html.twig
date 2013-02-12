@@ -5,7 +5,7 @@
 <h1>New Game Page</h1>
 
 <form action="{{ path('admin_game_page_create', {'site': site}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-    {% include 'SpoutletBundle:GamePageAdmin:_form.html.twig' %}
+    {% include 'GameBundle:GamePageAdmin:_form.html.twig' %}
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
@@ -26,5 +26,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% include 'SpoutletBundle:GamePageAdmin:_formJavascript.html.twig' %}
+    {% include 'GameBundle:GamePageAdmin:_formJavascript.html.twig' %}
 {% endblock %}

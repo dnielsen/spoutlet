@@ -1,9 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GameBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\GamePage;
-use Platformd\SpoutletBundle\Form\Type\GamePageType;
+use Platformd\GameBundle\Entity\GamePage;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\GameBundle\Form\Type\GamePageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
@@ -21,7 +22,7 @@ class GamePageAdminController extends Controller
     {
         $this->addGamePagesBreadcrumb();
 
-        return $this->render('SpoutletBundle:GamePageAdmin:index.html.twig', array(
+        return $this->render('GameBundle:GamePageAdmin:index.html.twig', array(
             'sites' => MultitenancyManager::getSiteChoices()
         ));
     }
@@ -39,7 +40,7 @@ class GamePageAdminController extends Controller
 
         $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($siteName);
 
-        return $this->render('SpoutletBundle:GamePageAdmin:list.html.twig', array(
+        return $this->render('GameBundle:GamePageAdmin:list.html.twig', array(
             'entities' => $gamePages,
             'site'     => $site,
         ));
@@ -67,7 +68,7 @@ class GamePageAdminController extends Controller
             )));
         }
 
-        return $this->render('SpoutletBundle:GamePageAdmin:new.html.twig', array(
+        return $this->render('GameBundle:GamePageAdmin:new.html.twig', array(
             'entity' => $gamePage,
             'form'   => $form->createView(),
             'site'   => $site,
@@ -84,7 +85,7 @@ class GamePageAdminController extends Controller
         $this->addSiteBreadcrumbs($site)->addChild('Edit Game Page');
         $em = $this->getDoctrine()->getEntityManager();
 
-        $gamePage = $em->getRepository('SpoutletBundle:GamePage')->find($id);
+        $gamePage = $em->getRepository('GameBundle:GamePage')->find($id);
 
         if (!$gamePage) {
             throw $this->createNotFoundException('Unable to find GamePage.');
@@ -102,7 +103,7 @@ class GamePageAdminController extends Controller
             )));
         }
 
-        return $this->render('SpoutletBundle:GamePageAdmin:edit.html.twig', array(
+        return $this->render('GameBundle:GamePageAdmin:edit.html.twig', array(
             'gamePage'      => $gamePage,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
@@ -120,7 +121,7 @@ class GamePageAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        /** @var $gamePage \Platformd\SpoutletBundle\Entity\GamePage */
+        /** @var $gamePage \Platformd\GameBundle\Entity\GamePage */
         $gamePage = $form->getData();
 
         if ($request->getMethod() == 'POST') {
@@ -207,7 +208,7 @@ class GamePageAdminController extends Controller
 
 
     /**
-     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     * @return \Platformd\GameBundle\Model\GamePageManager
      */
     private function getGamePageManager()
     {

@@ -13,7 +13,7 @@ use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
 use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\GroupEvents;
 use Doctrine\ORM\EntityManager;
-use Platformd\SpoutletBundle\Entity\GamePageLocale;
+use Platformd\GameBundle\Entity\GamePageLocale;
 use Symfony\Component\HttpFoundation\Session;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;

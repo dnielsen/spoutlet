@@ -17,7 +17,7 @@
             <td><a href="{{ path('admin_game_edit', { 'id': game.id }) }}">{{ game.name }}</a></td>
             <td>
                 {% if game.category %}
-                    {{ (constant('Platformd\\SpoutletBundle\\Entity\\Game::GAME_CATEGORY_LABEL_PREFIX')~game.category) | trans }}
+                    {{ (constant('Platformd\\GameBundle\\Entity\\Game::GAME_CATEGORY_LABEL_PREFIX')~game.category) | trans }}
                 {% else %}
                     <emph>none</emph>
                 {% endif %}

@@ -1,0 +1,11 @@
+GameBundle_game_page:
+    resource: "routing/game_page.yml"
+    prefix:   /games
+
+GameBundle_admin_game:
+    resource: "routing/admin_game.yml"
+    prefix:   /admin/game
+
+GameBundle_admin_game_page:
+    resource: "routing/admin_game_page.yml"
+    prefix:   /admin/game-page

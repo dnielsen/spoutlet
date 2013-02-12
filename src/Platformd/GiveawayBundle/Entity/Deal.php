@@ -4,7 +4,7 @@ namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
-use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\GameBundle\Entity\Game;
 use Platformd\SpoutletBundle\Entity\OpenGraphOverride;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -70,7 +70,7 @@ class Deal implements LinkableInterface, CommentableInterface
     private $externalUrl;
 
      /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL", nullable=true)
      */
     private $game;

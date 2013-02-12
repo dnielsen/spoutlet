@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\SpoutletBundle\Entity\Superclass\JoinedLocale;
@@ -30,7 +30,7 @@ class GamePageLocale extends JoinedLocale
     private $gamePage;
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\GameBundle\Entity\GamePage
      */
     public function getGamePage()
     {
@@ -38,7 +38,7 @@ class GamePageLocale extends JoinedLocale
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
+     * @param \Platformd\GameBundle\Entity\GamePage $gamePage
      */
     public function setGamePage($gamePage)
     {

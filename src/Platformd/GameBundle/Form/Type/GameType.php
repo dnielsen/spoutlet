@@ -1,10 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Form\Type;
+namespace Platformd\GameBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\GameBundle\Entity\Game;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
@@ -44,7 +44,7 @@ class GameType extends AbstractType
 
     public function getName()
     {
-        return 'platformd_spoutletbundle_gametype';
+        return 'platformd_gamebundle_gametype';
     }
 
     /**

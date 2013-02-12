@@ -20,8 +20,8 @@ class DealType extends AbstractType
                 'label' => 'External URL',
                 'help'  => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'
             ))
-            ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
-                'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
+            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'N/A',
+                'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
                     return $er->createQueryBuilder('g')
                               ->orderBy('g.name', 'ASC');
                     }))

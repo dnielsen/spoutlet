@@ -1,0 +1,7 @@
+game_page_list:
+    pattern:  /
+    defaults: { _controller: "GameBundle:GamePage:index" }
+
+game_page_show:
+    pattern:  /{category}/{slug}
+    defaults: { _controller: "GameBundle:GamePage:show" }

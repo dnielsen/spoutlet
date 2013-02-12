@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
@@ -10,10 +10,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
- * Platformd\SpoutletBundle\Entity\Game
+ * Platformd\GameBundle\Entity\Game
  *
  * @ORM\Table(name="pd_game")
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GameRepository")
+ * @ORM\Entity(repositoryClass="Platformd\GameBundle\Entity\GameRepository")
  * @Assert\Callback(methods={"validateGameCategory"})
  */
 class Game

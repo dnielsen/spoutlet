@@ -1,10 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\GameBundle\Entity\GamePage;
 
 /**
  * GamePageRepository
@@ -16,7 +16,7 @@ class GamePageRepository extends EntityRepository
 {
     /**
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     * @return \Platformd\GameBundle\Entity\GamePage[]
      */
     public function findAllForSiteNewestFirst($site)
     {
@@ -29,7 +29,7 @@ class GamePageRepository extends EntityRepository
     /**
      * @param integer $age
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     * @return \Platformd\GameBundle\Entity\GamePage[]
      */
     public function findActiveGamesForAge($age, $site)
     {
@@ -47,7 +47,7 @@ class GamePageRepository extends EntityRepository
     /**
      * @param $age
      * @param $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\GameBundle\Entity\GamePage
      */
     public function findMostRecentGameForAge($age, $site)
     {
@@ -65,7 +65,7 @@ class GamePageRepository extends EntityRepository
 
     /**
      * @param $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     * @return \Platformd\GameBundle\Entity\GamePage[]
      */
     public function findArchivesForSite($site)
     {
@@ -81,7 +81,7 @@ class GamePageRepository extends EntityRepository
     /**
      * @param string $slug
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\GameBundle\Entity\GamePage
      */
     public function findOneBySlugForSite($slug, $site)
     {
@@ -93,9 +93,9 @@ class GamePageRepository extends EntityRepository
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Game $game
+     * @param \Platformd\GameBundle\Entity\Game $game
      * @param string $site
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\GameBundle\Entity\GamePage
      */
     public function findOneByGame($game, $site)
     {

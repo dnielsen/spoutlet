@@ -5,7 +5,7 @@
 <h1>New Game</h1>
 
 <form action="{{ path('admin_game_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-    {% include 'SpoutletBundle:GameAdmin:_form.html.twig' %}
+    {% include 'GameBundle:GameAdmin:_form.html.twig' %}
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary" formnovalidate>Create</button>

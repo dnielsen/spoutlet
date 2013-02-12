@@ -1,14 +1,15 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Form\Type;
+namespace Platformd\GameBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\GameBundle\Entity\Game;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
+use Platformd\SpoutletBundle\Form\Type\OpenGraphOverrideType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
-use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\GameBundle\Entity\GamePage;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
@@ -23,8 +24,8 @@ class GamePageType extends AbstractType
                 'help'  => 'Provide both urls for recommended rigs in order for the ad to appear on the game page.'
             ))
             ->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this game\'s Game Page.'))
-            ->add('game', 'entity', array('class' => 'SpoutletBundle:Game', 'empty_value' => 'N/A',
-                'query_builder' => function(\Platformd\SpoutletBundle\Entity\GameRepository $er) {
+            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'N/A',
+                'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
                     return $er->createQueryBuilder('g')
                               ->orderBy('g.name', 'ASC');
                     }))
@@ -144,6 +145,6 @@ class GamePageType extends AbstractType
 
     public function getName()
     {
-        return 'platformd_spoutletbundle_gamepagetype';
+        return 'platformd_gamebundle_gamepagetype';
     }
 }

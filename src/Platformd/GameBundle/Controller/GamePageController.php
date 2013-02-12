@@ -1,7 +1,8 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Controller;
+namespace Platformd\GameBundle\Controller;
 
+use Platformd\SpoutletBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class GamePageController extends Controller
@@ -104,7 +105,7 @@ class GamePageController extends Controller
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Model\GamePageManager
+     * @return \Platformd\GameBundle\Model\GamePageManager
      */
     private function getGamePageManager()
     {

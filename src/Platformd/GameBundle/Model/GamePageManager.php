@@ -1,10 +1,10 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Model;
+namespace Platformd\GameBundle\Model;
 
-use Platformd\SpoutletBundle\Entity\GamePage;
+use Platformd\GameBundle\Entity\GamePage;
 use Doctrine\ORM\EntityManager;
-use Platformd\SpoutletBundle\Entity\GamePageLocale;
+use Platformd\GameBundle\Entity\GamePageLocale;
 use Knp\MediaBundle\Util\MediaUtil;
 
 class GamePageManager
@@ -23,7 +23,7 @@ class GamePageManager
      *
      * This must be used instead of persisting it directly
      *
-     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
+     * @param \Platformd\GameBundle\Entity\GamePage $gamePage
      */
     public function saveGamePage(GamePage $gamePage)
     {
@@ -84,7 +84,7 @@ class GamePageManager
 
     /**
      * @param $age
-     * @return \Platformd\SpoutletBundle\Entity\GamePAge
+     * @return \Platformd\GameBundle\Entity\GamePAge
      */
     public function findMostRecentGamePageForAge($age, $site)
     {
@@ -92,7 +92,7 @@ class GamePageManager
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\GamePage[]
+     * @return \Platformd\GameBundle\Entity\GamePage[]
      */
     public function findArchives($site)
     {
@@ -101,7 +101,7 @@ class GamePageManager
 
     /**
      * @param string $slug
-     * @return \Platformd\SpoutletBundle\Entity\GamePage
+     * @return \Platformd\GameBundle\Entity\GamePage
      */
     public function findOneBySlug($slug, $site)
     {
@@ -111,7 +111,7 @@ class GamePageManager
     /**
      * Properly persists or unsets the media fields
      *
-     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
+     * @param \Platformd\GameBundle\Entity\GamePage $gamePage
      */
     private function handleMediaFields(GamePage $gamePage)
     {
@@ -133,7 +133,7 @@ class GamePageManager
     /**
      * Handles the gallery medias persistence
      *
-     * @param \Platformd\SpoutletBundle\Entity\GamePage $gamePage
+     * @param \Platformd\GameBundle\Entity\GamePage $gamePage
      */
     private function handleMediaGallery(GamePage $gamePage)
     {
@@ -147,11 +147,11 @@ class GamePageManager
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\GamePageRepository
+     * @return \Platformd\GameBundle\Entity\GamePageRepository
      */
     private function getRepository()
     {
-        return $this->em->getRepository('SpoutletBundle:GamePage');
+        return $this->em->getRepository('GameBundle:GamePage');
     }
 
 

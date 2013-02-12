@@ -1,11 +1,12 @@
 <?php
 
-namespace Platformd\SpoutletBundle\Entity;
+namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\MediaBundle\Entity\Media;
-use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\GameBundle\Entity\Game;
+use Platformd\SpoutletBundle\Entity\OpenGraphOverride;
 use Gedmo\Sluggable\Util\Urlizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -14,7 +15,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
- * Platformd\SpoutletBundle\Entity\GamePage
+ * Platformd\GameBundle\Entity\GamePage
  *
  * @ORM\Table(
  *      name="pd_game_page",
@@ -25,7 +26,7 @@ use Symfony\Component\Validator\ExecutionContext;
  *          )
  *      }
  * )
- * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GamePageRepository")
+ * @ORM\Entity(repositoryClass="Platformd\GameBundle\Entity\GamePageRepository")
  * @UniqueEntity(fields={"slug"}, message="This URL is already used. Or if this is blank, there may already be a game page for this game, and if you intend to make a second page, please enter a unique URL string for it")
  * @Assert\Callback(methods={"validateExternalArchivedGamePage", "validatePossibilityOfSlug"})
  */
@@ -65,8 +66,8 @@ class GamePage implements LinkableInterface
      * site. Yea, that's totally a hack, but it's what they want. These
      * MUST be archived or else things will go crazy.
      *
-     * @var \Platformd\SpoutletBundle\Entity\Game
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game", cascade={"remove"})
+     * @var \Platformd\GameBundle\Entity\Game
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
     private $game;
@@ -278,7 +279,7 @@ class GamePage implements LinkableInterface
     /**
      *
      * @var OpenGraphOverride
-     * @ORM\OneToOne(targetEntity="OpenGraphOverride", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\OpenGraphOverride", cascade={"persist"})
      */
     private $openGraphOverride;
 
@@ -653,7 +654,7 @@ class GamePage implements LinkableInterface
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Game
+     * @return \Platformd\GameBundle\Entity\Game
      */
     public function getGame()
     {
@@ -661,7 +662,7 @@ class GamePage implements LinkableInterface
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Game $game
+     * @param \Platformd\GameBundle\Entity\Game $game
      */
     public function setGame(Game $game)
     {
