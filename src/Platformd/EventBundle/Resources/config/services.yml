@@ -20,3 +20,11 @@ services:
             - @knp_media.util.media_util
             - @event_dispatcher
             - @security.acl.provider
+
+    platformd_event.service.global_event:
+        class: Platformd\EventBundle\Service\GlobalEventService
+        arguments:
+            - @platformd_event.repository.global_event
+            - @knp_media.util.media_util
+            - @event_dispatcher
+            - @security.acl.provider

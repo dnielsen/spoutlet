@@ -1,9 +1,0 @@
-{% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.events.admin.create" | trans }}{% endblock %}
-
-{% block content %}
-{% include 'SpoutletBundle:Admin:eventForm.html.twig' with {
-    'form': form,
-    'route': path('admin_events_new')
-} %}
-{% endblock %}

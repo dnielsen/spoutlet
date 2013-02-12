@@ -71,11 +71,6 @@ class GroupEventService extends EventService
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
     }
 
-    public function findAllOwnedEventsForUser(User $user)
-    {
-        return $this->repository->getAllOwnedEventsForUser($user);
-    }
-
     public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)
     {
         return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
@@ -84,6 +79,16 @@ class GroupEventService extends EventService
     public function findPastEventsForUser(User $user)
     {
         return $this->repository->getPastEventListForUser($user);
+    }
+
+    /**
+     * Retrieves all Events pending approval for a certain group
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     */
+    public function getPendingApprovalEventsForGroup(Group $group)
+    {
+        return $this->repository->getPendingApprovalEventsForGroup($group);
     }
 
     /**

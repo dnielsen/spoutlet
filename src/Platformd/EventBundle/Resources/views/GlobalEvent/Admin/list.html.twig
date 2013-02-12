@@ -48,7 +48,7 @@
             </td>
             <td>
                 {% if not event.published %}
-                    <a href="{{ path('admin_event_approve', { "id" : event.id })  }}">{{ "platformd.events.admin.approve" | trans }}</a>
+                    <a href="{{ path('admin_event_publish', { "id" : event.id })  }}">{{ "platformd.events.admin.publish" | trans }}</a>
                 {% else %}
                     <a href="{{ path('admin_event_unpublish', { "id" : event.id }) }}">{{ "platformd.events.admin.unpublish" | trans }}</a>
                 {% endif %}

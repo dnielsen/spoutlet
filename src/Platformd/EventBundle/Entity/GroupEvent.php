@@ -10,7 +10,9 @@ use Vich\GeographicalBundle\Annotation as Vich;
 
 use Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
-    Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug
+    Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug,
+    Platformd\SpoutletBundle\Entity\ContentReport,
+    Platformd\SpoutletBundle\Model\ReportableContentInterface
 ;
 
 /**
@@ -21,8 +23,18 @@ use Platformd\SpoutletBundle\Entity\Group,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GroupEvent extends Event
+class GroupEvent extends Event implements ReportableContentInterface
 {
+    const DELETED_BY_OWNER  = 'by_owner';
+    const DELETED_BY_ADMIN  = 'by_admin';
+
+    static private $validDeletedReasons = array(
+        self::DELETED_BY_OWNER,
+        self::DELETED_BY_ADMIN,
+        ContentReport::DELETED_BY_REPORT,
+        ContentReport::DELETED_BY_REPORT_ADMIN,
+    );
+
     /**
      * @var integer $id
      *
@@ -72,30 +84,6 @@ class GroupEvent extends Event
     protected $sites;
 
     /**
-     * The complete address like "1021 Washington Drive, San Francisco, CA United States"
-     *
-     * @var string $address
-     * @ORM\Column(name="address", type="string", length=255, nullable=true)
-     */
-    protected $address;
-
-    /**
-     * This gets value from Google Location service
-     *
-     * @var float
-     * @ORM\Column(type="decimal", scale=7, nullable=true)
-     */
-    protected $latitude;
-
-    /**
-     * This gets value from Google Location service
-     *
-     * @var float
-     * @ORM\Column(type="decimal", scale=7, nullable=true)
-     */
-    protected $longitude;
-
-    /**
      * Event attendees
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -106,6 +94,25 @@ class GroupEvent extends Event
     protected $attendees;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $deletedReason;
+
+    /**
+     * @var boolean $deleted
+     * @ORM\Column(type="boolean")
+     */
+    private $deleted = false;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupEvent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"reportedAt" = "DESC"})
+     */
+    protected $contentReports;
+
+    /**
      * Constructor
      */
     public function __construct(Group $group)
@@ -113,6 +120,7 @@ class GroupEvent extends Event
         $this->group        = $group;
         $this->translations = new ArrayCollection();
         $this->sites        = new ArrayCollection();
+        $this->contentReports = new ArrayCollection();
 
         foreach ($this->getGroup()->getSites() as $site) {
             $this->sites->add($site);
@@ -252,56 +260,6 @@ class GroupEvent extends Event
     }
 
     /**
-     * @param string $address
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-    }
-
-    /**
-     * @Vich\GeographicalQuery
-     *
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-
-    /**
-     * @param float $latitude
-     */
-    public function setLatitude($latitude)
-    {
-        $this->latitude = $latitude;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * @param float $longitude
-     */
-    public function setLongitude($longitude)
-    {
-        $this->longitude = $longitude;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
-
-    /**
      * used to dynamically generate routes within twig files to allow multiple event types to be
      * mixed and displayed together
      * e.g. group_event_edit, group_event_delete
@@ -322,22 +280,6 @@ class GroupEvent extends Event
     public function getContentType()
     {
         return 'GroupEvent';
-    }
-
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $attendees
-     */
-    public function setAttendees($attendees)
-    {
-        $this->attendees = $attendees;
-    }
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getAttendees()
-    {
-        return $this->attendees;
     }
 
     public function setTranslations($translations)
@@ -402,5 +344,40 @@ class GroupEvent extends Event
     public function setCurrentLocale(Site $locale = null)
     {
         $this->currentLocale = $locale;
+    }
+
+
+    public function getContentReports()
+    {
+        return $this->contentReports;
+    }
+
+    public function setContentReports($contentReports)
+    {
+        $this->contentReports = $contentReports;
+    }
+
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    public function setDeletedReason($value)
+    {
+        if ($value && !in_array($value, self::$validDeletedReasons)) {
+            throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
+        }
+
+        $this->deletedReason = $value;
+    }
+
+    public function getDeletedReason()
+    {
+        return $this->deletedReason;
     }
 }

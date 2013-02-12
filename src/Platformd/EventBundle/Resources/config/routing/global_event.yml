@@ -1,0 +1,39 @@
+global_events_index:
+    pattern: /events
+    defaults: { _controller: EventBundle:GlobalEvent:index }
+
+global_events_current:
+    pattern: /events/current
+    defaults: { _controller: EventBundle:GlobalEvent:current }
+
+global_events_past:
+    pattern: /events/past
+    defaults: { _controller: EventBundle:GlobalEvent:past }
+
+global_event_view:
+    pattern: /events/{slug}
+    defaults: { _controller: EventBundle:GlobalEvent:view }
+
+admin_events_index:
+    pattern: /admin/events
+    defaults: { _controller: EventBundle:GlobalEventAdmin:list }
+
+admin_events_new:
+    pattern: /admin/events/new
+    defaults: { _controller: EventBundle:GlobalEventAdmin:newEvent }
+
+admin_events_new_import:
+    pattern: /admin/events/new/import/{id}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:newFromImport }
+
+admin_events_edit:
+    pattern: /admin/events/edit/{id}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:editEvent }
+
+admin_event_publish:
+    pattern: /admin/events/publish/{id}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:publishEvent }
+
+admin_event_unpublish:
+    pattern: /admin/events/unpublish/{id}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:unpublishEvent }
