@@ -30,3 +30,4 @@ services:
             - @knp_media.util.media_util
             - @event_dispatcher
             - @security.acl.provider
+            - @platformd.model.email_manager
