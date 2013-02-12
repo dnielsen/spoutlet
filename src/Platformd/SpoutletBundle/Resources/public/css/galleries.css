@@ -67,6 +67,7 @@
 .description {
     width: 100%;
     padding: 3px 3px 3px 0;
+    word-wrap: break-word;
 }
 
 .gallery-media-thumb-wrapper {
