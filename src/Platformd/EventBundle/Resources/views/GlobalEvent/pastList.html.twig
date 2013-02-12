@@ -1,0 +1,46 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+<div class="std_1col">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ 'platformd.events.event_listings.past_events' | trans }}
+            </div>
+        </div>
+
+        <div class="pagerfanta" id="pager-top" style="float:right;">
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'spoutlet', {
+                'previous_message': '',
+                'next_message': '',
+                'routeName': 'global_events_past'
+            }) }}
+        </div>
+
+        <div class="widget-content">
+            {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+                'events': events,
+                'no_events_message': 'platformd.events.event_listings.no_past_events' | trans
+            } %}
+        </div>
+
+        <div class="pagerfanta" id="pager-bottom" style="float:right;">
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'spoutlet', {
+                'previous_message': '',
+                'next_message': '',
+                'routeName': 'global_events_past'
+            }) }}
+        </div>
+
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div>
+</div>
+
+{% endblock %}

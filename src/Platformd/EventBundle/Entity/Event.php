@@ -15,13 +15,13 @@ use Gedmo\Mapping\Annotation as Gedmo,
 ;
 
 use Platformd\SpoutletBundle\Entity\Game,
-    Platformd\SpoutletBundle\Entity\ContentReport,
-    Platformd\SpoutletBundle\Model\ReportableContentInterface,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\UserBundle\Entity\User
 ;
 
-use DateTime;
+use DateTime,
+    DateTimeZone
+;
 
 /**
  * Base Event
@@ -29,20 +29,23 @@ use DateTime;
  * @ORM\MappedSuperclass
  * @Vich\Geographical
  */
-abstract class Event implements ReportableContentInterface, LinkableInterface
+abstract class Event implements LinkableInterface
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
 
-    const DELETED_BY_OWNER  = 'by_owner';
-    const DELETED_BY_ADMIN  = 'by_admin';
-
-    static private $validDeletedReasons = array(
-        self::DELETED_BY_OWNER,
-        self::DELETED_BY_ADMIN,
-        ContentReport::DELETED_BY_REPORT,
-        ContentReport::DELETED_BY_REPORT_ADMIN,
+    /**
+     * A map of UTC offsets and common timezone names
+     *
+     * This is because all we have are things like "Tokyo", but we may want
+     * to actually say JST
+     *
+     * @var array
+     */
+    static private $timzoneCommonNames = array(
+        32400 => 'JST',
+        28800 => 'CST',
     );
 
     /**
@@ -137,7 +140,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     /**
      * Event starts at
      *
-     * @var \DateTime $starts_at
+     * @var \DateTime $startsAt
      * @Assert\NotBlank()
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
@@ -146,7 +149,7 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     /**
      * Events ends at
      *
-     * @var \DateTime $ends_at
+     * @var \DateTime $endsAt
      * @Assert\NotBlank()
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
@@ -192,7 +195,6 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
      * Event attendees
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
      */
     protected $attendees;
 
@@ -247,31 +249,11 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
     protected $updatedAt;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
-     */
-    private $deletedReason;
-
-    /**
-     * @var boolean $deleted
-     * @ORM\Column(type="boolean")
-     */
-    private $deleted = false;
-
-    /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="groupEvent")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     * @ORM\OrderBy({"reportedAt" = "DESC"})
-     */
-    protected $contentReports;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->attendees        = new ArrayCollection();
-        $this->contentReports   = new ArrayCollection();
         $this->createdAt        = new DateTime();
     }
 
@@ -638,38 +620,84 @@ abstract class Event implements ReportableContentInterface, LinkableInterface
         }
     }
 
-    public function getContentReports()
+    /**
+     * Returns the start datetime converted into the timezone of the user
+     *
+     * @return \DateTime
+     */
+    public function getStartsAtInTimezone()
     {
-        return $this->contentReports;
+        return $this->convertDatetimeToTimezone($this->getStartsAt());
     }
 
-    public function setContentReports($contentReports)
+    /**
+     * Returns the end datetime converted into the timezone of the user
+     *
+     * @return \DateTime
+     */
+    public function getEndsAtInTimezone()
     {
-        $this->contentReports = $contentReports;
+        return $this->convertDatetimeToTimezone($this->getEndsAt());
     }
 
-    public function setDeleted($deleted)
+    /**
+     * Returns an array that can be used in a template and passed to a translation string
+     *
+     * @return array
+     */
+    public function getStartsAtInTimezoneTranslationArray()
     {
-        $this->deleted = $deleted;
+        return self::convertDateTimeIntoTranslationArray($this->getStartsAtInTimezone());
     }
 
-    public function getDeleted()
+    /**
+     * Returns an array that can be used in a template and passed to a translation string
+     *
+     * @return array
+     */
+    public function getEndsAtInTimezoneTranslationArray()
     {
-        return $this->deleted;
+        return self::convertDateTimeIntoTranslationArray($this->getEndsAtInTimezone());
     }
 
-    public function setDeletedReason($value)
+    /**
+     * @todo - refactor this somewhere more public
+     * @static
+     * @param \DateTime $dt
+     * @return array
+     */
+    static public function convertDateTimeIntoTranslationArray(DateTime $dt)
     {
-        if ($value && !in_array($value, self::$validDeletedReasons)) {
-            throw new \InvalidArgumentException(sprintf('Invalid reason for deletion "%s" given', $value));
-        }
-
-        $this->deletedReason = $value;
+        return array(
+            '%year%' => $dt->format('Y'),
+            '%month%' => $dt->format('m'),
+            '%day%' => $dt->format('d'),
+            '%time%' => $dt->format('H:i'),
+        );
     }
 
-    public function getDeletedReason()
+    /**
+     * Tries to get a friendly name for the event's timezone
+     *
+     * @return string
+     */
+    public function getTimezoneString()
     {
-        return $this->deletedReason;
+        $dtz = new \DateTimeZone($this->getTimezone());
+
+        $offset = $dtz->getOffset(new DateTime());
+
+        return isset(self::$timzoneCommonNames[$offset]) ? self::$timzoneCommonNames[$offset] : $dtz->getName();
+    }
+
+    private function convertDatetimeToTimezone(DateTime $dt)
+    {
+        $userTimezone = new DateTimeZone($this->getTimezone());
+        $offset = $userTimezone->getOffset($dt);
+
+        $timestamp = $dt->format('U') + $offset;
+
+        return DateTime::createFromFormat('U', $timestamp, $userTimezone);
     }
 
     /**

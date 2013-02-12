@@ -1,53 +1,5 @@
-group_event_rsvp:
-    pattern: /group-events/ajax/rsvp
-    defaults: { _controller:"EventBundle:GroupEvent:rsvpAjax", site: ~ }
-    requirements:
-        _format: json
-        _method: POST
+_group_event:
+    resource: group_event.yml
 
-group_event_disable:
-    pattern: /group-events/ajax/disable
-    defaults: { _controller:"EventBundle:GroupEvent:disableAjax", site: ~ }
-    requirements:
-        _format: json
-        _method: POST
-
-group_event_cancel:
-    pattern: /group-event/{eventId}/cancel
-    defaults: { _controller:"EventBundle:GroupEvent:cancel", site: ~ }
-
-group_event_activate:
-    pattern: /group-event/{eventId}/activate
-    defaults: { _controller:"EventBundle:GroupEvent:activate", site: ~ }
-
-group_event_new:
-    pattern: /groups/{groupSlug}/event/new
-    defaults: { _controller:"EventBundle:GroupEvent:new", site: ~ }
-
-group_event_new_import:
-    pattern: /groups/{groupSlug}/event/new/import/{eventId}
-    defaults: { _controller:"EventBundle:GroupEvent:newFromImport", site: ~ }
-
-group_event_edit:
-    pattern: /groups/{groupSlug}/event/edit/{eventId}
-    defaults: { _controller:"EventBundle:GroupEvent:edit", site: ~ }
-
-group_event_pending_approval:
-    pattern: /groups/{groupSlug}/events/pending-approval
-    defaults: { _controller:"EventBundle:GroupEvent:pendingApprovalList", site: ~ }
-
-group_event_approve:
-    pattern: /groups/{groupSlug}/event/approve/{eventId}
-    defaults: { _controller:"EventBundle:GroupEvent:approve", site: ~ }
-
-group_event_delete:
-    pattern: /groups/{groupSlug}/event/delete/{eventId}
-    defaults: { _controller:"EventBundle:GroupEvent:delete", site: ~ }
-
-group_event_contact:
-    pattern: /groups/{groupSlug}/event/contact/{eventSlug}
-    defaults: { _controller:"EventBundle:GroupEvent:contact", site: ~ }
-
-group_event_view:
-    pattern: /groups/{groupSlug}/event/{eventSlug}
-    defaults: { _controller:"EventBundle:GroupEvent:view", site: ~ }
+_global_event:
+    resource: global_event.yml

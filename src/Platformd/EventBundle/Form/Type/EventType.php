@@ -4,7 +4,8 @@ namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType,
     Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Security\Core\SecurityContextInterface
+    Symfony\Component\Security\Core\SecurityContextInterface,
+    Symfony\Component\EventDispatcher\EventSubscriberInterface
 ;
 
 use Platformd\SpoutletBundle\Form\Type\SlugType,
@@ -25,16 +26,15 @@ class EventType extends AbstractType
      *
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
      */
-    public function __construct(SecurityContextInterface $security)
+    public function __construct(
+        SecurityContextInterface $security
+    )
     {
-        $this->security = $security;
+        $this->security         = $security;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        // Needed to show fields only to admins
-        $adminEventSubscriber = new AdminEventSubscriber($builder->getFormFactory(), $this->security);
-
         $builder
             ->add('name', 'text', array(
                 'label' => 'platformd.event.form.name'
@@ -98,7 +98,6 @@ class EventType extends AbstractType
                 'label' => 'platformd.event.form.display_timezone',
 
             ))
-            ->addEventSubscriber($adminEventSubscriber)
         ;
     }
 

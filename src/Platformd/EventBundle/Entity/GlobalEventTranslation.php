@@ -6,13 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-use Platformd\SpoutletBundle\Entity\Site;
-
 /**
  * @ORM\Entity
- * @ORM\Table(name="group_event_translation")
+ * @ORM\Table(name="global_event_translation")
  */
-class GroupEventTranslation extends EventTranslation
+class GlobalEventTranslation extends EventTranslation
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -22,7 +20,7 @@ class GroupEventTranslation extends EventTranslation
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupEvent", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="GlobalEvent", inversedBy="translations")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotNull
      */

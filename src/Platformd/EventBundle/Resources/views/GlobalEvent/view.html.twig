@@ -1,0 +1,98 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+    // view event page
+    // markup to be created
+{% endblock %}
+
+{# Here is the legacy code from the former events system #}
+
+{#{% extends 'SpoutletBundle::layout.html.twig' %}#}
+
+{#{% block title event.name %}#}
+
+{#{% block content %}#}
+{#<div id="content">#}
+    {#<div class="std_1col">#}
+        {#{% if event.bannerImage %}#}
+            {#<div id="eventHeader" style="background:url('{{ asset(media_path(event)) }}') no-repeat;"></div>#}
+        {#{% endif %}#}
+    {#</div>#}
+
+    {#<div class="std_2col">#}
+        {#&#123;&#35;#}
+            {#Removed temporarily, until we think about this feature more#}
+        {#<div class="right">#}
+            {#<div class="widget-33" id="giveaway-getkey">#}
+                {#<div class="widget-header">#}
+                    {#<div class="widget-title">{{ 'platformd.events.event_show.register' | trans }}</div>#}
+                {#</div>#}
+
+                {#<div class="widget-content">#}
+                    {#{% if app.user and app.user.events.contains(event) %}#}
+                    {#<p>{{ 'platformd.events.event_show.registered_event' | trans }}</p>#}
+                    {#<p><a href="{{ path('events_unregister', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.unregister_event" | trans }}</a></p>#}
+                    {#{% else %}#}
+                    {#<p><a href="{{ path('events_register', { "slug": event.slug }) }}" class="button">{{ "platformd.events.event_show.register_event" | trans }}</a></p>#}
+                    {#{% endif %}#}
+
+                    {#{% if not is_granted('IS_AUTHENTICATED_FULLY') %}#}
+                    {#<ol>#}
+                        {#<li><span class="item"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.create_account_or_login' | trans }}</a></span></li>#}
+                    {#</ol>#}
+                    {#{% endif %}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#&#35;&#125;#}
+        {#<div class="left">#}
+            {#<div class="widget-66" id="giveaway-info">#}
+                {#<div class="widget-header">#}
+                    {#<div class="widget-title controlled-spacing">{{ event.name }}</div>#}
+                {#</div>#}
+                {#<div id="giveaway-details" class="widget-content">#}
+                    {#<div>#}
+                        {#{% if event.startsAt %}#}
+                            {#<label for="starts_at">{{ 'platformd.events.event_listings.start_date' | trans }}</label>#}
+                            {#<div id="starts_at">#}
+                                {#{{ 'sweepstakes_datetime_format' | trans(event.startsAtInTimezoneTranslationArray) }}#}
+                                {#{% if event.displayTimezone %}#}
+                                    {#{{ event.timezoneString }}#}
+                                {#{% endif %}#}
+                            {#</div>#}
+                        {#{% endif %}#}
+
+                        {#{% if event.endsAt %}#}
+                            {#<label for="ends_at">{{ 'platformd.events.event_listings.end_date' | trans }}</label>#}
+                            {#<div id="ends_at">#}
+                                {#{{ 'sweepstakes_datetime_format' | trans(event.endsAtInTimezoneTranslationArray) }}#}
+                                {#{% if event.displayTimezone %}#}
+                                    {#{{ event.timezoneString }}#}
+                                {#{% endif %}#}
+                            {#</div>#}
+                        {#{% endif %}#}
+
+                        {#{% if event.cityCountryLocationString %}#}
+                            {#<label for="location">{{ 'platformd.events.event_listings.location' | trans }}</label>#}
+                            {#<div id="location">{{ event.cityCountryLocationString }}</div>#}
+                        {#{% endif %}#}
+
+                        {#{% if event.hostedBy %}#}
+                            {#<label for="hostedBy">{{ 'platformd.events.event_listings.hosted_by' | trans }}</label>#}
+                            {#<div id="hostedBy">{{ event.hostedBy }}</div>#}
+                        {#{% endif %}#}
+
+                        {#{% if event.content %}#}
+                            {#<label for="contentDetails">{{ 'platformd.events.event_listings.details' | trans }}</label>#}
+                            {#<div id="contentDetails">{{ event.content | raw }}</div>#}
+                        {#{% endif %}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            {#{% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.slug, 'object' : event } %}#}
+        {#</div>#}
+    {#</div>#}
+
+{#</div>#}
+{#{% endblock %}#}
+

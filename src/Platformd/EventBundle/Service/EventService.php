@@ -145,6 +145,30 @@ class EventService
     }
 
     /**
+     * Publish event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
+    public function publishEvent(Event $event)
+    {
+        $event->setPublished(true);
+
+        $this->repository->saveEvent($event);
+    }
+
+    /**
+     * Unpublish event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
+    public function unpublishEvent(Event $event)
+    {
+        $event->setPublished(false);
+
+        $this->repository->saveEvent($event);
+    }
+
+    /**
      * Registers a user to an event
      *
      * @param \Platformd\EventBundle\Entity\Event $event
@@ -216,6 +240,17 @@ class EventService
     }
 
     /**
+     * Retrieves all events created by a user
+     *
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @return array
+     */
+    public function findAllOwnedEventsForUser(User $user)
+    {
+        return $this->repository->getAllOwnedEventsForUser($user);
+    }
+
+    /**
      * Saves Banner to image farm
      *
      * @param \Platformd\EventBundle\Entity\Event $event
@@ -245,15 +280,5 @@ class EventService
     public function isUserAttending(Event $event, User $user)
     {
         return $this->repository->isUserAttending($event, $user);
-    }
-
-    /**
-     * Retrieves all Events pending approval for a certain group
-     *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
-     */
-    public function getPendingApprovalEventsForGroup(Group $group)
-    {
-        return $this->repository->getPendingApprovalEventsForGroup($group);
     }
 }

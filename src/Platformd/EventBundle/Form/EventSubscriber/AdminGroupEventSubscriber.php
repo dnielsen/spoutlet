@@ -15,8 +15,7 @@ use Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Form\Type\GroupEventTranslationType
 ;
 
-
-class AdminEventSubscriber implements EventSubscriberInterface
+class AdminGroupEventSubscriber implements EventSubscriberInterface
 {
     private $factory;
     private $security;
@@ -52,6 +51,7 @@ class AdminEventSubscriber implements EventSubscriberInterface
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_options'
             )));
+
             $form->add($this->factory->createNamed('text', 'externalUrl', null, array(
                 'label' => 'platformd.event.form.external_url',
                 'help' => 'platformd.event.form.help.external_url',

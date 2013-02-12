@@ -157,9 +157,9 @@ platformd:
             title: Event admin
             edit_event: Edit Event | %event_title%
             create: Create New Event
-            approve: Approve
+            publish: Publish
             unpublish: Unpublish
-            approved: Event "%event_title%" has been approved and is now published.
+            published: Event "%event_title%" has been published.
             unpublished: Event "%event_title%" has been unpublished.
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
@@ -372,18 +372,22 @@ platformd:
             address: "Address"
             starts_at: "Starts At"
             ends_at: "Ends At"
+            hosted_by: "Hosted By"
             timezone: "Timezone"
             display_timezone: "Display Timezone"
             external_url: "External Url"
             event_options: "Event Options"
             sites: "Sites"
             private_public: "Is this a public or private event"
+            published: "Do you want your event published?"
 
             choice:
                 private_event: "Private Event"
                 public_event: "Public Event"
                 online_event: "Online Event"
                 physical_event: "Enter Location Address"
+                published: "Published"
+                unpublished: "Unpublished"
 
             help:
                 address: "Example: 1021 Washington Drive, San Francisco, CA, United States"

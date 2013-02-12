@@ -666,7 +666,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetEventsLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
-        $internalUrl    = $this->container->get('router')->generate('events_index');
+        $internalUrl    = $this->container->get('router')->generate('global_events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 

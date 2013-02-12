@@ -1,18 +1,20 @@
 parameters:
     platformd_event.form.type.group_event.class: Platformd\EventBundle\Form\Type\GroupEventType
-    platformd_event.form.type.group_event_wrapper.class: Platformd\EventBundle\Form\Type\GroupEventWrapperType
+    platformd_event.form.type.global_event.class: Platformd\EventBundle\Form\Type\GlobalEventType
+    platformd_event.form.event_subscriber.admin_group_event_subscriber.class: Platformd\EventBundle\Form\EventSubscriber\AdminGroupEventSubscriber
 
 services:
     platformd_event.form.type.group_event:
         class: %platformd_event.form.type.group_event.class%
         arguments:
             - @security.context
+            - %platformd_event.form.event_subscriber.admin_group_event_subscriber.class%
         tags:
             - { name: form.type, alias: groupEvent }
 
-    platformd_event.form.type.group_event_wrapper:
-        class: %platformd_event.form.type.group_event_wrapper.class%
+    platformd_event.form.type.global_event:
+        class: %platformd_event.form.type.global_event.class%
         arguments:
             - @security.context
         tags:
-            - { name: form.type, alias: groupEventWrapper }
+            - { name: form.type, alias: globalEvent }
