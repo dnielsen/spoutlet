@@ -17,7 +17,20 @@
         }
 
         $('.control-group').filter(function(index) {
-            return !($(this).has('input#groupEvent_name').length || $(this).has('input#groupEvent_game').length || $(this).has('input#groupEvent_location').length || $(this).has('input#groupEvent_address').length || $(this).has('input#groupEvent_startsAt').length || $(this).has('input#groupEvent_endsAt').length || $(this).has('input#groupEvent_timezone').length || $(this).has('input#groupEvent_registrationOption_REGISTRATION_3RDPARTY').length || $(this).has('input#groupEvent_externalUrl').length || $(this).has('#groupEvent_translations').length || $(this).has('div[id^="groupEvent_translations_"]').length || $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length);
+            return !(
+                $(this).has('input#groupEvent_name').length ||
+                $(this).has('input#groupEvent_game').length ||
+                $(this).has('input#groupEvent_location').length ||
+                $(this).has('input#groupEvent_online_1').length ||
+                $(this).has('input#groupEvent_address').length ||
+                $(this).has('input#groupEvent_startsAt').length ||
+                $(this).has('input#groupEvent_endsAt').length ||
+                $(this).has('input#groupEvent_timezone').length ||
+                $(this).has('input#groupEvent_registrationOption_REGISTRATION_3RDPARTY').length ||
+                $(this).has('input#groupEvent_externalUrl').length ||
+                $(this).has('#groupEvent_translations').length ||
+                $(this).has('div[id^="groupEvent_translations_"]').length ||
+                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length);
         }).wrap(displayDiv);
 
         $('.file-upload').wrap(displayDiv);
