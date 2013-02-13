@@ -311,8 +311,8 @@ class GroupEventController extends Controller
 
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
-            ->add('recipients', 'text', array(
-                'read_only' => true,
+            ->add('users', 'text', array(
+                'property_path' => false,
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
@@ -326,11 +326,12 @@ class GroupEventController extends Controller
             if ($form->isValid()) {
 
                 $email = $form->getData();
+                $recipientsString = $form->get('users')->getData();
                 $email->setGroupEvent($groupEvent);
 
                 $recipients = array();
 
-                if ($email->getRecipients() === null) {
+                if ($recipientsString === null) {
 
                     foreach ($groupEvent->getAttendees() as $recipient) {
                         $recipients[] = $recipient;
@@ -338,11 +339,11 @@ class GroupEventController extends Controller
 
                 } else {
 
-                    $recipientArr = explode(',', $email->getRecipients());
+                    $recipientArr = explode(',', $recipientsString);
                     $userManager = $this->getUserManager();
 
                     foreach ($recipientArr as $recipient) {
-                        $user = $userManager->loadUserByUsername($recipient);
+                        $user = $userManager->findUserBy(array('username' => $recipient));
                         if ($user && $groupEvent->getAttendees()->contains($user)) {
                             $recipients[] = $user;
                         }

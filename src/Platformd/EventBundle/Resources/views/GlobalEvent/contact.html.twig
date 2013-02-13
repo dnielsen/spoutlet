@@ -94,6 +94,8 @@
                 document.location.href = url;
             });
 
+            $('#form_users').attr('readonly', 'readonly');
+
             $('.event-attendee').hover(function() {
                 $(this).children('.event-hover-div').show();
             },
@@ -105,15 +107,15 @@
                 var username = $.trim($(this).find('.username').text());
                 var recipients = [];
 
-                if ($('#form_recipients').val()) {
-                    recipients = $('#form_recipients').val().split(',');
+                if ($('#form_users').val()) {
+                    recipients = $('#form_users').val().split(',');
                 }
 
                 if ($.inArray(username, recipients) < 0) {
-                    if ($('#form_recipients').val()) {
-                        $('#form_recipients').val($('#form_recipients').val() + ',' + username);
+                    if ($('#form_users').val()) {
+                        $('#form_users').val($('#form_users').val() + ',' + username);
                     } else {
-                        $('#form_recipients').val(username);
+                        $('#form_users').val(username);
                     }
 
                 }
