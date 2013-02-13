@@ -11,7 +11,8 @@ use Vich\GeographicalBundle\Annotation as Vich;
 
 use Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GlobalEventUniqueSlug as AssertUniqueSlug,
-    Platformd\UserBundle\Entity\User
+    Platformd\UserBundle\Entity\User,
+    Platformd\SpoutletBundle\Link\LinkableInterface
 ;
 
 /**
@@ -22,7 +23,7 @@ use Platformd\SpoutletBundle\Entity\Site,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GlobalEvent extends Event
+class GlobalEvent extends Event implements LinkableInterface
 {
     /**
      * @var integer $id
@@ -161,38 +162,6 @@ class GlobalEvent extends Event
     }
 
     /**
-     * If there is a set URL that should be used without doing anything else, return it here
-     *
-     * @return string
-     */
-    function getLinkableOverrideUrl()
-    {
-        return false;
-    }
-
-    /**
-     * Returns the name of the route used to link to this object
-     *
-     * @return string
-     */
-    function getLinkableRouteName()
-    {
-        return 'global_event_view';
-    }
-
-    /**
-     * Returns an array route parameters to link to this object
-     *
-     * @return array
-     */
-    function getLinkableRouteParameters()
-    {
-        return array(
-            'slug' => $this->getSlug()
-        );
-    }
-
-    /**
      * @param string $hosted_by
      */
     public function setHostedBy($hosted_by)
@@ -301,5 +270,27 @@ class GlobalEvent extends Event
     public function getCurrentLocale()
     {
         return $this->currentLocale;
+    }
+
+    public function getThreadId()
+    {
+        return 'global-event-'.$this->getId();
+    }
+
+    public function getLinkableRouteName()
+    {
+        return 'global_event_view';
+    }
+
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'slug' => $this->slug,
+        );
+    }
+
+    public function getContentType()
+    {
+        return 'GlobalEvent';
     }
 }

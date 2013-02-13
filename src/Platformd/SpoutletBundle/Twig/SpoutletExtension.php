@@ -312,19 +312,20 @@ class SpoutletExtension extends Twig_Extension
      * @param $obj
      * @return string
      */
-    public function linkToObjectFull($obj, $urlText = null)
+    public function linkToObjectFull($obj, $urlText = null, $classes=null)
     {
         $this->ensureLinkable($obj);
 
         $url        = $this->getLinkableManager()->link($obj);
         $target     = $this->linkToObjectTarget($obj);
         $urlText    = $urlText ?: $url;
+        $classes    = is_array($classes) ? 'class=' . implode(' ', $classes) : '';
 
         if (strlen($target) > 0) {
             $target = ' '.$target;
         }
 
-        return sprintf('<a href="%s"%s>%s</a>', $url, $target, $urlText);
+        return sprintf('<a href="%s"%s %s>%s</a>', $url, $target, $classes, $urlText);
     }
 
     /**
@@ -809,6 +810,7 @@ class SpoutletExtension extends Twig_Extension
         $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
         $china = in_array($locale, array('zh'));
         $northAmericaEuropeLatamOnly = in_array($locale, array('en_US', 'en_GB', 'es', 'en'));
+        $northAmericaEuropeLatamJapan = in_array($locale, array('en_US', 'en_GB', 'es', 'ja', 'en'));
 
         switch ($feature) {
             case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
@@ -827,7 +829,7 @@ class SpoutletExtension extends Twig_Extension
             case 'MICROSOFT':                   return !$japan;
             case 'PHOTOS':                      return $northAmericaEuropeLatamOnly;
             case 'CONTESTS':                    return $northAmericaEuropeLatamOnly;
-            case 'COMMENTS':                    return $northAmericaEuropeLatamOnly;
+            case 'COMMENTS':                    return $northAmericaEuropeLatamJapan;
             case 'EVENTS':                      return true;
         }
 

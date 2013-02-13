@@ -152,11 +152,12 @@ class GlobalEventAdminController extends Controller
             if($form->isValid())
             {
                 $this->getGlobalEventService()->updateEvent($form->getData());
+                $this->setFlash('success', 'Event saved successfully');
                 return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
             }
         }
 
-        return $this->render('SpoutletBundle:Admin:editEvent.html.twig',
+        return $this->render('EventBundle:GlobalEvent/Admin:edit.html.twig',
             array('form' => $form->createView(), 'event' => $event));
     }
 

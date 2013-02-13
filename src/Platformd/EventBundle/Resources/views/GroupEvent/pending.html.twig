@@ -45,7 +45,7 @@
                         <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>
                     </td>
                     <td>
-                        <a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}" target="_blank">{{ event.name }}</a>
+                        <a href="{{ event | pd_link }}" target="_blank">{{ event.name }}</a>
                     </td>
                     <td>
                         {% set type = (event.online) ? 'Online' : 'Location' %}

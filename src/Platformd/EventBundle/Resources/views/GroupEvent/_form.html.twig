@@ -8,6 +8,50 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
+            var displayDiv = '<div class="hideable-field" style="display: none;" />';
+            var exernalUrlDiv = '<div id="external-url" />';
+        } else {
+            var displayDiv = '<div class="hideable-field" />';
+            var exernalUrlDiv = '<div id="external-url" style="display: none;" />';
+        }
+
+        $('.control-group').filter(function(index) {
+            return !(
+                $(this).has('input#groupEvent_name').length ||
+                $(this).has('input#groupEvent_game').length ||
+                $(this).has('input#groupEvent_location').length ||
+                $(this).has('input#groupEvent_online_1').length ||
+                $(this).has('input#groupEvent_address').length ||
+                $(this).has('input#groupEvent_startsAt').length ||
+                $(this).has('input#groupEvent_endsAt').length ||
+                $(this).has('input#groupEvent_timezone').length ||
+                $(this).has('input#groupEvent_registrationOption_REGISTRATION_3RDPARTY').length ||
+                $(this).has('input#groupEvent_externalUrl').length ||
+                $(this).has('#groupEvent_translations').length ||
+                $(this).has('div[id^="groupEvent_translations_"]').length ||
+                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length);
+        }).wrap(displayDiv);
+
+        $('.file-upload').wrap(displayDiv);
+
+        $('.control-group').has('input#groupEvent_externalUrl').wrap(exernalUrlDiv);
+
+        $('#groupEvent_registrationOption_REGISTRATION_3RDPARTY').click(function() {
+            $('.hideable-field').slideUp();
+            $('#external-url').show();
+        });
+
+        $('#groupEvent_registrationOption_REGISTRATION_ENABLED').click(function() {
+            $('.hideable-field').slideDown();
+            $('#external-url').hide();
+        });
+
+        $('#groupEvent_registrationOption_REGISTRATION_DISABLED').click(function() {
+            $('.hideable-field').slideDown();
+            $('#external-url').hide();
+        });
+
         var $i = 0;
         $('#groupEvent_translations > .control-group > label').each(function (){
             switch ($i) {

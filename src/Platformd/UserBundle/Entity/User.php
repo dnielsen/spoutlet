@@ -2,7 +2,6 @@
 
 namespace Platformd\UserBundle\Entity;
 
-use Platformd\SpoutletBundle\Entity\Event;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -141,13 +140,6 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $cevoAvatarUrl;
-
-    /**
-     * @var Platformd\SpoutletBundle\Entity\Event $events
-     *
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", inversedBy="users")
-     */
-    private $events;
 
     /**
      * @var String $type
@@ -363,42 +355,6 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set events
-     *
-     * @param Doctrine\Common\Collections\Collection $events
-     */
-    public function setEvents(Collection $events)
-    {
-        $this->events = $events;
-    }
-
-    /**
-     * Get events
-     *
-     * @return Doctrine\Common\Collections\Collection
-     */
-    public function getEvents()
-    {
-        return $this->events;
-    }
-
-    /**
-     * @param Platformd\SpoutletBundle\Entity\Event $event
-     */
-    public function addEvent(Event $event)
-    {
-        $this->events->add($event);
-    }
-
-    /**
-     * @param Platformd\SpoutletBundle\Entity\Event $event
-     */
-    public function removeEvent(Event $event)
-    {
-        $this->events->removeElement($event);
     }
 
     /**

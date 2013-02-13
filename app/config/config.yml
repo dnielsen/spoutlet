@@ -9,6 +9,7 @@ imports:
     - { resource: "@MediaBundle/Resources/config/services.yml" }
     - { resource: "@CommentBundle/Resources/config/services.yml" }
     - { resource: "@EventBundle/Resources/config/services.yml" }
+    - { resource: "@GameBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~

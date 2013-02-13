@@ -48,7 +48,7 @@
                         {% if isEligible %}
                             {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
                                 {% if isEntered == false %}
-                                    {% if (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                                    {% if (contest.submissionStart | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s')) and (contest.submissionEnd | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
                                         <div style="padding-top: 10px;">
                                             <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
                                                 <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
@@ -57,7 +57,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                    {% else %}
+                                    {% elseif (contest.submissionStart | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s')) %}
                                         <div style="padding: 10px 0px;">
                                             <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
                                                 {{ 'contests.submit_page_submission_ended' | trans }}

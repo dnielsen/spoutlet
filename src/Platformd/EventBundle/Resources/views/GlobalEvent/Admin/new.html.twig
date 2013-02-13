@@ -3,6 +3,8 @@
 
 {% block content %}
 
+    <h1>New Event</h1>
+
     {% if existingEvents is defined and existingEvents|length > 0 %}
         <form action="{{ path('admin_events_new') }}" method="post" class="form-horizontal">
             <div class="control-group">

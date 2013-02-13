@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
-* 
+*
 */
 class GiveawayPoolAdminController extends Controller
 {
-    
+
     /**
      * Index action for Giveway pools management
      */
@@ -118,7 +118,7 @@ class GiveawayPoolAdminController extends Controller
             ->findOneBy(array('id' => $pool));
 
         if (!$pool) {
-            
+
             throw $this->createNotFoundException();
         }
 
@@ -135,7 +135,7 @@ class GiveawayPoolAdminController extends Controller
      *
      * @param \Platformd\GiveawayBundle\Form\Type\GiveawayPoolType $pool
      */
-    protected function savePool(GiveawayPool $pool) 
+    protected function savePool(GiveawayPool $pool)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($pool);
@@ -163,9 +163,9 @@ class GiveawayPoolAdminController extends Controller
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
             ->findOneBy(array('id' => $id));
-        
+
         if (!$giveaway) {
-            
+
             throw $this->createNotFoundException();
         }
 

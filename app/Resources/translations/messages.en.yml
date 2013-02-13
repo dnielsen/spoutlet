@@ -103,7 +103,7 @@ platformd:
         bottom_menu:
             contact_us: Contact Us
             privacy_policy: Privacy Policy
-            terms_and_conditions: "Terms & Conditions"
+            terms_and_conditions: "Terms of Service"
             steam_community: Steam Community
             xfire_community: Xfire Community
             copyright_2012: "Copyright 2012 Alienware Corporation. All Rights Reserved."
@@ -138,7 +138,7 @@ platformd:
             details: Details
             event: Event
             games: Games
-            hosted_by: Hosted by
+            hosted_by: Organizer
             location: Location
             upcoming_events: Upcoming Events
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
@@ -227,7 +227,10 @@ platformd:
         post: Post
         no_more_posts: No more posts to show.
         delete: Delete
+        delete_confirm: Are you sure you want to delete this comment?
         edit: Edit
+        submit: Submit
+        cancel: Cancel
         date_format: %month%/%day%/%year%
 
     user:

@@ -14,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo,
     Gedmo\Sluggable\Util\Urlizer
 ;
 
-use Platformd\SpoutletBundle\Entity\Game,
+use Platformd\GameBundle\Entity\Game,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\UserBundle\Entity\User
 ;
@@ -177,7 +177,7 @@ abstract class Event implements LinkableInterface
      *
      * @var Game
      * @Assert\NotBlank()
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Game")
+     * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $game;
@@ -390,7 +390,7 @@ abstract class Event implements LinkableInterface
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Game $game
+     * @param \Platformd\GameBundle\Entity\Game $game
      */
     public function setGame($game)
     {
@@ -398,7 +398,7 @@ abstract class Event implements LinkableInterface
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Game
+     * @return \Platformd\GameBundle\Entity\Game
      */
     public function getGame()
     {
@@ -714,5 +714,10 @@ abstract class Event implements LinkableInterface
     public function getActive()
     {
         return $this->active;
+    }
+
+    public function getLinkableOverrideUrl()
+    {
+        return $this->externalUrl ?: false;
     }
 }

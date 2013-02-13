@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManager;
 
 use Platformd\GiveawayBundle\Entity\Giveaway,
-    Platformd\SpoutletBundle\Entity\Deal,
+    Platformd\GiveawayBundle\Entity\Deal,
     Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
@@ -41,7 +41,7 @@ class MetricManager
     private $giveawayKeyRepository;
 
     /**
-     * @var \Platformd\SpoutletBundle\Entity\DealCodeRepository
+     * @var \Platformd\GiveawayBundle\Entity\DealCodeRepository
      */
     private $dealCodeRepository;
 
@@ -78,7 +78,7 @@ class MetricManager
         $this->userRepo = $em->getRepository('UserBundle:User');
         $this->globalActivityRepository = $em->getRepository('SpoutletBundle:GlobalActivity');
         $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
-        $this->dealCodeRepository = $em->getRepository('SpoutletBundle:DealCode');
+        $this->dealCodeRepository = $em->getRepository('GiveawayBundle:DealCode');
         $this->groupRepository = $em->getRepository('SpoutletBundle:Group');
         $this->groupMetricRepository = $em->getRepository('SpoutletBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('SpoutletBundle:GroupDiscussion');
@@ -110,7 +110,7 @@ class MetricManager
      * @param \DateTime $since
      * @return array
      */
-    public function createGiveawaysReport(Giveaway $giveaway, DateTime $since = null)
+    public function createGiveawaysReport(Giveaway $giveaway, $from, $to)
     {
         // the total numbers are not affected by the "since" - they are full totals
         $total = $this->giveawayKeyRepository->getTotalForGiveaway($giveaway);
@@ -127,7 +127,7 @@ class MetricManager
 
         // go through all the sites and populate their data
         foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $since);
+            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $from, $to);
         }
 
         return $data;
@@ -146,11 +146,11 @@ class MetricManager
      *   * sites
      *      site_key => # assigned
      *
-     * @param \Platformd\SpoutletBundle\Entity\Deal $deal
+     * @param \Platformd\GiveawayBundle\Entity\Deal $deal
      * @param \DateTime $since
      * @return array
      */
-    public function createDealReport(Deal $deal, DateTime $since = null)
+    public function createDealReport(Deal $deal, $from, $to)
     {
         // the total numbers are not affected by the "since" - they are full totals
         $total = $this->dealCodeRepository->getTotalForDeal($deal);
@@ -167,7 +167,7 @@ class MetricManager
 
         // go through all the sites and populate their data
         foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->dealCodeRepository->getAssignedForDealAndSite($deal, $key, $since);
+            $data['sites'][$key] = $this->dealCodeRepository->getAssignedForDealAndSite($deal, $key, $from, $to);
         }
 
         return $data;
@@ -490,14 +490,20 @@ class MetricManager
             array(),
             array('csrf_protection' => false)
         )
-        ->add('results_range', 'choice', array(
-            'choices' => array(
-                '7'  => 'Last 7 days',
-                '30' => 'Last 30 days',
-                ''   => 'All time',
-            )
+        ->add('startDate', 'date', array(
+            'widget' => 'single_text',
+            'attr'   => array(
+                'class' => 'date-picker'
+            ),
+            'format' => 'yyyy-MM-dd',
         ))
-        ;
+        ->add('endDate', 'date', array(
+            'widget' => 'single_text',
+            'attr'   => array(
+                'class' => 'date-picker'
+            ),
+            'format' => 'yyyy-MM-dd',
+        ));
 
     }
 }

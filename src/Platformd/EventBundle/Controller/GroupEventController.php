@@ -10,7 +10,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\EventType,
     Platformd\EventBundle\Service\EventService,
-    Platformd\EventBundle\Entity\GroupEventTranslation
+    Platformd\EventBundle\Entity\GroupEventTranslation,
+    Platformd\EventBundle\Entity\GroupEventEmail
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -82,6 +83,12 @@ class GroupEventController extends Controller
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'New event posted successfully');
 
+                    if ($groupEvent->getExternalUrl()) {
+                        return $this->redirect($this->generateUrl('group_show', array(
+                            'slug' => $group->getSlug()
+                        )) . '#events');
+                    }
+
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
                         'eventSlug' => $groupEvent->getSlug()
@@ -147,6 +154,12 @@ class GroupEventController extends Controller
 
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'New event posted successfully');
+
+                    if ($groupEvent->getExternalUrl()) {
+                        return $this->redirect($this->generateUrl('group_show', array(
+                            'slug' => $group->getSlug()
+                        )) . '#events');
+                    }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
@@ -269,7 +282,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function contactAction($groupSlug, $eventSlug)
+    public function contactAction($groupSlug, $eventSlug, Request $request)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -289,10 +302,214 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        return $this->render('EventBundle::contact.html.twig', array(
-            'group'         => $group,
-            'event'         => $groupEvent,
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
+        }
+
+        $email = new GroupEventEmail();
+
+        $form = $this->createFormBuilder($email)
+            ->add('subject', 'text')
+            ->add('recipients', 'text', array(
+                'read_only' => true,
+                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+            ))
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $email = $form->getData();
+                $email->setGroupEvent($groupEvent);
+
+                $recipients = array();
+
+                if ($email->getRecipients() === null) {
+
+                    foreach ($groupEvent->getAttendees() as $recipient) {
+                        $recipients[] = $recipient;
+                    }
+
+                } else {
+
+                    $recipientArr = explode(',', $email->getRecipients());
+                    $userManager = $this->getUserManager();
+
+                    foreach ($recipientArr as $recipient) {
+                        $user = $userManager->loadUserByUsername($recipient);
+                        if ($user && $groupEvent->getAttendees()->contains($user)) {
+                            $recipients[] = $user;
+                        }
+                    }
+                }
+
+                $email->setRecipients($recipients);
+
+                if (count($email->getRecipients()) > 0) {
+                    $sendCount = $this->getGroupEventService()->sendEmail($email);
+                } else {
+                    $this->setFlash('error', 'No valid recipients found.');
+                    return $this->redirect($this->generateUrl('group_event_contact', array(
+                        'groupSlug' => $groupSlug,
+                        'eventSlug' => $groupEvent->getSlug(),
+                        'form'  => $form->createView(),
+                    )));
+                }
+
+                $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
+
+                if ($groupEvent->getExternalUrl()) {
+                    return $this->redirect($this->generateUrl('group_show', array(
+                        'slug' => $group->getSlug()
+                    )) . '#events');
+                }
+
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                    'groupSlug' => $groupSlug,
+                    'eventSlug' => $groupEvent->getSlug()
+                )));
+            }
+
+            $this->setFlash('error', 'Please correct the following errors and try again!');
+        }
+
+        return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
+            'group' => $group,
+            'event' => $groupEvent,
+            'form'  => $form->createView(),
         ));
+    }
+
+    public function emailPreviewAction($groupSlug, $eventSlug, Request $request)
+    {
+        $email = new GroupEventEmail();
+
+        $form = $this->createFormBuilder($email)
+            ->add('subject', 'text')
+            ->add('recipients', 'text', array(
+                'read_only' => true,
+                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+            ))
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $email = $form->getData();
+
+                return $this->render('EventBundle::contactPreview.html.twig', array(
+                    'subject' => $email->getSubject(),
+                    'message' => $email->getMessage(),
+                ));
+            }
+        }
+
+        $this->setFlash('error', 'There was an error previewing your email!');
+        return $this->redirect($this->generateUrl('group_event_contact', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $eventSlug,
+            'form'  => $form->createView(),
+        )));
+    }
+
+    /**
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function attendeesAction($groupSlug, $eventSlug)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
+        }
+
+        $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
+
+        return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
+            'event' => $groupEvent,
+            'attendees' => $attendees,
+        ));
+    }
+
+    public function removeAttendeeAction($groupSlug, $eventSlug, $userId)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
+        }
+
+        $user = $this->getUserManager()->findUserBy(array('id' => $userId));
+
+        if (!$user) {
+            throw $this->createNotFoundException(sprintf('No user for id "%s"', $userId));
+        }
+
+        $this->getGroupEventService()->unregister($groupEvent, $user);
+
+        $subject    = "You are no longer attending ".$groupEvent->getName();
+        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()));
+        $message    = 'Hello '.$user->getUsername().'
+
+This email confirms that you no longer attending <a href="'.$url.'">'.$groupEvent->getName().'</a>.
+
+If you believe this to be an error, please send contact the event organizer.
+
+Alienware Arena Team';
+        $emailType  = "Event unregister notification";
+        $emailTo    = $user->getEmail();
+        $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
+
+        $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
+
+        $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
+        return $this->redirect($this->generateUrl('group_event_attendees', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $groupEvent->getSlug(),
+        )));
     }
 
     /**
@@ -470,13 +687,8 @@ class GroupEventController extends Controller
 
         if ($rsvp == 0 && $isAttending) {
             $this->getGroupEventService()->unregister($groupEvent, $user);
-//
-//            $groupEvent->getAttendees()->removeElement($user);
-//            $this->getGroupEventService()->updateEvent($groupEvent);
         } elseif ($rsvp > 0 && !$isAttending) {
             $this->getGroupEventService()->register($groupEvent, $user);
-//            $groupEvent->getAttendees()->add($user);
-//            $this->getGroupEventService()->updateEvent($groupEvent);
         }
 
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
@@ -520,7 +732,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        if ($user != $groupEvent->getUser() || $user->getAdminLevel() === null) {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) || $user->getAdminLevel() === null) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not authorized to delete this event.")));
             return $response;
         }

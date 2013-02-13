@@ -1,0 +1,52 @@
+admin_deal:
+    pattern:  /
+    defaults: { _controller: "GiveawayBundle:DealAdmin:index" }
+
+# show the true "list" page for a site
+admin_deal_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "GiveawayBundle:DealAdmin:list", site: ~ }
+
+admin_deal_new:
+    pattern:  /new
+    defaults: { _controller: "GiveawayBundle:DealAdmin:new" }
+
+admin_deal_create:
+    pattern:  /create
+    defaults: { _controller: "GiveawayBundle:DealAdmin:new" }
+    requirements: { _method: post }
+
+admin_deal_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "GiveawayBundle:DealAdmin:edit" }
+
+admin_deal_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "GiveawayBundle:DealAdmin:edit" }
+    requirements: { _method: post }
+
+admin_deal_pool_new:
+    pattern:  /{dealId}/pool/new
+    defaults: { _controller: "GiveawayBundle:DealPoolAdmin:new" }
+
+admin_deal_pool_edit:
+    pattern:  /{dealId}/pool/edit/{poolId}
+    defaults: { _controller: "GiveawayBundle:DealPoolAdmin:edit" }
+
+admin_deal_pool_index:
+    pattern:  /{dealId}/pool
+    defaults: { _controller: "GiveawayBundle:DealPoolAdmin:index" }
+
+admin_deal_pool_create:
+    pattern:  /{dealId}/pool/create
+    defaults: { _controller: "GiveawayBundle:DealPoolAdmin:new" }
+    requirements: { _method: post }
+
+admin_deal_pool_delete:
+    pattern:  /{dealId}/pool/delete/{poolId}
+    defaults: { _controller: "GiveawayBundle:DealPoolAdmin:delete" }
+
+# metrics
+admin_deal_metrics:
+    pattern: /metrics
+    defaults: { _controller: GiveawayBundle:DealAdmin:metrics }

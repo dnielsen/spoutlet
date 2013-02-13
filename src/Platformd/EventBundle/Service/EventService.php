@@ -5,10 +5,14 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
+    Platformd\UserBundle\Entity\EventEmail,
+    Platformd\UserBundle\Entity\GroupEventEmail,
+    Platformd\UserBundle\Entity\GlobalEventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group
+    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\SpoutletBundle\Model\EmailManager
 ;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
@@ -43,17 +47,24 @@ class EventService
      */
     protected $aclProvider;
 
+    /**
+     * @var EmailManager
+     */
+    protected $emailManager;
+
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
         EventDispatcher $dispatcher,
-        AclProvider $aclProvider
+        AclProvider $aclProvider,
+        EmailManager $emailManager
     )
     {
         $this->repository   = $repository;
         $this->mediaUtil    = $mediaUtil;
         $this->dispatcher   = $dispatcher;
         $this->aclProvider  = $aclProvider;
+        $this->emailManager  = $emailManager;
     }
 
     /**
@@ -64,6 +75,12 @@ class EventService
     public function createEvent(Event $event)
     {
         $this->handleMedia($event);
+
+        $event->getAttendees()->add($event->getUser());
+
+        if ($event->getExternalUrl()) {
+            $event->setPrivate(false);
+        }
 
         $this->repository->saveEvent($event);
 
@@ -88,6 +105,10 @@ class EventService
     public function updateEvent(Event $event)
     {
         $this->handleMedia($event);
+
+        if ($event->getExternalUrl()) {
+            $event->setPrivate(false);
+        }
 
         $this->repository->saveEvent($event);
 
@@ -271,6 +292,11 @@ class EventService
         return $this->repository->getAttendeeCount($event);
     }
 
+    public function getAttendeeList($event)
+    {
+        return $this->repository->getAttendeeList($event);
+    }
+
     /**
      * Returns whether a user is registered to attend an event
      *
@@ -280,5 +306,39 @@ class EventService
     public function isUserAttending(Event $event, User $user)
     {
         return $this->repository->isUserAttending($event, $user);
+    }
+
+    public function saveEmail(EventEmail $email)
+    {
+        $this->repository->saveEmail($email);
+    }
+
+    public function sendEmail(EventEmail $email)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+        $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
+
+        $sendCount = 0;
+
+        foreach ($email->getRecipients() as $recipient) {
+            $emailTo = $recipient->getEmail();
+            $this->emailManager->sendEmail($emailTo, $subject, $message, $emailType);
+            $sendCount++;
+        }
+
+        $this->repository->saveEmail($email);
+
+        return $sendCount;
+    }
+
+    public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)
+    {
+        return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
+    }
+
+    public function findPastEventsForUser(User $user)
+    {
+        return $this->repository->getPastEventListForUser($user);
     }
 }

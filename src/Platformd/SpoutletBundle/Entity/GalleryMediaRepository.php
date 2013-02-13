@@ -52,16 +52,20 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
-    public function findAllPublishedByUserNewestFirstExcept($user, $id)
+    public function findAllPublishedByUserNewestFirstExcept($user, $id, $site)
     {
         return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.galleries', 'g')
+            ->leftJoin('g.sites', 's')
             ->where('gm.author = :user')
             ->andWhere('gm.published = 1')
             ->andWhere('gm.deleted <> 1')
             ->andWhere('gm.id != :id')
+            ->andWhere('s.id = :site')
             ->orderBy('gm.createdAt', 'DESC')
             ->setParameter('user', $user)
             ->setParameter('id', $id)
+            ->setParameter('site', $site->getId())
             ->getQuery()
             ->execute();
     }

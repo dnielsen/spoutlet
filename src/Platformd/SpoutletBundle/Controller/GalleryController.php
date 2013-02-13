@@ -360,7 +360,7 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('No media found.');
         }
 
-        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id);
+        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id, $this->getCurrentSite());
 
         $otherMediaPerPage = 3;
         $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);

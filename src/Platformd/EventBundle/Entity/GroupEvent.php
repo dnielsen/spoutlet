@@ -12,7 +12,8 @@ use Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug,
     Platformd\SpoutletBundle\Entity\ContentReport,
-    Platformd\SpoutletBundle\Model\ReportableContentInterface
+    Platformd\SpoutletBundle\Model\ReportableContentInterface,
+    Platformd\SpoutletBundle\Link\LinkableInterface
 ;
 
 /**
@@ -23,7 +24,7 @@ use Platformd\SpoutletBundle\Entity\Group,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GroupEvent extends Event implements ReportableContentInterface
+class GroupEvent extends Event implements ReportableContentInterface, LinkableInterface
 {
     const DELETED_BY_OWNER  = 'by_owner';
     const DELETED_BY_ADMIN  = 'by_admin';
@@ -89,6 +90,7 @@ class GroupEvent extends Event implements ReportableContentInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
      * @ORM\JoinTable(name="group_events_attendees")
+     * @ORM\OrderBy({"username" = "ASC"})
      */
     protected $attendees;
 
@@ -259,19 +261,6 @@ class GroupEvent extends Event implements ReportableContentInterface
     }
 
     /**
-     * used to dynamically generate routes within twig files to allow multiple event types to be
-     * mixed and displayed together
-     * e.g. group_event_edit, group_event_delete
-     *
-     *  @return string
-     */
-    public function getRoutePrefix()
-    {
-        return 'group_event_';
-
-    }
-
-    /**
      * Content type for the purposes of content reporting
      *
      * @return string
@@ -309,11 +298,6 @@ class GroupEvent extends Event implements ReportableContentInterface
         return 'group-event-'.$this->getId();
     }
 
-    public function getLinkableOverrideUrl()
-    {
-        return false;
-    }
-
     public function getLinkableRouteName()
     {
         return 'group_event_view';
@@ -322,16 +306,8 @@ class GroupEvent extends Event implements ReportableContentInterface
     public function getLinkableRouteParameters()
     {
         return array(
-            'eventSlug' => $this->getSlug(),
-            'groupSlug' => $this->getGroup()->getSlug(),
-        );
-    }
-
-    public function getModifyRouteParameters()
-    {
-        return array(
-            'eventId' => $this->getId(),
-            'groupSlug' => $this->getGroup()->getSlug(),
+            'eventSlug' => $this->slug,
+            'groupSlug' => $this->group->getSlug(),
         );
     }
 

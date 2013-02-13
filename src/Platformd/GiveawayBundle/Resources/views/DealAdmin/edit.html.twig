@@ -1,0 +1,29 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>
+    <i class="icon-pencil"></i>
+    Deal edit
+</h1>
+
+<form action="{{ path('admin_deal_update', { 'id': deal.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {% include 'GiveawayBundle:DealAdmin:_form.html.twig' with {
+        'form': edit_form
+    } %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_deal') }}">
+    Back to the list
+</a>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'GameBundle:GamePageAdmin:_formJavascript.html.twig' %}
+    {% include 'SpoutletBundle:CountryAgeRestrictionRule:_formJavascript.html.twig' %}
+{% endblock %}

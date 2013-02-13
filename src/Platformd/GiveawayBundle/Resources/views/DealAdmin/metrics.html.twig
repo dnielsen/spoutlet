@@ -1,0 +1,86 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>Deals</h1>
+
+<div class="pull-left filter-form-wrapper">
+    <form action="{{ path('admin_deal_metrics') }}" method="GET">
+        {{ form_widget(form.deal) }}
+        From {{ form_widget(form.startDate) }}
+        To {{ form_widget(form.endDate) }}
+        <button type="submit" class="btn btn-primary" formnovalidate style="margin-top:-9px;">Filter</button>
+    </form>
+</div>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Deal</th>
+            <th>Total Keys</th>
+            <th>Total Assigned</th>
+            <th>Keys Left</th>
+            {% for site in sites %}
+                {% if site == 'North America' %}
+                    <th>NA</th>
+                {% endif %}
+
+                {% if site == 'India' %}
+                    <th>IN</th>
+                {% endif %}
+
+                {% if site == 'Latin America' %}
+                    <th>LATAM</th>
+                {% endif %}
+
+                {% if site == 'Europe' %}
+                    <th>EUR</th>
+                {% endif %}
+
+                {% if site == 'Singapore' %}
+                    <th>MYSG</th>
+                {% endif %}
+
+                {% if site == 'Australia / New Zealand' %}
+                    <th>ANZ</th>
+                {% endif %}
+
+                {% if site == 'China' %}
+                    <th>CN</th>
+                {% endif %}
+
+                {% if site == 'Japan' %}
+                    <th>JP</th>
+                {% endif %}
+
+                {% if site == 'Demo' %}
+                    <th>Demo</th>
+                {% endif %}
+
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics %}
+        <tr>
+            <td>{{ metric.name }}</td>
+            <td>{{ metric.total }}</td>
+            <td>{{ metric.assigned }}</td>
+            <td>{{ metric.remaining }}</td>
+            {% for key, site in sites %}
+                <td>
+                    {{ metric.sites[key] }}
+                </td>
+            {% endfor %}
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="{{ 4 + (sites | length) }}">
+                There are no deals matching this criteria.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

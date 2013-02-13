@@ -22,7 +22,7 @@
 
         <div class="widget-content">
             {% set no_events_message %}{{ "platformd.events.event_listings.no_current_events" | trans }}{% endset %}
-            {% include 'SpoutletBundle:Events:eventList.html.twig' with {
+            {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
                 'events': events,
                 'no_events_message': no_events_message
             } %}

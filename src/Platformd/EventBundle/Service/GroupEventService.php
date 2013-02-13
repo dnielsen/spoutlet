@@ -5,6 +5,7 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Entity\GroupEventTranslation,
+    Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\SpoutletBundle\Entity\Group,
@@ -69,16 +70,6 @@ class GroupEventService extends EventService
     public function findPastEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
-    }
-
-    public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)
-    {
-        return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
-    }
-
-    public function findPastEventsForUser(User $user)
-    {
-        return $this->repository->getPastEventListForUser($user);
     }
 
     /**

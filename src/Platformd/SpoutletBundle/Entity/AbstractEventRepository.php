@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Platformd\GameBundle\Entity\Game;
 
 /**
  * Repository for the base, abstract "events"

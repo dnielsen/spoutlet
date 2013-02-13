@@ -3,11 +3,9 @@
 namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\SpoutletBundle\Entity\Superclass\Code;
 
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
-use Platformd\SpoutletBundle\Entity\Superclass\Pool;
 
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayKey
@@ -21,7 +19,7 @@ use Platformd\SpoutletBundle\Entity\Superclass\Pool;
  * )
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository")
  */
-class GiveawayKey extends Code
+class GiveawayKey extends AbstractCode
 {
     /**
      * @ORM\JoinColumn(name="pool", referencedColumnName="id", onDelete="CASCADE")
@@ -37,17 +35,11 @@ class GiveawayKey extends Code
      */
     protected $user;
 
-    /**
-     * @param \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     */
-    public function setPool(Pool $pool)
+    public function setPool(AbstractPool $pool)
     {
         $this->pool = $pool;
     }
 
-    /**
-     * @return \Platformd\SpoutletBundle\Entity\Superclass\Pool $pool
-     */
     public function getPool()
     {
         return $this->pool;
@@ -61,21 +53,13 @@ class GiveawayKey extends Code
         $this->setAssignedSite($site);
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return User
-     */
     public function getUser()
     {
         return $this->user;
     }
-
-
 }

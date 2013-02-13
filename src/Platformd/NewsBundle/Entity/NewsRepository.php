@@ -4,7 +4,7 @@ namespace Platformd\NewsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Platformd\SpoutletBundle\Entity\Game;
+use Platformd\GameBundle\Entity\Game;
 
 /**
  * NewsRepository

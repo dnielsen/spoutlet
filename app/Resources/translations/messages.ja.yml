@@ -211,8 +211,11 @@ platformd:
         points: ポイント
         post: 投稿する
         delete: 消す
+        delete_confirm: このコメントを本当に削除しますか？
         edit: 編集
+        cancel: キャンセル
         no_more_posts: これ以上の投稿はありません
+        submit: 出品
         date_format: %year%年%month%月%day%日
 
     user:

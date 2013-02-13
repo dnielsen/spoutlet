@@ -67,7 +67,10 @@ platformd:
         points: Puntos:
         post: Puesto
         delete: Borrar
+        delete_confirm: ¿Estás seguro de que deseas eliminar este comentario?
         edit: Editar
+        submit: Enviar
+        cancel: Cancelar
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
 

@@ -1,0 +1,108 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>a) Basic Information</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_row(form.name) }}
+                {{ form_row(form.slug) }}
+                {{ form_row(form.game) }}
+                {{ form_row(form.externalUrl) }}
+                {{ form_row(form.status) }}
+                {{ form_row(form.testOnly) }}
+            </div>
+
+            <div class="span6">
+                {{ form_row(form.sites) }}
+                {{ form_row(form.startsAt) }}
+                {{ form_row(form.endsAt) }}
+                {{ form_row(form.timezone) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>b) Redemption Information</legend>
+        <div class="row-fluid first">
+            <div class="span6">
+                {{ form_label(form.redemptionInstructionsArray) }}
+                {{ form_errors(form.redemptionInstructionsArray) }}
+
+                <ol class="input">
+                    {% include 'GiveawayBundle:Deal:_steps.html.twig' with {'deal': deal} %}
+                    {% for redemptionForm in form.redemptionInstructionsArray %}
+                        <li>
+                            {{ form_widget(redemptionForm) }}
+                        </li>
+                    {% endfor %}
+                </ol>
+                {{ form_row(form.description) }}
+                {{ form_row(form.legalVerbiage) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+            <legend>c) Customize Deal Page</legend>
+            {{ form_row(form.banner) }}
+            {{ form_row(form.thumbnailLarge) }}
+            {{ form_row(form.claimCodeButton) }}
+            {{ form_row(form.visitWebsiteButton) }}
+            {{ form_row(form.websiteUrl) }}
+            {{ form_row(form.topColor) }}
+            {{ form_row(form.bottomColor) }}
+    </fieldset>
+    <fieldset>
+        <legend>d) Restrictions</legend>
+        <div class="game-page-form">
+            <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
+            <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+                {# see the CSS file this explanation #}
+                <li class="dummy"></li>
+                {% for rule in form.ruleset.rules %}
+                    <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
+
+                    {% if loop.index is even %}
+                        <li class="clear"></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </fieldset>
+    <fieldset>
+            <legend>e) Screenshots</legend>
+            <div class="game-page-form">
+                <ul class="medias-list clearfix row-fluid" data-prototype="{{ form_widget(form.mediaGalleryMedias.get('prototype')) | e }}">
+                    {# see the CSS file this explanation #}
+                    <li class="dummy"></li>
+                    {% for mediaForm in form.mediaGalleryMedias %}
+                        <li class="span5 image-li existing-element">{{ form_row(mediaForm) }}</li>
+
+                        {% if loop.index is even %}
+                            <li class="clear"></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {# this prints an empty div, but it's necessary, otherwise form_rest tries to print this, which prints a logo #}
+            {{ form_widget(form.mediaGalleryMedias) }}
+            <p class="alert alert-info help">
+                <i class="icon-info-sign"></i>
+                 Recommended size 250x200. Upload 3(4) images only.
+            </p>
+    </fieldset>
+    <fieldset>
+        <legend>f) Facebook Info</legend>
+        {{ form_row(form.openGraphOverride.description) }}
+        {{ form_row(form.openGraphOverride.thumbnail) }}
+    </fieldset>
+
+    <div style="display: none;">
+        {{ form_row(form.ruleset) }}
+        {{ form_label(form.ruleset.rules) }}
+    </div>
+
+    {{ form_rest(form) }}
+</div>

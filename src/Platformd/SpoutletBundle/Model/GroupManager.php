@@ -11,7 +11,6 @@ use Platformd\SpoutletBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\GroupDiscussion;
 use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
 use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
-use Platformd\SpoutletBundle\Entity\GamePageLocale;
 use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
 use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\Event\GroupEvent;
@@ -22,7 +21,6 @@ use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
 
 use Doctrine\ORM\EntityManager;
-
 use Knp\MediaBundle\Util\MediaUtil;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

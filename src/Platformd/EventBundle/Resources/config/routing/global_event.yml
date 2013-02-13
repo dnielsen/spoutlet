@@ -10,6 +10,38 @@ global_events_past:
     pattern: /events/past
     defaults: { _controller: EventBundle:GlobalEvent:past }
 
+global_event_contact:
+    pattern: /events/contact/{slug}
+    defaults: { _controller:"EventBundle:GlobalEvent:contact", site: ~ }
+
+global_event_attendees:
+    pattern: /events/attendees/{slug}
+    defaults: { _controller:"EventBundle:GlobalEvent:attendees", site: ~ }
+
+global_event_email_preview:
+    pattern: /events/contact-preview/{slug}
+    defaults: { _controller:"EventBundle:GlobalEvent:emailPreview", site: ~ }
+    requirements:
+        _method: POST
+
+global_event_rsvp:
+    pattern: /events/ajax/rsvp
+    defaults: { _controller:"EventBundle:GlobalEvent:rsvpAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+global_event_disable:
+    pattern: /events/ajax/disable
+    defaults: { _controller:"EventBundle:GlobalEvent:disableAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+global_event_remove_attendee:
+    pattern: /events/{slug}/remove/{userId}
+    defaults: { _controller: EventBundle:GlobalEvent:removeAttendee }
+
 global_event_view:
     pattern: /events/{slug}
     defaults: { _controller: EventBundle:GlobalEvent:view }
