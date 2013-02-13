@@ -715,4 +715,9 @@ abstract class Event implements LinkableInterface
     {
         return $this->active;
     }
+
+    public function getLinkableOverrideUrl()
+    {
+        return $this->externalUrl ?: false;
+    }
 }

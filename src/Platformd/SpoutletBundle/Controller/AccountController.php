@@ -66,16 +66,38 @@ class AccountController extends Controller
 
         /** @var $groupEventService GroupEventService */
         $groupEventService = $this->get('platformd_event.service.group_event');
+        $globalEventService = $this->get('platformd_event.service.global_event');
 
-        $events         = $groupEventService->findUpcomingEventsForUser($this->getUser());
-        $ownedEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
-        $pastEvents     = $groupEventService->findPastEventsForUser($this->getUser());
+        $upcomingGroupEvents = $groupEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGroupEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGroupEvents     = $groupEventService->findPastEventsForUser($this->getUser());
+
+        $upcomingGlobalEvents = $globalEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGlobalEvents    = $globalEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGlobalEvents     = $globalEventService->findPastEventsForUser($this->getUser());
+
+        $upcomingEvents     = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $ownedEvents        = array_merge($ownedGroupEvents, $ownedGlobalEvents);
+        $pastEvents         = array_merge($pastGroupEvents, $pastGlobalEvents);
+
+        uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($ownedEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
 
         return $this->render('SpoutletBundle:Account:events.html.twig', array(
-            'events'        => $events,
+            'events'        => $upcomingEvents,
             'ownedEvents'   => $ownedEvents,
             'pastEvents'    => $pastEvents,
         ));
+    }
+
+    private function eventCompare($a, $b) {
+
+        if ($a[0]->getStartsAt() == $b[0]->getStartsAt()) {
+            return 0;
+        }
+        return ($a[0]->getStartsAt() < $b[0]->getStartsAt()) ? -1 : 1;
+
     }
 
     public function videosAction()

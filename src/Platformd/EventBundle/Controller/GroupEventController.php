@@ -83,6 +83,12 @@ class GroupEventController extends Controller
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'New event posted successfully');
 
+                    if ($groupEvent->getExternalUrl()) {
+                        return $this->redirect($this->generateUrl('group_show', array(
+                            'slug' => $group->getSlug()
+                        )) . '#events');
+                    }
+
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
                         'eventSlug' => $groupEvent->getSlug()
@@ -148,6 +154,12 @@ class GroupEventController extends Controller
 
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'New event posted successfully');
+
+                    if ($groupEvent->getExternalUrl()) {
+                        return $this->redirect($this->generateUrl('group_show', array(
+                            'slug' => $group->getSlug()
+                        )) . '#events');
+                    }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
@@ -351,6 +363,13 @@ class GroupEventController extends Controller
                 }
 
                 $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
+
+                if ($groupEvent->getExternalUrl()) {
+                    return $this->redirect($this->generateUrl('group_show', array(
+                        'slug' => $group->getSlug()
+                    )) . '#events');
+                }
+
                 return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $groupEvent->getSlug()

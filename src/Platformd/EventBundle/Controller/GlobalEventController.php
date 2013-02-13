@@ -273,6 +273,11 @@ class GlobalEventController extends Controller
                 }
 
                 $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
+
+                if ($event->getExternalUrl()) {
+                    return $this->redirect($this->generateUrl('global_events_index'));
+                }
+
                 return $this->redirect($this->generateUrl('global_event_view', array(
                     'slug' => $slug
                 )));

@@ -90,7 +90,7 @@
 
             $('#cancel').click(function(e){
                 e.preventDefault();
-                var url = '{{ path("global_event_view", { "slug": event.slug }) }}';
+                var url = {% if event.externalUrl %}'{{ path("global_events_index") }}'{% else %}'{{ event | pd_link }}'{% endif %};
                 document.location.href = url;
             });
 

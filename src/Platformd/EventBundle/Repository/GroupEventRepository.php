@@ -51,67 +51,6 @@ class GroupEventRepository extends EventRepository
         return $qb;
     }
 
-    protected function addActiveClauses($qb, $alias='ge')
-    {
-        return $qb->andWhere($alias.'.deleted = 0')
-            ->andWhere($alias.'.approved = 1');
-    }
-
-    /**
-     * Returns list of events that the user is registered for or owns
-     *
-     * @param \Platformd\SpoutletBundle\Entity\User $user
-     * @param boolean $whereIsOrganizer
-     */
-    public function getUpcomingEventListForUser(User $user, $whereIsOrganizer = false)
-    {
-        $qb = $this->createQueryBuilder('ge')
-            ->select('ge', 'count(a.id) attendeeCount')
-            ->leftJoin('ge.attendees', 'a')
-            ->andWhere('ge.endsAt >= :now')
-            ->groupBy('ge.id')
-            ->setParameters(array(
-                'user' => $user,
-                'now' => new \DateTime('now'),
-            ));
-
-        $this->addActiveClauses($qb);
-
-        if ($whereIsOrganizer) {
-            $qb->andWhere('ge.user = :user');
-        } else {
-            $qb->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
-                ->andWhere('ge.user <> :user')
-                ->andWhere('ge.published = 1');
-        }
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Returns list of past events that the user is registered for
-     *
-     * @param \Platformd\SpoutletBundle\Entity\User $user
-     */
-    public function getPastEventListForUser(User $user)
-    {
-        $qb = $this->createQueryBuilder('ge')
-            ->select('ge', 'count(a.id) attendeeCount')
-            ->leftJoin('ge.attendees', 'a')
-            ->andWhere('ge.id IN (SELECT ge2.id FROM EventBundle:GroupEvent ge2 LEFT JOIN ge2.attendees a2 WHERE a2=:user)')
-            ->andWhere('ge.endsAt < :now')
-            ->andWhere('ge.published = 1')
-            ->groupBy('ge.id')
-            ->setParameters(array(
-                'user' => $user,
-                'now' => new \DateTime('now'),
-            ));
-
-        $this->addActiveClauses($qb);
-
-        return $qb->getQuery()->getResult();
-    }
-
     public function getPendingApprovalEventsForGroup(Group $group)
     {
         $qb = $this->createQueryBuilder('ge')
@@ -124,5 +63,11 @@ class GroupEventRepository extends EventRepository
         ;
 
         return $qb->getQuery()->getResult();
+    }
+
+    protected function addActiveClauses($qb, $alias='e')
+    {
+        return $qb->andWhere($alias.'.deleted = 0')
+            ->andWhere($alias.'.approved = 1');
     }
 }

@@ -79,7 +79,7 @@
 
                 case 'contact':
                 case 'edit':
-                    window.location($(this).children('option:selected').attr('data-route'));
+                    document.location.href = $(this).children('option:selected').attr('data-route');
                     break;
 
                 case 'disable':

@@ -12,7 +12,8 @@ use Platformd\SpoutletBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug,
     Platformd\SpoutletBundle\Entity\ContentReport,
-    Platformd\SpoutletBundle\Model\ReportableContentInterface
+    Platformd\SpoutletBundle\Model\ReportableContentInterface,
+    Platformd\SpoutletBundle\Link\LinkableInterface
 ;
 
 /**
@@ -23,7 +24,7 @@ use Platformd\SpoutletBundle\Entity\Group,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GroupEvent extends Event implements ReportableContentInterface
+class GroupEvent extends Event implements ReportableContentInterface, LinkableInterface
 {
     const DELETED_BY_OWNER  = 'by_owner';
     const DELETED_BY_ADMIN  = 'by_admin';
@@ -297,11 +298,6 @@ class GroupEvent extends Event implements ReportableContentInterface
         return 'group-event-'.$this->getId();
     }
 
-    public function getLinkableOverrideUrl()
-    {
-        return false;
-    }
-
     public function getLinkableRouteName()
     {
         return 'group_event_view';
@@ -310,8 +306,8 @@ class GroupEvent extends Event implements ReportableContentInterface
     public function getLinkableRouteParameters()
     {
         return array(
-            'eventSlug' => $this->getSlug(),
-            'groupSlug' => $this->getGroup()->getSlug(),
+            'eventSlug' => $this->slug,
+            'groupSlug' => $this->group->getSlug(),
         );
     }
 

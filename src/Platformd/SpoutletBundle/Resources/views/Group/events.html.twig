@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="group-event-details">
-                    <div class="group-event-title"><a href="{{ path('group_event_view', { 'groupSlug' : group.slug, 'eventSlug' : event.slug }) }}">{{ event.name }}</a></div>
+                    <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
                     <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezone }}{% endif %}</div>
                     <div class="group-event-location"><strong>Where:</strong>
                         {% if event.online %}

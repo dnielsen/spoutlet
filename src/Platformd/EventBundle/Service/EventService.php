@@ -318,4 +318,14 @@ class EventService
 
         return $sendCount;
     }
+
+    public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)
+    {
+        return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
+    }
+
+    public function findPastEventsForUser(User $user)
+    {
+        return $this->repository->getPastEventListForUser($user);
+    }
 }
