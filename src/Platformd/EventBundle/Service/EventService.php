@@ -82,7 +82,7 @@ class EventService
             $event->setPrivate(false);
         }
 
-        $set->repository->saveEvent($event);
+        $this->repository->saveEvent($event);
 
         // ACLs
         $objectIdentity = ObjectIdentity::fromDomainObject($event);
