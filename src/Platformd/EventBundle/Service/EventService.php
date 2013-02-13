@@ -78,7 +78,11 @@ class EventService
 
         $event->getAttendees()->add($event->getUser());
 
-        $this->repository->saveEvent($event);
+        if ($event->getExternalUrl()) {
+            $event->setPrivate(false);
+        }
+
+        $set->repository->saveEvent($event);
 
         // ACLs
         $objectIdentity = ObjectIdentity::fromDomainObject($event);
@@ -101,6 +105,10 @@ class EventService
     public function updateEvent(Event $event)
     {
         $this->handleMedia($event);
+
+        if ($event->getExternalUrl()) {
+            $event->setPrivate(false);
+        }
 
         $this->repository->saveEvent($event);
 
