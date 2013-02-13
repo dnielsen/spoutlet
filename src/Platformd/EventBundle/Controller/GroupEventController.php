@@ -423,6 +423,95 @@ class GroupEventController extends Controller
     }
 
     /**
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function attendeesAction($groupSlug, $eventSlug)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
+        }
+
+        $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
+
+        return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
+            'event' => $groupEvent,
+            'attendees' => $attendees,
+        ));
+    }
+
+    public function removeAttendeeAction($groupSlug, $eventSlug, $userId)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        // check for edit access (permissions match those required to send email)
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        {
+            throw new AccessDeniedException();
+        }
+
+        $user = $this->getUserManager()->findUserBy(array('id' => $userId));
+
+        if (!$user) {
+            throw $this->createNotFoundException(sprintf('No user for id "%s"', $userId));
+        }
+
+        $this->getGroupEventService()->unregister($groupEvent, $user);
+
+        $subject    = "You are no longer attending ".$groupEvent->getName();
+        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()));
+        $message    = 'Hello '.$user->getUsername().'
+
+This email confirms that you no longer attending <a href="'.$url.'">'.$groupEvent->getName().'</a>.
+
+If you believe this to be an error, please send contact the event organizer.
+
+Alienware Arena Team';
+        $emailType  = "Event unregister notification";
+        $emailTo    = $user->getEmail();
+        $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
+
+        $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
+
+        $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
+        return $this->redirect($this->generateUrl('group_event_attendees', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $groupEvent->getSlug(),
+        )));
+    }
+
+    /**
      * Lists all events pending approval
      * Only for group owner
      *

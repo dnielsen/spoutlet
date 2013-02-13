@@ -11,9 +11,9 @@ class GroupEventRepository extends EventRepository
     public function findUpcomingEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         $qb = $this->getBaseGroupQueryBuilder($group)
-            ->andWhere('ge.endsAt > :now')
-            ->andWhere('ge.published = 1')
-            ->orderBy('ge.startsAt')
+            ->andWhere('e.endsAt > :now')
+            ->andWhere('e.published = 1')
+            ->orderBy('e.startsAt')
             ->setParameter('now', new \DateTime('now'));
 
         $this->addActiveClauses($qb);
@@ -28,9 +28,9 @@ class GroupEventRepository extends EventRepository
     public function findPastEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         $qb = $this->getBaseGroupQueryBuilder($group)
-            ->andWhere('ge.endsAt < :now')
-            ->andWhere('ge.published = 1')
-            ->orderBy('ge.endsAt', 'DESC')
+            ->andWhere('e.endsAt < :now')
+            ->andWhere('e.published = 1')
+            ->orderBy('e.endsAt', 'DESC')
             ->setParameter('now', new \DateTime('now'));
 
         $this->addActiveClauses($qb);
@@ -42,7 +42,7 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->getResult();
     }
 
-    private function getBaseGroupQueryBuilder(Group $group, $alias = 'ge')
+    private function getBaseGroupQueryBuilder(Group $group, $alias = 'e')
     {
         $qb = $this->createQueryBuilder($alias)
             ->andWhere($alias.'.group = :group')
@@ -53,13 +53,13 @@ class GroupEventRepository extends EventRepository
 
     public function getPendingApprovalEventsForGroup(Group $group)
     {
-        $qb = $this->createQueryBuilder('ge')
-            ->select('ge', 'g')
-            ->leftJoin('ge.group', 'g')
-            ->where('ge.approved = false')
-            ->andWhere('ge.group = :group')
+        $qb = $this->createQueryBuilder('e')
+            ->select('e', 'g')
+            ->leftJoin('e.group', 'g')
+            ->where('e.approved = false')
+            ->andWhere('e.group = :group')
             ->setParameter('group', $group)
-            ->orderBy('ge.createdAt', 'DESC')
+            ->orderBy('e.createdAt', 'DESC')
         ;
 
         return $qb->getQuery()->getResult();

@@ -14,6 +14,10 @@ global_event_contact:
     pattern: /events/contact/{slug}
     defaults: { _controller:"EventBundle:GlobalEvent:contact", site: ~ }
 
+global_event_attendees:
+    pattern: /events/attendees/{slug}
+    defaults: { _controller:"EventBundle:GlobalEvent:attendees", site: ~ }
+
 global_event_email_preview:
     pattern: /events/contact-preview/{slug}
     defaults: { _controller:"EventBundle:GlobalEvent:emailPreview", site: ~ }
@@ -33,6 +37,10 @@ global_event_disable:
     requirements:
         _format: json
         _method: POST
+
+global_event_remove_attendee:
+    pattern: /events/{slug}/remove/{userId}
+    defaults: { _controller: EventBundle:GlobalEvent:removeAttendee }
 
 global_event_view:
     pattern: /events/{slug}

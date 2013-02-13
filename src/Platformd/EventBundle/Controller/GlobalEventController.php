@@ -104,6 +104,73 @@ class GlobalEventController extends Controller
         ));
     }
 
+    /**
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public function attendeesAction($slug)
+    {
+        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug,$this->getCurrentSite());
+
+        if (!$event) {
+            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+        }
+
+        if (false === $this->getSecurity()->isGranted('EDIT', $event) || $this->getUser()->getAdminLevel() === null) {
+            throw new AccessDeniedException();
+        }
+
+        $attendees = $this->getGlobalEventService()->getAttendeeList($event);
+
+        return $this->render('EventBundle:GlobalEvent:attendees.html.twig', array(
+            'event' => $event,
+            'attendees' => $attendees,
+        ));
+    }
+
+    public function removeAttendeeAction($slug, $userId)
+    {
+        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug,$this->getCurrentSite());
+
+        if (!$event) {
+            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+        }
+
+        if (false === $this->getSecurity()->isGranted('EDIT', $event) || $this->getUser()->getAdminLevel() === null) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $this->getUserManager()->findUserBy(array('id' => $userId));
+
+        if (!$user) {
+            throw $this->createNotFoundException(sprintf('No user for id "%s"', $userId));
+        }
+
+        $this->getGlobalEventService()->unregister($event, $user);
+
+        $subject    = "You are no longer attending ".$event->getName();
+        $url        = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()));
+        $message    = 'Hello '.$user->getUsername().'
+
+This email confirms that you no longer attending <a href="'.$url.'">'.$event->getName().'</a>.
+
+If you believe this to be an error, please send contact the event organizer.
+
+Alienware Arena Team';
+        $emailType  = "Event unregister notification";
+        $emailTo    = $user->getEmail();
+        $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
+
+        $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
+
+        $attendees = $this->getGlobalEventService()->getAttendeeList($event);
+
+        return $this->redirect($this->generateUrl('global_event_attendees', array(
+            'slug' => $event->getSlug(),
+        )));
+    }
+
     public function rsvpAjaxAction(Request $request)
     {
         $response = new Response();

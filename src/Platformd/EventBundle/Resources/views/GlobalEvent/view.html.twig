@@ -28,6 +28,7 @@
             <div class="left">
                 <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="GlobalEvent" style="width:130px; margin-bottom:5px;">
                     <option>Manage Event</option>
+                    <option value="attendees">Manage Attendees</option>
                     <option value="contact">Contact Attendees</option>
                     <option value="edit">Edit Event</option>
                     <option value="disable">Disable Event</option>
@@ -171,6 +172,10 @@
         $('.event-owner-actions').change(function () {
 
             switch($(this).children('option:selected').val()) {
+
+                case 'attendees':
+                     document.location.href = "{{ path("global_event_attendees", { 'slug': event.slug }) }}";
+                     break;
 
                 case 'contact':
                      document.location.href = "{{ path("global_event_contact", { 'slug': event.slug }) }}";

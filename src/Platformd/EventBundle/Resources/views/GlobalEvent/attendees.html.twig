@@ -1,0 +1,62 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'Attendees - ' ~ event.name %}
+
+{% block content %}
+
+    {% if event.bannerImage %}
+        <div class="std_1col">
+            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat;">
+        </div>
+    {% endif %}
+
+    <div class="std_1col">
+        <a href="{{ event | pd_link }}">Back to Event</a>
+    </div>
+
+    <div class="std_2col">
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">Attendees</div>
+                </div>
+                <div class="widget-content">
+                    <table style="width: 100%;">
+                        <thead style="text-align:left;">
+                            <tr>
+                                <th style="padding:5px 0;">Action</th>
+                                <th style="padding:5px 0;">Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendee in attendees %}
+                                <tr>
+                                    <td style="padding:5px 0;">
+                                        <a href="{{ path('global_event_remove_attendee', { 'slug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                    </td>
+                                    <td style="padding:5px 0;">
+                                        <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="2">
+                                        <em>There are no attendees!</em>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="widget-footer">&nbsp;</div>
+            </div>
+        </div>
+        <div class="right">
+            <div>
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

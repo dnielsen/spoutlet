@@ -292,6 +292,11 @@ class EventService
         return $this->repository->getAttendeeCount($event);
     }
 
+    public function getAttendeeList($event)
+    {
+        return $this->repository->getAttendeeList($event);
+    }
+
     /**
      * Returns whether a user is registered to attend an event
      *

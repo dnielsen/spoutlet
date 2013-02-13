@@ -30,9 +30,10 @@
             <div class="left">
                 <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:130px; margin-bottom:5px;">
                     <option>Manage Event</option>
-                    <option value="contact" data-route="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</option>
-                    <option value="edit" data-route="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</option>
-                    <option value="disable" data-route="{{ path("group_event_disable") }}">Disable Event</option>
+                    <option value="attendees">Manage Attendees</option>
+                    <option value="contact">Contact Attendees</option>
+                    <option value="edit">Edit Event</option>
+                    <option value="disable">Disable Event</option>
                 </select>
             </div>
         </div>
@@ -177,10 +178,18 @@
 
             switch($(this).children('option:selected').val()) {
 
+                case 'attendees':
+                     document.location.href = "{{ path("group_event_attendees", event.getLinkableRouteParameters) }}";
+                     break;
+
                 case 'contact':
+                     document.location.href = "{{ path("group_event_contact", event.getLinkableRouteParameters) }}";
+                     break;
+
                 case 'edit':
-                    document.location.href = $(this).children('option:selected').attr('data-route');
+                    document.location.href = "{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}";
                     break;
+
 
                 case 'disable':
                     var answer = confirm("Are you sure you want to disable this event? You can re-enable it from your control panel.")
@@ -188,7 +197,7 @@
                         return false;
                     }
 
-                    var route = $(this).children('option:selected').attr('data-route');
+                    var route = {{ path("group_event_disable") }};
                     var id = $(this).attr('data-id');
                     var type = $(this).attr('data-contenttype');
 
