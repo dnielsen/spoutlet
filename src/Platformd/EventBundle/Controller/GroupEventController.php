@@ -275,6 +275,7 @@ class GroupEventController extends Controller
         $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
+            'group'         => $group,
             'event'         => $groupEvent,
             'attendeeCount' => $attendeeCount,
             'isAttending'   => $isAttending,
@@ -418,7 +419,7 @@ class GroupEventController extends Controller
         $this->setFlash('error', 'There was an error previewing your email!');
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $groupEvent->getSlug(),
+            'eventSlug' => $eventSlug,
             'form'  => $form->createView(),
         )));
     }

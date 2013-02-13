@@ -5,10 +5,10 @@
 
     <h1>Edit Event</h1>
 
-    <form action="{{ path('admin_events_new') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('admin_events_edit', {'id' : event.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
 
-        <div class="form-actions" style="float: left;">
+        <div class="form-actions">
             <button type="submit" class="btn btn-primary" formnovalidate>Save</button>
         </div>
     </form>

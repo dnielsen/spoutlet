@@ -24,7 +24,7 @@
     <form action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
 
-        <div class="form-actions" style="float: left;">
+        <div class="form-actions">
             <button type="submit" class="btn btn-primary" formnovalidate>Save</button>
         </div>
     </form>
