@@ -32,6 +32,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            var timezone = jstz.determine();
+            if (timezone) {
+                $('#groupEvent_timezone').val(timezone.name());
+            }
+
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
