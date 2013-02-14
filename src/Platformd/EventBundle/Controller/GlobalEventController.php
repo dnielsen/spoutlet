@@ -307,8 +307,9 @@ Alienware Arena Team';
 
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
-            ->add('recipients', 'text', array(
-                'read_only' => true,
+            ->add('users', 'text', array(
+                'property_path' => false,
+                'label' => 'Recipients',
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
@@ -322,11 +323,12 @@ Alienware Arena Team';
             if ($form->isValid()) {
 
                 $email = $form->getData();
+                $recipientsString = $form->get('users')->getData();
                 $email->setEvent($event);
 
                 $recipients = array();
 
-                if ($email->getRecipients() === null) {
+                if ($recipientsString === null) {
 
                     foreach ($event->getAttendees() as $recipient) {
                         $recipients[] = $recipient;
@@ -334,11 +336,11 @@ Alienware Arena Team';
 
                 } else {
 
-                    $recipientArr = explode(',', $email->getRecipients());
+                    $recipientArr = explode(',', $recipientsString);
                     $userManager = $this->getUserManager();
 
                     foreach ($recipientArr as $recipient) {
-                        $user = $userManager->loadUserByUsername($recipient);
+                        $user = $userManager->findUserBy(array('username' => $recipient));
                         if ($user && $event->getAttendees()->contains($user)) {
                             $recipients[] = $user;
                         }

@@ -57,7 +57,7 @@ class EmailManager
             $to = $this->container->getParameter('email_destination_override_with');
         }
 
-        $finalEmail     = array('Subject'  => array('Data' => $subject, 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $body, 'Charset' => 'UTF-8')));
+        $finalEmail     = array('Subject'  => array('Data' => $subject, 'Charset' => 'UTF-8'), 'Body' => array('Html' => array('Data' => $body, 'Charset' => 'UTF-8')));
         $finalFrom      = $fromName.' <'.$fromEmail.'>';
         $finalTo        = array('ToAddresses'  => array($to));
 
