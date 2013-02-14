@@ -55,8 +55,13 @@ class GlobalEventController extends Controller
     public function currentAction(Request $request)
     {
         $page = $request->query->get('page', 1);
+        $site = $this->getCurrentSite();
 
-        $events = $this->getGlobalEventService()->findUpcomingEventsForSite($this->getCurrentSite(), 20, $page, $pager);
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
+
+        $events = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        uasort($events, array($this, 'eventCompare'));
 
         return $this->render('EventBundle:GlobalEvent:currentList.html.twig', array(
             'events' => $events,

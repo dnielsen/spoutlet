@@ -45,55 +45,73 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.maps.js"></script>
     <script type="text/javascript">
         $(function () {
-            $('.map-info').each(function(i, v) {
-                var id = $(this).attr('data-id');
+            $('.qtip-view-map').each(function(i, v) {
 
-                $('#view-map-' + id).qtip({
+                var lat = $(this).attr('data-lat');
+                var lng = $(this).attr('data-lng');
+
+                $(this).qtip({
                     content: {
-                        text: '<div class="google-map" id="map-' + id + '" style="width:300px;height:250px;"></div>',
-                        prerender: true
+                        text: 'Loading map...',
+                        prerender: false
                     },
                     style: {
-                        width: 300,
-                        height: 250,
-                        border: { width: 2, radius: 5 },
-                        padding: 2,
-                        tip: true,
-                        name: 'dark'
+                        classes: 'qtip-dark',
+                        width: 500,
                     },
                     position: {
-                        corner: {
-                            tooltip: 'bottomMiddle',
-                            target: 'topMiddle'
-                        }
+                        my: 'top center',
+                        at: 'bottom center',
+                        viewport: $(window),
+                        adjust: { method: 'shift' }
                     },
-                    hide: {
-                        fixed: true,
-                        when: {
-                            event: 'click'
-                        }
-                    },
-                    show: {
-                        fixed: true,
-                        when: {
-                            event: 'click'
+                    show: 'click',
+                    hide: 'unfocus',
+                    events: {
+                        render: function (event, api) {
+                            var tooltip = $(this);
+                            var container = $('<div style="width: 480px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+                            tooltip.show();
+
+                            // options
+                            var myOptions = {
+                                zoom: 12,
+                                mapTypeControl: true,
+                                mapTypeControlOptions: {
+                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                                },
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+
+                            // Create map object as api attribute for later use
+                            api.map = new google.maps.Map(container[0], myOptions);
+                            var map = api.map;
+                            markersArray = [];
+
+                            // set center
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            tooltip.hide();
+                        },
+                        show: function (event, api) {
+                            var map = api.map;
+
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                position: centerLatLong,
+                                animation: google.maps.Animation.DROP,
+                            });
                         }
                     }
                 });
-
-                $('#map-' + id).groupsmap({
-                   address : $('#location-' + id).val()
-                });
             });
-
-            $('.map-info').each(function(i, v) {
-                var id = $(this).attr('data-id');
-
-            });
-
         });
     </script>
 {% endblock %}

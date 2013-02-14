@@ -81,7 +81,7 @@ class GroupEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
@@ -90,10 +90,12 @@ class GroupEventRepository extends EventRepository
             ->where('e.endsAt >= :now')
             ->andWhere('e.published = :published')
             ->andWhere('s = :site')
+            ->andWhere('e.private = :private')
             ->orderBy('e.createdAt', 'DESC')
             ->setParameter('now', new DateTime())
             ->setParameter('published', $published)
             ->setParameter('site', $site)
+            ->setParameter('private', $private)
         ;
 
         if ($maxPerPage) {
@@ -117,7 +119,7 @@ class GroupEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
@@ -126,10 +128,12 @@ class GroupEventRepository extends EventRepository
             ->where('e.endsAt < :now')
             ->andWhere('e.published = :published')
             ->andWhere('s = :site')
+            ->andWhere('e.private = :private')
             ->orderBy('e.createdAt', 'DESC')
             ->setParameter('now', new DateTime())
             ->setParameter('published', $published)
             ->setParameter('site', $site)
+            ->setParameter('private', $private)
         ;
 
         if ($maxPerPage) {

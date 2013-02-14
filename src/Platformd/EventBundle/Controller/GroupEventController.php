@@ -223,7 +223,7 @@ class GroupEventController extends Controller
                 $groupEvent->setUser($this->getUser());
 
                 $this->getGroupEventService()->updateEvent($groupEvent);
-                $this->setFlash('success', 'New event posted successfully');
+                $this->setFlash('success', 'Event has been saved successfully.');
 
                 return $this->redirect($this->generateUrl('group_event_edit', array(
                     'groupSlug' => $group->getSlug(),
