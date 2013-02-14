@@ -59,7 +59,7 @@
                         prerender: false
                     },
                     style: {
-                        classes: 'qtip-dark',
+                        classes: 'qtip-dark qtip-shadow qtip-rounded',
                         width: 500,
                     },
                     position: {
@@ -73,7 +73,7 @@
                     events: {
                         render: function (event, api) {
                             var tooltip = $(this);
-                            var container = $('<div style="width: 480px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+                            var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
                             tooltip.show();
 
                             // options

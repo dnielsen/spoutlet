@@ -57,8 +57,10 @@
                     Online
                 {% else %}
                     {% if event.address is defined %}
+                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}">
+                            <img src="{{ asset('bundles/spoutlet/images/icons/map_magnify.png') }}" />
+                        </a>
                         <span class="map-info" data-id="{{ event.id }}">{{ event.location ? event.location : ('na'|trans) }}</span>
-                        <div>(<a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}">view map</a>)</div>
                     {% else %}
                         {{ 'na'|trans }}
                     {% endif %}
