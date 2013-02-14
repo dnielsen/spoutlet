@@ -1,0 +1,84 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% block title 'Groups - ' ~ group.name %}
+
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% if group.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block content %}
+<div class="std_1col" style="padding: 0;">
+    <div id="group-avatar">
+        {% if group.groupAvatar %}
+            <img src="{{ media_path(group.groupAvatar) }}" />
+        {% else %}
+            <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+        {% endif %}
+    </div>
+</div>
+<div class="std_1col" style="padding: 0;">
+    {% include 'GroupBundle:Group:_subNav.html.twig' %}
+</div>
+<div class="std_2col">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+    <div class="left" id="group-image-form-wrapper">
+
+        <h1>Submit Image</h1>
+        <p>All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.</p>
+        <h2>Image Restrictions</h2>
+        <ul>
+            <li>Only group-related images, everything else will get deleted without notice.</li>
+            <li>No copyrighted material.</li>
+            <li>No photos of children ages 13 and under.</li>
+            <li>Max file size per image 5MB.</li>
+            <li>Files supported: JPG, GIF and PNG</li>
+            <li>By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</li>
+        </ul>
+        <h2>Image Submission</h2>
+
+        <form action="{{ imageFormAction }}" method="post" {{ form_enctype(imageForm) }} class="form-horizontal">
+
+            {% form_theme imageForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+            {% form_theme imageForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+            {{ form_errors(imageForm) }}
+
+            <div class="span7">
+                {{ form_row(imageForm.title) }}
+                {{ form_row(imageForm.image) }}
+                <div class="form-actions">
+                    <button type="submit" formnovalidate>Save Image</button>
+                    <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">Cancel</button>
+                </div>
+            </div>
+
+
+
+            {{ form_rest(imageForm) }}
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

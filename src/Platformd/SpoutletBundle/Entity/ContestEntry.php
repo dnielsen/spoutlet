@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Contest;
-use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\Group;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -84,7 +84,7 @@ class ContestEntry
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Group")
+     * @ORM\ManyToMany(targetEntity="Platformd\GroupBundle\Entity\Group")
      * @ORM\JoinTable(name="pd_contest_entry_groups", joinColumns={@ORM\JoinColumn(name="contest_entry_id", referencedColumnName="id")}, inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")})
      */
     private $groups;

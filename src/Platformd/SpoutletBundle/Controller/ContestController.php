@@ -360,7 +360,7 @@ class ContestController extends Controller
 
     private function getGroupRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+        return $this->getEntityManager()->getRepository('GroupBundle:Group');
     }
 
     private function getContestRepository()

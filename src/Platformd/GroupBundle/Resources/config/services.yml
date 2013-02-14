@@ -1,0 +1,10 @@
+services:
+    platformd.model.group_manager:
+        class: Platformd\GroupBundle\Model\GroupManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@session"
+            - "@knp_media.util.media_util"
+            - "@security.context"
+            - "@event_dispatcher"
+

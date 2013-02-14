@@ -131,6 +131,6 @@ class DealType extends AbstractType
 
     public function getName()
     {
-        return 'platformd_spoutletbundle_dealtype';
+        return 'platformd_giveawaybundle_dealtype';
     }
 }

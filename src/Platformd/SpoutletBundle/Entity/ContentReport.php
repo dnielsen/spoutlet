@@ -85,21 +85,21 @@ class ContentReport
     private $deleted = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupImage")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupImage")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupImage = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupNews")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupNews")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupNews = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupVideo")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupVideo")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
@@ -113,21 +113,21 @@ class ContentReport
     protected $galleryMedia = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $group = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupDiscussion")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussion")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupDiscussion = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GroupDiscussionPost")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussionPost")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 

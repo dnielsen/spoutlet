@@ -269,7 +269,7 @@ class GlobalActivityRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb
             ->select('gD.id')
-            ->from('SpoutletBundle:GroupDiscussion', 'gD')
+            ->from('GroupBundle:GroupDiscussion', 'gD')
             ->where('gD.group = :group')
             ->setParameter('group', $group)
         ;
@@ -296,7 +296,7 @@ class GlobalActivityRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb
             ->select('gDP.id')
-            ->from('SpoutletBundle:GroupDiscussionPost', 'gDP')
+            ->from('GroupBundle:GroupDiscussionPost', 'gDP')
             ->where('gDP.groupDiscussion = :groupDiscussion')
             ->setParameter('groupDiscussion', $groupDiscussion)
         ;

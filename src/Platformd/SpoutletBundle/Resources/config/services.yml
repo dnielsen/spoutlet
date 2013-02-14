@@ -100,16 +100,6 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
 
-    platformd.model.group_manager:
-        class: Platformd\SpoutletBundle\Model\GroupManager
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@session"
-            - "@knp_media.util.media_util"
-            - "@security.context"
-            - "@event_dispatcher"
-
-
     # activity manager service
     platformd.model.activity_manager:
         class: Platformd\SpoutletBundle\Model\ActivityManager

@@ -4,7 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Entity\GroupImage;
+use Platformd\GroupBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
@@ -824,12 +824,12 @@ class GalleryController extends Controller
 
     private function getGroupRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+        return $this->getEntityManager()->getRepository('GroupBundle:Group');
     }
 
     private function getGroupImageRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupImage');
+        return $this->getEntityManager()->getRepository('GroupBundle:GroupImage');
     }
 
     private function getContestRepository()

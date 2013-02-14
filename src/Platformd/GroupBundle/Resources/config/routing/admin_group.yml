@@ -1,0 +1,54 @@
+admin_group_filter:
+    pattern: /metrics/find-groups
+    defaults: { _controller: "GroupBundle:GroupAdmin:filter" }
+    requirements: { _method: POST }
+
+admin_group_filter_reset:
+    pattern: /metrics/find-groups/reset
+    defaults: { _controller: "GroupBundle:GroupAdmin:filterReset" }
+    requirements: { _method: GET }
+
+admin_group_find:
+    pattern: /metrics/find-groups
+    defaults: { _controller: "GroupBundle:GroupAdmin:find" }
+    requirements: { _method: GET }
+
+admin_group_show:
+    pattern: /{id}
+    defaults: { _controller: "GroupBundle:GroupAdmin:show" }
+
+admin_group_summary:
+    pattern: /metrics/group-summary
+    defaults: { _controller: "GroupBundle:GroupAdmin:summary" }
+
+admin_group_export:
+    pattern: /{groupId}/metrics/group-export/{type}
+    defaults: { _controller: "GroupBundle:GroupAdmin:generateExportCsv" }
+
+admin_group_content_report:
+    pattern: /metrics/group-content-report/{id}
+    defaults: { _controller: "GroupBundle:GroupAdmin:contentReport" }
+
+admin_group_details:
+    pattern: /metrics/group/{id}/details
+    defaults: { _controller: "GroupBundle:GroupAdmin:details" }
+
+admin_group_discussion_find:
+    pattern: /metrics/find-discussions
+    defaults: { _controller: "GroupBundle:GroupAdmin:findDiscussion" }
+
+admin_group_discussion_summary:
+   pattern: /metrics/group-discussion-summary
+   defaults: { _controller: "GroupBundle:GroupAdmin:discussionSummary" }
+
+admin_group_discussion_summary_export:
+    pattern: /{id}/metrics/group-discussions-summary-export
+    defaults: { _controller: "GroupBundle:GroupAdmin:generateGroupDiscussionCsv" }
+
+admin_group_discussion_details_export:
+    pattern: /{id}/metrics/group-discussions-details-export
+    defaults: { _controller: "GroupBundle:GroupAdmin:generateGroupDiscussionDetailsCsv" }
+
+admin_group_discussion_replies_export:
+    pattern: /{id}/metrics/group-discussions-replies-export
+    defaults: { _controller: "GroupBundle:GroupAdmin:generateGroupDiscussionRepliesCsv" }

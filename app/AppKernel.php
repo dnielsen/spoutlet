@@ -43,6 +43,7 @@ class AppKernel extends Kernel
             new Platformd\UserBundle\UserBundle(),
             new Platformd\CommentBundle\CommentBundle(),
             new Platformd\GiveawayBundle\GiveawayBundle(),
+            new Platformd\GroupBundle\GroupBundle(),
             new Platformd\NewsBundle\NewsBundle(),
             new Platformd\CEVOBundle\CEVOBundle(),
             new Platformd\SweepstakesBundle\SweepstakesBundle(),

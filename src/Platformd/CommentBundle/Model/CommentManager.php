@@ -120,7 +120,7 @@ class CommentManager extends BaseCommentManager
 
             $groupId = $pieces[1];
             $group = $this->em
-                ->getRepository('SpoutletBundle:Group')
+                ->getRepository('GroupBundle:Group')
                 ->find($groupId)
             ;
 
@@ -136,7 +136,7 @@ class CommentManager extends BaseCommentManager
 
             $newsArticleId = $pieces[1];
             $newsArticle = $this->em
-                ->getRepository('SpoutletBundle:GroupNews')
+                ->getRepository('GroupBundle:GroupNews')
                 ->find($newsArticleId)
             ;
 
@@ -152,7 +152,7 @@ class CommentManager extends BaseCommentManager
 
             $videoArticleId = $pieces[1];
             $video = $this->em
-                ->getRepository('SpoutletBundle:GroupVideo')
+                ->getRepository('GroupBundle:GroupVideo')
                 ->find($videoArticleId)
             ;
 

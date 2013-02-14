@@ -301,7 +301,7 @@ class User extends BaseUser
     private $cevoUserId;
 
      /**
-    * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
+    * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
     * @ORM\JoinColumn(onDelete="SET NULL")
     */
     private $groupMembershipActions;

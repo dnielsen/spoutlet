@@ -21,9 +21,9 @@ use Platformd\GameBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\SpoutletBundle\Entity\Gallery;
 use Platformd\GiveawayBundle\Entity\Deal;
-use Platformd\SpoutletBundle\Entity\Group;
-use Platformd\SpoutletBundle\Entity\GroupApplication;
-use Platformd\SpoutletBundle\Entity\GroupNews;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupApplication;
+use Platformd\GroupBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\Comment;
 use Platformd\SpoutletBundle\Entity\Thread;
 
@@ -107,7 +107,7 @@ class AbstractFeatureContext extends MinkContext
 
         $em         = $this->getEntityManager();
         $um         = $this->getUserManager();
-        $groupRepo  = $em->getRepository('SpoutletBundle:Group');
+        $groupRepo  = $em->getRepository('GroupBundle:Group');
 
         foreach ($table->getHash() as $data) {
 
@@ -1155,7 +1155,7 @@ class AbstractFeatureContext extends MinkContext
         foreach ($table->getHash() as $data) {
 
             if (isset($data['name'])) {
-                if ($group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $data['name']))) {
+                if ($group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $data['name']))) {
                     $em->remove($group);
                     $em->flush();
                 }
@@ -1202,7 +1202,7 @@ class AbstractFeatureContext extends MinkContext
     public function theGroupHasOutstandingApplication($groupName, $username)
     {
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group) {
 
@@ -1240,7 +1240,7 @@ class AbstractFeatureContext extends MinkContext
     public function iAddForGroup($mediaType, $groupName)
     {
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group) {
             switch ($mediaType) {
@@ -1274,11 +1274,11 @@ class AbstractFeatureContext extends MinkContext
     public function iProcessAnApplicationTo($action, $groupName)
     {
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group){
 
-            $applications = $em->getRepository('SpoutletBundle:GroupApplication')->findBy(array('group' => $group->getId()));
+            $applications = $em->getRepository('GroupBundle:GroupApplication')->findBy(array('group' => $group->getId()));
 
             if ($applications) {
                 $application = $applications[0];
@@ -1303,7 +1303,7 @@ class AbstractFeatureContext extends MinkContext
         $route = "group_".$pageType;
 
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group){
 
@@ -1325,7 +1325,7 @@ class AbstractFeatureContext extends MinkContext
         $route = "group_".$pageType;
 
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group){
 
@@ -1345,7 +1345,7 @@ class AbstractFeatureContext extends MinkContext
     public function hasTheFollowingMembers($groupName, TableNode $table)
     {
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group) {
 
@@ -1391,7 +1391,7 @@ class AbstractFeatureContext extends MinkContext
     public function hasTheFollowingComments($groupName, TableNode $table)
     {
         $em = $this->getEntityManager();
-        $group = $em->getRepository('SpoutletBundle:Group')->findOneBy(array('name' => $groupName));
+        $group = $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $groupName));
 
         if ($group) {
             $thread     = $em->getRepository('SpoutletBundle:Thread')->find($group->getThreadId());

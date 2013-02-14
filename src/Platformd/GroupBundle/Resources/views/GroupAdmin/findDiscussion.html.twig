@@ -1,0 +1,90 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Find Discussions' %}
+
+{% block content %}
+<h1>Find Discussions</h1>
+<div style="width: 750px;">
+    <form action="{{ path('admin_group_discussion_find') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'GroupBundle:GroupAdmin:_findDiscussionForm.html.twig' %}
+        <div style="margin-left: 160px">
+            <button type="submit" class="btn btn-primary" formnovalidate>Search</button>
+            <a href="{{ path('admin_group_discussion_find') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+        </div>
+    </form>
+    <div>
+        <p>Search Results: {{ pager.nbResults }} <span style="margin-left: 20px;"><a href="{{ path('admin_group_discussion_summary') }}">Export</a></span></p>
+
+        {% if pager.haveToPaginate %}
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_group_discussion_find'}) }}
+        {% endif %}
+
+        <table class="table table-striped table-bordered tablesorter">
+            <thead>
+                <tr>
+                    <th>Discussion Name</th>
+                    <th>Group</th>
+                    <th>Region</th>
+                    <th>Created</th>
+                    <th>Status</th>
+                    <th>Author</th>
+                    <th>Replies</th>
+                    <th>Views</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for groupDiscussion in pager.currentPageResults %}
+                    {% set region = '' %}
+                    {% if (groupDiscussion.group.allLocales == true) %}
+                        {% set region = 'All Sites' %}
+                    {% else %}
+                        {% for site in groupDiscussion.group.sites %}
+                            {% set region = region ~ '[' ~ site.name ~ ']' %}
+                        {% endfor %}
+                    {% endif %}
+                    {% set status = (groupDiscussion.deleted == false ) ? 'Active' : 'Inactive' %}
+                    <tr>
+                        <td>{{ groupDiscussion.title }}</td>
+                        <td>{{ groupDiscussion.group.name }}</td>
+                        <td>{{ region }}</td>
+                        <td>{{ groupDiscussion.createdAt | date('m/d/Y') }}</td>
+                        <td>{{ status }}</td>
+                        <td>{{ groupDiscussion.author }}</td>
+                        <td>{{ groupDiscussion.replyCount }}</td>
+                        <td>{{ groupDiscussion.viewCount }}</td>
+                        <td>
+                            {#{% if (groupDiscussion.deleted == false ) %}#}
+                                {#<a href="{{ path('group_view_discussion', {'id': groupDiscussion.group.id, 'discussionId': groupDiscussion.id }) }}">View</a> /#}
+                            {#{% endif %}#}
+                            {#<a href="{{ path('group_edit_discussion', {'id': groupDiscussion.group.id, 'discussionId': groupDiscussion.id }) }}">Edit</a> /#}
+                            {#{% if form.from.get('value') != null and form.thru.get('value') != null %}#}
+                                {#<a href="{{ path('admin_group_discussion_details_export', {'id': groupDiscussion.id, 'from': form.from.get('value')|date('m/d/Y'), 'thru': form.thru.get('value')|date('m/d/Y') }) }}">Download metrics</a>#}
+                            {#{% else %}#}
+                                {#<a href="{{ path('admin_group_discussion_details_export', {'id': groupDiscussion.id }) }}">Download metrics</a>#}
+                            {#{% endif %}#}
+                            <a href="{{ path('admin_group_discussion_replies_export', {'id': groupDiscussion.id }) }}">Download replies</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="14">
+                            No discussion found.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pager.haveToPaginate %}
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_group_discussion_find'}) }}
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
