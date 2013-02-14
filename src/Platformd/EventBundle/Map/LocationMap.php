@@ -23,5 +23,7 @@ class LocationMap extends Map
         $this->setContainerId('map_canvas');
         $this->setWidth(290);
         $this->setHeight(250);
+        $this->setShowMapTypeControl(true);
+        $this->setShowZoomControl(true);
     }
 }
