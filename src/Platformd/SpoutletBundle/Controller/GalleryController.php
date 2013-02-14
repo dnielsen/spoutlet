@@ -791,7 +791,7 @@ class GalleryController extends Controller
             $counter = 0;
             $liip = $this->get('liip_imagine.templating.helper');
             foreach($media as $mediaItem) {
-                $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumb', true);
+                $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                 $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
                 $counter++;
             }
