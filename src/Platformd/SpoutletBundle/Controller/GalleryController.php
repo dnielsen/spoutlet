@@ -791,7 +791,7 @@ class GalleryController extends Controller
             $counter = 0;
             foreach($media as $mediaItem) {
                 $s3 = $this->get('platformd.media.imagine.cache.resolver.amazon_s3');
-                $featuredMedia[$counter]['thumbnail']   = $s3->getBrowserPath($mediaItem->getImage()->getFilename(), 'image_thumb', true);
+                $featuredMedia[$counter]['thumbnail']   = $s3->getBrowserPath($mediaItem->getImage()->getFilename(), 'media_feed_thumb', true);
                 $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
                 $counter++;
             }
