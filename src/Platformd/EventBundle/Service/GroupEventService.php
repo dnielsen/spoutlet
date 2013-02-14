@@ -9,7 +9,8 @@ use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\SpoutletBundle\Entity\Group,
-    Platformd\UserBundle\Entity\User
+    Platformd\UserBundle\Entity\User,
+    Platformd\SpoutletBundle\Entity\Site
 ;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,6 +71,16 @@ class GroupEventService extends EventService
     public function findPastEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
+    }
+
+    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
+    {
+        return $this->repository->findUpcomingEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
+    }
+
+    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
+    {
+        return $this->repository->findPastEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
     }
 
     /**

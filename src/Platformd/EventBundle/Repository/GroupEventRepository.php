@@ -5,6 +5,12 @@ namespace Platformd\EventBundle\Repository;
 use Platformd\SpoutletBundle\Entity\Group;
 use Platformd\EventBundle\Repository\EventRepository;
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\Site;
+use DateTime;
+
+use Pagerfanta\Pagerfanta,
+    Pagerfanta\Adapter\DoctrineORMAdapter
+;
 
 class GroupEventRepository extends EventRepository
 {
@@ -61,6 +67,78 @@ class GroupEventRepository extends EventRepository
             ->setParameter('group', $group)
             ->orderBy('e.createdAt', 'DESC')
         ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all upcoming events, ability to paginate
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Site $site
+     * @param int $maxPerPage
+     * @param int $currentPage
+     * @param $pager
+     * @param bool $published
+     * @return array
+     */
+    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e', 's')
+            ->leftJoin('e.sites', 's')
+            ->leftJoin('e.group', 'g')
+            ->where('e.endsAt >= :now')
+            ->andWhere('e.published = :published')
+            ->andWhere('s = :site')
+            ->orderBy('e.createdAt', 'DESC')
+            ->setParameter('now', new DateTime())
+            ->setParameter('published', $published)
+            ->setParameter('site', $site)
+        ;
+
+        if ($maxPerPage) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage($maxPerPage)->setCurrentPage($currentPage);
+
+            return $pager->getCurrentPageResults();
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all past events, ability to paginate
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Site $site
+     * @param int $maxPerPage
+     * @param int $currentPage
+     * @param $pager
+     * @param bool $published
+     * @return array
+     */
+    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e', 's')
+            ->leftJoin('e.sites', 's')
+            ->leftJoin('e.group', 'g')
+            ->where('e.endsAt < :now')
+            ->andWhere('e.published = :published')
+            ->andWhere('s = :site')
+            ->orderBy('e.createdAt', 'DESC')
+            ->setParameter('now', new DateTime())
+            ->setParameter('published', $published)
+            ->setParameter('site', $site)
+        ;
+
+        if ($maxPerPage) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage($maxPerPage)->setCurrentPage($currentPage);
+
+            return $pager->getCurrentPageResults();
+        }
 
         return $qb->getQuery()->getResult();
     }

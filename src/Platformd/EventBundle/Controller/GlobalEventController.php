@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\Request,
 
 class GlobalEventController extends Controller
 {
+    private $globalEventService;
+
+
     /**
      * Lists all events, upcoming and past
      *
@@ -24,12 +27,22 @@ class GlobalEventController extends Controller
      */
     public function indexAction()
     {
-        $upcomingEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($this->getCurrentSite());
-        $pastEvents = $this->getGlobalEventService()->findPastEventsForSite($this->getCurrentSite());
+        $site = $this->getCurrentSite();
+
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
+        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
+        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site);
+
+        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
+
+        uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
-            'pastEvents' => $pastEvents
+            'pastEvents'     => $pastEvents,
         ));
     }
 
@@ -394,11 +407,33 @@ Alienware Arena Team';
         )));
     }
 
+    private function eventCompare($a, $b) {
+
+        if ($a->getStartsAt() == $b->getStartsAt()) {
+            return 0;
+        }
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+
+    }
+
     /**
      * @return GlobalEventService
      */
     private function getGlobalEventService()
     {
         return $this->get('platformd_event.service.global_event');
+    }
+
+    /**
+     * @return GroupEventService
+     */
+    private function getGroupEventService()
+    {
+        return $this->get('platformd_event.service.group_event');
+    }
+
+    private function getGamePageManager()
+    {
+        return $this->get('platformd.model.game_page_manager');
     }
 }
