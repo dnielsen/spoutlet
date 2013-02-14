@@ -67,16 +67,16 @@ class ContentReportingController extends Controller
             return $response;
         }
 
-        $typeBundle         = $contentReportRepo->$
+        $typeBundle         = $contentReportRepo->getBundleFromType($type);
 
-        $fullClassName      = 'Platformd\\SpoutletBundle\\Entity\\'.$type;
+        $fullClassName      = 'Platformd\\'.$typeBundle.'\\Entity\\'.$type;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';
 
         if (!class_exists($fullClassName) || !in_array($fullInterfaceName, class_implements($fullClassName))) {
             return new Response(json_encode(array("success" => false, "messageForUser" => "Valid content type not given.")));
         }
 
-        $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('SpoutletBundle:%s', $type))->find($id);
+        $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('%s:%s', $typeBundle, $type))->find($id);
 
         if (!$content) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Could not find the content that you are reporting (perhaps it has been removed already).")));
@@ -102,7 +102,7 @@ class ContentReportingController extends Controller
 
         $em->persist($report);
 
-        $reportedItem = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+        $reportedItem = $em->getRepository($typeBundle.':'.$type)->find($id);
         $reportedItem->setDeleted(true);
         $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
 
@@ -126,7 +126,11 @@ class ContentReportingController extends Controller
     private function sendUserReportedNotificationEmail($id, $type, $reason)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $typeBundle = $contentReportRepo->getBundleFromType($type);
+
+        $item = $em->getRepository($typeBundle.':'.$type)->find($id);
 
         switch ($type) {
             case 'GalleryMedia':

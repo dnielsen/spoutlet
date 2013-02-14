@@ -365,7 +365,9 @@ class ContentReportAdminController extends Controller
     private function sendUserRestoredNotificationEmail($id, $type)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $item = $em->getRepository('SpoutletBundle:'.$type)->find($id);
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $typeBundle = $contentReportRepo->getBundleFromType($type);
+        $item = $em->getRepository($typeBundle.':'.$type)->find($id);
 
         switch ($type) {
             case 'GalleryMedia':
