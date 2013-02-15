@@ -40,12 +40,17 @@ class GlobalEventController extends Controller
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
 
-        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+        $groupsCount = 0;
+
+        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+            $groupsCount = count($groups);
+        }
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
-            'groupsCount'   => count($groups),
+            'groupsCount'   => $groupsCount,
         ));
     }
 
@@ -66,12 +71,17 @@ class GlobalEventController extends Controller
         $events = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         uasort($events, array($this, 'eventCompare'));
 
-        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+        $groupsCount = 0;
+
+        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+            $groupsCount = count($groups);
+        }
 
         return $this->render('EventBundle:GlobalEvent:currentList.html.twig', array(
             'events' => $events,
             'pager' => $pager,
-            'groupsCount' => count($groups),
+            'groupsCount' => $groupsCount,
         ));
     }
 
@@ -86,12 +96,18 @@ class GlobalEventController extends Controller
         $page = $request->query->get('page', 1);
 
         $events = $this->getGlobalEventService()->findPastEventsForSite($this->getCurrentSite(), 20, $page, $pager);
-        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+
+        $groupsCount = 0;
+
+        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+            $groupsCount = count($groups);
+        }
 
         return $this->render('EventBundle:GlobalEvent:pastList.html.twig', array(
             'events' => $events,
             'pager' => $pager,
-            'groupsCount' => count($groups),
+            'groupsCount' => $groupsCount,
         ));
     }
 
