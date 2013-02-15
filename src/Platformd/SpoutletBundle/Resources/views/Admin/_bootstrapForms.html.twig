@@ -83,7 +83,7 @@
         <table>
             <tr>
             {% for child in form %}
-                <td>
+                <td style="vertical-align:top;">
                     <label class="radio">
                         {{ form_widget(child) }}
                         {{ child.get('label') | trans }}
