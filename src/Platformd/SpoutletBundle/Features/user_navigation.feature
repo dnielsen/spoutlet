@@ -16,7 +16,7 @@ Feature: User Navigation
       | アカウントホーム          | http://alienwarearena.com/account/                    |                                                                           |                       |
       | パスワード変更          | http://alienwarearena.com/account/password/            |                                                                           |                      |
       | プロファイル             | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/japan/member/55                            | yes                  |
-      | 参加済みイベント         | http://www.alienwarearena.com/japan/account/events/   |                                                                           |                       |
+      | 参加済みイベント      | http://www.alienwarearena.com/japan/account/events/   |                                                                           |                       |
       | 参加済みキャンペーン      | /app_test.php/account/profile/giveaways                | http://japan.alienwarearena.local/app_test.php/account/profile/giveaways |                       |
       | トーナメント >> ゲームID   | http://www.alienwarearena.com/japan/account/ids/      |                                                                           |                       |
       | ログアウト               | /app_test.php/logout                                  | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/japan/cmd/account/logout?return=http%3A%2F%2Fjapan.alienwarearena.local%2Fapp_test.php%2F | |
@@ -45,7 +45,8 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/               |                                                                    |
       | Profile                       | http://www.alienwarearena.com/member/55/                  |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                  |                                                                    |
-      | My Events                     | http://www.alienwarearena.com/account/events/             |                                                                    |
+      | Events >> iGames My Events    | /app_test.php/account/profile/events                      | http://na.alienwarearena.local/app_test.php/account/profile/events |
+      | Events >> CEVO My Events      | http://www.alienwarearena.com/account/events/             |                                                                    |
       | My Giveaways                  | http://www.alienwarearena.com/account/my-giveaway-keys/   |                                                                    |
       | My Deals                      | /app_test.php/account/profile/deals                       | http://na.alienwarearena.local/app_test.php/account/profile/deals  |
       | My Groups                     | /app_test.php/account/profile/groups                      | http://na.alienwarearena.local/app_test.php/account/profile/groups |
@@ -63,6 +64,7 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/                     |                                                                    |
       | Profile                       | http://www.alienwarearena.com/europe/member/55/                 |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |                                                                    |
+      | My Events                     | /app_test.php/account/profile/events                            | http://eu.alienwarearena.local/app_test.php/account/profile/events |
       | My Giveaways                  | http://www.alienwarearena.com/europe/account/my-giveaway-keys/  |                                                                    |
       | My Deals                      | /app_test.php/account/profile/deals                             | http://eu.alienwarearena.local/app_test.php/account/profile/deals  |
       | My Groups                     | /app_test.php/account/profile/groups                            | http://eu.alienwarearena.local/app_test.php/account/profile/groups |

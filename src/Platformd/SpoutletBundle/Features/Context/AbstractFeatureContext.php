@@ -100,6 +100,20 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I select the "([^"]*)" radio button$/
+     */
+    public function iSelectTheRadioButton($label) {
+      $radio_button = $this->getSession()->getPage()->findField($label);
+      if (null === $radio_button) {
+        throw new ElementNotFoundException(
+          $this->getSession(), 'form field', 'id|name|label|value', $field
+        );
+      }
+      $value = $radio_button->getAttribute('value');
+      $this->fillField($label, $value);
+    }
+
+    /**
      * @Given /^I have the following group news articles:$/
      */
     public function iHaveTheFollowingGroupNewsArticles(TableNode $table)

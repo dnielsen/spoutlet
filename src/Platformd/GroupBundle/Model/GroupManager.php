@@ -2,7 +2,7 @@
 
 namespace Platformd\GroupBundle\Model;
 
-use Platformd\SpoutletBundle\GroupEvents;
+use Platformd\GroupBundle\GroupEvents;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\GroupBundle\Entity\GroupNews;
@@ -13,7 +13,7 @@ use Platformd\GroupBundle\Entity\GroupDiscussionPost;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupDiscussionEvent;
 use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
-use Platformd\SpoutletBundle\Event\GroupEvent;
+use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\CEVOBundle\Api\ApiManager;

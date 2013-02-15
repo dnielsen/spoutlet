@@ -31,6 +31,7 @@
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
+                {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
                 {% if site_has_feature('EVENTS') %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.events' | trans }}</a>

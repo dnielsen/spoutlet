@@ -584,7 +584,12 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserEventLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.user.account.my_events').'</a>';
+
+        if ($this->siteHasFeature('EVENTS')) {
+            $format         = '<a href="http://www.alienwarearena.com%s/account/events/"><span style="color: #ff5711;padding-right: 2px;">CEVO</span> '.$this->trans('platformd.user.account.my_events').'</a>';
+        } else {
+            $format         = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.user.account.my_events').'</a>';
+        }
 
         switch($locale) {
             case 'ja':      return sprintf($format, '/japan');
@@ -667,7 +672,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetEventsLink($locale) {
 
         if ($this->siteHasFeature('EVENTS')) {
-            $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">CEVO</span>'.$this->trans('platformd.layout.main_menu.events').'</a>';
+            $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">CEVO</span> '.$this->trans('platformd.layout.main_menu.events').'</a>';
         } else {
             $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
         }

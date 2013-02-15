@@ -11,8 +11,11 @@ Feature: Event Admin
         Given I am on "/admin"
         When I click to add new "Events"
             And I fill in the following:
-                | Name  | My Events |
+                | Name          | Test Event        |
+                | Description   | Description       |
+                | Starts At     | 2013-02-13 00:00  |
+                | Ends At       | 2050-02-13 00:00  |
             And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
             And I press "Save"
-        Then I should see "Event has been saved"
+        Then I should see "New event posted successfully!"

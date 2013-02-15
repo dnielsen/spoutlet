@@ -13,11 +13,11 @@ group_event_disable:
         _method: POST
 
 group_event_cancel:
-    pattern: /group-event/{eventId}/cancel
+    pattern: /group-events/{eventId}/cancel
     defaults: { _controller:"EventBundle:GroupEvent:cancel", site: ~ }
 
 group_event_activate:
-    pattern: /group-event/{eventId}/activate
+    pattern: /group-events/{eventId}/activate
     defaults: { _controller:"EventBundle:GroupEvent:activate", site: ~ }
 
 group_event_new:
