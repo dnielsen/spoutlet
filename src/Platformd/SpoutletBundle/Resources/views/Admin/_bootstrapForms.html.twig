@@ -72,13 +72,26 @@
 {# the first part is overriden to give us checkboxes that look schweet in bootstrap#}
 {% block choice_widget %}
 {% spaceless %}
-    {% if expanded %}
+    {% if expanded and multiple %}
         {% for child in form %}
             <label class="checkbox">
                 {{ form_widget(child) }}
                 {{ child.get('label') | trans }}
             </label>
         {% endfor %}
+    {% elseif expanded and not multiple %}
+        <table>
+            <tr>
+            {% for child in form %}
+                <td>
+                    <label class="radio">
+                        {{ form_widget(child) }}
+                        {{ child.get('label') | trans }}
+                    </label>
+                </td>
+            {% endfor %}
+            </tr>
+        </table>
     {% else %}
         {# this side is untouched #}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
