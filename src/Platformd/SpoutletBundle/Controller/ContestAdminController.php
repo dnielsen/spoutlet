@@ -114,7 +114,7 @@ class ContestAdminController extends Controller
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
         $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
-        $memberActionRepo   = $em->getRepository('SpoutletBundle:GroupMembershipAction');
+        $memberActionRepo   = $em->getRepository('GroupBundle:GroupMembershipAction');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
 
 

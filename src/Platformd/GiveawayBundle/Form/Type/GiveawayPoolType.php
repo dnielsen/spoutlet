@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 
 /**
-* 
+*
 */
 class GiveawayPoolType extends AbstractType
 {
@@ -30,7 +30,7 @@ class GiveawayPoolType extends AbstractType
      */
     public function getName()
     {
-        
+
         return 'giveway_pool';
     }
 }

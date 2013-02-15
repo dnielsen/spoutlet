@@ -1,0 +1,418 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'Groups - ' ~ group.name %}
+
+{% set openGraphThumb               = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
+{% set site                         = get_current_site() %}
+{% set isAllowedToViewGroupContent  = group.isAllowedTo(app.user, site, "ViewGroupContent") %}
+{% set isAllowedToViewGroup         = group.isAllowedTo(app.user, site, "ViewGroup") %}
+{% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ 'groups.opengraph.title' | trans }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="{{ openGraphThumb }}" />
+    <meta property="og:description" content="{{ 'groups.opengraph.description' | trans }}" />
+{% endblock %}
+
+{# either set the custom background image, or leave it to false #}
+{% if group.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block content %}
+<div class="std_1col" style="padding: 0;">
+    <div id="group-avatar">
+        {% if group.groupAvatar %}
+            <img src="{{ media_path(group.groupAvatar) }}" />
+        {% else %}
+            <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+        {% endif %}
+    </div>
+</div>
+<div class="std_1col" style="padding: 0;">
+    <div class="groups-sub-nav-wrapper">
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
+    </div>
+</div>
+<div class="std_2col">
+    <div class="right">
+        {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
+        <div class="join-group-options">
+            <form action="{{ path('group_join', { 'id': group.id }) }}">
+                <button id="join-group-button" type="submit"></button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
+        <div class="join-group-options">
+            <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+        </div>
+        {% endif %}
+
+        {% if group.isApplicant(app.user) %}
+            <p class="alert alert-info help">
+                <i class="icon-info-sign"></i>
+                Waiting on Approval
+            </p>
+        {% endif %}
+        <div class="widget-33" style="height: auto; margin-bottom: 10px;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ group.name }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <table class="group-details-table">
+                    <tr>
+                        <td>Founded</td>
+                        <td>{{ group.createdAt|date('M j, Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Organizer</td>
+                        <td><a href="javascript:void(0);">{{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Members</td>
+                        <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ group.members.count }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Comments</td>
+                        <td><span class="comment-count">{{ commentTotal }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Group</td>
+                        <td>{{ group.isPublic ? "Public" : "Private" }}</td>
+                    </tr>
+                    {% if isEntered %}
+                    <tr>
+                        <td>New Members Acquired</td>
+                        <td>{{ contestCount }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                {% if isEntered %}
+                    <div style="width:290px;">
+                        <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                            <em>{{ 'contests.group_part_of_contest' | trans }}<br /><br />
+                                <a href="{{ path('contest_show', { 'slug' : contest.slug }) }}" target="_blank">{{ contest.name }}</a>
+                            </em>
+                        </p>
+                    </div>
+                {% endif %}
+                <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
+                <div id="group-like-wrapper">
+                    <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
+                </div>
+
+                <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
+                <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">Report this Group</a></div>
+                {% if group.location and group.category == 'location' %}
+                <div id="group-location-address" class="location-info">
+                    <div>LOCATION:</div>
+                    <div id="metro-area">
+                        {{ group.location.metroArea }}
+                    </div>
+                    <div id="street-address1">
+                        {{ group.location.address1 }}
+                    </div>
+                    <div id="street-address2">
+                        {{ group.location.address2 }}
+                    </div>
+                    <div id="city">
+                        {{ group.location.city }}
+                    </div>
+                    <div id="state">
+                        {{ group.location.stateProvince }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if upcomingEvents | length > 0 or pastEvents | length > 0 %}
+            <div class="widget-33" style="height: auto; margin-bottom: 10px;">
+                <div class="widget-header">
+                    <div class="widget-title">Group Events</div>
+                </div>
+                <div class="widget-content" style="padding:10px 0 10px 0;">
+                    {% if upcomingEvents | length > 0 %}
+                        <h4>Upcoming Events</h4>
+                        <div class="group-upcoming-events">
+                            {% for event in upcomingEvents %}
+                                <div><a class="group-event-list-link" href="javascript:void(0)">{{ event.name }}</a></div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if upcomingEvents | length > 0 and pastEvents | length > 0 %}
+                        <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
+                    {% endif %}
+                    {% if pastEvents | length > 0 %}
+                        <h4>Past Events</h4>
+                        <div class="group-past-events">
+                            {% for event in pastEvents %}
+                                <div><a class="group-event-list-link" href="javascript:void(0)">{{ event.name }}</a></div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if group.location and group.category == 'location' %}
+            <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
+            <div id="google-map-location"></div>
+        {% endif %}
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+    </div>
+    <div class="left">
+        <div class="widget-66" id="featured-content">
+            <div class="featured-content-header">
+                {% if isAllowedToViewGroupContent %}
+                    <a href="javascript:void(0);" id="group-news" class="active">News</a>
+                    <a href="javascript:void(0);" id="group-images">Images</a>
+                    <a href="javascript:void(0);" id="group-videos">Videos</a>
+                    <a href="javascript:void(0);" id="group-events">Events</a>
+                    <a href="javascript:void(0);" id="group-events-past" style="display:none;">Past Events</a>
+                    {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
+                        <a href="javascript:void(0);" id="group-discussions">Discussions</a>
+                    {% endif %}
+                    <a href="javascript:void(0);" id="group-about">About</a>
+                {% elseif isAllowedToViewGroup %}
+                    <a href="javascript:void(0);" id="group-about" class="active">About</a>
+                {% endif %}
+                <div style="clear: left;"></div>
+            </div>
+            <div class="widget-content" id="group-widget-content" style="min-height: 560px;background: #191919;overflow: hidden;">
+                {% if isAllowedToViewGroupContent %}
+                    <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-events" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-discussions" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                {% elseif isAllowedToViewGroup %}
+                    <div id="content-group-about" class="featured-content-category active" style="height: 550px;background: #191919;">
+                        {% include 'GroupBundle:Group:about.html.twig' %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if site_has_feature('COMMENTS') %}
+            {% if isAllowedToViewGroupContent %}
+                <div id="group-comments">
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : group.threadId, 'object' : group } %}
+                </div>
+            {% else %}
+                <div id="group-comments">
+                    <p>You must be a member of a private group before you can see or post comments.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    {% include 'GroupBundle:Group:_reportGroupPopup.html.twig' %}
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/jquery.mCustomScrollbar.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.expander.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.awa.pagerUi.js"></script>
+
+    {% if group.location and group.category == 'location' %}
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                $('#google-map-location').groupsmap({
+                    address : $('#location-value').val()
+                });
+            });
+        </script>
+    {% endif %}
+    <script type="text/javascript">
+        $(function () {
+            $('a.group-event-list-link').truncate({ width: 250 });
+            $('a.group-event-list-link').click(function () {
+                $('a#group-events').trigger('click');
+            });
+
+            $('#group-invite').click(function () {
+                FB.ui({
+                    method: 'send',
+                    name: "You are invited to the {{ group.name | raw }}!",
+                    link: '{{ path('group_show', { 'slug': group.slug })  | absolute_url }}',
+                    description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
+                    image: '{{ openGraphThumb }}'
+                });
+            });
+
+            var hash = window.location.hash.replace('#','');
+
+            var tab = 'group-' + hash;
+
+            var loadVideoContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
+                    $("#scrollable-videos").scrollable();
+                    $('.youtube-link').truncate();
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadNewsContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+                content.load('{{ path('group_news', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadImageContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $("#scrollable-images").scrollable();
+                    $('.group-image-title').truncate();
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadDiscussionContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_discussions', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadAboutContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_about', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $('.featured-content-category#content-group-news').resize();
+                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadEventContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_events', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $('.featured-content-category#content-group-news').resize();
+                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadPastEventContent = function(id) {
+                var content = $('.featured-content-category#content-group-news');
+
+                content.load('{{ path('group_past_events', { 'id' : group.id }) }}', function(response, status, xhr) {
+                    $('.featured-content-category#content-group-news').resize();
+                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+                    $('#group-widget-content').unblock();
+                });
+            }
+
+            var loadContent = function(tab) {
+                if(tab == 'group-' || tab.indexOf('comment') > 0) {
+                    loadNewsContent('group-news');
+                } else {
+                    $('#' + tab).click();
+                }
+
+                window.setTimeout(function() {
+                    $('.xnotices').fadeOut();
+                }, 10000);
+            }
+
+            var killVideoContent = function() {
+                $('#content-group-news').html('');
+            }
+
+            $(".featured-content-header a").click(function() {
+                $('#group-widget-content').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+
+                });
+
+                killVideoContent();
+
+                var current = $('.featured-content-header a.active').attr('id');
+                var id = $(this).attr('id');
+
+                window.location.hash = id.replace('group-', '');
+
+                $('.featured-content-header a.active').removeClass('active');
+                $(this).addClass('active');
+                $('.featured-content-category#content-group-news').fadeOut('fast', function () {
+                    $('.report-wrapper').remove();
+
+                    var content = $('.featured-content-category#content-group-news');
+
+                    switch(id) {
+                        case 'group-videos':
+                            loadVideoContent(id);
+                            break;
+                        case 'group-news':
+                            loadNewsContent(id);
+                            break;
+                        case 'group-images':
+                            loadImageContent(id);
+                            break;
+                        case 'group-discussions':
+                            loadDiscussionContent(id);
+                            break;
+                        case 'group-about':
+                            loadAboutContent(id);
+                            break;
+                        case 'group-events':
+                            loadEventContent(id);
+                            break;
+                        case 'group-events-past':
+                            $('.featured-content-header a.active').removeClass('active');
+                            $('a#group-events').addClass('active');
+                            loadPastEventContent(id);
+                            break;
+                    }
+
+                    //$(this).delay(500);
+                    content.fadeIn();
+                });
+            });
+            $('#content-group-about').mCustomScrollbar();
+            loadContent(tab);
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+<h1>Create Group</h1>
+<form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'GroupBundle:Group:_form.html.twig' %}
+
+    <div class="form-actions" style="float: left;">
+        <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+        <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+{% block stylesheets %}
+ {{ parent() }}
+ <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('#platformd_spoutletbundle_grouptype_category').change(function () {
+                var groupType = $(this).val();
+                if(groupType == 'topic') {
+                    $('#group-location-controls').fadeOut();
+                } else {
+                    $('#group-location-controls').fadeIn();
+                }
+            });
+
+            var groupType = $('#platformd_spoutletbundle_grouptype_category').val();
+            if(groupType == 'topic') {
+                $('#group-location-controls').fadeOut();
+            }
+        });
+    </script>
+{% endblock %}

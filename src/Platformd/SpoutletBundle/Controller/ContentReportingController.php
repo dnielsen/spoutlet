@@ -5,11 +5,11 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\ContentReportEvents;
 use Platformd\SpoutletBundle\Event\ContentReportEvent;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
-use Platformd\SpoutletBundle\Entity\Group;
-use Platformd\SpoutletBundle\Entity\GroupNews;
-use Platformd\SpoutletBundle\Entity\GroupVideo;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupNews;
+use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Entity\ContentReport;
-use Platformd\SpoutletBundle\Form\Type\GroupType;
+use Platformd\GroupBundle\Form\Type\GroupType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,16 +67,16 @@ class ContentReportingController extends Controller
             return $response;
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $typeBundle         = $contentReportRepo->getBundleFromType($type);
 
-        $fullClassName = $em->getClassMetadata(ContentReport::getTypeClass($type))->getName();;
+        $fullClassName      = 'Platformd\\'.$typeBundle.'\\Entity\\'.$type;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';
 
         if (!class_exists($fullClassName) || !in_array($fullInterfaceName, class_implements($fullClassName))) {
             return new Response(json_encode(array("success" => false, "messageForUser" => "Valid content type not given.")));
         }
 
-        $content = $this->getDoctrine()->getEntityManager()->getRepository($fullClassName)->find($id);
+        $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('%s:%s', $typeBundle, $type))->find($id);
 
         if (!$content) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Could not find the content that you are reporting (perhaps it has been removed already).")));
@@ -98,31 +98,39 @@ class ContentReportingController extends Controller
 
         $report->$setType($content);
 
+        $em = $this->getDoctrine()->getEntityManager();
+
         $em->persist($report);
 
-        $content->setDeleted(true);
-        $content->setDeletedReason(ContentReport::DELETED_BY_REPORT);
+        $reportedItem = $em->getRepository($typeBundle.':'.$type)->find($id);
+        $reportedItem->setDeleted(true);
+        $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
 
-        $em->persist($content);
+        $em->persist($reportedItem);
 
         $em->flush();
 
         /* Disabled at present as causing issues with reporting.
         // We dispatch an event for further stuff like maintaining counts
         $eventName = ContentReportEvents::REPORT;
-        $event = new ContentReportEvent($content, $this->getUser());
+        $event = new ContentReportEvent($reportedItem, $this->getUser());
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         */
 
-        $this->sendUserReportedNotificationEmail($content, $type, $reason);
+        $this->sendUserReportedNotificationEmail($id, $type, $reason);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
     }
 
-    private function sendUserReportedNotificationEmail($item, $type, $reason)
+    private function sendUserReportedNotificationEmail($id, $type, $reason)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $typeBundle = $contentReportRepo->getBundleFromType($type);
+
+        $item = $em->getRepository($typeBundle.':'.$type)->find($id);
 
         switch ($type) {
             case 'GalleryMedia':
@@ -141,13 +149,6 @@ class ContentReportingController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getOwner();
-                break;
-
-            case 'GroupEvent':
-                case 'GroupEvent':
-                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
-                $name = $item->getName();
-                $owner = $item->getUser();
                 break;
 
             case 'GroupDiscussionPost':

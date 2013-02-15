@@ -98,7 +98,7 @@ class ContestController extends Controller
         $isUnlimited        = $contest->getMaxEntries() == 0;
 
         $agreeText = $this->trans('contests.show_page_agree_text');
-        $canVote = $contest->getVotingStart() < new \DateTime('now');
+        $canVote = $contest->getVotingStartUtc() < new \DateTime('now');
 
         return $this->render('SpoutletBundle:Contest:show.html.twig', array(
             'contest'       => $contest,
@@ -187,7 +187,7 @@ class ContestController extends Controller
 
         $entriesLeft        = $contest->getCategory() == 'image' ? $contest->getMaxEntries() - count($mediaCount) : $contest->getMaxEntries() - count($entry->getGroups());
         $isUnlimited        = $contest->getMaxEntries() == 0;
-        $submissionEnded    = new \DateTime("now") > $contest->getSubmissionEnd();
+        $submissionEnded    = new \DateTime("now") > $contest->getSubmissionEndUtc();
 
         if ($request->getMethod() == 'POST')
         {
@@ -360,7 +360,7 @@ class ContestController extends Controller
 
     private function getGroupRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+        return $this->getEntityManager()->getRepository('GroupBundle:Group');
     }
 
     private function getContestRepository()

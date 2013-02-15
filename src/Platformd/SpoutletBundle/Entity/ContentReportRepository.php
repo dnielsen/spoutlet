@@ -19,6 +19,22 @@ class ContentReportRepository extends EntityRepository
         'GroupDiscussionPost',
     );
 
+    private static $typeToBundleMap = array(
+        'GroupImage'            => 'GroupBundle',
+        'GroupNews'             => 'GroupBundle',
+        'GroupVideo'            => 'GroupBundle',
+        'Group'                 => 'GroupBundle',
+        'Comment'               => 'SpoutletBundle',
+        'GalleryMedia'          => 'SpoutletBundle',
+        'GroupDiscussion'       => 'GroupBundle',
+        'GroupDiscussionPost'   => 'GroupBundle',
+    );
+
+    public function getBundleFromType($type)
+    {
+        return self::$typeToBundleMap[$type];
+    }
+
     public function getContentReportTypeForAllSites($type)
     {
 
@@ -29,13 +45,15 @@ class ContentReportRepository extends EntityRepository
         $type = ContentReport::getTypeClass($type);
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
+
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE report.deleted = false
             GROUP BY item
             ORDER BY reportCount DESC, report.reportedAt
             ',
+            $this->getBundleFromType($type),
             $type))
             ->execute();
     }
@@ -49,7 +67,8 @@ class ContentReportRepository extends EntityRepository
         $type = ContentReport::getTypeClass($type);
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
+
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = false AND
@@ -58,6 +77,7 @@ class ContentReportRepository extends EntityRepository
             HAVING reportCount > 0
             ORDER BY reportCount DESC, report.reportedAt
             ',
+            $this->getBundleFromType($type),
             $type))
             ->execute();
     }
@@ -73,7 +93,8 @@ class ContentReportRepository extends EntityRepository
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s item
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
+
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = true AND report.deleted = true
@@ -81,6 +102,7 @@ class ContentReportRepository extends EntityRepository
             HAVING reportCount > 0
             ORDER BY reportCount DESC, report.reportedAt
             ',
+            $this->getBundleFromType($type),
             $type))
             ->execute();
     }

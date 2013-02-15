@@ -1,0 +1,164 @@
+groups:
+    pattern:  /
+    defaults: { _controller: "GroupBundle:Group:index" }
+
+group_new_getting_started:
+    pattern:  /new-getting-started/
+    defaults: { _controller: "GroupBundle:Group:newGettingStarted", site: ~ }
+
+group_new:
+    pattern:  /new/
+    defaults: { _controller: "GroupBundle:Group:new", site: ~ }
+
+group_create:
+    pattern:  /create/
+    defaults: { _controller: "GroupBundle:Group:new", site: ~ }
+
+group_image_show:
+    pattern:  /image/{id}
+    defaults: { _controller: "GroupBundle:Group:showImage", site: ~ }
+
+group_edit:
+    pattern:  /{id}/edit/
+    defaults: { _controller: "GroupBundle:Group:edit", site: ~ }
+
+group_news:
+    pattern: /{id}/news/
+    defaults: { _controller: "GroupBundle:Group:news", site: ~ }
+
+group_add_news:
+    pattern:  /{id}/add-news/
+    defaults: { _controller: "GroupBundle:Group:addNews", site: ~ }
+
+group_delete_news:
+    pattern:  /{id}/delete-news/{newsId}
+    defaults: { _controller: "GroupBundle:Group:deleteNews", site: ~ }
+
+group_edit_news:
+    pattern:  /{id}/edit-news/{newsId}
+    defaults: { _controller: "GroupBundle:Group:editNews", site: ~ }
+
+group_images:
+    pattern: /{id}/images/
+    defaults: { _controller: "GroupBundle:Group:image", site: ~ }
+
+group_add_image:
+    pattern:  /{id}/add-image/
+    defaults: { _controller: "GroupBundle:Group:addImage", site: ~ }
+
+group_delete_image:
+    pattern:  /{id}/delete-image/{imageId}
+    defaults: { _controller: "GroupBundle:Group:deleteImage", site: ~ }
+
+group_edit_image:
+    pattern:  /{id}/edit-image/{imageId}
+    defaults: { _controller: "GroupBundle:Group:editImage", site: ~ }
+
+group_videos:
+    pattern: /{id}/videos/
+    defaults: { _controller: "GroupBundle:Group:videos", site: ~ }
+
+group_add_video:
+    pattern:  /{id}/add-video/
+    defaults: { _controller: "GroupBundle:Group:addVideo", site: ~ }
+
+group_delete_video:
+    pattern:  /{id}/delete-video/{videoId}
+    defaults: { _controller: "GroupBundle:Group:deleteVideo", site: ~ }
+
+group_edit_video:
+    pattern:  /{id}/edit-video/{videoId}
+    defaults: { _controller: "GroupBundle:Group:editVideo", site: ~ }
+
+group_discussions:
+    pattern: /{id}/discussions/
+    defaults: { _controller: "GroupBundle:Group:discussions", site: ~ }
+
+group_enable_discussions:
+    pattern: /{id}/discussions-enable/
+    defaults: { _controller: "GroupBundle:Group:enableDiscussions", site: ~ }
+
+group_disable_discussions:
+    pattern: /{id}/discussions-disable/
+    defaults: { _controller: "GroupBundle:Group:disableDiscussions", site: ~ }
+
+group_add_discussion:
+    pattern: /{id}/add-discussion/
+    defaults: { _controller: "GroupBundle:Group:addDiscussion", site: ~ }
+
+group_delete_discussion:
+    pattern: /{id}/delete-discussion/{discussionId}
+    defaults: { _controller: "GroupBundle:Group:deleteDiscussion", site: ~ }
+
+group_edit_discussion:
+    pattern: /{id}/edit-discussion/{discussionId}
+    defaults: { _controller: "GroupBundle:Group:editDiscussion", site: ~ }
+
+group_view_discussion:
+    pattern: /{id}/discussion/{discussionId}
+    defaults: { _controller: "GroupBundle:Group:viewDiscussion", site: ~ }
+
+group_reply_discussion:
+    pattern: /{id}/discussion/{discussionId}/reply
+    defaults: { _controller: "GroupBundle:Group:replyDiscussion", site: ~ }
+
+group_edit_discussion_post:
+    pattern: /discussion-post/{id}/edit
+    defaults: { _controller: "GroupBundle:Group:editDiscussionPost", site: ~ }
+
+group_delete_discussion_post:
+    pattern: /discussion-post/{id}/delete
+    defaults: { _controller: "GroupBundle:Group:deleteDiscussionPost", site: ~ }
+
+group_about:
+    pattern: /{id}/about
+    defaults: { _controller: "GroupBundle:Group:about", site: ~ }
+
+group_leave:
+    pattern:  /{id}/leave/
+    defaults: { _controller: "GroupBundle:Group:leave", site: ~ }
+
+group_join:
+    pattern:  /{id}/join/
+    defaults: { _controller: "GroupBundle:Group:join", site: ~ }
+
+group_apply:
+    pattern:  /{id}/apply/
+    defaults: { _controller: "GroupBundle:Group:applyToGroup", site: ~ }
+
+group_delete:
+    pattern:  /{id}/delete/
+    defaults: { _controller: "GroupBundle:Group:delete", site: ~ }
+
+group_show:
+    pattern:  /{slug}/
+    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
+
+group_slug_show:
+    pattern:  /{slug}/
+    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
+
+group_update:
+    pattern:  /{id}/update/
+    defaults: { _controller: "GroupBundle:Group:edit", site: ~ }
+    requirements: { _method: post }
+
+group_applications:
+    pattern:  /{id}/applications/
+    defaults: { _controller: "GroupBundle:Group:applications", site: ~ }
+
+group_accept_application:
+    pattern:  /{id}/applications/{applicationId}/accept
+    defaults: { _controller: "GroupBundle:Group:acceptApplication", site: ~ }
+
+group_reject_application:
+    pattern:  /{id}/applications/{applicationId}/reject
+    defaults: { _controller: "GroupBundle:Group:rejectApplication", site: ~ }
+
+group_members:
+    pattern: /{id}/members
+    defaults: { _controller: "GroupBundle:Group:members", site: ~ }
+
+group_remove_member:
+    pattern: /{id}/remove/{uid}
+    defaults: { _controller: "GroupBundle:Group:remove", site: ~ }

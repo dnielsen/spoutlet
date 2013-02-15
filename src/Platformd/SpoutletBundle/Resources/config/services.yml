@@ -110,7 +110,6 @@ services:
             - "@security.context"
             - "@event_dispatcher"
 
-
     # activity manager service
     platformd.model.activity_manager:
         class: Platformd\SpoutletBundle\Model\ActivityManager

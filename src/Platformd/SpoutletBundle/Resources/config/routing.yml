@@ -44,10 +44,6 @@ _spoutlet_account:
     resource: routing/account.yml
     prefix:   /account
 
-military:
-    pattern: /groups/military
-    defaults: { _controller: SpoutletBundle:Default:military }
-
 wallpapers:
     pattern: /wallpapers
     defaults: { _controller: SpoutletBundle:Default:wallpapers }
@@ -59,10 +55,6 @@ SpoutletBundle_age:
 SpoutletBundle_admin_content_reports:
     resource: "@SpoutletBundle/Resources/config/routing/admin_content_reports.yml"
     prefix:   /admin/contentReports
-
-SpoutletBundle_group:
-    resource: "@SpoutletBundle/Resources/config/routing/group.yml"
-    prefix:   /groups
 
 SpoutletBundle_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/gallery.yml"
@@ -79,10 +71,6 @@ SpoutletBundle_contest:
 SpoutletBundle_contests:
     resource: "@SpoutletBundle/Resources/config/routing/contests.yml"
     prefix:   /contests
-
-SpoutletBundle_admin_group:
-    resource: "@SpoutletBundle/Resources/config/routing/admin_group.yml"
-    prefix:   /admin/groups
 
 SpoutletBundle_admin_wallpapers:
     resource: "@SpoutletBundle/Resources/config/routing/admin_wallpaper.yml"

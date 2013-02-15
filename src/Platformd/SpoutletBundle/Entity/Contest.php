@@ -348,6 +348,15 @@ class Contest implements LinkableInterface
         return $this->submissionStart;
     }
 
+    public function getSubmissionStartUtc()
+    {
+        if (!$this->getSubmissionStart()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getSubmissionStart(), new \DateTimeZone($this->getTimezone()));
+    }
+
     /**
      * Set submissionEnd
      *
@@ -366,6 +375,15 @@ class Contest implements LinkableInterface
     public function getSubmissionEnd()
     {
         return $this->submissionEnd;
+    }
+
+    public function getSubmissionEndUtc()
+    {
+        if (!$this->getSubmissionEnd()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getSubmissionEnd(), new \DateTimeZone($this->getTimezone()));
     }
 
     /**
@@ -388,6 +406,15 @@ class Contest implements LinkableInterface
         return $this->votingStart;
     }
 
+    public function getVotingStartUtc()
+    {
+        if (!$this->getVotingStart()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getVotingStart(), new \DateTimeZone($this->getTimezone()));
+    }
+
     /**
      * Set votingEnd
      *
@@ -406,6 +433,15 @@ class Contest implements LinkableInterface
     public function getVotingEnd()
     {
         return $this->votingEnd;
+    }
+
+    public function getVotingEndUtc()
+    {
+        if (!$this->getVotingEnd()) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->getVotingEnd(), new \DateTimeZone($this->getTimezone()));
     }
 
     /**
@@ -777,11 +813,11 @@ class Contest implements LinkableInterface
 
     public function isFinished()
     {
-        return $this->votingEnd < new \DateTime('now');
+        return $this->getVotingEndUtc() < new \DateTime('now');
     }
 
     public function isVotable()
     {
-        return $this->votingStart < new \DateTime('now');
+        return $this->getVotingStartUtc() < new \DateTime('now');
     }
 }

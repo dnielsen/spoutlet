@@ -7,7 +7,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
-use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use FOS\CommentBundle\Entity\Thread;

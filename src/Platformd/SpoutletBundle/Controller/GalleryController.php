@@ -4,7 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\MediaGallery;
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Entity\GroupImage;
+use Platformd\GroupBundle\Entity\GroupImage;
 use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
 use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
@@ -789,9 +789,9 @@ class GalleryController extends Controller
 
         if ($media) {
             $counter = 0;
+            $liip = $this->get('liip_imagine.templating.helper');
             foreach($media as $mediaItem) {
-                $s3 = $this->get('platformd.media.imagine.cache.resolver.amazon_s3');
-                $featuredMedia[$counter]['thumbnail']   = $s3->getBrowserPath($mediaItem->getImage()->getFilename(), 'image_thumb', true);
+                $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                 $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
                 $counter++;
             }
@@ -824,12 +824,12 @@ class GalleryController extends Controller
 
     private function getGroupRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Group');
+        return $this->getEntityManager()->getRepository('GroupBundle:Group');
     }
 
     private function getGroupImageRepository()
     {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:GroupImage');
+        return $this->getEntityManager()->getRepository('GroupBundle:GroupImage');
     }
 
     private function getContestRepository()
