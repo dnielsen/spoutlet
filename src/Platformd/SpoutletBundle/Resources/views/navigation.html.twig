@@ -31,7 +31,17 @@
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
-                <li>{{ site_link('EVENTS') | raw }}</a></li>
+                {% if site_has_feature('EVENTS') %}
+                    <li class="more">
+                        <a class="blue">{{ 'platformd.layout.main_menu.events' | trans }}</a>
+                        <ul>
+                            <li><a href="{{ path('global_events_index') }}"><span style="color: #ff5711;padding-right: 2px;">iGames</span> {{ 'platformd.layout.main_menu.events' | trans }}</a></li>
+                            <li>{{ site_link('EVENTS') | raw }}</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li>{{ site_link('EVENTS') | raw }}</a></li>
+                {% endif %}
 
                 {% if site_has_feature('NEWS') %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>

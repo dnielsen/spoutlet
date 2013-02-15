@@ -93,10 +93,10 @@ class AccountController extends Controller
 
     private function eventCompare($a, $b) {
 
-        if ($a[0]->getStartsAt() == $b[0]->getStartsAt()) {
+        if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;
         }
-        return ($a[0]->getStartsAt() < $b[0]->getStartsAt()) ? -1 : 1;
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
 
     }
 

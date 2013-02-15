@@ -2,10 +2,11 @@
 
 namespace Platformd\EventBundle\EventListener;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator,
+    Symfony\Component\Routing\RouterInterface;
 
 use Platformd\EventBundle\Event\EventEvent,
-    Platformd\SpoutletBundle\Event\GroupEvent,
+    Platformd\EventBundle\Entity\GroupEvent,
     Platformd\SpoutletBundle\Model\EmailManager,
     Platformd\SpoutletBundle\Util\SiteUtil
 ;
@@ -15,22 +16,19 @@ class GroupEventListener
     private $translator;
     private $siteUtil;
     private $emailManager;
-    private $senderEmail;
-    private $senderName;
+    private $router;
 
     public function __construct(
         Translator $translator,
         SiteUtil $siteUtil,
         EmailManager $emailManager,
-        $senderEmail,
-        $senderName
+        RouterInterface $router
     )
     {
         $this->translator   = $translator;
         $this->siteUtil     = $siteUtil;
         $this->emailManager = $emailManager;
-        $this->senderEmail  = $senderEmail;
-        $this->senderName   = $senderName;
+        $this->router = $router;
     }
 
     /**
@@ -50,15 +48,36 @@ class GroupEventListener
 
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
-        $subject            = $this->translator->trans('platformd.event.email.approve.title', array(), 'messages', $emailLocale);
-        $message            = $this->translator->trans('platformd.event.email.approve.message', array(
+        $subject            = $this->translator->trans('platformd.event.email.approved.title', array(), 'messages', $emailLocale);
+        $message            = $this->translator->trans('platformd.event.email.approved.message', array(
             '%eventName%' => $name,
             '%groupName%' => $group,
             '%eventType%' => $type
         ), 'messages', $emailLocale);
 
 
-        $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Approval Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $this->senderName, $this->senderEmail);
+        $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Approval Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+
+        if ($event instanceof GroupEvent) {
+
+            foreach ($event->getGroup()->getMembers() as $member) {
+                $emailTo            = $member->getEmail();
+                $emailLocale        = $member->getLocale() ? : 'en';
+                $subject            = $this->translator->trans('platformd.event.email.group_announcement.title', array('%eventName%'   => $name), 'messages', $emailLocale);
+                $message            = nl2br($this->translator->trans('platformd.event.email.group_announcement.message', array(
+                    '%eventName%'   => $name,
+                    '%groupName%'   => $group,
+                    '%startDate%'   => $event->getStartsAt()->format('l, M j, Y'),
+                    '%startTime%'   => $event->getStartsAt()->format('g:i A'),
+                    '%timezone%'    => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
+                    '%location%'    => ($event->getOnline()) ? 'Online' : ($event->getLocation() ? $event->getLocation().', ' : '').$event->getAddress(),
+                    '%url%'         => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                ), 'messages', $emailLocale));
+
+                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Invite", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+            }
+
+        }
     }
 
     /**
@@ -78,7 +97,7 @@ class GroupEventListener
             $subject            = $this->translator->trans('platformd.event.email.cancel.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
             $message            = $this->translator->trans('platformd.event.email.cancel.message', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
 
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Cancellation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $this->senderName, $this->senderEmail);
+            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Cancellation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
         }
     }
 
@@ -99,7 +118,7 @@ class GroupEventListener
             $subject            = $this->translator->trans('platformd.event.email.activate.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
             $message            = $this->translator->trans('platformd.event.email.activate.message', array('%eventName%' => $event->getName(), '%eventStartAt%' => $event->getStartsAt()), 'messages', $emailLocale);
 
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Activation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $this->senderName, $this->senderEmail);
+            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Activation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
         }
     }
 }

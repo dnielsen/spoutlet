@@ -666,7 +666,12 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetEventsLink($locale) {
 
-        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
+        if ($this->siteHasFeature('EVENTS')) {
+            $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">CEVO</span>'.$this->trans('platformd.layout.main_menu.events').'</a>';
+        } else {
+            $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
+        }
+
         $internalUrl    = $this->container->get('router')->generate('global_events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -830,7 +835,7 @@ class SpoutletExtension extends Twig_Extension
             case 'PHOTOS':                      return $northAmericaEuropeLatamOnly;
             case 'CONTESTS':                    return $northAmericaEuropeLatamOnly;
             case 'COMMENTS':                    return $northAmericaEuropeLatamJapan;
-            case 'EVENTS':                      return true;
+            case 'EVENTS':                      return $northAmericaOrEurope;
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));

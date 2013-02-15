@@ -310,7 +310,7 @@ class EventService
 
         foreach ($email->getRecipients() as $recipient) {
             $emailTo = $recipient->getEmail();
-            $this->emailManager->sendEmail($emailTo, $subject, $message, $emailType);
+            $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, $emailType);
             $sendCount++;
         }
 

@@ -118,6 +118,7 @@ platformd:
 
     events:
         event_listings:
+            create: Create Event
             organizer: Organizer
             attendees: Attendees
             actions: Actions
@@ -428,6 +429,22 @@ platformd:
                 title: %eventName% is active again
                 message: |
                     This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Alienware Arena Team
+
+            group_announcement:
+                title: You’re Invited to %eventName%
+                message: |
+                    %groupName% added a new event – %eventName%
+
+                    %startDate%
+                    %startTime% %timezone%
+
+                    Location: %location%
+
+                    <a href="%url%">Click here</a> to RSVP.
+
+                    Note: To unsubscribe from similar emails from this Group, you must leave the Group.
 
                     Alienware Arena Team
 

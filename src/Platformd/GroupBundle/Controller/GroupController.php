@@ -1332,6 +1332,17 @@ Alienware Arena Team
         $this->addGroupsBreadcrumb()->addChild('New Group');
 
         $group  = new Group();
+
+        // assume that the group is only being created because the user wants to do something that requires a group first and they have none.
+        if ($then = $request->query->get('then')) {
+            $request->getSession()->set(
+                'PostCreateAction',
+                $then
+            );
+
+            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to upload relevant images and videos, or start a discussion on this topic.');
+        }
+
         $form   = $this->createForm(new GroupType($this->getUser(), $group), $group);
 
         if($previous = $this->getReturnUrl($request)) {
@@ -1347,6 +1358,15 @@ Alienware Arena Team
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
             } catch(ApiException $e) {
+            }
+
+            if($then = $request->getSession()->get('PostCreateAction')) {
+
+                if ($then == "group_event") {
+                    $url = $this->generateUrl('group_event_new', array('groupSlug' => $group->getSlug()));
+                    $request->getSession()->remove('PostCreateAction');
+                    return $this->redirect($url);
+                }
             }
 
             if($return = $request->getSession()->get('ContestReturnUrl')) {

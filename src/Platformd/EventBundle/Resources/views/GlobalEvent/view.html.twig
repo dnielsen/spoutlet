@@ -46,7 +46,7 @@
                         <div id="event-heading-title">{{ event.name }}</div>
                     </div>
                     <div id="event-heading-date">{{ event.dateRangeString }}</div>
-                    <div id="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezone }}{% endif %}</div>
+                    <div id="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
                 </div>
                 <div class="widget-content">
                     <div id="event-content">{{ event.content | raw }}</div>

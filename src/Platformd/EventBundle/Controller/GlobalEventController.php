@@ -40,9 +40,12 @@ class GlobalEventController extends Controller
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
 
+        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
+            'groupsCount'   => count($groups),
         ));
     }
 
@@ -63,9 +66,12 @@ class GlobalEventController extends Controller
         $events = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         uasort($events, array($this, 'eventCompare'));
 
+        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+
         return $this->render('EventBundle:GlobalEvent:currentList.html.twig', array(
             'events' => $events,
-            'pager' => $pager
+            'pager' => $pager,
+            'groupsCount' => count($groups),
         ));
     }
 
@@ -80,10 +86,12 @@ class GlobalEventController extends Controller
         $page = $request->query->get('page', 1);
 
         $events = $this->getGlobalEventService()->findPastEventsForSite($this->getCurrentSite(), 20, $page, $pager);
+        $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
 
         return $this->render('EventBundle:GlobalEvent:pastList.html.twig', array(
             'events' => $events,
-            'pager' => $pager
+            'pager' => $pager,
+            'groupsCount' => count($groups),
         ));
     }
 

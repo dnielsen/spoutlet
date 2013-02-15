@@ -5,8 +5,7 @@ services:
                 - "@translator"
                 - "@platformd.model.site_util"
                 - "@platformd.model.email_manager"
-                - %sender_email_address%
-                - %sender_email_name%
+                - "@router"
             tags:
                 - { name: kernel.event_listener, event: platformd.event.approve, method: onApprove }
                 - { name: kernel.event_listener, event: platformd.event.cancel, method: onCancel }

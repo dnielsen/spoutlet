@@ -3,16 +3,16 @@
 namespace Platformd\GroupBundle\Model;
 
 use Platformd\SpoutletBundle\GroupEvents;
-use Platformd\SpoutletBundle\Entity\Group;
-use Platformd\SpoutletBundle\Entity\GroupApplication;
-use Platformd\SpoutletBundle\Entity\GroupNews;
-use Platformd\SpoutletBundle\Entity\GroupVideo;
-use Platformd\SpoutletBundle\Entity\GroupImage;
-use Platformd\SpoutletBundle\Entity\GroupDiscussion;
-use Platformd\SpoutletBundle\Entity\GroupDiscussionPost;
-use Platformd\SpoutletBundle\Entity\GroupMembershipAction;
-use Platformd\SpoutletBundle\Event\GroupDiscussionEvent;
-use Platformd\SpoutletBundle\Event\GroupDiscussionPostEvent;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupApplication;
+use Platformd\GroupBundle\Entity\GroupNews;
+use Platformd\GroupBundle\Entity\GroupVideo;
+use Platformd\GroupBundle\Entity\GroupImage;
+use Platformd\GroupBundle\Entity\GroupDiscussion;
+use Platformd\GroupBundle\Entity\GroupDiscussionPost;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupDiscussionEvent;
+use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
 use Platformd\SpoutletBundle\Event\GroupEvent;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Platformd\SpoutletBundle\Util\SiteUtil;
