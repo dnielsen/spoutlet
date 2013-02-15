@@ -35,8 +35,8 @@ class Group implements LinkableInterface, ReportableContentInterface
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     static private $validCategories = array(
-        'location',
         'topic',
+        'location',
     );
 
     static private $validDeletedReasons = array(
@@ -124,7 +124,7 @@ class Group implements LinkableInterface, ReportableContentInterface
      * @Assert\NotNull
      * @ORM\Column(name="isPublic", type="boolean")
      */
-    private $isPublic;
+    private $isPublic = true;
 
     /**
      * @var \Platformd\MediaBundle\Entity\Media

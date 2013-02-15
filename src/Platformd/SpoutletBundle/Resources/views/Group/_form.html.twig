@@ -1,41 +1,60 @@
 {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
+{% set showAdminOpts = form.sites is defined or form.deleted is defined or form.featured is defined or form.discussionsEnabled is defined %}
+
 <div class="game-page-form">
     {{ form_errors(form) }}
 
         <div class="span11">
+            <h4>Required Fields</h4>
             {{ form_row(form.name) }}
             <div class="styled-select">
                 {{ form_row(form.category) }}
             </div>
-            {{ form_widget(form.groupAvatar) }}
-            {{ form_widget(form.backgroundImage) }}
-            {{ form_widget(form.thumbNail )}}
-            {{ form_row(form.description) }}
-            {{ form_row(form.isPublic) }}
-
-
-            {% if form.sites is defined %}
-                {{ form_row(form.sites) }}
-                {{ form_row(form.allLocales) }}
-            {% endif %}
-
-            {% if form.deleted is defined %}
-                {{ form_row(form.deleted) }}
-            {% endif %}
-
-            {% if form.featured is defined %}
-                {{ form_row(form.featured) }}
-            {% endif %}
-
-            {% if form.discussionsEnabled is defined %}
-                {{ form_row(form.discussionsEnabled) }}
-            {% endif %}
-
             <div id="group-location-controls">
                 {{ form_row(form.location) }}
             </div>
+            {{ form_row(form.isPublic) }}
+            {{ form_row(form.description) }}
+
+
+            <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
+            <div id="advanced-options" style="display:none;">
+                {{ form_widget(form.groupAvatar) }}
+                {{ form_widget(form.backgroundImage) }}
+                {{ form_widget(form.thumbNail )}}
+            </div>
+
+            <div id="admin-options" style="margin-top:15px;">
+                {% if showAdminOpts %}
+                    <h4>Admin Options</h4>
+                {% endif %}
+                {% if form.sites is defined %}
+                    {{ form_row(form.sites) }}
+                    {{ form_row(form.allLocales) }}
+                {% endif %}
+
+                {% if form.deleted is defined %}
+                    {{ form_row(form.deleted) }}
+                {% endif %}
+
+                {% if form.featured is defined %}
+                    {{ form_row(form.featured) }}
+                {% endif %}
+
+                {% if form.discussionsEnabled is defined %}
+                    {{ form_row(form.discussionsEnabled) }}
+                {% endif %}
+            </div>
+
         </div>
     {{ form_rest(form) }}
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('#toggle-advanced').click(function () {
+            $('#advanced-options').slideToggle();
+        });
+    });
+</script>
