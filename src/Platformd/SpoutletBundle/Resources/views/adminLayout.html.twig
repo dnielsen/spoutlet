@@ -60,7 +60,7 @@
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 
         <script type="text/javascript">
-            CKEDITOR.config.customConfig = 'config.admin.js';
+            CKEDITOR.config.customConfig = '{{ asset('config.admin.js') }}';
         </script>
 	</head>
 	<body>
