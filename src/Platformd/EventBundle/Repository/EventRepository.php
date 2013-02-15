@@ -50,18 +50,6 @@ class EventRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getAttendeeCount($event)
-    {
-        $qb = $this->createQueryBuilder('e')
-            ->select('COUNT(a.id) attendeeCount')
-            ->leftJoin('e.attendees', 'a')
-            ->andWhere('e = :event')
-            ->setParameter('event', $event);
-
-        return $qb->getQuery()
-            ->getSingleScalarResult();
-    }
-
     public function getAttendeeList($event)
     {
         $qb = $this->createQueryBuilder('e')
@@ -114,7 +102,7 @@ class EventRepository extends EntityRepository
             ->getDQL();
 
         $qb = $this->createQueryBuilder('e')
-            ->select('e', 'count(a.id) attendeeCount')
+            ->select('e')
             ->leftJoin('e.attendees', 'a')
             ->andWhere('e.endsAt >= :now')
             ->groupBy('e.id')
@@ -153,7 +141,7 @@ class EventRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('e');
 
-        $qb->select('e', 'count(a.id) attendeeCount')
+        $qb->select('e')
             ->leftJoin('e.attendees', 'a')
             ->andWhere($qb->expr()->in('e.id', $subquery))
             ->andWhere('e.endsAt < :now')

@@ -491,7 +491,7 @@ Alienware Arena Team
 
         $groupEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
 
-        return $this->render('SpoutletBundle:Group:events.html.twig', array(
+        return $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,
             'groupEvents'   => $groupEvents,
             'mode'          => 'upcoming',
@@ -505,29 +505,11 @@ Alienware Arena Team
 
         $groupEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
-        return $this->render('SpoutletBundle:Group:events.html.twig', array(
+        return $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,
             'groupEvents'   => $groupEvents,
             'mode'          => 'past',
         ));
-    }
-
-    public function showEventAction($groupId, $event)
-    {
-        $slug = $this->getGroup($groupId)->getSlug();
-        return $this->showAction($slug);
-    }
-
-    public function editEventAction($groupId, $event)
-    {
-        $slug = $this->getGroup($groupId)->getSlug();
-        return $this->showAction($slug);
-    }
-
-    public function deleteEventAction($groupId, $event)
-    {
-        $slug = $this->getGroup($groupId)->getSlug();
-        return $this->showAction($slug);
     }
 
     public function newsAction($id, Request $request)

@@ -86,7 +86,7 @@
                     </div>
 
                     <div id="event-organizer"><strong>Organizer: </strong><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></div>
-                    <div id="event-attendee-attendees"><strong>Attending: </strong><span id="event-attendee-count-{{ event.id }}">{{ attendeeCount }}</span></div>
+                    <div id="event-attendee-attendees"><strong>Attending: </strong><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></div>
 
                     <div id="event-registration">
                         {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}

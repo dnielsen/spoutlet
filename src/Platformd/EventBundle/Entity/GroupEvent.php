@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM,
 
 use Vich\GeographicalBundle\Annotation as Vich;
 
-use Platformd\SpoutletBundle\Entity\Group,
+use Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug,
     Platformd\SpoutletBundle\Entity\ContentReport,
@@ -70,7 +70,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      * Groups the event pertains to
      *
      * @var Group
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group;
@@ -197,7 +197,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     }
 
     /**
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      */
     public function setGroup(Group $group)
     {
@@ -205,7 +205,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Entity\Group
+     * @return \Platformd\GroupBundle\Entity\Group
      */
     public function getGroup()
     {

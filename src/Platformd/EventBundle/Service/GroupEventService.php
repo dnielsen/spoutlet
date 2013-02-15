@@ -8,7 +8,7 @@ use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\GroupBundle\Entity\Group,
     Platformd\UserBundle\Entity\User,
     Platformd\SpoutletBundle\Entity\Site
 ;
@@ -86,7 +86,7 @@ class GroupEventService extends EventService
     /**
      * Retrieves all Events pending approval for a certain group
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      */
     public function getPendingApprovalEventsForGroup(Group $group)
     {

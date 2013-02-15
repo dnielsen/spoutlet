@@ -2,7 +2,7 @@
 
 namespace Platformd\EventBundle\Repository;
 
-use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\EventBundle\Repository\EventRepository;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Site;

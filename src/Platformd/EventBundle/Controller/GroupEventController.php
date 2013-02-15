@@ -3,8 +3,8 @@
 namespace Platformd\EventBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\SpoutletBundle\Entity\Group,
-    Platformd\SpoutletBundle\Model\GroupManager
+    Platformd\GroupBundle\Entity\Group,
+    Platformd\GroupManager\Model\GroupManager
 ;
 
 use Platformd\EventBundle\Entity\GroupEvent,
@@ -272,12 +272,9 @@ class GroupEventController extends Controller
 
         $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
 
-        $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
-
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
-            'attendeeCount' => $attendeeCount,
             'isAttending'   => $isAttending,
         ));
     }
@@ -692,7 +689,7 @@ Alienware Arena Team';
             $this->getGroupEventService()->register($groupEvent, $user);
         }
 
-        $attendeeCount = $this->getGroupEventService()->getAttendeeCount($groupEvent);
+        $attendeeCount = $groupEvent->getAttendeeCount();
 
         $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;

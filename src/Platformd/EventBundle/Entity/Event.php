@@ -249,6 +249,13 @@ abstract class Event implements LinkableInterface
     protected $updatedAt;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $attendeeCount = 0;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -719,5 +726,29 @@ abstract class Event implements LinkableInterface
     public function getLinkableOverrideUrl()
     {
         return $this->externalUrl ?: false;
+    }
+
+    /**
+     * @param int $attendeeCount
+     */
+    public function setAttendeeCount($attendeeCount)
+    {
+        $this->attendeeCount = $attendeeCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttendeeCount()
+    {
+        return $this->attendeeCount;
+    }
+
+    /**
+     * @param int $increment
+     */
+    public function updateAttendeeCount($increment = 1)
+    {
+        $this->attendeeCount += $increment;
     }
 }

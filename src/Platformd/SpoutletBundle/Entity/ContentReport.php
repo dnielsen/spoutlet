@@ -44,14 +44,14 @@ class ContentReport
 
     static private $typeClassMap = array(
         'GroupEvent' => 'EventBundle:GroupEvent',
-        'GroupImage' => 'SpoutletBundle:GroupImage',
-        'GroupNews' => 'SpoutletBundle:GroupNews',
-        'GroupVideo' => 'SpoutletBundle:GroupVideo',
-        'Group' => 'SpoutletBundle:Group',
+        'GroupImage' => 'GroupBundle:GroupImage',
+        'GroupNews' => 'GroupBundle:GroupNews',
+        'GroupVideo' => 'GroupBundle:GroupVideo',
+        'Group' => 'GroupBundle:Group',
         'Comment' => 'SpoutletBundle:Comment',
         'GalleryMedia' => 'SpoutletBundle:GalleryMedia',
-        'GroupDiscussion' => 'SpoutletBundle:GroupDiscussion',
-        'GroupDiscussionPost' => 'SpoutletBundle:GroupDiscussionPost',
+        'GroupDiscussion' => 'GroupBundle:GroupDiscussion',
+        'GroupDiscussionPost' => 'GroupBundle:GroupDiscussionPost',
     );
 
     /**

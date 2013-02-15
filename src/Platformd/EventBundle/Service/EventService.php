@@ -11,7 +11,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
-    Platformd\SpoutletBundle\Entity\Group,
+    Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Model\EmailManager
 ;
 
@@ -76,7 +76,7 @@ class EventService
     {
         $this->handleMedia($event);
 
-        $event->getAttendees()->add($event->getUser());
+        $this->register($event, $event->getUser());
 
         if ($event->getExternalUrl()) {
             $event->setPrivate(false);
@@ -198,12 +198,13 @@ class EventService
     public function register(Event $event, User $user)
     {
         $event->getAttendees()->add($user);
+        $event->updateAttendeeCount();
 
         $this->repository->saveEvent($event);
 
         // We dispatch an event for further tasks
-        $event = new RegistrationEvent($event, $user);
-        $this->dispatcher->dispatch(EventEvents::EVENT_UNREGISTER, $event);
+        $e = new RegistrationEvent($event, $user);
+        $this->dispatcher->dispatch(EventEvents::EVENT_REGISTER, $e);
     }
 
     /**
@@ -215,12 +216,13 @@ class EventService
     public function unregister(Event $event, User $user)
     {
         $event->getAttendees()->removeElement($user);
+        $event->updateAttendeeCount(-1);
 
         $this->repository->saveEvent($event);
 
         // We dispatch an event for further tasks
-        $event = new RegistrationEvent($event, $user);
-        $this->dispatcher->dispatch(EventEvents::EVENT_UNREGISTER, $event);
+        $e = new RegistrationEvent($event, $user);
+        $this->dispatcher->dispatch(EventEvents::EVENT_UNREGISTER, $e);
     }
 
     /**
@@ -280,21 +282,6 @@ class EventService
         if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
             $event->setBannerImage(null);
         }
-    }
-
-    /**
-     * Gets the count of attendees for an event
-     *
-     * @param \Platformd\EventBundle\Entity\Event $event
-     */
-    public function getAttendeeCount($event)
-    {
-        return $this->repository->getAttendeeCount($event);
-    }
-
-    public function getAttendeeList($event)
-    {
-        return $this->repository->getAttendeeList($event);
     }
 
     /**

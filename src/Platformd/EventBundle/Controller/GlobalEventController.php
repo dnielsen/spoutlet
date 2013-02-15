@@ -113,11 +113,8 @@ class GlobalEventController extends Controller
 
         $isAttending = $this->getGlobalEventService()->isUserAttending($event, $this->getUser());
 
-        $attendeeCount = $this->getGlobalEventService()->getAttendeeCount($event);
-
         return $this->render('EventBundle:GlobalEvent:view.html.twig', array(
             'event' => $event,
-            'attendeeCount' => $attendeeCount,
             'isAttending'   => $isAttending,
         ));
     }
@@ -233,7 +230,7 @@ Alienware Arena Team';
             $this->getGlobalEventService()->register($event, $user);
         }
 
-        $attendeeCount = $this->getGlobalEventService()->getAttendeeCount($event);
+        $attendeeCount = $event->getAttendeeCount();
 
         $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;

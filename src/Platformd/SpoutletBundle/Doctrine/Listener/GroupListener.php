@@ -2,7 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Doctrine\Listener;
 
-use Platformd\SpoutletBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\EventSubscriber,

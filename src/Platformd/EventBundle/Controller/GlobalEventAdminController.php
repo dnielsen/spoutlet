@@ -73,6 +73,9 @@ class GlobalEventAdminController extends Controller
                 }
 
                 $this->getGlobalEventService()->createEvent($event);
+
+                $this->setFlash('success', 'New event posted successfully!');
+
                 return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
             }
         }
@@ -117,7 +120,7 @@ class GlobalEventAdminController extends Controller
 
                 $this->getGlobalEventService()->createEvent($globalEvent);
 
-                $this->setFlash('success', 'New event posted successfully');
+                $this->setFlash('success', 'New event posted successfully!');
 
                 return $this->redirect($this->generateUrl('admin_events_edit', array(
                     'id' => $globalEvent->getId()
