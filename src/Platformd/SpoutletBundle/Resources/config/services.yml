@@ -100,7 +100,7 @@ services:
             - "@aws_ses"
 
     platformd.model.group_manager:
-        class: Platformd\SpoutletBundle\Model\GroupManager
+        class: Platformd\GroupBundle\Model\GroupManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@session"

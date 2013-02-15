@@ -2,7 +2,7 @@
 
 namespace Platformd\SpoutletBundle\EventListener;
 
-use Platformd\SpoutletBundle\Model\GroupManager;
+use Platformd\GroupBundle\Model\GroupManager;
 
 use Platformd\EventBundle\Event\RegistrationEvent as Event,
     Platformd\EventBundle\Entity\GroupEvent
