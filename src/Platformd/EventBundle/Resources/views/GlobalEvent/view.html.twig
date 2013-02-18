@@ -22,17 +22,16 @@
         </div>
     {% endif %}
 
-    {% if app.user == event.user or app.user.adminLevel == 'ROLE_SUPER_ADMIN' %}
-
-        <div class="std_2col" style="padding:10px 0 0 0;">
-            <div class="left">
-                <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="GlobalEvent" style="width:130px; margin-bottom:5px;">
-                    <option>Manage Event</option>
-                    <option value="attendees">Manage Attendees</option>
-                    <option value="contact">Contact Attendees</option>
-                    <option value="edit">Edit Event</option>
-                    <option value="disable">Disable Event</option>
-                </select>
+    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+        <div class="std_1col" style="padding: 0;">
+            <div class="events-sub-nav-wrapper">
+               <div class="events-sub-nav">
+                    <ul>
+                        <li><a href="{{ path("global_event_edit", { 'eventId': event.id }) }}">Edit Event</a></li>
+                        <li><a href="{{ path("global_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
+                        <li><a href="{{ path("global_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -169,64 +168,6 @@
                 }
             })
 
-        });
-
-        $('.event-owner-actions').change(function () {
-
-            switch($(this).children('option:selected').val()) {
-
-                case 'attendees':
-                     document.location.href = "{{ path("global_event_attendees", { 'slug': event.slug }) }}";
-                     break;
-
-                case 'contact':
-                     document.location.href = "{{ path("global_event_contact", { 'slug': event.slug }) }}";
-                     break;
-
-                case 'edit':
-                    document.location.href = "{{ path("admin_events_edit", { 'id': event.id }) }}";
-                    break;
-
-                case 'disable':
-                    var answer = confirm("Are you sure you want to disable this event? You can re-enable it from your control panel.")
-                    if (!answer){
-                        return false;
-                    }
-
-                    var route = "{{ path("global_event_disable") }}";
-
-                    $.blockUI({
-                        message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="padding:15px 0 15px 0;" />',
-                        css: {
-                            backgroundColor: '#252525',
-                            border: '3px solid #009CDA',
-                            color: '#B3B3B3',
-                        }
-                    });
-
-                    $.ajax({
-                        url: route,
-                        type: 'post',
-                        data: JSON.stringify({
-                            'id' : {{ event.id }}
-                        }),
-                        contentType: 'json',
-                        success: function(data) {
-                            if (!data.success) {
-                                alert(data.errorMessage);
-                            } else {
-                                alert("Event successfully disabled.");
-                                document.location.href = "{{ path('global_events_index') }}";
-                            }
-                            $.unblockUI();
-                        }
-                    });
-
-                    break;
-
-                default:
-                    break;
-            }
         });
     });
 

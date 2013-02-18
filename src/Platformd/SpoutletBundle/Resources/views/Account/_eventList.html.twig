@@ -16,13 +16,11 @@
                 {% if event.contentType == "GroupEvent" %}
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) %}
-                    {% set disableUrl = path("group_event_disable") %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
                     {% if event.approved == 0 %}{% set status = "Pending Approval by Group Organizer" %}{% endif %}
                 {% elseif event.contentType == "GlobalEvent" %}
                     {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
-                    {% set disableUrl = path("global_event_disable") %}
                     {% set rsvpUrl = path("global_event_rsvp") %}
                 {% endif %}
 
@@ -34,11 +32,10 @@
                     <td>{% if status is defined %}{{ status }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Registration CLosed{% endif %}</td>
                     <td>
                         {% if event.user == app.user %}
-                            <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:130px; color:#555;">
-                                <option></option>
-                                <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
+                            <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
+                                <option>Choose action..<./option>
                                 <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
-                                <option value="disable" data-route="{{ disableUrl }}">Disable Event</option>
+                                <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
                             </select>
                         {% else %}
                             <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ rsvpUrl }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>

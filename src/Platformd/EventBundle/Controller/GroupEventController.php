@@ -270,7 +270,11 @@ class GroupEventController extends Controller
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
-        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
+        $isAttending = false;
+
+        if ($this->isGranted('ROLE_USER')) {
+            $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
+        }
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,

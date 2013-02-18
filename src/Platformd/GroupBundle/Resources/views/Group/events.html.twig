@@ -1,7 +1,7 @@
 {% set reportContentType    = 'GroupEvent' %}
 {% set site                 = get_current_site() %}
 {% set canAdd               = group.isAllowedTo(app.user, site, 'AddEvent') %}
-{% set canManageEvents      = (app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
+{% set canManageEvents      = (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
 
 <div id="event-content-scroll" style="height: 550px;">
 

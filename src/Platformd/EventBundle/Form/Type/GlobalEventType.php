@@ -4,6 +4,8 @@ namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilder;
 
+use Platformd\SpoutletBundle\Form\Type\SlugType;
+
 class GlobalEventType extends EventType
 {
     public function buildForm(FormBuilder $builder, array $options)

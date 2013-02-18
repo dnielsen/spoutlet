@@ -64,42 +64,6 @@
                     document.location.href = $(this).children('option:selected').attr('data-route');
                     break;
 
-                case 'disable':
-                    var answer = confirm("Are you sure you want to disable this event?")
-                    if (!answer){
-                        return false;
-                    }
-
-                    var route = $(this).children('option:selected').attr('data-route');
-                    var id = $(this).attr('data-id');
-                    var type = $(this).attr('data-contenttype');
-
-                    $.blockUI({
-                        message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="padding:15px 0 15px 0;" />',
-                        css: {
-                            backgroundColor: '#252525',
-                            border: '3px solid #009CDA',
-                            color: '#B3B3B3',
-                        }
-                    });
-
-                    $.ajax({
-                        url: route,
-                        type: 'post',
-                        data: JSON.stringify({
-                            'id' : id
-                        }),
-                        contentType: 'json',
-                        success: function(data) {
-                            if (!data.success) {
-                                alert(data.errorMessage);
-                            }
-                            $.unblockUI();
-                        }
-                    });
-
-                    break;
-
                 default:
                     break;
             }

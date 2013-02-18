@@ -48,6 +48,8 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
+        $('.datetime-picker').datetimepicker({ minDate: 0 });
+
         var $i = 0;
         $('#globalEvent_translations > .control-group > label').each(function (){
             switch ($i) {

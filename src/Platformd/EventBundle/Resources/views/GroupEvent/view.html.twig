@@ -24,16 +24,14 @@
         </div>
     {% endif %}
 
-    {% if app.user == event.user or app.user.adminLevel == 'ROLE_SUPER_ADMIN' %}
+    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
         <div class="std_1col" style="padding: 0;">
             <div class="events-sub-nav-wrapper">
-            </div>
                <div class="events-sub-nav">
                     <ul>
                         <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</a></li>
                         <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
                         <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
-                        <li><a href="javascript:void(0);" id="disable-link">Disable Event</a></li>
                     </ul>
                 </div>
             </div>
@@ -176,47 +174,6 @@
             })
 
         });
-
-        $('#disable-link').click(function () {
-
-            var answer = confirm("Are you sure you want to disable this event? You can re-enable it from your control panel.")
-            if (!answer){
-                return false;
-            }
-
-            var route = {{ path("group_event_disable") }};
-            var id = $(this).attr('data-id');
-            var type = $(this).attr('data-contenttype');
-
-            $.blockUI({
-                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="padding:15px 0 15px 0;" />',
-                css: {
-                    backgroundColor: '#252525',
-                    border: '3px solid #009CDA',
-                    color: '#B3B3B3',
-                }
-            });
-
-            $.ajax({
-                url: route,
-                type: 'post',
-                data: JSON.stringify({
-                    'id' : id
-                }),
-                contentType: 'json',
-                success: function(data) {
-                    if (!data.success) {
-                        alert(data.errorMessage);
-                    } else {
-                        alert("Event successfully disabled.");
-                        document.location.href = "{{ path('accounts_events') }}";
-                    }
-                    $.unblockUI();
-                }
-            });
-
-        });
-
     });
 
 </script>

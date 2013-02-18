@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Component\Validator\ExecutionContext;
 
 use Vich\GeographicalBundle\Annotation as Vich;
 
@@ -28,6 +29,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
+ * @Assert\Callback(methods={"externalContentCheck"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -376,6 +378,7 @@ abstract class Event implements LinkableInterface
      */
     public function setEndsAt($endsAt)
     {
+        $endsAt = $endsAt < new \DateTime('now') ? new \DateTime('now') : $endsAt;
         $this->endsAt = $endsAt;
     }
 
@@ -529,6 +532,7 @@ abstract class Event implements LinkableInterface
      */
     public function setStartsAt($startsAt)
     {
+        $startsAt = $startsAt < new \DateTime('now') ? new \DateTime('now') : $startsAt;
         $this->startsAt = $startsAt;
     }
 
@@ -751,5 +755,12 @@ abstract class Event implements LinkableInterface
     public function updateAttendeeCount($increment = 1)
     {
         $this->attendeeCount += $increment;
+    }
+
+    public function externalContentCheck(ExecutionContext $context)
+    {
+        if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY) {
+            $this->setContent('This event is hosted at an external URL.');
+        }
     }
 }

@@ -5,20 +5,18 @@
     <h1>Edit Event: {{ event.name }}</h1>
 
     <form action="{{ path('group_event_edit', {'groupSlug': group.slug, 'eventId': event.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-        {% if event.active == true %}
-            <div class="cancel-event-container" style="padding-left: 40px;">
-                <a href="javascript:void(0);" class="cancel-event" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}">Cancel Event</a>
-            </div>
-        {% else %}
-            <div class="activate-event-container" style="padding-left: 40px;">
-                <a href="javascript:void(0);" class="activate-event" event-name="{{ event.name }}" data-path="{{ path('group_event_activate', { 'eventId' : event.id }) }}">Activate Event</a>
-            </div>
-        {% endif %}
 
         {% include 'EventBundle:GroupEvent:_form.html.twig' %}
 
         <div class="form-actions" style="float: left;">
             <button type="submit" class="btn btn-primary" formnovalidate>Update</button>
+
+            {% if event.active == true %}
+                <button type="submit" class="cancel-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Cancel Event</button>
+            {% else %}
+                <button type="submit" class="activate-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_activate', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Activate Event</button>
+            {% endif %}
+
             <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Cancel</button>
         </div>
     </form>
@@ -44,7 +42,8 @@
                 showSecond: true
             });
 
-            $('.cancel-event').click(function () {
+            $('.cancel-event').click(function (e) {
+                e.preventDefault();
                 var eventname = $(this).attr('event-name');
                 var path = $(this).attr('data-path');
                 var text = $('#cancel-text').text().replace('{0}', eventname);
@@ -54,9 +53,11 @@
                     modal: true,
                     resizable: false,
                     movable: false,
-                    height: 150,
+                    height: 200,
+                    width: 320,
                     buttons: {
                         "Yes": function() {
+                            $(this).dialog("close");
                             document.location = path;
                         },
                         "No": function() {
@@ -66,7 +67,8 @@
                 });
             });
 
-            $('.activate-event').click(function () {
+            $('.activate-event').click(function (e) {
+                e.preventDefault();
                 var eventname = $(this).attr('event-name');
                 var path = $(this).attr('data-path');
                 var text = $('#activate-text').text().replace('{0}', eventname);
@@ -76,9 +78,11 @@
                     modal: true,
                     resizable: false,
                     movable: false,
-                    height: 150,
+                    height: 200,
+                    width: 320,
                     buttons: {
                         "Yes": function() {
+                            $(this).dialog("close");
                             document.location = path;
                         },
                         "No": function() {
