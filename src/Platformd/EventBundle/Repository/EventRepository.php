@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager,
 ;
 
 use Platformd\EventBundle\Entity\Event;
+use Platformd\EventBundle\Entity\GroupEventRepository;
 use Platformd\EventBundle\Entity\EventEmail;
 use Platformd\UserBundle\Entity\User;
 
@@ -111,8 +112,8 @@ class EventRepository extends EntityRepository
                 'now' => new \DateTime('now'),
             ));
 
-        if (method_exists($this, 'addActiveClauses')) {
-            $this->addActiveClauses($qb);
+        if ($this instanceof GroupEventRepository) {
+            $qb->andWhere('e.deleted = 0');
         }
 
         if ($whereIsOrganizer) {
@@ -151,6 +152,10 @@ class EventRepository extends EntityRepository
                 'user' => $user,
                 'now' => new \DateTime('now'),
             ));
+
+        if ($this instanceof GroupEventRepository) {
+            $qb->andWhere('e.deleted = 0');
+        }
 
         if (method_exists($this, 'addActiveClauses')) {
             $this->addActiveClauses($qb);

@@ -632,8 +632,8 @@ class SpoutletExtension extends Twig_Extension
 
         switch($locale) {
 
-            case 'ja':      return sprintf($format, $internalUrl);
-            case 'zh':      return sprintf($format, $internalUrl);
+            //case 'ja':      return sprintf($format, $internalUrl);
+            //case 'zh':      return sprintf($format, $internalUrl);
 
             default:        return sprintf($format, $externalUrl);
         }

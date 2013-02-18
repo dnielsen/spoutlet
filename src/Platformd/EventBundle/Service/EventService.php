@@ -328,4 +328,9 @@ class EventService
     {
         return $this->repository->getPastEventListForUser($user);
     }
+
+    public function getAttendeeList($event)
+    {
+        return $this->repository->getAttendeeList($event);
+    }
 }

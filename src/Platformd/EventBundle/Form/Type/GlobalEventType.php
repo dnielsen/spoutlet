@@ -41,6 +41,9 @@ class GlobalEventType extends EventType
                 'expanded' => true,
                 'property' => 'name'
             ))
+            ->add('slug', new SlugType(), array(
+                'label' => 'platformd.event.form.url'
+            ))
         ;
     }
 }

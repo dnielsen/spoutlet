@@ -489,26 +489,13 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
         return $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,
             'groupEvents'   => $groupEvents,
-            'mode'          => 'upcoming',
-        ));
-    }
-
-    public function pastEventsAction($id)
-    {
-        $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewGroupContent', false);
-
-        $groupEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
-
-        return $this->render('GroupBundle:Group:events.html.twig', array(
-            'group'         => $group,
-            'groupEvents'   => $groupEvents,
-            'mode'          => 'past',
+            'pastEvents'    => $pastEvents,
         ));
     }
 

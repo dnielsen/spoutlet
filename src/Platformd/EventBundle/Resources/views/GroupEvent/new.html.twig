@@ -8,13 +8,15 @@
         <form action="{{ path('group_event_new', {'groupSlug': group.slug }) }}" method="post" class="form-horizontal">
             <div class="control-group">
                 <label class="control-label">Import From Past Event (Optional): </label>
-                <select id="existing_event_select" name="existing_event_select">
-                    {% for existingEvent in existingEvents %}
-                        <option value="{{ existingEvent.id }}">{{ existingEvent.name }}</option>
-                    {% endfor %}
-                </select>
+                <div class="controls">
+                    <select id="existing_event_select" name="existing_event_select">
+                        {% for existingEvent in existingEvents %}
+                            <option value="{{ existingEvent.id }}">{{ existingEvent.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary" formnovalidate>Import</button>
+                </div>
 
-                <button type="submit" class="btn btn-primary" formnovalidate>Import</button>
             </div>
         </form>
     {% endif %}

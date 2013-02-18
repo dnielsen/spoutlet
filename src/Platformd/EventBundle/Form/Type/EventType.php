@@ -8,8 +8,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\EventDispatcher\EventSubscriberInterface
 ;
 
-use Platformd\SpoutletBundle\Form\Type\SlugType,
-    Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
+use Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
     Platformd\EventBundle\Entity\Event,
     Platformd\MediaBundle\Form\Type\MediaType
 ;
@@ -44,9 +43,6 @@ class EventType extends AbstractType
                 'image_help'    => 'platformd.event.form.help.banner_image',
                 'required' => false
             ))
-            ->add('slug', new SlugType(), array(
-                'label' => 'platformd.event.form.url'
-            ))
             ->add('content', 'purifiedTextarea', array(
                 'label' => 'platformd.event.form.description',
                 'attr' => array(
@@ -56,7 +52,8 @@ class EventType extends AbstractType
             ->add('game', 'entity', array(
                 'class'     => 'GameBundle:Game',
                 'property'  => 'name',
-                'empty_value' => 'N/A',
+                'empty_value' => 'Other',
+                'required'  => false,
                 'label' => 'platformd.event.form.game'
             ))
             ->add('online', 'choice', array(
@@ -93,10 +90,6 @@ class EventType extends AbstractType
             ))
             ->add('timezone', 'timezone', array(
                 'label' => 'platformd.event.form.timezone'
-            ))
-            ->add('displayTimezone', 'checkbox', array(
-                'label' => 'platformd.event.form.display_timezone',
-
             ))
         ;
     }
