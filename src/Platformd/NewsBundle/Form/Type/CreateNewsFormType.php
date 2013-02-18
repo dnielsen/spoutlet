@@ -33,7 +33,9 @@ class CreateNewsFormType extends AbstractType
                 'required' => false
             ))
             ->add('blurb', 'textarea')
-            ->add('body')
+            ->add('body', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor')
+            ))
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
