@@ -15,7 +15,7 @@ Feature: User Navigation
       | Link                | Target                                                | Destination                                                                | CompareWithRedirects |
       | アカウントホーム          | http://alienwarearena.com/account/                    |                                                                           |                       |
       | パスワード変更          | http://alienwarearena.com/account/password/            |                                                                           |                      |
-      | プロファイル             | /app_test.php/account/profile/view                     | http://www.alienwarearena.com/japan/member/55                            | yes                  |
+      | プロファイル             | http://www.alienwarearena.com/japan/member/55         |                                                                       | yes                  |
       | 参加済みイベント      | http://www.alienwarearena.com/japan/account/events/   |                                                                           |                       |
       | 参加済みキャンペーン      | /app_test.php/account/profile/giveaways                | http://japan.alienwarearena.local/app_test.php/account/profile/giveaways |                       |
       | トーナメント >> ゲームID   | http://www.alienwarearena.com/japan/account/ids/      |                                                                           |                       |
