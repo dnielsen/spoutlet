@@ -25,20 +25,16 @@ class GlobalEventController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
 
-        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
-        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
-        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site);
-
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
-        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));
-        uasort($pastEvents, array($this, 'eventCompare'));
 
         $groupsCount = 0;
 
@@ -48,8 +44,8 @@ class GlobalEventController extends Controller
         }
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
+            'pager' => $pager,
             'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => $pastEvents,
             'groupsCount'   => $groupsCount,
         ));
     }
@@ -94,8 +90,13 @@ class GlobalEventController extends Controller
     public function pastAction(Request $request)
     {
         $page = $request->query->get('page', 1);
+        $site = $this->getCurrentSite();
 
-        $events = $this->getGlobalEventService()->findPastEventsForSite($this->getCurrentSite(), 20, $page, $pager);
+        $pastGlobalEvents = $this->getGlobalEventService()->findPastEventsForSite($site, 20, $page, $pager);
+        $pastGroupEvents  = $this->getGroupEventService()->findPastEventsForSite($site, 20, $page, $pager);
+
+        $events = array_merge($pastGlobalEvents, $pastGroupEvents);
+        uasort($events, array($this, 'eventCompare'));
 
         $groupsCount = 0;
 

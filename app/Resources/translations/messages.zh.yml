@@ -107,6 +107,7 @@ platformd:
 
     events:
         event_listings:
+            header: "Alienware Arena Events"
             organizer: Organizer
             attendees: Attendees
             action: Action

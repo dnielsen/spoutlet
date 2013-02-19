@@ -118,6 +118,7 @@ platformd:
 
     events:
         event_listings:
+            header: "Alienware Arena Events"
             create: Create Event
             organizer: Organizer
             attendees: Attendees
@@ -131,7 +132,7 @@ platformd:
                 change_rsvp: Change RSVP
                 attending: Attending
                 not_attending: Not Attending
-            current_events: Current Events
+            current_events: Upcoming Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
             start_date: Start Date

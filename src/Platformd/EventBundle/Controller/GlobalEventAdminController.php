@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Controller\Controller,
 ;
 
 use Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 ;
 
@@ -196,6 +197,15 @@ class GlobalEventAdminController extends Controller
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
 
+    public function metricsAction(Request $request)
+    {
+        $results = $this->getGroupEventService()->findGroupEventMetrics('upcoming');
+
+        return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
+            'results' => $results,
+        ));
+    }
+
     /**
      * @return \Knp\Menu\ItemInterface
      */
@@ -214,5 +224,13 @@ class GlobalEventAdminController extends Controller
     private function getGlobalEventService()
     {
         return $this->get('platformd_event.service.global_event');
+    }
+
+        /**
+     * @return GroupEventService
+     */
+    private function getGroupEventService()
+    {
+        return $this->get('platformd_event.service.group_event');
     }
 }

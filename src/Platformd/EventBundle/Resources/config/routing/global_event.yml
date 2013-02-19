@@ -69,3 +69,7 @@ admin_event_publish:
 admin_event_unpublish:
     pattern: /admin/events/unpublish/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:unpublishEvent }
+
+admin_event_metrics:
+    pattern: /admin/events/metrics
+    defaults: { _controller: EventBundle:GlobalEventAdmin:metrics }

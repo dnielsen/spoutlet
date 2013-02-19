@@ -1,18 +1,16 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
-
+<h2>{{ 'platformd.events.event_listings.header' | trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
         {% if groupsCount > 0 %}
-            <p>To create an event, go to the events tab of one of <a href="{{ path('accounts_groups') }}">your groups</a>.</p>
+            <div style="width:100%;">To create an event, <a href="{{ path('accounts_groups') }}">select a group</a>.</div>
         {% else %}
-            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary">{{ 'platformd.events.event_listings.create' | trans }}</a>
-            <p style="display: inline; margin-left: 10px;">(You will first have to create a group to attach the event to)</p>
+            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary" style="float:right;">{{ 'platformd.events.event_listings.create' | trans }}</a>
         {% endif %}
     </div>
 </div>
-
 <div class="std_1col">
     <div class="widget-100">
         <div class="widget-header">

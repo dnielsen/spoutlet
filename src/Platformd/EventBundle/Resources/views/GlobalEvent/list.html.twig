@@ -3,14 +3,13 @@
 {% block title 'platformd.layout.main_menu.events' | trans %}
 
 {% block content %}
-
+<h2>{{ 'platformd.events.event_listings.header' | trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
         {% if groupsCount > 0 %}
-            <p>To create an event, go to the events tab of one of <a href="{{ path('accounts_groups') }}">your groups</a>.</p>
+            <div style="width:100%;">To create an event, <a href="{{ path('accounts_groups') }}">select a group</a>.</div>
         {% else %}
-            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary">{{ 'platformd.events.event_listings.create' | trans }}</a>
-            <p style="display: inline; margin-left: 10px;">(You will first have to create a group to attach the event to)</p>
+            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary" style="float:right;">{{ 'platformd.events.event_listings.create' | trans }}</a>
         {% endif %}
     </div>
 </div>
@@ -30,100 +29,17 @@
         </div>
 
         <div class="widget-footer">
-            <a href="{{ path('global_events_current') }}">{{ 'platformd.events.event_listings.more_current_events' | trans }}</a>
-        </div>
-    </div>
-
-    <div class="widget-100" style="margin-top:15px;">
-        <div class="widget-header">
-            <div class="widget-title">
-                {{ 'platformd.events.event_listings.past_events' | trans }}
-            </div>
-        </div>
-
-        <div class="widget-content">
-            {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
-                'events': pastEvents,
-                'no_events_message': 'platformd.events.event_listings.no_past_events'
-            } %}
-        </div>
-
-        <div class="widget-footer">
-            <a href="{{ path('global_events_past') }}">{{ 'platformd.events.event_listings.more_past_Events' | trans }}</a>
+            &nbsp;
         </div>
     </div>
 </div>
 {% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.maps.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
-            $('.qtip-view-map').each(function(i, v) {
-
-                var lat = $(this).attr('data-lat');
-                var lng = $(this).attr('data-lng');
-
-                $(this).qtip({
-                    content: {
-                        text: 'Loading map...',
-                        prerender: false
-                    },
-                    style: {
-                        classes: 'qtip-dark qtip-shadow qtip-rounded',
-                        width: 500,
-                    },
-                    position: {
-                        my: 'top center',
-                        at: 'bottom center',
-                        viewport: $(window),
-                        adjust: { method: 'shift' }
-                    },
-                    show: 'click',
-                    hide: 'unfocus',
-                    events: {
-                        render: function (event, api) {
-                            var tooltip = $(this);
-                            var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
-                            tooltip.show();
-
-                            // options
-                            var myOptions = {
-                                zoom: 12,
-                                mapTypeControl: true,
-                                mapTypeControlOptions: {
-                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-                                },
-                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                            }
-
-                            // Create map object as api attribute for later use
-                            api.map = new google.maps.Map(container[0], myOptions);
-                            var map = api.map;
-                            markersArray = [];
-
-                            // set center
-                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                            map.setCenter(centerLatLong);
-
-                            tooltip.hide();
-                        },
-                        show: function (event, api) {
-                            var map = api.map;
-
-                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                            map.setCenter(centerLatLong);
-
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                position: centerLatLong,
-                                animation: google.maps.Animation.DROP,
-                            });
-                        }
-                    }
-                });
-            });
+           $('table.tablesorter').tablesorter();
         });
     </script>
 {% endblock %}

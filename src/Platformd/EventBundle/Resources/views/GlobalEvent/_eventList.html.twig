@@ -1,12 +1,14 @@
-<table>
-    <tbody>
+<table class="tablesorter">
+    <thead>
         <tr>
-            <th style="width:121px;">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
-            <th style="width:259px;">{{ 'platformd.events.event_listings.event' | trans }}</th>
-            <th style="width:212px;">{{ 'platformd.events.event_listings.games' | trans }}</th>
-            <th style="width:191px;">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
-            <th style="width:133px;">{{ 'platformd.events.event_listings.location' | trans }}</th>
+            <th style="width:121px;cursor:pointer">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
+            <th style="width:259px;cursor:pointer">{{ 'platformd.events.event_listings.event' | trans }}</th>
+            <th style="width:132px;cursor:pointer">{{ 'platformd.events.event_listings.games' | trans }}</th>
+            <th style="width:191px;cursor:pointer">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
+            <th style="width:213px;cursor:pointer">{{ 'platformd.events.event_listings.location' | trans }}</th>
         </tr>
+    </thead>
+    <tbody>
         {% if events|length == 0 %}
         <tr>
             <td style="text-align:center; padding:20px 0;" colspan="5">
@@ -22,7 +24,7 @@
         {% else %}
         {% for event in events %}
         <tr class="eventListGroup_online">
-            <td style="width:121px;">
+            <td style="width:121px;vertical-align:top">
                 {{ event.startsAt | date('M j, Y') }}
             </td>
             {# todo - refactor this next line somewhere else #}
@@ -34,14 +36,14 @@
                 {% endif %}
 
             </td>
-            <td style="width:212px;">
+            <td style="width:132px;vertical-align:top">
                 {% if event.game is defined %}
                     {{ event.game ? event.game : ('na'|trans) }}
                 {% else %}
                     {{ 'na'|trans }}
                 {% endif %}
             </td>
-            <td style="width:191px;">
+            <td style="width:191px;vertical-align:top">
                 {% if event.hostedBy is defined %}
                     {{ event.hostedBy }}
                 {% else %}
@@ -52,15 +54,14 @@
                     {% endif %}
                 {% endif %}
             </td>
-            <td style="width:133px;">
+            <td style="width:213px;vertical-align:top">
                 {% if event.online %}
                     Online
                 {% else %}
                     {% if event.address is defined %}
                         <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}">
-                            <img src="{{ asset('bundles/spoutlet/images/icons/map_magnify.png') }}" />
+                            {{ event.location ? event.location : ('na'|trans) }}
                         </a>
-                        <span class="map-info" data-id="{{ event.id }}">{{ event.location ? event.location : ('na'|trans) }}</span>
                     {% else %}
                         {{ 'na'|trans }}
                     {% endif %}
@@ -71,3 +72,72 @@
         {% endif %}
     </tbody>
 </table>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.qtip-view-map').each(function(i, v) {
+
+                var lat = $(this).attr('data-lat');
+                var lng = $(this).attr('data-lng');
+
+                $(this).qtip({
+                    content: {
+                        text: 'Loading map...',
+                        prerender: false
+                    },
+                    style: {
+                        classes: 'qtip-dark qtip-shadow qtip-rounded',
+                        width: 500,
+                    },
+                    position: {
+                        my: 'top center',
+                        at: 'bottom center',
+                        viewport: $(window),
+                        adjust: { method: 'shift' }
+                    },
+                    show: 'click',
+                    hide: 'unfocus',
+                    events: {
+                        render: function (event, api) {
+                            var tooltip = $(this);
+                            var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+                            tooltip.show();
+
+                            // options
+                            var myOptions = {
+                                zoom: 12,
+                                mapTypeControl: true,
+                                mapTypeControlOptions: {
+                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                                },
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+
+                            // Create map object as api attribute for later use
+                            api.map = new google.maps.Map(container[0], myOptions);
+                            var map = api.map;
+                            markersArray = [];
+
+                            // set center
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            tooltip.hide();
+                        },
+                        show: function (event, api) {
+                            var map = api.map;
+
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                position: centerLatLong,
+                                animation: google.maps.Animation.DROP,
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>

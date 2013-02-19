@@ -109,4 +109,9 @@ class GroupEventService extends EventService
             }
         }
     }
+
+    public function findGroupEventMetrics($filter)
+    {
+        return $this->repository->findGroupEventMetrics($filter);
+    }
 }
