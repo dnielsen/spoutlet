@@ -6,7 +6,9 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Service\GlobalEventService,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
-    Platformd\EventBundle\Entity\GlobalEventTranslation
+    Platformd\EventBundle\Entity\GlobalEventTranslation,
+    Platformd\EventBundle\Entity\EventFindWrapper,
+    Platformd\EventBundle\Form\Type\EventFindType
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -199,11 +201,64 @@ class GlobalEventAdminController extends Controller
 
     public function metricsAction(Request $request)
     {
-        $results = $this->getGroupEventService()->findGroupEventMetrics('upcoming');
+        $page = $request->query->get('page', 1);
+
+        $data = new EventFindWrapper();
+        $form = $this->createForm(new EventFindType(), $data);
+
+        if ('POST' == $request->getMethod()) {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->setEventsFilterFormData(array(
+                    'eventName' => $data->getEventName(),
+                    'published' => $data->getPublished(),
+                    'sites' => $data->getSites(),
+                    'from' => $data->getFrom(),
+                    'thru' => $data->getThru()
+                ));
+            }
+        }
+
+/*        $pager = $this->getGroupEventService()->findGroupEventStats(array(
+            'eventName' => $data->getEventName(),
+            'published' => $data->getPublished(),
+            'sites' => $data->getSites(),
+            'from' => $data->getFrom(),
+            'thru' => $data->getThru(),
+            'page' => $page
+        ));*/
+
+        $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
+            'eventName' => $data->getEventName(),
+            'published' => $data->getPublished(),
+            'sites' => $data->getSites(),
+            'from' => $data->getFrom(),
+            'thru' => $data->getThru(),
+            'page' => $page
+        ));
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
-            'results' => $results,
+            'pager' => $pager,
+            'form'  => $form->createView(),
         ));
+    }
+
+    private function resetEventsFilterFormData()
+    {
+        $this->setDiscussionsFilterFormData(array());
+    }
+
+    private function getEventsFilterFormData()
+    {
+        $session = $this->getRequest()->getSession();
+        return $session->get('eventsFormValues', array());
+    }
+
+    private function setEventsFilterFormData($data)
+    {
+        $session = $this->getRequest()->getSession();
+        $session->set('eventsFormValues', $data);
     }
 
     /**

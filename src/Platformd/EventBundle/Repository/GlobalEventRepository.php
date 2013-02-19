@@ -124,4 +124,65 @@ class GlobalEventRepository extends EventRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findGlobalEventStats(array $data = array())
+    {
+        $filters = array_merge(
+            array('eventName' => '', 'published' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            $data
+        );
+
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['published'], $filters['sites'], $filters['from'], $filters['thru']);
+
+        if (isset($filters['page'])) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage(10)->setCurrentPage($filters['page']);
+
+            return $pager;
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getFindEventsQB($eventName, $status, $sites, $from="", $thru="")
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->leftJoin('gE.sites', 's');
+
+        if (count($sites) > 0) {
+
+            $qb->andWhere('s.defaultLocale IN (:siteList)');
+            $qb->setParameter('siteList', $sites);
+
+        }
+
+        if ($eventName) {
+            $qb->andWhere('gE.name like :eventName');
+            $qb->setParameter('eventName', '%'.$eventName.'%');
+        }
+
+        if ($status != "") {
+            $qb->andWhere('gE.published = :status');
+            $qb->setParameter('status', $status);
+        }
+
+        if ($from != "") {
+
+            $from->setTime(0, 0, 0);
+            $qb->andWhere('gE.startsAt >= :from');
+            $qb->setParameter('from', $from);
+        }
+
+        if ($thru != "") {
+
+            $thru->setTime(23, 59, 59);
+            $qb->andWhere('gE.endsAt <= :thru');
+            $qb->setParameter('thru', $thru);
+        }
+
+        $qb->distinct('gE.id');
+
+        return $qb;
+    }
 }
