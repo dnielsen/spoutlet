@@ -168,3 +168,8 @@ services:
         class: Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper
         arguments:
             - "@doctrine.orm.entity_manager"
+
+    platformd.form.type.gmtOffsetTimezone:
+        class: Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType
+        tags:
+            - { name: form.type, alias: gmtTimezone }
