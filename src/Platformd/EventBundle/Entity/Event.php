@@ -6,7 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Component\Validator\ExecutionContext;
 
 use Vich\GeographicalBundle\Annotation as Vich;
 
@@ -28,6 +29,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
+ * @Assert\Callback(methods={"externalContentCheck"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -52,7 +54,7 @@ abstract class Event implements LinkableInterface
      * Event's name
      *
      * @var string $name
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(name="name", type="string", length=255)
      */
     protected $name;
@@ -73,7 +75,7 @@ abstract class Event implements LinkableInterface
      * Event description
      *
      * @var string $content
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(name="content", type="text", nullable=true)
      */
     protected $content;
@@ -100,7 +102,7 @@ abstract class Event implements LinkableInterface
      * Event registration option (enabled, disabled, 3rd party)
      *
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(name="registration_option", type="string", length=255)
      */
     protected $registrationOption = self::REGISTRATION_ENABLED;
@@ -141,7 +143,7 @@ abstract class Event implements LinkableInterface
      * Event starts at
      *
      * @var \DateTime $startsAt
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $startsAt;
@@ -150,7 +152,7 @@ abstract class Event implements LinkableInterface
      * Events ends at
      *
      * @var \DateTime $endsAt
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $endsAt;
@@ -159,7 +161,7 @@ abstract class Event implements LinkableInterface
      * The timezone this event is taking place in
      *
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Required")
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $timezone = 'UTC';
@@ -176,7 +178,6 @@ abstract class Event implements LinkableInterface
      * Game this event relates to
      *
      * @var Game
-     * @Assert\NotBlank()
      * @ORM\ManyToOne(targetEntity="Platformd\GameBundle\Entity\Game")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -260,8 +261,10 @@ abstract class Event implements LinkableInterface
      */
     public function __construct()
     {
-        $this->attendees        = new ArrayCollection();
-        $this->createdAt        = new DateTime();
+        $this->attendees    = new ArrayCollection();
+        $this->createdAt    = new DateTime();
+        $this->startsAt     = new \DateTime('now');
+        $this->endsAt       = new \DateTime('now');
     }
 
     /**
@@ -375,6 +378,7 @@ abstract class Event implements LinkableInterface
      */
     public function setEndsAt($endsAt)
     {
+        $endsAt = $endsAt < new \DateTime('now') ? new \DateTime('now') : $endsAt;
         $this->endsAt = $endsAt;
     }
 
@@ -528,6 +532,7 @@ abstract class Event implements LinkableInterface
      */
     public function setStartsAt($startsAt)
     {
+        $startsAt = $startsAt < new \DateTime('now') ? new \DateTime('now') : $startsAt;
         $this->startsAt = $startsAt;
     }
 
@@ -750,5 +755,12 @@ abstract class Event implements LinkableInterface
     public function updateAttendeeCount($increment = 1)
     {
         $this->attendeeCount += $increment;
+    }
+
+    public function externalContentCheck(ExecutionContext $context)
+    {
+        if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY) {
+            $this->setContent('This event is hosted at an external URL.');
+        }
     }
 }

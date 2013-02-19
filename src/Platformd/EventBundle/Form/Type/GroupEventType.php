@@ -30,7 +30,12 @@ class GroupEventType extends EventType
             ),
             'label' => 'platformd.event.form.private_public',
             'expanded' => true
-        ));
+        ))
+        ->add('timezone', 'gmtTimezone', array(
+            'label' => 'platformd.event.form.timezone',
+            'full' => true,
+        ))
+        ;
 
         // Needed to show fields only to admins
         $adminEventSubscriber = new $this->eventSubscriber($builder->getFormFactory(), $this->security);

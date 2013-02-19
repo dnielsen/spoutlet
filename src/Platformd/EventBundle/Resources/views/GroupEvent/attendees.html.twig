@@ -1,4 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
+{% set canRemove = (app.user == event.user) or (app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
 
 {% block title 'Attendees - ' ~ event.name %}
 
@@ -24,23 +25,25 @@
                     <table style="width: 100%;">
                         <thead style="text-align:left;">
                             <tr>
-                                <th style="padding:5px 0;">Action</th>
+                                {% if canRemove %}<th style="padding:5px 0;">Action</th>{% endif %}
                                 <th style="padding:5px 0;">Username</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for attendee in attendees %}
-                                    <tr>
+                                <tr>
+                                    {% if canRemove %}
                                         <td style="padding:5px 0;">
                                             <a href="{{ path('group_event_remove_attendee', { 'groupSlug': event.group.slug, 'eventSlug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
                                         </td>
-                                        <td style="padding:5px 0;">
-                                            <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
-                                        </td>
-                                    </tr>
+                                    {% endif %}
+                                    <td style="padding:5px 0;">
+                                        <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                    </td>
+                                </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="2">
+                                    <td{% if canRemove %} colspan="2"{% endif %}>
                                         <em>There are no attendees!</em>
                                     </td>
                                 </tr>

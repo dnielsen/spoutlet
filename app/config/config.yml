@@ -484,4 +484,5 @@ exercise_html_purifier:
     editor_basic:
         HTML.Allowed: a[href], p, strong, em, ul, ol, li
     editor_admin:
-        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, *[style]
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, img[src], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], pre, span, *[style]
+

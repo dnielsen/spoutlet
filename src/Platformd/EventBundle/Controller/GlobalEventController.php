@@ -157,10 +157,6 @@ class GlobalEventController extends Controller
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
         }
 
-        if (false === $this->getSecurity()->isGranted('EDIT', $event) || $this->getUser()->getAdminLevel() === null) {
-            throw new AccessDeniedException();
-        }
-
         $attendees = $this->getGlobalEventService()->getAttendeeList($event);
 
         return $this->render('EventBundle:GlobalEvent:attendees.html.twig', array(

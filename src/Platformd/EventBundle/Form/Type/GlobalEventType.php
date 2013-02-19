@@ -4,6 +4,8 @@ namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\FormBuilder;
 
+use Platformd\SpoutletBundle\Form\Type\SlugType;
+
 class GlobalEventType extends EventType
 {
     public function buildForm(FormBuilder $builder, array $options)
@@ -40,6 +42,12 @@ class GlobalEventType extends EventType
                 'multiple' => true,
                 'expanded' => true,
                 'property' => 'name'
+            ))
+            ->add('slug', new SlugType(), array(
+                'label' => 'platformd.event.form.url'
+            ))
+            ->add('timezone', 'gmtTimezone', array(
+                'label' => 'platformd.event.form.timezone',
             ))
         ;
     }

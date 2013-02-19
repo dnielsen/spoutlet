@@ -7,12 +7,9 @@
     <div class="row-fluid first">
         <div class="span11">
             {{ form_row(form.name) }}
-            {{ form_row(form.slug) }}
-            {{ form_row(form.bannerImage) }}
             {% if form.registrationOption is defined %}{{ form_row(form.registrationOption) }}{% endif %}
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
             {{ form_row(form.content) }}
-            {{ form_row(form.game) }}
             {{ form_row(form.online) }}
             <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
                 {{ form_row(form.location) }}
@@ -22,12 +19,21 @@
                 <div style="display:inline-table">{{ form_row(form.startsAt) }}</div>
                 <div style="display:inline-table">{{ form_row(form.endsAt) }}</div>
             </div>
-            {{ form_row(form.displayTimezone) }}
             {{ form_row(form.timezone) }}
             {% if form.sites is defined %}{{ form_row(form.sites) }}{% endif %}
             {{ form_row(form.private) }}
         </div>
     </div>
+
+    <div class="hideable-field">
+        <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
+        <div id="advanced-options" style="display:none;">
+            {% if form.slug is defined %}{{ form_row(form.slug) }}{% endif %}
+            {{ form_row(form.bannerImage) }}
+            {{ form_row(form.game) }}
+        </div>
+    </div>
+
     {% if form.translations is defined %}
         <a href="javascript:void(0);" id="translations" style="cursor:pointer;">Add Translations</a>
         <div class="row-fluid first" id="translations-wrapper" style="display:none; margin:20px 0 0 0;">
@@ -40,11 +46,11 @@
 
 {{ form_rest(form) }}
 
-
-
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $('.datetime-picker').datetimepicker({ minDate: 0 });
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
@@ -81,16 +87,21 @@
 
         $('#groupEvent_registrationOption_REGISTRATION_3RDPARTY').click(function() {
             $('.hideable-field').slideUp();
+            $('.hideable-field:hidden').hide();
             $('#external-url').show();
+            alert($('#groupEvent_content').text());
+            alert($('#cke_groupEvent_content').text());
         });
 
         $('#groupEvent_registrationOption_REGISTRATION_ENABLED').click(function() {
             $('.hideable-field').slideDown();
+            $('.hideable-field:hidden').show();
             $('#external-url').hide();
         });
 
         $('#groupEvent_registrationOption_REGISTRATION_DISABLED').click(function() {
             $('.hideable-field').slideDown();
+            $('.hideable-field:hidden').show();
             $('#external-url').hide();
         });
 
@@ -126,6 +137,10 @@
                 $('#translations-wrapper').toggle();
             });
         {% endif %}
+
+        $('#toggle-advanced').click(function () {
+            $('#advanced-options').slideToggle();
+        });
 
     });
 </script>

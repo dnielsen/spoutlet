@@ -30,7 +30,7 @@ class SweepstakesAdminType extends EventType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
-        $builder->add('timezone', 'timezone');
+        $builder->add('timezone', 'gmtTimezone');
 
         $builder->add('bannerImageFile', 'file');
         $builder->add('generalImageFile', 'file', array(
@@ -39,11 +39,15 @@ class SweepstakesAdminType extends EventType
 
         $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
 
-        $builder->add('officialRules', 'textarea');
+        $builder->add('officialRules', 'purifiedTextarea', array(
+            'attr'  => array('class' => 'ckeditor')
+        ));
 
         $builder->add('game', null, array('empty_value' => 'N/A'));
 
-    	$builder->add('content', 'textarea');
+    	$builder->add('content', 'purifiedTextarea', array(
+            'attr'  => array('class' => 'ckeditor')
+        ));
 
         $builder->add('testOnly', 'choice', array(
             'choices' => array(

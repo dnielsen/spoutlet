@@ -1,18 +1,12 @@
 {% set reportContentType    = 'GroupEvent' %}
 {% set site                 = get_current_site() %}
 {% set canAdd               = group.isAllowedTo(app.user, site, 'AddEvent') %}
-{% set canManageEvents      = (app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
+{% set canManageEvents      = (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
 
 <div id="event-content-scroll" style="height: 550px;">
 
     {% if canAdd %}
         <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a>
-    {% endif %}
-
-    {% if mode == 'upcoming' %}
-        <h2>Upcoming Events</h2>
-    {% else %}
-        <h2>Past Events</h2>
     {% endif %}
 
     {% if groupEvents is defined %}
@@ -50,13 +44,46 @@
         <p>No group events yet... please come back later!</p>
     {% endif %}
 
-    {% if mode == 'upcoming' %}
-        <h3><a id="show-past-events-link" href="javascript:void(0)">Past Events</a></h3>
-    {% else %}
-        <h3><a id="show-upcoming-events-link" href="javascript:void(0)">Upcoming Events</a></h3>
+    {% if pastEvents|length > 0 %}
+        <a id="show-past-events-link" href="javascript:void(0);">View Past Events</a>
+
+        <div id="group-past-events" style="display: none;">
+
+            {% for event in pastEvents %}
+
+                <div class="group-event-item" id="event-item-{{ event.id }}"{% if loop.index > 3 %} style="display:none;"{% endif %}>
+                    <div class="group-event-date">
+                        {{ event.getDateRangeString }}
+                    </div>
+
+                    <div class="group-event-details">
+                        <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+                        <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezone }}{% endif %}</div>
+                        <div class="group-event-location"><strong>Where:</strong>
+                            {% if event.online %}
+                                Online
+                            {% else %}
+                                {{ event.location }}, {{ event.address }}
+                            {% endif %}
+                        </div>
+                        <div class="group-event-actions">
+                            {% if canManageEvents == true %}
+                                <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
+                                <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
+                            {% endif %}
+                            <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>No past events!</p>
+            {% endfor %}
+
+            {% if pastEvents|length > 3 %}
+                <a href="javascript:void(0);" id="show-more-past-events">Show More Past Events</a>
+            {% endif %}
+        </div>
     {% endif %}
-
-
 
 </div>
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
@@ -66,11 +93,14 @@
         $('#event-content-scroll').mCustomScrollbar();
 
         $('#show-past-events-link').click(function () {
-            $('a#group-events-past').trigger('click');
+            $('#group-past-events').toggle();
+            $('#event-content-scroll').mCustomScrollbar('update');
         });
 
-        $('#show-upcoming-events-link').click(function () {
-            $('a#group-events').trigger('click');
+        $('#show-more-past-events').click(function () {
+            $('.group-event-item').show();
+            $(this).hide();
+            $('#event-content-scroll').mCustomScrollbar('update');
         });
     });
 </script>

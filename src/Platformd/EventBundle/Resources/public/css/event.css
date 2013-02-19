@@ -1,7 +1,3 @@
-#event-heading-title {
-    padding-bottom: 10px;
-}
-
 .event-comments {
     margin-top: 15px;
 }
@@ -14,14 +10,8 @@
     padding: 10px 0;
 }
 
-#event-heading-date,
-#event-heading-time {
-    color: #b3b3b3;
-    margin-left: 20px;
-}
-
 #event-registration {
-    margin: 10px 0;
+    margin: 10px 0 0 0;
     text-align: center;
 }
 
@@ -95,3 +85,44 @@
     opacity:0.3;
     background-color:#FFF;
 }
+
+.events-sub-nav-wrapper {
+    background: url('/bundles/spoutlet/images/groups/group_subnav_bg.png') no-repeat center;
+    height: 31px;
+}
+
+.events-sub-nav {
+    padding: 10px 0 10px 0;
+    width: 100%;
+    float: left;
+}
+
+.events-sub-nav ul {
+    padding: 0;
+    margin: 0;
+}
+
+.events-sub-nav ul li {
+    float:none;
+    background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 7px;
+    display: inline;
+    padding-top: 5px;
+    padding-bottom: 4px;
+}
+
+.events-sub-nav ul li.first { background: none; }
+
+.events-sub-nav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
+
+#event-registration-closed,
+#registration-response,
+#event-attending-message {
+    color: red;
+}
+
+#event-report-link {
+    margin-top: 10px;
+}
+

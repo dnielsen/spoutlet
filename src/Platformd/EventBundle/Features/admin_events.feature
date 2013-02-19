@@ -11,10 +11,10 @@ Feature: Event Admin
         Given I am on "/admin"
         When I click to add new "Events"
             And I fill in the following:
-                | Name          | Test Event        |
-                | Description   | Description       |
-                | Starts At     | 2013-02-13 00:00  |
-                | Ends At       | 2050-02-13 00:00  |
+                | Event Title   | Test Event        |
+                | Event Details | Description       |
+                | Event Starts  | 2013-02-13 00:00  |
+                | Event Ends    | 2050-02-13 00:00  |
             And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
             And I press "Save"

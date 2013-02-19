@@ -7,15 +7,28 @@ var ckeditorInitialized = false;
 
 CKEDITOR.editorConfig = function( config )
 {
-    config.toolbar = 'Basic';
+    config.toolbar = 'AdminToolbar';
 
     // this prevents extra buttons from being added on subsequent editors
     if (ckeditorInitialized) {
         return;
     }
 
-    config.toolbar_Basic[0].push('Source');
-    config.toolbar_Basic[0].push('PasteFromWord');
+    config.toolbar_AdminToolbar =
+    [
+        { name: 'styles', items : [ 'Format','Font','FontSize' ] },
+        { name: 'colors', items : [ 'TextColor','BGColor' ] },
+        { name: 'tools', items : [ 'ShowBlocks' ] },
+        { name: 'document', items : [ 'Source','-', 'Preview' ] },
+        { name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+        { name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
+        '/',
+        { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
+        { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote',
+        '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+        { name: 'links', items : [ 'Link','Unlink' ] },
+        { name: 'insert', items : [ 'Image','Table','HorizontalRule' ] }
+    ];
 
     ckeditorInitialized = true;
 };

@@ -102,7 +102,7 @@ class GroupEventController extends Controller
                 }
 
             } else {
-                $this->setFlash('error', 'Something went wrong');
+                $this->setFlash('error', 'You must fill in the required fields in order to save your event.');
             }
         }
 
@@ -270,7 +270,11 @@ class GroupEventController extends Controller
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
-        $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
+        $isAttending = false;
+
+        if ($this->isGranted('ROLE_USER')) {
+            $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
+        }
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
@@ -441,12 +445,6 @@ class GroupEventController extends Controller
 
         if (!$groupEvent) {
             throw new NotFoundHttpException('Event does not exist.');
-        }
-
-        // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
-        {
-            throw new AccessDeniedException();
         }
 
         $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);

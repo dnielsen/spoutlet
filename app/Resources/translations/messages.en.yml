@@ -123,6 +123,7 @@ platformd:
             organizer: Organizer
             attendees: Attendees
             actions: Actions
+            status: Status
             my_events: My Events
             your_owned_events: My Event Listings
             your_registered_events: Events I'm Registered In
@@ -137,6 +138,7 @@ platformd:
             more_current_events: More Current Events
             start_date: Start Date
             end_date: End Date
+            date: Date
             details: Details
             event: Event
             games: Games
@@ -367,23 +369,23 @@ platformd:
 
     event:
         form:
-            name: "Name"
-            banner_image: "Banner Image"
+            name: "Event Title"
+            banner_image: "Event Banner"
             url: "URL"
-            description: "Description"
+            description: "Event Details"
             game: "Game"
             event_type: "Event Type"
             location: "Location"
             address: "Address"
-            starts_at: "Starts At"
-            ends_at: "Ends At"
+            starts_at: "Event Starts"
+            ends_at: "Event Ends"
             hosted_by: "Hosted By"
             timezone: "Timezone"
             display_timezone: "Display Timezone"
             external_url: "External Url"
             event_options: "Event Options"
-            sites: "Sites"
-            private_public: "Is this a public or private event"
+            sites: "Regions"
+            private_public: "Is this a public or private event?"
             published: "Do you want your event published?"
 
             choice:

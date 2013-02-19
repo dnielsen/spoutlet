@@ -26,7 +26,6 @@
                     <div style="display:inline-table">{{ form_row(form.startsAt) }}</div>
                     <div style="display:inline-table">{{ form_row(form.endsAt) }}</div>
                 </div>
-                {{ form_row(form.displayTimezone) }}
                 {{ form_row(form.timezone) }}
                 {{ form_row(form.sites) }}
                 {{ form_row(form.published) }}
@@ -48,6 +47,8 @@
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $('.datetime-picker').datetimepicker({ minDate: 0 });
 
         var $i = 0;
         $('#globalEvent_translations > .control-group > label').each(function (){

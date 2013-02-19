@@ -85,6 +85,14 @@
                         <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ group.members.count }}</a></td>
                     </tr>
                     <tr>
+                        <td>Upcoming Events</td>
+                        <td>{{ upcomingEvents|length }}</td>
+                    </tr>
+                    <tr>
+                        <td>Past Events</td>
+                        <td>{{ pastEvents|length }}</td>
+                    </tr>
+                    <tr>
                         <td>Comments</td>
                         <td><span class="comment-count">{{ commentTotal }}</span></td>
                     </tr>
@@ -138,35 +146,6 @@
             </div>
         </div>
 
-        {% if upcomingEvents | length > 0 or pastEvents | length > 0 %}
-            <div class="widget-33" style="height: auto; margin-bottom: 10px;">
-                <div class="widget-header">
-                    <div class="widget-title">Group Events</div>
-                </div>
-                <div class="widget-content" style="padding:10px 0 10px 0;">
-                    {% if upcomingEvents | length > 0 %}
-                        <h4>Upcoming Events</h4>
-                        <div class="group-upcoming-events">
-                            {% for event in upcomingEvents %}
-                                <div><a class="group-event-list-link" href="javascript:void(0)">{{ event.name }}</a></div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    {% if upcomingEvents | length > 0 and pastEvents | length > 0 %}
-                        <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
-                    {% endif %}
-                    {% if pastEvents | length > 0 %}
-                        <h4>Past Events</h4>
-                        <div class="group-past-events">
-                            {% for event in pastEvents %}
-                                <div><a class="group-event-list-link" href="javascript:void(0)">{{ event.name }}</a></div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
         {% if group.location and group.category == 'location' %}
             <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
             <div id="google-map-location"></div>
@@ -181,7 +160,6 @@
                     <a href="javascript:void(0);" id="group-images">Images</a>
                     <a href="javascript:void(0);" id="group-videos">Videos</a>
                     <a href="javascript:void(0);" id="group-events">Events</a>
-                    <a href="javascript:void(0);" id="group-events-past" style="display:none;">Past Events</a>
                     {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
                         <a href="javascript:void(0);" id="group-discussions">Discussions</a>
                     {% endif %}
@@ -256,10 +234,6 @@
     {% endif %}
     <script type="text/javascript">
         $(function () {
-            $('a.group-event-list-link').truncate({ width: 250 });
-            $('a.group-event-list-link').click(function () {
-                $('a#group-events').trigger('click');
-            });
 
             $('#group-invite').click(function () {
                 FB.ui({
@@ -328,15 +302,6 @@
                 });
             }
 
-            var loadPastEventContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
-
-                content.load('{{ path('group_past_events', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    $('.featured-content-category#content-group-news').mCustomScrollbar();
-                    $('#group-widget-content').unblock();
-                });
-            }
-
             var loadContent = function(tab) {
                 if(tab == 'group-' || tab.indexOf('comment') > 0) {
                     loadNewsContent('group-news');
@@ -395,11 +360,6 @@
                             break;
                         case 'group-events':
                             loadEventContent(id);
-                            break;
-                        case 'group-events-past':
-                            $('.featured-content-header a.active').removeClass('active');
-                            $('a#group-events').addClass('active');
-                            loadPastEventContent(id);
                             break;
                     }
 

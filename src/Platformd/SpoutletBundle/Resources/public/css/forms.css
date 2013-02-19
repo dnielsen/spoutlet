@@ -978,11 +978,19 @@ select,
   margin-bottom: 9px;
   font-size: 13px;
   line-height: 18px;
-  color: #AAA;
   background-color: #ffffff;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
+}
+
+input,
+textarea {
+  color: #AAA;
+}
+
+select {
+  color: #555;
 }
 
 .uneditable-textarea {

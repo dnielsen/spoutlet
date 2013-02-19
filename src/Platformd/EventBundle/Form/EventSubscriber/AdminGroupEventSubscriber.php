@@ -11,7 +11,8 @@ use Symfony\Component\Form\Event\DataEvent,
 
 use Doctrine\ORM\EntityRepository;
 
-use Platformd\EventBundle\Entity\Event,
+use Platformd\SpoutletBundle\Form\Type\SlugType,
+    Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Form\Type\GroupEventTranslationType
 ;
 
@@ -64,6 +65,10 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
             foreach ($sites->toArray() as $site) {
                 $sitesArr[] = $site->getId();
             }
+
+            $form->add($this->factory->createNamed(new SlugType(), 'slug', array(
+                'label' => 'platformd.event.form.url'
+            )));
 
             $form->add($this->factory->createNamed('entity', 'sites', null, array(
                 'class'    => 'SpoutletBundle:Site',

@@ -32,50 +32,50 @@
         <div class="widget-title">Events</div>
     </div>
     <div class="widget-content">
-        <table style="width: 99%;" class="table table-striped table-bordered tablesorter">
-            <tbody><tr>
-                <th style="width:15%;">Action</th>
-                <th style="width:15%;">Event Name</th>
-                <th style="width:15%;">Type</th>
-                <th style="width:15%;">Dates</th>
-                <th style="width:15%;">Username</th>
-                <th style="width:15%;">Created</th>
-            </tr>
-            {% for event in pendingApprovals %}
-                <tr class="eventListGroup_lan">
-                    <td>
-                        <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>
-                    </td>
-                    <td>
-                        <a href="{{ event | pd_link }}" target="_blank">{{ event.name }}</a>
-                    </td>
-                    <td>
-                        {% set type = (event.online) ? 'Online' : 'Location' %}
-                        {{ type }}
-                    </td>
-                    <td>
-                        From {{ event.startsAt | date('m/d/Y') }} to {{ event.endsAt | date('m/d/Y') }}
-                    </td>
-                    <td>
-                        {{ event.user.username }}
-                    </td>
-                    <td>
-                        {{ event.createdAt | date('m/d/Y') }}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="6">
-                        <em>There are no events!</em>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="text">
+            <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
+                <thead>
+                    <tr>
+                        <th style="width:15%; color:#FFF;">Event Title</th>
+                        <th style="width:15%; color:#FFF;">Event Dates</th>
+                        <th style="width:15%; color:#FFF;">Submitted By</th>
+                        <th style="width:15%; color:#FFF;">Submitted On</th>
+                        <th style="width:15%; color:#FFF;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for event in pendingApprovals %}
+                    <tr class="eventListGroup_lan">
+                        <td>
+                            <a href="{{ event | pd_link }}" target="_blank">{{ event.name }}</a>
+                        </td>
+                        <td>
+                            {{ event.startsAt | date('M j, Y') }} - {{ event.endsAt | date('M j, Y') }}
+                        </td>
+                        <td>
+                            {{ event.user.username }}
+                        </td>
+                        <td>
+                            {{ event.createdAt | date('M j, Y') }}
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6">
+                            <em>There are no events!</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="widget-footer">&nbsp;</div>
 </div>
-<div id="approve-event-dialog" title="Approve Event" style="display:none;">
+<div id="approve-event-dialog" title="Approve Event" style="display:none; ">
     <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="approve-text">Are you sure you want to approve '{0}' to display on your group?</span></p>
 </div>
 
@@ -90,7 +90,8 @@
             modal: true,
             resizable: false,
             movable: false,
-            height: 150,
+            height: 200,
+            width: 320,
             buttons: {
                 "Yes": function() {
                     document.location = path;
