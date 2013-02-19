@@ -88,9 +88,6 @@ class EventType extends AbstractType
                     'class' => 'datetime-picker',
                 )
             ))
-            ->add('timezone', 'timezone', array(
-                'label' => 'platformd.event.form.timezone'
-            ))
         ;
     }
 

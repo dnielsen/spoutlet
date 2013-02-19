@@ -46,6 +46,9 @@ class GlobalEventType extends EventType
             ->add('slug', new SlugType(), array(
                 'label' => 'platformd.event.form.url'
             ))
+            ->add('timezone', 'gmtTimezone', array(
+                'label' => 'platformd.event.form.timezone',
+            ))
         ;
     }
 }
