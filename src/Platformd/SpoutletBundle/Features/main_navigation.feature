@@ -51,8 +51,7 @@ Feature: Main Navigation
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |                                                                     |
       | Games >> Rift               | http://alienwarearena.com/game/rift/            |                                                                     |
       | Games >> More Games         | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify              |
-      | Events >> iGames Events     | /app_test.php/events                            | http://na.alienwarearena.local/app_test.php/events                  |
-      | Events >> CEVO Events       | http://www.alienwarearena.com/event/            |                                                                     |
+      | Events                      | /app_test.php/events                            | http://na.alienwarearena.local/app_test.php/events                  |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |                                                                     |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                                     |
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
@@ -80,8 +79,7 @@ Feature: Main Navigation
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/                                                               |                                                         |
       | Games >> Rift               | http://alienwarearena.com/game/rift/                                                              |                                                         |
       | Games >> More Games         | /app_test.php/games/                                                                              | http://eu.alienwarearena.local/app_test.php/age/verify  |
-      | Events >> iGames Events     | /app_test.php/events                                                                              | http://eu.alienwarearena.local/app_test.php/events      |
-      | Events >> CEVO Events       | http://www.alienwarearena.com/europe/event/                                                       |                                                         |
+      | Events                      | /app_test.php/events                                                                              | http://eu.alienwarearena.local/app_test.php/events      |
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |                                                         |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
