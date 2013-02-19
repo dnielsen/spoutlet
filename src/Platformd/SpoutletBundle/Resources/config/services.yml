@@ -196,3 +196,8 @@ services:
         tags:
             - { name: form.type, alias: purifiedTextarea }
 
+    platformd.form.type.gmtOffsetTimezone:
+        class: Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType
+        tags:
+            - { name: form.type, alias: gmtTimezone }
+
