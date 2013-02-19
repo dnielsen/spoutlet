@@ -31,7 +31,7 @@ class EventType extends AbstractType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
-        $builder->add('timezone', 'timezone');
+        $builder->add('timezone', 'gmtTimezone');
         $builder->add('display_timezone', null, array(
             'label' => 'Display Timezone',
 
