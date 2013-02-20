@@ -28,6 +28,23 @@ class GroupRepository extends EntityRepository
             ->execute();
     }
 
+    public function getAllGroupsForUserAndSite($user, $site)
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.members', 'm')
+            ->leftJoin('g.sites', 's')
+            ->andWhere('g.deleted = false')
+            ->andWhere('m.id = :userId')
+            ->andWhere('s.id = :siteId')
+            ->orderBy('g.name')
+            ->setParameters(array(
+                'userId' => $user->getId(),
+                'siteId' => $site->getId()
+            ))
+            ->getQuery()
+            ->execute();
+    }
+
     public function getGroupAndMemberCountByRegion() {
 
         return $this->getEntityManager()->createQuery('

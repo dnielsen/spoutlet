@@ -163,7 +163,7 @@ class AccountController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUser($this->getUser());
+        $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
 
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
             'groups' => $groups,

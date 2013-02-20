@@ -42,8 +42,6 @@ class ContentReportRepository extends EntityRepository
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
 
-        $type = ContentReport::getTypeClass($type);
-
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
 
@@ -63,8 +61,6 @@ class ContentReportRepository extends EntityRepository
         if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
-
-        $type = ContentReport::getTypeClass($type);
 
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
@@ -87,8 +83,6 @@ class ContentReportRepository extends EntityRepository
         if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
-
-        $type = ContentReport::getTypeClass($type);
 
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
