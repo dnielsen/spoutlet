@@ -16,9 +16,8 @@
 {% if pager.haveToPaginate %}
     {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
     {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
-    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_event_metrics'}) }}
+    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_event_metrics', 'pageParameter' : 'group_page'}) }}
 {% endif %}
-
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
@@ -51,7 +50,7 @@
                 <td>{{ result.startsAt | date('m/d/Y') }}</td>
                 <td>{{ result.endsAt | date('m/d/Y') }}</td>
                 <td>{{ result.attendeeCount }}</td>
-                <td>{{ result.game.name }}</td>
+                <td>{{ result.game }}</td>
             </tr>
         {% else %}
             <tr>

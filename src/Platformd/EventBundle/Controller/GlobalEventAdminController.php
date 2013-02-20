@@ -203,6 +203,8 @@ class GlobalEventAdminController extends Controller
     {
         $page = $request->query->get('page', 1);
 
+        $this->resetEventsFilterFormData();
+
         $data = new EventFindWrapper();
         $form = $this->createForm(new EventFindType(), $data);
 
@@ -215,38 +217,42 @@ class GlobalEventAdminController extends Controller
                     'published' => $data->getPublished(),
                     'sites' => $data->getSites(),
                     'from' => $data->getFrom(),
-                    'thru' => $data->getThru()
+                    'thru' => $data->getThru(),
+                    'eventType' => $data->getEventType(),
                 ));
             }
         }
 
-/*        $pager = $this->getGroupEventService()->findGroupEventStats(array(
-            'eventName' => $data->getEventName(),
-            'published' => $data->getPublished(),
-            'sites' => $data->getSites(),
-            'from' => $data->getFrom(),
-            'thru' => $data->getThru(),
-            'page' => $page
-        ));*/
+        if($data->getEventType() == 'global') {
+            $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
+                'eventName' => $data->getEventName(),
+                'published' => $data->getPublished(),
+                'sites' => $data->getSites(),
+                'from' => $data->getFrom(),
+                'thru' => $data->getThru(),
+                'page' => $page
+            ));
+        } else {
+            $pager = $this->getGroupEventService()->findGroupEventStats(array(
+                'eventName' => $data->getEventName(),
+                'published' => $data->getPublished(),
+                'sites' => $data->getSites(),
+                'from' => $data->getFrom(),
+                'thru' => $data->getThru(),
+                'page' => $page
+            ));
 
-        $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
-            'eventName' => $data->getEventName(),
-            'published' => $data->getPublished(),
-            'sites' => $data->getSites(),
-            'from' => $data->getFrom(),
-            'thru' => $data->getThru(),
-            'page' => $page
-        ));
+        }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
-            'pager' => $pager,
-            'form'  => $form->createView(),
+            'pager'    => $pager,
+            'form'     => $form->createView(),
         ));
     }
 
     private function resetEventsFilterFormData()
     {
-        $this->setDiscussionsFilterFormData(array());
+        $this->setEventsFilterFormData(array());
     }
 
     private function getEventsFilterFormData()
@@ -281,11 +287,19 @@ class GlobalEventAdminController extends Controller
         return $this->get('platformd_event.service.global_event');
     }
 
-        /**
+    /**
      * @return GroupEventService
      */
     private function getGroupEventService()
     {
         return $this->get('platformd_event.service.group_event');
+    }
+
+    /**
+     * @return GroupEventService
+     */
+    private function getEventService()
+    {
+        return $this->get('platformd_event.service.event');
     }
 }

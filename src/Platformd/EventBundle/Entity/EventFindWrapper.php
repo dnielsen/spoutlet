@@ -13,6 +13,7 @@ class EventFindWrapper
     private $sites;
     private $from;
     private $thru;
+    private $eventType;
 
     public function setPublished($value)
     {
@@ -62,5 +63,15 @@ class EventFindWrapper
     public function getThru()
     {
         return $this->thru;
+    }
+
+    public function setEventType($value)
+    {
+        $this->eventType = $value;
+    }
+
+    public function getEventType()
+    {
+        return $this->eventType;
     }
 }

@@ -209,22 +209,6 @@ class GroupEventRepository extends EventRepository
         return $qb;
     }
 
-    public function findGroupEventMetrics($filter)
-    {
-        if($filter == 'upcoming') {
-            return $this->getUpcomingEventQb()->getQuery()->getResult();
-        }
-    }
-
-    public function getUpcomingEventQb()
-    {
-        return $this->createQueryBuilder('gE')
-            ->leftJoin('gE.group', 'g')
-            ->leftJoin('gE.game', 'gA')
-            ->where('gE.startsAt > :now')
-            ->setParameter('now', new DateTime('now'));
-    }
-
     protected function addActiveClauses($qb, $alias='e')
     {
         return $qb->andWhere($alias.'.deleted = 0')

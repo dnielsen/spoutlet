@@ -23,6 +23,13 @@ class EventFindType extends AbstractType
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
+            ->add('eventType', 'choice', array(
+                'label' => 'Type',
+                'choices' => array(
+                    'group' => 'Group',
+                    'global' => 'Global'
+                )
+            ))
             ->add('sites', 'choice', array(
                 'label' => 'Region:',
                 'expanded' => 'true',
