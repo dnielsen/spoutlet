@@ -42,18 +42,6 @@ class ContentReport
         'GroupEvent' => 'content_reporting.report_type_group_event',
     );
 
-    static private $typeClassMap = array(
-        'GroupEvent' => 'EventBundle:GroupEvent',
-        'GroupImage' => 'GroupBundle:GroupImage',
-        'GroupNews' => 'GroupBundle:GroupNews',
-        'GroupVideo' => 'GroupBundle:GroupVideo',
-        'Group' => 'GroupBundle:Group',
-        'Comment' => 'SpoutletBundle:Comment',
-        'GalleryMedia' => 'SpoutletBundle:GalleryMedia',
-        'GroupDiscussion' => 'GroupBundle:GroupDiscussion',
-        'GroupDiscussionPost' => 'GroupBundle:GroupDiscussionPost',
-    );
-
     /**
      * @var integer $id
      *
@@ -342,14 +330,5 @@ class ContentReport
         }
 
         return self::$typeTranslationMap['Unknown'];
-    }
-
-    static public function getTypeClass($type)
-    {
-        if (array_key_exists($type, self::$typeClassMap)) {
-            return self::$typeClassMap[$type];
-        }
-
-        return false;
     }
 }
