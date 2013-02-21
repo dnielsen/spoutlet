@@ -8,13 +8,8 @@
 
         <div class="span11">
             <h4>Required Fields</h4>
-            <div class="control-group">
-                {{ form_errors(form.name) }}
-                {{ form_label(form.name) }}
-                <div class="controls">
-                    {{ form_widget(form.name, { 'attr': {'style': 'width:300px;'} }) }}
-                </div>
-            </div>
+
+            {{ form_row(form.name) }}
 
             <div class="styled-select">
                 {{ form_row(form.category) }}
@@ -63,5 +58,7 @@
         $('#toggle-advanced').click(function () {
             $('#advanced-options').slideToggle();
         });
+
+        $('input#platformd_groupbundle_grouptype_name').css('width', '300px');
     });
 </script>

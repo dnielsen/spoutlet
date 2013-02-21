@@ -101,8 +101,6 @@ class GroupEventController extends Controller
                     )) . '#events');
                 }
 
-            } else {
-                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -178,8 +176,6 @@ class GroupEventController extends Controller
                     )) . '#events');
                 }
 
-            } else {
-                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -234,8 +230,6 @@ class GroupEventController extends Controller
                     'groupSlug' => $group->getSlug(),
                     'eventSlug' => $groupEvent->getSlug()
                 )));
-            } else {
-                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 

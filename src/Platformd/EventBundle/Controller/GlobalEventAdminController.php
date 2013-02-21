@@ -64,7 +64,7 @@ class GlobalEventAdminController extends Controller
         {
             $form->bindRequest($request);
 
-            if($form->isValid())
+        if($form->isValid())
             {
                 $event = $form->getData();
                 $event->setUser($this->getUser());
@@ -78,8 +78,6 @@ class GlobalEventAdminController extends Controller
                 $this->setFlash('success', 'New event posted successfully!');
 
                 return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
-            } else {
-                $this->setFlash('success', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -129,8 +127,6 @@ class GlobalEventAdminController extends Controller
                     'id' => $globalEvent->getId()
                 )));
 
-            } else {
-                $this->setFlash('success', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -160,8 +156,6 @@ class GlobalEventAdminController extends Controller
                 $this->getGlobalEventService()->updateEvent($form->getData());
                 $this->setFlash('success', 'Event saved successfully');
                 return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
-            }  else {
-                $this->setFlash('success', 'Please correct the errors highlighted below.');
             }
         }
 

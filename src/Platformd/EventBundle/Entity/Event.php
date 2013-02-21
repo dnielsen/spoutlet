@@ -38,19 +38,6 @@ abstract class Event implements LinkableInterface
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
 
     /**
-     * A map of UTC offsets and common timezone names
-     *
-     * This is because all we have are things like "Tokyo", but we may want
-     * to actually say JST
-     *
-     * @var array
-     */
-    static private $timzoneCommonNames = array(
-        32400 => 'JST',
-        28800 => 'CST',
-    );
-
-    /**
      * Event's name
      *
      * @var string $name

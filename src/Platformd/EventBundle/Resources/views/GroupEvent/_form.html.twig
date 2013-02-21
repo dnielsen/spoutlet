@@ -1,4 +1,5 @@
 {% form_theme form 'EventBundle::form_theme.html.twig' %}
+
 {% set isOnline = event is defined ? event.online : true %}
 
 {{ form_errors(form) }}
@@ -7,13 +8,7 @@
     <div class="row-fluid first">
         <div class="span11">
 
-            <div class="control-group">
-                {{ form_errors(form.name) }}
-                {{ form_label(form.name) }}
-                <div class="controls">
-                    {{ form_widget(form.name, { 'attr': {'style': 'width:300px;'} }) }}
-                </div>
-            </div>
+            {{ form_row(form.name) }}
 
             {% if form.registrationOption is defined %}{{ form_row(form.registrationOption) }}{% endif %}
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
@@ -59,6 +54,8 @@
     $(document).ready(function() {
 
         $('.datetime-picker').datetimepicker({ minDate: 0 });
+
+        $('input#groupEvent_name').css('width', '300px');
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
