@@ -35,8 +35,8 @@ abstract class PathResolver implements BasePathResolver
    */
   public function __construct(Filesystem $filesystem, $prefix = '')
   {
-    $this->filesystem = $filesystem; 
-    $this->prefix = $prefix;
+    $this->filesystem = $filesystem;
+    $this->prefix = substr($prefix, 0, 1) == "/" ? substr($prefix, 1) : $prefix;
   }
 
   /**
@@ -45,13 +45,14 @@ abstract class PathResolver implements BasePathResolver
    * @param String $name
    * @param \AmazonS3 $s3
    */
-  public function setBucket($name) 
+  public function setBucket($name)
   {
     $this->bucketName = $name;
   }
 
   public function getPath($path, array $options)
   {
+    $prefix =
 
     if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 

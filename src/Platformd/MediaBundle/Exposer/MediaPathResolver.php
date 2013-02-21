@@ -17,7 +17,7 @@ class MediaPathResolver implements PathResolver
     public function __construct($bucketName, $prefix)
     {
         $this->bucketName = $bucketName;
-        $this->prefix = $prefix;
+        $this->prefix = substr($prefix, 0, 1) == "/" ? substr($prefix, 1) : $prefix;
     }
 
     public function supports($media, array $options)
