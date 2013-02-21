@@ -54,7 +54,13 @@ abstract class PathResolver implements BasePathResolver
   {
     if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 
-        return sprintf('http://s3.amazonaws.com/%s/%s%s', $this->bucketName, $this->prefix, $path);
+        if ($this->bucketName == "platformd") {
+            $cf = "http://media.alienwarearena.com";
+        } else {
+            $cf = "http://mediastaging.alienwarearena.com";
+        }
+
+        return sprintf('%s/%s/%s', $cf, $this->prefix, $path);
     }
 
     return '/uploads/'.$this->prefix.'/'.$path;
