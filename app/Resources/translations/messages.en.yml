@@ -460,6 +460,23 @@ platformd:
 
                     Alienware Arena Team
 
+            group_join_application_from_event:
+                title: Group Member Approval Request
+                message: |
+                    %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
+                    Click <a href="%approvalUrl%">here</a> to manage their request.
+
+                    Alienware Arena Team
+
+            group_application_accepted_event_registered:
+                title: You’re approved to be in an Alienware Arena Group!
+                message: |
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit your group's page to join in on the conversation and share information with your group members.
+                    For your convenience, you are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this message because you submitted a request to join a private group.
+                    Alienware Arena Team
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"

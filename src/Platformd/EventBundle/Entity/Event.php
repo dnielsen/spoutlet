@@ -17,7 +17,9 @@ use Gedmo\Mapping\Annotation as Gedmo,
 
 use Platformd\GameBundle\Entity\Game,
     Platformd\SpoutletBundle\Link\LinkableInterface,
-    Platformd\UserBundle\Entity\User
+    Platformd\UserBundle\Entity\User,
+    Platformd\EventBundle\Entity\GlobalEvent,
+    Platformd\EventBundle\Entity\GroupEvent
 ;
 
 use DateTime,
@@ -747,7 +749,13 @@ abstract class Event implements LinkableInterface
 
     public function externalContentCheck(ExecutionContext $context)
     {
-        if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY && $this->externalUrl) {
+        if ($this instanceof GlobalEvent) {
+            $external = $this->externalUrl ? true : false;
+        } else {
+            $external = $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY && $this->externalUrl;
+        }
+
+        if ($this->getContent() == "" && $external) {
             $this->setContent('This event is hosted at an external URL.');
         }
     }

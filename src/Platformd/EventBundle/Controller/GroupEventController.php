@@ -211,7 +211,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -308,7 +308,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -399,8 +399,8 @@ class GroupEventController extends Controller
 
         $form = $this->createFormBuilder($email)
             ->add('subject', 'text')
-            ->add('recipients', 'text', array(
-                'read_only' => true,
+            ->add('users', 'text', array(
+                'property_path' => false,
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
@@ -425,7 +425,6 @@ class GroupEventController extends Controller
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupSlug,
             'eventSlug' => $eventSlug,
-            'form'  => $form->createView(),
         )));
     }
 
@@ -479,7 +478,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -604,7 +603,7 @@ Alienware Arena Team';
 
         if (
             !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
-            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+            (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
@@ -638,7 +637,7 @@ Alienware Arena Team';
 
         if (
             !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
-            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+            (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
@@ -693,7 +692,9 @@ Alienware Arena Team';
             return $response;
         }
 
-        if (!$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'JoinEvent')) {
+        $group = $groupEvent->getGroup();
+
+        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinEvent')) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not allowed to rsvp to this event!")));
             return $response;
         }
@@ -747,7 +748,7 @@ Alienware Arena Team';
             return $response;
         }
 
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) || $user->getAdminLevel() === null) {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && $user->getAdminLevel() === null) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not authorized to delete this event.")));
             return $response;
         }

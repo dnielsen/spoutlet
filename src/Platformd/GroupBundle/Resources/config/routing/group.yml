@@ -126,6 +126,10 @@ group_join:
     pattern:  /{id}/join/
     defaults: { _controller: "GroupBundle:Group:join", site: ~ }
 
+group_apply_with_event:
+    pattern:  /{id}/apply-event/{eventId}
+    defaults: { _controller: "GroupBundle:Group:applyToGroupWithEvent", site: ~ }
+
 group_apply:
     pattern:  /{id}/apply/
     defaults: { _controller: "GroupBundle:Group:applyToGroup", site: ~ }

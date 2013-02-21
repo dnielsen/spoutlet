@@ -25,4 +25,17 @@ class GroupApplicationRepository extends EntityRepository
             ->setParameter('group', $group)
             ->execute();
     }
+
+    public function getOneForGroupAndUser($group, $user)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.applicant = :user')
+            ->andWhere('a.group = :group')
+            ->setParameters(array(
+                'group' => $group,
+                'user' => $user,
+            ))
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
