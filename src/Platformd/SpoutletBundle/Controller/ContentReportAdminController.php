@@ -35,6 +35,7 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSitesArchived("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussionPost");
+            $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         } elseif ($mode == "deletedContent") {
             $comments               = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
             $groupNews              = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
@@ -44,6 +45,7 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussionPost");
+            $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         } elseif ($mode == "manage") {
             $comments               = $repo->getContentReportTypeForAllSites("Comment");
             $groupNews              = $repo->getContentReportTypeForAllSites("GroupNews");
@@ -53,6 +55,7 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSites("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSites("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
+            $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         }
 
         $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts);
@@ -81,7 +84,8 @@ class ContentReportAdminController extends Controller
 
         return $this->render('SpoutletBundle:ContentReportAdmin:list.html.twig', array(
             'allReports' => $allReports,
-            'mode' => $mode
+            'mode' => $mode,
+            'contests' => $contests,
         ));
     }
 

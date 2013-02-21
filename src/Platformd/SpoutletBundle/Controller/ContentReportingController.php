@@ -103,8 +103,37 @@ class ContentReportingController extends Controller
         $em->persist($report);
 
         $reportedItem = $em->getRepository($typeBundle.':'.$type)->find($id);
-        $reportedItem->setDeleted(true);
-        $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+
+        $sendEmail = true;
+
+        switch ($type) {
+            case 'GalleryMedia':
+                if($reportedItem->getContestEntry()) {
+                    $sendEmail = false;
+                    $reportedItem->setDeleted(false);
+                } else {
+                    $reportedItem->setDeleted(true);
+                    $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+                }
+                break;
+
+            case 'Group':
+                $contest = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Contest')->findContestByGroup($reportedItem);
+
+                if($contest) {
+                    $sendEmail = false;
+                    $reportedItem->setDeleted(false);
+                } else {
+                    $reportedItem->setDeleted(true);
+                    $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+                }
+                break;
+
+            default:
+                $reportedItem->setDeleted(true);
+                $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
+                break;
+        }
 
         $em->persist($reportedItem);
 
@@ -117,7 +146,9 @@ class ContentReportingController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         */
 
-        $this->sendUserReportedNotificationEmail($id, $type, $reason);
+        if($sendEmail) {
+            $this->sendUserReportedNotificationEmail($id, $type, $reason);
+        }
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;

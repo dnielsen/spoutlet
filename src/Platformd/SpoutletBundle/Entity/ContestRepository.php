@@ -134,4 +134,31 @@ class ContestRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findContestsByGroups($groups)
+    {
+        $ids = array();
+
+        foreach ($groups as $group) {
+            array_push($ids, $group[0]->getId());
+        }
+
+        $qb = $this->createQueryBuilder('c');
+        $results = $qb->select('eg.id')
+            ->leftJoin('c.entries', 'e')
+            ->leftJoin('e.groups', 'eg')
+            ->where($qb->expr()->in('eg.id', $ids))
+            ->andWhere('c.status = :status')
+            ->setParameter('status', 'published')
+            ->getQuery()
+            ->execute();
+
+        $found = array();
+
+        foreach ($results as $result) {
+            array_push($found, $result["id"]);
+        }
+
+        return $found;
+    }
 }
