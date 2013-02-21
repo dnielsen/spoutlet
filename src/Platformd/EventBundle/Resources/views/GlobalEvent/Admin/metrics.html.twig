@@ -12,7 +12,7 @@
         </div>
     </form>
 </div>
-
+<p>Search Results: {{ pager.nbResults }} <span style="margin-left: 20px;"><a href="{{ path('admin_event_summary_csv') }}">Export</a></span></p>
 {% if pager.haveToPaginate %}
     {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
     {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
@@ -49,7 +49,7 @@
                 </td>
                 <td>{{ result.startsAt | date('m/d/Y') }}</td>
                 <td>{{ result.endsAt | date('m/d/Y') }}</td>
-                <td>{{ result.attendeeCount }}</td>
+                <td><a href="{{ path('admin_event_attendee_csv', {'eventType' : eventType, 'id': result.id}) }}">{{ result.attendeeCount }}</a></td>
                 <td>{{ result.game }}</td>
             </tr>
         {% else %}

@@ -152,6 +152,7 @@ platformd:
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
             no_active_giveaways: There are no active giveaways at this moment.
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a group</a>.
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event

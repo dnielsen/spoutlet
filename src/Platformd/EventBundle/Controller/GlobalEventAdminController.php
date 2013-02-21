@@ -8,7 +8,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
     Platformd\EventBundle\Entity\EventFindWrapper,
-    Platformd\EventBundle\Form\Type\EventFindType
+    Platformd\EventBundle\Form\Type\EventFindType,
+    Platformd\SpoutletBundle\Util\CsvResponseFactory;
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -237,10 +238,112 @@ class GlobalEventAdminController extends Controller
         }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
-            'pager'    => $pager,
-            'form'     => $form->createView(),
+            'pager'          => $pager,
+            'form'           => $form->createView(),
             'resultFilter'   => $data->getFilter(),
+            'eventType'      => $data->getEventType(),
         ));
+    }
+
+    public function eventSummaryCsvAction()
+    {
+        return $this->generateSummaryCsv();
+    }
+
+    private function generateSummaryCsv()
+    {
+        $factory = new CsvResponseFactory();
+
+        $factory->addRow(array(
+            'Event Title',
+            'Status',
+            'Group',
+            'Event Organizer',
+            'Region',
+            'Start Date',
+            'End Date',
+            '# of Attendees',
+            'Game'
+        ));
+
+        $filters = array_merge(
+            array('eventName' => '','sites' => array(), 'filter' => ''),
+            $this->getEventsFilterFormData()
+        );
+
+        if($filters['eventType'] == 'global') {
+            $results = $this->getGlobalEventService()->findGlobalEventStats($filters);
+        } else {
+            $results = $this->getGroupEventService()->findGroupEventStats($filters);
+        }
+
+        foreach ($results as $result) {
+            $region = '';
+
+            foreach ($result->getSites() as $site) {
+                $region .=  '['.$site->getName().']';
+            }
+
+            $status = $result->getPublished() ? 'Active' : 'Inactive';
+            $groupName = $result->getGroup() ? $result->getGroup()->getName() : 'N/A';
+            $organizer = !$result->getGroup() ? $result->getHostedBy() : 'N/A';
+
+            $factory->addRow(array(
+                $result->getName(),
+                $status,
+                $groupName,
+                $organizer,
+                $region,
+                $result->getStartsAt()->format('Y-m-d H:i:s'),
+                $result->getEndsAt()->format('Y-m-d H:i:s'),
+                $result->getAttendeeCount(),
+                $result->getGame()
+            ));
+        }
+
+        return $factory->createResponse('Event_Summary.csv');
+    }
+
+    public function eventAttendeeCsvAction($id, $eventType)
+    {
+        if($eventType == 'global') {
+            $service = $this->getGlobalEventService();
+        } else {
+            $service = $this->getGroupEventService();
+        }
+
+        $event   = $service->find($id);
+
+        if(!$event) {
+            return $this->redirect($this->generateUrl('admin_event_metrics'));
+        }
+
+        $attendees = $service->getAttendeeList($event);
+
+        return $this->generateAttendeeCsv($attendees, $event->getName());
+    }
+
+    private function generateAttendeeCsv($attendees, $eventName)
+    {
+        $factory = new CsvResponseFactory();
+
+        $factory->addRow(array(
+            'Username',
+            'Email',
+            'RSVP Date'
+        ));
+
+        foreach ($attendees as $attendee) {
+            $factory->addRow(array(
+                $attendee['username'],
+                $attendee['email'],
+                'N/A'
+            ));
+        }
+
+        $fileName = sprintf('%s_Attendees.csv', $eventName);
+
+        return $factory->createResponse($fileName);
     }
 
     private function resetEventsFilterFormData()
