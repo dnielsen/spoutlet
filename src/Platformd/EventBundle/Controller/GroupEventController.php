@@ -34,6 +34,8 @@ class GroupEventController extends Controller
      */
     public function newAction($groupSlug, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var Group $group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -117,6 +119,8 @@ class GroupEventController extends Controller
      */
     public function newFromImportAction($groupSlug, $eventId, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var Group $group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -262,7 +266,8 @@ class GroupEventController extends Controller
         }
 
         if (!$groupEvent->isApproved()) {
-            if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+            $this->basicSecurityCheck(array('ROLE_USER'));
+            if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
             }
         }
@@ -282,6 +287,8 @@ class GroupEventController extends Controller
 
     public function contactAction($groupSlug, $eventSlug, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
         if (!$group) {
@@ -454,6 +461,8 @@ class GroupEventController extends Controller
 
     public function removeAttendeeAction($groupSlug, $eventSlug, $userId)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
         if (!$group) {
@@ -514,6 +523,8 @@ Alienware Arena Team';
      */
     public function pendingApprovalListAction($groupSlug)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var $group Group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -538,6 +549,8 @@ Alienware Arena Team';
      */
     public function approveAction($groupSlug, $eventId)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var $group Group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -578,6 +591,8 @@ Alienware Arena Team';
      */
     public function cancelAction($eventId)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var $groupEvent GroupEvent */
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'id' => $eventId
@@ -610,6 +625,8 @@ Alienware Arena Team';
 
     public function activateAction($eventId)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         /** @var $groupEvent GroupEvent */
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'id' => $eventId
