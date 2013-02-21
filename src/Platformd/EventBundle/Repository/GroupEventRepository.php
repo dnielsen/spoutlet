@@ -150,11 +150,11 @@ class GroupEventRepository extends EventRepository
     public function findGroupEventStats(array $data = array())
     {
         $filters = array_merge(
-            array('eventName' => '', 'published' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            array('eventName' => '','sites' => array(), 'filter' => ''),
             $data
         );
 
-        $qb = $this->getFindEventsQB($filters['eventName'], $filters['published'], $filters['sites'], $filters['from'], $filters['thru']);
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['sites'], $filters['filter']);
 
         if (isset($filters['page'])) {
             $adapter = new DoctrineORMAdapter($qb);
@@ -167,7 +167,7 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->execute();
     }
 
-    public function getFindEventsQB($eventName, $status, $sites, $from="", $thru="")
+    public function getFindEventsQB($eventName, $sites, $filter="")
     {
         $qb = $this->createQueryBuilder('gE')
             ->leftJoin('gE.group', 'g')
@@ -185,23 +185,30 @@ class GroupEventRepository extends EventRepository
             $qb->setParameter('eventName', '%'.$eventName.'%');
         }
 
-        if ($status != "") {
-            $qb->andWhere('gE.published = :status');
-            $qb->setParameter('status', $status);
-        }
+        if($filter != "") {
+            if($filter == "upcoming") {
+                $qb->andWhere('gE.startsAt >= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
 
-        if ($from != "") {
+            if($filter == "past") {
+                $qb->andWhere('gE.startsAt <= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
 
-            $from->setTime(0, 0, 0);
-            $qb->andWhere('gE.startsAt >= :from');
-            $qb->setParameter('from', $from);
-        }
+            if($filter == "public") {
+                $qb->andWhere('gE.private = 0');
+            }
 
-        if ($thru != "") {
+            if($filter == "private") {
+                $qb->andWhere('gE.private = 1');
+            }
 
-            $thru->setTime(23, 59, 59);
-            $qb->andWhere('gE.endsAt <= :thru');
-            $qb->setParameter('thru', $thru);
+            if($filter == "inactive") {
+                $qb->orWhere('gE.active <> 1');
+                $qb->orWhere('gE.published <> 1');
+                $qb->orWhere('gE.deleted = 1');
+            }
         }
 
         $qb->distinct('gE.id');
