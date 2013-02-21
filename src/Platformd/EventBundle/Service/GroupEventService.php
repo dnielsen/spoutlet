@@ -110,8 +110,8 @@ class GroupEventService extends EventService
         }
     }
 
-    public function findGroupEventMetrics($filter)
+    public function findGroupEventStats(array $data = array())
     {
-        return $this->repository->findGroupEventMetrics($filter);
+        return $this->repository->findGroupEventStats($data);
     }
 }

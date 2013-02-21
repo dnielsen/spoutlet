@@ -10,6 +10,11 @@ use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEventRepository;
 use Platformd\EventBundle\Entity\EventEmail;
 use Platformd\UserBundle\Entity\User;
+use DateTime;
+
+use Pagerfanta\Pagerfanta,
+    Pagerfanta\Adapter\DoctrineORMAdapter
+;
 
 class EventRepository extends EntityRepository
 {

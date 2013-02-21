@@ -76,4 +76,9 @@ class GlobalEventService extends EventService
     {
         return $this->repository->findEventsForGamePage($site, $game, $published);
     }
+
+    public function findGlobalEventStats(array $data = array())
+    {
+        return $this->repository->findGlobalEventStats($data);
+    }
 }

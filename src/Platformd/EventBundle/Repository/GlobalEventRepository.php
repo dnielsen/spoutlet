@@ -124,4 +124,63 @@ class GlobalEventRepository extends EventRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findGlobalEventStats(array $data = array())
+    {
+        $filters = array_merge(
+            array('eventName' => '','sites' => array(), 'filter' => ''),
+            $data
+        );
+
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['sites'], $filters['filter']);
+
+        if (isset($filters['page'])) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage(10)->setCurrentPage($filters['page']);
+
+            return $pager;
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function getFindEventsQB($eventName, $sites, $filter="")
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->leftJoin('gE.sites', 's');
+
+        if (count($sites) > 0) {
+
+            $qb->andWhere('s.defaultLocale IN (:siteList)');
+            $qb->setParameter('siteList', $sites);
+
+        }
+
+        if ($eventName) {
+            $qb->andWhere('gE.name like :eventName');
+            $qb->setParameter('eventName', '%'.$eventName.'%');
+        }
+
+        if($filter != "") {
+            if($filter == "upcoming") {
+                $qb->andWhere('gE.startsAt >= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
+
+            if($filter == "past") {
+                $qb->andWhere('gE.startsAt <= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
+
+            if($filter == "inactive") {
+                $qb->andWhere('gE.active <> 1');
+                $qb->andWhere('gE.published <> 1');
+            }
+        }
+
+        $qb->distinct('gE.id');
+
+        return $qb;
+    }
 }

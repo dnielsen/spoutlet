@@ -6,7 +6,9 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Service\GlobalEventService,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
-    Platformd\EventBundle\Entity\GlobalEventTranslation
+    Platformd\EventBundle\Entity\GlobalEventTranslation,
+    Platformd\EventBundle\Entity\EventFindWrapper,
+    Platformd\EventBundle\Form\Type\EventFindType
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -197,11 +199,65 @@ class GlobalEventAdminController extends Controller
 
     public function metricsAction(Request $request)
     {
-        $results = $this->getGroupEventService()->findGroupEventMetrics('upcoming');
+        $page = $request->query->get('page', 1);
+
+        $this->resetEventsFilterFormData();
+
+        $data = new EventFindWrapper();
+        $form = $this->createForm(new EventFindType(), $data);
+
+        if ('POST' == $request->getMethod()) {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->setEventsFilterFormData(array(
+                    'eventName' => $data->getEventName(),
+                    'sites' => $data->getSites(),
+                    'eventType' => $data->getEventType(),
+                    'filter' => $data->getFilter(),
+                ));
+            }
+        }
+
+        if($data->getEventType() == 'global') {
+            $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
+                'eventName' => $data->getEventName(),
+                'sites' => $data->getSites(),
+                'filter' => $data->getFilter(),
+                'page' => $page
+            ));
+        } else {
+            $pager = $this->getGroupEventService()->findGroupEventStats(array(
+                'eventName' => $data->getEventName(),
+                'sites' => $data->getSites(),
+                'filter' => $data->getFilter(),
+                'page' => $page
+            ));
+
+        }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
-            'results' => $results,
+            'pager'    => $pager,
+            'form'     => $form->createView(),
+            'resultFilter'   => $data->getFilter(),
         ));
+    }
+
+    private function resetEventsFilterFormData()
+    {
+        $this->setEventsFilterFormData(array());
+    }
+
+    private function getEventsFilterFormData()
+    {
+        $session = $this->getRequest()->getSession();
+        return $session->get('eventsFormValues', array());
+    }
+
+    private function setEventsFilterFormData($data)
+    {
+        $session = $this->getRequest()->getSession();
+        $session->set('eventsFormValues', $data);
     }
 
     /**
@@ -224,11 +280,19 @@ class GlobalEventAdminController extends Controller
         return $this->get('platformd_event.service.global_event');
     }
 
-        /**
+    /**
      * @return GroupEventService
      */
     private function getGroupEventService()
     {
         return $this->get('platformd_event.service.group_event');
+    }
+
+    /**
+     * @return GroupEventService
+     */
+    private function getEventService()
+    {
+        return $this->get('platformd_event.service.event');
     }
 }

@@ -30,8 +30,8 @@ class GlobalEventController extends Controller
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
 
-        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 10, $page, $pager);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 10, $page, $pager);
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));

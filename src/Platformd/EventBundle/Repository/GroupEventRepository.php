@@ -147,20 +147,73 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findGroupEventMetrics($filter)
+    public function findGroupEventStats(array $data = array())
     {
-        if($filter == 'upcoming') {
-            return $this->getUpcomingEventQb()->getQuery()->getResult();
+        $filters = array_merge(
+            array('eventName' => '','sites' => array(), 'filter' => ''),
+            $data
+        );
+
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['sites'], $filters['filter']);
+
+        if (isset($filters['page'])) {
+            $adapter = new DoctrineORMAdapter($qb);
+            $pager = new Pagerfanta($adapter);
+            $pager->setMaxPerPage(10)->setCurrentPage($filters['page']);
+
+            return $pager;
         }
+
+        return $qb->getQuery()->execute();
     }
 
-    public function getUpcomingEventQb()
+    public function getFindEventsQB($eventName, $sites, $filter="")
     {
-        return $this->createQueryBuilder('gE')
+        $qb = $this->createQueryBuilder('gE')
             ->leftJoin('gE.group', 'g')
-            ->leftJoin('gE.game', 'gA')
-            ->where('gE.startsAt > :now')
-            ->setParameter('now', new DateTime('now'));
+            ->leftJoin('gE.sites', 's');
+
+        if (count($sites) > 0) {
+
+            $qb->andWhere('s.defaultLocale IN (:siteList)');
+            $qb->setParameter('siteList', $sites);
+
+        }
+
+        if ($eventName) {
+            $qb->andWhere('gE.name like :eventName');
+            $qb->setParameter('eventName', '%'.$eventName.'%');
+        }
+
+        if($filter != "") {
+            if($filter == "upcoming") {
+                $qb->andWhere('gE.startsAt >= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
+
+            if($filter == "past") {
+                $qb->andWhere('gE.startsAt <= :now');
+                $qb->setParameter('now', new DateTime('now'));
+            }
+
+            if($filter == "public") {
+                $qb->andWhere('gE.private = 0');
+            }
+
+            if($filter == "private") {
+                $qb->andWhere('gE.private = 1');
+            }
+
+            if($filter == "inactive") {
+                $qb->orWhere('gE.active <> 1');
+                $qb->orWhere('gE.published <> 1');
+                $qb->orWhere('gE.deleted = 1');
+            }
+        }
+
+        $qb->distinct('gE.id');
+
+        return $qb;
     }
 
     protected function addActiveClauses($qb, $alias='e')

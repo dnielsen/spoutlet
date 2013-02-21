@@ -33,6 +33,15 @@
         </div>
     </div>
 </div>
+    <div class="pagerfanta" id="pager-bottom" style="float:right;margin-top:15px;">
+        {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+        {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+        {{ pagerfanta(pager, 'spoutlet', {
+            'previous_message': '',
+            'next_message': '',
+            'routeName': 'global_events_current'
+        }) }}
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
