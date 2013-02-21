@@ -52,8 +52,6 @@ abstract class PathResolver implements BasePathResolver
 
   public function getPath($path, array $options)
   {
-    $prefix =
-
     if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 
         return sprintf('http://s3.amazonaws.com/%s/%s%s', $this->bucketName, $this->prefix, $path);
