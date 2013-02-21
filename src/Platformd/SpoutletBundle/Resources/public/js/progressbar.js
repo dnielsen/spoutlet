@@ -1,6 +1,9 @@
 (function(){
 
     var setupProgressBar = function(){
+
+        var vInterval;
+
         jQuery.fn.anim_progressbar = function (aOptions, totalSeconds) {
             // def values
             var iCms = 1000;
@@ -14,6 +17,8 @@
             var aOpts = jQuery.extend(aDefOpts, aOptions);
             var vPb = this;
 
+            clearInterval(vInterval);
+
             // each progress bar
             return this.each(
                 function() {
@@ -23,7 +28,7 @@
                     $(vPb).children('.pbar').progressbar();
 
                     // looping process
-                    var vInterval = setInterval(
+                    vInterval = setInterval(
                         function(){
                             var iElapsedMs = new Date() - aOpts.start, // elapsed time in MS
                                 iPerc = (iElapsedMs > 0) ? 100 - (iElapsedMs / iDuration * 100) : 0; // percentages

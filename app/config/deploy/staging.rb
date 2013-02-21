@@ -1,2 +1,2 @@
 set :deploy_to,   "/var/www/staging/deploy"
-set :branch,      "develop"
+set :branch,      "staging"
