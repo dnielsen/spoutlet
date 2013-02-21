@@ -3,7 +3,7 @@
 {% block title 'platformd.layout.main_menu.events' | trans %}
 
 {% block content %}
-<h2>{{ 'platformd.events.event_listings.header' | trans }}</h2>
+<h2 style="margin:0 0 10px 0;">{{ 'platformd.events.event_listings.header' | trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
         {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups'), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
@@ -17,7 +17,7 @@
                 {{ 'platformd.events.event_listings.current_events' | trans }}
             </div>
         </div>
-        <div class="widget-content">
+        <div class="widget-content" style="width:950px;">
             {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
                 'events': upcomingEvents,
                 'no_events_message': 'platformd.events.event_listings.no_current_events'
