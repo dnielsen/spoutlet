@@ -136,7 +136,7 @@ class GlobalEventController extends Controller
             return new RedirectResponse($event->getExternalUrl());
         }
 
-        $isAttending = $this->getGlobalEventService()->isUserAttending($event, $this->getUser());
+        $isAttending = $this->isGranted('ROLE_USER') ? $this->getGlobalEventService()->isUserAttending($event, $this->getUser()) : false;
 
         return $this->render('EventBundle:GlobalEvent:view.html.twig', array(
             'event' => $event,
