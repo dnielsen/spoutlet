@@ -2,25 +2,40 @@
 
 namespace Platformd\SpoutletBundle\Util;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class SiteUtil
 {
-    public function __construct(EntityManager $em, Request $request)
+    private $em;
+    private $host;
+
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->request = $request;
     }
 
     public function getCurrentSite()
     {
-        $currentHost    = $this->request->getHost();
-        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
+        if (!$currentHost = $this->host) {
+            return;
+        }
+
+        $subDomain = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
 
         return $this->getSiteFromSubDomain($subDomain);
     }
 
     public function getSiteFromSubDomain($subDomain) {
         return $this->em->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
+    }
+
+    public function getAllSites()
+    {
+        return $this->em->getRepository('SpoutletBundle:Site')->findAll();
+    }
+
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+        $this->host = $event->getRequest()->getHost();
     }
 }

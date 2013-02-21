@@ -86,12 +86,12 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
-    platford.model.site_util:
+    platformd.model.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@request"
-        scope: request
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
 
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager
