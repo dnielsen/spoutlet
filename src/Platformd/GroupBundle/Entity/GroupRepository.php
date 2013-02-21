@@ -31,6 +31,7 @@ class GroupRepository extends EntityRepository
     public function getAllGroupsForUserAndSite($user, $site)
     {
         return $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
             ->leftJoin('g.members', 'm')
             ->leftJoin('g.sites', 's')
             ->andWhere('g.deleted = false')
@@ -41,6 +42,7 @@ class GroupRepository extends EntityRepository
                 'userId' => $user->getId(),
                 'siteId' => $site->getId()
             ))
+            ->groupBy('g.id')
             ->getQuery()
             ->execute();
     }

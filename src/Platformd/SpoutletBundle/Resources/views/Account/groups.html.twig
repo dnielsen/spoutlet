@@ -25,20 +25,20 @@
             {% for group in groups %}
                 <tr class="eventListGroup_lan">
                     <td>
-                        <a href="{{ path('group_show', { 'slug': group.slug }) }}">{{ group.name }}</a>
+                        <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
                     </td>
                     <td>
-                        {{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}
+                        {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}
                     </td>
                     <td>
-                        {% if group.isPublic %}
+                        {% if group[0].isPublic %}
                             <span class="label label-success">Public</span>
                         {% else %}
                             <span class="label label-warning">Private</span>
                         {% endif %}
                     </td>
                     <td>
-                        {{ group.members.count }}
+                        {{ group['memberCount'] }}
                     </td>
                 </tr>
             {% else %}
