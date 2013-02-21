@@ -100,6 +100,8 @@ class ContentReportAdminController extends Controller
         $group      = $report->getGroup();
         $comment    = $report->getComment();
         $galleryMedia = $report->getGalleryMedia();
+        $groupDiscussion        = $report->getGroupDiscussion();
+        $groupDiscussionPost    = $report->getGroupDiscussionPost();
 
         if ($groupVideo) {
             $groupVideo->setDeleted(false);
