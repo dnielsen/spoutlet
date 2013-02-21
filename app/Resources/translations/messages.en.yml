@@ -477,6 +477,20 @@ platformd:
                     Note: You are receiving this message because you submitted a request to join a private group.
                     Alienware Arena Team
 
+            event_reminder:
+                title: Reminder on Your Upcoming Event - %eventName%
+                message: |
+                    Just a reminder, you've got an event coming up!
+
+                    %eventName%
+                    %dateString% - %timeString% %timezone%
+
+                    Location: %location%
+
+                    Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Alienware Arena Team
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"

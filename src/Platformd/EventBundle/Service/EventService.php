@@ -21,7 +21,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher,
     Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
-    Symfony\Component\Security\Acl\Permission\MaskBuilder
+    Symfony\Component\Security\Acl\Permission\MaskBuilder,
+    Symfony\Component\Routing\RouterInterface,
+    Symfony\Bundle\FrameworkBundle\Translation\Translator
 ;
 
 use Knp\MediaBundle\Util\MediaUtil;
@@ -53,19 +55,33 @@ class EventService
      */
     protected $emailManager;
 
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+    /**
+     * @var Translator
+     */
+    protected $translator;
+
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
         EventDispatcher $dispatcher,
         AclProvider $aclProvider,
-        EmailManager $emailManager
+        EmailManager $emailManager,
+        RouterInterface $router,
+        Translator $translator
     )
     {
-        $this->repository   = $repository;
-        $this->mediaUtil    = $mediaUtil;
-        $this->dispatcher   = $dispatcher;
-        $this->aclProvider  = $aclProvider;
+        $this->repository    = $repository;
+        $this->mediaUtil     = $mediaUtil;
+        $this->dispatcher    = $dispatcher;
+        $this->aclProvider   = $aclProvider;
         $this->emailManager  = $emailManager;
+        $this->router        = $router;
+        $this->translator    = $translator;
     }
 
     /**
@@ -317,11 +333,54 @@ class EventService
         $this->repository->saveEmail($email);
     }
 
-    public function sendEmail(EventEmail $email)
+    public function sendReminderEmail(Event $event)
+    {
+        if ($event instanceof GroupEvent) {
+            $email = new GroupEventEmail();
+        } else {
+            $email = new GlobalEventEmail();
+        }
+
+        $recipients = array();
+
+        foreach ($event->getAttendees() as $attendee) {
+            $recipients[] = $recipient;
+        }
+
+        $email->setGroupEvent($event);
+        $email->setRecipients($recipients);
+
+        $locale = $groupEvent->getUser()->getLocale() ?: 'en';
+
+        $subject = $this->translator->trans('platformd.event.email.event_reminder.title', array(
+            '%eventName%' => $event->getName(),
+        ), 'messages', $locale);
+
+        $message = nl2br($this->translator->trans('platformd.event.email.event_reminder.message', array(
+            '%eventName%'   => $event->getName(),
+            '%dateString%'  => $event->getDateRangeString(),
+            '%timeString%'  => $event->getStartsAt()->format('g:i A').' - '.$event->getEndsAt()->format('g:i A'),
+            '%timezone%'    => $event->getTimezoneString(),
+            '%location%'    => $event->getOnline() ? 'Online' : $event->getAddress(),
+            '%eventUrl%'    => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+        ), 'messages', $locale));
+
+        $email->setSubject($subject);
+        $email->setMessage($message);
+
+        $this->sendEmail($email, "Event Reminder Email");
+    }
+
+    public function sendEmail(EventEmail $email, $type=null)
     {
         $subject    = $email->getSubject();
         $message    = $email->getMessage();
-        $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
+
+        if ($type === null) {
+            $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
+        } else {
+            $emailType = $type;
+        }
 
         $sendCount = 0;
 
@@ -334,6 +393,11 @@ class EventService
         $this->repository->saveEmail($email);
 
         return $sendCount;
+    }
+
+    public function findUpcomingEventsStartingDaysFromNow($days)
+    {
+        return $this->repository->findUpcomingEventsStartingDaysFromNow($days);
     }
 
     public function findUpcomingEventsForUser(User $user, $whereIsOrganizer = false)

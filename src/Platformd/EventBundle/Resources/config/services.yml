@@ -13,6 +13,8 @@ services:
             - @event_dispatcher
             - @security.acl.provider
             - @platformd.model.email_manager
+            - @router
+            - @translator
 
     platformd_event.service.group_event:
         class: Platformd\EventBundle\Service\GroupEventService
@@ -22,6 +24,8 @@ services:
             - @event_dispatcher
             - @security.acl.provider
             - @platformd.model.email_manager
+            - @router
+            - @translator
 
     platformd_event.service.global_event:
         class: Platformd\EventBundle\Service\GlobalEventService
@@ -31,3 +35,5 @@ services:
             - @event_dispatcher
             - @security.acl.provider
             - @platformd.model.email_manager
+            - @router
+            - @translator

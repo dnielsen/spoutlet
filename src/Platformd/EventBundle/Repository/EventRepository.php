@@ -175,4 +175,30 @@ class EventRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findUpcomingEventsStartingDaysFromNow($days)
+    {
+        $daysOffset = abs((int)$days);
+
+        $dateTime = new \DateTime('+ '.$daysOffset.' days');
+
+        $startDt    = $dateTime->setTime(0, 0, 0);
+        $endDt      = $dateTime->setTime(23, 59, 59);
+
+        $qb = $this->createQueryBuilder('e')
+            ->andWhere('e.startsAt <= :start')
+            ->andWhere('e.endsAt <= :end')
+            ->andWhere('e.published = 1')
+            ->setParameters(array(
+                'start' => $startDt,
+                'end'   => $endDt,
+            ));
+
+        if ($this instanceof GroupEventRepository) {
+            $qb->andWhere('e.deleted = 0');
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
