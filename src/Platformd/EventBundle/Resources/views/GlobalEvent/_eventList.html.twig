@@ -28,7 +28,7 @@
                 {{ event.startsAt | date('M j, Y') }}
             </td>
             {# todo - refactor this next line somewhere else #}
-            <td style="width:259px;">
+            <td style="width:259px;vertical-align:top">
                 {% if event.group is defined %}
                     {{ event | pd_link_full(event.name) }}
                 {% else %}
@@ -36,14 +36,14 @@
                 {% endif %}
 
             </td>
-            <td style="width:132px;vertical-align:top">
+            <td style="width:132px;vertical-align:top" class="event-game">
                 {% if event.game is defined %}
                     {{ event.game ? event.game : ('na'|trans) }}
                 {% else %}
                     {{ 'na'|trans }}
                 {% endif %}
             </td>
-            <td style="width:191px;vertical-align:top">
+            <td style="width:191px;vertical-align:top" class="event-organizer">
                 {% if event.hostedBy is defined %}
                     {{ event.hostedBy }}
                 {% else %}
@@ -75,6 +75,23 @@
 
     <script type="text/javascript">
         $(function () {
+
+            $('.global-event-link').truncate({
+                width: 500
+            });
+
+            $('.qtip-view-map').truncate({
+                width: 400
+            });
+
+            $('.event-organizer').truncate({
+                width: 375
+            });
+
+            $('.event-game').truncate({
+                width: 250
+            });
+
             $('.qtip-view-map').each(function(i, v) {
 
                 var lat = $(this).attr('data-lat');

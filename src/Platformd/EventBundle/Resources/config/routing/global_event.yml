@@ -80,4 +80,4 @@ admin_event_summary_csv:
 
 admin_event_attendee_csv:
     pattern: /admin/event/attendee-csv/{eventType}/{id}
-    defaults: { _controller: EventBundle:GlobalEventAdmin:eventAttendeeCsv }
+    defaults: { _controller: EventBundle:GlobalEventAdmin:eventAttendeeCsv, eventType: "group" }

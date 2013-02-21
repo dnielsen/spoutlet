@@ -1,6 +1,8 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 {% block title %}{{ "platformd.events.admin.title" | trans }}{% endblock %}
 
+{% set typeParam = eventType ? eventType : 'group' %}
+
 {% block content %}
 <div style="width:750px">
 
@@ -43,13 +45,13 @@
                 <td>{{ result.name }}</td>
                 <td>{{ status }}</td>
                 <td>{% if result.group is defined %}{{ result.group.name }}{% else %}N/A{% endif %}</td>
-                <td>{% if result.group is not defined %}{{ result.hostedBy }}{% else %}N/A{% endif %}</td>
+                <td>{{ result.user }}</td>
                 <td>
                     {{ region }}
                 </td>
                 <td>{{ result.startsAt | date('m/d/Y') }}</td>
                 <td>{{ result.endsAt | date('m/d/Y') }}</td>
-                <td><a href="{{ path('admin_event_attendee_csv', {'eventType' : eventType, 'id': result.id}) }}">{{ result.attendeeCount }}</a></td>
+                <td><a href="{{ path('admin_event_attendee_csv', {'eventType' : typeParam, 'id': result.id}) }}">{{ result.attendeeCount }}</a></td>
                 <td>{{ result.game }}</td>
             </tr>
         {% else %}
