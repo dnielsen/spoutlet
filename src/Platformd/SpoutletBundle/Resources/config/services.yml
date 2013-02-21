@@ -90,7 +90,8 @@ services:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
 
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager
