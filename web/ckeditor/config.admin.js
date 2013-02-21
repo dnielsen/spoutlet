@@ -9,11 +9,6 @@ CKEDITOR.editorConfig = function( config )
 {
     config.toolbar = 'AdminToolbar';
 
-    // this prevents extra buttons from being added on subsequent editors
-    if (ckeditorInitialized) {
-        return;
-    }
-
     config.toolbar_AdminToolbar =
     [
         { name: 'styles', items : [ 'Format','Font','FontSize' ] },
@@ -29,6 +24,4 @@ CKEDITOR.editorConfig = function( config )
         { name: 'links', items : [ 'Link','Unlink' ] },
         { name: 'insert', items : [ 'Image','Table','HorizontalRule' ] }
     ];
-
-    ckeditorInitialized = true;
 };
