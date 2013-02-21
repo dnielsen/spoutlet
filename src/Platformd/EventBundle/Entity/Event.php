@@ -747,7 +747,7 @@ abstract class Event implements LinkableInterface
 
     public function externalContentCheck(ExecutionContext $context)
     {
-        if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY) {
+        if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY && $this->externalUrl) {
             $this->setContent('This event is hosted at an external URL.');
         }
     }

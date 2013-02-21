@@ -79,10 +79,16 @@ class EventService
 
         if ($event instanceof GroupEvent) {
             $this->register($event, $event->getUser());
-        }
 
-        if ($event->getExternalUrl()) {
-            $event->setPrivate(false);
+            if ($event->getExternalUrl()) {
+                $event->setPrivate(false);
+            }
+        } else {
+            if ($event->getExternalUrl()) {
+                $event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
+            } else {
+                $event->setRegistrationOption(GroupEvent::REGISTRATION_ENABLED);
+            }
         }
 
         $this->repository->saveEvent($event);
@@ -109,8 +115,16 @@ class EventService
     {
         $this->handleMedia($event);
 
-        if ($event->getExternalUrl()) {
-            $event->setPrivate(false);
+        if ($event instanceof GroupEvent) {
+            if ($event->getExternalUrl()) {
+                $event->setPrivate(false);
+            }
+        } else {
+            if ($event->getExternalUrl()) {
+                $event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
+            } else {
+                $event->setRegistrationOption(GroupEvent::REGISTRATION_ENABLED);
+            }
         }
 
         $this->repository->saveEvent($event);

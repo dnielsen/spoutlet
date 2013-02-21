@@ -66,7 +66,7 @@ class GlobalEventAdminController extends Controller
         {
             $form->bindRequest($request);
 
-        if($form->isValid())
+            if($form->isValid())
             {
                 $event = $form->getData();
                 $event->setUser($this->getUser());
