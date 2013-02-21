@@ -10,4 +10,5 @@ services:
                 - { name: kernel.event_listener, event: platformd.event.approve, method: onApprove }
                 - { name: kernel.event_listener, event: platformd.event.cancel, method: onCancel }
                 - { name: kernel.event_listener, event: platformd.event.activate, method: onActivate }
+                - { name: kernel.event_listener, event: platformd.event.create, method: onCreate }
             scope: request

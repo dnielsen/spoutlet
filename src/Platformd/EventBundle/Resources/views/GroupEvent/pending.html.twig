@@ -94,6 +94,7 @@
             width: 320,
             buttons: {
                 "Yes": function() {
+                    $(this).dialog("close");
                     document.location = path;
                 },
                 "No": function() {

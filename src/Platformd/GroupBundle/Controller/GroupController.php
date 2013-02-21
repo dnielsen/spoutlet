@@ -1340,7 +1340,6 @@ Alienware Arena Team
         }
 
         if ($this->processForm($form, $request)) {
-            $this->setFlash('success', 'The group was created!');
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
@@ -1350,11 +1349,16 @@ Alienware Arena Team
             if($then = $request->getSession()->get('PostCreateAction')) {
 
                 if ($then == "group_event") {
+
+                    $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
+
                     $url = $this->generateUrl('group_event_new', array('groupSlug' => $group->getSlug()));
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }
             }
+
+            $this->setFlash('success', 'The group was created!');
 
             if($return = $request->getSession()->get('ContestReturnUrl')) {
                 $request->getSession()->remove('ContestReturnUrl');

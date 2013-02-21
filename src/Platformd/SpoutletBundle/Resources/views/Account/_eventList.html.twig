@@ -1,13 +1,13 @@
 <div class="event-list">
-    <table style="width:100%; border-collapse:separate; border-spacing: 5px;">
+    <table style="width:99%; border-collapse:separate; border-spacing: 5px;">
         <thead>
             <tr>
-                <th style="width:10%">{{ 'platformd.events.event_listings.date' | trans }}</th>
+                <th style="width:10%;">{{ 'platformd.events.event_listings.date' | trans }}</th>
                 <th>{{ 'platformd.events.event_listings.event' | trans }}</th>
-                <th style="width:10%">{{ 'platformd.events.event_listings.organizer' | trans }}</th>
-                <th style="width:10%">{{ 'platformd.events.event_listings.attendees' | trans }}</th>
-                <th style="width:25%">{{ 'platformd.events.event_listings.status' | trans }}</th>
-                <th style="width:15%">{{ 'platformd.events.event_listings.actions' | trans }}</th>
+                <th style="width:10%;">{{ 'platformd.events.event_listings.organizer' | trans }}</th>
+                <th style="width:10%; text-align:center;">{{ 'platformd.events.event_listings.attendees' | trans }}</th>
+                <th style="width:25%;">{{ 'platformd.events.event_listings.status' | trans }}</th>
+                <th style="width:150px;">{{ 'platformd.events.event_listings.actions' | trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -26,14 +26,14 @@
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}">
                     <td>{{ event.startsAt | date('M j, Y') }}</td>
-                    <td><a href="{{ event | pd_link }}">{{  event.name }}</a></td>
+                    <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                     <td><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></td>
-                    <td>{{ event.attendeeCount }}</td>
-                    <td>{% if status is defined %}{{ status }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Registration CLosed{% endif %}</td>
+                    <td style=" text-align:center;">{{ event.attendeeCount }}</td>
+                    <td>{% if status is defined %}{{ status }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Registration Closed{% endif %}</td>
                     <td>
                         {% if event.user == app.user %}
                             <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
-                                <option>Choose action..<./option>
+                                <option>Select One...</option>
                                 <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
                                 <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
                             </select>
@@ -49,6 +49,31 @@
                     </td>
                 </tr>
             {% endfor %}
+
+            {% if pastEvents|length > 0 %}
+                {% for event in pastEvents %}
+                    {% if loop.index == 1 %}
+                        <tr class="past-{{ event.contentType }}" style="display:none;">
+                            <td colspan="6"style="text-align:center;"><hr class="faded" /></td>
+                        </tr>
+                    {% endif %}
+                    <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}" style="display:none;">
+                        <td>{{ event.startsAt | date('M j, Y') }}</td>
+                        <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
+                        <td><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></td>
+                        <td style=" text-align:center;">{{ event.attendeeCount }}</td>
+                        <td>Registration Closed</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.event-title-link').truncate({ width: 230 });
+    });
+</script>

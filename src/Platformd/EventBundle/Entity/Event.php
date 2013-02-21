@@ -29,7 +29,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck"})
+ * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -695,11 +695,12 @@ abstract class Event implements LinkableInterface
      */
     public function getTimezoneString()
     {
-        $dtz = new \DateTimeZone($this->getTimezone());
+        $dt = new DateTime('now');
+        $dt->setTimezone(new DateTimeZone($this->timezone));
+        $tz = $dt->format('T');
+        $offset = $tz == "GMT" ? "" : ' (GMT '.$dt->format('P').')';
 
-        $offset = $dtz->getOffset(new DateTime());
-
-        return isset(self::$timzoneCommonNames[$offset]) ? self::$timzoneCommonNames[$offset] : $dtz->getName();
+        return $dt->format('T').$offset;
     }
 
     private function convertDatetimeToTimezone(DateTime $dt)
@@ -761,6 +762,20 @@ abstract class Event implements LinkableInterface
     {
         if ($this->getContent() == "" && $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY) {
             $this->setContent('This event is hosted at an external URL.');
+        }
+    }
+
+    public function validateDateRanges(ExecutionContext $executionContext)
+    {
+        if ($this->endsAt < $this->startsAt) {
+            $propertyPath = $executionContext->getPropertyPath() . '.endsAt';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $executionContext->addViolation(
+                "The end date/time must be after the start date/time",
+                array(),
+                "endsAt"
+            );
         }
     }
 }

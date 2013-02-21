@@ -9,7 +9,7 @@
             <div class="control-group">
                 <label class="control-label">Import From Past Event (Optional): </label>
                 <div class="controls">
-                    <select id="existing_event_select" name="existing_event_select">
+                    <select id="existing_event_select" name="existing_event_select" style="width: 300px;">
                         {% for existingEvent in existingEvents %}
                             <option value="{{ existingEvent.id }}">{{ existingEvent.name }}</option>
                         {% endfor %}

@@ -11,36 +11,46 @@
                 <div class="widget-100" style="margin-bottom:20px;">
                     <div class="widget-header">
                         <div class="widget-title">
-                            {{ "platformd.events.event_listings.your_registered_events" | trans }}
+                            {{ "platformd.events.event_listings.my_registered_events" | trans }}
                         </div>
                     </div>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': events,
+                            'pastEvents' : pastEvents,
                             'no_events_message': no_events_message,
                         } %}
                     </div>
                     <div class="widget-footer">
-                        &nbsp;
+                        {% if pastEvents|length > 0 %}
+                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastEvents.0.contentType }}">Show past events</a>
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="widget-100" style="margin-bottom:20px;">
                     <div class="widget-header">
                         <div class="widget-title">
-                            {{ "platformd.events.event_listings.your_owned_events" | trans }}
+                            {{ "platformd.events.event_listings.my_owned_events" | trans }}
                         </div>
                     </div>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': ownedEvents,
+                            'pastEvents' : pastOwnedEvents,
                             'no_events_message': no_events_message,
                         } %}
                     </div>
                     <div class="widget-footer">
-                        &nbsp;
+                        {% if pastOwnedEvents|length > 0 %}
+                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">Show past events</a>
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
                     </div>
                 </div>
 
@@ -55,6 +65,13 @@
 
 <script type="text/javascript">
     $(function () {
+
+        $('.event-show-past-link').click(function () {
+            var text = $(this).text() == "Show past events" ? "Hide past events" : "Show past events";
+            $(this).text(text);
+            $('.past-' + $(this).attr('data-contentType')).fadeToggle();
+        });
+
         $('.event-owner-actions').change(function () {
 
             switch($(this).children('option:selected').val()) {

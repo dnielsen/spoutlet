@@ -125,9 +125,9 @@ platformd:
             actions: Actions
             status: Status
             my_events: My Events
-            your_owned_events: My Event Listings
-            your_registered_events: Events I'm Registered In
-            your_past_events: My Past Events
+            my_owned_events: My Event Listings
+            my_registered_events: Events I'm Registered In
+            my_past_events: My Past Events
             rsvp:
                 dialog_title: Event RSVP
                 change_rsvp: Change RSVP
@@ -410,16 +410,12 @@ platformd:
             approved:
                 title: Your Event Has Been Approved
                 message: |
-                    Congratulations, your event %eventName% has been approved!
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved!
 
-                    Event Summary:
-                    Name: %eventName%
-                    Group: %groupName%
-                    Type: %eventType%
-
+                    We encourage you to share this event with your friends.
                     Your event is now visible on Alienware Arena.
 
-                    Should you have any questions, please contact us at contact@alienwarearena.com.
+                    Should you have any questions, please contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
 
                     Alienware Arena Team
             cancel:
@@ -445,9 +441,21 @@ platformd:
 
                     Location: %location%
 
-                    <a href="%url%">Click here</a> to RSVP.
+                    <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
 
                     Note: To unsubscribe from similar emails from this Group, you must leave the Group.
+
+                    Alienware Arena Team
+
+            require_approval:
+                title:  Request to Approve My Event for %groupName%
+                message: |
+                    <a href="%eventUrl%">%eventName%</a> needs approval to be listed on the "%groupName%"" page.
+
+                    Dates: %dateRange%
+                    Event Organizer: <a href="%userUrl%">%username%</a>
+
+                    You must click <a href="%approvalUrl%">here</a> to approve the event.
 
                     Alienware Arena Team
 

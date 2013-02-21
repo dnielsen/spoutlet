@@ -6,7 +6,15 @@
 <div>
     <div class="row-fluid first">
         <div class="span11">
-            {{ form_row(form.name) }}
+
+            <div class="control-group">
+                {{ form_errors(form.name) }}
+                {{ form_label(form.name) }}
+                <div class="controls">
+                    {{ form_widget(form.name, { 'attr': {'style': 'width:300px;'} }) }}
+                </div>
+            </div>
+
             {% if form.registrationOption is defined %}{{ form_row(form.registrationOption) }}{% endif %}
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
             {{ form_row(form.content) }}
@@ -89,8 +97,6 @@
             $('.hideable-field').slideUp();
             $('.hideable-field:hidden').hide();
             $('#external-url').show();
-            alert($('#groupEvent_content').text());
-            alert($('#cke_groupEvent_content').text());
         });
 
         $('#groupEvent_registrationOption_REGISTRATION_ENABLED').click(function() {
@@ -131,6 +137,10 @@
                 $('#location-info').slideUp();
             }
         });
+
+        if ($('input[name="groupEvent[online]"]:checked').val() == 0) {
+            $('#location-info').show();
+        }
 
         {% if form.translations is defined %}
             $('#translations').click(function () {

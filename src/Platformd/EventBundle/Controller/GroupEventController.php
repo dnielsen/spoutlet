@@ -94,7 +94,7 @@ class GroupEventController extends Controller
                         'eventSlug' => $groupEvent->getSlug()
                     )));
                 } else {
-                    $this->setFlash('success', 'New event posted successfully and is ending approval from Group Organizer');
+                    $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
                         'slug' => $group->getSlug()
@@ -102,7 +102,7 @@ class GroupEventController extends Controller
                 }
 
             } else {
-                $this->setFlash('error', 'You must fill in the required fields in order to save your event.');
+                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -139,6 +139,11 @@ class GroupEventController extends Controller
         $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
         $groupEvent->setGroup($group);
 
+        // Event is automatically approved if user is group organizer or super admin
+        if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+            $groupEvent->setApproved(true);
+        }
+
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
@@ -166,7 +171,7 @@ class GroupEventController extends Controller
                         'eventSlug' => $groupEvent->getSlug()
                     )));
                 } else {
-                    $this->setFlash('success', 'New event posted successfully and is ending approval from Group Organizer');
+                    $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
                         'slug' => $group->getSlug()
@@ -174,7 +179,7 @@ class GroupEventController extends Controller
                 }
 
             } else {
-                $this->setFlash('error', 'Something went wrong');
+                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -225,12 +230,12 @@ class GroupEventController extends Controller
                 $this->getGroupEventService()->updateEvent($groupEvent);
                 $this->setFlash('success', 'Event has been saved successfully.');
 
-                return $this->redirect($this->generateUrl('group_event_edit', array(
+                return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $group->getSlug(),
-                    'eventId' => $groupEvent->getId()
+                    'eventSlug' => $groupEvent->getSlug()
                 )));
             } else {
-                $this->setFlash('error', 'Something went wrong');
+                $this->setFlash('error', 'Please correct the errors highlighted below.');
             }
         }
 
@@ -266,8 +271,6 @@ class GroupEventController extends Controller
             if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
             }
-        } elseif (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ViewEvent')) {
-            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
         $isAttending = false;
@@ -564,7 +567,7 @@ Alienware Arena Team';
 
         $this->getGroupEventService()->approveEvent($groupEvent);
 
-        $this->setFlash('success', 'Event has been approved');
+        $this->setFlash('success', 'An automated email was sent to the event organizer and the group members to inform them about the event.');
 
         return $this->redirect($this->generateUrl('group_event_pending_approval', array(
             'groupSlug' => $group->getSlug()
@@ -676,6 +679,11 @@ Alienware Arena Team';
 
         if (!$groupEvent) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
+            return $response;
+        }
+
+        if (!$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'JoinEvent')) {
+            $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not allowed to rsvp to this event!")));
             return $response;
         }
 

@@ -32,6 +32,7 @@
                         <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</a></li>
                         <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
                         <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
+                        <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
                     </ul>
                 </div>
             </div>
@@ -49,7 +50,7 @@
                 </div>
                 <div class="widget-content">
                     <div id="event-heading-date">{{ event.dateRangeString }}</div>
-                    <div id="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                    <div id="event-heading-time">{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
                     <div id="event-content">{{ event.content | raw }}</div>
                 </div>
             </div>
@@ -92,18 +93,28 @@
                             {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">Registration is no longer open for this event.</div>
                             {% else %}
-                                <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
+                                {% if group.isAllowedTo(app.user, get_current_site(), 'JoinEvent') %}
+                                    <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
 
-                                <div id="registration-response" style="display:none;"></div>
+                                    <div id="registration-response" style="display:none;"></div>
 
-                                <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
+                                    <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
 
-                                <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
+                                    <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
+                                {% else %}
+                                    <div id="registration-response">You must join this group to register for this event!</div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endif %}
 
                     <div id="event-report-link"><a href="javascript:void(0);" class="report-content" report-data="{{ event.id }}">{{ 'content_reporting.report' | trans }}</a></div>
+
+                    {% if event.registrationOption != "REGISTRATION_ENABLED" %}
+                        <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                            Please contact the organizer for information on how to register for this event.
+                        </p>
+                    {% endif %}
 
                 </div>
 
@@ -117,9 +128,10 @@
                     {% if event.online %}
                         <div id="event-location-online">This is an online event.</div>
                     {% else %}
+                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
                         <div id="event-location-name">{{ event.location }}</div>
                         <div id="event-location-address">{{ event.address }}</div>
-                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        <div id="event-directions-link"><a href="http://maps.google.com/maps?saddr={{ event.address | url_encode }}" target="_blank">Directions</a></div>
                     {% endif %}
                 </div>
             </div>

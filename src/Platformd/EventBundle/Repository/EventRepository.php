@@ -132,7 +132,7 @@ class EventRepository extends EntityRepository
      *
      * @param \Platformd\SpoutletBundle\Entity\User $user
      */
-    public function getPastEventListForUser(User $user)
+    public function getPastEventListForUser(User $user, $whereIsOrganizer = false)
     {
         $subquery = $this->createQueryBuilder('e2')
             ->select('e2.id')
@@ -144,7 +144,6 @@ class EventRepository extends EntityRepository
 
         $qb->select('e')
             ->leftJoin('e.attendees', 'a')
-            ->andWhere($qb->expr()->in('e.id', $subquery))
             ->andWhere('e.endsAt < :now')
             ->andWhere('e.published = 1')
             ->groupBy('e.id')
@@ -155,6 +154,14 @@ class EventRepository extends EntityRepository
 
         if ($this instanceof GroupEventRepository) {
             $qb->andWhere('e.deleted = 0');
+        }
+
+        if ($whereIsOrganizer) {
+            $qb->andWhere('e.user = :user');
+        } else {
+            $qb->andWhere($qb->expr()->in('e.id', $subquery))
+                ->andWhere('e.user <> :user')
+                ->andWhere('e.published = 1');
         }
 
         if (method_exists($this, 'addActiveClauses')) {

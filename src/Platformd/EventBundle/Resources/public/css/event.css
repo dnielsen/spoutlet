@@ -20,12 +20,14 @@
     font-style: italic;
 }
 
-#event-location-name {
-    margin: 0 0 5px 10px;
+#event-location-name,
+#event-location-address,
+#event-directions-link {
+    margin: 5px 0 5px 10px;
 }
 
-#event-location-address {
-    margin-left: 10px;
+#event-location-name {
+    font-weight: bold;
 }
 
 #event-banner {
@@ -123,6 +125,5 @@
 }
 
 #event-report-link {
-    margin-top: 10px;
+    margin: 10px 0;
 }
-

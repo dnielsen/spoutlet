@@ -5,6 +5,7 @@ namespace Platformd\EventBundle\Service;
 use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
+    Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\EventEmail,
     Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Entity\GlobalEventEmail,
@@ -76,7 +77,9 @@ class EventService
     {
         $this->handleMedia($event);
 
-        $this->register($event, $event->getUser());
+        if ($event instanceof GroupEvent) {
+            $this->register($event, $event->getUser());
+        }
 
         if ($event->getExternalUrl()) {
             $event->setPrivate(false);
@@ -324,9 +327,9 @@ class EventService
         return $this->repository->getUpcomingEventListForUser($user, $whereIsOrganizer);
     }
 
-    public function findPastEventsForUser(User $user)
+    public function findPastEventsForUser(User $user, $whereIsOrganizer = false)
     {
-        return $this->repository->getPastEventListForUser($user);
+        return $this->repository->getPastEventListForUser($user, $whereIsOrganizer);
     }
 
     public function getAttendeeList($event)

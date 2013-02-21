@@ -482,7 +482,7 @@ exercise_html_purifier:
     default:
         Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
     editor_basic:
-        HTML.Allowed: a[href], p, strong, em, ul, ol, li
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li, div, *[style]
     editor_admin:
-        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, img[src], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], pre, span, *[style]
+        HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, img[src], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], pre, span, div, *[style]
 

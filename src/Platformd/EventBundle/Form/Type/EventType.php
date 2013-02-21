@@ -36,7 +36,7 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name', 'text', array(
-                'label' => 'platformd.event.form.name'
+                'label' => 'platformd.event.form.name',
             ))
             ->add('bannerImage', new MediaType(), array(
                 'image_label'   => 'platformd.event.form.banner_image',

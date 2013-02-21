@@ -27,7 +27,7 @@
             <div class="events-sub-nav-wrapper">
                <div class="events-sub-nav">
                     <ul>
-                        <li><a href="{{ path("global_event_edit", { 'eventId': event.id }) }}">Edit Event</a></li>
+                        <li><a href="{{ path("admin_events_edit", { 'id': event.id }) }}">Edit Event</a></li>
                         <li><a href="{{ path("global_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
                         <li><a href="{{ path("global_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
                     </ul>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="widget-content">
                     <div id="event-heading-date">{{ event.dateRangeString }}</div>
-                    <div id="event-heading-time">{{ event.startsAt | date('H:i A') }} - {{ event.endsAt | date('H:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                    <div id="event-heading-time">{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
                     <div id="event-content">{{ event.content | raw }}</div>
                 </div>
             </div>
