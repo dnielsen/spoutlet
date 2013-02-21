@@ -151,6 +151,12 @@ class ContentReportingController extends Controller
                 $owner = $item->getOwner();
                 break;
 
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
+                break;
+
             case 'GroupDiscussionPost':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();
@@ -164,23 +170,6 @@ class ContentReportingController extends Controller
                 break;
         }
 
-        $name               = $type == 'Group' ? $item->getName() : $type == 'Comment' ? $item->getBody() : $item->getTitle();
-
-        $subject            = "Your Content Has Been Flagged";
-        $message            = sprintf("An item posted on Alienware Arena has been flagged as inappropriate and requires review.
-
-Type: %s
-Content:  %s
-Reason: %s
-
-The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours.  If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
-
-Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
-
-
-Alienware Arena Team
-
-", $itemType, $name, $reason);
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
         $emailTo            = $owner->getEmail();

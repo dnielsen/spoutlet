@@ -28,6 +28,7 @@ class ContentReportRepository extends EntityRepository
         'GalleryMedia'          => 'SpoutletBundle',
         'GroupDiscussion'       => 'GroupBundle',
         'GroupDiscussionPost'   => 'GroupBundle',
+        'GroupEvent'            => 'EventBundle',
     );
 
     public function getBundleFromType($type)

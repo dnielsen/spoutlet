@@ -35,6 +35,7 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSitesArchived("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussionPost");
+            $groupEvents            = $repo->getContentReportTypeForAllSitesArchived("GroupEvent");
         } elseif ($mode == "deletedContent") {
             $comments               = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
             $groupNews              = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
@@ -44,6 +45,7 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussionPost");
+            $groupEvents            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupEvent");
         } elseif ($mode == "manage") {
             $comments               = $repo->getContentReportTypeForAllSites("Comment");
             $groupNews              = $repo->getContentReportTypeForAllSites("GroupNews");
@@ -53,9 +55,10 @@ class ContentReportAdminController extends Controller
             $groups                 = $repo->getContentReportTypeForAllSites("Group");
             $groupDiscussions       = $repo->getContentReportTypeForAllSites("GroupDiscussion");
             $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
+            $groupEvents            = $repo->getContentReportTypeForAllSites("GroupEvent");
         }
 
-        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts);
+        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts, $groupEvents);
 
         usort($allReports, function($a, $b) {
 
@@ -100,6 +103,9 @@ class ContentReportAdminController extends Controller
         $group      = $report->getGroup();
         $comment    = $report->getComment();
         $galleryMedia = $report->getGalleryMedia();
+        $groupDiscussion        = $report->getGroupDiscussion();
+        $groupDiscussionPost    = $report->getGroupDiscussionPost();
+        $groupEvent = $report->getGroupEvent();
 
         if ($groupVideo) {
             $groupVideo->setDeleted(false);
@@ -151,6 +157,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForComment($comment);
             $type = 'Comment';
             $id = $comment->getId();
+        } else if ($groupEvent) {
+            $groupEvent->setDeleted(false);
+            $groupEvent->setDeletedReason(null);
+            $repo->deleteAllContentReportsForGroupEvent($groupEvent);
+            $type = 'GroupEvent';
+            $id = $groupEvent->getId();
         } else {
             $this->setFlash('error', 'Unknown content type.');
             return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -182,6 +194,7 @@ class ContentReportAdminController extends Controller
         $comment                = $report->getComment();
         $groupDiscussion        = $report->getGroupDiscussion();
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
+        $groupEvent             = $report->getGroupEvent();
 
         if ($groupVideo) {
 
@@ -251,6 +264,13 @@ class ContentReportAdminController extends Controller
             $em->persist($groupDiscussionPost);
             $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
 
+        } else if ($groupEvent) {
+
+            $groupEvent->setDeleted(true);
+            $groupEvent->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+            $em->persist($groupEvent);
+            $repo->deleteAllContentReportsForGroupEvent($groupEvent);
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -280,6 +300,7 @@ class ContentReportAdminController extends Controller
         $comment                = $report->getComment();
         $groupDiscussion        = $report->getGroupDiscussion();
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
+        $groupEvent             = $report->getGroupEvent();
 
         if ($groupVideo) {
 
@@ -347,6 +368,15 @@ class ContentReportAdminController extends Controller
             $id = $groupDiscussionPost->getId();
             $reportedItem = $groupDiscussionPost;
 
+        } else if ($groupEvent) {
+
+            $groupEvent->setDeleted(false);
+            $groupEvent->setDeletedReason(null);
+            $em->persist($groupEvent);
+            $type = 'GroupEvent';
+            $id = $groupEvent->getId();
+            $reportedItem = $groupEvent;
+
         } else {
 
             $this->setFlash('error', 'Unknown content type.');
@@ -392,6 +422,12 @@ class ContentReportAdminController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();
                 $owner = $item->getOwner();
+                break;
+
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
                 break;
 
             default:
