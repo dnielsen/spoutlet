@@ -211,7 +211,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -308,7 +308,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -478,7 +478,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent))
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
         }
@@ -603,7 +603,7 @@ Alienware Arena Team';
 
         if (
             !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
-            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+            (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
@@ -637,7 +637,7 @@ Alienware Arena Team';
 
         if (
             !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
-            false === $this->getSecurity()->isGranted('EDIT', $groupEvent)
+            (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
@@ -748,7 +748,7 @@ Alienware Arena Team';
             return $response;
         }
 
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) || $user->getAdminLevel() === null) {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && $user->getAdminLevel() === null) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not authorized to delete this event.")));
             return $response;
         }
