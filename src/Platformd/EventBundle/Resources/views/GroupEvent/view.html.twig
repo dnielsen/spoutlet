@@ -102,7 +102,11 @@
 
                                     <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
                                 {% else %}
-                                    <div id="registration-response">You must join this group to register for this event!</div>
+                                    {% if group.isPublic %}
+                                        <div id="registration-response">You must <a href="{{ path('group_join', { 'id': group.id, 'event': event.id }) }}">join</a> this group to register for this event!</div>
+                                    {% else %}
+                                        <div id="registration-response">You must <a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}">apply to join</a> this group to register for this event!</div>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>

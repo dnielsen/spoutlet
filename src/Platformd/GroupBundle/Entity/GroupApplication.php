@@ -71,6 +71,11 @@ class GroupApplication
      */
     private $reason;
 
+    /**
+     * @var \Platformd\EventBundle\Entity\GroupEvent
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
+     */
+    protected $event;
 
     public function __construct()
     {
@@ -158,5 +163,15 @@ class GroupApplication
     public function setReason($value)
     {
         $this->reason = $value;
+    }
+
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    public function setEvent($value)
+    {
+        $this->event = $value;
     }
 }

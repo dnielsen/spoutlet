@@ -14,6 +14,7 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupDiscussionEvent;
 use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
 use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\EventBundle\Entity\GroupEvent as GroupEventEntity;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\CEVOBundle\Api\ApiManager;
@@ -124,7 +125,7 @@ class GroupManager
     /**
      * Automatically makes a user join a group
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \Platformd\UserBundle\Entity\User $user
      */
     public function autoJoinGroup(Group $group, User $user)
@@ -163,26 +164,21 @@ class GroupManager
     /**
      * Automatically makes a user apply to a group
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \Platformd\UserBundle\Entity\User $user
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      * @throws \Exception
      */
-    public function autoApplyToGroup(Group $group, User $user)
+    public function autoApplyToGroup(Group $group, User $user, GroupEventEntity $event=null)
     {
         if ($group->isMember($user) || $group->isOwner($user)) {
             throw new \Exception('You are already a member of this group!');
         }
 
-        /** @var $applicationRepo \Platformd\SpoutletBundle\Entity\GroupApplicationRepository */
-        $applicationRepo = $this->em->getRepository('SpoutletBundle:GroupApplication');
+        /** @var $applicationRepo \Platformd\GroupBundle\Entity\GroupApplicationRepository */
+        $applicationRepo = $this->em->getRepository('GroupBundle:GroupApplication');
 
-        $application = $applicationRepo->findOneBy(array(
-            'group' => $group,
-            'user' => $user
-        ));
-
-        if ($application->getGroup() && ($application->getGroup()->getId() == $group->getId())) {
+        if ($application = $applicationRepo->getOneForGroupAndUser($group, $user)) {
             throw new \Exception('You have already applied to this group!');
         }
 
@@ -196,6 +192,10 @@ class GroupManager
         $application->setApplicant($user);
         $application->setSite($this->getCurrentSite());
         $application->setReason('This is an automated application because user has registered for an event belonging to this group.');
+
+        if ($event) {
+            $application->setEvent($event);
+        }
 
         $this->em->persist($application);
         $this->em->flush();
