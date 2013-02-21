@@ -73,3 +73,11 @@ admin_event_unpublish:
 admin_event_metrics:
     pattern: /admin/events/metrics
     defaults: { _controller: EventBundle:GlobalEventAdmin:metrics }
+
+admin_event_summary_csv:
+    pattern: /admin/event/summary-csv
+    defaults: { _controller: EventBundle:GlobalEventAdmin:eventSummaryCsv }
+
+admin_event_attendee_csv:
+    pattern: /admin/event/attendee-csv/{eventType}/{id}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:eventAttendeeCsv }

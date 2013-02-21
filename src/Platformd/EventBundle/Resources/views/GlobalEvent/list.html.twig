@@ -6,11 +6,15 @@
 <h2>{{ 'platformd.events.event_listings.header' | trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
+<<<<<<< Updated upstream
         {% if groupsCount > 0 %}
             <div style="width:100%;">To create an event, <a href="{{ path('accounts_groups', { 'then': "group_event" }) }}">select a group</a>.</div>
         {% else %}
             <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary" style="float:right;">{{ 'platformd.events.event_listings.create' | trans }}</a>
         {% endif %}
+=======
+        {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups'), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
+>>>>>>> Stashed changes
     </div>
 </div>
 
@@ -33,15 +37,6 @@
         </div>
     </div>
 </div>
-    <div class="pagerfanta" id="pager-bottom" style="float:right;margin-top:15px;">
-        {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
-        {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
-        {{ pagerfanta(pager, 'spoutlet', {
-            'previous_message': '',
-            'next_message': '',
-            'routeName': 'global_events_current'
-        }) }}
-    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -59,7 +59,7 @@ class EventRepository extends EntityRepository
     public function getAttendeeList($event)
     {
         $qb = $this->createQueryBuilder('e')
-            ->select('a.id, a.username')
+            ->select('a.id, a.username, a.email')
             ->leftJoin('e.attendees', 'a')
             ->andWhere('e = :event')
             ->setParameter('event', $event);

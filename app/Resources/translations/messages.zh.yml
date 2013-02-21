@@ -132,6 +132,7 @@ platformd:
             no_past_events: 无以往活动
             no_current_events: 无当前活动
             no_active_giveaways: 目前没有活动赠品。
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a group</a>.
         event_show:
             register_event: 注册活动
             unregister_event: Unregister for event
