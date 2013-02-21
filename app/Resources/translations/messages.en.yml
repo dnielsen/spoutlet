@@ -397,7 +397,7 @@ platformd:
                 unpublished: "Unpublished"
 
             help:
-                address: "Example: 1021 Washington Drive, San Francisco, CA, United States"
+                address: "Example: 1021 Washington Drive, San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
                 banner_image: "Resolution 950x120, jpeg or png formats"
                 external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
 
