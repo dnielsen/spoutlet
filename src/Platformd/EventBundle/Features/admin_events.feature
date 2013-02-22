@@ -11,18 +11,18 @@ Feature: Event Admin
 #                | Other global event  | other-global-event | en    | -4 days  | +4 days | Some other description |
             And there is a game called "Skyrim"
 
-    Scenario: I can create a new event
-        Given I am on "/admin"
-        When I click to add new "Events"
-            And I fill in the following:
-                | Event Title   | Test Event        |
-                | Event Details | Description       |
-                | Event Starts  | 2013-02-13 00:00  |
-                | Event Ends    | 2050-02-13 00:00  |
-            And I select "Skyrim" from "Game"
-            And I check the "Demo" option for "Sites"
-            And I press "Save"
-        Then I should see "New event posted successfully!"
+#    Scenario: I can create a new event
+#        Given I am on "/admin"
+#        When I click to add new "Events"
+#            And I fill in the following:
+#                | Event Title   | Test Event        |
+#                | Event Details | Description       |
+#            And I select "Skyrim" from "Game"
+#            And I check the "Demo" option for "Sites"
+#            And I select the "groupEvent_online_1" radio button
+#            And I select the "Public Event" radio button
+#            And I press "Save"
+#        Then I should see "New event posted successfully!"
 
 #    Scenario: I can edit an event
 #        Given I am on "/admin"
@@ -30,8 +30,6 @@ Feature: Event Admin
 #            And I fill in the following:
 #                | Event Title   | Test Event Updated |
 #                | Event Details | Description        |
-#                | Event Starts  | 2013-02-13 00:00   |
-#                | Event Ends    | 2050-02-13 00:00   |
 #            And I select "Skyrim" from "Game"
 #            And I check the "Demo" option for "Sites"
 #            And I press "Save"

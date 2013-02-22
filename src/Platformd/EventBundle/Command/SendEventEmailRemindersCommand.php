@@ -8,10 +8,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-use Platformd\EventBundle\Entity\GroupEventEmail,
-    Platformd\EventBundle\Entity\GlobalEventEmail
-;
-
 class SendEventEmailRemindersCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -78,6 +74,6 @@ EOT
         }
 
         $output->writeLn('');
-        $output->writeLn('Done.')
+        $output->writeLn('Done.');
     }
 }

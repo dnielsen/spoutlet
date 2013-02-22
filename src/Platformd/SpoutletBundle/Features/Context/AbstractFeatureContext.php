@@ -739,7 +739,7 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldSeeDataRows($num)
     {
-        $rows = $this->getPage()->findAll('css', 'table.table tbody tr');
+        $rows = $this->getPage()->findAll('css', 'table tbody tr');
 
         assertEquals($num, count($rows));
     }

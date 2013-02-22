@@ -1342,7 +1342,7 @@ Alienware Arena Team
         $user   = $this->getCurrentUser();
         $group  = $this->getGroupBySlug($slug);
 
-        if ($group->getDeleted()) {
+        if ($group && $group->getDeleted()) {
             $this->setFlash('error', 'Sorry, this group does not exist.');
             return $this->redirect($this->generateUrl('groups'));
         }

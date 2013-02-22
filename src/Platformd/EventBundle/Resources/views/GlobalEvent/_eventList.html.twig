@@ -60,7 +60,7 @@
                 {% else %}
                     {% if event.address is defined %}
                         <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}">
-                            {{ event.location ? event.location : ('na'|trans) }}
+                            {{ event.location ? event.location : ('platformd.events.event_listings.show_map'|trans) }}
                         </a>
                     {% else %}
                         {{ 'na'|trans }}

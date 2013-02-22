@@ -343,6 +343,8 @@ Alienware Arena Team';
                 $email = $form->getData();
                 $recipientsString = $form->get('users')->getData();
                 $email->setEvent($event);
+                $email->setSender($this->getUser());
+                $email->setSite($this->getCurrentSite());
 
                 $recipients = array();
 

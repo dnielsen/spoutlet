@@ -63,6 +63,22 @@ abstract class EventEmail
      */
     protected $sentAt;
 
+    /**
+     * Email sender
+     *
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $sender;
+
+    /**
+     * Site email is sent from
+     *
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $site;
+
     public function __construct()
     {
         $this->recipients = new ArrayCollection();
@@ -148,5 +164,37 @@ abstract class EventEmail
     public function setSentAt($sentAt)
     {
         $this->sentAt = $sentAt;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSender()
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param User
+     */
+    public function setSender($sender)
+    {
+        $this->sender = $sender;
+    }
+
+    /**
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @param Site
+     */
+    public function setSite($site)
+    {
+        $this->site = $site;
     }
 }

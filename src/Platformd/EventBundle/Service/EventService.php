@@ -13,6 +13,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
     Platformd\GroupBundle\Entity\Group,
+    Platformd\SpoutletBundle\Entity\Site,
     Platformd\SpoutletBundle\Model\EmailManager
 ;
 
@@ -361,7 +362,7 @@ class EventService
             '%dateString%'  => $event->getDateRangeString(),
             '%timeString%'  => $event->getStartsAt()->format('g:i A').' - '.$event->getEndsAt()->format('g:i A'),
             '%timezone%'    => $event->getTimezoneString(),
-            '%location%'    => $event->getOnline() ? 'Online' : $event->getAddress(),
+            '%location%'    => $event->getOnline() ? 'Online' : $event->getFormattedAddress(),
             '%eventUrl%'    => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
         ), 'messages', $locale));
 
@@ -376,6 +377,9 @@ class EventService
         $subject    = $email->getSubject();
         $message    = $email->getMessage();
 
+        $fromName   = ($email->getSender() && $email->getSender()->getAdminLevel()) ? null : $email->getSender()->getUsername();
+        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
+
         if ($type === null) {
             $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
         } else {
@@ -386,7 +390,7 @@ class EventService
 
         foreach ($email->getRecipients() as $recipient) {
             $emailTo = $recipient->getEmail();
-            $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, $emailType);
+            $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, $emailType, $site, $fromName);
             $sendCount++;
         }
 
@@ -413,5 +417,15 @@ class EventService
     public function getAttendeeList($event)
     {
         return $this->repository->getAttendeeList($event);
+    }
+
+    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
+    {
+        return $this->repository->findUpcomingEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
+    }
+
+    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
+    {
+        return $this->repository->findPastEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
     }
 }

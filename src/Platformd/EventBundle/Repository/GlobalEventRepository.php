@@ -121,7 +121,6 @@ class GlobalEventRepository extends EventRepository
             ->setParameter('game', $game)
         ;
 
-
         return $qb->getQuery()->getResult();
     }
 

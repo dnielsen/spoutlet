@@ -62,16 +62,6 @@ class GlobalEventService extends EventService
         return $this->repository->findOneBySlugForSite($slug, $site);
     }
 
-    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
-    {
-        return $this->repository->findUpcomingEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
-    }
-
-    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
-    {
-        return $this->repository->findPastEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
-    }
-
     public function findEventsForGamePage(Site $site, Game $game, $published = true)
     {
         return $this->repository->findEventsForGamePage($site, $game, $published);

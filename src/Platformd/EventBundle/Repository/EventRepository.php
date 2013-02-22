@@ -125,7 +125,6 @@ class EventRepository extends EntityRepository
             $qb->andWhere('e.user = :user');
         } else {
             $qb->andWhere($qb->expr()->in('e.id', $subquery))
-                ->andWhere('e.user <> :user')
                 ->andWhere('e.published = 1');
         }
 
@@ -165,7 +164,6 @@ class EventRepository extends EntityRepository
             $qb->andWhere('e.user = :user');
         } else {
             $qb->andWhere($qb->expr()->in('e.id', $subquery))
-                ->andWhere('e.user <> :user')
                 ->andWhere('e.published = 1');
         }
 

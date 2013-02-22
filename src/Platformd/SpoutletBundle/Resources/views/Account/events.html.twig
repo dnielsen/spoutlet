@@ -73,17 +73,7 @@
         });
 
         $('.event-owner-actions').change(function () {
-
-            switch($(this).children('option:selected').val()) {
-
-                case 'contact':
-                case 'edit':
-                    document.location.href = $(this).children('option:selected').attr('data-route');
-                    break;
-
-                default:
-                    break;
-            }
+            document.location.href = $(this).children('option:selected').attr('data-route');
         });
     });
 </script>

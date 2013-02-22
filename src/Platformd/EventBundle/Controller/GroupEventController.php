@@ -64,11 +64,6 @@ class GroupEventController extends Controller
             $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
         }
 
-        // Event is automatically approved if user is group organizer or super admin
-        if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
-            $groupEvent->setApproved(true);
-        }
-
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST' && !$importedGroupEvent) {
@@ -79,6 +74,11 @@ class GroupEventController extends Controller
                 /** @var GroupEvent $groupEvent */
                 $groupEvent = $form->getData();
                 $groupEvent->setUser($this->getUser());
+
+                // Event is automatically approved if user is group organizer or super admin
+                if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+                    $groupEvent->setApproved(true);
+                }
 
                 $this->getGroupEventService()->createEvent($groupEvent);
 
@@ -141,11 +141,6 @@ class GroupEventController extends Controller
         $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
         $groupEvent->setGroup($group);
 
-        // Event is automatically approved if user is group organizer or super admin
-        if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
-            $groupEvent->setApproved(true);
-        }
-
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
@@ -156,6 +151,11 @@ class GroupEventController extends Controller
                 /** @var GroupEvent $groupEvent */
                 $groupEvent = $form->getData();
                 $groupEvent->setUser($this->getUser());
+
+                // Event is automatically approved if user is group organizer or super admin
+                if ($groupEvent->getGroup()->getOwner() === $groupEvent->getUser() || $this->getUser()->hasRole('ROLE_SUPER_ADMIN')) {
+                    $groupEvent->setApproved(true);
+                }
 
                 $this->getGroupEventService()->createEvent($groupEvent);
 
@@ -334,6 +334,8 @@ class GroupEventController extends Controller
                 $email = $form->getData();
                 $recipientsString = $form->get('users')->getData();
                 $email->setGroupEvent($groupEvent);
+                $email->setSender($this->getUser());
+                $email->setSite($this->getCurrentSite());
 
                 $recipients = array();
 

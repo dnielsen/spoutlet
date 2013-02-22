@@ -43,8 +43,9 @@ class GroupEventListener
 
         $name = $event->getName();
         $group = $event->getGroup()->getName();
-        $type = ($event->getOnline()) ? 'Online' : 'Location';
         $owner = $event->getUser();
+
+        $fromName = $event->getGroup()->getName();
 
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
@@ -55,9 +56,19 @@ class GroupEventListener
         ), 'messages', $emailLocale));
 
 
-        $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Event Approval Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+        $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Event Approval Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
 
         if ($event instanceof GroupEvent) {
+            $this->sendGroupAnnouncementEmail($event);
+        }
+    }
+
+    private function sendGroupAnnouncementEmail($event)
+    {
+        if ($event instanceof GroupEvent) {
+
+            $name = $event->getName();
+            $group = $event->getGroup()->getName();
 
             foreach ($event->getGroup()->getMembers() as $member) {
                 $emailTo            = $member->getEmail();
@@ -69,11 +80,11 @@ class GroupEventListener
                     '%startDate%'   => $event->getStartsAt()->format('l, M j, Y'),
                     '%startTime%'   => $event->getStartsAt()->format('g:i A'),
                     '%timezone%'    => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
-                    '%location%'    => ($event->getOnline()) ? 'Online' : ($event->getLocation() ? $event->getLocation().', ' : '').$event->getAddress(),
+                    '%location%'    => ($event->getOnline()) ? 'Online' : $event->getFormattedAddress(),
                     '%url%'         => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
                 ), 'messages', $emailLocale));
 
-                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Invite", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Invite", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $group);
             }
 
         }
@@ -89,6 +100,8 @@ class GroupEventListener
         /** @var $event GroupEvent */
         $event = $ev->getEvent();
 
+        $fromName = $event->getGroup()->getName();
+
         foreach ($event->getAttendees() as $attendee) {
             $emailTo            = $attendee->getEmail();
             $emailLocale        = $attendee->getLocale() ? : 'en';
@@ -96,7 +109,7 @@ class GroupEventListener
             $subject            = $this->translator->trans('platformd.event.email.cancel.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
             $message            = $this->translator->trans('platformd.event.email.cancel.message', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
 
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Cancellation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Cancellation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
         }
     }
 
@@ -109,15 +122,16 @@ class GroupEventListener
     {
         /** @var $event GroupEvent */
         $event = $ev->getEvent();
+        $fromName = $event->getGroup()->getName();
 
         foreach ($event->getAttendees() as $attendee) {
             $emailTo            = $attendee->getEmail();
             $emailLocale        = $attendee->getLocale() ?: 'en';
 
             $subject            = $this->translator->trans('platformd.event.email.activate.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
-            $message            = $this->translator->trans('platformd.event.email.activate.message', array('%eventName%' => $event->getName(), '%eventStartAt%' => $event->getStartsAt()), 'messages', $emailLocale);
+            $message            = $this->translator->trans('platformd.event.email.activate.message', array('%eventName%' => $event->getName(), '%eventStartsAt%' => $event->getStartsAt()->format('M d, Y')), 'messages', $emailLocale);
 
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Activation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Activation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
         }
     }
 
@@ -131,39 +145,44 @@ class GroupEventListener
         $event = $ev->getEvent();
 
         if ($event instanceof GroupEvent) {
+            if ($event->getApproved()) {
+                $this->sendGroupAnnouncementEmail($event);
+            } else {
+                $group          = $event->getGroup();
+                $groupOwner     = $group->getOwner();
+                $eventOwner     = $event->getUser();
 
-            $group          = $event->getGroup();
-            $groupOwner     = $group->getOwner();
-            $eventOwner     = $event->getUser();
+                $emailTo        = $groupOwner->getEmail();
+                $emailLocale    = $groupOwner->getLocale() ?: 'en';
 
-            $emailTo        = $groupOwner->getEmail();
-            $emailLocale    = $groupOwner->getLocale() ?: 'en';
+                $approvalUrl    = $this->router->generate('group_event_pending_approval', array('groupSlug' => $group->getSlug()), true);
 
-            $approvalUrl    = $this->router->generate('group_event_pending_approval', array('groupSlug' => $group->getSlug()), true);
+                $cevoLinkLocales = array(
+                    'ja' => '/japan',
+                    'zh' => '/china',
+                    'es' => 'latam'
+                );
 
-            $cevoLinkLocales = array(
-                'ja' => '/japan',
-                'zh' => '/china',
-                'es' => 'latam'
-            );
+                $userUrl = sprintf('http://www.alienwarearena.com%s/member/%d', array_key_exists($emailLocale, $cevoLinkLocales) ? $cevoLinkLocales[$emailLocale] : "" , $eventOwner->getCevoUserId());
 
-            $userUrl = sprintf('http://www.alienwarearena.com%s/member/%d', array_key_exists($emailLocale, $cevoLinkLocales) ? $cevoLinkLocales[$emailLocale] : "" , $eventOwner->getCevoUserId());
+                $subject  = $this->translator->trans('platformd.event.email.require_approval.title', array(
+                    '%groupName%' => $group->getName()
+                ), 'messages', $emailLocale);
 
-            $subject  = $this->translator->trans('platformd.event.email.require_approval.title', array(
-                '%groupName%' => $group->getName()
-            ), 'messages', $emailLocale);
+                $message = nl2br($this->translator->trans('platformd.event.email.require_approval.message', array(
+                    "%eventUrl%" => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                    "%eventName%" => $event->getName(),
+                    "%groupName%" => $group->getName(),
+                    "%dateRange%" => $event->getDateRangeString(),
+                    "%username%" => $event->getUser()->getUsername(),
+                    "%userUrl%" => $userUrl,
+                    "%approvalUrl%" => $approvalUrl,
+                ), 'messages', $emailLocale));
 
-            $message = nl2br($this->translator->trans('platformd.event.email.require_approval.message', array(
-                "%eventUrl%" => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
-                "%eventName%" => $event->getName(),
-                "%groupName%" => $group->getName(),
-                "%dateRange%" => $event->getDateRangeString(),
-                "%username%" => $event->getUser()->getUsername(),
-                "%userUrl%" => $userUrl,
-                "%approvalUrl%" => $approvalUrl,
-            ), 'messages', $emailLocale));
+                $fromName = $event->getUser()->getAdminLevel() ? null : $event->getUser()->getUsername();
 
-            $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Creation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale());
+                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Creation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
+            }
         }
     }
 }

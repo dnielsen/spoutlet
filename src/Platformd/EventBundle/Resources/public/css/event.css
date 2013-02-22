@@ -127,3 +127,21 @@
 #event-report-link {
     margin: 10px 0;
 }
+
+#groupEvent_location,
+#groupEvent_address {
+    width: 450px;
+}
+
+#groupEvent_name {
+    width: 300px;
+}
+
+.event-time-selection {
+    display: inline-block;
+    margin: 0 0 0 3px;
+}
+
+.event-time-selection select {
+    width: 50px;
+}

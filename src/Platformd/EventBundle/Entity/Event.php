@@ -125,8 +125,9 @@ abstract class Event implements LinkableInterface
      *
      * @var boolean $online
      * @ORM\Column(name="online", type="boolean")
+     * @Assert\NotNull(message="Required")
      */
-    protected $online = true;
+    protected $online;
 
     /**
      * Event starts at
@@ -281,6 +282,11 @@ abstract class Event implements LinkableInterface
     public function getAddress()
     {
         return $this->address;
+    }
+
+    public function getFormattedAddress()
+    {
+        return ($this->location ? $this->location."\n" : '').str_replace(',', ",\n", $this->address);;
     }
 
     /**

@@ -49,19 +49,19 @@ class EventType extends AbstractType
                     'class' => 'ckeditor'
                 )
             ))
-            ->add('game', 'entity', array(
-                'class'     => 'GameBundle:Game',
-                'property'  => 'name',
-                'empty_value' => 'Other',
+            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'Other',
+                'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
+                    return $er->createQueryBuilder('g')
+                              ->orderBy('g.name', 'ASC');
+                    },
                 'required'  => false,
-                'label' => 'platformd.event.form.game'
+                'label' => 'platformd.event.form.game',
             ))
             ->add('online', 'choice', array(
                 'choices'   => array(
                     1 => 'platformd.event.form.choice.online_event',
                     0 => 'platformd.event.form.choice.physical_event'
                 ),
-                'required'  => false,
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_type'
             ))
@@ -76,17 +76,15 @@ class EventType extends AbstractType
             ))
             ->add('startsAt', 'datetime', array(
                 'label' => 'platformd.event.form.starts_at',
-                'widget' => 'single_text',
-                'attr' => array(
-                    'class' => 'datetime-picker',
-                )
+                //'widget' => 'single_text',
+                'date_widget' => 'single_text',
+                'time_widget' => 'choice',
             ))
             ->add('endsAt', 'datetime', array(
                 'label' => 'platformd.event.form.ends_at',
-                'widget' => 'single_text',
-                'attr' => array(
-                    'class' => 'datetime-picker',
-                )
+                //'widget' => 'single_text',
+                'date_widget' => 'single_text',
+                'time_widget' => 'choice',
             ))
         ;
     }

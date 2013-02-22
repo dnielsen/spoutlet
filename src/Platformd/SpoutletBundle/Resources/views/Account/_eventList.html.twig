@@ -17,11 +17,13 @@
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
+                    {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
                     {% if event.approved == 0 %}{% set status = "Pending Approval by Group Organizer" %}{% endif %}
                 {% elseif event.contentType == "GlobalEvent" %}
                     {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
                     {% set rsvpUrl = path("global_event_rsvp") %}
+                    {% set manageUrl = path("global_event_attendees", event.getLinkableRouteParameters) %}
                 {% endif %}
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}">
@@ -35,7 +37,8 @@
                             <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
                                 <option>Select One...</option>
                                 <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
-                                <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
+                                {% if event.attendeeCount > 0 %}<option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>{% endif %}
+                                {% if event.attendeeCount > 0 %}<option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>{% endif %}
                             </select>
                         {% else %}
                             <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ rsvpUrl }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>

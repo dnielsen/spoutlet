@@ -15,3 +15,18 @@
     </label>
 {% endspaceless %}
 {% endblock %}
+
+{% block date_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' date-picker'}) %}
+    {{ block('field_widget') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block time_widget %}
+{% spaceless %}
+    <div class="event-time-selection">
+        at {{ form_widget(form.hour) }} : {{ form_widget(form.minute) }}
+    </div>
+{% endspaceless %}
+{% endblock time_widget %}

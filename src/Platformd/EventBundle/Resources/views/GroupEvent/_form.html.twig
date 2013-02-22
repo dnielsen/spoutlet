@@ -18,10 +18,8 @@
                 {{ form_row(form.location) }}
                 {{ form_row(form.address) }}
             </div>
-            <div>
-                <div style="display:inline-table">{{ form_row(form.startsAt) }}</div>
-                <div style="display:inline-table">{{ form_row(form.endsAt) }}</div>
-            </div>
+            {{ form_row(form.startsAt) }}
+            {{ form_row(form.endsAt) }}
             {{ form_row(form.timezone) }}
             {% if form.sites is defined %}{{ form_row(form.sites) }}{% endif %}
             {{ form_row(form.private) }}
@@ -30,7 +28,7 @@
 
     <div class="hideable-field">
         <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
-        <div id="advanced-options" style="display:none;">
+        <div id="advanced-options" style="display:none; margin:20px 0 0 0;">
             {% if form.slug is defined %}{{ form_row(form.slug) }}{% endif %}
             {{ form_row(form.bannerImage) }}
             {{ form_row(form.game) }}
@@ -53,9 +51,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('.datetime-picker').datetimepicker({ minDate: 0 });
-
-        $('input#groupEvent_name').css('width', '300px');
+        $('.date-picker').datepicker({ minDate: 0 });
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';

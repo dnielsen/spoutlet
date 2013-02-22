@@ -120,6 +120,7 @@ platformd:
         event_listings:
             header: "Alienware Arena Events"
             create: Create Event
+            show_map: Show Map
             organizer: Organizer
             attendees: Attendees
             actions: Actions
@@ -393,7 +394,7 @@ platformd:
                 private_event: "Private Event"
                 public_event: "Public Event"
                 online_event: "Online Event"
-                physical_event: "Enter Location Address"
+                physical_event: "In-Person"
                 published: "Published"
                 unpublished: "Unpublished"
 
@@ -440,7 +441,7 @@ platformd:
                     %startDate%
                     %startTime% %timezone%
 
-                    Location: %location%
+                    %location%
 
                     <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
 
@@ -451,7 +452,7 @@ platformd:
             require_approval:
                 title:  Request to Approve My Event for %groupName%
                 message: |
-                    <a href="%eventUrl%">%eventName%</a> needs approval to be listed on the "%groupName%"" page.
+                    <a href="%eventUrl%">%eventName%</a> needs approval to be listed on the "%groupName%" page.
 
                     Dates: %dateRange%
                     Event Organizer: <a href="%userUrl%">%username%</a>
@@ -485,7 +486,7 @@ platformd:
                     %eventName%
                     %dateString% - %timeString% %timezone%
 
-                    Location: %location%
+                    %location%
 
                     Click <a href="%eventUrl%">here</a> to change your RSVP.
 
