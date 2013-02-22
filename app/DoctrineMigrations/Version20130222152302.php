@@ -21,7 +21,8 @@ class Version20130222152302 extends AbstractMigration
         $this->addSql("CREATE INDEX IDX_DC6A98DAF624B39D ON global_event_email (sender_id)");
         $this->addSql("ALTER TABLE global_event_email ADD CONSTRAINT FK_DC6A98DAF6BD1646 FOREIGN KEY (site_id) REFERENCES pd_site(id) ON DELETE SET NULL");
         $this->addSql("CREATE INDEX IDX_DC6A98DAF6BD1646 ON global_event_email (site_id)");
-        $this->addSql("ALTER TABLE group_event_email ADD sender_id INT DEFAULT NULL, site_id INT DEFAULT NULL");
+        $this->addSql("ALTER TABLE group_event_email ADD sender_id INT DEFAULT NULL");
+        $this->addSql("ALTER TABLE group_event_email ADD site_id INT DEFAULT NULL");
         $this->addSql("ALTER TABLE group_event_email ADD CONSTRAINT FK_8331D299F624B39D FOREIGN KEY (sender_id) REFERENCES fos_user(id) ON DELETE SET NULL");
         $this->addSql("CREATE INDEX IDX_8331D299F624B39D ON group_event_email (sender_id)");
         $this->addSql("ALTER TABLE group_event_email ADD CONSTRAINT FK_8331D299F6BD1646 FOREIGN KEY (site_id) REFERENCES pd_site(id) ON DELETE SET NULL");
