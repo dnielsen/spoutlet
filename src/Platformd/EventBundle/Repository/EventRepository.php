@@ -82,6 +82,17 @@ class EventRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getAllEventsUserIsAttending(User $user)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e.id')
+            ->leftJoin('e.attendees', 'a')
+            ->andWhere('a = :user')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * Persists EventEmail in the DB
      *

@@ -29,10 +29,22 @@
             </td>
             {# todo - refactor this next line somewhere else #}
             <td style="width:259px;vertical-align:top">
+                {% set attending  = false %}
+                {% if is_granted('ROLE_USER') %}
+                    {% set attending = event.isUserAttending(app.user) %}
+                {% endif %}
                 {% if event.group is defined %}
-                    {{ event | pd_link_full(event.name) }}
+                    {% if attending %}
+                        {{ event | pd_link_full(event.name, ['attending']) }}
+                    {% else %}
+                        {{ event | pd_link_full(event.name) }}
+                    {% endif %}
                 {% else %}
-                    {{ event | pd_link_full(event.name, ['global-event-link']) }}
+                    {% if attending %}
+                        {{ event | pd_link_full(event.name, ['global-event-link', 'attending']) }}
+                    {% else %}
+                        {{ event | pd_link_full(event.name, ['global-event-link']) }}
+                    {% endif %}
                 {% endif %}
 
             </td>
@@ -48,7 +60,7 @@
                     {{ event.hostedBy }}
                 {% else %}
                     {% if event.group is defined %}
-                        {{ event.group | pd_link_full(event.group.name) }}
+                        <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
                     {% else %}
                         {{ 'na'|trans }}
                     {% endif %}
@@ -96,11 +108,18 @@
 
                 var lat = $(this).attr('data-lat');
                 var lng = $(this).attr('data-lng');
+                var directionsLink = 'http://maps.google.com/maps?geocode=&q=' + lat + ',+' + lng + '&aq=&z=17';
 
                 $(this).qtip({
                     content: {
                         text: 'Loading map...',
-                        prerender: false
+                        title: {
+                            button: $('<img/>', {
+                               'src': '{{ asset('bundles/spoutlet/images/x.png') }}',
+                               'class': 'qtip-close',
+                               'style': 'background:none;border-style:none;margin-top:-5px'
+                            })
+                        }
                     },
                     style: {
                         classes: 'qtip-dark qtip-shadow qtip-rounded',
@@ -117,7 +136,11 @@
                     events: {
                         render: function (event, api) {
                             var tooltip = $(this);
+                            //var closeBtn = $('<span class="ui-icon ui-icon-close">×</span>').appendTo(api.elements.content);
                             var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+
+                            var mapLink = $('<div style="padding-top: 5px;font-size:12px;font-weight:normal;"><a href="' + directionsLink + '" target="_blank">Directions</a></div>').appendTo(api.elements.content);
+
                             tooltip.show();
 
                             // options

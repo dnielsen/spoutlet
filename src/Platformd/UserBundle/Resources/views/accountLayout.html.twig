@@ -19,28 +19,6 @@
                 <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
             {% endif %}
 
-{# start events link section #}
-            {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
-            {% if site_has_feature('EVENTS') and event_link != false %}
-                <li class="more">
-                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.layout.main_menu.events' | trans }}</a>
-                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-            {% endif %}
-
-            {% if site_has_feature('EVENTS') %}
-                <li><a href="{{ path('accounts_events') }}">{% if event_link != false %}<span style="color: #ff5711;padding-right: 2px;">iGames</span> {% endif %}{{ 'platformd.user.account.my_events' | trans }}</a></li>
-            {% endif %}
-
-            {% if event_link != false %}
-                <li>{{ event_link | raw }}</li>
-            {% endif %}
-
-            {% if site_has_feature('EVENTS') and event_link != false %}
-                    </ul>
-                </li>
-            {% endif %}
-{# end events link section #}
-
             {% if app.session.locale == 'en_SG' %}
                 {{ giveaway_link | raw }}
             {% else %}
@@ -54,7 +32,7 @@
             {% endif %}
 
             {% if site_has_feature('GROUPS') %}
-                <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+                <li><a href="{{ path('accounts_groups') }}">Groups</a></li>
             {% endif %}
 
             {% if app.session.locale == 'zh' %}
@@ -77,6 +55,27 @@
                             {% endif %}
                             <li><a href="http://alienwarearena.com/account/client/">{{ 'platformd.user.account.match_client' | trans }}</a></li>
                             <li><a id="match-lobby-link" href="http://alienwarearena.com/external/match-lobby/">{{ 'platformd.user.account.match_lobby' | trans }}</a></li>
+                            {# start events link section #}
+                            {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
+                            {% if site_has_feature('EVENTS') and event_link != false %}
+                                <li>
+                                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.layout.main_menu.events' | trans }}</a>
+                                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                            {% endif %}
+
+                            {% if site_has_feature('EVENTS') %}
+                                <li><a href="{{ path('accounts_events') }}">{% if event_link != false %}<span style="color: #ff5711;padding-right: 2px;">iGames</span> {% endif %}{{ 'platformd.user.account.my_events' | trans }}</a></li>
+                            {% endif %}
+
+                            {% if event_link != false %}
+                                <li>{{ event_link | raw }}</li>
+                            {% endif %}
+
+                            {% if site_has_feature('EVENTS') and event_link != false %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {# end events link section #}
                         {% endif %}
                     </ul>
                 </li>

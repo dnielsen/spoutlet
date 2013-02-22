@@ -104,4 +104,9 @@ class GroupEventService extends EventService
     {
         return $this->repository->findGroupEventStats($data);
     }
+
+    public function getAllEventsUserIsAttending(User $user)
+    {
+        return $this->repository->getAllEventsUserIsAttending($user);
+    }
 }

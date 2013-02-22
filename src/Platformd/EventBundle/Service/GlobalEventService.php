@@ -5,7 +5,8 @@ namespace Platformd\EventBundle\Service;
 use Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
-    Platformd\GameBundle\Entity\Game
+    Platformd\GameBundle\Entity\Game,
+    Platformd\UserBundle\Entity\User
 ;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -70,5 +71,10 @@ class GlobalEventService extends EventService
     public function findGlobalEventStats(array $data = array())
     {
         return $this->repository->findGlobalEventStats($data);
+    }
+
+    public function getAllEventsUserIsAttending(User $user)
+    {
+        return $this->repository->getAllEventsUserIsAttending($user);
     }
 }

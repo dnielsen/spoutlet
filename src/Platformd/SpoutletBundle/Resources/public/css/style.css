@@ -350,7 +350,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-100 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }
 
 .widget-100 th { color: #888888; font-size:12px; text-align:left; padding-bottom:4px; }
-.widget-100 td { color: #c6c6c6; font-size: 12px; padding: 2px 0; }
+.widget-100 td { color: #c6c6c6; font-size: 12px; padding: 4px 2px; }
 
 .widget-100.no-header { background-image: url('../images/widget-100-bg-no-header.png'); }
 
@@ -902,4 +902,9 @@ hr.faded:before {
 
 .global-event-link:hover {
     color: #9BC744;
+}
+
+.attending {
+    padding-left: 20px;
+    background: url(/bundles/spoutlet/images/form-ic-success.png) no-repeat top left;
 }

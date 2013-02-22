@@ -779,4 +779,15 @@ abstract class Event implements LinkableInterface
             );
         }
     }
+
+    public function isUserAttending($user)
+    {
+        foreach ($this->attendees as $attendee) {
+            if($attendee->getId() == $user->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

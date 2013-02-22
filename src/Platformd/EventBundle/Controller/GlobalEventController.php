@@ -30,23 +30,32 @@ class GlobalEventController extends Controller
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
 
-        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 10, $page, $pager);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 10, $page, $pager);
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
+        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
+        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site);
+
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
 
         $groupsCount = 0;
 
         if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
             $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
+            $userGlobal = $this->getGlobalEventService()->getAllEventsUserIsAttending($this->getUser());
+            $userGroup  = $this->getGroupEventService()->getAllEventsUserIsAttending($this->getUser());
             $groupsCount = count($groups);
         }
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
-            'pager' => $pager,
             'upcomingEvents' => $upcomingEvents,
-            'groupsCount'   => $groupsCount,
+            'pastEvents'     => $pastEvents,
+            'groupsCount'    => $groupsCount,
+            'userGlobal'     => $userGlobal,
+            'userGroup'      => $userGroup,
         ));
     }
 

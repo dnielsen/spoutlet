@@ -14,7 +14,7 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                {{ 'platformd.events.event_listings.current_events' | trans }}
+                {{ 'platformd.events.event_listings.current_events' | trans }}<a style="float:right;font-size: 12px;" href="{{ path('accounts_events') }}">{{ 'platformd.events.event_listings.my_events' | trans }}</a>
             </div>
         </div>
         <div class="widget-content" style="width:950px;">
@@ -25,8 +25,30 @@
         </div>
 
         <div class="widget-footer">
-            &nbsp;
+            <div style="width:100%;position:relative;height:16px;">
+                <a id="show-past-events" style="margin-right:10px;position:absolute;right:0px;" href="javascript:void(0);">View Past Events</a>
+                <div style="position:absolute;left:0px;"><span class="attending" style="color:#c6c6c6">Means you are registered to attend this event.</span></div>
+            </div>
         </div>
+    </div>
+</div>
+
+<div id="past-events" class="widget-100" style="margin-top:15px;display:none;">
+    <div class="widget-header">
+        <div class="widget-title">
+            {{ 'platformd.events.event_listings.past_events' | trans }}
+        </div>
+    </div>
+
+    <div class="widget-content">
+        {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+            'events': pastEvents,
+            'no_events_message': 'platformd.events.event_listings.no_past_events'
+        } %}
+    </div>
+
+    <div class="widget-footer">
+        &nbsp;
     </div>
 </div>
 {% endblock %}
@@ -35,7 +57,10 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
-           $('table.tablesorter').tablesorter();
+            $('#show-past-events').click(function () {
+                $('#past-events').slideToggle();
+            });
+            $('table.tablesorter').tablesorter();
         });
     </script>
 {% endblock %}
