@@ -1,0 +1,8 @@
+services:
+    platformd.spoutlet.theme_tenant_detection:
+        class: Platformd\SpoutletBundle\Theme\SiteThemeDetection
+        arguments:
+            - "@liip_theme.active_theme"
+            - "%active_theme%"
+        tags:
+            - { name: kernel.event_listener, event: "kernel.request", method: "onKernelRequest" }

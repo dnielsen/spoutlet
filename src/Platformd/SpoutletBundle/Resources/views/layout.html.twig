@@ -34,7 +34,6 @@
 		    {% endstylesheets %}
         {% endblock %}
 
-
         {% block javascripts %}
 		    {% javascripts
                 'bundles/spoutlet/js/ie8.js'
@@ -73,8 +72,9 @@
             {% endif %}
 
 		    {% endjavascripts %}
-        {% endblock %}
 
+            {% include '::' ~ active_theme ~ '_assets.html.twig' %}
+        {% endblock %}
 
         <title>
             {%- if block('title') -%}

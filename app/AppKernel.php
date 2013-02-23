@@ -27,7 +27,8 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             new JMS\TranslationBundle\JMSTranslationBundle(),
-            new \Liip\ImagineBundle\LiipImagineBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
+            new Liip\ThemeBundle\LiipThemeBundle(),
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
 
@@ -35,7 +36,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new \Knp\MediaBundle\KnpMediaBundle(),
+            new Knp\MediaBundle\KnpMediaBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
 
             // my bundles
@@ -48,8 +49,8 @@ class AppKernel extends Kernel
             new Platformd\CEVOBundle\CEVOBundle(),
             new Platformd\SweepstakesBundle\SweepstakesBundle(),
             new Platformd\GameBundle\GameBundle(),
-            new \Platformd\TranslationBundle\TranslationBundle(),
-            new \Platformd\MediaBundle\MediaBundle(),
+            new Platformd\TranslationBundle\TranslationBundle(),
+            new Platformd\MediaBundle\MediaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
