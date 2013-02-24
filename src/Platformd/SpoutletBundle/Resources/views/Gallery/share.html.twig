@@ -3,6 +3,7 @@
 {% block title 'galleries.submit_photo_share' | trans %}
 
 {% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+{% set siteFeatures   = get_current_site_features() %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -14,7 +15,7 @@
     <meta property="og:description" content="{{ media.description }}" />
 {% endblock %}
 
-{% if site_has_feature('PHOTOS') %}
+{% if siteFeatures.hasPhotos %}
     {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
     {% elseif app.session.locale == 'es' %}

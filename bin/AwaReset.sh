@@ -18,9 +18,11 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.2              |"
+echo "|  Alienware Arena Reset Script v1.3              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
+echo
+echo "NOTE: All output from the commands executed by this script are available in 'AwaReset.log'."
 echo
 
 if [ -z "$AwaResetDirectory" ]; then
@@ -32,6 +34,8 @@ if [ -z "$AwaResetDirectory" ]; then
 fi
 
 cd $AwaResetDirectory > /dev/null
+
+rm bin/AwaReset.log 2> /dev/null
 
 if [ `pwd` != $AwaResetDirectory ]; then
     echo "Aborting... Could not switch directory to the AwaResetDirectory..."
@@ -48,109 +52,98 @@ echo
 echo "Updating Vendor files..."
 echo
 
-./bin/vendors install > /dev/null
+./bin/vendors install >> bin/AwaReset.log
 
 echo
-echo "Resetting production database:"
+echo "Resetting development database:"
 echo "  - Dropping database..."
 
-./app/console doctrine:database:drop --force > /dev/null
+./app/console doctrine:database:drop --env=dev --force >> bin/AwaReset.log
 
 echo "  - Creating database..."
 
-./app/console doctrine:database:create > /dev/null
+./app/console doctrine:database:create --env=dev >> bin/AwaReset.log
 
 echo "  - Migrating database..."
 
-./app/console doctrine:migrations:migrate --no-interaction > /dev/null
+./app/console doctrine:migrations:migrate --no-interaction --env=dev >> bin/AwaReset.log
 
 echo "  - Loading fixtures..."
 
-# Note: this needs to be --append, because some database data comes from the migrations
-
-./app/console doctrine:fixtures:load --append > /dev/null
+./app/console doctrine:fixtures:load --env=dev >> bin/AwaReset.log
 
 echo "  - Dropping ACL database..."
 
-./app/console doctrine:database:drop --connection="acl" --force > /dev/null
+./app/console doctrine:database:drop --connection="acl" --force --env=dev >> bin/AwaReset.log
 
 echo "  - Creating ACL database..."
 
-./app/console doctrine:database:create --connection="acl" > /dev/null
+./app/console doctrine:database:create --connection="acl" --env=dev >> bin/AwaReset.log
 
 echo "  - Initialising ACL structure..."
 
-./app/console init:acl > /dev/null
+./app/console init:acl --env=dev >> bin/AwaReset.log
 
 echo
 echo "Resetting test database:"
 echo "  - Dropping database..."
 
-./app/console doctrine:database:drop --env=test --force > /dev/null
+./app/console doctrine:database:drop --env=test --force >> bin/AwaReset.log
 
 echo "  - Creating database..."
 
-./app/console doctrine:database:create --env=test > /dev/null
+./app/console doctrine:database:create --env=test >> bin/AwaReset.log
 
 echo "  - Migrating database..."
 
-./app/console doctrine:migrations:migrate --no-interaction --env=test  > /dev/null
+./app/console doctrine:migrations:migrate --no-interaction --env=test  >> bin/AwaReset.log
 
 echo "  - Loading fixtures..."
 
-# Note: this needs to be --append, because some database data comes from the migrations
-
-./app/console doctrine:fixtures:load --append --env=test > /dev/null
+./app/console doctrine:fixtures:load --env=test >> bin/AwaReset.log
 
 echo "  - Dropping ACL database..."
 
-./app/console doctrine:database:drop --env=test --connection="acl" --force > /dev/null
+./app/console doctrine:database:drop --env=test --connection="acl" --force >> bin/AwaReset.log
 
 echo "  - Creating ACL database..."
 
-./app/console doctrine:database:create --env=test --connection="acl" > /dev/null
+./app/console doctrine:database:create --env=test --connection="acl" >> bin/AwaReset.log
 
 echo "  - Initialising ACL structure..."
 
-./app/console init:acl --env=test > /dev/null
+./app/console init:acl --env=test >> bin/AwaReset.log
 
 echo
 echo "Changing cache ownership..."
 
-sudo chown -R `whoami`:`whoami` app/cache/ > /dev/null
+sudo chown -R `whoami`:`whoami` app/cache/ >> bin/AwaReset.log
 
 echo
 echo "Clearing caches:"
-echo "  - Production..."
-
-./app/console cache:clear --no-debug --env=prod > /dev/null
-
 echo "  - Development..."
 
-./app/console cache:clear --no-debug --env=dev > /dev/null
+./app/console cache:clear --no-debug --env=dev >> bin/AwaReset.log
 
 echo "  - Testing..."
 
-./app/console cache:clear --no-debug --env=test > /dev/null
+./app/console cache:clear --no-debug --env=test >> bin/AwaReset.log
 
 echo
 echo "Installing web assets..."
 
-./app/console assets:install --symlink web > /dev/null
+./app/console assets:install --symlink web >> bin/AwaReset.log
 
 echo
 echo "Executing web requests:"
-echo "  - Production..."
-
-wget demo.alienwarearena.local/app.php --quiet -O /dev/null  > /dev/null
 
 echo "  - Development..."
 
-wget demo.alienwarearena.local/app_dev.php --quiet -O /dev/null > /dev/null
+wget demo.alienwarearena.local/app_dev.php --quiet -O /dev/null >> bin/AwaReset.log
 
 echo "  - Testing..."
 
-wget demo.alienwarearena.local/app_test.php --quiet -O /dev/null  > /dev/null
+wget demo.alienwarearena.local/app_test.php --quiet -O /dev/null  >> bin/AwaReset.log
 
 echo
 echo "Changing cache & logs permissions..."

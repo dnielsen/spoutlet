@@ -1,9 +1,12 @@
 {# base layout for the account section #}
 {% extends 'SpoutletBundle::layout.html.twig' %}
-{% set event_link = site_link('USER_EVENT') %}
-{% set game_id_link = site_link('USER_GAME_ID') %}
-{% set profile_link = site_link('USER_PROFILE') %}
+
+{% set event_link    = site_link('USER_EVENT') %}
+{% set game_id_link  = site_link('USER_GAME_ID') %}
+{% set profile_link  = site_link('USER_PROFILE') %}
 {% set giveaway_link = site_link('USER_GIVEAWAY') %}
+{% set siteFeatures  = get_current_site_features() %}
+
 {% block pre_content_nav %}
 <div class="std_1col">
     <div id="accountHeader">
@@ -15,7 +18,7 @@
             <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
             <li>{{ profile_link | raw }}</li>
 
-            {% if site_has_feature('MESSAGES') %}
+            {% if siteFeatures.hasMessages %}
                 <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
             {% endif %}
 
@@ -29,11 +32,11 @@
                 </li>
             {% endif %}
 
-            {% if site_has_feature('DEALS') %}
+            {% if siteFeatures.hasDeals %}
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>
             {% endif %}
 
-            {% if site_has_feature('GROUPS') %}
+            {% if siteFeatures.hasGroups %}
                 <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
             {% endif %}
 
@@ -63,7 +66,7 @@
 
             {% endif %}
 
-            {% if site_has_feature('PHOTOS') %}
+            {% if siteFeatures.hasPhotos %}
                 <li class="more">
                     <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | trans }}</a>
                     <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">

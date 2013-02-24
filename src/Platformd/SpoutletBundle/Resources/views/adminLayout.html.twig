@@ -64,6 +64,8 @@
         </script>
 	</head>
 	<body>
+    
+    {% set siteFeatures = get_current_site_features() %}
 
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
@@ -161,7 +163,7 @@
 
                             {% endif %}
 
-                            {% if site_has_feature('WALLPAPERS') %}
+                            {% if siteFeatures.hasWallpapers %}
 
                                 <li>
                                     <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
@@ -195,7 +197,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            {% if site_has_feature('DEALS') and is_granted('ROLE_ADMIN_DEAL') %}
+                            {% if siteFeatures.hasDeals and is_granted('ROLE_ADMIN_DEAL') %}
                             <li>
                                 <a href="{{ path('admin_deal') }}">Deals</a>
                                 <ul>
@@ -212,7 +214,7 @@
                                 </li>
                             {% endif %}
 
-                            {% if is_granted('ROLE_ORGANIZER') and site_has_feature('GROUPS') %}
+                            {% if is_granted('ROLE_ORGANIZER') and siteFeatures.hasGroups %}
                                 <li>
                                     <a href="{{ path('admin_content_reports') }}">Content Report Admin</a>
                                 </li>

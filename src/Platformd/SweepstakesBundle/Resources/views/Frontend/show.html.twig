@@ -21,6 +21,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% set siteFeatures = get_current_site_features() %}
+
     <div id="content">
         <div class="std_1col">
 
@@ -127,7 +130,7 @@
 
                 </div><!-- giveaway-info -->
 
-                {% if site_has_feature('COMMENTS') %}
+                {% if siteFeatures.hasComments %}
                     {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
                 {% endif %}
 

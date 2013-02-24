@@ -86,12 +86,22 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
+
+    platformd.listener.site_translation_listener:
+        class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
+        arguments:
+            - "@platformd.model.site_util"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+        calls:
+            - [ setLogger, [ @logger] ]
+
     platformd.model.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
 
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager

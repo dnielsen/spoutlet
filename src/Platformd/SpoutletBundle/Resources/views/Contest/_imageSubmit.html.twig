@@ -1,3 +1,5 @@
+{% set siteFeatures = get_current_site_features() %}
+
 <div class="xnotices" id="flash-publish-success" style="display:none;">
     <div class="successNotice notice">
         <div class="pad">
@@ -83,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                {% if site_has_feature('GROUPS') %}
+                {% if siteFeatures.hasGroups %}
                     <div id="gallery-submit-image-groups">
                         <div class="control-group ">
                             <label class="control-label">{{ 'galleries.submit_photo_groups' | trans }}</label>

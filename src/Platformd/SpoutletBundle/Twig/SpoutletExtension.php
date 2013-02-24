@@ -83,7 +83,13 @@ class SpoutletExtension extends Twig_Extension
             'get_current_site'                  => new Twig_Function_Method(
                 $this,
                 'getCurrentSite'
-                ),
+            ),
+
+            'get_current_site_features'                  => new Twig_Function_Method(
+                $this,
+                'getCurrentSiteFeatures'
+            ),
+
             'can_user_apply_to_giveaway'  => new Twig_Function_Method(
 
                 $this,
@@ -101,10 +107,6 @@ class SpoutletExtension extends Twig_Extension
             'is_admin_page'                 => new Twig_Function_Method(
                 $this,
                 'isAdminPage'
-            ),
-            'site_has_feature'              => new Twig_Function_Method(
-                $this,
-                'siteHasFeature'
             ),
             'site_link'                     => new Twig_Function_Method(
                 $this,
@@ -135,11 +137,11 @@ class SpoutletExtension extends Twig_Extension
     }
 
     public function getCurrentSite() {
+        return $this->container->get('platformd.model.site_util')->getCurrentSite();
+    }
 
-        $currentHost    = $this->getRequest()->getHost();
-        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
-
-        return $this->getSiteFromSubDomain($subDomain);
+    public function getCurrentSiteFeatures() {
+        return $this->getCurrentSite()->getSiteFeatures();
     }
 
     private function getRequest() {
@@ -148,10 +150,6 @@ class SpoutletExtension extends Twig_Extension
 
     private function getEntityManager() {
         return $this->container->get('doctrine.orm.entity_manager');
-    }
-
-    private function getSiteFromSubDomain($subDomain) {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
     }
 
     private function getSiteFromDefaultLocale($locale) {
@@ -783,55 +781,6 @@ class SpoutletExtension extends Twig_Extension
 
             default:        return false;
         }
-    }
-
-    /**
-     * A little temporary function (temporary because it will be much more
-     * built-out in the future).
-     *
-     * Currently-supported features:
-     *  * EXTRA_NAVIGATION: do we show the extra navigation items in the layout?
-     *  * STEAM_XFIRE_COMMUNITIES: do we show the steam/xfire community links in the footer?
-     *
-     * @param string $feature
-     * @return bool
-     * @throws \InvalidArgumentException
-     */
-    public function siteHasFeature($feature)
-    {
-        $locale = $this->container->get('session')->getLocale();
-        $japan = in_array($locale, array('ja'));
-        $chinaOrJapan = in_array($locale, array('zh', 'ja'));
-        $chinaOrJapanOrLatam = in_array($locale, array('zh', 'ja', 'es'));
-        $northAmerica = in_array($locale, array('en_US', 'en'));
-        $northAmericaOrEurope = in_array($locale, array('en_US', 'en_GB', 'en'));
-        $demoOnly = in_array($locale, array('en'));
-        $northAmericaEuropeAnzOnly = in_array($locale, array('en_US', 'en_GB', 'en_AU', 'en'));
-        $china = in_array($locale, array('zh'));
-        $northAmericaEuropeLatamOnly = in_array($locale, array('en_US', 'en_GB', 'es', 'en'));
-        $northAmericaEuropeLatamJapan = in_array($locale, array('en_US', 'en_GB', 'es', 'ja', 'en'));
-
-        switch ($feature) {
-            case 'EXTRA_NAVIGATION':            return !$chinaOrJapan;
-            case 'VIDEO':                       return true;
-            case 'STEAM_XFIRE_COMMUNITIES':     return !$chinaOrJapan;
-            case 'SWEEPSTAKES':                 return false;
-            case 'FORUMS':                      return !$chinaOrJapan;
-            case 'ARP':                         return !$chinaOrJapan;
-            case 'NEWS':                        return $chinaOrJapan;
-            case 'DEALS':                       return $northAmericaOrEurope;
-            case 'GAMES':                       return !$chinaOrJapan;
-            case 'GAMES_NAV_DROP_DOWN':         return !$chinaOrJapan;
-            case 'MESSAGES':                    return !$chinaOrJapan;
-            case 'GROUPS':                      return $northAmericaOrEurope;
-            case 'WALLPAPERS':                  return !$japan;
-            case 'MICROSOFT':                   return !$japan;
-            case 'PHOTOS':                      return $northAmericaEuropeLatamOnly;
-            case 'CONTESTS':                    return $northAmericaEuropeLatamOnly;
-            case 'COMMENTS':                    return $northAmericaEuropeLatamJapan;
-        }
-
-        throw new \InvalidArgumentException(sprintf('Unknown feature "%s"', $feature));
     }
 
     /**

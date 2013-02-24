@@ -444,7 +444,7 @@ email:
         The key has been posted to your Alienware Arena account and can be accessed from here:
         (%accountUrl%)
 
-        If you have any questions, please email us at %subDomain%@alienwarearena.com.
+        If you have any questions, please email us at %supportEmailAddress%.
 
         Thank you,
         - Alienware Arena Team
@@ -461,7 +461,7 @@ email:
         If the system tag you entered is incorrect, please access the link below to re-enter the 7-digit number:
         %giveawayUrl%
 
-        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you reqiure further assistance, please email us at %subDomain%@alienwarearena.com.
+        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you require further assistance, please email us at %supportEmailAddress%.
 
         Thank you,
         - Alienware Arena Team

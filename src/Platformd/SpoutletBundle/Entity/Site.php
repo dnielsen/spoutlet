@@ -7,6 +7,7 @@ use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Platformd\SpoutletBundle\Entity\SiteFeatures;
 
 /**
  * Platformd\SpoutletBundle\Entity\Site
@@ -42,12 +43,29 @@ class Site
     private $defaultLocale;
 
     /**
-     * @var string $subDomain
      *
      * @ORM\Column(type="string")
      * @Assert\NotNull
      */
-    private $subDomain;
+    private $fullDomain;
+
+    /**
+     *
+     * @ORM\Column(type="string")
+     * @Assert\NotNull
+     */
+    private $supportEmailAddress;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\SiteFeatures", mappedBy="site", cascade={"persist"})
+     */
+    private $siteFeatures;
+
+
+    public function __construct() {
+        $this->siteFeatures = new SiteFeatures();
+        $this->siteFeatures->setSite($this);
+    }
 
     /**
      * Get id
@@ -89,13 +107,40 @@ class Site
         return $this->defaultLocale;
     }
 
-    public function setSubDomain($subDomain)
+    public function setSupportEmailAddress($supportEmailAddress)
     {
-        $this->subDomain = $subDomain;
+        $this->supportEmailAddress = $supportEmailAddress;
+    }
+
+    public function getSupportEmailAddress()
+    {
+        return $this->supportEmailAddress;
+    }
+
+    public function getFullDomain()
+    {
+        return $this->fullDomain;
+    }
+
+    public function setFullDomain($value)
+    {
+        $this->fullDomain = $value;
     }
 
     public function getSubDomain()
     {
-        return $this->subDomain;
+        $arr = explode('.', $this->getFullDomain());
+        return $arr[0];
+    }
+
+    public function getSiteFeatures()
+    {
+        return $this->siteFeatures;
+    }
+
+    public function setSiteFeatures($value)
+    {
+        $this->siteFeatures = $value;
+        return $this;
     }
 }

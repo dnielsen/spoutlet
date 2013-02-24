@@ -1,6 +1,8 @@
-{% set facebookLink = site_link('FACEBOOK') %}
-{% set twitterLink = site_link('TWITTER') %}
+{% set facebookLink     = site_link('FACEBOOK') %}
+{% set twitterLink      = site_link('TWITTER') %}
 {% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
+{% set siteFeatures     = get_current_site_features() %}
+
 <div id="footer-wrapper">
     <div id="footer-background">
         <div class="wide-950">
@@ -9,7 +11,7 @@
                     <li><a href="{{ path('contact') }}">{{ 'platformd.layout.bottom_menu.contact_us' | trans }}</a></li>
                     <li><a rel="nofollow" href="{{ path('privacy') }}">{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}</a></li>
                     <li><a rel="nofollow" href="{{ path('terms_conditions') }}">{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}</a></li>
-                    {% if site_has_feature('STEAM_XFIRE_COMMUNITIES') %}
+                    {% if siteFeatures.hasSteamXfireCommunities %}
                     <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
                     <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
                     {% endif %}

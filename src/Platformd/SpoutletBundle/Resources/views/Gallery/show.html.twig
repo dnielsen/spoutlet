@@ -4,6 +4,7 @@
 {% set mediaId              = media.id %}
 
 {% set site                 = get_current_site() %}
+{% set siteFeatures         = get_current_site_features() %}
 {% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
 {% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
 {% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
@@ -11,7 +12,7 @@
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
-{% if site_has_feature('PHOTOS') %}
+{% if siteFeatures.hasPhotos %}
     {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
     {% elseif app.session.locale == 'es' %}
@@ -78,7 +79,7 @@
             {% endif %}
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
-            {% if site_has_feature('COMMENTS') %}
+            {% if siteFeatures.hasComments %}
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : media.getThreadId, 'object' : media } %}
             {% endif %}
 

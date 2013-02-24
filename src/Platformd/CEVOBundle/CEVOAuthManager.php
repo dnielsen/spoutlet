@@ -83,7 +83,7 @@ class CEVOAuthManager
      */
     private function getLocalePrefix()
     {
-        $locale = $this->getSession()->getLocale();
+        $locale = $this->container->get('platformd.model.site_util')->getCurrentSite()->getDefaultLocale();
 
         return isset(self::$localePathMap[$locale]) ? self::$localePathMap[$locale] : null;
     }
