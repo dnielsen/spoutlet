@@ -76,13 +76,11 @@ class EventType extends AbstractType
             ))
             ->add('startsAt', 'datetime', array(
                 'label' => 'platformd.event.form.starts_at',
-                //'widget' => 'single_text',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
             ))
             ->add('endsAt', 'datetime', array(
                 'label' => 'platformd.event.form.ends_at',
-                //'widget' => 'single_text',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
             ))

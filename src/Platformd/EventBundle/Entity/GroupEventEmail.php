@@ -30,7 +30,7 @@ class GroupEventEmail extends EventEmail
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $groupEvent;
+    protected $event;
 
     public function __construct()
     {
@@ -40,16 +40,16 @@ class GroupEventEmail extends EventEmail
     /**
      * @return Platformd\EventBundle\Entity\GroupEvent
      */
-    public function getGroupEvent()
+    public function getEvent()
     {
-        return $this->groupEvent;
+        return $this->event;
     }
 
     /**
-     * @param Platformd\EventBundle\Entity\GroupEvent $groupEvent
+     * @param Platformd\EventBundle\Entity\GroupEvent $event
      */
-    public function setGroupEvent($groupEvent)
+    public function setEvent($event)
     {
-        $this->groupEvent = $groupEvent;
+        $this->event = $event;
     }
 }

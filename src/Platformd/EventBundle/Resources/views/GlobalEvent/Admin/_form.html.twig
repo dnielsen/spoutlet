@@ -1,5 +1,6 @@
 {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+{% form_theme form 'EventBundle::form_theme.html.twig' %}
 
 {{ form_errors(form) }}
 
@@ -47,8 +48,6 @@
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
     $(document).ready(function() {
-
-        $('.datetime-picker').datetimepicker({ minDate: 0 });
 
         var $i = 0;
         $('#globalEvent_translations > .control-group > label').each(function (){

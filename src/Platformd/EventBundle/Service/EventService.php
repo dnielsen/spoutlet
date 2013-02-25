@@ -345,13 +345,13 @@ class EventService
         $recipients = array();
 
         foreach ($event->getAttendees() as $attendee) {
-            $recipients[] = $recipient;
+            $recipients[] = $attendee;
         }
 
-        $email->setGroupEvent($event);
+        $email->setEvent($event);
         $email->setRecipients($recipients);
 
-        $locale = $groupEvent->getUser()->getLocale() ?: 'en';
+        $locale = $event->getUser()->getLocale() ?: 'en';
 
         $subject = $this->translator->trans('platformd.event.email.event_reminder.title', array(
             '%eventName%' => $event->getName(),
@@ -360,7 +360,7 @@ class EventService
         $message = nl2br($this->translator->trans('platformd.event.email.event_reminder.message', array(
             '%eventName%'   => $event->getName(),
             '%dateString%'  => $event->getDateRangeString(),
-            '%timeString%'  => $event->getStartsAt()->format('g:i A').' - '.$event->getEndsAt()->format('g:i A'),
+            '%timeString%'  => $event->getStartsAt()->format('g:i A'),
             '%timezone%'    => $event->getTimezoneString(),
             '%location%'    => $event->getOnline() ? 'Online' : $event->getFormattedAddress(),
             '%eventUrl%'    => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
@@ -377,7 +377,7 @@ class EventService
         $subject    = $email->getSubject();
         $message    = $email->getMessage();
 
-        $fromName   = ($email->getSender() && $email->getSender()->getAdminLevel()) ? null : $email->getSender()->getUsername();
+        $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
         $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
 
         if ($type === null) {

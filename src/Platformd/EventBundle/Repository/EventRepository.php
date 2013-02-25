@@ -189,18 +189,19 @@ class EventRepository extends EntityRepository
     {
         $daysOffset = abs((int)$days);
 
-        $dateTime = new \DateTime('+ '.$daysOffset.' days');
+        $startDateTime = new \DateTime('+ '.$daysOffset.' days');
+        $endDateTime = new \DateTime('+ '.$daysOffset.' days');
 
-        $startDt    = $dateTime->setTime(0, 0, 0);
-        $endDt      = $dateTime->setTime(23, 59, 59);
+        $startDateTime->setTime(0, 0, 0);
+        $endDateTime->setTime(23, 59, 59);
 
         $qb = $this->createQueryBuilder('e')
-            ->andWhere('e.startsAt <= :start')
-            ->andWhere('e.endsAt <= :end')
+            ->andWhere('e.startsAt >= :start')
+            ->andWhere('e.startsAt <= :end')
             ->andWhere('e.published = 1')
             ->setParameters(array(
-                'start' => $startDt,
-                'end'   => $endDt,
+                'start' => $startDateTime,
+                'end'   => $endDateTime,
             ));
 
         if ($this instanceof GroupEventRepository) {
