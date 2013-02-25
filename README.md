@@ -144,7 +144,7 @@ USING MULTIPLE THEMES
     Example of theme could be app/Resources/themes/custom_theme
 
     You can grab an empty one there:
-      https://github.com/newcodeinc/custom-theme
+      https://github.com/playitcool/custom_theme
 
     You have to enable it by adding this to your parameters.ini:
       liip_enabled_themes[] = custom_theme
