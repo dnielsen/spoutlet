@@ -137,3 +137,29 @@ INSTALLATION CHALLENGES
 	  :.,$s@https://@git://@
 
 
+USING MULTIPLE THEMES
+-----------------------
+
+* Create a custom theme and place it inside app/Resources/themes
+    Example of theme could be app/Resources/themes/custom_theme
+
+    You can grab an empty one there:
+      https://github.com/newcodeinc/custom-theme
+
+    You have to enable it by adding this to your parameters.ini:
+      liip_enabled_themes[] = custom_theme
+
+* You will place all assets and templates inside this unique theme directory
+
+* To install your assets just run the following:
+
+    .app/console cache:clear
+    .app/console themes:install web --symlink
+    .app/console assetic:dump web
+
+    This will place your theme assets and assets inclusion template in the proper location
+
+* Be careful to follow the same conventions for your assets file inclusion as the ones in the default theme. Don't use Assetic shorthand for bundles path like @SpoutletBundle.
+
+* Now you can override any template you want in the system. For that, you can read the documentation of LiipThemeBundle to understand of to override templates:
+      https://github.com/liip/LiipThemeBundle/blob/master/README.md

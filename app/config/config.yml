@@ -46,6 +46,7 @@ twig:
         showVideo:    false
         facebook_app_id: %facebook_app_id%
         google_api_key: %google_api_key%
+        active_theme: %active_theme%
 
 # Assetic Configuration
 assetic:
@@ -482,3 +483,14 @@ exercise_html_purifier:
     editor_admin:
         HTML.Allowed: a[href], p, strong, em, ul, ol, li, h1, h2, h3, h4, img[src], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], pre, span, *[style]
 
+liip_theme:
+    themes: %liip_enabled_themes%
+    active_theme: 'default'
+    path_patterns:
+        app_resource:
+            - %%app_path%%/themes/%%current_theme%%/%%template%%
+            - %%app_path%%/themes/%%current_theme%%
+            - %%app_path%%/views/%%template%%
+        bundle_resource_dir:
+            - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
+            - %%dir%%/%%bundle_name%%/%%override_path%%
