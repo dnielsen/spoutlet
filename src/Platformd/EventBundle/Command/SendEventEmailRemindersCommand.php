@@ -41,7 +41,7 @@ EOT
         $groupEvents = $groupEventService->findUpcomingEventsStartingDaysFromNow($daysOffset);
         $output->write('<info>✔</info>', true);
 
-        $output->write('Getting group events...');
+        $output->write('Getting global events...');
         $globalEvents = $globalEventService->findUpcomingEventsStartingDaysFromNow($daysOffset);
         $output->write('<info>✔</info>', true);
 

@@ -333,7 +333,7 @@ class GroupEventController extends Controller
 
                 $email = $form->getData();
                 $recipientsString = $form->get('users')->getData();
-                $email->setGroupEvent($groupEvent);
+                $email->setEvent($groupEvent);
                 $email->setSender($this->getUser());
                 $email->setSite($this->getCurrentSite());
 
