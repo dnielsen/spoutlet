@@ -5,9 +5,21 @@
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteVideo') %}
 
 <div>
-    {% if canAdd %}
-        <a href="{{ path('group_add_video', {'id' : group.id }) }}" style="margin-left: 15px;">Add Video</a>
+    <div>
+    {% if pages | length > 0 %}
+        {% if canAdd %}
+            <a href='{{ path('gallery_submit') }}'>Add your video</a> now.
+        {% else %}
+            <a href='{{ path('gallery_submit') }}'>Add your video</a> now. Want to add an video? Become a member of our group.
+        {% endif %}
+    {% else %}
+        {% if canAdd %}
+            No videos found... <a href='{{ path('gallery_submit') }}'>Add your video</a> now.
+        {% else %}
+            No videos found... <a href='{{ path('gallery_submit') }}'>Add your video</a> now. Want to add an video? Become a member of our group.
+        {% endif %}
     {% endif %}
+    </div>
     {% if pages | length > 0 %}
         <div id="theater-screen-wrapper">
             <div id="theater_screen" style="width:600px; height:350px;margin: 10px 0 0 12px;">
@@ -60,8 +72,6 @@
             <a class="prev browse video-scroll-prev" style="float: left;"></a>
             <a class="next browse video-scroll-next" style="float: right;"></a>
         </div>
-    {% else %}
-        <p>No videos yet... please come back later!</p>
     {% endif %}
 </div>
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

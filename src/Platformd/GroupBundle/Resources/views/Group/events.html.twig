@@ -6,43 +6,46 @@
 <div id="event-content-scroll" style="height: 550px;">
 
     {% if canAdd %}
-        <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a>
+        {% if groupEvents | length > 0 %}
+            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Create your event</a> now.</p>
+        {% else %}
+            <p>No group events yet... <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Create your event</a> now.</p>
+        {% endif %}
+    {% else %}
+        {% if groupEvents | length > 0 %}
+            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Create your event</a> now.</p>
+        {% else %}
+            <p>No group events yet... <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Create your event</a> now. Want to add an event? Become a member of our group.</p>
+        {% endif %}
     {% endif %}
 
-    {% if groupEvents is defined %}
+    {% for event in groupEvents %}
 
-        {% for event in groupEvents %}
+        <div class="group-event-item" id="event-item-{{ event.id }}">
+            <div class="group-event-date">
+                {{ event.getDateRangeString }}
+            </div>
 
-            <div class="group-event-item" id="event-item-{{ event.id }}">
-                <div class="group-event-date">
-                    {{ event.getDateRangeString }}
+            <div class="group-event-details">
+                <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+                <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                <div class="group-event-location"><strong>Where:</strong>
+                    {% if event.online %}
+                        Online
+                    {% else %}
+                        {{ event.location }}, {{ event.address }}
+                    {% endif %}
                 </div>
-
-                <div class="group-event-details">
-                    <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
-                    <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
-                    <div class="group-event-location"><strong>Where:</strong>
-                        {% if event.online %}
-                            Online
-                        {% else %}
-                            {{ event.location }}, {{ event.address }}
-                        {% endif %}
-                    </div>
-                    <div class="group-event-actions">
-                        {% if canManageEvents == true %}
-                            <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
-                            <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
-                        {% endif %}
-                        <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
-                    </div>
+                <div class="group-event-actions">
+                    {% if canManageEvents == true %}
+                        <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
+                        <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
+                    {% endif %}
+                    <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
                 </div>
             </div>
-        {% else %}
-            <p>No group events yet... please come back later!</p>
-        {% endfor %}
-    {% else %}
-        <p>No group events yet... please come back later!</p>
-    {% endif %}
+        </div>
+    {% endfor %}
 
     {% if pastEvents|length > 0 %}
         <a id="show-past-events-link" href="javascript:void(0);">View Past Events</a>

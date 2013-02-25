@@ -6,8 +6,18 @@
 {% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
 
 <div id="discussion-content-scroll" style="height: 550px;">
-    {% if canAdd %}
-        <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit Topic</a>
+    {% if results | length > 0 %}
+        {% if canAdd %}
+            <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+        {% else %}
+            <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now. Want to add a topic? Become a member of our group.
+        {% endif %}
+    {% else %}
+        {% if canAdd %}
+            No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+        {% else %}
+            No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now. Want to add a topic? Become a member of our group.
+        {% endif %}
     {% endif %}
 
     {% if results | length > 0 %}
@@ -64,11 +74,6 @@
             });
 
         </script>
-
-    {% else %}
-        <div style="height: 500px; width: 600px;">
-            <p>No discussions yet... please come back later!</p>
-        </div>
     {% endif %}
 
 </div>

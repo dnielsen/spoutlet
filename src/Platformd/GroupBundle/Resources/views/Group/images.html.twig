@@ -3,14 +3,26 @@
 {% set canAdd               = group.isAllowedTo(app.user, site, 'AddImage') %}
 {% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
+{% set addImageUrl          = site_has_feature('PHOTOS') ? path('gallery_submit') : path('group_add_image') %}
 
-{% if canAdd %}
-    {% if site_has_feature('PHOTOS') %}
-        <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
+
+
+<div>
+    {% if pages | length > 0 %}
+        {% if canAdd %}
+            <a href='{{ addImageUrl }}'>Add your image</a> now.
+        {% else %}
+            <a href='{{ addImageUrl }}'>Add your image</a> now. Want to add an image? Become a member of our group.
+        {% endif %}
     {% else %}
-        <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
+        {% if canAdd %}
+            No images found... <a href='{{ addImageUrl }}'>Add your image</a> now.
+        {% else %}
+            No images found... <a href='{{ addImageUrl }}'>Add your image</a> now. Want to add an image? Become a member of our group.
+        {% endif %}
     {% endif %}
-{% endif %}
+</div>
+
 {% if pages | length > 0 %}
     <div class="scrollable" id="scrollable-images" style="height: 550px; width: 600px;background: #191919;">
         <div class="items">
@@ -47,10 +59,5 @@
         <a class="prev browse" style="float: left;">Previous</a>
         <a class="next browse" style="float: right;">See More</a>
     </div>
-
-{% else %}
-<div style="height: 500px; width: 600px;">
-    <p>No images yet... please come back later!</p>
-</div>
 {% endif %}
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
