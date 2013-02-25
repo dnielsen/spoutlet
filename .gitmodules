@@ -1,0 +1,3 @@
+[submodule "app/Resources/themes/custom_theme"]
+	path = app/Resources/themes/custom_theme
+	url = git@github.com:playitcool/custom_theme.git

@@ -5,7 +5,6 @@
 /app/bootstrap*
 /app/cache/*
 /app/logs/*
-/app/Resources/themes/*
 /vendor/
 /app/config/parameters.ini
 /web/uploads/*
