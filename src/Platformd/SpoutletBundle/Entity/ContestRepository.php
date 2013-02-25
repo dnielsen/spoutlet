@@ -137,7 +137,7 @@ class ContestRepository extends EntityRepository
 
     public function findContestsByGroups($groups)
     {
-        $ids = array();
+        $ids = array(0);
 
         foreach ($groups as $group) {
             array_push($ids, $group[0]->getId());
