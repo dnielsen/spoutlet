@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.3              |"
+echo "|  Alienware Arena Reset Script v1.4              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -46,7 +46,7 @@ fi
 echo "Syncing local clock and renewing 'sudo' token..."
 echo
 
-sudo ntpdate pool.ntp.org
+sudo ntpdate -u pool.ntp.org
 
 echo
 echo "Updating Vendor files..."
