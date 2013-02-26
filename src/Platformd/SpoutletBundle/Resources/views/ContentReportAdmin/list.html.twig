@@ -99,7 +99,7 @@
                     {% elseif item[0].getContentType == 'Comment' %}
 
                         <h1>Thread</h1>
-                        <div><a href="{{ change_link_subdomain(item[0].thread.permalink | absolute_url, item.subdomain) }}" target="_blank">Click to view thread</a></div>
+                        <div><a href="{{ change_link_domain(item[0].thread.permalink | absolute_url, item.fullDomain) }}" target="_blank">Click to view thread</a></div>
                         <h1>Comment</h1>
                         <div>{{ item[0].body }}</div>
                         <h1>Author</h1>

@@ -1,4 +1,4 @@
-{% set subDomain = get_current_site().subDomain %}
+{% set subDomain = site.subDomain %}
 {% set isJapanOrChina = (subDomain == "japan" or subDomain == "china") %}
 
 {% set isAdmin = app.user ? (app.user.getIsOrganizer or app.user.getIsSuperAdmin) : false %}

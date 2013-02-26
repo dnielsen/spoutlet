@@ -15,32 +15,80 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\Translation\TranslatorInterface;
 use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Twig extension for generic things
  */
 class SpoutletExtension extends Twig_Extension
 {
-    private $container;
+    private $bucketName;
+    private $currentSiteFeatures = NULL;
+    private $currentSite = NULL;
+    private $currentUser = NULL;
+    private $giveawayManager;
+    private $linkableManager;
+    private $request = NULL;
+    private $router;
+    private $session = NULL;
     private $translator;
-    private $session;
+    private $userManager;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager)
     {
-        $this->container = $container;
+        $this->bucketName          = $bucketName;
+        $this->giveawayManager     = $giveawayManager;
+        $this->linkableManager     = $linkableManager;
+        $this->mediaExposer        = $mediaExposer;
+        $this->router              = $router;
+        $this->securityContext     = $securityContext;
+        $this->siteUtil            = $siteUtil;
+        $this->translator          = $translator;
+        $this->userManager         = $userManager;
+    }
+
+    public function onKernelRequest(GetResponseEvent $event)
+    {
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            return;
+        }
+
+        $this->request             = $event->getRequest();
+        $this->session             = $this->request->getSession();
+        $this->currentSite         = $this->siteUtil->getCurrentSite();
+        $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
+
+        $token = $this->securityContext->getToken();
+        $this->currentUser = $token ? $token->getUser() : null;
     }
 
     public function getFilters()
     {
         return array(
-            'pd_link' => new Twig_Filter_Method($this, 'linkToObject'),
-            'pd_link_target' => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
-            'pd_link_full' => new Twig_Filter_Method($this, 'linkToObjectFull', array('is_safe' => array('html'))),
-            'site_name' => new Twig_Filter_Method($this, 'translateSiteName'),
-            'absolute_url' => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
-            'wrap' => new Twig_Filter_Method($this, 'wrap'),
-            'add_links' => new Twig_Filter_Method($this, 'addLinks'),
+            'absolute_url'       => new Twig_Filter_Method($this, 'getAbsoluteUrl'),
+            'add_links'          => new Twig_Filter_Method($this, 'addLinks'),
             'add_ordinal_suffix' => new Twig_Filter_Method($this, 'addOrdinalSuffix'),
+            'pd_link_full'       => new Twig_Filter_Method($this, 'linkToObjectFull',   array('is_safe' => array('html'))),
+            'pd_link'            => new Twig_Filter_Method($this, 'linkToObject'),
+            'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
+            'wrap'               => new Twig_Filter_Method($this, 'wrap'),
+        );
+    }
+
+    public function getFunctions()
+    {
+        return array(
+            'can_user_apply_to_giveaway'   => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
+            'cevo_account_link'            => new Twig_Function_Method($this, 'cevoAccountLink'),
+            'change_link_domain'           => new Twig_Function_Method($this, 'changeLinkDomain'),
+            'ends_with'                    => new Twig_Function_Method($this, 'endsWith'),
+            'get_avatar_url'               => new Twig_Function_Method($this, 'getAvatarUrl'),
+            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
+            'is_admin_page'                => new Twig_Function_Method($this, 'isAdminPage'),
+            'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
+            'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
+            'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
         );
     }
 
@@ -51,15 +99,16 @@ class SpoutletExtension extends Twig_Extension
         );
     }
 
+    public function getGlobals()
+    {
+        return array(
+            'site'     => $this->currentSite,
+            'features' => $this->currentSiteFeatures,
+            'user'     => $this->currentUser
+        );
+    }
+
     private function trans($key) {
-
-        if (!$this->translator) {
-            $this->translator = $this->container->get('translator');
-        }
-
-        if (!$this->session) {
-            $this->session = $this->container->get('session');
-        }
 
         if (!$this->translator || !$this->session) {
             return $key;
@@ -77,90 +126,9 @@ class SpoutletExtension extends Twig_Extension
         return preg_replace("/(http:\/\/[^\s]+)/", "<a href=\"$1\">$1</a>", $string);
     }
 
-    public function getFunctions()
-    {
-        return array(
-            'get_current_site'                  => new Twig_Function_Method(
-                $this,
-                'getCurrentSite'
-            ),
-
-            'get_current_site_features'                  => new Twig_Function_Method(
-                $this,
-                'getCurrentSiteFeatures'
-            ),
-
-            'can_user_apply_to_giveaway'  => new Twig_Function_Method(
-
-                $this,
-                'canUserApplyToGiveaway'
-            ),
-            'has_user_applied_to_giveaway'  => new Twig_Function_Method(
-                $this,
-                'hasUserAppliedToGiveaway'
-            ),
-            'target_blank'                  => new Twig_Function_Method(
-                $this,
-                'getTargetBlank',
-                array('is_safe' => array('html'))
-            ),
-            'is_admin_page'                 => new Twig_Function_Method(
-                $this,
-                'isAdminPage'
-            ),
-            'site_link'                     => new Twig_Function_Method(
-                $this,
-                'siteLink', array('is_safe' => array('html'))
-            ),
-            'get_avatar_url'                => new Twig_Function_Method(
-                $this,
-                'getAvatarUrl'
-            ),
-            'ends_with'                => new Twig_Function_Method(
-                $this,
-                'endsWith'
-            ),
-            'media_path_nice'           => new Twig_Function_Method(
-                $this,
-                'mediaPathNice'
-            ),
-            'cevo_account_link'         => new Twig_Function_Method(
-                $this,
-                'cevoAccountLink'
-            ),
-
-            'change_link_subdomain'     => new Twig_Function_Method(
-                $this,
-                'changeLinkSubdomain'
-            ),
-        );
-    }
-
-    public function getCurrentSite() {
-        return $this->container->get('platformd.model.site_util')->getCurrentSite();
-    }
-
-    public function getCurrentSiteFeatures() {
-        return $this->getCurrentSite()->getSiteFeatures();
-    }
-
-    private function getRequest() {
-        return $this->container->get('request');
-    }
-
-    private function getEntityManager() {
-        return $this->container->get('doctrine.orm.entity_manager');
-    }
-
-    private function getSiteFromDefaultLocale($locale) {
-        return $this->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
-    }
-
     public function mediaPathNice($media) {
 
-        $bucketName = $this->container->getParameter('s3_bucket_name');
-
-        if ($bucketName == "platformd") {
+        if ($this->bucketName == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
             $cf = "http://mediastaging.alienwarearena.com";
@@ -171,10 +139,9 @@ class SpoutletExtension extends Twig_Extension
 
     public function cevoAccountLink($username)
     {
-        $userManager    = $this->container->get('fos_user.user_manager');
-        $user           = $userManager->loadUserByUsername($username);
+        $user           = $this->userManager->loadUserByUsername($username);
         $cevoUserId     = $user->getCevoUserId();
-        $locale         = $this->container->get('session')->getLocale();
+        $locale         = $this->session->getLocale();
 
         switch ($locale) {
             case 'ja':
@@ -212,7 +179,7 @@ class SpoutletExtension extends Twig_Extension
         return (substr($haystack, -$length) === $needle);
     }
 
-    public function changeLinkSubdomain($link, $subdomain)
+    public function changeLinkDomain($link, $fullDomain)
     {
         if(parse_url($link, PHP_URL_SCHEME) == '') {
             return $link;
@@ -220,20 +187,10 @@ class SpoutletExtension extends Twig_Extension
 
         $parsedUrl = parse_url($link);
 
-        $parts = explode('.', $parsedUrl['host']);
-
-        if (strpos($parts[0], 'staging')) {
-            $parts[0] = $subdomain.'staging';
-        } else {
-            $parts[0] = $subdomain;
-        }
-
-        $host = implode('.', $parts);
-
         $query = array_key_exists('query', $parsedUrl) != "" ? "?".$parsedUrl['query'] : '';
         $anchor = array_key_exists('fragment', $parsedUrl) != "" ? "#".$parsedUrl['fragment'] : '';
 
-        $url = $parsedUrl['scheme'].'://'.$host.$parsedUrl['path'].$query.$anchor;
+        $url = $parsedUrl['scheme'].'://'.$fullDomain.$parsedUrl['path'].$query.$anchor;
 
         return $url;
     }
@@ -246,8 +203,7 @@ class SpoutletExtension extends Twig_Extension
     {
         # look at the url that is being passed in and if it is relative, return base path + url... if it is not, then return obj
 
-        $request = $this->container->get('request');
-        $base = $request->getScheme() . '://' . $request->getHost();
+        $base = $this->request->getScheme() . '://' . $this->request->getHost();
         $path = $obj[0] == '/' ? $obj : '/' . $obj;
 
         /* return if already absolute URL */
@@ -303,7 +259,7 @@ class SpoutletExtension extends Twig_Extension
     {
         $this->ensureLinkable($obj);
 
-        return $this->getLinkableManager()->link($obj);
+        return $this->linkableManager->link($obj);
     }
 
     /**
@@ -314,7 +270,7 @@ class SpoutletExtension extends Twig_Extension
     {
         $this->ensureLinkable($obj);
 
-        $url        = $this->getLinkableManager()->link($obj);
+        $url        = $this->linkableManager->link($obj);
         $target     = $this->linkToObjectTarget($obj);
         $urlText    = $urlText ?: $url;
 
@@ -337,7 +293,7 @@ class SpoutletExtension extends Twig_Extension
             $url = $this->linkToObject($url);
         }
 
-        $currentHost = $this->container->get('request')->getHost();
+        $currentHost = $this->request->getHost();
 
         return HttpUtil::isUrlExternal($url, $currentHost);
     }
@@ -370,20 +326,20 @@ class SpoutletExtension extends Twig_Extension
      */
     public function canUserApplyToGiveaway(Giveaway $giveaway)
     {
-        if (!$user = $this->getCurrentUser()) {
+        if (!$user = $this->currentUser) {
             return false;
         }
 
-        return $this->getGiveawayManager()->canUserApplyToGiveaway($user, $giveaway);
+        return $this->giveawayManager->canUserApplyToGiveaway($user, $giveaway);
     }
 
     public function hasUserAppliedToGiveaway(Giveaway $giveaway)
     {
-        if (!$user = $this->getCurrentUser()) {
+        if (!$user = $this->currentUser) {
             return false;
         }
 
-        return $this->getGiveawayManager()->hasUserAppliedToGiveaway($user, $giveaway);
+        return $this->giveawayManager->hasUserAppliedToGiveaway($user, $giveaway);
     }
 
     /**
@@ -393,9 +349,7 @@ class SpoutletExtension extends Twig_Extension
      */
     public function isAdminPage()
     {
-        $pathInfo = $request = $this->container->get('request')->getPathInfo();
-
-        return (strpos($pathInfo, '/admin') === 0);
+        return (strpos($this->request->getPathInfo(), '/admin') === 0);
     }
 
     /**
@@ -420,7 +374,7 @@ class SpoutletExtension extends Twig_Extension
      */
     public function SiteLink($linkType) {
 
-        $locale = $this->container->get('session')->getLocale();
+        $locale = $this->session->getLocale();
 
         switch ($linkType) {
             case 'ALIENWARE_LINK':                  return $this->GetAlienwareLink($locale);
@@ -463,7 +417,7 @@ class SpoutletExtension extends Twig_Extension
         }
 
         if ($user->getAvatar() && $user->isAvatarApproved()) {
-            return $this->getMediaExposer()->getPath($user);
+            return $this->mediaExposer->getPath($user);
         }
 
         return $default;
@@ -612,7 +566,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetUserProfileLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.user.account.profile').'</a>';
-        $internalUrl    = $this->container->get('router')->generate('accounts_profile');
+        $internalUrl    = $this->router->generate('accounts_profile');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
@@ -620,7 +574,7 @@ class SpoutletExtension extends Twig_Extension
             $externalUrl .= $cevoCountry.'/';
         }
 
-        $externalUrl .= 'member/'.$this->getCurrentUser()->getCevoUserId().'/';
+        $externalUrl .= 'member/'.$this->currentUser->getCevoUserId().'/';
 
         switch($locale) {
 
@@ -634,7 +588,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetWallpapersLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.wallpapers').'</a>';
-        $url            = $this->container->get('router')->generate('wallpapers');
+        $url            = $this->router->generate('wallpapers');
 
         switch($locale) {
 
@@ -664,7 +618,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetEventsLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
-        $internalUrl    = $this->container->get('router')->generate('events_index');
+        $internalUrl    = $this->router->generate('events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
@@ -696,7 +650,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetUserGiveawayLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a>';
-        $internalUrl    = $this->container->get('router')->generate('accounts_giveaways');
+        $internalUrl    = $this->router->generate('accounts_giveaways');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
@@ -716,7 +670,7 @@ class SpoutletExtension extends Twig_Extension
                     <a class="blue" style="background: url(\'/bundles/spoutlet/images/nav-arrow-1.png\') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">Giveaways</a>
                     <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
                         <li><a href="http://www.alienwarearena.com/sg/account/my-giveaway-keys/">Giveaway Keys</a></li>
-                        <li><a href="'.$this->container->get('router')->generate('accounts_giveaways').'">System Tag Keys</a></li>
+                        <li><a href="'.$this->router->generate('accounts_giveaways').'">System Tag Keys</a></li>
                     </ul>
                 </li>';
 
@@ -736,7 +690,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetGroupsLink($locale)
     {
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.groups').'</a>';
-        $url            = $this->container->get('router')->generate('gallery_index');
+        $url            = $this->router->generate('gallery_index');
 
         switch($locale) {
 
@@ -749,7 +703,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetPhotosLink($locale)
     {
         $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.photos').'</a>';
-        $url            = $this->container->get('router')->generate('gallery_index');
+        $url            = $this->router->generate('gallery_index');
 
         switch($locale) {
 
@@ -762,7 +716,7 @@ class SpoutletExtension extends Twig_Extension
     private function GetContestsLink($locale, $category=null)
     {
         $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">'.$this->trans('deals_new').'</span>'.$this->trans('platformd.layout.main_menu.contests').'</a>';
-        $url            = $category == null ? $this->container->get('router')->generate('contest_index') : $this->container->get('router')->generate('contest_index', array('category' => $category));
+        $url            = $category == null ? $this->router->generate('contest_index') : $this->router->generate('contest_index', array('category' => $category));
 
         switch($locale) {
 
@@ -781,37 +735,5 @@ class SpoutletExtension extends Twig_Extension
 
             default:        return false;
         }
-    }
-
-    /**
-     * @return \Platformd\SpoutletBundle\Link\LinkableManager
-     */
-    private function getLinkableManager()
-    {
-        return $this->container->get('platformd.link.linkable_manager');
-    }
-
-    private function getCurrentUser()
-    {
-        $securityContext = $this->container->get('security.context');
-        $token = $securityContext->getToken();
-
-        return $token ? $token->getUser() : null;
-    }
-
-    /**
-     * @return \Platformd\GiveawayBundle\Model\GiveawayManager
-     */
-    private function getGiveawayManager()
-    {
-        return $this->container->get('pd_giveaway.giveaway_manager');
-    }
-
-    /**
-     * @return \MediaExposer\Exposer
-     */
-    private function getMediaExposer()
-    {
-        return $this->container->get('media_exposer');
     }
 }

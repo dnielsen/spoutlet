@@ -2,9 +2,7 @@
 
 {% block title 'galleries.submit_photo_page_title' | trans %}
 
-{% set siteFeatures = get_current_site_features() %}
-
-{% if siteFeatures.hasPhotos %}
+{% if features.hasPhotos %}
     {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
     {% elseif app.session.locale == 'es' %}
@@ -88,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                {% if siteFeatures.hasGroups %}
+                {% if features.hasGroups %}
                     <div id="gallery-submit-image-groups">
                         <div class="control-group ">
                             <label class="control-label">{{ 'galleries.submit_photo_groups' | trans }}</label>

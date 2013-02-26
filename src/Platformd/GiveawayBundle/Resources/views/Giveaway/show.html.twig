@@ -29,8 +29,6 @@
 
 {% block content %}
 
-{% set siteFeatures = get_current_site_features() %}
-
     <div id="content">
         <div class="std_1col">
 
@@ -103,7 +101,7 @@
 
                 </div><!-- giveaway-info -->
 
-                {% if siteFeatures.hasComments %}
+                {% if features.hasComments %}
                     {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
                 {% endif %}
 

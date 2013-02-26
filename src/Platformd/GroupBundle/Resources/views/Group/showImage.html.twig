@@ -2,7 +2,6 @@
 
 {% set reportContentType    = 'GroupImage' %}
 
-{% set site                 = get_current_site() %}
 {% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
 

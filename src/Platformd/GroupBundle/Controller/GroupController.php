@@ -105,14 +105,10 @@ class GroupController extends Controller
     private function sendApplicationAcceptedEmail($application) {
 
         $currentHost        = $this->getRequest()->getHost();
-        $currentSubDomain   = substr($currentHost, 0, stripos($currentHost, '.'));
+        $currentSubDomain   = $this->getCurrentSite()->getSubDomain();
         $applicantSubDomain = $application->getSite()->getSubDomain();
 
-        if (strpos($currentSubDomain, 'staging') !== false) {
-            $applicantSubDomain .= 'staging';
-        }
-
-        $baseHost          = $this->container->getParameter('base_host');
+        $baseHost           = $this->container->getParameter('base_host');
 
         $groupName          = $application->getGroup()->getName();
         $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $application->getGroup()->getSlug()));

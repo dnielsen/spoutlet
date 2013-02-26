@@ -3,7 +3,6 @@
 {% block title %}{{ news.title | trans }}{% endblock %}
 
 {% block content %}
-{% set siteFeatures = get_current_site_features() %}
 {# this whole thing was copied from the homepage template.... #}
 <div id="row-2" class="std_2col">
     <div class="right">
@@ -29,7 +28,7 @@
                 {{ news.body | raw }}
             </div>
 
-            {% if siteFeatures.hasComments %}
+            {% if features.hasComments %}
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
             {% endif %}
         </div>
