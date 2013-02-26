@@ -1637,7 +1637,7 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * @Then /^I should be on the "([^"]*)" event called "([^"]*)" in "([^"]*)"$/
+     * @Then /^I should be on the "([^"]*)" event called "([^"]*)" on "([^"]*)"$/
      */
     public function iShouldBeOnTheEventCalledIn($type, $eventName, $locale)
     {
