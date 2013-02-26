@@ -38,8 +38,8 @@
                                 <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
                                     <option>Select One...</option>
                                     <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
-                                    {% if event.attendeeCount > 0 %}<option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>{% endif %}
-                                    {% if event.attendeeCount > 0 %}<option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>{% endif %}
+                                    <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
+                                    <option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>
                                 </select>
                             </div>
                         {% else %}
