@@ -61,6 +61,7 @@ ul, ol {
 
 a { color:#009cda; text-decoration:none; outline:none; font-weight: bold; }
 a:hover { color:#17b8f8; }
+a.btn:hover { color:#FFF; }
 a:focus, a:hover, a:active { outline:none; }
 a.aw-link { display: inline; background: url('/bundles/spoutlet/images/link-icon.png') bottom right no-repeat; padding: 0 17px 0 0; text-transform: capitalize; }
 

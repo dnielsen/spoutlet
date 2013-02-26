@@ -8,15 +8,15 @@
     <div>
     {% if pages | length > 0 %}
         {% if canAdd %}
-            <a href='{{ path('gallery_submit') }}'>Add your video</a> now.
+            <a href='{{ path('gallery_submit') }}'>Submit Video</a>
         {% else %}
-            <a href='{{ path('gallery_submit') }}'>Add your video</a> now. Want to add an video? Become a member of our group.
+            Want to add an video? Become a member of our group.
         {% endif %}
     {% else %}
         {% if canAdd %}
-            No videos found... <a href='{{ path('gallery_submit') }}'>Add your video</a> now.
+            There are no videos. <a href='{{ path('gallery_submit') }}'>Submit Video</a>
         {% else %}
-            No videos found... <a href='{{ path('gallery_submit') }}'>Add your video</a> now. Want to add an video? Become a member of our group.
+            There are no videos. Want to add an video? Become a member of our group.
         {% endif %}
     {% endif %}
     </div>

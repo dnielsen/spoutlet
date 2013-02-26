@@ -328,3 +328,7 @@ table.uploadedFiles td {
     bottom: 15px;
     width: 950px;
 }
+
+.event-owner-actions {
+    margin-bottom: 0;
+}

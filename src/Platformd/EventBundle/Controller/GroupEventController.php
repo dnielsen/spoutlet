@@ -83,7 +83,7 @@ class GroupEventController extends Controller
                 $this->getGroupEventService()->createEvent($groupEvent);
 
                 if ($groupEvent->isApproved()) {
-                    $this->setFlash('success', 'New event posted successfully');
+                    $this->setFlash('success', 'Your event has been successfully added.');
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(
@@ -160,7 +160,7 @@ class GroupEventController extends Controller
                 $this->getGroupEventService()->createEvent($groupEvent);
 
                 if ($groupEvent->isApproved()) {
-                    $this->setFlash('success', 'New event posted successfully');
+                    $this->setFlash('success', 'Your event has been successfully added.');
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(

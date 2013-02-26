@@ -585,11 +585,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetUserEventLink($locale) {
 
-        if ($this->siteHasFeature('EVENTS')) {
-            $format         = '<a href="http://www.alienwarearena.com%s/account/events/"><span style="color: #ff5711;padding-right: 2px;">CEVO</span> '.$this->trans('platformd.user.account.my_events').'</a>';
-        } else {
-            $format         = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.user.account.my_events').'</a>';
-        }
+        $format         = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.layout.page_content.competitions').'</a>';
 
         switch($locale) {
             case 'ja':      return sprintf($format, '/japan');

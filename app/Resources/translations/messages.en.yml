@@ -126,7 +126,7 @@ platformd:
             actions: Actions
             status: Status
             my_events: My Events
-            my_owned_events: My Event Listings
+            my_owned_events: My Listed Events
             my_registered_events: Events I'm Registered In
             my_past_events: My Past Events
             rsvp:
@@ -176,7 +176,8 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: You have not registered to any event yet.
+            no_registered_events: No events registered. Check out <a href="%url%">upcoming events</a>.
+            no_created_events: No events created.
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
         account:
             welcome_to_control: Welcome to your Control Panel
@@ -280,7 +281,7 @@ platformd:
             registered_events: Registered Events
             my_giveaways: Giveaways
             my_videos: Videos
-            my_events: Competitions
+            my_events: Events
             my_groups: Groups
             help: Help
             game_ids: Game IDs
@@ -371,16 +372,16 @@ platformd:
 
     event:
         form:
-            name: "Event Title"
+            name: "Title"
             banner_image: "Event Banner"
             url: "URL"
             description: "Event Details"
             game: "Game"
-            event_type: "Event Type"
-            location: "Location"
+            event_type: "Location"
+            location: "Location Name"
             address: "Address"
-            starts_at: "Event Starts"
-            ends_at: "Event Ends"
+            starts_at: "Start Date & Time"
+            ends_at: "End Date & Time"
             hosted_by: "Hosted By"
             timezone: "Timezone"
             display_timezone: "Display Timezone"
@@ -400,13 +401,13 @@ platformd:
 
             help:
                 address: "Example: 1021 Washington Drive, San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
-                banner_image: "Resolution 950x120, jpeg or png formats"
+                banner_image: "Recommended size: 950x120. File formats accepted: JPEG and PNG."
                 external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
 
         registration:
-            enabled: "I would like to manage event registration on this website"
-            disabled: "Please list my event only"
-            3rdparty: "Link event listing to 3rd party website"
+            enabled: "Manage event registration on this site."
+            disabled: "List my event only. Event registration is managed elsewhere."
+            3rdparty: "Link event listing to 3rd party website."
 
         email:
             approved:

@@ -20,7 +20,7 @@ Feature: Global Events
         Given I am on "/admin"
         When I click to add new "Events"
             And I fill in the following:
-                | Event Title   | Test Event        |
+                | Title         | Test Event        |
                 | Event Details | Description       |
             And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
@@ -33,7 +33,7 @@ Feature: Global Events
         When I click on "Events"
             And I click on "Test global event"
             And I fill in the following:
-                | Event Title   | Test Event Updated  |
+                | Title         | Test Event Updated  |
                 | Event Details | Description Updated |
             And I press "Save"
         Then I should see "Event saved successfully"

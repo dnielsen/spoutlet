@@ -15,7 +15,7 @@
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans({'%url%': path('global_events_index')}) %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': events,
                             'pastEvents' : pastEvents,
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | trans %}
+                        {% set no_events_message = 'platformd.account_page.events.no_created_events' | trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups'), '%2' : path('group_new', { 'then': "group_event" }) }) %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': ownedEvents,
                             'pastEvents' : pastOwnedEvents,
@@ -63,7 +63,18 @@
 
 {% include 'EventBundle::_rsvpDialog.html.twig' %}
 
-<script type="text/javascript">
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+
+    <script type="text/javascript">
     $(function () {
 
         $('.event-show-past-link').click(function () {
@@ -75,12 +86,8 @@
         $('.event-owner-actions').change(function () {
             document.location.href = $(this).children('option:selected').attr('data-route');
         });
+
+        $('table.tablesorter').tablesorter();
     });
 </script>
-
-{% endblock %}
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 {% endblock %}

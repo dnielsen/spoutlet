@@ -14,13 +14,19 @@
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
             {{ form_row(form.content) }}
             {{ form_row(form.online) }}
+
             <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
                 {{ form_row(form.location) }}
                 {{ form_row(form.address) }}
             </div>
+
             {{ form_row(form.startsAt) }}
             {{ form_row(form.endsAt) }}
-            {{ form_row(form.timezone) }}
+
+            <div class="styled-select">
+                {{ form_row(form.timezone) }}
+            </div>
+
             {% if form.sites is defined %}{{ form_row(form.sites) }}{% endif %}
             {{ form_row(form.private) }}
         </div>
@@ -31,7 +37,10 @@
         <div id="advanced-options" style="display:none; margin:20px 0 0 0;">
             {% if form.slug is defined %}{{ form_row(form.slug) }}{% endif %}
             {{ form_row(form.bannerImage) }}
-            {{ form_row(form.game) }}
+
+            <div class="styled-select">
+                {{ form_row(form.game) }}
+            </div>
         </div>
     </div>
 

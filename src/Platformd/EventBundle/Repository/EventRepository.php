@@ -58,14 +58,19 @@ class EventRepository extends EntityRepository
 
     public function getAttendeeList($event)
     {
-        $qb = $this->createQueryBuilder('e')
+        $result = $this->createQueryBuilder('e')
             ->select('a.id, a.username, a.email')
             ->leftJoin('e.attendees', 'a')
             ->andWhere('e = :event')
-            ->setParameter('event', $event);
-
-        return $qb->getQuery()
+            ->setParameter('event', $event)
+            ->getQuery()
             ->getResult();
+
+        if (count($result) == 1 && $result[0]['id'] == null) {
+            return null;
+        }
+
+        return $result;
     }
 
     public function isUserAttending(Event $event, User $user)

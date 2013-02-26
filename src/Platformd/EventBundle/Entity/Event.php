@@ -785,7 +785,7 @@ abstract class Event implements LinkableInterface
             $executionContext->setPropertyPath($propertyPath);
 
             $executionContext->addViolation(
-                "The end date/time must be after the start date/time",
+                "The end date/time must be after the start date/time.",
                 array(),
                 "endsAt"
             );

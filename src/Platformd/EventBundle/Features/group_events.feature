@@ -24,12 +24,12 @@ Feature: Group Events
 #        Given I am on "/groups/group-1"
 #            And I add "event" for group "Group 1"
 #            And I fill in the following:
-#                | Event Title    | Group Event         |
+#                | Title          | Group Event         |
 #                | Event Details  | Group Event Details |
 #            And I select the "Online Event" radio button
 #            And I select the "Public Event" radio button
 #            And I press "Create"
-#        Then I should see "New event posted successfully"
+#        Then I should see "Your event has been successfully added."
 #            And I should be on the "group" event called "Group Event" on "en"
 #
 #    Scenario: I can create a new event if I do not have any groups
@@ -40,12 +40,12 @@ Feature: Group Events
 #            And I press "Create"
 #        Then I should see "Your group was created. Fill in the details below to list your upcoming event."
 #        When I fill in the following:
-#                | Event Title    | Group Event         |
+#                | Title          | Group Event         |
 #                | Event Details  | Group Event Details |
 #            And I select the "Online Event" radio button
 #            And I select the "Public Event" radio button
 #            And I press "Create"
-#        Then I should see "New event posted successfully"
+#        Then I should see "Your event has been successfully added."
 #            And I should be on the "group" event called "Group Event" on "en"
 #
 #    Scenario: I can edit a group event
@@ -53,7 +53,7 @@ Feature: Group Events
 #        When I click on "Test group event"
 #            And I click on "Edit Event"
 #            And I fill in the following:
-#                | Event Title   | Group Event Updated  |
+#                | Title         | Group Event Updated  |
 #                | Event Details | Description Updated |
 #            And I press "Update"
 #        Then I should see "Event has been saved successfully."
