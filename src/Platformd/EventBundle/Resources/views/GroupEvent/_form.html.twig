@@ -51,7 +51,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('.date-picker').datepicker({ minDate: 0 });
+        $('.date-picker').datepicker({
+            minDate: 0,
+            dateFormat: 'yy-mm-dd'
+        });
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
