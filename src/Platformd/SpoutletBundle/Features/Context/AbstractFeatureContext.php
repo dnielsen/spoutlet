@@ -1601,28 +1601,15 @@ class AbstractFeatureContext extends MinkContext
 
         foreach ($table->getHash() as $data) {
 
-            $group = isset($data['group']) ? $em->getRepository('GroupBundle:Group')->findOneBy(array('name' => $data['group'])) : null;
+            $group = isset($data['group']) ? $em->getRepository('GroupBundle:Group')->findOneByName($data['group']) : null;
+            $event = $group ? new GroupEvent($group) : new GlobalEvent();
 
-            if (isset($data['name'])) {
-                if ($event = $em->getRepository('EventBundle:GlobalEvent')->findOneBy(array('name' => $data['name']))) {
-                    $em->remove($event);
-                    $em->flush();
-                }
-
-                $event = $group ? new GroupEvent($group) : new GlobalEvent();
-                $event->setName($data['name']);
-            } else {
-                $event = new GlobalEvent();
-                $event->setName('Test Event '.$counter);
-            }
-
+            $event->setName(isset($data['name']) ? $data['name'] : 'Test Event '.$counter);
             $event->setSlug(isset($data['slug']) ? $data['slug'] : "test-event-".$counter);
 
             if (isset($data['site'])) {
-                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $data['site']));
-                $event->getSites()->add($site);
-            } else {
-                $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => "en"));
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($data['site']);
+                $event->getSites()->clear();
                 $event->getSites()->add($site);
             }
 
