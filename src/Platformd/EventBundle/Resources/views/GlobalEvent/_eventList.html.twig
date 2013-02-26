@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th style="width:121px;cursor:pointer">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
+            <th style="width:8px;cursor:pointer"></th>
             <th style="width:259px;cursor:pointer">{{ 'platformd.events.event_listings.event' | trans }}</th>
             <th style="width:132px;cursor:pointer">{{ 'platformd.events.event_listings.games' | trans }}</th>
             <th style="width:191px;cursor:pointer">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
@@ -28,23 +29,21 @@
                 {{ event.startsAt | date('M j, Y') }}
             </td>
             {# todo - refactor this next line somewhere else #}
-            <td style="width:259px;vertical-align:top">
+            <td style="width:8px;vertical-align:top">
                 {% set attending  = false %}
                 {% if is_granted('ROLE_USER') %}
                     {% set attending = event.isUserAttending(app.user) %}
                 {% endif %}
+                {% if attending %}
+                <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" />
+                {% endif %}
+            </td>
+            <td style="width:259px;vertical-align:top">
+
                 {% if event.group is defined %}
-                    {% if attending %}
-                        {{ event | pd_link_full(event.name, ['attending']) }}
-                    {% else %}
-                        {{ event | pd_link_full(event.name) }}
-                    {% endif %}
+                    {{ event | pd_link_full(event.name) }}
                 {% else %}
-                    {% if attending %}
-                        {{ event | pd_link_full(event.name, ['global-event-link', 'attending']) }}
-                    {% else %}
-                        {{ event | pd_link_full(event.name, ['global-event-link']) }}
-                    {% endif %}
+                    {{ event | pd_link_full(event.name, ['global-event-link']) }}
                 {% endif %}
 
             </td>
