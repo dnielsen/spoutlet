@@ -33,8 +33,6 @@
 
 {% block content %}
 
-{% set siteFeatures = get_current_site_features() %}
-
 {% if dealCode %}
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
@@ -154,7 +152,7 @@
         </div>
     </div>
 
-    {% if siteFeatures.hasComments %}
+    {% if features.hasComments %}
         <div class="std_2col">
             <div class="left">
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}

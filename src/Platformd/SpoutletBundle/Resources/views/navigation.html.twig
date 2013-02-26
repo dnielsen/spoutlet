@@ -1,5 +1,3 @@
-{% set siteFeatures = get_current_site_features() %}
-
 <div id="mainNav">
     <div class="wide-950">
         <div id="nav-wrapper">
@@ -7,7 +5,7 @@
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 <li>{{ site_link('ALIENWARE_LINK') }}</li>
 
-                {% if siteFeatures.hasGamesNavDropDown %}
+                {% if features.hasGamesNavDropDown %}
                     <li class="more">
                         <a class="blue">{{ 'games' | trans }}</a>
                         <ul>
@@ -24,18 +22,18 @@
 
                             {% endif %}
 
-                            {% if siteFeatures.hasGames -%}
+                            {% if features.hasGames -%}
                                 <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
                             {%- endif %}
                         </ul>
                     </li>
-                {% elseif siteFeatures.hasGames %}
+                {% elseif features.hasGames %}
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
                 <li>{{ site_link('EVENTS') | raw }}</a></li>
 
-                {% if siteFeatures.hasNews %}
+                {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
                 {% else %}
                     <li class="more">
@@ -47,38 +45,38 @@
                     </li>
                 {% endif %}
 
-                {% if siteFeatures.hasSweepstakes %}
+                {% if features.hasSweepstakes %}
                     <li><a href="{{ path('sweepstakes_index') }}">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
                 {% endif %}
 
-                {% if siteFeatures.hasVideo and not siteFeatures.hasWallpapers and not siteFeatures.hasPhotos and not siteFeatures.hasContests %}
+                {% if features.hasVideo and not features.hasWallpapers and not features.hasPhotos and not features.hasContests %}
                     <li>{{ site_link('VIDEOS') }}</li>
 
-                {% elseif siteFeatures.hasVideo or siteFeatures.hasWallpapers or siteFeatures.hasPhotos or siteFeatures.hasContests %}
+                {% elseif features.hasVideo or features.hasWallpapers or features.hasPhotos or features.hasContests %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
-                            {% if siteFeatures.hasVideo %}
+                            {% if features.hasVideo %}
                             <li>{{ site_link('VIDEOS') }}</li>
                             {% endif %}
-                            {% if siteFeatures.hasWallpapers %}
+                            {% if features.hasWallpapers %}
                             <li>{{ site_link('WALLPAPERS') }}</li>
                             {% endif %}
-                            {% if siteFeatures.hasPhotos %}
+                            {% if features.hasPhotos %}
                             <li>{{ site_link('PHOTOS') }}</li>
                             {% endif %}
-                            {% if siteFeatures.hasContests %}
+                            {% if features.hasContests %}
                             <li>{{ site_link('CONTESTS_IMAGE') }}</li>
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if siteFeatures.hasDeals %}
+                {% if features.hasDeals %}
                     <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
-                {% if siteFeatures.hasGroups %}
+                {% if features.hasGroups %}
                     <li class="more">
                         <a class="blue">
                             {{ 'platformd.layout.main_menu.groups' | trans }}
@@ -93,22 +91,22 @@
                             <li>
                                 <a href="{{ path('group_new') }}">Create Group</a>
                             </li>
-                            {% if siteFeatures.hasContests %}
+                            {% if features.hasContests %}
                             <li>{{ site_link('CONTESTS_GROUP') }}</li>
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if siteFeatures.hasForums %}
+                {% if features.hasForums %}
                     <li><a href="{{ path('forums') }}">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
                 {% endif %}
 
-                {% if siteFeatures.hasArp %}
+                {% if features.hasArp %}
                     <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                 {% endif %}
 
-                {% if siteFeatures.hasMicrosoft %}
+                {% if features.hasMicrosoft %}
                 <li><a href="{{ path('microsoft') }}">{{ 'platformd.layout.main_menu.microsoft' | trans }}</a></li>
                 {% endif %}
 

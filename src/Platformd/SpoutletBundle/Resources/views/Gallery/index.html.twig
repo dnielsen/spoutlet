@@ -1,9 +1,8 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% set hasPhotos    = nivoSliderMedia | length > 0 %}
-{% set siteFeatures = get_current_site_features() %}
 
-{% if siteFeatures.hasPhotos %}
+{% if features.hasPhotos %}
     {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
     {% elseif app.session.locale == 'es' %}

@@ -1,5 +1,4 @@
 {% set reportContentType    = 'GroupDiscussion' %}
-{% set site                 = get_current_site() %}
 {% set canAdd               = group.isAllowedTo(app.user, site, 'AddDiscussion') %}
 {% set canEdit              = group.isAllowedTo(app.user, site, 'EditDiscussion') %}
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteDiscussion') %}

@@ -76,9 +76,17 @@ services:
     platformd.twig.spoutlet_extension:
         class: Platformd\SpoutletBundle\Twig\SpoutletExtension
         arguments:
-            - "@service_container"
-        public: false
+            - "%s3_bucket_name%"
+            - "@pd_giveaway.giveaway_manager"
+            - "@platformd.link.linkable_manager"
+            - "@media_exposer"
+            - "@router"
+            - "@security.context"
+            - "@platformd.model.site_util"
+            - "@translator"
+            - "@fos_user.user_manager"
         tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
 
     platformd.form.extension.help_form_type_extension:

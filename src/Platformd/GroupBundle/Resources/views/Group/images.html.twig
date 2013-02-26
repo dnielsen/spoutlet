@@ -1,12 +1,10 @@
 {% set reportContentType    = 'GroupImage' %}
-{% set site                 = get_current_site() %}
-{% set siteFeatures         = get_current_site_features() %}
 {% set canAdd               = group.isAllowedTo(app.user, site, 'AddImage') %}
 {% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
 {% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
 
 {% if canAdd %}
-    {% if siteFeatures.hasPhotos %}
+    {% if features.hasPhotos %}
         <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
     {% else %}
         <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
