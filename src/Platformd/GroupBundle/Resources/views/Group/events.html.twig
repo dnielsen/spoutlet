@@ -7,15 +7,15 @@
 
     {% if canAdd %}
         {% if groupEvents | length > 0 %}
-            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Create your event</a> now.</p>
+            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a></p>
         {% else %}
-            <p>No group events yet... <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Create your event</a> now.</p>
+            <p>No group events yet. <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Submit Event</a></p>
         {% endif %}
     {% else %}
         {% if groupEvents | length > 0 %}
-            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Create your event</a> now.</p>
+            <p>Want to add an event? Become a member of our group.</p>
         {% else %}
-            <p>No group events yet... <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Create your event</a> now. Want to add an event? Become a member of our group.</p>
+            <p>No group events yet. Want to add an event? Become a member of our group.</p>
         {% endif %}
     {% endif %}
 

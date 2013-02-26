@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Features\Context;
 use Behat\BehatBundle\Context\MinkContext;
 use Behat\Behat\Context\ClosuredContextInterface,
 Behat\Behat\Context\TranslatedContextInterface,
+Behat\Mink\Exception\ElementNotFoundException,
 Behat\Behat\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode,
 Behat\Gherkin\Node\TableNode;
@@ -26,6 +27,8 @@ use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\GroupBundle\Entity\GroupNews;
 use Platformd\SpoutletBundle\Entity\Comment;
 use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\GlobalEvent;
 
 /**
  * Base Feature context.
@@ -103,14 +106,16 @@ class AbstractFeatureContext extends MinkContext
      * @Given /^I select the "([^"]*)" radio button$/
      */
     public function iSelectTheRadioButton($label) {
-      $radio_button = $this->getSession()->getPage()->findField($label);
-      if (null === $radio_button) {
-        throw new ElementNotFoundException(
-          $this->getSession(), 'form field', 'id|name|label|value', $field
-        );
-      }
-      $value = $radio_button->getAttribute('value');
-      $this->fillField($label, $value);
+
+        $radio_button = $this->getPage()->find('css', sprintf('label:contains("%s")', $label));
+
+          if (null === $radio_button) {
+            throw new ElementNotFoundException(
+              $this->getSession(), 'form field', 'id|name|label|value', $label
+            );
+          }
+
+          $this->fillField($label, 1);
     }
 
     /**
@@ -1201,7 +1206,7 @@ class AbstractFeatureContext extends MinkContext
             $group->setUpdatedAt(new \DateTime('now'));
 
             $owner = isset($data['owner']) ? $em->getRepository('UserBundle:User')->findOneBy(array('username' => $data['owner'])) : null;
-            $group->setOWner($owner ?: $this->getCurrentUser());
+            $group->setOwner($owner ?: $this->getCurrentUser());
 
             $this->getContainer()->get('platformd.model.group_manager')
             ->saveGroup($group);
@@ -1270,6 +1275,11 @@ class AbstractFeatureContext extends MinkContext
 
                 case 'discussion':
                     $url = $this->getContainer()->get('router')->generate('group_add_discussion', array('id' => $group->getId()));
+                    $this->getSession()->visit($url);
+                    break;
+
+                case 'event':
+                    $url = $this->getContainer()->get('router')->generate('group_event_new', array('groupSlug' => $group->getSlug()));
                     $this->getSession()->visit($url);
                     break;
 
@@ -1578,5 +1588,91 @@ class AbstractFeatureContext extends MinkContext
             ->createQuery(sprintf('DELETE FROM %s', $model))
             ->execute()
         ;
+    }
+
+    /**
+     * @Given /^I have the following events:$/
+     */
+    public function iHaveTheFollowingEvents(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+
+        $counter = 0;
+
+        foreach ($table->getHash() as $data) {
+
+            $group = isset($data['group']) ? $em->getRepository('GroupBundle:Group')->findOneByName($data['group']) : null;
+            $event = $group ? new GroupEvent($group) : new GlobalEvent();
+
+            $event->setName(isset($data['name']) ? $data['name'] : 'Test Event '.$counter);
+            $event->setSlug(isset($data['slug']) ? $data['slug'] : "test-event-".$counter);
+
+            if (isset($data['site'])) {
+                $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($data['site']);
+                $event->getSites()->clear();
+                $event->getSites()->add($site);
+            }
+
+            $event->setStartsAt(    isset($data['start'])       ? new \DateTime($data['start']) : new \DateTime('-2 days'));
+            $event->setEndsAt(      isset($data['end'])         ? new \DateTime($data['end'])   : new \DateTime('+2 days'));
+            $event->setContent(     isset($data['description']) ? $data['description']          : "default description");
+            $event->setPublished(   isset($data['published'])   ? $data['published']            : 1);
+            $event->setApproved(    isset($data['approved'])    ? $data['approved']             : 1);
+            $event->setActive(      isset($data['active'])      ? $data['active']               : 1);
+            $event->setOnline(      isset($data['online'])      ? $data['online']               : 1);
+
+            $event->setRegistrationOption(GlobalEvent::REGISTRATION_ENABLED);
+
+            if ($group) {
+                $event->setPrivate(isset($data['private']) ? $data['private'] : 0);
+            }
+
+            $owner = isset($data['owner']) ? $em->getRepository('UserBundle:User')->findOneBy(array('username' => $data['owner'])) : null;
+            $event->setUser($owner ?: $this->getCurrentUser());
+
+            $this->getContainer()->get('platformd_event.service.global_event')->createEvent($event);
+
+            $counter++;
+        }
+    }
+
+    /**
+     * @Then /^I should be on the "([^"]*)" event called "([^"]*)" on "([^"]*)"$/
+     */
+    public function iShouldBeOnTheEventCalledIn($type, $eventName, $locale)
+    {
+        $em     = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+
+        if (!$site) {
+            throw new \Exception(sprintf('Site not found for locale "%s"', $locale));
+        }
+
+        $entity = $type == "group" ? 'GroupEvent' : 'GlobalEvent';
+
+        $event   = $em->getRepository('EventBundle:'.$entity)->findOneByName($eventName);
+
+        if (!$event) {
+            throw new \Exception('Could not find the event in the database');
+        }
+
+        if (!$event->getSites()->contains($site)){
+            throw new \Exception('Event is not enabled on this site');
+        }
+
+        $session    = $this->getSession();
+        $currentUrl = $session->getCurrentUrl();
+        $slug       = $event->getSlug();
+
+        if (strpos($currentUrl, $slug) === false) {
+            throw new \Exception(sprintf('Not currently on the Event.  Expected URL was "%s" but currently on "%s"', $slug, $currentUrl));
+        }
+
+        $statusCode = $session->getStatusCode();
+        $httpOk = 200;
+
+        if ($statusCode != $httpOk) {
+            throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
+        }
     }
 }

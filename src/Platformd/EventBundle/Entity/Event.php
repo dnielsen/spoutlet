@@ -254,7 +254,7 @@ abstract class Event implements LinkableInterface
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
         $this->startsAt     = new \DateTime('now');
-        $this->endsAt       = new \DateTime('now');
+        $this->endsAt       = new \DateTime('tomorrow');
     }
 
     /**
@@ -373,7 +373,13 @@ abstract class Event implements LinkableInterface
      */
     public function setEndsAt($endsAt)
     {
-        $endsAt = $endsAt < new \DateTime('now') ? new \DateTime('now') : $endsAt;
+        $todayDt = new \DateTime('now');
+        $todayDt->setTime(0, 0, 0);
+
+        if ($endsAt < $todayDt) {
+            $endsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+        }
+
         $this->endsAt = $endsAt;
     }
 
@@ -527,7 +533,13 @@ abstract class Event implements LinkableInterface
      */
     public function setStartsAt($startsAt)
     {
-        $startsAt = $startsAt < new \DateTime('now') ? new \DateTime('now') : $startsAt;
+        $todayDt = new \DateTime('now');
+        $todayDt->setTime(0, 0, 0);
+
+        if ($startsAt < $todayDt) {
+            $startsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+        }
+
         $this->startsAt = $startsAt;
     }
 
@@ -773,7 +785,7 @@ abstract class Event implements LinkableInterface
             $executionContext->setPropertyPath($propertyPath);
 
             $executionContext->addViolation(
-                "The end date/time must be after the start date/time",
+                "The end date/time must be after the start date/time.",
                 array(),
                 "endsAt"
             );

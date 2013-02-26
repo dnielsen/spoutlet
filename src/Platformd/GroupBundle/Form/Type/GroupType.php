@@ -36,17 +36,17 @@ class GroupType extends AbstractType
             ))
             ->add('groupAvatar', new MediaType(), array(
                 'image_label'   => 'Group Banner',
-                'image_help'    => 'Recommended size: 950x120',
+                'image_help'    => 'Recommended size: 950x120. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
+                'image_help'    => 'Recommended width: 2000px. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('thumbNail', new MediaType(), array(
                 'image_label'   => 'Thumbnail Image',
-                'image_help'    => 'Recommended size: 135x80',
+                'image_help'    => 'Recommended size: 135x80. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('description', 'purifiedTextarea', array(

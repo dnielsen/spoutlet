@@ -17,12 +17,18 @@ class SiteUtil
     public function getCurrentSite()
     {
         if (!$currentHost = $this->host) {
+            die("OnKernelRequest has not correctly set the host. Getting current site failed.");
             return;
         }
 
         $subDomain = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
+        $site = $this->getSiteFromSubDomain($subDomain);
 
-        return $this->getSiteFromSubDomain($subDomain);
+        if (!$site) {
+            die("Could not find site for '".$subDomain."'.");
+        }
+
+        return $site;
     }
 
     public function getSiteFromSubDomain($subDomain) {

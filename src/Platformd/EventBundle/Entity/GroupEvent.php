@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection
 ;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Vich\GeographicalBundle\Annotation as Vich;
 
 use Platformd\GroupBundle\Entity\Group,
@@ -51,6 +53,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      *
      * @var boolean $private
      * @ORM\Column(name="private", type="boolean")
+     * @Assert\NotNull(message="Required")
      */
     protected $private;
 

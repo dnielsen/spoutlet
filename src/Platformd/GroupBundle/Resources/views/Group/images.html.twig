@@ -10,15 +10,15 @@
 <div>
     {% if pages | length > 0 %}
         {% if canAdd %}
-            <a href='{{ addImageUrl }}'>Add your image</a> now.
+            <a href='{{ addImageUrl }}'>Submit image(s)</a>.
         {% else %}
-            <a href='{{ addImageUrl }}'>Add your image</a> now. Want to add an image? Become a member of our group.
+            Want to add an image? Become a member of our group.
         {% endif %}
     {% else %}
         {% if canAdd %}
-            No images found... <a href='{{ addImageUrl }}'>Add your image</a> now.
+            There are no images. <a href='{{ addImageUrl }}'>Submit image(s)</a>.
         {% else %}
-            No images found... <a href='{{ addImageUrl }}'>Add your image</a> now. Want to add an image? Become a member of our group.
+            There are no images. Want to add an image? Become a member of our group.
         {% endif %}
     {% endif %}
 </div>
