@@ -142,7 +142,7 @@ platformd:
             date: Date
             details: Details
             event: Event
-            games: Games
+            games: Game(s)
             hosted_by: Organizer
             location: Location
             upcoming_events: Upcoming Events

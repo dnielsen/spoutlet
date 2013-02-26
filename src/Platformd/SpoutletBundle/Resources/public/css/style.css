@@ -905,6 +905,5 @@ hr.faded:before {
 }
 
 .attending {
-    padding-left: 20px;
-    background: url(/bundles/spoutlet/images/form-ic-success.png) no-repeat top left;
+    padding-left: 10px;
 }
