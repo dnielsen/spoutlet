@@ -46,6 +46,7 @@ class AdminController extends Controller
     	return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
             'form' => $form->createView(),
             'sweepstakes' => $sweepstakes,
+            'group' => null,
         ));
     }
 
@@ -77,8 +78,10 @@ class AdminController extends Controller
         	}
         }
 
+        $group = $sweepstakes->getGroup();
+
     	return $this->render('SweepstakesBundle:Admin:edit.html.twig',
-    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes));
+    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes, 'group' => $group));
     }
 
     public function approveAction($id)

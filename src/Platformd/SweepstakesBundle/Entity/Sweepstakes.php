@@ -47,6 +47,11 @@ class Sweepstakes extends AbstractEvent
      */
     protected $entries;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", cascade={"persist"})
+     */
+    protected $group = null;
+
     public function __construct()
     {
         $this->entries = new ArrayCollection();
@@ -201,5 +206,15 @@ class Sweepstakes extends AbstractEvent
     public function getLinkableRouteName()
     {
         return 'sweepstakes_show';
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

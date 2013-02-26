@@ -3,6 +3,8 @@
 
 {{ form_errors(form) }}
 
+
+
 <div class="row-fluid">
     <fieldset>
         <legend>a) Basic Information</legend>
@@ -14,6 +16,17 @@
                 {{ form_row(form.externalUrl) }}
                 {{ form_row(form.status) }}
                 {{ form_row(form.testOnly) }}
+                <div class="control-group">
+                    <label for="group-auto-complete" class="control-label">Group</label>
+                    <div class="controls">
+                        <input type="text" id="group-auto-complete" name="group-auto-complete" {% if group is not null %}value="{{ group.name }}"{% endif %}/>
+                    </div>
+                </div>
+                {% if group is not null %}
+                    {{ form_row(form.group, {value : group.id}) }}
+                {% else %}
+                    {{ form_row(form.group) }}
+                {% endif %}
             </div>
 
             <div class="span6">
@@ -21,6 +34,7 @@
                 {{ form_row(form.startsAt) }}
                 {{ form_row(form.endsAt) }}
                 {{ form_row(form.timezone) }}
+
             </div>
         </div>
     </fieldset>
@@ -106,3 +120,16 @@
 
     {{ form_rest(form) }}
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('#group-auto-complete').autocomplete({
+            source: '{{ path('admin_group_autocomplete') }}',
+            minLength: 3,
+            select: function(event, ui) {
+                $(this).val(ui.item.label);
+                $('#platformd_giveawaybundle_dealtype_group').val(ui.item.value);
+                event.preventDefault();
+            }
+        });
+    });
+</script>

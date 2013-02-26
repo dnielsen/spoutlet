@@ -113,6 +113,10 @@ class DealType extends AbstractType
                 'help'  => 'This allows admins to still test the operation of the deal IF it is unpublished',
             ));
 
+            $builder->add('group', 'hidden', array(
+                'property_path' => false,
+            ));
+
             $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 

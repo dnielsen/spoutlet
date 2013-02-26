@@ -220,6 +220,11 @@ class Deal implements LinkableInterface, CommentableInterface
      */
     protected $testOnly = false;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", cascade={"persist"})
+     */
+    protected $group = null;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
@@ -662,5 +667,15 @@ class Deal implements LinkableInterface, CommentableInterface
     public function getBottomColor()
     {
         return $this->bottomColor;
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
     }
 }
