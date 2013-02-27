@@ -345,7 +345,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-100 .widget-header { padding: 0px 5px 0 5px; background-color: #131313; margin: 2px }
 .widget-100 .widget-title { font-size: 18.67px; font-weight: bold; color: #bfbfbf; padding: 7px 0 4px 5px; }
 .widget-100 .widget-footer { background: #131313; padding: 5px; width: 950px; margin: 0 auto; border-top: 1px solid #2d2d2d; border-bottom: 1px solid #2d2d2d; }
-.widget-100 .widget-content { padding: 5px; width: 928px; margin: 0 auto; background: #191919; overflow: hidden; }
+.widget-100 .widget-content { padding: 10px; margin: 0 auto; background: #191919; overflow: hidden; }
 .widget-100 .widget-icon { float: right; padding: 1px 0 0 0; }
 .widget-100 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; background: #252525; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
 .widget-100 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }

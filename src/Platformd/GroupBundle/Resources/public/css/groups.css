@@ -354,6 +354,10 @@ button#join-group-button:hover {
     font-size: 10px;
 }
 
+.group-event-actions {
+    font-size: 10px;
+}
+
 .group-event-item {
     background-color: #252525;
     padding: 10px;

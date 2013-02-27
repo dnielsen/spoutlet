@@ -297,7 +297,7 @@
                 var content = $('.featured-content-category#content-group-news');
 
                 content.load('{{ path('group_events', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+                    $('#event-content-scroll').mCustomScrollbar();
                     $('#group-widget-content').unblock();
                 });
             }

@@ -6,7 +6,7 @@
 <h2 style="margin:0 0 10px 0;">{{ 'platformd.events.event_listings.header' | trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
-        {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups'), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
+        {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
     </div>
 </div>
 
