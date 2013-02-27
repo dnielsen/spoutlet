@@ -6,6 +6,10 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 
 /**
 *
@@ -62,7 +66,7 @@ class GiveawayController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function keyAction($slug, Request $request)
+    public function keyAction($slug, Request $request, $joinGroup=true)
     {
         if ($slug == 'dota-2') {
             //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
@@ -134,6 +138,40 @@ class GiveawayController extends Controller
             $this->setFlash('error', 'platformd.giveaway.no_keys_left');
 
             return $this->redirect($giveawayShow);
+        }
+
+        # if user has elected to join the group associated with this deal, we add them to the list of members
+        if($joinGroup) {
+            if($giveaway->getGroup()) {
+                $group = $giveaway->getGroup();
+
+                if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+                    // TODO This should probably be refactored to use the global activity table
+                    $joinAction = new GroupMembershipAction();
+                    $joinAction->setGroup($group);
+                    $joinAction->setUser($user);
+                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+                    $group->getMembers()->add($user);
+                    $group->getUserMembershipActions()->add($joinAction);
+
+                    // TODO Add a service layer for managing groups and dispatching such events
+                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('event_dispatcher');
+                    $event = new GroupEvent($group, $user);
+                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+                    $this->getGroupManager()->saveGroup($group);
+
+                    if($group->getIsPublic()) {
+                        try {
+                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                        } catch (ApiException $e) {
+
+                        }
+                    }
+                }
+            }
         }
 
         // assign this key to this user - record ip address
@@ -258,5 +296,21 @@ class GiveawayController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:GiveawayKey');
+    }
+
+    /**
+     * @return \Platformd\GroupBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\Api\ApiManager
+     */
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

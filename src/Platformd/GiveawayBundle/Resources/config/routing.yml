@@ -6,7 +6,7 @@ _admin_giveaway_metrics:
     resource: "routing/metrics.yml"
     prefix:   /admin/metrics/giveaways
 
-giveaway_index: 
+giveaway_index:
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
 
@@ -17,8 +17,8 @@ giveaway_show:
         keyId: \d+
 
 giveaway_get_key:
-    pattern: /giveaways/{slug}/key
-    defaults: { _controller: GiveawayBundle:Giveaway:key }
+    pattern: /giveaways/{slug}/key/{joinGroup}
+    defaults: { _controller: GiveawayBundle:Giveaway:key, joinGroup: true }
 
 giveaway_submit_machine_code:
     pattern: /giveaways/{slug}/machineCode

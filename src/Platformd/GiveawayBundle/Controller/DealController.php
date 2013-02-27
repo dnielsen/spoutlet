@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 
 class DealController extends Controller
 {
@@ -174,32 +175,34 @@ class DealController extends Controller
         $code->setCountry($country); # in addition to assigning the deal code, we need to set the country (this is one of the differences between a Code and a DealCode)
 
         # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($deal->getGroup()) {
-            $group = $deal->getGroup();
+        if($joinGroup) {
+            if($deal->getGroup()) {
+                $group = $deal->getGroup();
 
-            if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
-                // TODO This should probably be refactored to use the global activity table
-                $joinAction = new GroupMembershipAction();
-                $joinAction->setGroup($group);
-                $joinAction->setUser($user);
-                $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+                if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+                    // TODO This should probably be refactored to use the global activity table
+                    $joinAction = new GroupMembershipAction();
+                    $joinAction->setGroup($group);
+                    $joinAction->setUser($user);
+                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-                $group->getMembers()->add($user);
-                $group->getUserMembershipActions()->add($joinAction);
+                    $group->getMembers()->add($user);
+                    $group->getUserMembershipActions()->add($joinAction);
 
-                // TODO Add a service layer for managing groups and dispatching such events
-                /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-                $dispatcher = $this->get('event_dispatcher');
-                $event = new GroupEvent($group, $user);
-                $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+                    // TODO Add a service layer for managing groups and dispatching such events
+                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('event_dispatcher');
+                    $event = new GroupEvent($group, $user);
+                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
-                $this->getGroupManager()->saveGroup($group);
+                    $this->getGroupManager()->saveGroup($group);
 
-                if($group->getIsPublic()) {
-                    try {
-                        $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
-                    } catch (ApiException $e) {
+                    if($group->getIsPublic()) {
+                        try {
+                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                        } catch (ApiException $e) {
 
+                        }
                     }
                 }
             }
