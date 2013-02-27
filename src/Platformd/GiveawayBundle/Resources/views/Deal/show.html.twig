@@ -37,6 +37,8 @@
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
 
+{% set joinGroup = deal.group is defined %}
+
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
     <div class="xnotices">
@@ -105,7 +107,7 @@
                                 {% elseif not hasKeys %}
                                     <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
                                 {% elseif is_granted('ROLE_USER') %}
-                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">
+                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug, "joinGroup" : joinGroup }) }}">
                                         {% if deal.claimCodeButton %}
                                             <img src="{{ media_path(deal.claimCodeButton) }}" />
                                         {% else %}
@@ -113,7 +115,11 @@
                                         {% endif %}
                                     </a>
                                     {% if deal.group is defined %}
-                                    <p>Yo Group Deal! hoooooo</p>
+                                    <p>
+                                        <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
+                                            {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                        </input>
+                                    </p>
                                     {% endif %}
                                 {% endif %}
                             </div>
@@ -197,6 +203,12 @@
             });
 
             $('.deals-timeleft').fadeIn();
+
+            $('#join-group').change(function () {
+                var join = $(this).is(':checked') ? '/1' : '/0';
+                var url  = '{{ path('deal_redeem', { "slug" : deal.slug }) }}' + join;
+                $('#deal-redeem-link').attr('href', url);
+            });
         });
     </script>
 
