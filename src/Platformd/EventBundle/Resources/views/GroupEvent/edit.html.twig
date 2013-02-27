@@ -11,13 +11,15 @@
         <div class="form-actions" style="float: left;">
             <button type="submit" class="btn btn-primary" formnovalidate>Update</button>
 
-            {% if event.active == true %}
-                <button type="submit" class="cancel-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Cancel Event</button>
-            {% else %}
-                <button type="submit" class="activate-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_activate', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Activate Event</button>
+            {% if event.endsAt|date('Y-m-d H:i:s') >= "now"|date('Y-m-d H:i:s') %}
+                {% if event.active == true %}
+                    <button type="submit" class="cancel-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Cancel Event</button>
+                {% else %}
+                    <button type="submit" class="activate-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_activate', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Activate Event</button>
+                {% endif %}
             {% endif %}
 
-            <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Cancel</button>
+            <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Group Events</button>
         </div>
     </form>
 
