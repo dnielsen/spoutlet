@@ -489,7 +489,6 @@ liip_theme:
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%
-            - %%app_path%%/themes/%%current_theme%%
             - %%app_path%%/views/%%template%%
         bundle_resource_dir:
             - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
