@@ -31,7 +31,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges"})
+ * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateLocationField", "validateAddressField"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -801,5 +801,37 @@ abstract class Event implements LinkableInterface
         }
 
         return false;
+    }
+
+    public function validateLocationField(ExecutionContext $executionContext)
+    {
+        if ($this->online == false) {
+            if ($this->location == null) {
+                $propertyPath = $executionContext->getPropertyPath() . '.location';
+                $executionContext->setPropertyPath($propertyPath);
+
+                $executionContext->addViolation(
+                    "You must enter a location for an In-Person event.",
+                    array(),
+                    "location"
+                );
+            }
+        }
+    }
+
+    public function validateAddressField(ExecutionContext $executionContext)
+    {
+        if ($this->online == false) {
+            if ($this->address == null) {
+                $propertyPath = $executionContext->getPropertyPath() . '.address';
+                $executionContext->setPropertyPath($propertyPath);
+
+                $executionContext->addViolation(
+                    "You must enter an address for an In-Person event.",
+                    array(),
+                    "address"
+                );
+            }
+        }
     }
 }
