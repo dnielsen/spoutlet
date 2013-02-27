@@ -17,6 +17,8 @@ use Platformd\SpoutletBundle\Entity\SiteFeatures;
  */
 class Site
 {
+    const DEFAULT_THEME = 'default';
+
     /**
      * @var integer $id
      *
@@ -61,6 +63,11 @@ class Site
      */
     private $siteFeatures;
 
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotNull
+     */
+    private $theme = self::DEFAULT_THEME;
 
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
@@ -142,5 +149,15 @@ class Site
     {
         $this->siteFeatures = $value;
         return $this;
+    }
+
+    public function setTheme($theme)
+    {
+        $this->theme = $theme;
+    }
+
+    public function getTheme()
+    {
+        return $this->theme;
     }
 }

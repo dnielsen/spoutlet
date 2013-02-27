@@ -14,7 +14,7 @@
         {% include 'SpoutletBundle::base_assets.html.twig' %}
 
         {# Here we include assets for the current active theme #}
-        {% include '::' ~ active_theme ~ '_assets.html.twig' ignore missing %}
+        {% include '::' ~ site.theme ~ '_assets.html.twig' ignore missing %}
 
         <title>
             {%- if block('title') -%}
