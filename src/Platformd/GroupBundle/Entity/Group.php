@@ -273,6 +273,20 @@ class Group implements LinkableInterface, ReportableContentInterface
      */
     protected $facebookLikes = 0;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\Deal", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $deals;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $events;
+
     public function __construct()
     {
         $this->sites                    = new ArrayCollection();
@@ -280,6 +294,7 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->applications             = new ArrayCollection();
         $this->userMembershipActions    = new ArrayCollection();
         $this->contentReports           = new ArrayCollection();
+        $this->deals                    = new ArrayCollection();
     }
 
     /**
@@ -984,5 +999,25 @@ class Group implements LinkableInterface, ReportableContentInterface
 
             return $regions;
         }
+    }
+
+    public function setDeals($value)
+    {
+        $this->deals = $value;
+    }
+
+    public function getDeals()
+    {
+        return $this->deals;
+    }
+
+    public function setEvents($value)
+    {
+        $this->events = $value;
+    }
+
+    public function getEvents()
+    {
+        return $this->events;
     }
 }

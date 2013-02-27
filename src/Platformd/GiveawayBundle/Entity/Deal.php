@@ -221,7 +221,8 @@ class Deal implements LinkableInterface, CommentableInterface
     protected $testOnly = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group = null;
 
