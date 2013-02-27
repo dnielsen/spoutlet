@@ -68,7 +68,8 @@ class DealAdminController extends Controller
 
         return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
             'deal' => $deal,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'group' => null,
         ));
     }
 
