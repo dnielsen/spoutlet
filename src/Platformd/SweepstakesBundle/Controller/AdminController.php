@@ -245,6 +245,15 @@ class AdminController extends Controller
         $sweepstakes->getRuleset()->setParentType('sweepstake');
         $sweepstakes->getRuleset()->setDefaultAllow($defaultAllow);
 
+        $groupId = $sweepstakesForm['group']->getData();
+        if($groupId) {
+            $group = $em->getRepository('GroupBundle:Group')->find($groupId);
+
+            if($group) {
+                $sweepstakes->setGroup($group);
+            }
+        }
+
         $this
             ->get('platformd.events_manager')
             ->save($sweepstakes);
