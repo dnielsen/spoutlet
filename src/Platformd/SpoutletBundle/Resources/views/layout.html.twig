@@ -7,11 +7,14 @@
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
 
-        {% block open_graph %}
+        {% block open_graph %}{% endblock %}
 
-        {% endblock %}
+        {# This can never be overriden using the multitheme feature #}
+        {# If you want to add css or js for only one theme, use the theme specific assets template #}
+        {% include 'SpoutletBundle::base_assets.html.twig' %}
 
-        {% include '::' ~ active_theme ~ '_assets.html.twig' %}
+        {# Here we include assets for the current active theme #}
+        {% include '::' ~ active_theme ~ '_assets.html.twig' ignore missing %}
 
         <title>
             {%- if block('title') -%}
