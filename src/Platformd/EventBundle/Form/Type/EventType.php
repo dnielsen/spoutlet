@@ -78,13 +78,15 @@ class EventType extends AbstractType
                 'label' => 'platformd.event.form.starts_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
-                'date_format' => 'yyyy-MM-dd',
+                'date_format' => 'MM/dd/yyyy',
+                'error_bubbling' => false,
             ))
             ->add('endsAt', 'datetime', array(
                 'label' => 'platformd.event.form.ends_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
-                'date_format' => 'yyyy-MM-dd',
+                'date_format' => 'MM/dd/yyyy',
+                'error_bubbling' => false,
             ))
         ;
     }

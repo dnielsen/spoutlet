@@ -10,13 +10,13 @@
 <div>
     {% if pages | length > 0 %}
         {% if canAdd %}
-            <a href='{{ addImageUrl }}'>Submit image(s)</a>.
+            <a href='{{ addImageUrl }}'>Submit image(s)</a>
         {% else %}
             Want to add an image? Become a member of our group.
         {% endif %}
     {% else %}
         {% if canAdd %}
-            There are no images. <a href='{{ addImageUrl }}'>Submit image(s)</a>.
+            There are no images. <a href='{{ addImageUrl }}'>Submit image(s)</a>
         {% else %}
             There are no images. Want to add an image? Become a member of our group.
         {% endif %}

@@ -145,3 +145,12 @@
 .event-time-selection select {
     width: 50px;
 }
+
+.event-timezone select {
+    width: 303px;
+}
+
+#groupEvent_endsAt,
+#groupEvent_startsAt {
+    display:inline-block;
+}

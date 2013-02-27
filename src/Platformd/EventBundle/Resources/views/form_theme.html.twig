@@ -18,7 +18,7 @@
 
 {% block date_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' date-picker'}) %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' event-date-picker'}) %}
     {{ block('field_widget') }}
 {% endspaceless %}
 {% endblock %}

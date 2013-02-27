@@ -773,8 +773,14 @@ abstract class Event implements LinkableInterface
             $external = $this->getRegistrationOption() == self::REGISTRATION_3RD_PARTY && $this->externalUrl;
         }
 
-        if ($this->getContent() == "" && $external) {
-            $this->setContent('This event is hosted at an external URL.');
+        if ($external) {
+            if ($this->getContent() == "") {
+                $this->setContent('This event is hosted at an external URL.');
+            }
+
+            if ($this instanceof GroupEvent) {
+                $this->setPrivate(0);
+            }
         }
     }
 

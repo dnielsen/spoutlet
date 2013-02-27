@@ -7,15 +7,15 @@
 
     {% if canAdd %}
         {% if groupEvents | length > 0 %}
-            <p><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a></p>
+            <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a>
         {% else %}
-            <p>No group events yet. <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Submit Event</a></p>
+            No group events yet. <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Submit Event</a>
         {% endif %}
     {% else %}
         {% if groupEvents | length > 0 %}
-            <p>Want to add an event? Become a member of our group.</p>
+            Want to add an event? Become a member of our group.
         {% else %}
-            <p>No group events yet. Want to add an event? Become a member of our group.</p>
+            No group events yet. Want to add an event? Become a member of our group.
         {% endif %}
     {% endif %}
 
@@ -93,7 +93,6 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#event-content-scroll').mCustomScrollbar();
 
         $('#show-past-events-link').click(function () {
             $('#group-past-events').toggle();

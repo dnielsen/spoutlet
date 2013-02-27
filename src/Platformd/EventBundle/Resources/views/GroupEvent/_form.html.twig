@@ -23,7 +23,7 @@
             {{ form_row(form.startsAt) }}
             {{ form_row(form.endsAt) }}
 
-            <div class="styled-select">
+            <div class="styled-select event-timezone">
                 {{ form_row(form.timezone) }}
             </div>
 
@@ -60,9 +60,9 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $('.date-picker').datepicker({
+        $('.event-date-picker').datepicker({
             minDate: 0,
-            dateFormat: 'yy-mm-dd'
+            dateFormat: 'mm/dd/yy'
         });
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
