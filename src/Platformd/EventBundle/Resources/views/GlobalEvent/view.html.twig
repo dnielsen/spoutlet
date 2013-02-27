@@ -118,6 +118,7 @@
                         <div id="event-location-name">{{ event.location }}</div>
                         <div id="event-location-address">{{ event.address }}</div>
                         <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        <div id="event-directions-link"><a href="http://maps.google.com/maps?saddr={{ event.address | url_encode }}" target="_blank">Directions</a></div>
                     {% endif %}
                 </div>
             </div>

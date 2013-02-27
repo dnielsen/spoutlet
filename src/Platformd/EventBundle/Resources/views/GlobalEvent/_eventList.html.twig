@@ -12,7 +12,7 @@
     <tbody>
         {% if events|length == 0 %}
         <tr>
-            <td style="text-align:center; padding:20px 0;" colspan="5">
+            <td style="text-align:center; padding:20px 0;" colspan="6">
                 {# basically a hack, in one case I need another message, that has an HTML anchor tag in it #}
                 {% if no_events_pre_message is defined %}
                     <p>
@@ -70,7 +70,7 @@
                     Online
                 {% else %}
                     {% if event.address is defined %}
-                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}">
+                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}" data-address="{{ event.address | url_encode }}">
                             {{ event.location ? event.location : ('platformd.events.event_listings.show_map'|trans) }}
                         </a>
                     {% else %}
@@ -107,7 +107,8 @@
 
                 var lat = $(this).attr('data-lat');
                 var lng = $(this).attr('data-lng');
-                var directionsLink = 'http://maps.google.com/maps?geocode=&q=' + lat + ',+' + lng + '&aq=&z=17';
+                var addr = $(this).attr('data-address');
+                var directionsLink = 'http://maps.google.com/maps?saddr=' + addr;
 
                 $(this).qtip({
                     content: {
