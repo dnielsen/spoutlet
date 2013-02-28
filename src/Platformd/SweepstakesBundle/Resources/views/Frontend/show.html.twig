@@ -80,6 +80,16 @@
                                         <input type="submit" value="{{ 'enter' | trans }}" class="button" />
                                     </div>
 
+                                    {% if sweepstakes.group is defined %}
+                                        {% if not sweepstakes.group.isMember(app.user) %}
+                                        <p>
+                                            <input id="join-group" name="join_checkbox" type="checkbox" style="margin:0px;" checked>&nbsp;
+                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+                                            </input>
+                                        </p>
+                                        {% endif %}
+                                    {% endif %}
+
                                 {% endif %}
 
                                 <div class="clear"></div>
@@ -103,14 +113,14 @@
                                 <label>{{ 'registration_opens' | trans }}</label>
 
                                 {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
-                                {{ sweepstakes.timezoneString }}
+                                {{ sweepstakes.startsAtInTimezone | date }}
                             </li>
                             <li>
                                 {% if sweepstakes.endsAt %}
 
                                     <label>{{ 'registration_closes' | trans }}</label>
                                 {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
-                                    {{ sweepstakes.timezoneString }}
+                                    {{ sweepstakes.endsAtInTimezone | date }}
                                 {% else %}
                                     <label>{{ 'registration_closes' | trans }}</label>
                                     {{ 'na' | trans }}
