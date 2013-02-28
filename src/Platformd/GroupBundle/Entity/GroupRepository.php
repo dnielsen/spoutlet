@@ -534,4 +534,17 @@ class GroupRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function isUserMemberOfGroup($user, $group)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(m.id) as isMember')
+            ->leftJoin('g.members', 'm')
+            ->andWhere('m.id = :userId')
+            ->andWhere('g.id = :groupId')
+            ->setParameter('userId', $user->getId())
+            ->setParameter('groupId', $group->getId())
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -4,9 +4,9 @@
 
 {% set openGraphThumb               = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
 {% set site                         = get_current_site() %}
-{% set isAllowedToViewGroupContent  = group.isAllowedTo(app.user, site, "ViewGroupContent") %}
-{% set isAllowedToViewGroup         = group.isAllowedTo(app.user, site, "ViewGroup") %}
-{% set isAllowedToManageDiscussions = group.isAllowedTo(app.user, site, "ManageDiscussions") %}
+{% set isAllowedToViewGroupContent  = groupManager.isAllowedTo(app.user, group, site, "ViewGroupContent") %}
+{% set isAllowedToViewGroup         = groupManager.isAllowedTo(app.user, group, site, "ViewGroup") %}
+{% set isAllowedToManageDiscussions = groupManager.isAllowedTo(app.user, group, site, "ManageDiscussions") %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -44,7 +44,7 @@
 </div>
 <div class="std_2col">
     <div class="right">
-        {% if group.isAllowedTo(app.user, site, 'JoinGroup') %}
+        {% if groupManager.isAllowedTo(app.user, group, site, 'JoinGroup') %}
         <div class="join-group-options">
             <form action="{{ path('group_join', { 'id': group.id }) }}">
                 <button id="join-group-button" type="submit"></button>
@@ -52,13 +52,13 @@
         </div>
         {% endif %}
 
-        {% if group.isAllowedTo(app.user, site, 'ApplyToGroup') %}
+        {% if groupManager.isAllowedTo(app.user, group, site, 'ApplyToGroup') %}
         <div class="join-group-options">
             <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
         </div>
         {% endif %}
 
-        {% if group.isApplicant(app.user) %}
+        {% if groupManager.isApplicant(app.user, group) %}
             <p class="alert alert-info help">
                 <i class="icon-info-sign"></i>
                 Waiting on Approval

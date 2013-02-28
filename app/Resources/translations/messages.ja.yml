@@ -473,7 +473,7 @@ content_reporting:
     inappropriate_content: 不適切な内容
     spam: スパム
     violates_intellectual_property: 知的財産を侵害する
-    harassment: 嫌がらせ
+    individual_harrassing_me: 嫌がらせ
     must_be_logged_in: あなたは内容を報告するためにログインする必要があります
     once_per_hour: あなたは1時間あたり1項目を報告できます。
     report_type_group: Group
