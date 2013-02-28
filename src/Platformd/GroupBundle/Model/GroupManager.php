@@ -142,11 +142,11 @@ class GroupManager
      */
     public function autoJoinGroup(Group $group, User $user)
     {
-        if ($group->isMember($user) || $group->isOwner($user)) {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
             throw new \Exception('You are already a member of this group!');
         }
 
-        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
@@ -183,7 +183,7 @@ class GroupManager
      */
     public function autoApplyToGroup(Group $group, User $user, GroupEventEntity $event=null)
     {
-        if ($group->isMember($user) || $group->isOwner($user)) {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
             throw new \Exception('You are already a member of this group!');
         }
 
@@ -194,7 +194,7 @@ class GroupManager
             throw new \Exception('You have already applied to this group!');
         }
 
-        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'ApplyToGroup')) {
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'ApplyToGroup')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 

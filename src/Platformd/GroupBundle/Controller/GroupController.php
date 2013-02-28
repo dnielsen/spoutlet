@@ -422,7 +422,7 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl($group->getLinkableRouteName(), $grpup->getLinkableRouteParameters()));
         }
 
-        if ($group->isMember($user) || $group->isOwner($user)) {
+        if ($this->getGroupManager()->isMember($user, $group) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
         }
@@ -583,10 +583,13 @@ Alienware Arena Team
         $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
+        $canAdd         = $this->ensureAllowed($this->getCurrentUser(), $group, $this->getCurrentSite(), 'AddEvent');
+
         return $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,
             'groupEvents'   => $groupEvents,
             'pastEvents'    => $pastEvents,
+            'canAdd'        => $canAdd,
         ));
     }
 

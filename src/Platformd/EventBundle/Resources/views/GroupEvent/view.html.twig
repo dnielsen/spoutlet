@@ -97,7 +97,7 @@
                             {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">Registration is no longer open for this event.</div>
                             {% else %}
-                                {% if group.isAllowedTo(app.user, get_current_site(), 'JoinEvent') %}
+                                {% if canJoin %}
                                     <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
 
                                     <div id="registration-response" style="display:none;"></div>
@@ -109,7 +109,7 @@
                                     {% if group.isPublic %}
                                         <div id="event-registration-public-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_join', { 'id': group.id, 'event': event.id }) }}" class="btn btn-primary">Register</a></div>
                                     {% else %}
-                                        {% if group.isApplicant(app.user) %}
+                                        {% if isApplicant %}
                                             <div style="padding: 10px 0px;">
                                                 <p class="alert alert-info help" style="margin:0; text-align:left;"><i class="icon-info-sign"></i>
                                                     A request was sent to the group organizer to accept you into the group. Once approved, you will also be registered for the event.

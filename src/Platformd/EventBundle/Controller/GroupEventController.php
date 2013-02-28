@@ -43,7 +43,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group $this->getCurrentSite(), 'AddEvent')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
@@ -128,7 +128,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
@@ -267,21 +267,27 @@ class GroupEventController extends Controller
 
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
-            if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+            if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
                 throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
             }
         }
 
         $isAttending = false;
 
+        $canJoin = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'JoinEvent')
+
         if ($this->isGranted('ROLE_USER')) {
             $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
         }
+
+        $isApplcant = $this->getGroupManager()-.isApplicant($this->getUser(), $group);
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'isAttending'   => $isAttending,
+            'canJoin'       => $canJoin,
+            'isApplicant'   => $isApplicant,
         ));
     }
 
@@ -540,7 +546,7 @@ Alienware Arena Team';
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
@@ -566,7 +572,7 @@ Alienware Arena Team';
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
@@ -703,7 +709,7 @@ Alienware Arena Team';
 
         $group = $groupEvent->getGroup();
 
-        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent')) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "You are not allowed to rsvp to this event!")));
             return $response;
         }
