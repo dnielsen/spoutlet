@@ -47,7 +47,7 @@ class MediaPathResolver implements PathResolver
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s%s/%s', $cf, $this->prefix, $path);
+        return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
     }
 
     /**
