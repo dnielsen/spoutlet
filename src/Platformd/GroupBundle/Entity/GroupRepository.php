@@ -523,4 +523,15 @@ class GroupRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getMembershipCountByGroup($group)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('COUNT(m.id) as membershipCount')
+            ->leftJoin('g.members', 'm')
+            ->where('g.id = :groupId')
+            ->setParameter('groupId', $group->getId())
+            ->getQuery()
+            ->execute();
+    }
 }

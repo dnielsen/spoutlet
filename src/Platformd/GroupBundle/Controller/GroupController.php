@@ -1263,6 +1263,7 @@ Alienware Arena Team
         $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
         $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $memberCount    = $this->getGroupManager()->getMembershipCountByGroup($group);
 
         $contest = $this->getContestRepository()->findContestByGroup($group);
 
@@ -1282,6 +1283,7 @@ Alienware Arena Team
             'isEntered'     => $isEntered,
             'contestCount'  => $contestMemberCount,
             'contest'       => $contest,
+            'memberCount'   => $memberCount[0]['membershipCount']
         ));
     }
 

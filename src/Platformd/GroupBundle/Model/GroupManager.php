@@ -350,6 +350,11 @@ class GroupManager
         return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
     }
 
+    public function getMembershipCountByGroup($group)
+    {
+        return $this->getRepository()->getMembershipCountByGroup($group);
+    }
+
     /**
      * @return \Platformd\GroupBundle\Entity\GroupRepository
      */
