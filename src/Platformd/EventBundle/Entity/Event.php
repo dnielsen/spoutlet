@@ -254,7 +254,7 @@ abstract class Event implements LinkableInterface
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
         $this->startsAt     = new \DateTime('now');
-        $this->endsAt       = new \DateTime('tomorrow');
+        $this->endsAt       = new \DateTime('+1 day');
     }
 
     /**
