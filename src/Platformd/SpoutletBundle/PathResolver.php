@@ -36,7 +36,7 @@ abstract class PathResolver implements BasePathResolver
   public function __construct(Filesystem $filesystem, $prefix = '')
   {
     $this->filesystem = $filesystem;
-    $this->prefix = substr($prefix, 0, 1) == "/" ? substr($prefix, 1) : $prefix;
+    $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
   }
 
   /**
@@ -60,10 +60,10 @@ abstract class PathResolver implements BasePathResolver
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return sprintf('%s/%s/%s', $cf, $this->prefix, $path);
+        return sprintf('%s%s/%s', $cf, $this->prefix, $path);
     }
 
-    return '/uploads/'.$this->prefix.'/'.$path;
+    return '/uploads'.$this->prefix.'/'.$path;
   }
 
 }

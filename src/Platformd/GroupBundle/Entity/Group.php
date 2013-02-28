@@ -46,13 +46,6 @@ class Group implements LinkableInterface, ReportableContentInterface
         self::DELETED_BY_REPORT_ADMIN,
     );
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'LeaveGroup');
-    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
-    static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
-    static private $applicantIsAllowedTo         = array('ViewGroup');
-
     const COMMENT_PREFIX = 'group-';
 
     /**
@@ -687,74 +680,10 @@ class Group implements LinkableInterface, ReportableContentInterface
             return false;
         }
 
-        $isGlobal         = $this->getAllLocales();
-        $isAllowedForSite = $this->getSites() && $this->getSites()->contains($site);
+        $isGlobal         = $this->allLocales;
+        $isAllowedForSite = $this->sites && $this->sites->contains($site);
 
         return $isGlobal || $isAllowedForSite;
-    }
-
-    public function isAllowedTo($user, $site, $action) {
-
-        if ($this->getDeleted() && $action != "EditGroup") {
-            return false;
-        }
-
-        if (!$this->isVisibleOnSite($site)) {
-            return false;
-        }
-
-        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
-
-            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
-            $isOwner        = $this->isOwner($user);
-            $isMember       = $this->isMember($user);
-            $isApplicant    = $this->isApplicant($user);
-
-            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
-
-                return true;
-            }
-
-            if ($isOwner) {
-                return in_array($action, self::$ownerIsAllowedTo);
-            }
-
-            if ($isMember) {
-                return in_array($action, self::$memberIsAllowedTo);
-            }
-
-            if ($isApplicant) {
-                return in_array($action, self::$applicantIsAllowedTo);
-            }
-        }
-
-        if ($this->getIsPublic()) {
-            return in_array($action, self::$nonMemberPublicIsAllowedTo);
-        }
-
-        if (!$this->getIsPublic()) {
-            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
-        }
-
-        return false;
-    }
-
-    public function isMember($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        return $this->getMembers()->contains($user);
-    }
-
-    public function isOwner($user)
-    {
-        if (!$user) {
-            return false;
-        }
-
-        return $this->getOwner() === $user;
     }
 
     public function getUserMembershipActions() {
@@ -783,23 +712,6 @@ class Group implements LinkableInterface, ReportableContentInterface
     public function setFeaturedAt($featuredAt)
     {
         $this->featuredAt = $featuredAt;
-    }
-
-    public function isApplicant($user)
-    {
-        if(!$user) {
-            return false;
-        }
-
-        foreach($this->getApplications() as $application)
-        {
-            if($application->getApplicant() == $user)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -984,5 +896,14 @@ class Group implements LinkableInterface, ReportableContentInterface
 
             return $regions;
         }
+    }
+
+    public function isOwner($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->owner === $user;
     }
 }

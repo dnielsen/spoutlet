@@ -431,7 +431,7 @@ content_reporting:
     cancel: 关闭
     close: 关闭
     violates_intellectual_property: 违反知识产权
-    harassment: 骚扰
+    individual_harrassing_me: 骚扰
     must_be_logged_in: 您必须登录才可报告内容
     once_per_hour: 您只可以每小时报告项目一次
     report_type_group: Group
