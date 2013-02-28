@@ -137,13 +137,17 @@
     width: 300px;
 }
 
-.event-time-selection {
+.time-selection {
     display: inline-block;
     margin: 0 0 0 3px;
 }
 
-.event-time-selection select {
+.minute-selection select {
     width: 50px;
+}
+
+.hour-selection select {
+    width: 105px;
 }
 
 .event-timezone select {

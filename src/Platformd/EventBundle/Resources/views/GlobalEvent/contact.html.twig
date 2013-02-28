@@ -9,7 +9,7 @@
 
         <div class="std_1col" style="padding:0;">
             {% if event.bannerImage %}
-                <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat background-size: 100% 100%; margin: -10px 0 0 0;"></div>
+                <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%; margin: -10px 0 0 0;"></div>
             {% else %}
                 <div id="event-banner" style="background:url('{{ asset('bundles/event/images/events_default_banner.jpg') }}') top left no-repeat; background-size: cover;"></div>
             {% endif %}

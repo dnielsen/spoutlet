@@ -43,7 +43,10 @@ class GlobalEventController extends Controller
 
         $groupsCount = 0;
 
-        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        $userGlobal = $userGroup = null;
+        $groupsCount = 0;
+
+        if ($this->isGranted('ROLE_USER')) {
             $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
             $userGlobal = $this->getGlobalEventService()->getAllEventsUserIsAttending($this->getUser());
             $userGroup  = $this->getGroupEventService()->getAllEventsUserIsAttending($this->getUser());
@@ -52,7 +55,7 @@ class GlobalEventController extends Controller
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => $pastEvents,
+            'pastEvents'     => array_reverse($pastEvents),
             'groupsCount'    => $groupsCount,
             'userGlobal'     => $userGlobal,
             'userGroup'      => $userGroup,
@@ -332,8 +335,15 @@ Alienware Arena Team';
 
         $email = new GlobalEventEmail();
 
+        $emailLocale = $this->getLocale() ?: 'en';
+        $email->setSubject($this->trans(
+            'platformd.event.email.attendees_contact.title',
+            array('%eventName%' => $event->getName()),
+            'messages',
+            $emailLocale
+        ));
+
         $form = $this->createFormBuilder($email)
-            ->add('subject', 'text')
             ->add('users', 'text', array(
                 'property_path' => false,
                 'label' => 'Recipients',

@@ -32,8 +32,10 @@
                <div class="events-sub-nav">
                     <ul>
                         <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</a></li>
-                        <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
-                        <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
+                        {% if event.registrationOption != "REGISTRATION_3RDPARTY" %}
+                            <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
+                        {% endif %}
                         <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
                     </ul>
                 </div>

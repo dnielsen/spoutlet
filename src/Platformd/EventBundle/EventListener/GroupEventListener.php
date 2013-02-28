@@ -91,51 +91,6 @@ class GroupEventListener
     }
 
     /**
-     * We send an email to all attendees when event gets canceled
-     *
-     * @param \Platformd\EventBundle\Event\EventEvent $ev
-     */
-    public function onCancel(EventEvent $ev)
-    {
-        /** @var $event GroupEvent */
-        $event = $ev->getEvent();
-
-        $fromName = $event->getGroup()->getName();
-
-        foreach ($event->getAttendees() as $attendee) {
-            $emailTo            = $attendee->getEmail();
-            $emailLocale        = $attendee->getLocale() ? : 'en';
-
-            $subject            = $this->translator->trans('platformd.event.email.cancel.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
-            $message            = $this->translator->trans('platformd.event.email.cancel.message', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
-
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Cancellation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
-        }
-    }
-
-    /**
-     * We send an email to all attendees when event gets activated
-     *
-     * @param \Platformd\EventBundle\Event\EventEvent $ev
-     */
-    public function onActivate(EventEvent $ev)
-    {
-        /** @var $event GroupEvent */
-        $event = $ev->getEvent();
-        $fromName = $event->getGroup()->getName();
-
-        foreach ($event->getAttendees() as $attendee) {
-            $emailTo            = $attendee->getEmail();
-            $emailLocale        = $attendee->getLocale() ?: 'en';
-
-            $subject            = $this->translator->trans('platformd.event.email.activate.title', array('%eventName%' => $event->getName()), 'messages', $emailLocale);
-            $message            = $this->translator->trans('platformd.event.email.activate.message', array('%eventName%' => $event->getName(), '%eventStartsAt%' => $event->getStartsAt()->format('M d, Y')), 'messages', $emailLocale);
-
-            $this->emailManager->sendEmail($emailTo, $subject, $message, "Event Activation Notification", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
-        }
-    }
-
-    /**
      * We send an email to the group owner when an event that needs approval is created
      *
      * @param \Platformd\EventBundle\Event\EventEvent $ev

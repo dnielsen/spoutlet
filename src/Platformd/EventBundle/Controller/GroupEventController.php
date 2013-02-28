@@ -315,8 +315,15 @@ class GroupEventController extends Controller
 
         $email = new GroupEventEmail();
 
+        $emailLocale = $group->getOwner()->getLocale() ?: 'en';
+        $email->setSubject($this->trans(
+            'platformd.event.email.attendees_contact.title',
+            array('%eventName%' => $groupEvent->getName()),
+            'messages',
+            $emailLocale
+        ));
+
         $form = $this->createFormBuilder($email)
-            ->add('subject', 'text')
             ->add('users', 'text', array(
                 'property_path' => false,
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
@@ -615,12 +622,12 @@ Alienware Arena Team';
         } else {
             $this->getGroupEventService()->cancelEvent($groupEvent);
 
-            $this->setFlash('success', 'Event has been canceled successfully and attendees will be notified!');
+            $this->setFlash('success', ' Your event is cancelled. Notify your attendees via email below.');
         }
 
-        return $this->redirect($this->generateUrl('group_event_edit', array(
+        return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupEvent->getGroup()->getSlug(),
-            'eventId' => $groupEvent->getId()
+            'eventSlug' => $groupEvent->getSlug()
         )));
     }
 
@@ -649,12 +656,12 @@ Alienware Arena Team';
         } else {
             $this->getGroupEventService()->activateEvent($groupEvent);
 
-            $this->setFlash('success', 'Event has been activated successfully and attendees will be notified!');
+            $this->setFlash('success', ' Your event is active. Notify your attendees via email below.');
         }
 
-        return $this->redirect($this->generateUrl('group_event_edit', array(
+        return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupEvent->getGroup()->getSlug(),
-            'eventId' => $groupEvent->getId()
+            'eventSlug' => $groupEvent->getSlug()
         )));
     }
 

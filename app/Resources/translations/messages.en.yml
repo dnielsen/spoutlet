@@ -132,8 +132,8 @@ platformd:
             rsvp:
                 dialog_title: Event RSVP
                 change_rsvp: Change RSVP
-                attending: Attending
-                not_attending: Not Attending
+                attending: I'm going
+                not_attending: No thanks
             current_events: Upcoming Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
@@ -143,7 +143,7 @@ platformd:
             details: Details
             event: Event
             games: Game(s)
-            hosted_by: Organizer
+            hosted_by: Organizer/Group
             location: Location
             upcoming_events: Upcoming Events
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
@@ -410,6 +410,8 @@ platformd:
             3rdparty: "Link event listing to 3rd party website."
 
         email:
+            attendees_contact:
+                title: Message from the organizer about %eventName%
             approved:
                 title: Your Event Has Been Approved
                 message: |
