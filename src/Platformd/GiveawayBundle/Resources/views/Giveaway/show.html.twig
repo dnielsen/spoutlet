@@ -24,6 +24,13 @@
             {# assignedKey.value #}
             {{ 'platformd.giveaway.assigned.key' | trans }}: {{ assignedKey.value }}
         </p>
+        <p>
+            {% if giveaway.group is defined %}
+                {% if giveaway.group.isMember(app.user) %}
+                    {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': giveaway.group.slug}), '%group%': giveaway.group.name}) | raw }}
+                {% endif %}
+            {% endif %}
+        </p>
     {% endif %}
 {% endblock %}
 

@@ -57,6 +57,13 @@
                                 {%- endif -%}
                             </p>
                             <p>{{ 'deal_redeem_success' | trans }}</p>
+                            <p>
+                                {% if deal.group is defined %}
+                                    {% if deal.group.isMember(app.user) %}
+                                        {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                    {% endif %}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>
