@@ -34,14 +34,19 @@
                     <td>{% if status is defined %}{{ status }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Registration Closed{% endif %}</td>
                     <td>
                         {% if event.user == app.user %}
-                            <div class="styled-select">
-                                <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
-                                    <option>Select One...</option>
-                                    <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
-                                    <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
-                                    <option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>
-                                </select>
-                            </div>
+                            {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                                <div class="styled-select">
+                                    <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
+                                        <option>Select One...</option>
+                                        <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
+                                        <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
+                                        <option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>
+                                    </select>
+                                </div>
+                            {% else %}
+                                <a href="{{ editUrl }}">Edit Event</a>
+                            {% endif %}
+
                         {% else %}
                             <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ rsvpUrl }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a>
                         {% endif %}
