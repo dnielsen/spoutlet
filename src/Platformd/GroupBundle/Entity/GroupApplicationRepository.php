@@ -37,5 +37,16 @@ class GroupApplicationRepository extends EntityRepository
             ))
             ->getQuery()
             ->getOneOrNullResult();
+
+    public function isUserApplicantToGroup($user, $group)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('COUNT(a.id) as isApplicant')
+            ->andWhere('a.applicant = :user')
+            ->andWhere('a.group = :group')
+            ->setParameter('user', $user)
+            ->setParameter('group', $group)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

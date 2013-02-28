@@ -2,7 +2,7 @@
 
 {% block title 'Content Report Admin' %}
 
-{% macro getContentReportTable(items, manage, deletedContent) %}
+{% macro getContentReportTable(items, manage, deletedContent, contests) %}
 
     <table id="content-reports">
 
@@ -80,7 +80,14 @@
                         {% if item[0].getCategory == 'image' %}
 
                             <h1>Image</h1>
-                            <div><img src="{{ media_path(item[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" /></div>
+                            <div>
+                                <img src="{{ media_path(item[0].image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ item[0].title }}" />
+                                {% if item[0].getContestEntry is not null %}
+                                <p class="alert alert-info help" style="margin-top:10px;"><i class="icon-info-sign"></i>
+                                    This image is part of a contest.
+                                </p>
+                                {% endif %}
+                            </div>
 
                         {% elseif item[0].getCategory == 'video' %}
 
@@ -91,7 +98,14 @@
 
                     {% elseif item[0].getContentType == 'Group' %}
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a></div>
+                        <div>
+                            <a href="{{ path('group_edit', { 'id' : item[0].getId() }) }}">{{ item[0].name }}</a>
+                            {% if item[0].id in contests %}
+                            <p class="alert alert-info help" style="margin-top:10px;"><i class="icon-info-sign"></i>
+                                This group is part of a contest.
+                            </p>
+                            {% endif %}
+                        </div>
 
                     {% elseif item[0].getContentType == 'Comment' %}
 
@@ -169,6 +183,6 @@
     {% endif %}
 </p>
 
-<p>{{ _self.getContentReportTable(allReports, mode == "manage", mode == "deletedContent") }}</p>
+<p>{{ _self.getContentReportTable(allReports, mode == "manage", mode == "deletedContent", contests) }}</p>
 
 {% endblock %}

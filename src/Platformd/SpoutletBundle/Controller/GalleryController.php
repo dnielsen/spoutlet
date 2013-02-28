@@ -193,7 +193,7 @@ class GalleryController extends Controller
                 foreach ($groups as $group) {
 
                     $group = $groupRepo->find($group);
-                    if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                    if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
                         $groupImage = new GroupImage();
                         $groupImage->setGroup($group);
                         $groupImage->setTitle($title);
@@ -302,7 +302,7 @@ class GalleryController extends Controller
             foreach ($groups as $group) {
 
                 $group      = $groupRepo->find($group);
-                if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
                     $groupImage = new GroupImage();
                     $groupImage->setGroup($group);
                     $groupImage->setTitle($title);
@@ -867,5 +867,10 @@ class GalleryController extends Controller
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
     }
 }

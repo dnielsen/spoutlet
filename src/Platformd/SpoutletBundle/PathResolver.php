@@ -35,8 +35,8 @@ abstract class PathResolver implements BasePathResolver
    */
   public function __construct(Filesystem $filesystem, $prefix = '')
   {
-    $this->filesystem = $filesystem; 
-    $this->prefix = $prefix;
+    $this->filesystem = $filesystem;
+    $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
   }
 
   /**
@@ -45,20 +45,25 @@ abstract class PathResolver implements BasePathResolver
    * @param String $name
    * @param \AmazonS3 $s3
    */
-  public function setBucket($name) 
+  public function setBucket($name)
   {
     $this->bucketName = $name;
   }
 
   public function getPath($path, array $options)
   {
-
     if ($this->filesystem->getAdapter() instanceof AmazonS3) {
 
-        return sprintf('http://s3.amazonaws.com/%s/%s%s', $this->bucketName, $this->prefix, $path);
+        if ($this->bucketName == "platformd") {
+            $cf = "http://media.alienwarearena.com";
+        } else {
+            $cf = "http://mediastaging.alienwarearena.com";
+        }
+
+        return sprintf('%s%s/%s', $cf, $this->prefix, $path);
     }
 
-    return '/uploads/'.$this->prefix.'/'.$path;
+    return '/uploads'.$this->prefix.'/'.$path;
   }
 
 }
