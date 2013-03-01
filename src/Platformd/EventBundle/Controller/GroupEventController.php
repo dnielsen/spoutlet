@@ -43,7 +43,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Group does not exist.');
         }
 
-        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group $this->getCurrentSite(), 'AddEvent')) {
+        if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent')) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
