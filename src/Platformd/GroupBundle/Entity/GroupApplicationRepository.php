@@ -37,6 +37,7 @@ class GroupApplicationRepository extends EntityRepository
             ))
             ->getQuery()
             ->getOneOrNullResult();
+    }
 
     public function isUserApplicantToGroup($user, $group)
     {

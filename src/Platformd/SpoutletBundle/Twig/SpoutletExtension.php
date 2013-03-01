@@ -704,7 +704,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetUserGiveawayLink($locale) {
 
-        $format         = '<a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a>';
+        $format         = '<li><a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a></li>';
         $internalUrl    = $this->container->get('router')->generate('accounts_giveaways');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -782,11 +782,12 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserGameIdLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
+        $format = '<a href="http://www.alienwarearena.com%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'japan');
-            case 'zh':      return sprintf($format, 'china');
+            case 'ja':      return sprintf($format, '/japan');
+            case 'zh':      return sprintf($format, '/china');
+            case 'en_SG':   return sprintf($format, '');
 
             default:        return false;
         }
