@@ -20,8 +20,8 @@
                 {{ form_row(form.address) }}
             </div>
 
-            {{ form_row(form.startsAt) }}
-            {{ form_row(form.endsAt) }}
+            <div class="start-date">{{ form_row(form.startsAt) }}</div>
+            <div class="end-date">{{ form_row(form.endsAt) }}</div>
 
             <div class="styled-select event-timezone">
                 {{ form_row(form.timezone) }}
@@ -64,6 +64,10 @@
             minDate: 0,
             dateFormat: 'mm/dd/yy'
         });
+
+        var d = new Date();
+        month = d.getMonth() + 1;
+        $('.start-date .event-date-picker').val((month<10 ? '0' : '') + month + '/' + (d.getDate()<10 ? '0' : '') + d.getDate() + '/' + d.getFullYear());
 
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';

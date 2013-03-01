@@ -133,7 +133,7 @@ abstract class Event implements LinkableInterface
      * Event starts at
      *
      * @var \DateTime $startsAt
-     * @Assert\NotBlank(message="Required")
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $startsAt;
@@ -142,7 +142,7 @@ abstract class Event implements LinkableInterface
      * Events ends at
      *
      * @var \DateTime $endsAt
-     * @Assert\NotBlank(message="Required")
+     * @Assert\NotNull(message="Required")
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $endsAt;
@@ -253,8 +253,6 @@ abstract class Event implements LinkableInterface
     {
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
-        $this->startsAt     = new \DateTime('now');
-        $this->endsAt       = new \DateTime('+1 day');
     }
 
     /**
@@ -373,14 +371,18 @@ abstract class Event implements LinkableInterface
      */
     public function setEndsAt($endsAt)
     {
-        $todayDt = new \DateTime('now');
-        $todayDt->setTime(0, 0, 0);
+        if ($endsAt === null) {
+            $this->endsAt = $endsAt;
+        } else {
+            $todayDt = new \DateTime('now');
+            $todayDt->setTime(0, 0, 0);
 
-        if ($endsAt < $todayDt) {
-            $endsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+            if ($endsAt < $todayDt) {
+                $endsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+            }
+
+            $this->endsAt = $endsAt;
         }
-
-        $this->endsAt = $endsAt;
     }
 
     /**
@@ -533,14 +535,18 @@ abstract class Event implements LinkableInterface
      */
     public function setStartsAt($startsAt)
     {
-        $todayDt = new \DateTime('now');
-        $todayDt->setTime(0, 0, 0);
+        if ($startsAt === null) {
+            $this->startsAt = $startsAt;
+        } else {
+            $todayDt = new \DateTime('now');
+            $todayDt->setTime(0, 0, 0);
 
-        if ($startsAt < $todayDt) {
-            $startsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+            if ($startsAt < $todayDt) {
+                $startsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
+            }
+
+            $this->startsAt = $startsAt;
         }
-
-        $this->startsAt = $startsAt;
     }
 
     /**

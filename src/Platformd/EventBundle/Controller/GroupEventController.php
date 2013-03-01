@@ -280,7 +280,7 @@ class GroupEventController extends Controller
             $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
         }
 
-        $isApplcant = $this->getGroupManager()->isApplicant($this->getUser(), $group);
+        $isApplicant = $this->getGroupManager()->isApplicant($this->getUser(), $group);
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,

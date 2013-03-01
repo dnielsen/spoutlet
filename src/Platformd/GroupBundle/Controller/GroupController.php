@@ -583,7 +583,7 @@ Alienware Arena Team
         $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
-        $canAdd         = $this->ensureAllowed($this->getCurrentUser(), $group, $this->getCurrentSite(), 'AddEvent');
+        $canAdd         = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent');
 
         return $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,

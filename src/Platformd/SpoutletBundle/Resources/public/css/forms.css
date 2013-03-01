@@ -1376,7 +1376,6 @@ input[type="checkbox"][readonly] {
 input:focus:required:invalid,
 textarea:focus:required:invalid,
 select:focus:required:invalid {
-  color: #ff0000;
   border-color: #ee5f5b;
 }
 

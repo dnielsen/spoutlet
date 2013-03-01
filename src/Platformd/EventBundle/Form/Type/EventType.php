@@ -78,6 +78,7 @@ class EventType extends AbstractType
                 'label' => 'platformd.event.form.starts_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
+                'empty_value' => array('hour' => 'Hrs', 'minute' => 'Mins'),
                 'date_format' => 'MM/dd/yyyy',
                 'error_bubbling' => false,
             ))
@@ -85,6 +86,7 @@ class EventType extends AbstractType
                 'label' => 'platformd.event.form.ends_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
+                'empty_value' => array('hour' => 'Hrs', 'minute' => 'Mins'),
                 'date_format' => 'MM/dd/yyyy',
                 'error_bubbling' => false,
             ))

@@ -44,6 +44,11 @@ jQuery(document).ready(function() {
 
     $('span.hour-selection option').each(function() {
         var hour    = parseInt($(this).text());
+
+        if (isNaN(hour)) {
+            return;
+        }
+
         var newHour = hour;
         var amPm    = 'AM';
 
