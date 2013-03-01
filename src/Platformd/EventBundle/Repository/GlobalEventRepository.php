@@ -127,11 +127,11 @@ class GlobalEventRepository extends EventRepository
     public function findGlobalEventStats(array $data = array())
     {
         $filters = array_merge(
-            array('eventName' => '','sites' => array(), 'filter' => ''),
+            array('eventName' => '', 'published' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
             $data
         );
 
-        $qb = $this->getFindEventsQB($filters['eventName'], $filters['sites'], $filters['filter']);
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['published'], $filters['sites'], $filters['from'], $filters['thru']);
 
         if (isset($filters['page'])) {
             $adapter = new DoctrineORMAdapter($qb);
@@ -144,7 +144,7 @@ class GlobalEventRepository extends EventRepository
         return $qb->getQuery()->execute();
     }
 
-    public function getFindEventsQB($eventName, $sites, $filter="")
+    public function getFindEventsQB($eventName, $status, $sites, $from="", $thru="")
     {
         $qb = $this->createQueryBuilder('gE')
             ->leftJoin('gE.sites', 's');
@@ -161,21 +161,23 @@ class GlobalEventRepository extends EventRepository
             $qb->setParameter('eventName', '%'.$eventName.'%');
         }
 
-        if($filter != "") {
-            if($filter == "upcoming") {
-                $qb->andWhere('gE.startsAt >= :now');
-                $qb->setParameter('now', new DateTime('now'));
-            }
+        if ($status != "") {
+            $qb->andWhere('gE.published = :status');
+            $qb->setParameter('status', $status);
+        }
 
-            if($filter == "past") {
-                $qb->andWhere('gE.startsAt <= :now');
-                $qb->setParameter('now', new DateTime('now'));
-            }
+        if ($from != "") {
 
-            if($filter == "inactive") {
-                $qb->andWhere('gE.active <> 1');
-                $qb->andWhere('gE.published <> 1');
-            }
+            $from->setTime(0, 0, 0);
+            $qb->andWhere('gE.startsAt >= :from');
+            $qb->setParameter('from', $from);
+        }
+
+        if ($thru != "") {
+
+            $thru->setTime(23, 59, 59);
+            $qb->andWhere('gE.endsAt <= :thru');
+            $qb->setParameter('thru', $thru);
         }
 
         $qb->distinct('gE.id');

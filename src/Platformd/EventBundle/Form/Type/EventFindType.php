@@ -14,6 +14,15 @@ class EventFindType extends AbstractType
             ->add('eventName', 'text', array(
                 'label' => 'Name:'
             ))
+            ->add('published', 'choice', array(
+                'label' => 'Status:',
+                'choices' => array(
+                    '0' => 'Active',
+                    '1' => 'Inactive'
+                ),
+                'empty_value' => 'Select All',
+                'required' => false,
+            ))
             ->add('eventType', 'choice', array(
                 'label' => 'Type',
                 'choices' => array(
@@ -27,17 +36,21 @@ class EventFindType extends AbstractType
                 'multiple' => 'true',
                 'choices' => MultitenancyManager::getSiteChoices(),
             ))
-            ->add('filter', 'choice', array(
-                'label' => 'Status',
-                'choices' => array(
-                    'upcoming' => 'Upcoming Events',
-                    'past'     => 'Past Events',
-                    'public'   => 'Public Only',
-                    'private'  => 'Private Only',
-                    'inactive' => 'Inactive Events'
-                ),
-                'empty_value' => 'None',
-                'required' => false,
+            ->add('from', 'date', array(
+                'label' => 'Start Date:',
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr'   => array(
+                    'class' => 'date-picker'
+                )
+            ))
+            ->add('thru', 'date', array(
+                'label' => 'End Date:',
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'attr'   => array(
+                    'class' => 'date-picker'
+                )
             ));
     }
 

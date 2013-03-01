@@ -213,9 +213,11 @@ class GlobalEventAdminController extends Controller
                 $data = $form->getData();
                 $this->setEventsFilterFormData(array(
                     'eventName' => $data->getEventName(),
+                    'published' => $data->getPublished(),
                     'sites' => $data->getSites(),
+                    'from' => $data->getFrom(),
+                    'thru' => $data->getThru(),
                     'eventType' => $data->getEventType(),
-                    'filter' => $data->getFilter(),
                 ));
             }
         }
@@ -223,25 +225,28 @@ class GlobalEventAdminController extends Controller
         if($data->getEventType() == 'global') {
             $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
                 'eventName' => $data->getEventName(),
+                'published' => $data->getPublished(),
                 'sites' => $data->getSites(),
-                'filter' => $data->getFilter(),
+                'from' => $data->getFrom(),
+                'thru' => $data->getThru(),
                 'page' => $page
             ));
         } else {
             $pager = $this->getGroupEventService()->findGroupEventStats(array(
                 'eventName' => $data->getEventName(),
+                'published' => $data->getPublished(),
                 'sites' => $data->getSites(),
-                'filter' => $data->getFilter(),
+                'from' => $data->getFrom(),
+                'thru' => $data->getThru(),
                 'page' => $page
             ));
 
         }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
-            'pager'          => $pager,
-            'form'           => $form->createView(),
-            'resultFilter'   => $data->getFilter(),
-            'eventType'      => $data->getEventType(),
+            'pager'    => $pager,
+            'form'     => $form->createView(),
+            'typeParam'=> $data->getEventType() ?: 'group'
         ));
     }
 

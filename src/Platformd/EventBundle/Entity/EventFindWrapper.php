@@ -9,9 +9,21 @@ use DateTime,
 class EventFindWrapper
 {
     private $eventName;
+    private $published;
     private $sites;
+    private $from;
+    private $thru;
     private $eventType;
-    private $filter;
+
+    public function setPublished($value)
+    {
+        $this->published = $value;
+    }
+
+    public function getPublished()
+    {
+        return $this->published;
+    }
 
     public function setEventName($value)
     {
@@ -33,6 +45,26 @@ class EventFindWrapper
         return $this->sites;
     }
 
+    public function setFrom($from)
+    {
+        $this->from = $from;
+    }
+
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    public function setThru($thru)
+    {
+        $this->thru = $thru;
+    }
+
+    public function getThru()
+    {
+        return $this->thru;
+    }
+
     public function setEventType($value)
     {
         $this->eventType = $value;
@@ -41,15 +73,5 @@ class EventFindWrapper
     public function getEventType()
     {
         return $this->eventType;
-    }
-
-    public function setFilter($value)
-    {
-        $this->filter = $value;
-    }
-
-    public function getFilter()
-    {
-        return $this->filter;
     }
 }
