@@ -17,7 +17,6 @@ class SiteUtil
     public function getCurrentSite()
     {
         if (!$currentHost = $this->host) {
-            die("OnKernelRequest has not correctly set the host. Getting current site failed.");
             return;
         }
 
