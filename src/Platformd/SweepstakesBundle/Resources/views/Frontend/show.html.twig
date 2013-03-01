@@ -25,65 +25,65 @@
     <div id="content">
         <div class="std_1col">
 
-            {% if sweepstakes.bannerImage %}
-                <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
+        {% if sweepstakes.bannerImage %}
+            <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
+        {% endif %}
+
+        <div class="page-header">
+            <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
+
+            {% if sweepstakes.generalImage %}
+                <div style="text-align: center;">
+                    <img src="{{ asset(media_path(sweepstakes, {
+                        'type': 'general'
+                    })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
+                </div>
             {% endif %}
+        </div><!-- widget-header -->
+    </div><!-- std_1col -->
 
-            <div class="page-header">
-                <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
+    <div class="std_2col">
+        <div class="right">
+            <div id="giveaway-getkey" class="widget-33">
+                <div class="widget-header">
+                    <div class="widget-title">{{ 'platformd.sweepstakes.enter' | trans }}</div>
+                </div>
 
-                {% if sweepstakes.generalImage %}
-                    <div style="text-align: center;">
-                        <img src="{{ asset(media_path(sweepstakes, {
-                            'type': 'general'
-                        })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
-                    </div>
-                {% endif %}
-            </div><!-- widget-header -->
-        </div><!-- std_1col -->
+                <form action="{{ path('sweepstakes_enter', {'slug': sweepstakes.slug}) }}" method="GET" id="sweeps-form-enter">
 
-        <div class="std_2col">
-            <div class="right">
-                <div id="giveaway-getkey" class="widget-33">
-                    <div class="widget-header">
-                        <div class="widget-title">{{ 'platformd.sweepstakes.enter' | trans }}</div>
-                    </div>
+                    <div class="widget-content">
+                        {% if isEntered %}
 
-                    <form action="{{ path('sweepstakes_enter', {'slug': sweepstakes.slug}) }}" method="GET" id="sweeps-form-enter">
+                            <p>{{ 'already_entered_sweepstakes' | trans }}</p>
 
-                        <div class="widget-content">
-                            {% if isEntered %}
+                        {% elseif not sweepstakes.isCurrentlyOpen %}
 
-                                <p>{{ 'already_entered_sweepstakes' | trans }}</p>
+                            <p>{{ 'sweeps_not_open' | trans }}</p>
 
-                            {% elseif not sweepstakes.isCurrentlyOpen %}
+                        {% else %}
+                            <ol>
+                                {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
+                            </ol>
 
-                                <p>{{ 'sweeps_not_open' | trans }}</p>
+                            <div class="form-msg-error" id="_sweeps_error"></div>
 
-                            {% else %}
-                                <ol>
-                                    {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
-                                </ol>
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 
-                                <div class="form-msg-error" id="_sweeps_error"></div>
+                                <div class="agree-row">
+                                    <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
+                                    <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
+                                        '%a_start%': '<a href="#" class="sweeps-terms-modal">',
+                                        '%a_end%': '</a>'
+                                    }) | raw }}</label>
+                                </div>
 
-                                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                <div style="text-align: center;">
+                                    <input type="submit" value="{{ 'enter' | trans }}" class="button" />
+                                </div>
 
-                                    <div class="agree-row">
-                                        <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
-                                        <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
-                                            '%a_start%': '<a href="#" class="sweeps-terms-modal">',
-                                            '%a_end%': '</a>'
-                                        }) | raw }}</label>
-                                    </div>
+                            {% endif %}
 
-                                    <div style="text-align: center;">
-                                        <input type="submit" value="{{ 'enter' | trans }}" class="button" />
-                                    </div>
-
-                                {% endif %}
-
-                                <div class="clear"></div>
+                            <div class="clear"></div>
                             {% endif %}
 
                         </div>

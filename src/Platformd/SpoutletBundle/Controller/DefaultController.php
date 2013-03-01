@@ -55,6 +55,8 @@ class DefaultController extends Controller
     public function featuredContentAction()
     {
 
+        $site = $this->getCurrentSite();
+
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
@@ -69,7 +71,7 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllActiveForSiteWithLimit($this->getCurrentSite())
+            ->findAllActiveForSiteWithLimit($site)
         ;
 
         $giveaways_list = array();
@@ -83,7 +85,7 @@ class DefaultController extends Controller
         $competitions = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($this->getCurrentSite())
+            ->getCurrentEventsOnly($site)
         ;
 
         $competitions_list = array();

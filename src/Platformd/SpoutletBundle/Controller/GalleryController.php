@@ -193,7 +193,7 @@ class GalleryController extends Controller
                 foreach ($groups as $group) {
 
                     $group = $groupRepo->find($group);
-                    if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                    if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
                         $groupImage = new GroupImage();
                         $groupImage->setGroup($group);
                         $groupImage->setTitle($title);
@@ -302,7 +302,7 @@ class GalleryController extends Controller
             foreach ($groups as $group) {
 
                 $group      = $groupRepo->find($group);
-                if ($group && $group->isAllowedTo($user, $site, 'AddImage')) {
+                if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
                     $groupImage = new GroupImage();
                     $groupImage->setGroup($group);
                     $groupImage->setTitle($title);
@@ -355,12 +355,14 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('No media found.');
         }
 
-        if($media->getDeleted() || !$media->isVisibleOnSite($this->getCurrentSite()) || !$media->getPublished())
+        $site = $this->getCurrentSite();
+
+        if($media->getDeleted() || !$media->isVisibleOnSite($site) || !$media->getPublished())
         {
             throw $this->createNotFoundException('No media found.');
         }
 
-        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id, $this->getCurrentSite());
+        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id, $site);
 
         $otherMediaPerPage = 3;
         $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);
@@ -687,11 +689,12 @@ class GalleryController extends Controller
     {
         $type = $request->get('type');
         $repo = $this->getGalleryMediaRepository();
+        $site = $this->getCurrentSite();
 
         switch ($type) {
             case 'featured':
                 # get featured media
-                $medias = $repo->findFeaturedMediaForSite($this->getCurrentSite());
+                $medias = $repo->findFeaturedMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -699,7 +702,7 @@ class GalleryController extends Controller
 
             case 'latest':
                 # get latest media
-                $medias = $repo->findLatestMediaForSite($this->getCurrentSite());
+                $medias = $repo->findLatestMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -707,7 +710,7 @@ class GalleryController extends Controller
 
             case 'popular':
                 # get popular media (based on views but will need to be based on ratings when those are implemented)
-                $medias = $repo->findPopularMediaForSite($this->getCurrentSite());
+                $medias = $repo->findPopularMediaForSite($site);
 
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
@@ -867,5 +870,10 @@ class GalleryController extends Controller
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
     }
 }

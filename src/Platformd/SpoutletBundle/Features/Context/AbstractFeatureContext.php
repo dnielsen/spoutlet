@@ -1247,7 +1247,7 @@ class AbstractFeatureContext extends MinkContext
 
             $app = new GroupApplication();
 
-            $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $this->getCurrentSite()));
+            $site = $this->getCurrentSite();
 
             $app->setCreatedAt(new \DateTime('now'));
             $app->setUpdatedAt(new \DateTime('now'));

@@ -2,8 +2,8 @@
 
 {% set reportContentType    = 'GroupImage' %}
 
-{% set canEdit              = group.isAllowedTo(app.user, site, 'EditImage') %}
-{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteImage') %}
+{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditImage') %}
+{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteImage') %}
 
 {% block title media.title %}
 

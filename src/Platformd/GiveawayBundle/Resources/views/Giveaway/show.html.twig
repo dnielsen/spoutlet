@@ -68,7 +68,7 @@
                                     {% else %}
                                         {{ 'platformd.sweepstakes.entered.message' | trans }}
                                     {% endif %}
-                                {% endif %}
+                            {% endif %}
                             </div>
                         {% endif %}
 
@@ -101,9 +101,9 @@
 
                 </div><!-- giveaway-info -->
 
-                {% if features.hasComments %}
-                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
-                {% endif %}
+                    {% if features.hasComments %}
+                        {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
+                    {% endif %}
 
             </div><!-- left -->
 
