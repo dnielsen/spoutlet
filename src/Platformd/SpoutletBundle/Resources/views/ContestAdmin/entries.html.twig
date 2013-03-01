@@ -39,7 +39,7 @@
         {% if entries | length > 0 %}
             {% for entry in entries %}
                 {% for media in entry.medias %}
-                    {% if not media.deleted %}
+                    {% if not media.deleted and media.published %}
                     <tr>
                         <td><img src="{{ media_path(media.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ media.title }}" /></td>
                         <td><a href="{{ media_path_nice(media.image) }}">{{ media_path_nice(media.image) }}</a></td>

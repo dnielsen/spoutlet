@@ -41,6 +41,7 @@ class ContestEntryRepository extends EntityRepository
             ->leftJoin('e.medias', 'gm')
             ->leftJoin('e.contest', 'c')
             ->where('gm.deleted <> 1')
+            ->andWhere('gm.published = 1')
             ->groupBy('c.id')
             ->getQuery()
             ->execute();
