@@ -274,13 +274,13 @@ class GroupEventController extends Controller
 
         $isAttending = false;
 
-        $canJoin = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'JoinEvent')
+        $canJoin = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'JoinEvent');
 
         if ($this->isGranted('ROLE_USER')) {
             $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
         }
 
-        $isApplcant = $this->getGroupManager()-.isApplicant($this->getUser(), $group);
+        $isApplcant = $this->getGroupManager()->isApplicant($this->getUser(), $group);
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
