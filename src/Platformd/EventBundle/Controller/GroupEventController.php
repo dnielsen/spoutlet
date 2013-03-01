@@ -280,13 +280,15 @@ class GroupEventController extends Controller
             $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
         }
 
-        $isApplicant = $this->getGroupManager()->isApplicant($this->getUser(), $group);
+        $isMember       = $this->getGroupManager()->isMember($this->getUser(), $group);
+        $isApplicant    = $this->getGroupManager()->isApplicant($this->getUser(), $group);
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'isAttending'   => $isAttending,
             'canJoin'       => $canJoin,
+            'isMember'      => $isMember,
             'isApplicant'   => $isApplicant,
         ));
     }
@@ -726,6 +728,40 @@ Alienware Arena Team';
 
         $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;
+    }
+
+    public function registerAction($groupSlug, $eventId, Request $request)
+    {
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+        $user = $this->getUser();
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->find($eventId);
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (!$this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent')) {
+            $this->setFlash('error', "You are not allowed to rsvp to this event!");
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug' => $groupSlug,
+                'eventSlug' => $groupEvent->getSlug(),
+            )));
+        }
+
+        $this->getGroupEventService()->register($groupEvent, $user);
+        $this->getGroupManager()->autoJoinGroup($group, $user);
+
+        $this->setFlash('success', sprintf('To attend this event, you must join %s. You are now a member of this group.', $group->getName()));
+        return $this->redirect($this->generateUrl('group_event_view', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $groupEvent->getSlug(),
+        )));
     }
 
     public function disableAjaxAction(Request $request)

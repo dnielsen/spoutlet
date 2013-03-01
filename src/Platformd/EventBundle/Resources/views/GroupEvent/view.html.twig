@@ -98,26 +98,28 @@
                                 <div id="event-registration-closed">Registration is no longer open for this event.</div>
                             {% else %}
                                 {% if canJoin %}
-                                    <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
+
+                                    {% if isMember %}
+                                        <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
+                                    {% else %}
+                                        <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
+                                    {% endif %}
 
                                     <div id="registration-response" style="display:none;"></div>
 
                                     <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
 
                                     <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
+
                                 {% else %}
-                                    {% if group.isPublic %}
-                                        <div id="event-registration-public-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_join', { 'id': group.id, 'event': event.id }) }}" class="btn btn-primary">Register</a></div>
+                                    {% if isApplicant %}
+                                        <div style="padding: 10px 0px;">
+                                            <p class="alert alert-info help" style="margin:0; text-align:left;"><i class="icon-info-sign"></i>
+                                                A request was sent to the group organizer to accept you into the group. Once approved, you will also be registered for the event.
+                                            </p>
+                                        </div>
                                     {% else %}
-                                        {% if isApplicant %}
-                                            <div style="padding: 10px 0px;">
-                                                <p class="alert alert-info help" style="margin:0; text-align:left;"><i class="icon-info-sign"></i>
-                                                    A request was sent to the group organizer to accept you into the group. Once approved, you will also be registered for the event.
-                                                </p>
-                                            </div>
-                                        {% else %}
-                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
-                                        {% endif %}
+                                        <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}

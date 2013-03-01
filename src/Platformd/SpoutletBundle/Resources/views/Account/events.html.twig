@@ -20,6 +20,7 @@
                             'events': events,
                             'pastEvents' : pastEvents,
                             'no_events_message': no_events_message,
+                            'extendedStatus': false,
                         } %}
                     </div>
                     <div class="widget-footer">
@@ -38,11 +39,12 @@
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_message = 'platformd.account_page.events.no_created_events' | trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups'), '%2' : path('group_new', { 'then': "group_event" }) }) %}
+                        {% set no_events_message = 'platformd.account_page.events.no_created_events' | trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
                             'events': ownedEvents,
                             'pastEvents' : pastOwnedEvents,
                             'no_events_message': no_events_message,
+                            'extendedStatus': true,
                         } %}
                     </div>
                     <div class="widget-footer">

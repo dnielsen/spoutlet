@@ -231,6 +231,10 @@ class EventService
      */
     public function register(Event $event, User $user)
     {
+        if ($event->getId() && $this->repository->isUserAttending($event, $user)) {
+            return;
+        }
+
         $event->getAttendees()->add($user);
         $event->updateAttendeeCount();
 
@@ -249,6 +253,10 @@ class EventService
      */
     public function unregister(Event $event, User $user)
     {
+        if ($event->getId() && !$this->repository->isUserAttending($event, $user)) {
+            return;
+        }
+
         $event->getAttendees()->removeElement($user);
         $event->updateAttendeeCount(-1);
 
@@ -362,7 +370,7 @@ class EventService
             '%dateString%'  => $event->getDateRangeString(),
             '%timeString%'  => $event->getStartsAt()->format('g:i A'),
             '%timezone%'    => $event->getTimezoneString(),
-            '%location%'    => $event->getOnline() ? 'Online' : $event->getFormattedAddress(),
+            '%location%'    => $event->getOnline() ? 'Online' : $event->getAddress(),
             '%eventUrl%'    => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
         ), 'messages', $locale));
 

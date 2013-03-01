@@ -31,7 +31,17 @@
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                     <td><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></td>
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
-                    <td>{% if status is defined %}{{ status }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Registration Closed{% endif %}</td>
+                    <td>
+                        {% if status is defined %}
+                            {{ status }}
+                        {% else %}
+                            {% if extendedStatus %}
+                                {% if event.active == false %}Cancelled{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Event Listing{% endif %}
+                            {% else %}
+                                {% if event.active %}Active{% else %}Cancelled{% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if event.user == app.user %}
                             {% if event.registrationOption == "REGISTRATION_ENABLED" %}

@@ -143,7 +143,7 @@ class GroupManager
     public function autoJoinGroup(Group $group, User $user)
     {
         if ($this->isMember($user, $group) || $group->isOwner($user)) {
-            throw new \Exception('You are already a member of this group!');
+            return;
         }
 
         if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
@@ -184,7 +184,7 @@ class GroupManager
     public function autoApplyToGroup(Group $group, User $user, GroupEventEntity $event=null)
     {
         if ($this->isMember($user, $group) || $group->isOwner($user)) {
-            throw new \Exception('You are already a member of this group!');
+            return;
         }
 
         /** @var $applicationRepo \Platformd\GroupBundle\Entity\GroupApplicationRepository */

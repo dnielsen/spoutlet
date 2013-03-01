@@ -80,7 +80,7 @@ class GroupEventListener
                     '%startDate%'   => $event->getStartsAt()->format('l, M j, Y'),
                     '%startTime%'   => $event->getStartsAt()->format('g:i A'),
                     '%timezone%'    => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
-                    '%location%'    => ($event->getOnline()) ? 'Online' : $event->getFormattedAddress(),
+                    '%location%'    => ($event->getOnline()) ? 'Online' : $event->getAddress(),
                     '%url%'         => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
                 ), 'messages', $emailLocale));
 

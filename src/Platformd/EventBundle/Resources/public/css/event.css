@@ -139,7 +139,7 @@
 
 .time-selection {
     display: inline-block;
-    margin: 0 0 0 3px;
+    margin: 0 0 0 7px;
 }
 
 .minute-selection select {
@@ -148,6 +148,7 @@
 
 .hour-selection select {
     width: 105px;
+    margin: 0 0 0 7px;
 }
 
 .event-timezone select {

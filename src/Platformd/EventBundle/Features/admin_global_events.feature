@@ -20,8 +20,10 @@ Feature: Global Events
         Given I am on "/admin"
         When I click to add new "Events"
             And I fill in the following:
-                | Title         | Test Event        |
-                | Event Details | Description       |
+                | Title             | Test Event        |
+                | Event Details     | Description       |
+            And I fill in "03/01/2013" for "globalEvent_startsAt_date"
+            And I fill in "03/01/2015" for "globalEvent_endsAt_date"
             And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
             And I select the "Online Event" radio button
