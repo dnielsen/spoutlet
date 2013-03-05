@@ -38,6 +38,8 @@ set  :use_sudo,      false
 set :update_vendors, true
 set :vendors_mode,   "install"
 
+set  :dump_assetic_assets, true
+
 # keep the vendor files shared, for faster deployment
 set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video", web_path + "/media"]
 
@@ -52,6 +54,10 @@ end
 # Change ownership of releases directories to allow cleanup without permissions issues
 after "deploy:create_symlink" do
   run "sudo chown -R `whoami`:`whoami` #{deploy_to}/releases/"
+end
+
+before "symfony:assetic:dump" do
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} themes:install web --symlink"
 end
 
 # Cleanup releases to leave only the 3 most recent
