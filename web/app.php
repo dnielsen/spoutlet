@@ -1,6 +1,9 @@
 <?php
 umask(0000); // This will let the permissions be 0777
 
+// Setting $_ENV['HOME'] to avoid excessive, unnecessary errors in apache log file
+$_ENV['HOME'] = '/home/ubuntu';
+
 require_once __DIR__.'/../app/bootstrap.php.cache';
 require_once __DIR__.'/../app/AppKernel.php';
 //require_once __DIR__.'/../app/AppCache.php';

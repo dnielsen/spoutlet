@@ -17,7 +17,7 @@ class MediaPathResolver implements PathResolver
     public function __construct($bucketName, $prefix)
     {
         $this->bucketName = $bucketName;
-        $this->prefix = substr($prefix, 0, 1) == "/" ? substr($prefix, 1) : $prefix;
+        $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
     }
 
     public function supports($media, array $options)
@@ -41,12 +41,13 @@ class MediaPathResolver implements PathResolver
             return $media->getFilename();
         }
 
-        return sprintf(
-            'http://s3.amazonaws.com/%s/%s/%s',
-            $this->getBucketName(),
-            $this->getPrefix(),
-            $media->getFilename()
-        );
+        if ($this->bucketName == "platformd") {
+            $cf = "http://media.alienwarearena.com";
+        } else {
+            $cf = "http://mediastaging.alienwarearena.com";
+        }
+
+        return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
     }
 
     /**

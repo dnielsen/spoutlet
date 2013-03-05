@@ -43,7 +43,9 @@ class GroupController extends Controller
 
         $this->ensureGroupExists($group);
 
-        if (!$group->isAllowedTo($this->getCurrentUser(), $this->getCurrentSite(), $action)) {
+        $groupManager = $this->getGroupManager();
+
+        if (!$groupManager->isAllowedTo($this->getCurrentUser(), $group, $this->getCurrentSite(), $action)) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
     }
@@ -105,14 +107,13 @@ class GroupController extends Controller
     private function sendApplicationAcceptedEmail($application) {
 
         $currentHost        = $this->getRequest()->getHost();
-        $currentSubDomain   = $this->getCurrentSite()->getSubDomain();
-        $applicantSubDomain = $application->getSite()->getSubDomain();
+        $applicationSite    = $application->getSite();
 
         $baseHost           = $this->container->getParameter('base_host');
 
         $groupName          = $application->getGroup()->getName();
         $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $application->getGroup()->getSlug()));
-        $groupUrlAbsolute   = sprintf('http://%s.%s%s', $applicantSubDomain, $baseHost, $groupUrlRelative);
+        $groupUrlAbsolute   = sprintf('http://%s%s', $applicationSite->getFullDomain(), $groupUrlRelative);
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
@@ -154,7 +155,9 @@ Alienware Arena Team
 
         $em = $this->getEntityManager();
 
-        if ($group->isMember($user)) {
+        $groupManager = $this->getGroupManager();
+
+        if ($groupManager->isMember($user, $group)) {
 
             $em->remove($application);
             $em->flush();
@@ -171,7 +174,7 @@ Alienware Arena Team
         $group->getMembers()->add($user);
         $group->getUserMembershipActions()->add($joinAction);
 
-        $this->getGroupManager()->saveGroup($group);
+        $groupManager->saveGroup($group);
 
         $this->sendApplicationAcceptedEmail($application);
 
@@ -212,7 +215,9 @@ Alienware Arena Team
 
         $em = $this->getEntityManager();
 
-        if ($group->isMember($user)) {
+        $groupManager = $this->getGroupManager();
+
+        if ($groupManager->isMember($user, $group)) {
 
             $em->remove($application);
             $em->flush();
@@ -239,7 +244,8 @@ Alienware Arena Team
 
         return $this->render('GroupBundle:Group:applications.html.twig', array(
             'applications' => $applications,
-            'group' => $group
+            'group' => $group,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -289,12 +295,14 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $user = $this->getCurrentUser();
 
+        $groupManager = $this->getGroupManager();
+
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group owner, you are not allowed to leave the group!');
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
-        if (!$group->isMember($user)) {
+        if (!$groupManager->isMember($user, $group)) {
             $this->setFlash('error', 'You are not a member of this group!');
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
@@ -332,7 +340,9 @@ Alienware Arena Team
 
         $user = $this->getUser();
 
-        if ($group->isMember($user) || $group->isOwner($user)) {
+        $groupManager = $this->getGroupManager();
+
+        if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl('groups'));
         }
@@ -381,7 +391,9 @@ Alienware Arena Team
 
         $user = $this->getUser();
 
-        if ($group->isMember($user) || $group->isOwner($user)) {
+        $groupManager = $this->getGroupManager();
+
+        if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
@@ -429,7 +441,9 @@ Alienware Arena Team
 
         return $this->render('GroupBundle:Group:applyToGroup.html.twig', array(
             'group' => $group,
-            'form' => $form->createView()));
+            'form' => $form->createView(),
+            'groupManager' => $this->getGroupManager(),
+        ));
     }
 
     public function removeAction($id, $uid)
@@ -453,12 +467,14 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
         }
 
+        $groupManager = $this->getGroupManager();
+
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group organizer. Please email contact@alienwarearena.com if you want to be removed from this group.');
             return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
         }
 
-        if (!$group->isMember($user)) {
+        if (!$groupManager->isMember($user, $group)) {
             $this->setFlash('error', 'You cannot remove someone who is not a member of this group!');
             return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
         }
@@ -473,7 +489,7 @@ Alienware Arena Team
         $group->getMembers()->removeElement($user);
         $group->getUserMembershipActions()->add($removeAction);
 
-        $this->getGroupManager()->saveGroup($group);
+        $groupManager->saveGroup($group);
 
         $this->setFlash('success', sprintf('%s is no longer in this group.', $user->getUsername()));
 
@@ -490,6 +506,7 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:news.html.twig', array(
             'group' => $group,
             'groupNews' => $groupNews,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -527,7 +544,8 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addNews.html.twig', array(
             'group' => $group,
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id))
+            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id)),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -569,8 +587,9 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editNews.html.twig', array(
             'group' => $group,
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId)))
-        );
+            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId)),
+            'groupManager' => $this->getGroupManager(),
+        ));
     }
 
     public function deleteNewsAction($id, $newsId, Request $request)
@@ -616,6 +635,7 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:images.html.twig', array(
             'pages' => $pages,
             'group' => $group,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -649,6 +669,7 @@ Alienware Arena Team
                 'group'             => $group,
                 'otherMediaPages'   => $otherMediaPages,
                 'galleryMediaItem'  => $galleryMedia,
+                'groupManager' => $this->getGroupManager(),
             ));
         }
 
@@ -694,7 +715,8 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addImage.html.twig', array(
             'group' => $group,
             'imageForm' => $form->createView(),
-            'imageFormAction' => $this->generateUrl('group_add_image', array('id' => $id))
+            'imageFormAction' => $this->generateUrl('group_add_image', array('id' => $id)),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -734,8 +756,9 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editImage.html.twig', array(
             'group' => $group,
             'imageForm' => $form->createView(),
-            'imageFormAction' => $this->generateUrl('group_edit_image', array('id' => $id, 'imageId' => $imageId)))
-        );
+            'imageFormAction' => $this->generateUrl('group_edit_image', array('id' => $id, 'imageId' => $imageId)),
+            'groupManager' => $this->getGroupManager(),
+        ));
     }
 
     public function deleteImageAction($id, $imageId, Request $request)
@@ -783,6 +806,7 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:videos.html.twig', array(
             'pages' => $pages,
             'group' => $group,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -829,6 +853,7 @@ Alienware Arena Team
             'group' => $group,
             'videoForm' => $form->createView(),
             'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -870,8 +895,9 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editVideo.html.twig', array(
             'group' => $group,
             'videoForm' => $form->createView(),
-            'videoFormAction' => $this->generateUrl('group_edit_video', array('id' => $id, 'videoId' => $videoId)))
-        );
+            'videoFormAction' => $this->generateUrl('group_edit_video', array('id' => $id, 'videoId' => $videoId)),
+            'groupManager' => $this->getGroupManager(),
+        ));
     }
 
     public function deleteVideoAction($id, $videoId, Request $request)
@@ -911,6 +937,7 @@ Alienware Arena Team
             'group' => $group,
             'results' => $results,
             'pager' => $pager,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -976,6 +1003,7 @@ Alienware Arena Team
             'group' => $group,
             'discussionForm' => $form->createView(),
             'discussionFormAction' => $this->generateUrl('group_add_discussion', array('id' => $id)),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -1020,7 +1048,8 @@ Alienware Arena Team
             'group' => $group,
             'discussionForm' => $form->createView(),
             'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('id' => $id, 'discussionId' => $discussionId)),
-            'discussionId' => $discussionId
+            'discussionId' => $discussionId,
+            'groupManager' => $this->getGroupManager(),
             )
         );
     }
@@ -1103,6 +1132,7 @@ Alienware Arena Team
                 'id' => $id,
                 'discussionId' => $discussionId
             )),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -1152,6 +1182,7 @@ Alienware Arena Team
                 'id' => $id,
                 'discussionId' => $discussionId
             )),
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 
@@ -1259,6 +1290,7 @@ Alienware Arena Team
         $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
         $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $memberCount    = $this->getGroupManager()->getMembershipCountByGroup($group);
 
         $contest = $this->getContestRepository()->findContestByGroup($group);
 
@@ -1278,6 +1310,8 @@ Alienware Arena Team
             'isEntered'     => $isEntered,
             'contestCount'  => $contestMemberCount,
             'contest'       => $contest,
+            'memberCount'   => $memberCount[0]['membershipCount'],
+            'groupManager'  => $this->getGroupManager(),
         ));
     }
 
@@ -1386,6 +1420,7 @@ Alienware Arena Team
             'group' => $group,
             'canRemove' => $canRemove,
             'members' => $members,
+            'groupManager' => $this->getGroupManager(),
         ));
     }
 

@@ -10,13 +10,16 @@ class EventsController extends Controller
 {
     public function indexAction()
     {
+
+        $site = $this->getCurrentSite();
+
         $current_events = $this->getAbstractEventsRepo()
-            ->getCurrentEventsAndSweepstakes($this->getCurrentSite(), 50);
+            ->getCurrentEventsAndSweepstakes($site, 50);
         $past_events    = $this->getAbstractEventsRepo()
-            ->getPastEventsAndSweepstakes($this->getCurrentSite(), 50);
+            ->getPastEventsAndSweepstakes($site, 50);
 
         $allGiveaways = $this->getGiveawayRepo()
-            ->findActives($this->getCurrentSite())
+            ->findActives($site)
         ;
 
         return $this->render('SpoutletBundle:Events:index.html.twig',

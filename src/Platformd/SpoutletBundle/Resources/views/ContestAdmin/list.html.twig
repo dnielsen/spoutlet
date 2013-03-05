@@ -27,7 +27,7 @@
             <tr>
                 <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
                 <td>
-                    {% set url = url('contest_show', {'slug': contest.slug, '_locale': site }) %}
+                    {% set url = url('contest_show', {'slug': contest.slug, '_locale': site.defaultLocale }) %}
                     <a href="{{ url }}" target="_blank">{{ url }}</a>
                  </td>
                 <td>
@@ -91,7 +91,7 @@
             <tr>
                 <td><a href="{{ path('admin_contest_edit', { 'slug': contest.slug }) }}">{{ contest.name }}</a></td>
                 <td>
-                    {% set url = url('contest_show', {'slug': contest.slug, '_locale': site }) %}
+                    {% set url = url('contest_show', {'slug': contest.slug, '_locale': sitesite.defaultLocale }) %}
                     <a href="{{ url }}" target="_blank">{{ url }}</a>
                  </td>
                 <td>

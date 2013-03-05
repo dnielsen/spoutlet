@@ -42,6 +42,16 @@ class GroupManager
 
     private $eventDispatcher;
 
+    private $isMemberCache;
+    private $isApplicantCache;
+
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
+    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'LeaveGroup');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
+    static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
+    static private $applicantIsAllowedTo         = array('ViewGroup');
+
     public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
     {
         $this->em = $em;
@@ -49,6 +59,8 @@ class GroupManager
         $this->mediaUtil = $mediaUtil;
         $this->securityContext = $securityContext;
         $this->eventDispatcher = $eventDispatcher;
+        $this->isMemberCache = array();
+        $this->isApplicantCache = array();
     }
 
     /**
@@ -74,10 +86,6 @@ class GroupManager
             $group->setMembers($members);
         }
 
-        $groupDescription = $group->getDescription();
-        $groupDescription = strip_tags($groupDescription, '<p><br><a><strong><em><ol><ul><li>');
-        $group->setDescription($groupDescription);
-
         $this->em->persist($group);
 
         $this->handleMediaFields($group);
@@ -95,10 +103,6 @@ class GroupManager
             $user = $this->securityContext->getToken()->getUser();
             $groupNews->setAuthor($user);
         }
-
-        $article = $groupNews->getArticle();
-        $article = strip_tags($article, '<p><br><a><strong><em><ol><ul><li>');
-        $groupNews->setArticle($article);
 
         $this->em->persist($groupNews);
 
@@ -350,11 +354,105 @@ class GroupManager
         return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
     }
 
+    public function getMembershipCountByGroup($group)
+    {
+        return $this->getRepository()->getMembershipCountByGroup($group);
+    }
+
     /**
      * @return \Platformd\GroupBundle\Entity\GroupRepository
      */
     private function getRepository()
     {
         return $this->em->getRepository('GroupBundle:Group');
+    }
+
+    private function getApplicationRepository()
+    {
+        return $this->em->getRepository('GroupBundle:GroupApplication');
+    }
+
+    public function isAllowedTo($user, $group, $site, $action) {
+
+        if ($group->getDeleted() && $action != "EditGroup") {
+            return false;
+        }
+
+        if (!$group->isVisibleOnSite($site)) {
+            return false;
+        }
+
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
+
+            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
+            $isOwner        = $group->isOwner($user);
+            $isMember       = $this->isMember($user, $group);
+            $isApplicant    = $this->isApplicant($user, $group);
+
+            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
+
+                return true;
+            }
+
+            if ($isOwner) {
+                return in_array($action, self::$ownerIsAllowedTo);
+            }
+
+            if ($isMember) {
+                return in_array($action, self::$memberIsAllowedTo);
+            }
+
+            if ($isApplicant) {
+                return in_array($action, self::$applicantIsAllowedTo);
+            }
+        }
+
+        if ($group->getIsPublic()) {
+            return in_array($action, self::$nonMemberPublicIsAllowedTo);
+        }
+
+        if (!$group->getIsPublic()) {
+            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
+        }
+
+        return false;
+    }
+
+    public function isMember($user, Group $group)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $cacheKey = $user->getId().'-'.$group->getId();
+
+        if (array_key_exists($cacheKey, $this->isMemberCache)) {
+            return $this->isMemberCache[$cacheKey];
+        }
+
+        $repo   = $this->getRepository();
+        $result = $repo->isUserMemberOfGroup($user, $group);
+
+        $this->isMemberCache[$cacheKey] = $result;
+        return $this->isMemberCache[$cacheKey];
+    }
+
+    public function isApplicant($user, Group $group)
+    {
+        if(!$user) {
+            return false;
+        }
+
+        $cacheKey = $user->getId().'-'.$group->getId();
+
+        if (array_key_exists($cacheKey, $this->isApplicantCache)) {
+            return $this->isApplicantCache[$cacheKey];
+        }
+
+        $repo   = $this->getApplicationRepository();
+        $result =  $repo->isUserApplicantToGroup($user, $group);
+
+        $this->isApplicantCache[$cacheKey] = $result;
+        return $this->isApplicantCache[$cacheKey];
     }
 }
