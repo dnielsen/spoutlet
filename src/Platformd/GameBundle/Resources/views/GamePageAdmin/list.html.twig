@@ -16,10 +16,10 @@
     <tbody>
     {% for gamePage in entities %}
         <tr>
-            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">{{ gamePage.getBestNameForGame }}</a></td>
+            <td><a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site.defaultLocale }) }}">{{ gamePage.getBestNameForGame }}</a></td>
             <td>
                 {# todo - should use linkable, but linkable doesn't support passing in which site/locale you're targeting #}
-                {% set url = gamePage.externalUrl ? gamePage.externalUrl : url('game_page_show', {'slug': gamePage.slug, 'category': gamePage.game.category, '_locale': site }) %}
+                {% set url = gamePage.externalUrl ? gamePage.externalUrl : url('game_page_show', {'slug': gamePage.slug, 'category': gamePage.game.category, '_locale': site.defaultLocale }) %}
                 <a href="{{ url }}" target="_blank">{{ url }}</a>
             </td>
             <td>
@@ -38,7 +38,7 @@
                 {% endif %}
             </td>
             <td>
-                <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site }) }}">edit</a>
+                <a href="{{ path('admin_game_page_edit', { 'id': gamePage.id, 'site': site.defaultLocale }) }}">edit</a>
             </td>
         </tr>
     {% else %}
@@ -51,7 +51,7 @@
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="{{ path('admin_game_page_new', { 'site': site }) }}">
+<a class="btn btn-primary" href="{{ path('admin_game_page_new', { 'site': site.defaultLocale }) }}">
     Create a new game page
 </a>
 {% endblock %}

@@ -42,7 +42,6 @@ class GamePageAdminController extends Controller
 
         return $this->render('GameBundle:GamePageAdmin:list.html.twig', array(
             'entities' => $gamePages,
-            'site'     => $site,
         ));
     }
 
