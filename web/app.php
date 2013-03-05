@@ -15,4 +15,7 @@ $request = Request::createFromGlobals();
 
 $request->trustProxyData();
 
+// Setting $_ENV['HOME'] to avoid excessive, unnecessary errors in apache log file
+$_ENV['HOME'] = '/home/ubuntu';
+
 $kernel->handle($request)->send();
