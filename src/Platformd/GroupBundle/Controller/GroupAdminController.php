@@ -620,6 +620,17 @@ class GroupAdminController extends Controller
 
         $results = $groupRepo->findGroups($filters);
 
+        $idArray = array();
+        foreach ($results as $group) {
+            $idArray[] = $group->getId();
+        }
+
+        $groupMemberCounts  = $groupRepo->findGroupMemberCountsIn($idArray);
+
+        foreach ($groupMemberCounts as $group) {
+            $memberCounts[$group['id']] = $group['membercount'];
+        }
+
         foreach ($results as $group) {
 
             $type = $group->getIsPublic() ? 'Public' : 'Private';
@@ -659,7 +670,7 @@ class GroupAdminController extends Controller
                 $status,
                 $group->getOwner()->getUsername(),
                 $group->getOwner()->getEmail(),
-                $group->getMembers()->count(),
+                array_key_exists($group->getId(), $memberCounts) ? $memberCounts[$group->getId()] : 0,
                 $newMemberCount,
                 $group->getVideos()->count(),
                 $group->getImages()->count(),
@@ -876,5 +887,10 @@ class GroupAdminController extends Controller
     private function getMetricManager()
     {
         return $this->get('platformd.metric_manager');
+    }
+
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
     }
 }
