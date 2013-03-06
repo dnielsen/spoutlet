@@ -14,3 +14,4 @@
 /web/media/*
 VERSION
 /external_data/ip2location/overrideCountry
+/bin/AwaReset.log
