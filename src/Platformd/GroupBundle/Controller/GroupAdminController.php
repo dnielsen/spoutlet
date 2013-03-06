@@ -646,20 +646,8 @@ class GroupAdminController extends Controller
 
             $status = $group->getDeleted() ? 'Inactive' : 'Active';
 
-            $newMemberCount = $group->getMembershipActions()
-                ->filter(function($x) {
-                    return
-                    $x->getCreatedAt() >= new DateTime('-30 days') &&
-                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
-                    $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED); })
-                ->count();
-
-            $leftMemberCount = $group->getMembershipActions()
-                ->filter(function($x) {
-                    return
-                    $x->getCreatedAt() >= new DateTime('-30 days') &&
-                    $x->getAction() == GroupMembershipAction::ACTION_LEFT; })
-                ->count();
+            $newMemberCount = $this->getGroupManager()->getMembersJoinedCountByGroup($group, new \DateTime('-30 days'));
+            $leftMemberCount = $this->getGroupManager()->getMembersLeftCountByGroup($group, new \DateTime('-30 days'));
 
             $factory->addRow(array(
                 $group->getName(),
