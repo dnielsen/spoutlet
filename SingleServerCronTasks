@@ -1,0 +1,7 @@
+Single server cron tasks:
+
+#47 * * * * /var/www/alienwarevideo/production/current/scripts/syncvideos.sh production > /dev/null 2>&1
+#15 * * * * /var/www/alienwarevideo/staging/current/scripts/syncvideos.sh staging > /dev/null 2>&1
+0 15 * * 1 php /home/ubuntu/scripts/mu-sigma_automation/mu_sigma_automation.php > /dev/null 2>&1
+0 20 * * * /var/www/staging/deploy/current/app/console platformd:events:reminders --env=prod > /dev/null 2>&1
+30 20 * * * /var/www/staging/deploy/current/app/console platformd:events:reminders --env=dev > /dev/null 2>&1
