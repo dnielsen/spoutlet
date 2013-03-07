@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.4              |"
+echo "|  Alienware Arena Reset Script v1.5              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -54,6 +54,8 @@ echo
 
 ./bin/vendors install >> bin/AwaReset.log
 
+sudo ls > /dev/null
+
 echo
 echo "Resetting development database:"
 echo "  - Dropping database..."
@@ -83,6 +85,8 @@ echo "  - Creating ACL database..."
 echo "  - Initialising ACL structure..."
 
 ./app/console init:acl --env=dev >> bin/AwaReset.log
+
+sudo ls > /dev/null
 
 echo
 echo "Resetting test database:"
