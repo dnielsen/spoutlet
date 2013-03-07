@@ -66,15 +66,14 @@
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
 
-            {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
-                <script type="text/javascript">
-                    CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
-                </script>
-            {% endif %}
-
 		    {% endjavascripts %}
         {% endblock %}
 
+        {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+            <script type="text/javascript">
+                CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+            </script>
+        {% endif %}
 
         <title>
             {%- if block('title') -%}
