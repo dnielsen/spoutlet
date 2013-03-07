@@ -23,7 +23,7 @@
                         {% endif %}
                     {% else %}
                         <div class="thumbnail-vote-caption">
-                            <a href="http://demo.alienwarearena.local/app_dev.php/cevo/api/stub/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('contest_vote', { 'slug': contest.slug }) ~ '?vote=' ~ media.id) | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('contest_vote', { 'slug': contest.slug }) ~ '?vote=' ~ media.id) | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                         </div>
                     {% endif %}
                 </a>
