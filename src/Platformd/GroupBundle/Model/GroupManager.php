@@ -455,4 +455,14 @@ class GroupManager
         $this->isApplicantCache[$cacheKey] = $result;
         return $this->isApplicantCache[$cacheKey];
     }
+
+    public function getMembersLeftCountByGroup($group, $fromDate=null, $thruDate=null)
+    {
+        return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersLeftCountByGroup($group, $fromDate, $thruDate);
+    }
+
+    public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
+    {
+        return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersJoinedCountByGroup($group, $fromDate, $thruDate);
+    }
 }
