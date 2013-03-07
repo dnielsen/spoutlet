@@ -12,6 +12,7 @@ class GroupMembershipActionRepository extends EntityRepository
     public function getMembersLeftCountByGroup($group, $fromDate=null, $thruDate=null)
     {
         $qb = $this->createQueryBuilder('gma');
+        $qb->select('COUNT(DISTINCT gma.user)');
         $qb->where('gma.group = :group');
         $qb->andWhere('gma.action = :action');
         $qb->setParameter('group', $group);
@@ -25,14 +26,15 @@ class GroupMembershipActionRepository extends EntityRepository
                ->setParameter('thruDate', $thruDate);
         }
 
-        $total = $qb->getQuery()->getResult();
+        $total = $qb->getQuery()->getSingleScalarResult();
 
-        return count($total);
+        return $total;
     }
 
     public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
     {
         $qb = $this->createQueryBuilder('gma');
+        $qb->select('COUNT(DISTINCT gma.user)');
         $qb->where('gma.group = :group');
         $qb->andWhere('gma.action = :action1 OR gma.action = :action2');
         $qb->setParameter('group', $group);
@@ -47,7 +49,7 @@ class GroupMembershipActionRepository extends EntityRepository
                ->setParameter('thruDate', $thruDate);
         }
 
-        $total = $qb->getQuery()->getResult();
+        $total = $qb->getQuery()->getSingleScalarResult();
 
         return count($total);
     }
