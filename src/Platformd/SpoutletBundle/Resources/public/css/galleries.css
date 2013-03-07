@@ -42,20 +42,14 @@
     padding-top:5px;
 }
 
-.photo-views {
+.views {
     padding-top:5px;
 }
 
-.photo-voting-wrapper {
-    display: inline-table;
-    vertical-align: top;
-    text-align: center;
-    width: 180px;
-}
-
-.photo-voting-wrapper .photo-votes {
+.photo-voting-wrapper .photo-stats {
     display: inline-table;
     padding: 0px 15px;
+    text-align: center;
 }
 
 .media-voting-wrapper {
@@ -163,7 +157,7 @@ a.media-voting-button {
 
 .up {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 0 0;
+    background-position: 0 29px;
 }
 
 .up:hover {
@@ -353,4 +347,32 @@ a.media-voting-button {
     padding: 8px 0;
     top:2px;
     margin-left:10px;
+}
+
+.photo-like {
+    display: inline-table;
+    vertical-align: top;
+}
+
+#media-like-label {
+    display: inline-table;
+    float: left;
+    margin: 8px 5px 0 0;
+}
+
+#media-likes {
+    font-size: 18px;
+}
+
+.media-likes {
+    display: inline-table;
+    text-align: center;
+    width: 80px;
+}
+
+#media-likes-wrapper {
+    text-align: center;
+    display: inline-table;
+    vertical-align: top;
+    width: 180px;
 }

@@ -298,27 +298,21 @@ class ContestAdminController extends Controller
             foreach ($entry->getMedias() as $media) {
                 $likes[$media->getId()] = $this->getEntryLikeCount($media);
 
-                $totalVotes =  $media->getVotes()->count();
+                $votes =  $media->getVotes();
 
-                if ($totalVotes) {
-                    $upCount = $media->getVotes()
+                if ($votes->count()) {
+                    $upCount = $votes
                         ->filter(function($x) {
                             return
                             $x->getVoteType() == "up"; })
                         ->count();
 
-                    $upVotes[$media->getId()] = round(($upCount/$totalVotes)*100);
-                    $downVotes[$media->getId()] = round((($totalVotes - $upCount)/$totalVotes)*100);
+                    $upVotes[$media->getId()] = $upCount;
                 } else {
                     $upVotes[$media->getId()] = 0;
-                    $downVotes[$media->getId()] = 0;
                 }
-
-
             }
         }
-
-
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
             'contest'   => $contest,
@@ -326,7 +320,6 @@ class ContestAdminController extends Controller
             'slug'      => $slug,
             'likes'     => $likes,
             'upVotes'   => $upVotes,
-            'downVotes' => $downVotes,
         ));
     }
 
@@ -445,7 +438,6 @@ class ContestAdminController extends Controller
             'Date of Birth',
             'IP Address',
             'Vote Date',
-            'IP Address',
             'Country Registered',
         ));
 

@@ -142,32 +142,27 @@
 
                     {% if isVotable %}
 
-                        <div class="photo-voting-wrapper">
-                            <div class="photo-votes upvotes">
-                                <div class="votes"><strong><span id="media-upvotes">{{ upVotes }}</span>%</strong></div>
-                                <div>{{ 'galleries.likes' | trans }}</div>
-                            </div>
+                        <div id="media-likes-wrapper">
 
-                           <div class="photo-votes downvotes">
-                                <div class="votes"><strong><span id="media-downvotes">{{ downVotes }}</span>%</strong></div>
-                                <div>{{ 'galleries.dislikes' | trans }}</div>
-                            </div>
-
-                            {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
-
-                                <div class="media-voting-wrapper">
-                                    <span>{{ 'galleries.cast_your_vote' | trans }} </span>
-                                    {% include 'SpoutletBundle:Gallery:_mediaVoting.html.twig' %}
-                                </div>
-
-                                <div id="media-voting-login-required" style="display: none; margin-top: 35px; padding: 0 20px;">
-                                    <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">Login</a>
+                            {% if app.user is not null %}
+                                {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
+                                    <div class="photo-like">
+                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up quick-vote-link" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.quick_vote_caption' | trans }}"></a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="photo-like">
+                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="http://demo.alienwarearena.local/app_dev.php/cevo/api/stub/account/login?return={{ app.request.uri ~ '?vote=' ~ media.id | url_encode }}"></a>
                                 </div>
                             {% endif %}
 
-                            <div id="media-voting-success" style="display:none;margin-top:35px;">{{ 'galleries.vote_success' | trans }}</div>
+                            <div class="media-likes">
+                               <div class="photo-stats">
+                                    <div class="likes"><strong><span id="media-likes">{{ likes | number_format(0, '.', ',') }}</span></strong></div>
+                                    <div>{{ 'galleries.show_photo_details_points' | trans}}</div>
+                                </div>
+                            </div>
                         </div>
-
                     {% endif %}
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
@@ -189,7 +184,7 @@
                             {% endif %}
                         </p>
                     <div class="description">{{ media.description }}</div>
-                    <div class="photo-views">{{ 'galleries.show_photo_details_views' | trans}} {{ media.views | number_format(0, '.', ',') }}{% if isVotable %} | {{ 'galleries.show_photo_details_points' | trans}} <span id="media-points">{{ points | number_format(0, '.', ',') }}</span>{% endif %}</div>
+                    <div class="views">{{ 'galleries.show_photo_details_views' | trans}}: {{ media.views | number_format(0, '.', ',') }}</div>
 
                     <div style="margin-top:10px; width:300px">
                         <div style="width:20%; float:left;">{{ 'galleries.index_page_title' | trans }}: </div>
@@ -207,32 +202,27 @@
                         </p>
                     </div>
                     {% if app.user is not null %}
-                        {% if media.hasUserVoted(app.user) %}
-                            <div style="width:290px;padding:5px 0;">
-                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                    {{ 'galleries.already_voted' | trans }}
-                                </p>
-                            </div>
-                        {% elseif isVotable == false %}
-                            <div style="width:290px;padding:5px 0;">
-                                <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
-                                    <em>{{ 'contests.image_part_of_contest' | trans }}<br /><br />
-                                    {{ 'contests.voting_begins' | trans }} {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
-                                </p>
-                            </div>
-                        {% elseif media.canUserVote(app.user) == false  %}
-                            <div style="width:290px;padding:5px 0;">
-                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                    {{ 'galleries.ineligible_due_to_contest' | trans }}
-                                </p>
-                            </div>
-                        {% endif %}
-                    {% else %}
-                        <div style="width:290px;padding:5px 0;">
+                        <div id="media-already-voted" style="width:290px;padding:5px 0;{% if media.hasUserVoted(app.user) == false %}display:none;{% endif %}">
                             <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                {{ 'galleries.login_to_vote_linked' | trans({ '%login_url%' : 'http://alienwarearena.com/account/login?return=' ~ app.request.uri | url_encode }) | raw }}
+                                {{ 'galleries.already_voted' | trans }}
                             </p>
                         </div>
+                        {% if media.hasUserVoted(app.user) == false %}
+                            {% if isVotable == false %}
+                                <div style="width:290px;padding:5px 0;">
+                                    <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
+                                        <em>{{ 'contests.image_part_of_contest' | trans }}<br /><br />
+                                        {{ 'contests.voting_begins' | trans }} {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
+                                    </p>
+                                </div>
+                            {% elseif media.canUserVote(app.user) == false  %}
+                                <div style="width:290px;padding:5px 0;">
+                                    <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                        {{ 'galleries.ineligible_due_to_contest' | trans }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -247,6 +237,7 @@
 </div>
 
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+{% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
 
 {% endblock %}
 
