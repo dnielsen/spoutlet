@@ -69,13 +69,13 @@
             %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
-
-            {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
-                <script type="text/javascript">
-                    CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
-                </script>
-            {% endif %}
         {% endblock %}
+
+        {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+            <script type="text/javascript">
+                CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+            </script>
+        {% endif %}
 
         {# Here we include assets for the current active theme #}
         {% include '::' ~ site.theme ~ '_assets.html.twig' ignore missing %}
