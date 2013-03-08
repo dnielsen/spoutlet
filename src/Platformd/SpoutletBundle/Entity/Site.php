@@ -59,7 +59,7 @@ class Site
     private $supportEmailAddress;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\SiteFeatures", mappedBy="site", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\SiteFeatures", mappedBy="site", cascade={"persist"}, fetch="EAGER")
      */
     private $siteFeatures;
 

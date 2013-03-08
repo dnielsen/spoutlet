@@ -24,7 +24,7 @@ class SiteFeatures
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", inversedBy="SiteFeatures", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", inversedBy="siteFeatures", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $site;
