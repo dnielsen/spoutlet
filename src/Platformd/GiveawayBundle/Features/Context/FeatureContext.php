@@ -17,6 +17,7 @@ use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 
 use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
 
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Feature context.
  */
@@ -51,9 +52,7 @@ class FeatureContext extends AbstractFeatureContext
                 $giveaway->setGiveawayType($data['type']);
             }
 
-            $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->getCurrentSite());
-
-            $giveaway->setSites(array($site));
+            $giveaway->setSites(array($this->currentSite));
 
             $keys = isset($data['keys']) ? explode(',', $data['keys']) : array();
             if (count($keys) > 0) {
@@ -75,6 +74,7 @@ class FeatureContext extends AbstractFeatureContext
             }
 
             $em->persist($giveaway);
+
         }
 
         // if we have 1 giveaway, make it the current one
@@ -83,6 +83,7 @@ class FeatureContext extends AbstractFeatureContext
         }
 
         $em->flush();
+
     }
 
     /**
@@ -134,10 +135,7 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        $em = $this->getEntityManager();
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($this->getCurrentSite());
-
-        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $site);
+        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $this->currentSite);
     }
 
     /**

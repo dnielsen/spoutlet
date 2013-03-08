@@ -106,7 +106,7 @@ class DealController extends Controller
         $deal           = $this->getDealManager()->findOneBySlug($slug, $site);
         $clientIp       = $request->getClientIp(true);
         $user           = $this->getUser();
-        $locale         = $this->getLocale();
+        $locale         = $site->getDefaultLocale();
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
 

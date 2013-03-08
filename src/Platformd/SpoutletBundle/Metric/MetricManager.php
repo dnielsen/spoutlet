@@ -195,6 +195,7 @@ class MetricManager
             $newUsers = $this->userRepo->countNewRegistrants($since, $key);
 
             $data[$key] = array(
+                'siteName'             => $name,
                 'count'                => $totalUsers,
                 'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,

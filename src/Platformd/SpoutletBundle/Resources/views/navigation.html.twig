@@ -5,7 +5,7 @@
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 <li>{{ site_link('ALIENWARE_LINK') }}</li>
 
-                {% if site_has_feature('GAMES_NAV_DROP_DOWN') %}
+                {% if features.hasGamesNavDropDown %}
                     <li class="more">
                         <a class="blue">{{ 'games' | trans }}</a>
                         <ul>
@@ -22,17 +22,17 @@
 
                             {% endif %}
 
-                            {% if site_has_feature('GAMES') -%}
+                            {% if features.hasGames -%}
                                 <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
                             {%- endif %}
                         </ul>
                     </li>
-                {% elseif site_has_feature('GAMES') %}
+                {% elseif features.hasGames %}
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
                 {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
-                {% if site_has_feature('EVENTS') %}
+                {% if features.hasEvents %}
                     <li>
                         <a href="{{ path('global_events_index') }}">
                             {{ 'platformd.layout.main_menu.events' | trans }}
@@ -42,7 +42,7 @@
                     <li>{{ site_link('EVENTS') | raw }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('NEWS') %}
+                {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
                 {% else %}
                     <li class="more">
@@ -54,38 +54,38 @@
                     </li>
                 {% endif %}
 
-                {% if site_has_feature('SWEEPSTAKES') %}
+                {% if features.hasSweepstakes %}
                     <li><a href="{{ path('sweepstakes_index') }}">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('VIDEO') and not site_has_feature('WALLPAPERS') and not site_has_feature('PHOTOS') and not site_has_feature('CONTESTS') %}
+                {% if features.hasVideo and not features.hasWallpapers and not features.hasPhotos and not features.hasContests %}
                     <li>{{ site_link('VIDEOS') }}</li>
 
-                {% elseif site_has_feature('VIDEO') or site_has_feature('WALLPAPERS') or site_has_feature('PHOTOS') or site_has_feature('CONTESTS') %}
+                {% elseif features.hasVideo or features.hasWallpapers or features.hasPhotos or features.hasContests %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
-                            {% if site_has_feature('VIDEO') %}
+                            {% if features.hasVideo %}
                             <li>{{ site_link('VIDEOS') }}</li>
                             {% endif %}
-                            {% if site_has_feature('WALLPAPERS') %}
+                            {% if features.hasWallpapers %}
                             <li>{{ site_link('WALLPAPERS') }}</li>
                             {% endif %}
-                            {% if site_has_feature('PHOTOS') %}
+                            {% if features.hasPhotos %}
                             <li>{{ site_link('PHOTOS') }}</li>
                             {% endif %}
-                            {% if site_has_feature('CONTESTS') %}
+                            {% if features.hasContests %}
                             <li>{{ site_link('CONTESTS_IMAGE') }}</li>
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if site_has_feature('DEALS') %}
+                {% if features.hasDeals %}
                     <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('GROUPS') %}
+                {% if features.hasGroups %}
                     <li class="more">
                         <a class="blue">
                             {{ 'platformd.layout.main_menu.groups' | trans }}
@@ -100,22 +100,22 @@
                             <li>
                                 <a href="{{ path('group_new') }}">Create Group</a>
                             </li>
-                            {% if site_has_feature('CONTESTS') %}
+                            {% if features.hasContests %}
                             <li>{{ site_link('CONTESTS_GROUP') }}</li>
                             {% endif %}
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if site_has_feature('FORUMS') %}
+                {% if features.hasForums %}
                     <li><a href="{{ path('forums') }}">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('ARP') %}
+                {% if features.hasArp %}
                     <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                 {% endif %}
 
-                {% if site_has_feature('MICROSOFT') %}
+                {% if features.hasMicrosoft %}
                 <li><a href="{{ path('microsoft') }}">{{ 'platformd.layout.main_menu.microsoft' | trans }}</a></li>
                 {% endif %}
 

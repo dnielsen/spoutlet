@@ -1,37 +1,26 @@
 <?php
 
 namespace Platformd\SpoutletBundle\Util;
+
+use Platformd\SpoutletBundle\Entity\Site;
+
 use Doctrine\ORM\EntityManager;
+
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+
 
 class SiteUtil
 {
     private $em;
-    private $host;
+
+    /**
+     * @var Site
+     */
+    private $currentSite;
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-    }
-
-    public function getCurrentSite()
-    {
-        if (!$currentHost = $this->host) {
-            return;
-        }
-
-        $subDomain = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
-        $site = $this->getSiteFromSubDomain($subDomain);
-
-        if (!$site) {
-            die("Could not find site for '".$subDomain."'.");
-        }
-
-        return $site;
-    }
-
-    public function getSiteFromSubDomain($subDomain) {
-        return $this->em->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
     }
 
     public function getAllSites()
@@ -39,8 +28,26 @@ class SiteUtil
         return $this->em->getRepository('SpoutletBundle:Site')->findAll();
     }
 
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Site
+     */
+    public function getCurrentSite() {
+        return $this->currentSite;
+    }
+
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $this->host = $event->getRequest()->getHost();
+        $currentHost = $event->getRequest()->getHost();
+
+        $this->currentSite = $this->em->getRepository('SpoutletBundle:Site')->findOneByFullDomain($currentHost);
+
+        if (!$this->currentSite) {
+            die("Could not find current site (domain = '".$currentHost."').");
+        }
+    }
+
+    public function getSiteForLocale($locale)
+    {
+        return $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 }

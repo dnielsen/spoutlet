@@ -28,7 +28,7 @@
                 {{ news.body | raw }}
             </div>
 
-            {% if site_has_feature('COMMENTS') %}
+            {% if features.hasComments %}
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
             {% endif %}
         </div>

@@ -51,3 +51,7 @@ fos_comment_extra:
 GameBundle:
     resource: "@GameBundle/Resources/config/routing.yml"
     prefix:   /
+
+liip_theme:
+    resource: "@LiipThemeBundle/Resources/config/routing.xml"
+    prefix: /theme

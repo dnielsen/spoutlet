@@ -64,7 +64,7 @@
         </script>
 	</head>
 	<body>
-
+    
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
@@ -161,7 +161,7 @@
 
                             {% endif %}
 
-                            {% if site_has_feature('WALLPAPERS') %}
+                            {% if features.hasWallpapers %}
 
                                 <li>
                                     <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
@@ -195,7 +195,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            {% if site_has_feature('DEALS') and is_granted('ROLE_ADMIN_DEAL') %}
+                            {% if features.hasDeals and is_granted('ROLE_ADMIN_DEAL') %}
                             <li>
                                 <a href="{{ path('admin_deal') }}">Deals</a>
                                 <ul>
@@ -212,7 +212,7 @@
                                 </li>
                             {% endif %}
 
-                            {% if is_granted('ROLE_ORGANIZER') and site_has_feature('GROUPS') %}
+                            {% if is_granted('ROLE_ORGANIZER') and features.hasGroups %}
                                 <li>
                                     <a href="{{ path('admin_content_reports') }}">Content Report Admin</a>
                                 </li>

@@ -4,7 +4,7 @@
 
 [twig]
     git=http://github.com/fabpot/Twig.git
-    version=v1.7.0
+    version=v1.8.0
 
 [monolog]
     git=http://github.com/Seldaek/monolog.git
@@ -60,7 +60,7 @@
 [AsseticBundle]
     git=http://github.com/symfony/AsseticBundle.git
     target=/bundles/Symfony/Bundle/AsseticBundle
-    version=v1.0.1
+    version=origin/2.0
 
 [FOSUserBundle]
     git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
@@ -185,3 +185,7 @@
    git=git://github.com/dustin10/VichGeographicalBundle.git
    target=/bundles/Vich/GeographicalBundle
    version=fc68b2c52e3b925fb31e51ee87fefe325491d266
+
+[LiipThemeBundle]
+    git=http://github.com/liip/LiipThemeBundle.git
+    target=bundles/Liip/ThemeBundle

@@ -24,7 +24,7 @@
     <tbody>
         {% for siteKey, siteData in sitesData %}
         <tr>
-            <td>{{ siteKey | site_name }}</td>
+            <td>{{ siteData.siteName }}</td>
             <td>{{ siteData.count }}</td>
             <td>{{ siteData.arenaOptIn }}</td>
             <td>{{ siteData.arenaOptInPercentage }}%</td>

@@ -12,16 +12,18 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
     private $container;
     private $manager;
 
-    private function createSite($id, $name, $locale, $domain) {
+    private function createSite($id, $name, $locale, $domain, $supportEmailAddress) {
 
-        $siteRepo   = $this->manager->getRepository('SpoutletBundle:Site');
-        $site       = $siteRepo->find($id) ?: new Site();
+        $site = new Site();
 
         $site->setName($name);
         $site->setDefaultLocale($locale);
-        $site->setSubdomain($domain);
+        $site->setFullDomain($domain);
+        $site->setSupportEmailAddress($supportEmailAddress);
 
         $this->manager->persist($site);
+
+        return $site;
     }
 
     private function resetAutoIncrementId() {
@@ -38,15 +40,195 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
 
         $this->resetAutoIncrementId();
 
-        $this->createSite(1, 'Demo', 'en', 'demo');
-        $this->createSite(2, 'Japan', 'ja', 'japan');
-        $this->createSite(3, 'China', 'zh', 'china');
-        $this->createSite(4, 'North America', 'en_US', 'na');
-        $this->createSite(5, 'Europe', 'en_GB', 'eu');
-        $this->createSite(6, 'Latin America', 'es', 'latam');
-        $this->createSite(7, 'India', 'en_IN', 'in');
-        $this->createSite(8, 'Singapore', 'en_SG', 'mysg');
-        $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz');
+        $demo  = $this->createSite(1, 'Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local');
+        $japan = $this->createSite(2, 'Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local');
+        $china = $this->createSite(3, 'China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local');
+        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local');
+        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local');
+        $latam = $this->createSite(6, 'Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local');
+        $in    = $this->createSite(7, 'India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local');
+        $mysg  = $this->createSite(8, 'Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local');
+        $anz   = $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local');
+
+        $demo->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments()
+          ->setHasContests()
+          ->setHasDeals()
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups()
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews()
+          ->setHasPhotos()
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents()
+        ;
+
+        $japan->getSiteFeatures()
+          ->setHasArp(false)
+          ->setHasComments()
+          ->setHasContests(false)
+          ->setHasDeals(false)
+          ->setHasForums(false)
+          ->setHasGames(false)
+          ->setHasGamesNavDropDown(false)
+          ->setHasGroups(false)
+          ->setHasMessages(false)
+          ->setHasMicrosoft(false)
+          ->setHasNews()
+          ->setHasPhotos(false)
+          ->setHasSteamXfireCommunities(false)
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers(false)
+          ->setHasEvents(false)
+        ;
+
+        $china->getSiteFeatures()
+          ->setHasArp(false)
+          ->setHasComments(false)
+          ->setHasContests(false)
+          ->setHasDeals(false)
+          ->setHasForums(false)
+          ->setHasGames(false)
+          ->setHasGamesNavDropDown(false)
+          ->setHasGroups(false)
+          ->setHasMessages(false)
+          ->setHasMicrosoft()
+          ->setHasNews()
+          ->setHasPhotos(false)
+          ->setHasSteamXfireCommunities(false)
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents(false)
+        ;
+
+        $na->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments()
+          ->setHasContests()
+          ->setHasDeals()
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups()
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos()
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents()
+        ;
+
+        $eu->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments()
+          ->setHasContests()
+          ->setHasDeals()
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups()
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos()
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents()
+        ;
+
+        $latam->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments()
+          ->setHasContests()
+          ->setHasDeals(false)
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups(false)
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos()
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents(false)
+        ;
+
+        $in->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments(false)
+          ->setHasContests(false)
+          ->setHasDeals(false)
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups(false)
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos(false)
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents(false)
+        ;
+
+        $mysg->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments(false)
+          ->setHasContests(false)
+          ->setHasDeals(false)
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups(false)
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos(false)
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents(false)
+        ;
+
+        $anz->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments(false)
+          ->setHasContests(false)
+          ->setHasDeals(false)
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown()
+          ->setHasGroups(false)
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews(false)
+          ->setHasPhotos(false)
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents(false)
+        ;
 
         $this->manager->flush();
     }

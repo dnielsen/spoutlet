@@ -21,7 +21,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="std_1col">
+
+    <div id="content">
+        <div class="std_1col">
 
         {% if sweepstakes.bannerImage %}
             <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
@@ -82,60 +84,61 @@
                             {% endif %}
 
                             <div class="clear"></div>
-                        {% endif %}
-
-                    </div>
-                </form>
-            </div>
-
-        </div><!-- right -->
-
-        <div class="left">
-            <div id="giveaway-info" class="widget-66">
-                <div class="widget-header">
-                    <div class="widget-title">{{ 'overview' | trans }}</div>
-                </div><!-- widget-header -->
-
-                <div class="widget-content" id="giveaway-details">
-                    <ul class="sweepstakes-details">
-                        <li class="tight">
-                            <label>{{ 'registration_opens' | trans }}</label>
-
-                            {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
-                            {{ sweepstakes.timezoneString }}
-                        </li>
-                        <li>
-                            {% if sweepstakes.endsAt %}
-
-                                <label>{{ 'registration_closes' | trans }}</label>
-                            {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
-                                {{ sweepstakes.timezoneString }}
-                            {% else %}
-                                <label>{{ 'registration_closes' | trans }}</label>
-                                {{ 'na' | trans }}
                             {% endif %}
-                        </li>
 
-                    </ul>
+                        </div>
+                    </form>
+                </div>
 
-                    <label>{{ 'instructions' |trans }}</label><br/>
+            </div><!-- right -->
 
-                    {{ sweepstakes.content | raw }}
+            <div class="left">
+                <div id="giveaway-info" class="widget-66">
+                    <div class="widget-header">
+                        <div class="widget-title">{{ 'overview' | trans }}</div>
+                    </div><!-- widget-header -->
 
-                </div><!-- giveaway-details -->
+                    <div class="widget-content" id="giveaway-details">
+                        <ul class="sweepstakes-details">
+                            <li class="tight">
+                                <label>{{ 'registration_opens' | trans }}</label>
 
-            </div><!-- giveaway-info -->
+                                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
+                                {{ sweepstakes.timezoneString }}
+                            </li>
+                            <li>
+                                {% if sweepstakes.endsAt %}
 
-            {% if site_has_feature('COMMENTS') %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
-            {% endif %}
+                                    <label>{{ 'registration_closes' | trans }}</label>
+                                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
+                                    {{ sweepstakes.timezoneString }}
+                                {% else %}
+                                    <label>{{ 'registration_closes' | trans }}</label>
+                                    {{ 'na' | trans }}
+                                {% endif %}
+                            </li>
 
-        </div><!-- left -->
+                        </ul>
 
-        <div class="clear">
+                        <label>{{ 'instructions' |trans }}</label><br/>
 
-        </div><!-- clear -->
-    </div><!-- std_2col -->
+                        {{ sweepstakes.content | raw }}
+
+                    </div><!-- giveaway-details -->
+
+                </div><!-- giveaway-info -->
+
+                {% if features.hasComments %}
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
+                {% endif %}
+
+            </div><!-- left -->
+
+            <div class="clear">
+
+            </div><!-- clear -->
+        </div><!-- std_2col -->
+    </div>
 
     <div id="sweeps-terms-modal-content" class="modal-content" style="display: none">
         <h3>{{ 'official_sweepstakes_rules' | trans }}</h3>

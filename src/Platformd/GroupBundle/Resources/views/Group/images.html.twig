@@ -1,12 +1,8 @@
 {% set reportContentType    = 'GroupImage' %}
-{% set site                 = get_current_site() %}
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddImage') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditImage') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteImage') %}
-{% set addImageUrl          = site_has_feature('PHOTOS') ? path('gallery_submit') : path('group_add_image') %}
-
-
-
+{% set addImageUrl          = features.hasPhotos ? path('gallery_submit') : path('group_add_image') %}
 
 <div>
     {% if pages | length > 0 %}

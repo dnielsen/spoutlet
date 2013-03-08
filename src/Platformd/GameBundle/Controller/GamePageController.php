@@ -72,15 +72,15 @@ class GamePageController extends Controller
         $feedEvents = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->findActivesForGame($gamePage->getGame(), $this->getCurrentSite())
+            ->findActivesForGame($gamePage->getGame(), $site)
         ;
 
         $dealRepo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal');
 
-        $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($this->getCurrentSite(), $gamePage->getGame());
-        $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $this->getCurrentSite());
+        $deals          = $dealRepo->findAllPublishedForSiteNewestFirstForGame($site, $gamePage->getGame());
+        $feedNewsItems  = $this->getNewsRepo()->findActivesForGame($gamePage->getGame(), $site);
 
         $hasVideos = $gamePage->getyoutubeIdTrailer1() != ''
             || $gamePage->getyoutubeIdTrailer1() != ''

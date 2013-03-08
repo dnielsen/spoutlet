@@ -119,10 +119,6 @@ class GroupManager
             $group->setMembers($members);
         }
 
-        $groupDescription = $group->getDescription();
-        $groupDescription = strip_tags($groupDescription, '<p><br><a><strong><em><ol><ul><li>');
-        $group->setDescription($groupDescription);
-
         $this->em->persist($group);
 
         $this->handleMediaFields($group);
@@ -219,10 +215,6 @@ class GroupManager
             $user = $this->securityContext->getToken()->getUser();
             $groupNews->setAuthor($user);
         }
-
-        $article = $groupNews->getArticle();
-        $article = strip_tags($article, '<p><br><a><strong><em><ol><ul><li>');
-        $groupNews->setArticle($article);
 
         $this->em->persist($groupNews);
 
@@ -584,5 +576,15 @@ class GroupManager
 
         $this->isApplicantCache[$cacheKey] = $result;
         return $this->isApplicantCache[$cacheKey];
+    }
+
+    public function getMembersLeftCountByGroup($group, $fromDate=null, $thruDate=null)
+    {
+        return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersLeftCountByGroup($group, $fromDate, $thruDate);
+    }
+
+    public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
+    {
+        return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersJoinedCountByGroup($group, $fromDate, $thruDate);
     }
 }

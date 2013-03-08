@@ -1,5 +1,4 @@
 {% set reportContentType    = 'GroupNews' %}
-{% set site                 = get_current_site() %}
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddNews') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditNews') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteNews') %}

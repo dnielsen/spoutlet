@@ -1,0 +1,63 @@
+{# Here we should only have the bare minimum for the site to display and operate properly #}
+
+{% block stylesheets %}
+    {% stylesheets
+        'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
+        'bundles/spoutlet/css/forms.css'
+        'bundles/spoutlet/css/style.css'
+        'bundles/spoutlet/css/superfish-aw.css'
+        'bundles/spoutlet/css/thickbox.css'
+        'bundles/spoutlet/css/custom-theme/jquery-ui-1.8.16.custom.css'
+        'bundles/spoutlet/css/account-registration.css'
+        'bundles/spoutlet/css/default.css'
+        'bundles/spoutlet/css/legal.css'
+        'bundles/spoutlet/css/new.css'
+        'bundles/comment/css/comments.css'
+        'bundles/spoutlet/css/comments.css'
+        'ckeditor/skins/kama/editor.css'
+        'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
+        filter='cssrewrite'
+        output='css/packed/layout.css'
+    %}
+    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'bundles/spoutlet/js/ie8.js'
+        'bundles/spoutlet/js/jquery-1.7.2.min.js'
+        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
+        'bundles/spoutlet/js/jquery.ajaxfileupload.js'
+        'bundles/spoutlet/js/jquery.cycle.all.js'
+        'bundles/spoutlet/js/jquery.dropshadow.js'
+        'bundles/spoutlet/js/jquery.qtip.min.js'
+        'bundles/spoutlet/js/jquery.simplemodal.js'
+        'bundles/spoutlet/js/jquery.simpletip.js'
+        'bundles/spoutlet/js/jquery.truncate.min.js'
+        'bundles/spoutlet/js/progressbar.js'
+        'bundles/spoutlet/js/superfish.js'
+        'bundles/spoutlet/js/supersubs.js'
+        'bundles/spoutlet/js/custom.js'
+        'bundles/spoutlet/js/google-dfp.js'
+        'bundles/spoutlet/js/jquery.countdown.min.js'
+        'bundles/spoutlet/js/jquery.ddslick.min.js'
+        'bundles/spoutlet/alt_js/*'
+        'bundles/comment/js/comments.js'
+        'bundles/spoutlet/js/jquery.timeago.min.js'
+        'ckeditor/ckeditor.js'
+        'ckeditor/config.js'
+        'ckeditor/lang/en.js'
+        'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
+        'bundles/spoutlet/js/jquery.blockUI.js'
+        output='js/packed/layout.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+        <script type="text/javascript">
+            CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+        </script>
+    {% endif %}
+{% endblock %}

@@ -429,7 +429,7 @@ email:
         %accountUrl%
 
         ご質問等ございましたら下記Eメールアドレスまでご連絡ください。
-        japan@alienwarearena.com.
+        %supportEmailAddress%.
 
         - ALIENWARE ARENA チーム
 

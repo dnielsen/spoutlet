@@ -61,7 +61,7 @@ class AccountController extends Controller
         $this->checkSecurity();
 
         // we have a little, temporary message until around April 1st
-        $isJapan = $this->getRequest()->getSession()->getLocale() == 'ja';
+        $isJapan = $this->getLocale() == 'ja';
         // this is April 1st at midnight EST - not sure what the EXACT time should be
         $isItAprilYet = time() < 1333256400;
         $showSweepstakesMessage = ($isJapan && $isItAprilYet);

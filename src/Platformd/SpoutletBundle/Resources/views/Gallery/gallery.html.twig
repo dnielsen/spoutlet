@@ -40,7 +40,7 @@
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.login_to_vote' | trans }}</a>
+                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
@@ -80,7 +80,7 @@
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.login_to_vote' | trans }}</a>
+                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
@@ -105,6 +105,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -117,6 +118,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
+    {% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
     <script type="text/javascript">
         $(function () {
 

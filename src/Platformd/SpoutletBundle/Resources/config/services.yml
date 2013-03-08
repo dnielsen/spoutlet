@@ -76,9 +76,17 @@ services:
     platformd.twig.spoutlet_extension:
         class: Platformd\SpoutletBundle\Twig\SpoutletExtension
         arguments:
-            - "@service_container"
-        public: false
+            - "%s3_bucket_name%"
+            - "@pd_giveaway.giveaway_manager"
+            - "@platformd.link.linkable_manager"
+            - "@media_exposer"
+            - "@router"
+            - "@security.context"
+            - "@platformd.model.site_util"
+            - "@translator"
+            - "@fos_user.user_manager"
         tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
 
     platformd.form.extension.help_form_type_extension:
@@ -86,12 +94,22 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
+
+    platformd.listener.site_translation_listener:
+        class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
+        arguments:
+            - "@platformd.model.site_util"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
+        calls:
+            - [ setLogger, [ @logger] ]
+
     platformd.model.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
             - "@doctrine.orm.entity_manager"
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
 
     platformd.model.email_manager:
         class: Platformd\SpoutletBundle\Model\EmailManager

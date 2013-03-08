@@ -1,5 +1,5 @@
 symfony v2.0.13
-twig v1.7.0
+twig v1.8.0
 monolog 1.0.2
 doctrine-common 2.1.4
 doctrine-dbal 2.1.6
@@ -12,7 +12,7 @@ SensioFrameworkExtraBundle cb61b92ed55241d93ed9726bc3f5f47c7d2ce8fe
 JMSSecurityExtraBundle e752f888c51425f71382c056961f10f2be642102
 SensioDistributionBundle 20b66a408084ad8752f98e50f10533f5245310bf
 SensioGeneratorBundle b1ccb78c1743f30817b0fce9bb5c6baff6ed7bf8
-AsseticBundle v1.0.1
+AsseticBundle 6f15728c1aefa5246caa83730e3dbf70b0d46052
 FOSUserBundle 1.1.0~52
 doctrine-fixtures v1.0.0-ALPHA1~4
 DoctrineFixturesBundle a66be2f077f3a4e5c3801b356b42b8782f1abbd6
@@ -38,3 +38,4 @@ LiipImagineBundle 2825a611569dbb5d28edc335ecbf2a081902f69d
 HTMLPurifierBundle f79f6bcd8725f41ba5c3af2d045a91bcfd00ba2a
 HTMLPurifier 344e0640b6610883a0aa6766cc6750d26d091c76
 VichGeographicalBundle fc68b2c52e3b925fb31e51ee87fefe325491d266
+LiipThemeBundle fd03522f96af1f6b580e5362eb97f983f1126975

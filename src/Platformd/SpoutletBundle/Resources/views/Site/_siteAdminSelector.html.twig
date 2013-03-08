@@ -14,7 +14,7 @@
             </li>
             {% for site, name in sites %}
             <li>
-                <a href="{{ path(route, {'site': site}) }}">{{ site | site_name }}</a>
+                <a href="{{ path(route, {'site': site }) }}">{{ name }}</a>
             </li>
             {% endfor %}
         </ul>

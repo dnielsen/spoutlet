@@ -16,19 +16,7 @@ class Controller extends BaseController
 {
 
     protected function getCurrentSite() {
-
-        $currentHost    = $this->getRequest()->getHost();
-        $subDomain      = str_replace('staging', '', substr($currentHost, 0, stripos($currentHost, '.')));
-
-        return $this->getSiteFromSubDomain($subDomain);
-    }
-
-    protected function getSiteFromSubDomain($subDomain) {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneBySubDomain($subDomain);
-    }
-
-    protected function getSiteFromLocale($locale) {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+        return $this->container->get('platformd.model.site_util')->getCurrentSite();
     }
 
     /**

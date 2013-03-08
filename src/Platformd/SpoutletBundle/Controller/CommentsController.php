@@ -203,7 +203,7 @@ class CommentsController extends Controller
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $commentCount,
-            'permalink' => $thread->getPermalink(),
+            'permalink' => $comment->getThread()->getPermalink(),
         ));
     }
 
@@ -423,7 +423,7 @@ class CommentsController extends Controller
             $tag = 'nukephotocomment';
         }
 
-        if(strlen(stristr($thread, 'group')) > 0) {
+        if(strlen(stristr($threadId, 'group')) > 0) {
             $tag = 'nukeforumreply';
         }
 

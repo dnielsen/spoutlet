@@ -44,8 +44,7 @@ class ContentReportRepository extends EntityRepository
         }
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
-
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE report.deleted = false
@@ -64,8 +63,7 @@ class ContentReportRepository extends EntityRepository
         }
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
-
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = false AND
@@ -88,8 +86,7 @@ class ContentReportRepository extends EntityRepository
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
         return $this->getEntityManager()->createQuery(sprintf('
-            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.subDomain subdomain FROM %s:%s item
-
+            SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = true AND report.deleted = true

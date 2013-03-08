@@ -415,7 +415,7 @@ email:
 
         Thank you for registering for %giveawayName%. Your key is posted to your ALIENWARE ARENA account (%accountUrl%) and is now ready to use.
 
-        If you have any questions, please feel free to email us at japan@alienwarearena.com.
+        If you have any questions, please feel free to email us at %supportEmailAddress%.
 
         -ALIENWARE ARENA
 

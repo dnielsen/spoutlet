@@ -27,7 +27,8 @@ class AppKernel extends Kernel
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             new JMS\TranslationBundle\JMSTranslationBundle(),
-            new \Liip\ImagineBundle\LiipImagineBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
+            new Liip\ThemeBundle\LiipThemeBundle(),
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
             new Vich\GeographicalBundle\VichGeographicalBundle(),
@@ -36,7 +37,7 @@ class AppKernel extends Kernel
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
             new Knp\Bundle\MediaExposerBundle\KnpMediaExposerBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new \Knp\MediaBundle\KnpMediaBundle(),
+            new Knp\MediaBundle\KnpMediaBundle(),
             new Knp\Bundle\TimeBundle\KnpTimeBundle(),
 
             // my bundles
