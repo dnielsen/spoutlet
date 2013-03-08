@@ -119,9 +119,9 @@ echo "  - Initialising ACL structure..."
 ./app/console init:acl --env=test >> bin/AwaReset.log
 
 echo
-echo "Changing cache ownership..."
+echo "Nuking cache from orbit..."
 
-sudo chown -R `whoami`:`whoami` app/cache/ >> bin/AwaReset.log
+sudo rm -rf app/cache/* >> bin/AwaReset.log
 
 echo
 echo "Clearing caches:"
