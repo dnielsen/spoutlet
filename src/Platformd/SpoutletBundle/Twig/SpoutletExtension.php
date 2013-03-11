@@ -73,6 +73,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link'            => new Twig_Filter_Method($this, 'linkToObject'),
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
+            'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
         );
     }
 
@@ -743,5 +744,10 @@ class SpoutletExtension extends Twig_Extension
 
             default:        return false;
         }
+    }
+
+    public function dateTranslate($datetime)
+    {
+        return $datetime->format($this->translator->trans('date_format', array(), 'messages', $this->session->getLocale()));
     }
 }

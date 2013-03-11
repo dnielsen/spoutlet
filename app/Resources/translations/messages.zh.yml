@@ -1,4 +1,5 @@
 edit: 编辑
+date_format: Y年m月d日
 
 platformd:
 
@@ -363,7 +364,6 @@ platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
 instructions: 说明
 sweepstakes_date_format: %year%年%month%月%day%日
-date_format: %year%年%month%月%day%日
 eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
@@ -424,6 +424,7 @@ username: 用户名
 age_confirm:
     headline: Please Confirm Your Date of Birth
     message: The content is intended for mature audiences. Please confirm your age below
+    date_format: %year%年%month%月%day%日
 confirm: Confirm
 
 forms:

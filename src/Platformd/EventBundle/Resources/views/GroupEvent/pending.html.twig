@@ -50,13 +50,13 @@
                             <a href="{{ event | pd_link }}" target="_blank">{{ event.name }}</a>
                         </td>
                         <td>
-                            {{ event.startsAt | date('M j, Y') }} - {{ event.endsAt | date('M j, Y') }}
+                            {{ event.startsAt | date_translate }} - {{ event.endsAt | date_translate }}
                         </td>
                         <td>
                             {{ event.user.username }}
                         </td>
                         <td>
-                            {{ event.createdAt | date('M j, Y') }}
+                            {{ event.createdAt | date_translate }}
                         </td>
                         <td>
                             <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>

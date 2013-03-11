@@ -26,7 +26,7 @@
         {% for event in events %}
         <tr class="eventListGroup_online">
             <td style="width:121px;vertical-align:top">
-                {{ event.startsAt | date('M j, Y') }}
+                {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
             <td style="width:8px;vertical-align:top">

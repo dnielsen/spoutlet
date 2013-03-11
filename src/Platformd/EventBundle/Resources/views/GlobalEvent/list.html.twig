@@ -4,11 +4,14 @@
 
 {% block content %}
 <h2 style="margin:0 0 10px 0;">{{ 'platformd.events.event_listings.header' | trans }}</h2>
-<div class="std_1col" style="padding:0 0 10px 0">
-    <div>
-        {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
+
+{% if features.hasGroups %}
+    <div class="std_1col" style="padding:0 0 10px 0">
+        <div>
+            {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
+        </div>
     </div>
-</div>
+{% endif %}
 
 <div class="std_1col">
     <div class="widget-100">
@@ -30,7 +33,7 @@
                 <div style="position:absolute;left:0px;">
                     <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" /><span class="attending" style="color:#c6c6c6">Means you are registered to attend this event.</span>
                     <div style="display:inline-table; background-color:#9BC744; height: 10px; width:10px; margin:0 5px 0 35px;"></div><span style="color:#c6c6c6">Alienware Arena Sponsored Event</span>
-                    <div style="display:inline-table; background-color:#009cda; height: 10px; width:10px; margin:0 5px 0 35px;"></div><span style="color:#c6c6c6">Group Event</span>
+                    {% if features.hasGroups %}<div style="display:inline-table; background-color:#009cda; height: 10px; width:10px; margin:0 5px 0 35px;"></div><span style="color:#c6c6c6">Group Event</span>{% endif %}
                 </div>
             </div>
         </div>

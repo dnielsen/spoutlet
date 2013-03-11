@@ -32,29 +32,31 @@
                     </div>
                 </div>
 
-                <div class="widget-100" style="margin-bottom:20px;">
-                    <div class="widget-header">
-                        <div class="widget-title">
-                            {{ "platformd.events.event_listings.my_owned_events" | trans }}
+                {% if features.hasGroups %}
+                    <div class="widget-100" style="margin-bottom:20px;">
+                        <div class="widget-header">
+                            <div class="widget-title">
+                                {{ "platformd.events.event_listings.my_owned_events" | trans }}
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            {% set no_events_message = 'platformd.account_page.events.no_created_events' | trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) %}
+                            {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                                'events': ownedEvents,
+                                'pastEvents' : pastOwnedEvents,
+                                'no_events_message': no_events_message,
+                                'extendedStatus': true,
+                            } %}
+                        </div>
+                        <div class="widget-footer">
+                            {% if pastOwnedEvents|length > 0 %}
+                                <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">Show past events</a>
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="widget-content">
-                        {% set no_events_message = 'platformd.account_page.events.no_created_events' | trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) %}
-                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
-                            'events': ownedEvents,
-                            'pastEvents' : pastOwnedEvents,
-                            'no_events_message': no_events_message,
-                            'extendedStatus': true,
-                        } %}
-                    </div>
-                    <div class="widget-footer">
-                        {% if pastOwnedEvents|length > 0 %}
-                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">Show past events</a>
-                        {% else %}
-                            &nbsp;
-                        {% endif %}
-                    </div>
-                </div>
+                {% endif %}
 
             </div>
         </div>

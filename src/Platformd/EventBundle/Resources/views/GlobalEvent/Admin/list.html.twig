@@ -33,8 +33,7 @@
                 {{ event | pd_link_full }}
             </td>
             <td title="{{ event.startsAt|date }}">
-                {{ event.startsAt|date('M') }}
-                <span class="dateEmphasis"><strong>{{ event.startsAt|date('d') }}</strong></span>
+                {{ event.startsAt|date_translate }}
             </td>
             <td>{{ event.game }}</td>
             <td>

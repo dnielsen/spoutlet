@@ -1,4 +1,5 @@
 edit: 編集
+date_format: Y年m月d日
 
 platformd:
 
@@ -372,7 +373,6 @@ platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
 sweepstakes_date_format: %year%年%month%月%day%日
-date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
@@ -466,6 +466,7 @@ age_confirm:
     message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
+    date_format: %year%年%month%月%day%日
 confirm: 確認
 
 forms:

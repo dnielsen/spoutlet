@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    <div id="event-heading-date">{{ event.dateRangeString }}</div>
+                <div id="event-heading-date">{{ event.startsAt|date_translate ~ ' - ' ~ event.endsAt|date_translate }}</div>
                     <div id="event-heading-time">{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
                     <div id="event-content">{{ event.content | raw }}</div>
                 </div>
