@@ -227,4 +227,9 @@ class GroupDiscussionPost implements ReportableContentInterface
     {
         return $this->groupDiscussion;
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }

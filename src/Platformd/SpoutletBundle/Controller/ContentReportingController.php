@@ -83,7 +83,9 @@ class ContentReportingController extends Controller
             return $response;
         }
 
-        foreach ($content->getContentReports() as $r) {
+        $contentReports = $content->getContentReports();
+
+        foreach ($contentReports as $r) {
             if ($r->getReporter()->getId() == $user->getId()) {
                 $response->setContent(json_encode(array("success" => false, "messageForUser" => "You have already reported this content.")));
                 return $response;
@@ -101,43 +103,25 @@ class ContentReportingController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $em->persist($report);
+        $em->flush();
 
         $reportedItem = $em->getRepository($typeBundle.':'.$type)->find($id);
 
         $sendEmail = true;
 
-        switch ($type) {
-            case 'GalleryMedia':
-                if($reportedItem->getContestEntry()) {
-                    $sendEmail = false;
-                    $reportedItem->setDeleted(false);
-                } else {
-                    $reportedItem->setDeleted(true);
-                    $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
-                }
-                break;
+        if ((count($contentReports) + 1) >= $reportedItem->getReportThreshold()) {
+            $reportedItem->setDeleted(true);
+            $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
 
-            case 'Group':
-                $contest = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Contest')->findContestByGroup($reportedItem);
+            $em->persist($reportedItem);
+            $em->flush();
 
-                if($contest) {
-                    $sendEmail = false;
-                    $reportedItem->setDeleted(false);
-                } else {
-                    $reportedItem->setDeleted(true);
-                    $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
-                }
-                break;
-
-            default:
-                $reportedItem->setDeleted(true);
-                $reportedItem->setDeletedReason('REPORTED_PENDING_INVESTIGATION');
-                break;
+            if($sendEmail) {
+                $this->sendUserReportedNotificationEmail($id, $type, $reason);
+            }
         }
 
-        $em->persist($reportedItem);
-
-        $em->flush();
+        $this->sendStaffReportedNotificationEmail($id, $type, $reason, $report);
 
         /* Disabled at present as causing issues with reporting.
         // We dispatch an event for further stuff like maintaining counts
@@ -145,10 +129,6 @@ class ContentReportingController extends Controller
         $event = new ContentReportEvent($reportedItem, $this->getUser());
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         */
-
-        if($sendEmail) {
-            $this->sendUserReportedNotificationEmail($id, $type, $reason);
-        }
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
         return $response;
@@ -168,30 +148,42 @@ class ContentReportingController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
                 $name = $item->getTitle();
                 $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             case 'Comment':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getBody();
                 $owner = $item->getAuthor();
+                $url = $this->getCurrentSite()->getFullDomain().$item->getPermalink();
                 break;
 
             case 'Group':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getOwner();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             case 'GroupDiscussionPost':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();
-                $owner = $item->getOwner();
+                $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getGroupDiscussion()->getLinkableRouteName(), $item->getGroupDiscussion()->getLinkableRouteParameters(), true);
+                break;
+
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             default:
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getTitle();
                 $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
         }
 
@@ -202,14 +194,46 @@ class ContentReportingController extends Controller
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
         $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
         $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
-        $message            = sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason);
+        $message            = nl2br(sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url));
 
 
-        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
     }
 
     private function getEmailManager()
     {
         return $this->get('platformd.model.email_manager');
+    }
+
+    private function sendStaffReportedNotificationEmail($id, $type, $reason, $report)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $typeBundle = $contentReportRepo->getBundleFromType($type);
+
+        $item = $em->getRepository($typeBundle.':'.$type)->find($id);
+
+        switch ($type) {
+            case 'Comment':
+                $url = $this->getCurrentSite()->getFullDomain().$item->getPermalink();
+                break;
+
+            case 'GroupDiscussionPost':
+                $url = $this->generateUrl($item->getGroupDiscussion()->getLinkableRouteName(), $item->getGroupDiscussion()->getLinkableRouteParameters(), true);
+                break;
+
+            default:
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
+                break;
+        }
+
+        $emailTo            = 'reports@alienwarearena.com';
+        $emailLocale        = 'en';
+        $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
+        $subject            = $this->trans('content_reporting.staff_notification_title', array(), 'messages', $emailLocale);
+        $message            = nl2br(sprintf($this->trans('content_reporting.staff_notification', array(), 'messages', $emailLocale), $url, $reason, $report->getReporter()->getUsername()));
+
+        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported Staff Notification", $this->getCurrentSite()->getDefaultLocale());
     }
 }

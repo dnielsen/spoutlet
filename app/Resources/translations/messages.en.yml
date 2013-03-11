@@ -512,19 +512,15 @@ content_reporting:
     report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
     reported_email: |
-        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+        An item posted by you on Alienware Arena has been flagged as inappropriate and removed.
 
         Type: %s
-        Content:  %s
+        Content: %s
         Reason: %s
+        Link: %s
 
-        The content has been temporarily removed from Alienware Arena and will be
-        reviewed by our Staff within 72 hours.  If the content does not violate
-        our Terms of Service, we will enable it on our website and you will
-        receive an automated email with this update.
-
-        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
-
+        The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+        Thank you for your patience. Should you have any questions, please contact us at reports@alienwarearena.com.
         Alienware Arena Team
 
     restored_email_title: Your Content is Restored
@@ -535,6 +531,24 @@ content_reporting:
         Content: %s
 
         Alienware Arena Team
+
+    removed_email_title: Your Content Has Been Removed
+    removed_email: |
+        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: %s
+
+        Should you have any questions, please contact us at reports@alienwarearena.com.
+        Alienware Arena Team
+
+    staff_notification_title: New Content Reported
+    staff_notification: |
+        Link: %s
+        Reason: %s
+        Reporter: %s
 
 error:
     fill_in_birthday: Please fill in your birthday!

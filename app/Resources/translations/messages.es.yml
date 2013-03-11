@@ -129,6 +129,24 @@ content_reporting:
 
         Equipo Alienware Arena
 
+    removed_email_title: Your Content Has Been Removed
+    removed_email: |
+        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: %s
+
+        Should you have any questions, please contact us at reports@alienwarearena.com.
+        Alienware Arena Team
+
+    staff_notification_title: New Content Reported
+    staff_notification: |
+        Link: %s
+        Reason: %s
+        Reporter: %s
+
 error:
     fill_in_birthday: Por favor, escriba su cumpleaños!
 
