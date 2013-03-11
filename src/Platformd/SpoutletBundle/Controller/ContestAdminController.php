@@ -148,21 +148,15 @@ class ContestAdminController extends Controller
 
         $voteData = $voteRepo->getVotesForContest($contest);
         $likes = array();
-        $dislikes = array();
 
-        foreach ($voteData['up'] as $upVotes) {
+        foreach ($voteData as $upVotes) {
             $likes[$upVotes['id']] = $upVotes['vote_count'];
-        }
-
-        foreach ($voteData['down'] as $downVotes) {
-            $dislikes[$downVotes['id']] = $downVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
             'entries'   => $entries,
             'contest'   => $contest,
             'likes'     => $likes,
-            'dislikes'  => $dislikes,
         ));
     }
 
@@ -286,9 +280,8 @@ class ContestAdminController extends Controller
 
     private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
     {
-        $likes              = array();
-        $upVotes            = array();
-        $downVotes          = array();
+        $upVotes    = array();
+        $em         = $this->getDoctrine()->getEntityManager();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -296,24 +289,10 @@ class ContestAdminController extends Controller
 
         $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
 
-        foreach ($entries as $entry) {
-            foreach ($entry->getMedias() as $media) {
-                $likes[$media->getId()] = $this->getEntryLikeCount($media);
+        $contestLikes = $em->getRepository('SpoutletBundle:Vote')->getVotesForContest($contest);
 
-                $votes =  $media->getVotes();
-
-                if ($votes->count()) {
-                    $upCount = $votes
-                        ->filter(function($x) {
-                            return
-                            $x->getVoteType() == "up"; })
-                        ->count();
-
-                    $upVotes[$media->getId()] = $upCount;
-                } else {
-                    $upVotes[$media->getId()] = 0;
-                }
-            }
+        foreach ($contestLikes as $upVotes) {
+            $likes[$upVotes['id']] = $upVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
@@ -321,7 +300,6 @@ class ContestAdminController extends Controller
             'entries'   => $entries,
             'slug'      => $slug,
             'likes'     => $likes,
-            'upVotes'   => $upVotes,
         ));
     }
 
@@ -429,7 +407,10 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find media item.');
         }
 
-        $votes      = $voteRepo->findVotes($galleryMedia);
+        $contestEntry   = $galleryMedia->getContestEntry() ?: null;
+        $contest        = $contestEntry ? $contestEntry->getContest() : null;
+
+        $votes      = $voteRepo->findUpVotes($galleryMedia, $contest);
         $factory    = new CsvResponseFactory();
 
         $factory->addRow(array(

@@ -419,7 +419,7 @@ class GalleryController extends Controller
         }
 
         $voteRepo       = $this->getVoteRepository();
-        $likes        = $voteRepo->findUpVotes($id);
+        $likes        = $voteRepo->findUpVotesCount($id);
 
         $views = $media->getViews();
 
@@ -643,7 +643,7 @@ class GalleryController extends Controller
         $em->persist($vote);
         $em->flush();
 
-        $likes = $this->getVoteRepository()->findUpVotes($media);
+        $likes = $this->getVoteRepository()->findUpVotesCount($media);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => 'Vote successful', "likes" => $likes)));
         return $response;

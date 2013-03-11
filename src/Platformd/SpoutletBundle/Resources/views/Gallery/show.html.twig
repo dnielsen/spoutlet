@@ -68,7 +68,7 @@
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
-            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
+            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.contestEntry.contest.isFinished == false and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
                 <div style="width:100%;padding:5px 0;margin-bottom:10px;text-align:center;">
                         <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
                             {{ 'contests.ongoing_contest_alert' | trans }}

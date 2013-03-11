@@ -82,31 +82,18 @@ class GalleryAdminController extends Controller
         $form = $this->createForm(new ImageFindType());
         $results = $this->processFindForm($form, $request);
 
-        $upVotes        = array();
-        $downVotes      = array();
-        $likes          = array();
+        $em      = $this->getDoctrine()->getEntityManager();
 
         if($results) {
 
+            $idArray = array();
+
             foreach ($results as $media) {
+                $idArray[] = $media->getId();
                 $likes[$media->getId()] = $this->getEntryLikeCount($media);
-
-                $totalVotes =  $media->getVotes()->count();
-
-                if ($totalVotes) {
-                    $upCount = $media->getVotes()
-                        ->filter(function($x) {
-                            return
-                            $x->getVoteType() == "up"; })
-                        ->count();
-
-                    $upVotes[$media->getId()] = round(($upCount/$totalVotes)*100);
-                    $downVotes[$media->getId()] = round((($totalVotes - $upCount)/$totalVotes)*100);
-                } else {
-                    $upVotes[$media->getId()] = 0;
-                    $downVotes[$media->getId()] = 0;
-                }
             }
+
+            $upVotes   = $em->getRepository('SpoutletBundle:Vote')->findUpVotesInArray($idArray);
         }
 
         $this->bindFormValues($form);
@@ -114,7 +101,6 @@ class GalleryAdminController extends Controller
         return $this->render('SpoutletBundle:GalleryAdmin:find.html.twig', array(
             'results'   => $results,
             'upVotes'   => $upVotes,
-            'downVotes' => $downVotes,
             'likes'     => $likes,
             'form'      => $form->createView()
         ));
