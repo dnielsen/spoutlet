@@ -189,12 +189,13 @@ Alienware Arena Team
             $this->getGroupEventService()->register($event, $user);
 
             $emailLocale = $user->getLocale() ?: 'en';
-            $subject     = $this->trans('platformd.event.email.group_application_accepted_event_registered.title', array(), 'messages', $emailLocale);
+            $subject     = $this->trans('platformd.event.email.group_application_accepted_event_registered.title', array("%groupName%" => $group->getName()), 'messages', $emailLocale);
             $message     = nl2br($this->trans('platformd.event.email.group_application_accepted_event_registered.message', array(
                 '%groupUrl%' => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
                 '%groupName%' => $group->getName(),
                 '%eventUrl%' => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
                 '%eventName%' => $event->getName(),
+                '%groupOwnerName%' => $group->getOwner()->getUsername(),
             ), 'messages', $emailLocale));
 
             $emailTo = $user->getEmail();

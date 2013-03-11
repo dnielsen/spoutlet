@@ -1023,4 +1023,27 @@ class User extends BaseUser
     {
         $this->groupMembershipActions = $value;
     }
+
+    public function getAccountLink($locale)
+    {
+        switch ($locale) {
+            case 'ja':
+                $subdomain = '/japan';
+                break;
+
+            case 'zh':
+                $subdomain = '/china';
+                break;
+
+            case 'es':
+                $subdomain = '/latam';
+                break;
+
+            default:
+                $subdomain = '';
+                break;
+        }
+
+        return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $this->cevoUserId);
+    }
 }

@@ -60,7 +60,7 @@ class GroupEventController extends Controller
         // TODO improve this
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->getSiteFromLocale($locale);
+            $site = $this->container->get('platformd.model.site_util')->getSiteForLocale($locale);
             $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
         }
 
@@ -351,6 +351,18 @@ class GroupEventController extends Controller
                 $email->setEvent($groupEvent);
                 $email->setSender($this->getUser());
                 $email->setSite($this->getCurrentSite());
+
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $groupEvent->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
 
                 $recipients = array();
 

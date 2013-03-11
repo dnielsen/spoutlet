@@ -365,6 +365,18 @@ Alienware Arena Team';
                 $email->setSender($this->getUser());
                 $email->setSite($this->getCurrentSite());
 
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $event->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
+
                 $recipients = array();
 
                 if ($recipientsString === null) {

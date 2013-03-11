@@ -412,18 +412,27 @@ platformd:
 
         email:
             attendees_contact:
-                title: Message from the organizer about %eventName%
+                title: Message from the event organizer about %eventName%
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
             approved:
                 title: Your Event Has Been Approved
                 message: |
-                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved!
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Alienware Arena.
 
-                    We encourage you to share this event with your friends.
-                    Your event is now visible on Alienware Arena.
+                    We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
 
-                    Should you have any questions, please contact us at <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
+                    Note: You are receiving this email because you submitted an event for approval.
 
-                    Alienware Arena Team
+                    Sent from Alienware Arena on behalf of %organizerName%.
             cancel:
                 title: %eventName% has been canceled
                 message: |
@@ -440,61 +449,90 @@ platformd:
             group_announcement:
                 title: You’re Invited to %eventName%
                 message: |
-                    %groupName% added a new event – %eventName%
+                    %groupName% added a new event – <a href="%url%">%eventName%</a>
+
+                    <strong><u>When</u></strong>
 
                     %startDate%
                     %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
 
                     %location%
 
                     <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
 
-                    Note: To unsubscribe from similar emails from this Group, you must leave the Group.
+                    Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
 
-                    Alienware Arena Team
+                    Sent from Alienware Arena on behalf of %organizerName%.
 
             require_approval:
                 title:  Request to Approve My Event for %groupName%
                 message: |
-                    <a href="%eventUrl%">%eventName%</a> needs approval to be listed on the "%groupName%" page.
+                    Hi %groupOwnerName%,
 
-                    Dates: %dateRange%
-                    Event Organizer: <a href="%userUrl%">%username%</a>
+                    Please approve my upcoming event - <a href="%eventUrl%">%eventName%</a> to be listed on the "%groupName%" page.
 
-                    You must click <a href="%approvalUrl%">here</a> to approve the event.
+                    <strong><u>When</u></strong>
 
-                    Alienware Arena Team
+                    %dateRange%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to approve the event.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
 
             group_join_application_from_event:
                 title: Group Member Approval Request
                 message: |
                     %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
-                    Click <a href="%approvalUrl%">here</a> to manage their request.
 
-                    Alienware Arena Team
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to review their request.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %userName%.
 
             group_application_accepted_event_registered:
-                title: You’re approved to be in an Alienware Arena Group!
+                title: You’re approved to be in %groupName%!
                 message: |
-                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit your group's page to join in on the conversation and share information with your group members.
-                    For your convenience, you are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit the group's page to join the conversation and share information with your fellow group members.
 
-                    Note: You are receiving this message because you submitted a request to join a private group.
-                    Alienware Arena Team
+                    You are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %groupOwnerName%.
 
             event_reminder:
-                title: Reminder on Your Upcoming Event - %eventName%
+                title: Upcoming Event Reminder for %eventName%
                 message: |
-                    Just a reminder, you've got an event coming up!
+                    Hi %username%,
 
-                    %eventName%
+                    Your event is almost here!
+
+                    <a href="%eventUrl%">%eventName%</a>
                     %dateString% - %timeString% %timezone%
 
                     %location%
 
-                    Click <a href="%eventUrl%">here</a> to change your RSVP.
+                    Have questions about the event?
+                    Contact the event organizer, <a href="%organizerUrl%">%organizerName%</a>.
 
-                    Alienware Arena Team
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
 
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"

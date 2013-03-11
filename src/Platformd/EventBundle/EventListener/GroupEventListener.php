@@ -42,17 +42,18 @@ class GroupEventListener
         $event = $ev->getEvent();
 
         $name = $event->getName();
-        $group = $event->getGroup()->getName();
+        $group = $event->getGroup();
         $owner = $event->getUser();
 
-        $fromName = $event->getGroup()->getName();
+        $fromName = $group->getOwner()->getUsername();
 
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
         $subject            = $this->translator->trans('platformd.event.email.approved.title', array(), 'messages', $emailLocale);
         $message            = nl2br($this->translator->trans('platformd.event.email.approved.message', array(
-            '%eventName%' => $name,
-            '%eventUrl%' => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            '%eventName%'       => $name,
+            '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            '%organizerName%'   => $fromName,
         ), 'messages', $emailLocale));
 
 
@@ -69,22 +70,24 @@ class GroupEventListener
 
             $name = $event->getName();
             $group = $event->getGroup()->getName();
+            $fromName = $event->getUser()->getUsername();
 
             foreach ($event->getGroup()->getMembers() as $member) {
                 $emailTo            = $member->getEmail();
                 $emailLocale        = $member->getLocale() ? : 'en';
                 $subject            = $this->translator->trans('platformd.event.email.group_announcement.title', array('%eventName%'   => $name), 'messages', $emailLocale);
                 $message            = nl2br($this->translator->trans('platformd.event.email.group_announcement.message', array(
-                    '%eventName%'   => $name,
-                    '%groupName%'   => $group,
-                    '%startDate%'   => $event->getStartsAt()->format('l, M j, Y'),
-                    '%startTime%'   => $event->getStartsAt()->format('g:i A'),
-                    '%timezone%'    => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
-                    '%location%'    => ($event->getOnline()) ? 'Online' : $event->getAddress(),
-                    '%url%'         => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                    '%eventName%'       => $name,
+                    '%groupName%'       => $group,
+                    '%startDate%'       => $event->getStartsAt()->format('l, M j, Y'),
+                    '%startTime%'       => $event->getStartsAt()->format('g:i A'),
+                    '%timezone%'        => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
+                    '%location%'        => ($event->getOnline()) ? 'Online' : $event->getAddress(),
+                    '%url%'             => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                    '%organizerName%'   => $fromName,
                 ), 'messages', $emailLocale));
 
-                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Invite", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $group);
+                $this->emailManager->sendHtmlEmail($emailTo, $subject, $message, "Group Event Invite", $this->siteUtil->getCurrentSite()->getDefaultLocale(), $fromName);
             }
 
         }
@@ -129,9 +132,12 @@ class GroupEventListener
                     "%eventName%" => $event->getName(),
                     "%groupName%" => $group->getName(),
                     "%dateRange%" => $event->getDateRangeString(),
-                    "%username%" => $event->getUser()->getUsername(),
-                    "%userUrl%" => $userUrl,
                     "%approvalUrl%" => $approvalUrl,
+                    "%groupOwnerName%" => $groupOwner->getUsername(),
+                    "%organizerName%" => $eventOwner->getUsername(),
+                    "%startTime%" => $event->getStartsAt()->format('g:i A'),
+                    "%timezone%" => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
+                    "%location%" => ($event->getOnline()) ? 'Online' : $event->getAddress(),
                 ), 'messages', $emailLocale));
 
                 $fromName = $event->getUser()->getAdminLevel() ? null : $event->getUser()->getUsername();
