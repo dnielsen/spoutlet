@@ -833,7 +833,12 @@ class GalleryController extends Controller
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
-        $site   = $siteRepo->findOneByFullDomain($subdomain.'.alienwarearena.com');
+        foreach ($siteRepo->findAll() as $dbSite) {
+            if ($site->getSubDomain() == $subdomain) {
+                $site = $dbSite;
+                break;
+            }
+        }
 
         if (!$site) {
             $response->setContent(json_encode(array("error" => "Invalid site specified.")));
