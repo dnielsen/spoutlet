@@ -48,7 +48,7 @@ set :shared_files,      ["app/config/parameters.ini"]
 
 # After finalizing update - update translations
 after "deploy:finalize_update" do
-  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract"
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} spoutlet:translations:entity-extract",:once => true
 end
 
 # Change ownership of releases directories to allow cleanup without permissions issues
