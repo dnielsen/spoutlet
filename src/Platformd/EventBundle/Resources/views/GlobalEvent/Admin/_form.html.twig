@@ -21,7 +21,8 @@
                 {{ form_row(form.online) }}
                 <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
                     {{ form_row(form.location) }}
-                    {{ form_row(form.address) }}
+                    {{ form_row(form.address1) }}
+                    {{ form_row(form.address2) }}
                 </div>
                 <div>
                     <div style="display:inline-table">{{ form_row(form.startsAt) }}</div>
