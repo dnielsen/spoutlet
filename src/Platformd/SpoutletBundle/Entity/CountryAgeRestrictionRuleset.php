@@ -112,7 +112,7 @@ class CountryAgeRestrictionRuleset
         foreach ($this->getRules() as $rule) {
             $isAllowed = $rule->isAllowed($age, $country) ;
 
-            if ($isAllowed == null) {
+            if ($isAllowed === null) {
                 continue;
             }
 

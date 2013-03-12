@@ -277,6 +277,8 @@ span.required {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     opacity: 0;
+    width: 120px;
+    height: 60px;
 }
 #homepage-gallery .ad-thumbs li a.ad-active img {
     border-color: #68bcd8;

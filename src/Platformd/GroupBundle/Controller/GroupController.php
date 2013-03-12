@@ -749,8 +749,6 @@ Alienware Arena Team
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
-
-            $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
         return $this->render('GroupBundle:Group:editImage.html.twig', array(

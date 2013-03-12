@@ -226,10 +226,10 @@ class CountryAgeRestrictionRule
 
             if (!$age || (($age > $this->getMinAge() || !$this->getMinAge()) && ($age < $this->getMaxAge() || !$this->getMaxAge()))) {
 
-                return $this->getRuleType();
+                return $this->getRuleType() == "allow";
             }
 
-            return !$this->getRuleType();
+            return !($this->getRuleType() == "allow");
 
         }
 

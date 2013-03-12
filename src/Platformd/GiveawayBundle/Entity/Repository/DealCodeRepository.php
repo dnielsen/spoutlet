@@ -59,6 +59,7 @@ class DealCodeRepository extends AbstractCodeRepository
         }
 
         if ($to) {
+            $to->setTime(23,59,59);
             $qb->andWhere('k.assignedAt <= :to')
                 ->setParameter('to', $to)
             ;
