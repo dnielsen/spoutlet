@@ -36,6 +36,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            $('.hour-selection select').val(null);
+            $('.minute-selection select').val(null);
+
             var timezone = jstz.determine();
             if (timezone) {
                 $('#groupEvent_timezone').val(timezone.name());

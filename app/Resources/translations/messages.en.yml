@@ -380,7 +380,8 @@ platformd:
             game: "Game"
             event_type: "Location"
             location: "Location Name"
-            address: "Address"
+            address1: "Street"
+            address2: "City, State, Zip"
             starts_at: "Start Date & Time"
             ends_at: "End Date & Time"
             hosted_by: "Hosted By"
@@ -401,7 +402,8 @@ platformd:
                 unpublished: "Unpublished"
 
             help:
-                address: "Example: 1021 Washington Drive, San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
+                address1: "Example: 1021 Washington Drive"
+                address2: "Example: San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
                 banner_image: "Recommended size: 950x120. File formats accepted: JPEG and PNG."
                 external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
 

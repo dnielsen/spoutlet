@@ -32,7 +32,8 @@ class GlobalEventService extends EventService
         $clonedGlobalEvent->setGame($globalEvent->getGame());
         $clonedGlobalEvent->setExternalUrl($globalEvent->getExternalUrl());
         $clonedGlobalEvent->setLocation($globalEvent->getLocation());
-        $clonedGlobalEvent->setAddress($globalEvent->getAddress());
+        $clonedGlobalEvent->setAddress1($globalEvent->getAddress1());
+        $clonedGlobalEvent->setAddress2($globalEvent->getAddress2());
         $clonedGlobalEvent->setCreatedAt($globalEvent->getCreatedAt());
 
         $clonedGlobalEvent->setTranslations(new ArrayCollection());

@@ -370,7 +370,7 @@ class EventService
             '%dateString%'      => $event->getDateRangeString(),
             '%timeString%'      => $event->getStartsAt()->format('g:i A'),
             '%timezone%'        => $event->getTimezoneString(),
-            '%location%'        => $event->getOnline() ? 'Online' : $event->getAddress(),
+            '%location%'        => $event->getOnline() ? 'Online' : $event->getHtmlFormattedAddress(),
             '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             '%organizerUrl%'    => $event->getUser()->getAccountLink($locale),
             '%organizerName%'   => $event->getUser()->getUsername(),

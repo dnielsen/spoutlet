@@ -21,7 +21,8 @@
 }
 
 #event-location-name,
-#event-location-address,
+#event-location-address1,
+#event-location-address2,
 #event-directions-link {
     margin: 5px 0 5px 10px;
 }
@@ -129,7 +130,8 @@
 }
 
 #groupEvent_location,
-#groupEvent_address {
+#groupEvent_address1,
+#groupEvent_address2 {
     width: 450px;
 }
 

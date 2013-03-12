@@ -69,8 +69,8 @@
                 {% if event.online %}
                     Online
                 {% else %}
-                    {% if event.address is defined %}
-                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}" data-address="{{ event.address | url_encode }}">
+                    {% if event.fullAddress is not null %}
+                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}" data-address="{{ event.fullAddress | url_encode }}">
                             {{ event.location ? event.location : ('platformd.events.event_listings.show_map'|trans) }}
                         </a>
                     {% else %}

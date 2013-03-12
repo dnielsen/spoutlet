@@ -31,7 +31,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateLocationField", "validateAddressField"})
+ * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -198,12 +198,20 @@ abstract class Event implements LinkableInterface
     protected $location;
 
     /**
-     * The complete address like "1021 Washington Drive, San Francisco, CA United States"
+     * The street section of the address, like "1021 Washington Drive"
      *
      * @var string $address
-     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     * @ORM\Column(name="address1", type="string", length=255, nullable=true)
      */
-    protected $address;
+    protected $address1;
+
+    /**
+     * The remaining address, like "San Francisco, CA United States"
+     *
+     * @var string $address
+     * @ORM\Column(name="address2", type="string", length=255, nullable=true)
+     */
+    protected $address2;
 
     /**
      * This gets value from Google Location service
@@ -253,6 +261,9 @@ abstract class Event implements LinkableInterface
     {
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
+
+        $this->startsAt = new \DateTime('now');
+        $this->endsAt = new \DateTime('now');
     }
 
     /**
@@ -262,29 +273,47 @@ abstract class Event implements LinkableInterface
      */
     public function getFullAddress()
     {
-        return $this->address;
+        return $this->address1.', '.$this->address2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHtmlFormattedAddress()
+    {
+        return $this->address1.'<br />'.$this->address2;
     }
 
     /**
      * @param string $address
      */
-    public function setAddress($address)
+    public function setAddress1($address1)
     {
-        $this->address = $address;
+        $this->address1 = $address1;
     }
 
     /**
-     * @Vich\GeographicalQuery
      * @return string
      */
-    public function getAddress()
+    public function getAddress1()
     {
-        return $this->address;
+        return $this->address1;
     }
 
-    public function getFormattedAddress()
+    /**
+     * @param string $address
+     */
+    public function setAddress2($address2)
     {
-        return ($this->location ? $this->location."\n" : '').str_replace(',', ",\n", $this->address);;
+        $this->address2 = $address2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
     }
 
     /**
@@ -815,11 +844,14 @@ abstract class Event implements LinkableInterface
         return false;
     }
 
-    public function validateLocationField(ExecutionContext $executionContext)
+    public function validateAddressField(ExecutionContext $executionContext)
     {
         if ($this->online == false) {
+
+            $oldPath = $executionContext->getPropertyPath();
+
             if ($this->location == null) {
-                $propertyPath = $executionContext->getPropertyPath() . '.location';
+                $propertyPath = $oldPath . '.location';
                 $executionContext->setPropertyPath($propertyPath);
 
                 $executionContext->addViolation(
@@ -827,22 +859,34 @@ abstract class Event implements LinkableInterface
                     array(),
                     "location"
                 );
-            }
-        }
-    }
 
-    public function validateAddressField(ExecutionContext $executionContext)
-    {
-        if ($this->online == false) {
-            if ($this->address == null) {
-                $propertyPath = $executionContext->getPropertyPath() . '.address';
+                $executionContext->setPropertyPath($oldPath);
+            }
+
+            if ($this->address1 == null) {
+                $propertyPath = $oldPath . '.address1';
                 $executionContext->setPropertyPath($propertyPath);
 
                 $executionContext->addViolation(
-                    "You must enter an address for an In-Person event.",
+                    "You must enter a complete address for an In-Person event.",
                     array(),
-                    "address"
+                    "address1"
                 );
+
+                $executionContext->setPropertyPath($oldPath);
+            }
+
+             if ($this->address2 == null) {
+                $propertyPath = $oldPath . '.address2';
+                $executionContext->setPropertyPath($propertyPath);
+
+                $executionContext->addViolation(
+                    "You must enter a complete address for an In-Person event.",
+                    array(),
+                    "address2"
+                );
+
+                $executionContext->setPropertyPath($oldPath);
             }
         }
     }

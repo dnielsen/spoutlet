@@ -17,7 +17,8 @@
 
             <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
                 {{ form_row(form.location) }}
-                {{ form_row(form.address) }}
+                {{ form_row(form.address1) }}
+                {{ form_row(form.address2) }}
             </div>
 
             <div class="start-date">{{ form_row(form.startsAt) }}</div>
@@ -65,10 +66,6 @@
             dateFormat: 'mm/dd/yy'
         });
 
-        var d = new Date();
-        month = d.getMonth() + 1;
-        $('.start-date .event-date-picker').val((month<10 ? '0' : '') + month + '/' + (d.getDate()<10 ? '0' : '') + d.getDate() + '/' + d.getFullYear());
-
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
             var exernalUrlDiv = '<div id="external-url" />';
@@ -84,7 +81,8 @@
                 $(this).has('input#groupEvent_game').length ||
                 $(this).has('input#groupEvent_location').length ||
                 $(this).has('input#groupEvent_online_1').length ||
-                $(this).has('input#groupEvent_address').length ||
+                $(this).has('input#groupEvent_address1').length ||
+                $(this).has('input#groupEvent_address2').length ||
                 $(this).has('input#groupEvent_startsAt_date').length ||
                 $(this).has('input#groupEvent_endsAt_date').length ||
                 $(this).has('input#groupEvent_timezone').length ||

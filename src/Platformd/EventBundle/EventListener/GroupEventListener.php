@@ -82,7 +82,7 @@ class GroupEventListener
                     '%startDate%'       => $event->getStartsAt()->format('l, M j, Y'),
                     '%startTime%'       => $event->getStartsAt()->format('g:i A'),
                     '%timezone%'        => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
-                    '%location%'        => ($event->getOnline()) ? 'Online' : $event->getAddress(),
+                    '%location%'        => ($event->getOnline()) ? 'Online' : $event->getHtmlFormattedAddress(),
                     '%url%'             => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
                     '%organizerName%'   => $fromName,
                 ), 'messages', $emailLocale));
@@ -137,7 +137,7 @@ class GroupEventListener
                     "%organizerName%" => $eventOwner->getUsername(),
                     "%startTime%" => $event->getStartsAt()->format('g:i A'),
                     "%timezone%" => $event->getDisplayTimezone() ? $event->getTimezoneString() : "",
-                    "%location%" => ($event->getOnline()) ? 'Online' : $event->getAddress(),
+                    "%location%" => ($event->getOnline()) ? 'Online' : $event->getHtmlFormattedAddress(),
                 ), 'messages', $emailLocale));
 
                 $fromName = $event->getUser()->getAdminLevel() ? null : $event->getUser()->getUsername();

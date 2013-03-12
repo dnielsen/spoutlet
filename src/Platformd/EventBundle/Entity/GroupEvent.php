@@ -358,4 +358,9 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     {
         return $this->deletedReason;
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }

@@ -36,7 +36,8 @@ class GroupEventService extends EventService
         $clonedGroupEvent->setGame($groupEvent->getGame());
         $clonedGroupEvent->setExternalUrl($groupEvent->getExternalUrl());
         $clonedGroupEvent->setLocation($groupEvent->getLocation());
-        $clonedGroupEvent->setAddress($groupEvent->getAddress());
+        $clonedGroupEvent->setAddress1($groupEvent->getAddress1());
+        $clonedGroupEvent->setAddress2($groupEvent->getAddress2());
         $clonedGroupEvent->setCreatedAt($groupEvent->getCreatedAt());
         $clonedGroupEvent->setPrivate($groupEvent->getPrivate());
 

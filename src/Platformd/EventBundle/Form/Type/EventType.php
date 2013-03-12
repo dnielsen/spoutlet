@@ -69,10 +69,15 @@ class EventType extends AbstractType
                 'required' => false,
                 'label' => 'platformd.event.form.location'
             ))
-            ->add('address', 'text', array(
+            ->add('address1', 'text', array(
                 'required' => false,
-                'help' => 'platformd.event.form.help.address',
-                'label' => 'platformd.event.form.address'
+                'help' => 'platformd.event.form.help.address1',
+                'label' => 'platformd.event.form.address1'
+            ))
+            ->add('address2', 'text', array(
+                'required' => false,
+                'help' => 'platformd.event.form.help.address2',
+                'label' => 'platformd.event.form.address2'
             ))
             ->add('startsAt', 'datetime', array(
                 'label' => 'platformd.event.form.starts_at',
