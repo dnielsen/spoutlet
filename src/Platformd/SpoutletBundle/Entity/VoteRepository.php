@@ -69,9 +69,8 @@ class VoteRepository extends EntityRepository
             ->leftJoin('ce.contest', 'c')
             ->andWhere('gm.contestEntry IS NOT NULL')
             ->andWhere('v.voteType = :up')
-            ->andWhere('v.votedAt < :voteEnd')
+            ->andWhere('v.votedAt < c.votingEnd')
             ->setParameter('up', 'up')
-            ->setParameter('voteEnd', $contest->getVotingEndUtc())
             ->groupBy('c.id')
             ->getQuery()
             ->execute();
