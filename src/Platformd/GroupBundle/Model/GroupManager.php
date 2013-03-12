@@ -527,14 +527,14 @@ class GroupManager
             if ($isApplicant) {
                 return in_array($action, self::$applicantIsAllowedTo);
             }
-        }
 
-        if ($group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPublicIsAllowedTo);
-        }
+            if ($group->getIsPublic()) {
+                return in_array($action, self::$nonMemberPublicIsAllowedTo);
+            }
 
-        if (!$group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
+            if (!$group->getIsPublic()) {
+                return in_array($action, self::$nonMemberPrivateIsAllowedTo);
+            }
         }
 
         return false;
