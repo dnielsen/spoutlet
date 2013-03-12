@@ -736,16 +736,6 @@ textarea {
   line-height: 27px;
 }
 
-.page-header {
-  padding-bottom: 17px;
-  margin: 18px 0;
-  border-bottom: 1px solid #eeeeee;
-}
-
-.page-header h1 {
-  line-height: 1;
-}
-
 dl {
   margin-bottom: 18px;
 }

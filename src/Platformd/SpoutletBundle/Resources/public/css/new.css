@@ -216,7 +216,7 @@ table.list tr.even {
 
 }
 
-div#content.microsoft {
+div.microsoft {
   text-align: center;
 }
 
@@ -373,7 +373,7 @@ span.required {
     margin: 10px 0;
     text-align: center;
 }
-.pate-header img {
+.page-header img {
     display: inline;
 }
 

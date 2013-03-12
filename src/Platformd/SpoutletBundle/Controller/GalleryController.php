@@ -501,7 +501,7 @@ class GalleryController extends Controller
                 $em->flush();
 
                 $this->setFlash('success', 'Your changes are saved.');
-                return $this->redirect($this->generateUrl('gallery_edit_media', array('id' => $media->getId())));
+                return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
             }
         }
 
@@ -677,6 +677,11 @@ class GalleryController extends Controller
         $user       = $this->getUser();
         $mediaId    = (int)$request->query->get('vote');
 
+        if(!$gallery || $gallery->getDeleted() || !$gallery->isVisibleOnSite($this->getCurrentSite()))
+        {
+            throw $this->createNotFoundException('Gallery not found.');
+        }
+
         if ($mediaId && $this->isGranted('ROLE_USER')) {
             $media = $this->getGalleryMediaRepository()->find($mediaId);
 
@@ -709,11 +714,6 @@ class GalleryController extends Controller
             if (is_numeric(end($parts)) && strpos($parsedUrl['path'], 'galleries/photo')) {
                 $returnId = end($parts);
             }
-        }
-
-        if(!$gallery || $gallery->getDeleted())
-        {
-            throw $this->createNotFoundException('Gallery not found.');
         }
 
         if($sort == 'popular')

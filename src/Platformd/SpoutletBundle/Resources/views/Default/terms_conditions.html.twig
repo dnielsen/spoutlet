@@ -3,7 +3,7 @@
 {% block title %}{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}{% endblock %}
 
 {% block content %}
-<div id="content" class="terms">
+<div class="terms">
     {% include ['SpoutletBundle:Default:terms_conditions/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:terms_conditions/en.html.twig'] %}
 </div>
 {% endblock %}
