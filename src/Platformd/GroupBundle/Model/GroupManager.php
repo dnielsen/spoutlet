@@ -542,7 +542,7 @@ class GroupManager
 
     public function isMember($user, Group $group)
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return false;
         }
 
