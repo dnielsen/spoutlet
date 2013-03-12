@@ -36,8 +36,10 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            $('.hour-selection select').val(null);
-            $('.minute-selection select').val(null);
+            if (document.referrer != window.location.href ) {
+                $('.hour-selection select').val(null);
+                $('.minute-selection select').val(null);
+            }
 
             var timezone = jstz.determine();
             if (timezone) {

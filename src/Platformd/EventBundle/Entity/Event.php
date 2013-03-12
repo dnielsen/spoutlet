@@ -19,7 +19,8 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GlobalEvent,
-    Platformd\EventBundle\Entity\GroupEvent
+    Platformd\EventBundle\Entity\GroupEvent,
+    Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil
 ;
 
 use DateTime,
@@ -889,5 +890,23 @@ abstract class Event implements LinkableInterface
                 $executionContext->setPropertyPath($oldPath);
             }
         }
+    }
+
+    public function getStartsAtUtc()
+    {
+        if (!$this->startsAt) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->startsAt, new \DateTimeZone($this->timezone));
+    }
+
+    public function getEndsAtUtc()
+    {
+        if (!$this->endsAt) {
+            return null;
+        }
+
+        return TzUtil::getUtc($this->endsAt, new \DateTimeZone($this->timezone));
     }
 }

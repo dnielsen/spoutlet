@@ -52,8 +52,8 @@ jQuery(document).ready(function() {
         var newHour = hour;
         var amPm    = 'AM';
 
-        if ((hour - 12) > 0) {
-            newHour = (hour - 12);
+        if ((hour - 12) >= 0) {
+            newHour = (hour > 12) ? (hour - 12) : hour;
             amPm    = 'PM';
         }
 

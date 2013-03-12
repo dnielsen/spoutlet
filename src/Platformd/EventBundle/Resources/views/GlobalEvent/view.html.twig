@@ -91,7 +91,7 @@
                     {% if event.registrationOption == "REGISTRATION_ENABLED" %}
                         <div id="event-attendee-attendees"><strong>Attending: </strong><a href="{{ path('global_event_attendees', { 'slug': event.slug }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
                         <div id="event-registration">
-                            {% if (event.endsAt | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
+                            {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">Registration is no longer open for this event.</div>
                             {% else %}
                                 <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("global_event_rsvp") }}" class="btn btn-primary">Register</a></div>

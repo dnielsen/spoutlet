@@ -11,7 +11,7 @@
         <div class="form-actions" style="float: left;">
             <button type="submit" class="btn btn-primary" formnovalidate>Update</button>
 
-            {% if event.endsAt|date('Y-m-d H:i:s') >= "now"|date('Y-m-d H:i:s') %}
+            {% if event.endsAtUtc|date('Y-m-d H:i:s') >= "now"|date('Y-m-d H:i:s') %}
                 {% if event.active == true %}
                     <button type="submit" class="cancel-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Cancel Event</button>
                 {% else %}
