@@ -561,7 +561,7 @@ class GroupManager
 
     public function isApplicant($user, Group $group)
     {
-        if(!$user) {
+        if(!$user instanceof User) {
             return false;
         }
 
