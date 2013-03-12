@@ -21,7 +21,7 @@ group_event_activate:
     defaults: { _controller:"EventBundle:GroupEvent:activate", site: ~ }
 
 group_event_register_and_join:
-    pattern: /group/{groupSlug}/event/register/{eventId}
+    pattern: /groups/{groupSlug}/event/register/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:register", site: ~ }
 
 group_event_new:
