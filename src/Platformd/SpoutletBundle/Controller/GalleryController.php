@@ -617,15 +617,17 @@ class GalleryController extends Controller
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
         $country            = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($contest && !$contest->isFinished() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
-            return $response;
-        }
+        if ($contest && !$contest->isFinished()) {
 
+            if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+                $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
+                return $response;
+            }
 
-        if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
-            return $response;
+            if (!$contest->getSites()->contains($this->getCurrentSite())) {
+                $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
+                return $response;
+            }
         }
 
         if (!$voteRepo->canVoteOnMedia($media, $user)) {

@@ -280,7 +280,8 @@ class ContestAdminController extends Controller
 
     private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
     {
-        $upVotes    = array();
+        $likes      = array();
+        $imageLikes = array();
         $em         = $this->getDoctrine()->getEntityManager();
 
         if(!$contest) {
@@ -291,15 +292,21 @@ class ContestAdminController extends Controller
 
         $contestLikes = $em->getRepository('SpoutletBundle:Vote')->getVotesForContest($contest);
 
+        foreach ($entries as $entry) {
+            foreach ($entry->getMedias() as $media) {
+                $likes[$media->getId()] = $this->getEntryLikeCount($media);
+            }
+        }
         foreach ($contestLikes as $upVotes) {
-            $likes[$upVotes['id']] = $upVotes['vote_count'];
+            $imageLikes[$upVotes['id']] = $upVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
-            'contest'   => $contest,
-            'entries'   => $entries,
-            'slug'      => $slug,
-            'likes'     => $likes,
+            'contest'       => $contest,
+            'entries'       => $entries,
+            'slug'          => $slug,
+            'imageLikes'    => $imageLikes,
+            'likes'         => $likes,
         ));
     }
 
