@@ -212,27 +212,43 @@ class ContentReportingController extends Controller
         $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
         $typeBundle = $contentReportRepo->getBundleFromType($type);
 
-        $item = $em->getRepository($typeBundle.':'.$type)->find($id);
+        $item       = $em->getRepository($typeBundle.':'.$type)->find($id);
+        $reporter   = $report->getReporter();
 
         switch ($type) {
             case 'Comment':
                 $url = 'http://'.$this->getCurrentSite()->getFullDomain().$item->getThread()->getPermalink();
+                $owner = $item->getAuthor();
                 break;
 
             case 'GroupDiscussionPost':
                 $url = $this->generateUrl($item->getGroupDiscussion()->getLinkableRouteName(), $item->getGroupDiscussion()->getLinkableRouteParameters(), true);
+                $owner = $item->getAuthor();
+                break;
+
+            case 'GroupEvent':
+                $owner = $item->getUser();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
+                break;
+
+            case 'Group':
+                $owner = $item->getOwner();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             default:
                 $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
+                $owner = $item->getAuthor();
                 break;
         }
 
         $emailTo            = 'reports@alienwarearena.com';
         $emailLocale        = 'en';
+        $ownerUrl           = $this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $owner->getId()), true);
+        $reporterUrl        = $this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $reporter->getId()), true);
         $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
         $subject            = $this->trans('content_reporting.staff_notification_title', array(), 'messages', $emailLocale);
-        $message            = nl2br(sprintf($this->trans('content_reporting.staff_notification', array(), 'messages', $emailLocale), $url, $url, $reason, $report->getReporter()->getUsername()));
+        $message            = nl2br(sprintf($this->trans('content_reporting.staff_notification', array(), 'messages', $emailLocale), $url, $url, $reason, $reporterUrl, $reporter->getUsername(), $ownerUrl, $owner->getUsername()));
 
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported Staff Notification", $this->getCurrentSite()->getDefaultLocale());
     }

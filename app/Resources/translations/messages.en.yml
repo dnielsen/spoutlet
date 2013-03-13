@@ -548,7 +548,8 @@ content_reporting:
     staff_notification: |
         Link: <a href="%s">%s</a>
         Reason: %s
-        Reporter: %s
+        Reporter: <a href="%s">%s</a>
+        Content Owner: <a href="%s">%s</a>
 
 error:
     fill_in_birthday: Please fill in your birthday!
