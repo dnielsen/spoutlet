@@ -405,7 +405,7 @@ class ContentReportAdminController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getBody();
                 $owner = $item->getAuthor();
-                $url = $this->getCurrentSite()->getFullDomain().$item->getPermalink();
+                $url = 'http://'.$this->getCurrentSite()->getFullDomain().$item->getThread()->getPermalink();
                 break;
 
             case 'Group':
@@ -450,7 +450,7 @@ class ContentReportAdminController extends Controller
         } else {
             $reason     = $report ? $this->trans('content_reporting.'.$report->getReason(), array(), 'messages', $emailLocale) : $this->trans('content_reporting.report_type_unknown', array(), 'messages', $emailLocale);
             $subject    = $this->trans('content_reporting.removed_email_title', array(), 'messages', $emailLocale);
-            $message    = nl2br(sprintf($this->trans('content_reporting.removed_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url));
+            $message    = nl2br(sprintf($this->trans('content_reporting.removed_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
             $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Removed User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
         }
     }

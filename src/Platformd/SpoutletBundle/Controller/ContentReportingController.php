@@ -130,7 +130,7 @@ class ContentReportingController extends Controller
         $this->get('event_dispatcher')->dispatch($eventName, $event);
         */
 
-        $response->setContent(json_encode(array("success" => true, "messageForUser" => "This content will be reviewed by our staff. If it violates our Terms of Service, it will be removed. If you have additional information for your report, please email us at contact@alienwarearena.com with the additional details.")));
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => $this->trans('content_reporting.report_success'))));
         return $response;
     }
 
@@ -155,7 +155,7 @@ class ContentReportingController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getBody();
                 $owner = $item->getAuthor();
-                $url = $this->getCurrentSite()->getFullDomain().$item->getPermalink();
+                $url = 'http://'.$this->getCurrentSite()->getFullDomain().$item->getThread()->getPermalink();
                 break;
 
             case 'Group':
@@ -194,7 +194,7 @@ class ContentReportingController extends Controller
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
         $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
         $subject            = $this->trans('content_reporting.reported_email_title', array(), 'messages', $emailLocale);
-        $message            = nl2br(sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url));
+        $message            = nl2br(sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
 
 
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
@@ -216,7 +216,7 @@ class ContentReportingController extends Controller
 
         switch ($type) {
             case 'Comment':
-                $url = $this->getCurrentSite()->getFullDomain().$item->getPermalink();
+                $url = 'http://'.$this->getCurrentSite()->getFullDomain().$item->getThread()->getPermalink();
                 break;
 
             case 'GroupDiscussionPost':
@@ -232,7 +232,7 @@ class ContentReportingController extends Controller
         $emailLocale        = 'en';
         $reason             = $this->trans('content_reporting.'.$reason, array(), 'messages', $emailLocale);
         $subject            = $this->trans('content_reporting.staff_notification_title', array(), 'messages', $emailLocale);
-        $message            = nl2br(sprintf($this->trans('content_reporting.staff_notification', array(), 'messages', $emailLocale), $url, $reason, $report->getReporter()->getUsername()));
+        $message            = nl2br(sprintf($this->trans('content_reporting.staff_notification', array(), 'messages', $emailLocale), $url, $url, $reason, $report->getReporter()->getUsername()));
 
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported Staff Notification", $this->getCurrentSite()->getDefaultLocale());
     }

@@ -486,7 +486,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
-    report_success: 内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでcontact@alienwarearena.comまで送付してください。
+    report_success: 内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでreports@alienwarearena.comまで送付してください。
     reported_email_title: あなたの投稿にフラグが設定されています
     reported_email: |
         ALIENWARE ARENAに投稿された内容に不適切とされるフラグが付いており、確認を必要としています。

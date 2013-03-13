@@ -444,7 +444,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
-    report_success: 内容已被暂时移除，我们的工作人员将审查。如果你的报告有更多的信息，请将其他详细信息用电子邮件发给我们 contact@alienwarearena.com。
+    report_success: 内容已被暂时移除，我们的工作人员将审查。如果你的报告有更多的信息，请将其他详细信息用电子邮件发给我们 reports@alienwarearena.com。
     reported_email_title: 您的内容已被标记
     reported_email: |
         一个ALIENWARE ARENA上发布的项目已被标记为不当，并需要审查。

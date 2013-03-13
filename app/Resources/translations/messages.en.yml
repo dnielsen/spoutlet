@@ -509,7 +509,7 @@ content_reporting:
     report_type_group_discussion_post: Group Discussion Post
     report_type_group_event: Group Event
     report_type_unknown: Unknown
-    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at reports@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
     reported_email: |
         An item posted by you on Alienware Arena has been flagged as inappropriate and removed.
@@ -517,10 +517,10 @@ content_reporting:
         Type: %s
         Content: %s
         Reason: %s
-        Link: %s
+        Link: <a href="%s">%s</a>
 
         The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
-        Thank you for your patience. Should you have any questions, please contact us at reports@alienwarearena.com.
+        Thank you for your patience. Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
         Alienware Arena Team
 
     restored_email_title: Your Content is Restored
@@ -539,14 +539,14 @@ content_reporting:
         Type: %s
         Content: %s
         Reason: %s
-        Link: %s
+        Link: <a href="%s">%s</a>
 
-        Should you have any questions, please contact us at reports@alienwarearena.com.
+        Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
         Alienware Arena Team
 
     staff_notification_title: New Content Reported
     staff_notification: |
-        Link: %s
+        Link: <a href="%s">%s</a>
         Reason: %s
         Reporter: %s
 
