@@ -8,11 +8,14 @@ use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\UserBundle\Entity\User;
+use Platformd\MediaBundle\Entity\MediaZip;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Knp\MediaBundle\Entity\Media
  *
  * @ORM\MappedSuperclass
+ * @Assert\Callback(methods={"validateMimeTypes"})
  */
 abstract class Media
 {
@@ -43,13 +46,7 @@ abstract class Media
 
     /**
      * @var \Symfony\Component\HttpFoundation\File\File
-     * @Assert\Image(groups = {"generic"})
-     * @Assert\Image(
-     *     maxSize = "2048k",
-     *     maxSizeMessage = "Please upload an image that's 2 megabytes or smaller",
-     *     groups = {"subject_image"}
-     * )
-     * @Assert\Image(mimeTypes={"image/jpeg", "image/jpg", "image/png", "image/gif"}, mimeTypesMessage="This is not a valid image file.")
+     * @Assert\NotNull()
      */
     protected $fileObject;
 
@@ -82,6 +79,8 @@ abstract class Media
      * @ORM\Column(type="string", nullable=true)
      */
     protected $mimeType;
+
+    protected $isZip = false;
 
     /**
      * Get id
@@ -233,5 +232,49 @@ abstract class Media
     public function __toString()
     {
         return (string) $this->getFilename();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsZip()
+    {
+        return $this->isZip;
+    }
+
+    /**
+     * @param boolean $isZip
+     */
+    public function setIsZip($value)
+    {
+        $this->isZip = $value;
+    }
+
+    public function validateMimeTypes(ExecutionContext $executionContext)
+    {
+        if (null === $this->getFileObject()) {
+            return;
+        }
+
+        $allowedMimeTypes = $this->isZip ? array("application/zip", "application/x-zip-compressed") : array("image/jpeg", "image/jpg", "image/png", "image/gif");
+
+        $mimeType = $this->getFileObject()->getMimeType();
+
+        if (!in_array($mimeType, $allowedMimeTypes)) {
+            $oldPath = $executionContext->getPropertyPath();
+
+            $propertyPath = $oldPath . '.fileObject';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $type = $this->isZip ? 'zip' : 'image';
+
+            $executionContext->addViolation(
+                'This is not a valid '.$type.' file',
+                array(),
+                null
+            );
+
+            $executionContext->setPropertyPath($oldPath);
+        }
     }
 }

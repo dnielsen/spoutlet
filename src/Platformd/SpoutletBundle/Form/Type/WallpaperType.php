@@ -6,6 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Wallpaper;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\MediaBundle\Form\Type\MediaZipType;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Event\DataEvent;
 
 class WallpaperType extends AbstractType
 {
