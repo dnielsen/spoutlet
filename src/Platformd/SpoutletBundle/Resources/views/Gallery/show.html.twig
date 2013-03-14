@@ -144,9 +144,9 @@
                         <div id="media-likes-wrapper">
 
                             {% if app.user is not null %}
-                                {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
+                                {% if media.canUserVote(app.user) == true and isVotable %}
                                     <div class="photo-like">
-                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up quick-vote-link" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.quick_vote_caption' | trans }}"></a>
+                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up {% if media.hasUserVoted(app.user) == false %}quick-vote-link {% else %}already-voted{% endif %}" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.vote_caption' | trans }}"></a>
                                     </div>
                                 {% endif %}
                             {% else %}

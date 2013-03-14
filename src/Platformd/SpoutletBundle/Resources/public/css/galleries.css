@@ -157,10 +157,11 @@ a.media-voting-button {
 
 .up {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 0 29px;
+    background-position: 0 0;
 }
 
-.up:hover {
+.up:hover,
+.already-voted {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
     background-position: 0 29px;
 }

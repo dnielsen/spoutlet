@@ -83,6 +83,8 @@ class GalleryAdminController extends Controller
         $results = $this->processFindForm($form, $request);
 
         $em      = $this->getDoctrine()->getEntityManager();
+        $upVotes = array();
+        $likes = array();
 
         if($results) {
 

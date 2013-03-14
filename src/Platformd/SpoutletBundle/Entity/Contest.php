@@ -129,6 +129,13 @@ class Contest implements LinkableInterface
     private $votingEnd;
 
     /**
+     * @var datetime $voting_end
+     * @Assert\NotNull
+     * @ORM\Column(name="voting_end_utc", type="datetime")
+     */
+    private $votingEndUtc;
+
+    /**
      * @var string $timezone
      *
      * @ORM\Column(name="timezone", type="string", length=255)
@@ -423,6 +430,7 @@ class Contest implements LinkableInterface
     public function setVotingEnd($votingEnd)
     {
         $this->votingEnd = $votingEnd;
+        $this->setVotingEndUtc(TzUtil::getUtc($votingEnd, new \DateTimeZone($this->getTimezone())));
     }
 
     /**
@@ -435,13 +443,14 @@ class Contest implements LinkableInterface
         return $this->votingEnd;
     }
 
+    public function setVotingEndUtc($value)
+    {
+        $this->votingEndUtc = $value;
+    }
+
     public function getVotingEndUtc()
     {
-        if (!$this->getVotingEnd()) {
-            return null;
-        }
-
-        return TzUtil::getUtc($this->getVotingEnd(), new \DateTimeZone($this->getTimezone()));
+        return $this->votingEndUtc;
     }
 
     /**

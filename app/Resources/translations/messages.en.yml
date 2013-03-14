@@ -725,7 +725,8 @@ galleries:
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
     login_to_vote_linked: Please <a href="%login_url%">log in</a> to vote.
     login_to_vote: Log In to Vote!
-    quick_vote_caption: Like it?
+    quick_vote_caption: "+1"
+    vote_caption: Like it?
     voting_closed_caption: Voting Closed
     already_voted_caption: Voted
     by: by:
