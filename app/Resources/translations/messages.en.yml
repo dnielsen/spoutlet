@@ -536,6 +536,17 @@ platformd:
 
                     Sent from Alienware Arena on behalf of %organizerName%.
 
+            attendee_removed:
+                title: You are no longer attending %eventName%
+                message: |
+                    Hello %username%
+
+                    This email confirms that you no longer attending <a href="%url%">%eventName%</a>.
+
+                    If you believe this to be an error, please send contact the event organizer.
+
+                    Alienware Arena Team
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"

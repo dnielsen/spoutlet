@@ -520,18 +520,21 @@ class GroupEventController extends Controller
 
         $this->getGroupEventService()->unregister($groupEvent, $user);
 
-        $subject    = "You are no longer attending ".$groupEvent->getName();
-        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()));
-        $message    = 'Hello '.$user->getUsername().'
+        $subject = $this->translator->trans('platformd.event.email.attendee_removed.title', array(
+            '%eventName%' => $groupEvent->getName(),
+        ), 'messages', $locale);
 
-This email confirms that you no longer attending <a href="'.$url.'">'.$groupEvent->getName().'</a>.
+        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()), true);
 
-If you believe this to be an error, please send contact the event organizer.
+        $message = nl2br($this->translator->trans('platformd.event.email.attendee_removed.message', array(
+            '%username%'       => $user->getUsername(),
+            '%url%'            => $url,
+            '%eventName%'      => $groupEvent->getName(),
+        ), 'messages', $locale));
 
-Alienware Arena Team';
         $emailType  = "Event unregister notification";
         $emailTo    = $user->getEmail();
-        $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
+        $this->get('platformd.model.email_manager')->sendHtmlEmail($emailTo, $subject, $message, $emailType);
 
         $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
 

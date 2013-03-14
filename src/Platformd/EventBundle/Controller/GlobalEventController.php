@@ -197,15 +197,18 @@ class GlobalEventController extends Controller
 
         $this->getGlobalEventService()->unregister($event, $user);
 
-        $subject    = "You are no longer attending ".$event->getName();
-        $url        = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()));
-        $message    = 'Hello '.$user->getUsername().'
+        $subject = $this->translator->trans('platformd.event.email.attendee_removed.title', array(
+            '%eventName%' => $event->getName(),
+        ), 'messages', $locale);
 
-This email confirms that you no longer attending <a href="'.$url.'">'.$event->getName().'</a>.
+        $url        = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()), true);
 
-If you believe this to be an error, please send contact the event organizer.
+        $message = nl2br($this->translator->trans('platformd.event.email.attendee_removed.message', array(
+            '%username%'       => $user->getUsername(),
+            '%url%'            => $url,
+            '%eventName%'      => $event->getName(),
+        ), 'messages', $locale));
 
-Alienware Arena Team';
         $emailType  = "Event unregister notification";
         $emailTo    = $user->getEmail();
         $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
