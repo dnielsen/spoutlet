@@ -88,6 +88,16 @@ class GiveawayRepository extends AbstractEventRepository
     }
 
     /**
+     * Returns top 4 featured giveaways
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
+     */
+    public function findActiveFeaturedForSite($limit=4)
+    {
+
+    }
+
+
+    /**
      * Creates a base query builder that's site-aware
      *
      * @param $site
