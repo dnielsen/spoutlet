@@ -165,6 +165,7 @@ class GiveawayController extends Controller
         $user = $this->getUser();
 
         $giveaway = $this->findGiveaway($slug);
+        $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
 
         $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
         if (!$giveaway->getStatus() == "active" && !$canTest) {

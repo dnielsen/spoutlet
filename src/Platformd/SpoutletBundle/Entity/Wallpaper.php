@@ -31,6 +31,7 @@ class Wallpaper
      * @var \Platformd\MediaBundle\Entity\Media
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
+     * @Assert\NotNull()
      */
     private $thumbnail;
 
@@ -58,6 +59,11 @@ class Wallpaper
      * @Gedmo\Timestampable(on="update")
      */
     protected $updatedAt;
+
+    public function __construct() {
+        $this->resolutionPack = new Media();
+        $this->resolutionPack->setIsZip(true);
+    }
 
     /**
      * Get id
@@ -90,6 +96,11 @@ class Wallpaper
      */
     public function getResolutionPack()
     {
+        if (null === $this->resolutionPack) {
+            return;
+        }
+
+        $this->resolutionPack->setIsZip(true);
         return $this->resolutionPack;
     }
 

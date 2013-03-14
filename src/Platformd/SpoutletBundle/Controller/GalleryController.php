@@ -27,10 +27,32 @@ use Platformd\MediaBundle\Imagine\Cache\Resolver\AmazonS3Resolver;
  */
 class GalleryController extends Controller
 {
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $nivoSliderMedia = $this->getGalleryMediaRepository()->findFeaturedMediaForSite($this->getCurrentSite(), 5);
-        $options = $this->getFilterOptions();
+        $nivoSliderMedia    = $this->getGalleryMediaRepository()->findFeaturedMediaForSite($this->getCurrentSite(), 5);
+        $options            = $this->getFilterOptions();
+        $user               = $this->getUser();
+        $mediaId            = (int)$request->query->get('vote');
+
+        if ($mediaId && $this->isGranted('ROLE_USER')) {
+            $media = $this->getGalleryMediaRepository()->find($mediaId);
+
+            if ($media && !$media->hasUserVoted($this->getUser())) {
+                $vote = new Vote();
+                $vote->setUser($this->getUser());
+                $vote->setGalleryMedia($media);
+                $vote->setVoteType('up');
+                $vote->setIpAddress($request->getClientIp(true));
+
+                $em = $this->getEntityManager();
+
+                $em->persist($vote);
+
+                $media->getVotes()->add($vote);
+                $em->persist($media);
+                $em->flush();
+            }
+        }
 
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
             'nivoSliderMedia'   => $nivoSliderMedia,
@@ -355,12 +377,35 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('No media found.');
         }
 
-        if($media->getDeleted() || !$media->isVisibleOnSite($this->getCurrentSite()) || !$media->getPublished())
+        $site = $this->getCurrentSite();
+
+        if($media->getDeleted() || !$media->isVisibleOnSite($site) || !$media->getPublished())
         {
             throw $this->createNotFoundException('No media found.');
         }
 
-        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id, $this->getCurrentSite());
+        $mediaId = (int)$request->query->get('vote');
+
+        if ($mediaId && $this->isGranted('ROLE_USER')) {
+
+            if ($media && !$media->hasUserVoted($this->getUser())) {
+                $vote = new Vote();
+                $vote->setUser($this->getUser());
+                $vote->setGalleryMedia($media);
+                $vote->setVoteType('up');
+                $vote->setIpAddress($request->getClientIp(true));
+
+                $em = $this->getEntityManager();
+
+                $em->persist($vote);
+
+                $media->getVotes()->add($vote);
+                $em->persist($media);
+                $em->flush();
+            }
+        }
+
+        $otherMedia     = $this->getGalleryMediaRepository()->findAllPublishedByUserNewestFirstExcept($media->getAuthor(), $id, $site);
 
         $otherMediaPerPage = 3;
         $pageCount = ceil(count($otherMedia) / $otherMediaPerPage);
@@ -374,12 +419,7 @@ class GalleryController extends Controller
         }
 
         $voteRepo       = $this->getVoteRepository();
-        $totalVotes     = $voteRepo->findVoteCount($id);
-        $upVotes        = $voteRepo->findUpVotes($id);
-        $points         = $upVotes - ($totalVotes - $upVotes);
-
-        $upVotesPercentage      = $totalVotes ? round(($upVotes/$totalVotes)*100) : 0;
-        $downVotesPercentage    = $totalVotes ? 100 - $upVotesPercentage : 0;
+        $likes        = $voteRepo->findUpVotes($id);
 
         $views = $media->getViews();
 
@@ -417,10 +457,8 @@ class GalleryController extends Controller
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'             => $media,
             'otherMediaPages'   => $otherMediaPages,
-            'upVotes'           => $upVotesPercentage,
+            'likes'             => $likes,
             'crumb'             => $crumb,
-            'downVotes'         => $downVotesPercentage,
-            'points'            => $points,
             'returnType'        => $returnType,
         ));
     }
@@ -463,7 +501,7 @@ class GalleryController extends Controller
                 $em->flush();
 
                 $this->setFlash('success', 'Your changes are saved.');
-                return $this->redirect($this->generateUrl('gallery_edit_media', array('id' => $media->getId())));
+                return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
             }
         }
 
@@ -605,13 +643,9 @@ class GalleryController extends Controller
         $em->persist($vote);
         $em->flush();
 
-        $totalVotes     = $this->getVoteRepository()->findVoteCount($media);
-        $upVotesCount   = $this->getVoteRepository()->findUpVotes($media);
-        $downVotesCount = $totalVotes - $upVotesCount;
-        $points         = $upVotesCount - $downVotesCount;
-        $upVotes        = round(($upVotesCount/$totalVotes)*100);
+        $likes = $this->getVoteRepository()->findUpVotes($media);
 
-        $response->setContent(json_encode(array("success" => true, "messageForUser" => $upVotes, "points" => $points)));
+        $response->setContent(json_encode(array("success" => true, "messageForUser" => 'Vote successful', "likes" => $likes)));
         return $response;
     }
 
@@ -639,7 +673,35 @@ class GalleryController extends Controller
 
     public function galleryAction($slug, $sort='latest', Request $request)
     {
-        $gallery = $this->getGalleryRepository()->findOneBySlug($slug);
+        $gallery    = $this->getGalleryRepository()->findOneBySlug($slug);
+        $user       = $this->getUser();
+        $mediaId    = (int)$request->query->get('vote');
+
+        if(!$gallery || $gallery->getDeleted() || !$gallery->isVisibleOnSite($this->getCurrentSite()))
+        {
+            throw $this->createNotFoundException('Gallery not found.');
+        }
+
+        if ($mediaId && $this->isGranted('ROLE_USER')) {
+            $media = $this->getGalleryMediaRepository()->find($mediaId);
+
+            if ($media && !$media->hasUserVoted($this->getUser())) {
+                $vote = new Vote();
+                $vote->setUser($this->getUser());
+                $vote->setGalleryMedia($media);
+                $vote->setVoteType('up');
+                $vote->setIpAddress($request->getClientIp(true));
+
+                $em = $this->getEntityManager();
+
+                $em->persist($vote);
+
+                $media->getVotes()->add($vote);
+                $em->persist($media);
+                $em->flush();
+            }
+        }
+
         $page = 0;
         $returnId = null;
 
@@ -652,12 +714,6 @@ class GalleryController extends Controller
             if (is_numeric(end($parts)) && strpos($parsedUrl['path'], 'galleries/photo')) {
                 $returnId = end($parts);
             }
-        }
-
-
-        if(!$gallery || $gallery->getDeleted())
-        {
-            throw $this->createNotFoundException('Gallery not found.');
         }
 
         if($sort == 'popular')
@@ -687,11 +743,12 @@ class GalleryController extends Controller
     {
         $type = $request->get('type');
         $repo = $this->getGalleryMediaRepository();
+        $site = $this->getCurrentSite();
 
         switch ($type) {
             case 'featured':
                 # get featured media
-                $medias = $repo->findFeaturedMediaForSite($this->getCurrentSite());
+                $medias = $repo->findFeaturedMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -699,7 +756,7 @@ class GalleryController extends Controller
 
             case 'latest':
                 # get latest media
-                $medias = $repo->findLatestMediaForSite($this->getCurrentSite());
+                $medias = $repo->findLatestMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
                     'type'   => $type,
@@ -707,7 +764,7 @@ class GalleryController extends Controller
 
             case 'popular':
                 # get popular media (based on views but will need to be based on ratings when those are implemented)
-                $medias = $repo->findPopularMediaForSite($this->getCurrentSite());
+                $medias = $repo->findPopularMediaForSite($site);
 
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
                     'medias' => $medias,
@@ -776,7 +833,12 @@ class GalleryController extends Controller
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
-        $site   = $siteRepo->findOneBySubDomain($subdomain);
+        foreach ($siteRepo->findAll() as $dbSite) {
+            if ($dbSite->getSubDomain() == $subdomain) {
+                $site = $dbSite;
+                break;
+            }
+        }
 
         if (!$site) {
             $response->setContent(json_encode(array("error" => "Invalid site specified.")));

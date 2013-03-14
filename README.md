@@ -137,3 +137,40 @@ INSTALLATION CHALLENGES
 	  :.,$s@https://@git://@
 
 
+USING MULTIPLE THEMES
+-----------------------
+
+* Create a custom theme and place it inside app/Resources/themes
+
+    Example of theme could be app/Resources/themes/custom_theme
+
+    You can grab an empty one there:
+      https://github.com/playitcool/custom_theme
+
+    You have to enable it by adding this to your parameters.ini:
+      liip_enabled_themes[] = custom_theme
+
+* You will place all assets and templates inside this unique theme directory
+
+* To install your assets just run the following:
+
+    .app/console cache:clear
+    .app/console themes:install web --symlink
+    .app/console assetic:dump web
+
+    This will place your theme assets and assets inclusion template in the proper location
+
+* Be careful to follow the same conventions for your assets file inclusion as the ones in the default theme. Don't use Assetic shorthand for bundles path like @SpoutletBundle.
+
+* Now you can override any template you want in the system. For that, you can read the documentation of LiipThemeBundle to understand how to override templates:
+
+    https://github.com/liip/LiipThemeBundle/blob/master/README.md
+
+* A few things worth noting:
+
+    Always put base templates in a bundle rather than in app/Resources/views or you might get unexpected results
+    Never override 'SpoutletBundle::base_assets.html.twig' as Assetic won't be able to dump its content
+    Instead, simply use your custom theme assets and run the command app./console themes:install web --symlink
+    If you override the default layout: 'SpoutletBundle::layout.html.twig' - don't forget to add all the necessary blocks and to include the base assets
+    When you want to override a template and create a new file in your theme directory, make sure to clear the cache or you won't see the new template
+    Any time you add a new asset file (css or js) - make sure you clear the cache as well and re-dump the assets

@@ -886,11 +886,11 @@ class Group implements LinkableInterface, ReportableContentInterface
 
     public function getRegion()
     {
-        if ($this->getAllLocales()) {
+        if ($this->allLocales) {
             return 'All Sites';
         } else {
             $regions = '';
-            foreach ($this->getSites() as $site) {
+            foreach ($this->sites as $site) {
                 $regions .=  '['.$site->getName().']';
             }
 

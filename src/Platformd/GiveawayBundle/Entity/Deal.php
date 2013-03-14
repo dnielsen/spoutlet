@@ -346,6 +346,11 @@ class Deal implements LinkableInterface, CommentableInterface
         );
     }
 
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+    }
+
     public function getTimezone()
     {
         return $this->timezone;

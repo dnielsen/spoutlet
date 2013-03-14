@@ -3,7 +3,7 @@
 {% block title %}{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}{% endblock %}
 
 {% block content %}
-<div id="content" class="privacy">
+<div class="privacy">
     {% include ['SpoutletBundle:Default:privacy/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:privacy/en.html.twig'] %}
 </div>
 {% endblock %}

@@ -1,5 +1,4 @@
 {% set reportContentType    = 'GroupVideo' %}
-{% set site                 = get_current_site() %}
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddVideo') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditVideo') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteVideo') %}

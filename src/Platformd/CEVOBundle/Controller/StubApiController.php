@@ -35,7 +35,7 @@ class StubApiController extends Controller
         $return = $request->query->get('return');
 
         // in the test environment, we redirect back with this, which actually triggers the auth
-        if ($isTestEnv) {
+        if ($isTestEnv && $action == "login") {
             $return .= '?username='.self::FAKE_USER_ID;
         }
 

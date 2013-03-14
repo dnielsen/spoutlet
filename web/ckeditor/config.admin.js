@@ -16,7 +16,6 @@ CKEDITOR.editorConfig = function( config )
         { name: 'tools', items : [ 'ShowBlocks' ] },
         { name: 'document', items : [ 'Source','-', 'Preview' ] },
         { name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
-        { name: 'editing', items : [ 'Find','Replace','-','SelectAll','-','SpellChecker', 'Scayt' ] },
         '/',
         { name: 'basicstyles', items : [ 'Bold','Italic','Underline','Strike','Subscript','Superscript','-','RemoveFormat' ] },
         { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote',

@@ -11,9 +11,14 @@ use Platformd\UserBundle\Entity\User;
 class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
     protected $container;
+    protected $manager;
 
     public function load($manager)
     {
+        $this->manager = $manager;
+
+        $this->resetAutoIncrementId();
+
         // a normal user
         $this->getUserManipulator()->create(
             'user',
@@ -42,6 +47,14 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
             true
         );
         $this->getUserManipulator()->addRole('admin', 'ROLE_SUPER_ADMIN');
+    }
+
+    private function resetAutoIncrementId() {
+        $con = $this->manager->getConnection();
+
+        $con
+            ->prepare("ALTER TABLE `fos_user` AUTO_INCREMENT = 1")
+            ->execute();
     }
 
     public function setContainer(ContainerInterface $container = null)

@@ -107,18 +107,13 @@ class GroupController extends Controller
     private function sendApplicationAcceptedEmail($application) {
 
         $currentHost        = $this->getRequest()->getHost();
-        $currentSubDomain   = substr($currentHost, 0, stripos($currentHost, '.'));
-        $applicantSubDomain = $application->getSite()->getSubDomain();
+        $applicationSite    = $application->getSite();
 
-        if (strpos($currentSubDomain, 'staging') !== false) {
-            $applicantSubDomain .= 'staging';
-        }
-
-        $baseHost          = $this->container->getParameter('base_host');
+        $baseHost           = $this->container->getParameter('base_host');
 
         $groupName          = $application->getGroup()->getName();
         $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $application->getGroup()->getSlug()));
-        $groupUrlAbsolute   = sprintf('http://%s.%s%s', $applicantSubDomain, $baseHost, $groupUrlRelative);
+        $groupUrlAbsolute   = sprintf('http://%s%s', $applicationSite->getFullDomain(), $groupUrlRelative);
 
         $fromEmail          = $this->container->getParameter('sender_email_address');
         $fromName           = $this->container->getParameter('sender_email_name');
@@ -754,8 +749,6 @@ Alienware Arena Team
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
-
-            $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
         return $this->render('GroupBundle:Group:editImage.html.twig', array(

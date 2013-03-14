@@ -108,6 +108,7 @@ class WallpaperAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
+
             $form->bindRequest($request);
 
             if ($form->isValid()) {

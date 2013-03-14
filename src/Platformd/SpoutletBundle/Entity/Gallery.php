@@ -314,5 +314,10 @@ class Gallery implements LinkableInterface
     {
         return $this->name;
     }
+
+    public function isVisibleOnSite($site)
+    {
+        return $this->sites->contains($site);
+    }
 }
 

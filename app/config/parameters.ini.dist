@@ -43,3 +43,7 @@
 
     memcached_server1_ip    = 127.0.0.1
     memcached_server1_port  = 11211
+
+    ; Here we must have at least default
+    liip_enabled_themes[] = default
+    liip_enabled_themes[] = test_theme

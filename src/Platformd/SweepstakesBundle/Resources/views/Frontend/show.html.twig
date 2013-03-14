@@ -21,6 +21,7 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="std_1col">
 
         {% if sweepstakes.bannerImage %}
@@ -69,7 +70,7 @@
 
                                 <div class="agree-row">
                                     <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
-                                    <label for="_sweepstakes_terms">{{ 'read_and_agreed_to_rules' | trans({
+                                    <label for="_sweepstakes_terms" style="display:inline;">{{ 'read_and_agreed_to_rules' | trans({
                                         '%a_start%': '<a href="#" class="sweeps-terms-modal">',
                                         '%a_end%': '</a>'
                                     }) | raw }}</label>
@@ -99,26 +100,24 @@
                 <div class="widget-content" id="giveaway-details">
                     <ul class="sweepstakes-details">
                         <li class="tight">
-                            <label>{{ 'registration_opens' | trans }}</label>
+                            <label style="display:inline;">{{ 'registration_opens' | trans }}</label>
 
                             {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
-                            {{ sweepstakes.timezoneString }}
                         </li>
                         <li>
                             {% if sweepstakes.endsAt %}
 
-                                <label>{{ 'registration_closes' | trans }}</label>
+                                <label style="display:inline;">{{ 'registration_closes' | trans }}</label>
                             {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
-                                {{ sweepstakes.timezoneString }}
                             {% else %}
-                                <label>{{ 'registration_closes' | trans }}</label>
+                                <label style="display:inline;">{{ 'registration_closes' | trans }}</label>
                                 {{ 'na' | trans }}
                             {% endif %}
                         </li>
 
                     </ul>
 
-                    <label>{{ 'instructions' |trans }}</label><br/>
+                    <label style="display:inline;">{{ 'instructions' |trans }}</label><br/>
 
                     {{ sweepstakes.content | raw }}
 
@@ -126,7 +125,7 @@
 
             </div><!-- giveaway-info -->
 
-            {% if site_has_feature('COMMENTS') %}
+            {% if features.hasComments %}
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
             {% endif %}
 

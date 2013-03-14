@@ -152,7 +152,7 @@
         </div>
     </div>
 
-    {% if site_has_feature('COMMENTS') %}
+    {% if features.hasComments %}
         <div class="std_2col">
             <div class="left">
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}

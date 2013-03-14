@@ -7,7 +7,7 @@
     {% if deal.endsAtUtc is not null %}
         {% if not deal.hasExpired %}
             {% if hasKeys %}
-                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAtUtc | date('Y/m/d h:i:s') }}" />
+                <input id="deal-ends-date" type="hidden" value="{{ deal.endsAtUtc | date('Y/m/d H:i:s') }}" />
                 <div id="time-left">
                     <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
                     <span id="deals-daysleft">{dn}</span>

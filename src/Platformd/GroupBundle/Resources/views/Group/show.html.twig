@@ -3,7 +3,6 @@
 {% block title 'Groups - ' ~ group.name %}
 
 {% set openGraphThumb               = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
-{% set site                         = get_current_site() %}
 {% set isAllowedToViewGroupContent  = groupManager.isAllowedTo(app.user, group, site, "ViewGroupContent") %}
 {% set isAllowedToViewGroup         = groupManager.isAllowedTo(app.user, group, site, "ViewGroup") %}
 {% set isAllowedToManageDiscussions = groupManager.isAllowedTo(app.user, group, site, "ManageDiscussions") %}
@@ -173,7 +172,7 @@
                 {% endif %}
             </div>
         </div>
-        {% if site_has_feature('COMMENTS') %}
+        {% if features.hasComments %}
             {% if isAllowedToViewGroupContent %}
                 <div id="group-comments">
                     {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : group.threadId, 'object' : group } %}
