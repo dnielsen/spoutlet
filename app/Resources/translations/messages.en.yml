@@ -520,7 +520,9 @@ content_reporting:
         Link: <a href="%s">%s</a>
 
         The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+
         Thank you for your patience. Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
+
         Alienware Arena Team
 
     restored_email_title: Your Content is Restored
@@ -542,6 +544,7 @@ content_reporting:
         Link: <a href="%s">%s</a>
 
         Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
+
         Alienware Arena Team
 
     staff_notification_title: New Content Reported
