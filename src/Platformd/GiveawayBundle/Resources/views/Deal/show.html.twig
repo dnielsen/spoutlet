@@ -59,7 +59,7 @@
                             <p>{{ 'deal_redeem_success' | trans }}</p>
                             <p>
                                 {% if deal.group is defined %}
-                                    {% if deal.group.isMember(app.user) %}
+                                    {% if groupManager.isMember(user, deal.group) %}
                                         {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
                                     {% endif %}
                                 {% endif %}
@@ -168,7 +168,7 @@
         </div>
     </div>
 
-    {% if site_has_feature('COMMENTS') %}
+    {% if features.hasComments %}
         <div class="std_2col">
             <div class="left">
                 {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}

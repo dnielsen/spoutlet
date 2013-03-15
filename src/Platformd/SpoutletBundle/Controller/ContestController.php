@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\Vote;
 
 class ContestController extends Controller
 {
@@ -176,10 +177,11 @@ class ContestController extends Controller
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
 
+        $site       = $this->getCurrentSite();
         $form       = $this->createForm(new SubmitImageType($user));
         $medias     = $this->getGalleryMediaRepository()->findAllUnpublishedByUserForContest($user, $contest);
-        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($this->getCurrentSite(), 'image');
-        $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllOwnedGroupsForContest($user, $entry, $this->getCurrentSite());
+        $galleries  = $this->getGalleryRepository()->findAllGalleriesByCategoryForSite($site, 'image');
+        $groups     = $contest->getCategory() == 'image' ? $this->getGroupRepository()->getAllGroupsForUser($user) : $this->getGroupRepository()->findAllOwnedGroupsForContest($user, $entry, $site);
         $mediaCount = $entry->getMedias()
             ->filter(function($x) {
                 return $x->getDeleted() != 1;
@@ -280,11 +282,33 @@ class ContestController extends Controller
         return $response;
     }
 
-    public function voteAction($slug)
+    public function voteAction($slug, Request $request)
     {
         $contest = $this->getContestRepository()->findOneBy(array('slug' => $slug));
+        $user = $this->getUser();
 
         $this->ensureContestIsValid($contest);
+        $mediaId = (int)$request->query->get('vote');
+
+        if ($mediaId && $this->isGranted('ROLE_USER')) {
+            $media = $this->getGalleryMediaRepository()->find($mediaId);
+
+            if ($media && !$media->hasUserVoted($this->getUser())) {
+                $vote = new Vote();
+                $vote->setUser($this->getUser());
+                $vote->setGalleryMedia($media);
+                $vote->setVoteType('up');
+                $vote->setIpAddress($request->getClientIp(true));
+
+                $em = $this->getEntityManager();
+
+                $em->persist($vote);
+
+                $media->getVotes()->add($vote);
+                $em->persist($media);
+                $em->flush();
+            }
+        }
 
         $medias = $this->getGalleryMediaRepository()->findMediaForContest($contest);
         $entries = $this->getContestEntryRepository()->findGroupsByContest($contest);

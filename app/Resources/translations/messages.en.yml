@@ -444,7 +444,7 @@ email:
         The key has been posted to your Alienware Arena account and can be accessed from here:
         (%accountUrl%)
 
-        If you have any questions, please email us at %subDomain%@alienwarearena.com.
+        If you have any questions, please email us at %supportEmailAddress%.
 
         Thank you,
         - Alienware Arena Team
@@ -461,7 +461,7 @@ email:
         If the system tag you entered is incorrect, please access the link below to re-enter the 7-digit number:
         %giveawayUrl%
 
-        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you reqiure further assistance, please email us at %subDomain%@alienwarearena.com.
+        Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you require further assistance, please email us at %supportEmailAddress%.
 
         Thank you,
         - Alienware Arena Team
@@ -689,8 +689,8 @@ galleries:
 
     show_photo_details_label: Image Details
     show_photo_details_upload_on: Uploaded On
-    show_photo_details_views: Views:
-    show_photo_details_points: Points:
+    show_photo_details_views: Views
+    show_photo_details_points: Points
 
     delete_photo_error_message: Image was not deleted.
     delete_photo_success_message: Your image was deleted successfully.
@@ -723,13 +723,13 @@ galleries:
     publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
     publish_photo_multiple_message_gallery_or_group_required: You must select at least one gallery or group to place your image in.
     no_images_found: No images found...
-    already_voted: You have already voted on this image.
+    already_voted: You have liked this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
     login_to_vote_linked: Please <a href="%login_url%">log in</a> to vote.
     login_to_vote: Log In to Vote!
-    quick_vote_caption: Quick Vote
-    voting_closed_caption: Voting Closed!
-    already_voted_caption: Already Voted!
+    quick_vote_caption: Like it?
+    voting_closed_caption: Voting Closed
+    already_voted_caption: Voted
     by: by:
     submit_no_groups: You are not a member of any groups at this time.
     likes: Likes

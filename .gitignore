@@ -1,4 +1,6 @@
+/bin/AwaReset.log
 /.idea/*
+.DS_Store
 /web/bundles/
 /app/bootstrap*
 /app/cache/*
@@ -12,5 +14,7 @@
 /web/js/*
 /web/video
 /web/media/*
+/web/themes/*
 VERSION
 /external_data/ip2location/overrideCountry
+/bin/AwaReset.log

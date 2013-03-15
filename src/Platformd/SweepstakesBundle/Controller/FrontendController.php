@@ -48,6 +48,7 @@ class FrontendController extends Controller
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
+            'groupManager' => $this->getGroupManager(),
         );
     }
 
@@ -107,9 +108,10 @@ class FrontendController extends Controller
         # if user has elected to join the group associated with this deal, we add them to the list of members
         if($joinGroup) {
             if($sweepstakes->getGroup()) {
+                $groupManager = $this->getGroupManager();
                 $group = $sweepstakes->getGroup();
 
-                if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
                     // TODO This should probably be refactored to use the global activity table
                     $joinAction = new GroupMembershipAction();
                     $joinAction->setGroup($group);
@@ -125,7 +127,7 @@ class FrontendController extends Controller
                     $event = new GroupEvent($group, $user);
                     $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
-                    $this->getGroupManager()->saveGroup($group);
+                    $groupManager->saveGroup($group);
 
                     if($group->getIsPublic()) {
                         try {

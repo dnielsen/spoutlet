@@ -3,7 +3,7 @@
 {% block title event.name %}
 
 {% block content %}
-<div id="content">
+
     <div class="std_1col">
         {% if event.bannerImage %}
             <div id="eventHeader" style="background:url('{{ asset(media_path(event)) }}') no-repeat;"></div>
@@ -84,5 +84,4 @@
         </div>
     </div>
 
-</div>
 {% endblock %}

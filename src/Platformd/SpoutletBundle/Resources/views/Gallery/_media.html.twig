@@ -27,7 +27,7 @@
                         {% endif %}
                     {% else %}
                         <div class="thumbnail-vote-caption">
-                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index')) | url_encode }}">{{ 'galleries.login_to_vote' | trans }}</a>
+                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index')) | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                         </div>
                     {% endif %}
                 </a>
@@ -66,7 +66,7 @@
                         {% endif %}
                     {% else %}
                         <div class="thumbnail-vote-caption">
-                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index')) | url_encode }}">{{ 'galleries.login_to_vote' | trans }}</a>
+                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('gallery_index') ~ '?vote=' ~ media.id) | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                         </div>
                     {% endif %}
                 </a>
@@ -85,8 +85,8 @@
 
 {% endif %}
 
-{% include 'SpoutletBundle:Gallery:_quickVotePopup.html.twig' %}
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+{% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
 
 <script type="text/javascript">
     $(document).ready(function() {

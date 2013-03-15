@@ -13,6 +13,9 @@ if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
     exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 }
 
+// Setting $_ENV['HOME'] to avoid excessive, unnecessary errors in apache log file
+$_ENV['HOME'] = '/home/ubuntu';
+
 require_once __DIR__.'/../app/bootstrap.php.cache';
 require_once __DIR__.'/../app/AppKernel.php';
 

@@ -90,6 +90,7 @@ class DealController extends Controller
             'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
             'hasKeys' => $hasKeys > 0,
+            'groupManager' => $this->getGroupmanager(),
         );
     }
 
@@ -109,7 +110,7 @@ class DealController extends Controller
         $deal           = $this->getDealManager()->findOneBySlug($slug, $site);
         $clientIp       = $request->getClientIp(true);
         $user           = $this->getUser();
-        $locale         = $this->getLocale();
+        $locale         = $site->getDefaultLocale();
         $countryRepo    = $em->getRepository('SpoutletBundle:Country');
         $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
 
@@ -177,9 +178,10 @@ class DealController extends Controller
         # if user has elected to join the group associated with this deal, we add them to the list of members
         if($joinGroup) {
             if($deal->getGroup()) {
+                $groupManager = $this->getGroupManager();
                 $group = $deal->getGroup();
 
-                if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
                     // TODO This should probably be refactored to use the global activity table
                     $joinAction = new GroupMembershipAction();
                     $joinAction->setGroup($group);
@@ -195,7 +197,7 @@ class DealController extends Controller
                     $event = new GroupEvent($group, $user);
                     $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
-                    $this->getGroupManager()->saveGroup($group);
+                    $groupManager->saveGroup($group);
 
                     if($group->getIsPublic()) {
                         try {

@@ -1,0 +1,51 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var voteRequestSent;
+
+        $('.quick-vote-link').click(function () {
+
+            if (voteRequestSent) {
+                return false;
+            }
+
+            voteRequestSent = sendVoteRequest(this);
+        });
+
+        function sendVoteRequest(element)
+        {
+            $(element).parent('.thumbnail-vote-caption').fadeOut();
+            $(element).closest('#media-likes-wrapper').fadeOut();
+            $(element).parent('.photo-like').fadeOut();
+
+            $(element).closest('.gallery-media-thumb').block({
+                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="height:auto;width:auto;cursor:default;" />',
+                css: {
+                    border: 'none',
+                    background: 'transparent'
+                }
+
+            });;
+
+            $(element).unbind('click')
+            return $.ajax({
+                url: '{{ path('gallery_media_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : $(element).attr('media-data'),
+                    'voteType' : 'up'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    $(element).text('{{ "galleries.already_voted_caption"| trans }}');
+                    $(element).removeClass('quick-vote-link');
+                    $(element).closest('.gallery-media-thumb').unblock();
+                    $('#media-already-voted').fadeIn();
+                    $(element).closest('#media-likes-wrapper').fadeIn();
+                    $('#media-likes').text(data.likes);
+                    voteRequestSent = false;
+                }
+            })
+        }
+    });
+</script>

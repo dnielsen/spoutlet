@@ -1,8 +1,7 @@
 {% set reportContentType    = 'GroupNews' %}
-{% set site                 = get_current_site() %}
-{% set canAdd               = group.isAllowedTo(app.user, site, 'AddNews') %}
-{% set canEdit              = group.isAllowedTo(app.user, site, 'EditNews') %}
-{% set canDelete            = group.isAllowedTo(app.user, site, 'DeleteNews') %}
+{% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddNews') %}
+{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditNews') %}
+{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteNews') %}
 
 <div id="news-content-scroll" style="height: 550px;">
 

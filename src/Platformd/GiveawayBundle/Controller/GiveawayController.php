@@ -55,6 +55,7 @@ class GiveawayController extends Controller
             'redemptionSteps'   => $instruction,
             'available_keys'    => $availableKeys,
             'assignedKey'       => $assignedKey,
+            'groupManager'      => $this->getGroupManager(),
         ));
     }
 
@@ -143,9 +144,10 @@ class GiveawayController extends Controller
         # if user has elected to join the group associated with this deal, we add them to the list of members
         if($joinGroup) {
             if($giveaway->getGroup()) {
+                $groupManager = $this->getGroupManager();
                 $group = $giveaway->getGroup();
 
-                if ($group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
                     // TODO This should probably be refactored to use the global activity table
                     $joinAction = new GroupMembershipAction();
                     $joinAction->setGroup($group);
@@ -161,7 +163,7 @@ class GiveawayController extends Controller
                     $event = new GroupEvent($group, $user);
                     $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
-                    $this->getGroupManager()->saveGroup($group);
+                    $groupManager->saveGroup($group);
 
                     if($group->getIsPublic()) {
                         try {
@@ -203,6 +205,7 @@ class GiveawayController extends Controller
         $user = $this->getUser();
 
         $giveaway = $this->findGiveaway($slug);
+        $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
 
         $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
         if (!$giveaway->getStatus() == "active" && !$canTest) {

@@ -216,7 +216,7 @@ table.list tr.even {
 
 }
 
-div#content.microsoft {
+div.microsoft {
   text-align: center;
 }
 
@@ -277,6 +277,8 @@ span.required {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     opacity: 0;
+    width: 120px;
+    height: 60px;
 }
 #homepage-gallery .ad-thumbs li a.ad-active img {
     border-color: #68bcd8;
@@ -373,7 +375,7 @@ span.required {
     margin: 10px 0;
     text-align: center;
 }
-.pate-header img {
+.page-header img {
     display: inline;
 }
 

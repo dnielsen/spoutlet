@@ -29,9 +29,10 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
+        $site = $this->getCurrentSite();
 
-        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite(), Contest::getValidStatuses());
-        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite(), Contest::getValidStatuses());
+        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site, Contest::getValidStatuses());
+        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site, Contest::getValidStatuses());
 
         return $this->render('SpoutletBundle:ContestAdmin:list.html.twig', array(
             'imageContests' => $imageContests,
@@ -204,10 +205,11 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
-        $em              = $this->getDoctrine()->getEntityManager();
-        $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $this->getCurrentSite());
-        $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $this->getCurrentSite());
-        $voteResult      = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
+        $em            = $this->getDoctrine()->getEntityManager();
+        $site          = $this->getCurrentSite();
+        $imageContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site);
+        $groupContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site);
+        $voteResult    = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
 
         $entryCounts      = array();
         $groupEntryCounts = array();
@@ -298,27 +300,21 @@ class ContestAdminController extends Controller
             foreach ($entry->getMedias() as $media) {
                 $likes[$media->getId()] = $this->getEntryLikeCount($media);
 
-                $totalVotes =  $media->getVotes()->count();
+                $votes =  $media->getVotes();
 
-                if ($totalVotes) {
-                    $upCount = $media->getVotes()
+                if ($votes->count()) {
+                    $upCount = $votes
                         ->filter(function($x) {
                             return
                             $x->getVoteType() == "up"; })
                         ->count();
 
-                    $upVotes[$media->getId()] = round(($upCount/$totalVotes)*100);
-                    $downVotes[$media->getId()] = round((($totalVotes - $upCount)/$totalVotes)*100);
+                    $upVotes[$media->getId()] = $upCount;
                 } else {
                     $upVotes[$media->getId()] = 0;
-                    $downVotes[$media->getId()] = 0;
                 }
-
-
             }
         }
-
-
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
             'contest'   => $contest,
@@ -326,7 +322,6 @@ class ContestAdminController extends Controller
             'slug'      => $slug,
             'likes'     => $likes,
             'upVotes'   => $upVotes,
-            'downVotes' => $downVotes,
         ));
     }
 
@@ -445,7 +440,6 @@ class ContestAdminController extends Controller
             'Date of Birth',
             'IP Address',
             'Vote Date',
-            'IP Address',
             'Country Registered',
         ));
 
