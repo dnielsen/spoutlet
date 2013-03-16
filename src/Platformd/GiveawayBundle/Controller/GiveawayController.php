@@ -16,9 +16,13 @@ class GiveawayController extends Controller
     public function indexAction()
     {
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
+        $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
+        $expired   = $this->getRepository()->findExpiredWithZeroKeysForSite($this->getCurrentSite());
 
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
-            'giveaways' => $giveaways
+            'giveaways' => $giveaways,
+            'featured'  => $featured,
+            'expired'   => $expired,
         ));
     }
 

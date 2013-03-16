@@ -104,7 +104,7 @@ class Giveaway extends AbstractEvent
      *
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
      */
-    protected $thumbnail;
+    protected $thumbnail = null;
 
     public function __construct()
     {
