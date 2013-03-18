@@ -112,7 +112,9 @@ class DealType extends AbstractType
                 'label' => 'Allow admin testing?',
                 'help'  => 'This allows admins to still test the operation of the deal IF it is unpublished',
             ));
-
+            $builder->add('featured', null, array(
+                'label' => 'Featured'
+            ));
             $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 
