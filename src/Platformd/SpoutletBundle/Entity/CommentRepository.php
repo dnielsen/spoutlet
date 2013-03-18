@@ -77,6 +77,7 @@ class CommentRepository extends EntityRepository
             ->leftJoin('c.thread', 't')
             ->orderBy('c.createdAt', 'DESC')
             ->where('t.permalink like :giveaways')
+            ->andWhere('c.deleted <> true')
             ->andWhere('t.site = :site')
             ->setParameter('site', $site)
             ->setParameter('giveaways', '%' . 'giveaways' . '%')
