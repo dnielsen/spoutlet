@@ -13,7 +13,7 @@
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
 
-        <div class="widget-33">
+        <div class="widget-33" style="margin: 10px 0 0 0;">
             <div class="widget-header">
                 <div class="widget-title">{{ 'platformd.giveaway.latest_comments' | trans }}</div>
             </div>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="title">
                         <a href="{{ comment.thread.permalink }}">{{ comment.body }}</a></div>
-                    <div class="about widget-item-subtext"><span class="who">{{ comment.author.username }}</span><span class="when">{{ comment.createdAt | date }}</span></div>
+                    <div class="about widget-item-subtext"><span class="who">{{ comment.author.username }}</span><span class="when" title="{{ comment.createdAt | date }}"></span></div>
                     <div class="clear"></div>
                 </div>
                 {% endfor %}
@@ -106,10 +106,14 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+    {% endif %}
     <script type="text/javascript">
         $(function () {
            $('.deal-link').truncate({ width: 225 });
            $('.title a').truncate({ width: 240 });
+           $('.when').timeago();
         });
     </script>
 {% endblock %}

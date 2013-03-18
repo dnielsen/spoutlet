@@ -73,6 +73,16 @@ class CommentRepository extends EntityRepository
 
     public function findCommentsForGiveaways($site, $limit=8)
     {
+        return $this->findCommentsForSiteFeature($site, $limit, 'giveaways');
+    }
+
+    public function findCommentsForDeals($site, $limit=8)
+    {
+        return $this->findCommentsForSiteFeature($site, $limit, 'deal');
+    }
+
+    private function findCommentsForSiteFeature($site, $limit, $featureName)
+    {
         $result = $this->createQueryBuilder('c')
             ->leftJoin('c.thread', 't')
             ->orderBy('c.createdAt', 'DESC')
@@ -80,7 +90,7 @@ class CommentRepository extends EntityRepository
             ->andWhere('c.deleted <> true')
             ->andWhere('t.site = :site')
             ->setParameter('site', $site)
-            ->setParameter('giveaways', '%' . 'giveaways' . '%')
+            ->setParameter('giveaways', '%' . $featureName . '%')
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();

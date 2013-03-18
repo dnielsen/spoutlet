@@ -12,34 +12,26 @@
         <div class="right">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
 
-            <div class="widget-33" style="margin-top: 10px;">
+            <div class="widget-33" style="margin: 10px 0 0 0;">
                 <div class="widget-header">
-                    <div class="widget-title">
-                         {{ 'deal_comments' | trans }}
-                    </div>
+                    <div class="widget-title">{{ 'platformd.giveaway.latest_comments' | trans }}</div>
                 </div>
                 <div class="widget-content">
-                    <div class="deals-comments">
-                        {% for commentObject in commentsArr %}
-                        {% set comment = commentObject.comment %}
-                        {% set deal = commentObject.object %}
-                            {% set dealCommentImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
-                            <div class="dealListItem">
-                            <div>
-                                <img class="dealListItemThumb" src="{{ dealCommentImage }}" title="{{ deal.name }}" alt="{{ deal.name }}">
-                                <div class="commentListItemDetails">
-                                    <ul class="dealDetails">
-                                        <li class="dealTitle"><a class="movie_ellipsis" title="" href="{{ deal | pd_link }}">{{ deal.name }}</a></li>
-                                        <li class="dealCommentAuthor">{{ 'by' | trans }} {{ comment.author }}</li>
-                                        <li class="dealCommentAt">{{ 'deal_comments_posted_on' | trans}} {{ 'platformd.comment.date_format' | trans(comment.createdAtInTimezoneTranslationArray) }}</li>
-                                    </ul>
-                                </div>
-                            </div>
+
+                    {% for comment in comments %}
+                    <div class="widget-item">
+                        <div class="picture">
+                            <a href="{{ cevo_account_link(comment.author.username) }}">
+                                <img src="{{ asset(get_avatar_url(comment.author)) }}">
+                            </a>
                         </div>
-                        {% else %}
-                        {{ 'fos_comment_comment_new_headline_first' | trans({}, 'FOSCommentBundle') }}
-                        {% endfor %}
+                        <div class="title">
+                            <a href="{{ comment.thread.permalink }}">{{ comment.body }}</a></div>
+                        <div class="about widget-item-subtext"><span class="who">{{ comment.author.username }}</span><span class="when" title="{{ comment.createdAt | date }}"></span></div>
+                        <div class="clear"></div>
                     </div>
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
@@ -151,6 +143,9 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+    {% endif %}
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.scrollTo-1.4.2-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.localscroll-1.2.7-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.serialScroll-1.2.2-min.js') }}"></script>
@@ -168,6 +163,7 @@
 
             $('.movie_ellipsis').truncate();
             $('.deal-link').truncate({ width: 225 });
+            $('.when').timeago();
         });
     </script>
 

@@ -25,16 +25,14 @@ class DealController extends Controller
         $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
         $allDeals = $this->getDealManager()->findActiveDeals($site);
         $expiredDeals = $this->getDealManager()->findExpiredDeals($site);
-        $commentsArr = $this->getCommentManager()
-            ->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5)
-        ;
+        $comments = $this->getCommentRepository()->findCommentsForDeals($site);
 
         return array(
             'mainDeal'          => $mainDeal,
             'featuredDeals'     => $featuredDeals,
             'allDeals'          => $allDeals,
             'expiredDeals'      => $expiredDeals,
-            'commentsArr'       => $commentsArr,
+            'comments'          => $comments,
         );
     }
 
@@ -190,5 +188,16 @@ class DealController extends Controller
     protected function getCommentManager()
     {
         return $this->container->get('fos_comment.manager.comment');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Repository\CommentRepository
+     */
+    protected function getCommentRepository()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Comment');
     }
 }
