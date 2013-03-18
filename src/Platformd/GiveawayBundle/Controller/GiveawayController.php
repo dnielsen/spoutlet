@@ -18,11 +18,13 @@ class GiveawayController extends Controller
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
         $expired   = $this->getRepository()->findExpiredWithZeroKeysForSite($this->getCurrentSite());
+        $comments  = $this->getCommentRepository()->findCommentsForGiveaways($this->getCurrentSite());
 
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
             'giveaways' => $giveaways,
             'featured'  => $featured,
             'expired'   => $expired,
+            'comments'  => $comments,
         ));
     }
 
@@ -263,5 +265,16 @@ class GiveawayController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:GiveawayKey');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Repository\CommentRepository
+     */
+    protected function getCommentRepository()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Comment');
     }
 }

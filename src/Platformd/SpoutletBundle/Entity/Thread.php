@@ -46,6 +46,12 @@ class Thread
      */
     protected $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $site;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -109,5 +115,15 @@ class Thread
     public function getComments()
     {
         return $this->comments;
+    }
+
+    public function setSite($value)
+    {
+        $this->site = $value;
+    }
+
+    public function getSite()
+    {
+        return $this->site;
     }
 }

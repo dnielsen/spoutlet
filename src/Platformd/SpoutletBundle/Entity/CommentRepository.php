@@ -70,5 +70,21 @@ class CommentRepository extends EntityRepository
 
         return $result;
     }
+
+    public function findCommentsForGiveaways($site, $limit=8)
+    {
+        $result = $this->createQueryBuilder('c')
+            ->leftJoin('c.thread', 't')
+            ->orderBy('c.createdAt', 'DESC')
+            ->where('t.permalink like :giveaways')
+            ->andWhere('t.site = :site')
+            ->setParameter('site', $site)
+            ->setParameter('giveaways', '%' . 'giveaways' . '%')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+
+        return $result;
+    }
 }
 

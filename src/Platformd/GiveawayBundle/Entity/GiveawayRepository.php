@@ -104,18 +104,19 @@ class GiveawayRepository extends AbstractEventRepository
             ->execute();
     }
 
-
     /**
      * Returns top 4 (by default) expired giveaways with 0 keys
      * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
      */
-    public function findExpiredWithZeroKeysForSite($site, $limit=4)
+    public function findExpiredWithZeroKeysForSite($site, $limit=5)
     {
         return $this->createBaseQueryBuilder($site)
-            ->leftJoin('g.giveawayPools', 'gp')
-            ->andWhere('g.featured != 1')
+            ->leftJoin('g.giveawayPools', 'gkp')
+            ->andWhere('g.featured <> 1')
             ->andWhere('g.status != :flag')
+            ->orderBy('g.featuredAt', 'DESC')
             ->setParameter('flag', 'disabled')
+            ->setMaxResults($limit)
             ->getQuery()
             ->execute();
     }

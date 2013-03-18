@@ -354,6 +354,17 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 .widget-100.no-header { background-image: url('../images/widget-100-bg-no-header.png'); }
 
+.picture { float: left; width: 26px; height: 26px; padding-right: 6px; border: none; }
+.picture a { border: none; }
+.picture a img { width: 26px; height: 26px; }
+
+.title { float: left; width: 240px; height: 12px; font-size: 12px; font-weight: bold; }
+.widget-item-subtext { font-size: 11px; color: #b3b3b3; }
+.about { float: left; width: 240px; height: 15px; margin: 2px 0 0 0; }
+.about .who { display: block; float: left; font-size: 11px; font-weight: normal; }
+.about .when { display: block; float: right; font-size: 11px; font-weight: normal; }
+
+
 /** Rotator **/
 #rotator { width:634px; }
 #mainAd { width:300px; height:250px; margin-bottom: 0px; border: 1px solid #4A4A4A; }

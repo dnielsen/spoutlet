@@ -77,6 +77,27 @@ class GiveawayKeyRepository extends AbstractCodeRepository
         return $count > 0;
     }
 
+    /**
+     * Returns top 4 (by default) expired giveaways with 0 keys
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
+     */
+    public function findExpiredWithZeroKeysForSite($site, $limit=5)
+    {
+        return $this->createQueryBuilder('k')
+            ->select('g.id, COUNT(k.id) as keyCount')
+            ->leftJoin('k.pool', 'gkp')
+            ->leftJoin('gkp.giveaway', 'g', 'WITH', 'g.featured != 1 AND g.status != :flag')
+            ->leftJoin('g.sites', 's')
+            ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
+            ->groupBy('g.id')
+            ->having('keyCount = 0')
+            ->setParameter('flag', 'disabled')
+            ->setParameter('site', $site)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
     private function createForGiveawayQueryBuilder(Giveaway $giveaway)
     {
         return $this->createQueryBuilder('k')
