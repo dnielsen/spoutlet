@@ -15,13 +15,23 @@ class GiveawayController extends Controller
 
     public function indexAction()
     {
+        $active    = array();
+        $expired   = array();
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
-        $expired   = $this->getRepository()->findExpiredWithZeroKeysForSite($this->getCurrentSite());
         $comments  = $this->getCommentRepository()->findCommentsForGiveaways($this->getCurrentSite());
 
+        foreach ($giveaways as $giveaway) {
+            $keyRepo = $this->getKeyRepository();
+            if($keyRepo->getTotalForGiveaway($giveaway) == 0) {
+                array_push($expired, $giveaway);
+            } else {
+                array_push($active, $giveaway);
+            }
+        }
+
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
-            'giveaways' => $giveaways,
+            'giveaways' => $active,
             'featured'  => $featured,
             'expired'   => $expired,
             'comments'  => $comments,

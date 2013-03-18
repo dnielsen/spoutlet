@@ -84,6 +84,17 @@ class GiveawayKeyRepository extends AbstractCodeRepository
     public function findExpiredWithZeroKeysForSite($site, $limit=5)
     {
         return $this->createQueryBuilder('k')
+            ->select('g.id, g.slug, COUNT(k.id)')
+            ->join('k.pool','gkp')
+            ->join('gkp.giveaway', 'g', 'WITH', 'g.featured != 1 AND g.status != :flag')
+            ->setParameter('flag', 'disabled')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+/*    public function findExpiredWithZeroKeysForSite($site, $limit=5)
+    {
+        return $this->createQueryBuilder('k')
             ->select('g.id, COUNT(k.id) as keyCount')
             ->leftJoin('k.pool', 'gkp')
             ->leftJoin('gkp.giveaway', 'g', 'WITH', 'g.featured != 1 AND g.status != :flag')
@@ -96,7 +107,7 @@ class GiveawayKeyRepository extends AbstractCodeRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
-    }
+    }*/
 
     private function createForGiveawayQueryBuilder(Giveaway $giveaway)
     {
