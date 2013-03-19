@@ -386,4 +386,9 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     {
         $this->lastPostId = $value;
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }

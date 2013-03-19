@@ -906,4 +906,9 @@ class Group implements LinkableInterface, ReportableContentInterface
 
         return $this->owner === $user;
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }
