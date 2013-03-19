@@ -23,7 +23,7 @@ class GiveawayController extends Controller
 
         foreach ($giveaways as $giveaway) {
             $keyRepo = $this->getKeyRepository();
-            if($keyRepo->getTotalForGiveaway($giveaway) == 0) {
+            if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getGiveawayPools()) == 0) {
                 array_push($expired, $giveaway);
             } else {
                 array_push($active, $giveaway);

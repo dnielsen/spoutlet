@@ -78,36 +78,25 @@ class GiveawayKeyRepository extends AbstractCodeRepository
     }
 
     /**
-     * Returns top 4 (by default) expired giveaways with 0 keys
-     * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
+     * Returns the total number of keys for the given array of pools
      */
-    public function findExpiredWithZeroKeysForSite($site, $limit=5)
+    public function getTotalUnassignedKeysForPools($pools)
     {
-        return $this->createQueryBuilder('k')
-            ->select('g.id, g.slug, COUNT(k.id)')
-            ->join('k.pool','gkp')
-            ->join('gkp.giveaway', 'g', 'WITH', 'g.featured != 1 AND g.status != :flag')
-            ->setParameter('flag', 'disabled')
-            ->setMaxResults($limit)
+        $ids = array(0);
+        foreach ($pools as $pool) {
+            array_push($ids, $pool->getId());
+        }
+
+        $qb = $this->createQueryBuilder('k');
+
+        return (int)$qb->select('COUNT(k.id)')
+            ->leftJoin('k.pool', 'kp')
+            ->where('k.user IS NULL')
+            ->andWhere('kp.isActive = 1')
+            ->andWhere($qb->expr()->in('kp.id', $ids))
             ->getQuery()
-            ->execute();
+            ->getSingleScalarResult();
     }
-/*    public function findExpiredWithZeroKeysForSite($site, $limit=5)
-    {
-        return $this->createQueryBuilder('k')
-            ->select('g.id, COUNT(k.id) as keyCount')
-            ->leftJoin('k.pool', 'gkp')
-            ->leftJoin('gkp.giveaway', 'g', 'WITH', 'g.featured != 1 AND g.status != :flag')
-            ->leftJoin('g.sites', 's')
-            ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
-            ->groupBy('g.id')
-            ->having('keyCount = 0')
-            ->setParameter('flag', 'disabled')
-            ->setParameter('site', $site)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->execute();
-    }*/
 
     private function createForGiveawayQueryBuilder(Giveaway $giveaway)
     {
