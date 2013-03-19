@@ -50,6 +50,10 @@
     height: 84px;
 }
 
+.comment-wrapper .comment-author a {
+    border: none;
+}
+
 .comment-wrapper .comment-body {
     float: right;
     width: 535px;
