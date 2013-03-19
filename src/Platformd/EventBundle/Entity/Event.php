@@ -32,7 +32,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField"})
+ * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
  */
 abstract class Event implements LinkableInterface
 {
@@ -54,7 +54,7 @@ abstract class Event implements LinkableInterface
      * Only partially automatically set, through setName()
      *
      * @var string $slug
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255, nullable=true)
      * @Assert\Regex(pattern="/^[A-Za-z0-9\-]+$/", message="This can only contain letters, numbers and dashes (-)")
      *      Only allow numbers, digits and dashes
      * This should not happen, since it should generate based on name
@@ -885,6 +885,27 @@ abstract class Event implements LinkableInterface
                     "You must enter a complete address for an In-Person event.",
                     array(),
                     "address2"
+                );
+
+                $executionContext->setPropertyPath($oldPath);
+            }
+        }
+    }
+
+    public function validateSlug(ExecutionContext $executionContext)
+    {
+        if (!$this->getSlug()) {
+            $slug = Urlizer::urlize($this->getName());
+
+            if (!$slug) {
+                $oldPath = $executionContext->getPropertyPath();
+                $propertyPath = $oldPath . '.name';
+                $executionContext->setPropertyPath($propertyPath);
+
+                $executionContext->addViolation(
+                    "Please eneter a valid name for your event.",
+                    array(),
+                    "name"
                 );
 
                 $executionContext->setPropertyPath($oldPath);
