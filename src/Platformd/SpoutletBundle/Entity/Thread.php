@@ -46,12 +46,6 @@ class Thread
      */
     protected $comments;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $site;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
