@@ -86,11 +86,11 @@ class CommentRepository extends EntityRepository
         $result = $this->createQueryBuilder('c')
             ->leftJoin('c.thread', 't')
             ->orderBy('c.createdAt', 'DESC')
-            ->where('t.permalink like :giveaways')
+            ->where('t.permalink like :featureName')
             ->andWhere('c.deleted <> true')
             ->andWhere('t.site = :site')
             ->setParameter('site', $site)
-            ->setParameter('giveaways', '%' . $featureName . '%')
+            ->setParameter('featureName', '%' . $featureName . '%')
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
