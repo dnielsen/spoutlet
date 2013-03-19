@@ -110,6 +110,16 @@ class SiteFeatures
     private $hasComments = false;
 
     /**
+     * @ORM\Column(name="has_giveaways", type="boolean")
+     */
+    private $hasGiveaways = false;
+
+    /**
+     * @ORM\Column(name="has_events", type="boolean")
+     */
+    private $hasEvents = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -306,5 +316,26 @@ class SiteFeatures
         return $this;
     }
 
+    public function getHasGiveaways()
+    {
+        return $this->hasGiveaways;
+    }
+
+    public function setHasGiveaways($value)
+    {
+        $this->hasGiveaways = $value;
+        return $this;
+    }
+
+    public function getHasEvents()
+    {
+        return $this->hasEvents;
+    }
+
+    public function setHasEvents($value)
+    {
+        $this->hasEvents = $value;
+        return $this;
+    }
 
 }

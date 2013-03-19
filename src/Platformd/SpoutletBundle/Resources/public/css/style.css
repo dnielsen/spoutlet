@@ -300,8 +300,6 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .std_tbl .subheader td {text-align: center; font-weight: bold; color: white; font-size: 14px;}
 
 
-
-
 /* New Blue Buttons */
 .blueButton { background:url(/bundles/spoutlet/images/btnBlue-right.png) top right no-repeat; }
 .blueButton a { display:block; background:url(/bundles/spoutlet/images/btnBlue-left.png) top left no-repeat; height:25px; padding-top:5px;  color:#ffffff; font-weight: bold; margin-right: 3px; padding-left: 3px; }

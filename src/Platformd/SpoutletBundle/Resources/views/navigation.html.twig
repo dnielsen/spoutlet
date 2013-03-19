@@ -31,7 +31,39 @@
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
-                <li>{{ site_link('EVENTS') | raw }}</a></li>
+                {% if features.hasGiveaways %}
+                    <li>{{ site_link('GIVEAWAYS') | raw }}</li>
+                {% endif %}
+
+                {% if features.hasGroups %}
+                    <li class="more">
+                        <a class="blue">
+                            {{ 'platformd.layout.main_menu.groups' | trans }}
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ path('groups') }}">All Groups</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('accounts_groups') }}">My Groups</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('group_new') }}">Create Group</a>
+                            </li>
+                            {% if features.hasContests %}
+                            <li>{{ site_link('CONTESTS_GROUP') }}</li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {% if features.hasDeals %}
+                    <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
+                {% endif %}
+
+                {% if features.hasEvents %}
+                    <li>{{ site_link('EVENTS') | raw }}</li>
+                {% endif %}
 
                 {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
@@ -67,32 +99,6 @@
                             {% endif %}
                             {% if features.hasContests %}
                             <li>{{ site_link('CONTESTS_IMAGE') }}</li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                {% endif %}
-
-                {% if features.hasDeals %}
-                    <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
-                {% endif %}
-
-                {% if features.hasGroups %}
-                    <li class="more">
-                        <a class="blue">
-                            {{ 'platformd.layout.main_menu.groups' | trans }}
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{ path('groups') }}">All Groups</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('accounts_groups') }}">My Groups</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('group_new') }}">Create Group</a>
-                            </li>
-                            {% if features.hasContests %}
-                            <li>{{ site_link('CONTESTS_GROUP') }}</li>
                             {% endif %}
                         </ul>
                     </li>
