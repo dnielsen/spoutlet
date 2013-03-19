@@ -660,7 +660,7 @@ class GroupEventController extends Controller
         }
 
         if (
-            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            !$this->getGroupManager()->isAllowedTo($this->getUser(), $groupEvent->getGroup(), $this->getCurrentSite(), 'CancelEvent') &&
             (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
@@ -694,7 +694,7 @@ class GroupEventController extends Controller
         }
 
         if (
-            !$groupEvent->getGroup()->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'CancelEvent') &&
+            !$this->getGroupManager()->isAllowedTo($this->getUser(), $groupEvent->getGroup(), $this->getCurrentSite(), 'CancelEvent') &&
             (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         ) {
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
@@ -853,6 +853,44 @@ class GroupEventController extends Controller
 
         $response->setContent(json_encode(array("success" => true)));
         return $response;
+    }
+
+    /**
+     * Sets an event as deleted
+     *
+     * @param $groupSlug, $eventId
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+    public function deleteAction($groupSlug, $eventId)
+    {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
+        /** @var $groupEvent GroupEvent */
+        $groupEvent = $this->getGroupEventService()->findOneBy(array(
+            'id' => $eventId
+        ));
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        if (
+            !$this->getGroupManager()->isAllowedTo($this->getUser(), $groupEvent->getGroup(), $this->getCurrentSite(), 'DeleteEvent') &&
+            (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
+        ) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        if ($groupEvent->getDeleted()) {
+            $this->setFlash('error', 'Event is already deleted!');
+        } else {
+            $this->getGroupEventService()->deleteEvent($groupEvent);
+
+            $this->setFlash('success', ' Your event is deleted.');
+        }
+
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $groupEvent->getGroup()->getSlug())) . '#events');
     }
 
     /**

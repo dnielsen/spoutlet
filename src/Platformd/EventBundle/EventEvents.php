@@ -48,6 +48,16 @@ final class EventEvents
     const EVENT_CANCEL = 'platformd.event.cancel';
 
     /**
+     * The platformd.event.delete event is thrown each time an event gets deleted
+     *
+     * The event listener receives a Platformd\EventBundle\Event\EventEvent
+     * instance.
+     *
+     * @var string
+     */
+    const EVENT_DELETE = 'platformd.event.delete';
+
+    /**
      * The platformd.event.activate event is thrown each time an event gets activated
      *
      * The event listener receives a Platformd\EventBundle\Event\EventEvent

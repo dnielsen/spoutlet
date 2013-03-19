@@ -3,9 +3,8 @@
         <tr>
             <th style="width:121px;cursor:pointer">{{ 'platformd.events.event_listings.start_date' | trans }}</th>
             <th style="width:8px;cursor:pointer"></th>
-            <th style="width:259px;cursor:pointer">{{ 'platformd.events.event_listings.event' | trans }}</th>
-            <th style="width:132px;cursor:pointer">{{ 'platformd.events.event_listings.games' | trans }}</th>
-            <th style="width:191px;cursor:pointer">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
+            <th style="width:341px;cursor:pointer">{{ 'platformd.events.event_listings.event' | trans }}</th>
+            <th style="width:241px;cursor:pointer">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
             <th style="width:213px;cursor:pointer">{{ 'platformd.events.event_listings.location' | trans }}</th>
         </tr>
     </thead>
@@ -46,13 +45,6 @@
                     {{ event | pd_link_full(event.name, ['global-event-link']) }}
                 {% endif %}
 
-            </td>
-            <td style="width:132px;vertical-align:top" class="event-game">
-                {% if event.game is defined %}
-                    {{ event.game ? event.game : ('na'|trans) }}
-                {% else %}
-                    {{ 'na'|trans }}
-                {% endif %}
             </td>
             <td style="width:191px;vertical-align:top" class="event-organizer">
                 {% if event.hostedBy is defined %}

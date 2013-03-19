@@ -49,14 +49,6 @@ class EventType extends AbstractType
                     'class' => 'ckeditor'
                 )
             ))
-            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'Other',
-                'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
-                    return $er->createQueryBuilder('g')
-                              ->orderBy('g.name', 'ASC');
-                    },
-                'required'  => false,
-                'label' => 'platformd.event.form.game',
-            ))
             ->add('online', 'choice', array(
                 'choices'   => array(
                     1 => 'platformd.event.form.choice.online_event',

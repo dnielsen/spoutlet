@@ -184,6 +184,22 @@ class EventService
     }
 
     /**
+     * Delete an event
+     *
+     * @param \Platformd\EventBundle\Entity\Event $event
+     */
+    public function deleteEvent(Event $event)
+    {
+        $event->setDeleted(true);
+
+        $this->updateEvent($event);
+
+        // We dispatch an event for further tasks
+        $event = new EventEvent($event);
+        $this->dispatcher->dispatch(EventEvents::EVENT_DELETE, $event);
+    }
+
+    /**
      * Activate an event
      *
      * @param \Platformd\EventBundle\Entity\Event $event
