@@ -426,8 +426,22 @@ class GroupEventController extends Controller
     {
         $email = new GroupEventEmail();
 
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+
+        $event = $this->getGroupEventService()->findOneBy(array(
+            'group' => $group->getId(),
+            'slug' => $eventSlug,
+        ));
+
+        $emailLocale = $group->getOwner()->getLocale() ?: 'en';
+        $email->setSubject($this->trans(
+            'platformd.event.email.attendees_contact.title',
+            array('%eventName%' => $event->getName()),
+            'messages',
+            $emailLocale
+        ));
+
         $form = $this->createFormBuilder($email)
-            ->add('subject', 'text')
             ->add('users', 'text', array(
                 'property_path' => false,
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
@@ -442,6 +456,18 @@ class GroupEventController extends Controller
 
             if ($form->isValid()) {
                 $email = $form->getData();
+
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $event->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
 
                 return $this->render('EventBundle::contactPreview.html.twig', array(
                     'subject' => $email->getSubject(),
@@ -747,6 +773,8 @@ class GroupEventController extends Controller
 
     public function registerAction($groupSlug, $eventId, Request $request)
     {
+        $this->basicSecurityCheck('ROLE_USER');
+
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
         $user = $this->getUser();
 

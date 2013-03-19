@@ -436,11 +436,20 @@ class GlobalEventController extends Controller
     public function emailPreviewAction($slug, Request $request)
     {
         $email = new GlobalEventEmail();
+        $event = $this->getGlobalEventService()->findOneBy(array('slug' => $slug));
+
+        $emailLocale = $this->getLocale() ?: 'en';
+        $email->setSubject($this->trans(
+            'platformd.event.email.attendees_contact.title',
+            array('%eventName%' => $event->getName()),
+            'messages',
+            $emailLocale
+        ));
 
         $form = $this->createFormBuilder($email)
-            ->add('subject', 'text')
-            ->add('recipients', 'text', array(
-                'read_only' => true,
+            ->add('users', 'text', array(
+                'property_path' => false,
+                'label' => 'Recipients',
                 'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
             ))
             ->add('message', 'purifiedTextarea', array(
@@ -454,6 +463,18 @@ class GlobalEventController extends Controller
             if ($form->isValid()) {
                 $email = $form->getData();
 
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $event->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
+
                 return $this->render('EventBundle::contactPreview.html.twig', array(
                     'subject' => $email->getSubject(),
                     'message' => $email->getMessage(),
@@ -462,9 +483,28 @@ class GlobalEventController extends Controller
         }
 
         $this->setFlash('error', 'There was an error previewing your email!');
-        return $this->redirect($this->generateUrl('group_event_contact', array(
+        return $this->redirect($this->generateUrl('global_event_contact', array(
             'slug' => $slug,
             'form'  => $form->createView(),
+        )));
+    }
+
+    public function registerAction($id, Request $request)
+    {
+        $this->basicSecurityCheck('ROLE_USER');
+        $user = $this->getUser();
+
+        $event = $this->getGlobalEventService()->find($id);
+
+        if (!$event) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $this->getGlobalEventService()->register($event, $user);
+
+        $this->setFlash('success', sprintf('You are now attending this event.'));
+        return $this->redirect($this->generateUrl('global_event_view', array(
+            'slug' => $event->getSlug(),
         )));
     }
 

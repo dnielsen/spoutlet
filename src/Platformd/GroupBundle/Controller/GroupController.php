@@ -329,6 +329,26 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
 
+        $ownedEvents = $this->getGroupEventService()->findBy(array(
+            'user' => $user->getId(),
+            'active' => 1,
+        ));
+
+        $unexpired = 0;
+
+        if (count($ownedEvents) > 0) {
+            foreach ($ownedEvents as $event) {
+                if ($event->getEndsAtUtc() > new \DateTime()) {
+                    $unexpired++;
+                }
+            }
+        }
+
+        if ($unexpired > 0) {
+            $this->setFlash('error', 'Sorry! We are unable to process your request because you have upcoming events listed for this group. Please cancel your events by going to Account > Events or wait until your events are over.');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        }
+
         $this->ensureAllowed($group, 'LeaveGroup');
 
         $leaveAction = new GroupMembershipAction();
@@ -419,7 +439,8 @@ Alienware Arena Team
         }
 
         if ($this->getGroupManager()->isMember($user, $group) || $group->isOwner($user)) {
-            $this->setFlash('error', 'You are already a member of this group!');
+            $this->getGroupEventService()->register($event, $user);
+            $this->setFlash('success', 'Youare now attentding this event.');
             return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
         }
 
