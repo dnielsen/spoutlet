@@ -62,6 +62,38 @@
             dateFormat: 'mm/dd/yy'
         });
 
+        $('#group-event-form').submit(function() {
+
+            var errors = 0;
+            var errorString = '<div class="help-inline time-error">Please select a valid time for your event</div>';
+
+            if (!$('.start-date .hour-selection select').val() || !$('.start-date .minute-selection select').val()) {
+                $('.start-date .control-group').addClass('error');
+                if ($('.start-date .time-error').length < 1) {
+                    $('.start-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.start-date .control-group').removeClass('error');
+                $('.start-date .time-error').remove();
+            }
+
+            if (!$('.end-date .hour-selection select').val() || !$('.end-date .minute-selection select').val()) {
+                $('.end-date .control-group').addClass('error');
+                if ($('.end-date .time-error').length < 1) {
+                    $('.end-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.end-date .control-group').removeClass('error');
+                $('.end-date .time-error').remove();
+            }
+
+            if (errors > 0) {
+                return false;
+            }
+        });
+
         if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
             var exernalUrlDiv = '<div id="external-url" />';

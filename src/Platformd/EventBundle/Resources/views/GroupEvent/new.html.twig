@@ -24,7 +24,7 @@
     {% endif %}
 
     {% set post_route = (importedGroupEvent) ? path('group_event_new_import', {'groupSlug': group.slug, 'eventId': importedGroupEvent.id }) : path('group_event_new', {'groupSlug': group.slug }) %}
-    <form action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form id="group-event-form" action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GroupEvent:_form.html.twig' %}
 
         <div class="form-actions" style="float: left;">

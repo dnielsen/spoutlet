@@ -903,7 +903,7 @@ abstract class Event implements LinkableInterface
                 $executionContext->setPropertyPath($propertyPath);
 
                 $executionContext->addViolation(
-                    "Please eneter a valid name for your event.",
+                    "Please enter a valid name for your event.",
                     array(),
                     "name"
                 );
