@@ -117,6 +117,8 @@ class AdminController extends Controller
 
     public function manageMediaAction(Request $request)
     {
+        $this->addManageMediaBreadcrumb();
+
         $page   = $request->query->get('page', 1);
         $pager  = $this->getMediaRepo()->getMediaForAdmin(50, $page);
         $medias = $pager->getCurrentPageResults();
@@ -199,6 +201,15 @@ class AdminController extends Controller
     private function getMediaRepo()
     {
         return $this->getDoctrine()->getEntityManager()->getRepository('MediaBundle:Media');
+    }
+
+    private function addManageMediaBreadcrumb()
+    {
+         $this->getBreadcrumbs()->addChild('Manage Media', array(
+            'route' => 'admin_upload_media'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 
     /**
