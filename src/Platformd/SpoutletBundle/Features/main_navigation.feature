@@ -15,7 +15,6 @@ Feature: Main Navigation
       | Link        | Target                   | Destination                                                |
       | ホーム        | /app_test.php/           | http://japan.alienwarearena.local/app_test.php/            |
       | Alienware   | http://alienware.jp/     |                                                            |
-      | キャンペーン    | /app_test.php/giveaways    | http://japan.alienwarearena.local/app_test.php/giveaways     |
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
@@ -44,7 +43,7 @@ Feature: Main Navigation
     Given I am on the "North America" site
     When I go to "/app_test.php/games/"
     Then the main navigation menu should be:
-      | Link                        | Target                                          | Destination                                                          |
+      | Link                        | Target                                          | Destination                                                         |
       | Home                        | /app_test.php/                                  | http://www.alienwarearena.com/                                      |
       | Alienware                   | http://www.alienware.com/                       |                                                                     |
       | Games >> Battlefield 3      | http://alienwarearena.com/game/bf3/             |                                                                     |
@@ -156,5 +155,7 @@ Feature: Main Navigation
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://anz.alienwarearena.local/app_test.php/wallpapers |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                    |
+      | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
+      | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                 |                  |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                 |
