@@ -37,7 +37,7 @@ Feature: Main Navigation
       | Medios >> NewConcursos      | /app_test.php/contests/image                   | http://latam.alienwarearena.local/app_test.php/contests/image   |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
       | ARP                         | /app_test.php/arp                              | http://www.alienwarearena.com/arp/sweepstakes/             |
-      | Microsoft                   | /app_test.php/microsoft                        | http://www.alienwarearena.com/microsoft                    |
+      | Microsoft                   | /app_test.php/microsoft                        | http://latam.alienwarearena.local/app_test.php/microsoft                    |
 
   Scenario: The "North America" site's main navigation menu has the correct items
     Given I am on the "North America" site
@@ -65,7 +65,7 @@ Feature: Main Navigation
       | Groups >> NewContests       | /app_test.php/contests/group                    | http://na.alienwarearena.local/app_test.php/contests/group          |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | ARP                         | /app_test.php/arp                               | http://www.alienwarearena.com/arp/sweepstakes/                      |
-      | Microsoft                   | /app_test.php/microsoft                         | http://www.alienwarearena.com/microsoft                             |
+      | Microsoft                   | /app_test.php/microsoft                         | http://na.alienwarearena.local/app_test.php/microsoft                             |
 
   Scenario: The "Europe" site's main navigation menu has the correct items
     Given I am on the "Europe" site
@@ -93,7 +93,7 @@ Feature: Main Navigation
       | Groups >> NewContests       | /app_test.php/contests/group                                                                      | http://eu.alienwarearena.local/app_test.php/contests/group               |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |
-      | Microsoft                   | /app_test.php/microsoft                                                                           | http://www.alienwarearena.com/microsoft                 |
+      | Microsoft                   | /app_test.php/microsoft                                                                           | http://eu.alienwarearena.local/app_test.php/microsoft                 |
 
   Scenario: The "India" site's main navigation menu has the correct items
     Given I am on the "India" site
@@ -114,7 +114,7 @@ Feature: Main Navigation
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://in.alienwarearena.local/app_test.php/wallpapers   |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
-      | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                  |
+      | Microsoft                   | /app_test.php/microsoft                   | http://in.alienwarearena.local/app_test.php/microsoft                  |
 
   Scenario: The "Singapore" site's main navigation menu has the correct items
     Given I am on the "Singapore" site
@@ -135,7 +135,7 @@ Feature: Main Navigation
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://mysg.alienwarearena.local/app_test.php/wallpapers |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
-      | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                  |
+      | Microsoft                   | /app_test.php/microsoft                   | http://mysg.alienwarearena.local/app_test.php/microsoft                  |
 
   Scenario: The "Australia / New Zealand" site's main navigation menu has the correct items
     Given I am on the "Australia / New Zealand" site
@@ -156,4 +156,4 @@ Feature: Main Navigation
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://anz.alienwarearena.local/app_test.php/wallpapers |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
-      | Microsoft                   | /app_test.php/microsoft                   | http://www.alienwarearena.com/microsoft                 |
+      | Microsoft                   | /app_test.php/microsoft                   | http://anz.alienwarearena.local/app_test.php/microsoft                 |
