@@ -154,9 +154,8 @@ class SpoutletExtension extends Twig_Extension
 
         if (empty($url)) {
             if ($adSite = $this->getCurrentBackgroundAdSite($this->currentSite, $timezone)) {
-                $exposer = $this->container->get('twig.extension.media_exposer');
                 if ($file =  $adSite->getAd()->getFile()) {
-                    $url = $exposer->getPath($file);
+                    $url = $this->mediaExposer->getPath($file);
                 }
             }
         }
@@ -171,10 +170,6 @@ class SpoutletExtension extends Twig_Extension
     private function getCurrentBackgroundAdSite(Site $site = null, $timezone = 'UTC')
     {
         return $this->backgroundAdRepo->getCurrentBackgroundAdSite($site, $timezone);
-    }
-
-    private function getEntityManager() {
-        return $this->container->get('doctrine.orm.entity_manager');
     }
 
     public function mediaPathNice($media) {
