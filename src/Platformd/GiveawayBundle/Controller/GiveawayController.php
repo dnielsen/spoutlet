@@ -19,7 +19,7 @@ class GiveawayController extends Controller
         $expired   = array();
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
-        $comments  = $this->getCommentRepository()->findCommentsForGiveaways($this->getCurrentSite());
+        $comments  = $this->getCommentRepository()->findCommentsForGiveaways();
 
         foreach ($giveaways as $giveaway) {
             $keyRepo = $this->getKeyRepository();

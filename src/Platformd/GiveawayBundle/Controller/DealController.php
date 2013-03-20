@@ -25,7 +25,7 @@ class DealController extends Controller
         $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
         $allDeals = $this->getDealManager()->findActiveDeals($site);
         $expiredDeals = $this->getDealManager()->findExpiredDeals($site);
-        $comments = $this->getCommentRepository()->findCommentsForDeals($site);
+        $comments = $this->getCommentRepository()->findCommentsForDeals();
 
         return array(
             'mainDeal'          => $mainDeal,

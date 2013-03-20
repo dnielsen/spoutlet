@@ -15,6 +15,7 @@ Feature: Main Navigation
       | Link        | Target                   | Destination                                                |
       | ホーム        | /app_test.php/           | http://japan.alienwarearena.local/app_test.php/            |
       | Alienware   | http://alienware.jp/     |                                                            |
+      | キャンペーン    | /app_test.php/giveaways    | http://japan.alienwarearena.local/app_test.php/giveaways     |
       | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
@@ -43,7 +44,7 @@ Feature: Main Navigation
     Given I am on the "North America" site
     When I go to "/app_test.php/games/"
     Then the main navigation menu should be:
-      | Link                        | Target                                          | Destination                                                         |
+      | Link                        | Target                                          | Destination                                                          |
       | Home                        | /app_test.php/                                  | http://www.alienwarearena.com/                                      |
       | Alienware                   | http://www.alienware.com/                       |                                                                     |
       | Games >> Battlefield 3      | http://alienwarearena.com/game/bf3/             |                                                                     |
