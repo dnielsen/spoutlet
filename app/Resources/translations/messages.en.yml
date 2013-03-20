@@ -513,21 +513,19 @@ content_reporting:
     report_type_group_discussion_post: Group Discussion Post
     report_type_group_event: Group Event
     report_type_unknown: Unknown
-    report_success: The content has been temporarily removed and will be reviewed by our staff. If you have additional information for your report, please email us at contact@alienwarearena.com with additional details.
+    report_success: The content will be reviewed by our staff within 72 hours. If you have additional information for your report, please email us at reports@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
     reported_email: |
-        An item posted on Alienware Arena has been flagged as inappropriate and requires review.
+        An item posted by you on Alienware Arena has been flagged as inappropriate and removed.
 
         Type: %s
-        Content:  %s
+        Content: %s
         Reason: %s
+        Link: <a href="%s">%s</a>
 
-        The content has been temporarily removed from Alienware Arena and will be
-        reviewed by our Staff within 72 hours.  If the content does not violate
-        our Terms of Service, we will enable it on our website and you will
-        receive an automated email with this update.
+        The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
 
-        Thank you for your patience.  Should you have any questions, please contact us at contact@alienwarearena.com.
+        Thank you for your patience. Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
 
         Alienware Arena Team
 
@@ -539,6 +537,26 @@ content_reporting:
         Content: %s
 
         Alienware Arena Team
+
+    removed_email_title: Your Content Has Been Removed
+    removed_email: |
+        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: <a href="%s">%s</a>
+
+        Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
+
+        Alienware Arena Team
+
+    staff_notification_title: New Content Reported
+    staff_notification: |
+        Link: <a href="%s">%s</a>
+        Reason: %s
+        Reporter: <a href="%s">%s</a>
+        Content Owner: <a href="%s">%s</a>
 
 error:
     fill_in_birthday: Please fill in your birthday!

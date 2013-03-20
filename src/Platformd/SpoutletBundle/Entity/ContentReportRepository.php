@@ -292,4 +292,10 @@ class ContentReportRepository extends EntityRepository
 
         return $result ? $result[0]->getReportedAt() : null;
     }
+
+    public function hasUserReportedRecently($user, $minutes = 60)
+    {
+        $lastReportDate = $this->getLastReportDateForUser($user);
+        return $lastReportDate ? $lastReportDate > new \DateTime('-'.$minutes.' minutes') : false;
+    }
 }

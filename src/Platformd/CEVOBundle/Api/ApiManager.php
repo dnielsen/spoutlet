@@ -208,6 +208,7 @@ class ApiManager
         curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $phpSess = sprintf('PHPSESSID=%s;', $useCevoAuth ? $this->getCevoSessionId() : $this->getSessionId());
         curl_setopt($ch, CURLOPT_COOKIE, $phpSess);

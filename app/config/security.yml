@@ -41,7 +41,7 @@ security:
 
         - { path: ^/([\w]+\/)?admin/users, role: ROLE_SUPER_ADMIN }
         # admin is the lowest admin role - catch all for admin routes
-        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN }
+        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: https }
 
     role_hierarchy:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page

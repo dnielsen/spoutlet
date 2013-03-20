@@ -104,7 +104,7 @@ class GroupRepository extends EntityRepository
             ->andWhere('g.featured <> 1')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
-            ->orderBy('g.createdAt', 'DESC')
+            ->orderBy('memberCount', 'DESC')
             ->groupBy('g.id');
 
         return $qb->getQuery()->execute();

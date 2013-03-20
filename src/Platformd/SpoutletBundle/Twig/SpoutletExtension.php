@@ -34,8 +34,9 @@ class SpoutletExtension extends Twig_Extension
     private $session = NULL;
     private $translator;
     private $userManager;
+    private $contentReportRepo;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -46,6 +47,7 @@ class SpoutletExtension extends Twig_Extension
         $this->siteUtil            = $siteUtil;
         $this->translator          = $translator;
         $this->userManager         = $userManager;
+        $this->contentReportRepo   = $contentReportRepo;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -89,6 +91,7 @@ class SpoutletExtension extends Twig_Extension
             'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
             'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
             'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
+            'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
         );
     }
 
@@ -102,9 +105,9 @@ class SpoutletExtension extends Twig_Extension
     public function getGlobals()
     {
         return array(
-            'site'     => $this->currentSite,
-            'features' => $this->currentSiteFeatures,
-            'user'     => $this->currentUser
+            'site'      => $this->currentSite,
+            'features'  => $this->currentSiteFeatures,
+            'user'      => $this->currentUser,
         );
     }
 
@@ -738,7 +741,8 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
-        private function GetGiveawaysLink($locale) {
+
+    private function GetGiveawaysLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.page_content.giveaways').'</a>';
         $internalUrl    = $this->router->generate('giveaway_index');
@@ -768,5 +772,11 @@ class SpoutletExtension extends Twig_Extension
 
             default:        return false;
         }
+    }
+
+    public function canReport()
+    {
+        return !$this->contentReportRepo->hasUserReportedRecently($this->currentUser);
+
     }
 }

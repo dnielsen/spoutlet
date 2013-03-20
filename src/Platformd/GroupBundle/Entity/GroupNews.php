@@ -262,7 +262,7 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
      */
     public function  getLinkableRouteName()
     {
-        return 'group_view_news';
+        return 'group_show';
     }
 
     /**
@@ -273,8 +273,7 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getGroup()->getId(),
-            'newsId' => $this->getId()
+            'slug' => $this->getGroup()->getSlug(),
         );
     }
 
@@ -288,5 +287,10 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    public function getReportThreshold()
+    {
+        return 3;
     }
 }
