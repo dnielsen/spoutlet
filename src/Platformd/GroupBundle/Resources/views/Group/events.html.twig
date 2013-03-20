@@ -31,7 +31,7 @@
                     {% if event.online %}
                         Online
                     {% else %}
-                        {{ event.location }}, {{ event.fullAddress }}
+                        {{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
                     {% endif %}
                 </div>
                 <div class="group-event-actions">
@@ -46,7 +46,8 @@
     {% endfor %}
 
     {% if pastEvents|length > 0 %}
-        <a id="show-past-events-link" href="javascript:void(0);">View Past Events</a>
+
+        <div><a id="show-past-events-link" href="javascript:void(0);">View Past Events</a></div>
 
         <div id="group-past-events" style="display: none;">
 
