@@ -90,6 +90,9 @@
             }
 
             if (errors > 0) {
+                $('html, body').animate({
+                    scrollTop: $(".start-date").offset().top - 100
+                }, 100);
                 return false;
             }
         });
