@@ -65,7 +65,7 @@
                             {% if event.online %}
                                 Online
                             {% else %}
-                                {{ event.location }}, {{ event.fullAddress }}
+                                {{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
                             {% endif %}
                         </div>
                         <div class="group-event-actions">
