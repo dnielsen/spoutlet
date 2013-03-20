@@ -4,6 +4,9 @@ namespace Knp\MediaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+
 /**
  * MediaRepository
  *
@@ -12,4 +15,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class MediaRepository extends EntityRepository
 {
+    public function getMediaForAdmin($maxPerPage = 10, $currentPage = 1)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.isAdmin = 1');
+
+        $adapter = new DoctrineORMAdapter($qb);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($maxPerPage)->setCurrentPage($currentPage);
+
+        return $pager;
+    }
 }

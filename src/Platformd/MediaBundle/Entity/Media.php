@@ -56,6 +56,11 @@ class Media extends BaseMedia implements MediaOwnerInterface
     protected $filteredMedias;
 
     /**
+     * @ORM\Column(name="is_admin", type="boolean")
+     */
+    private $isAdmin = false;
+
+    /**
      * @return \Platformd\UserBundle\Entity\User
      */
     public function getOwner()
@@ -111,5 +116,15 @@ class Media extends BaseMedia implements MediaOwnerInterface
     public function setFilteredMedias($filteredMedias)
     {
         $this->filteredMedias = $filteredMedias;
+    }
+
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
+    public function setIsAdmin($value)
+    {
+        $this->isAdmin = $value;
     }
 }
