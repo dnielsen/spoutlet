@@ -298,4 +298,9 @@ class GroupImage implements LinkableInterface, ReportableContentInterface
             "image"
         );
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }

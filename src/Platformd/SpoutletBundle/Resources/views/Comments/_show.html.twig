@@ -1,7 +1,7 @@
 <div class="comment-wrapper">
     <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
     <div class="comment-author">
-        <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+        <a href="{{ cevo_account_link(comment.author.username) }}"><img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" /></a>
         <div class="author-link"><a href="{{ cevo_account_link(comment.author.username) }}">{{ comment.author.username }}</a></div>
         <div class="author-level">Level 7</div>
         <div class="level-img"><div>5477 ARP</div></div>

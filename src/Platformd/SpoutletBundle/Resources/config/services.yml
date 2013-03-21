@@ -85,6 +85,7 @@ services:
             - "@platformd.model.site_util"
             - "@translator"
             - "@fos_user.user_manager"
+            - "@platformd.repository.content_reporting"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
@@ -213,4 +214,11 @@ services:
             - "@security.context"
         tags:
             - { name: form.type, alias: purifiedTextarea }
+
+    platformd.repository.content_reporting:
+        class:           Platformd\SpoutletBundle\Entity\ContentReportRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:ContentReport'
 

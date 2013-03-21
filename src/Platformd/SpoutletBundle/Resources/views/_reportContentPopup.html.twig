@@ -1,19 +1,31 @@
 <div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;" title="{{ 'content_reporting.report_content' | trans }}">
-    <input type="hidden" id="report-id-{{ reportContentType }}" />
-    <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
-    <div style="height: 120px;">
-        <div id="report-response" style="display:none;">
-        {{ 'content_reporting.report_success' | trans }}
+    {% if app.user is null %}
+        <div style="height: 120px;">
+            {{ 'content_reporting.must_be_logged_in' | trans }}
         </div>
-        <div id="report-options">
-            <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | trans }} <br />
-            <input class="report-option" type="radio" name="reason" value="spam"> {{ 'content_reporting.spam' | trans }} <br />
-            <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> {{ 'content_reporting.violates_intellectual_property' | trans }} <br />
-            <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.individual_harrassing_me' | trans }}
+        <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+    {% elseif can_user_report() == false %}
+        <div style="height: 120px;">
+            {{ 'content_reporting.once_per_hour' | trans }}
         </div>
-    </div>
-    <button id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | trans }}</button>
-    <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+        <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+    {% else %}
+        <input type="hidden" id="report-id-{{ reportContentType }}" />
+        <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
+        <div style="height: 120px;">
+            <div id="report-response" style="display:none;">
+            {{ 'content_reporting.report_success' | trans }}
+            </div>
+            <div id="report-options">
+                <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | trans }} <br />
+                <input class="report-option" type="radio" name="reason" value="spam"> {{ 'content_reporting.spam' | trans }} <br />
+                <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> {{ 'content_reporting.violates_intellectual_property' | trans }} <br />
+                <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.individual_harrassing_me' | trans }}
+            </div>
+        </div>
+        <button id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | trans }}</button>
+        <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+    {% endif %}
 </div>
 <script type="text/javascript">
     $(function () {

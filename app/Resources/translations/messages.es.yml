@@ -106,7 +106,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_unknown: Unknown
-    report_success: El contenido ha sido retirado temporalmente y será revisado por nuestro personal. Si tienes información adicional para tu informe, por favor envíenos un correo electrónico a contact@alienwarearena.com con los detalles adicionales.
+    report_success: El contenido ha sido retirado temporalmente y será revisado por nuestro personal. Si tienes información adicional para tu informe, por favor envíenos un correo electrónico a reports@alienwarearena.com con los detalles adicionales.
     reported_email_title: Tu Contenido ha Sido Marcado
     reported_email: |
         Un artículo publicado en Alienware Arena ha sido marcada como inapropiada y requiere revisión.
@@ -128,6 +128,24 @@ content_reporting:
         Contenido: %s
 
         Equipo Alienware Arena
+
+    removed_email_title: Your Content Has Been Removed
+    removed_email: |
+        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: %s
+
+        Should you have any questions, please contact us at reports@alienwarearena.com.
+        Alienware Arena Team
+
+    staff_notification_title: New Content Reported
+    staff_notification: |
+        Link: %s
+        Reason: %s
+        Reporter: %s
 
 error:
     fill_in_birthday: Por favor, escriba su cumpleaños!

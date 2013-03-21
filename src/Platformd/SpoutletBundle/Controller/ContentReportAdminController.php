@@ -165,7 +165,7 @@ class ContentReportAdminController extends Controller
         $em->persist($report);
         $em->flush();
 
-        $this->sendUserRestoredNotificationEmail($id, $type);
+        $this->sendUserNotificationEmail($id, $type);
 
         $this->setFlash('success', 'Content has been reinstated and the complaint has been hidden.');
         return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -195,6 +195,8 @@ class ContentReportAdminController extends Controller
             $groupVideo->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupVideo);
             $repo->deleteAllContentReportsForGroupVideo($groupVideo);
+            $id = $groupVideo->getId();
+            $type = "GroupVideo";
 
         } else if ($groupNews) {
 
@@ -202,6 +204,8 @@ class ContentReportAdminController extends Controller
             $groupNews->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupNews);
             $repo->deleteAllContentReportsForGroupNews($groupNews);
+            $id = $groupNews->getId();
+            $type = "GroupNews";
 
         } else if ($groupImage) {
 
@@ -209,6 +213,8 @@ class ContentReportAdminController extends Controller
             $groupImage->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupImage);
             $repo->deleteAllContentReportsForGroupImage($groupImage);
+            $id = $groupImage->getId();
+            $type = "GroupImage";
 
         } else if ($galleryMedia) {
 
@@ -216,6 +222,8 @@ class ContentReportAdminController extends Controller
             $galleryMedia->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($galleryMedia);
             $repo->deleteAllContentReportsForGalleryMedia($galleryMedia);
+            $id = $galleryMedia->getId();
+            $type = "GalleryMedia";
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('nukephoto', $galleryMedia->getAuthor()->getCevoUserId());
@@ -229,6 +237,8 @@ class ContentReportAdminController extends Controller
             $group->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($group);
             $repo->deleteAllContentReportsForGroup($group);
+            $id = $group->getId();
+            $type = "Group";
 
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getCevoUserId());
@@ -242,6 +252,8 @@ class ContentReportAdminController extends Controller
             $comment->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($comment);
             $repo->deleteAllContentReportsForComment($comment);
+            $id = $comment->getId();
+            $type = "Comment";
 
         } else if ($groupDiscussion) {
 
@@ -249,6 +261,8 @@ class ContentReportAdminController extends Controller
             $groupDiscussion->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupDiscussion);
             $repo->deleteAllContentReportsForGroupDiscussion($groupDiscussion);
+            $id = $groupDiscussion->getId();
+            $type = "GroupDiscussion";
 
         } else if ($groupDiscussionPost) {
 
@@ -256,6 +270,8 @@ class ContentReportAdminController extends Controller
             $groupDiscussionPost->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($groupDiscussionPost);
             $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
+            $id = $groupDiscussionPost->getId();
+            $type = "GroupDiscussionPost";
 
         } else {
 
@@ -264,6 +280,8 @@ class ContentReportAdminController extends Controller
         }
 
         $em->flush();
+
+        $this->sendUserNotificationEmail($id, $type, true, $report);
 
         $this->setFlash('success', 'Content has been confirmed as removed.');
         return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -361,14 +379,14 @@ class ContentReportAdminController extends Controller
 
         $em->flush();
 
-        $this->sendUserRestoredNotificationEmail($id, $type);
+        $this->sendUserNotificationEmail($id, $type);
 
         $this->setFlash('success', 'Content has been reinstated successfully.');
 
         return $this->redirect($this->generateUrl('admin_content_reports_with_mode', array('mode' => 'deletedContent')));
     }
 
-    private function sendUserRestoredNotificationEmail($id, $type)
+    private function sendUserNotificationEmail($id, $type, $removed=false, $report=null)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
@@ -380,30 +398,42 @@ class ContentReportAdminController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey(ucfirst($item->getCategory()));
                 $name = $item->getTitle();
                 $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             case 'Comment':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getBody();
                 $owner = $item->getAuthor();
+                $url = 'http://'.$this->getCurrentSite()->getFullDomain().$item->getThread()->getPermalink();
                 break;
 
             case 'Group':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getOwner();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             case 'GroupDiscussionPost':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();
-                $owner = $item->getOwner();
+                $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getGroupDiscussion()->getLinkableRouteName(), $item->getGroupDiscussion()->getLinkableRouteParameters(), true);
+                break;
+
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             default:
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getTitle();
                 $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
         }
 
@@ -412,10 +442,17 @@ class ContentReportAdminController extends Controller
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
-        $subject            = $this->trans('content_reporting.restored_email_title', array(), 'messages', $emailLocale);
-        $message            = sprintf($this->trans('content_reporting.restored_email', array(), 'messages', $emailLocale), $itemType, $name);
 
-        $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        if (!$removed) {
+            $subject    = $this->trans('content_reporting.restored_email_title', array(), 'messages', $emailLocale);
+            $message    = nl2br(sprintf($this->trans('content_reporting.restored_email', array(), 'messages', $emailLocale), $itemType, $name));
+            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        } else {
+            $reason     = $report ? $this->trans('content_reporting.'.$report->getReason(), array(), 'messages', $emailLocale) : $this->trans('content_reporting.report_type_unknown', array(), 'messages', $emailLocale);
+            $subject    = $this->trans('content_reporting.removed_email_title', array(), 'messages', $emailLocale);
+            $message    = nl2br(sprintf($this->trans('content_reporting.removed_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
+            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Removed User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        }
     }
 
     private function addReportedContentsBreadcrumb()

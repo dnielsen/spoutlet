@@ -47,3 +47,5 @@
     ; Here we must have at least default
     liip_enabled_themes[] = default
     liip_enabled_themes[] = test_theme
+
+    admin_prod_url_scheme = https

@@ -103,7 +103,7 @@ class GroupRepository extends EntityRepository
             ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
-            ->orderBy('g.createdAt', 'DESC')
+            ->orderBy('memberCount', 'DESC')
             ->groupBy('g.id');
 
         return $qb->getQuery()->execute();

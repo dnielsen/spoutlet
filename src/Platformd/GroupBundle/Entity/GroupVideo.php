@@ -291,7 +291,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
      */
     public function  getLinkableRouteName()
     {
-        return 'group_view_video';
+        return 'group_show';
     }
 
     /**
@@ -302,8 +302,7 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
     public function  getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getGroup()->getId(),
-            'videoId' => $this->getId()
+            'slug' => $this->getGroup()->getSlug(),
         );
     }
 
@@ -317,5 +316,10 @@ class GroupVideo implements LinkableInterface, ReportableContentInterface
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    public function getReportThreshold()
+    {
+        return 3;
     }
 }

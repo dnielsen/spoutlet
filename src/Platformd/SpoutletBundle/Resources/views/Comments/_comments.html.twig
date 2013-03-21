@@ -11,7 +11,7 @@
                 <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
                     <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
                     <div class="comment-author" style="z-index:1000;">
-                        <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+                       <a href="{{ cevo_account_link(comment.author.username) }}"><img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" /></a>
 
                         {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ comment.author.cevoUserId %}
 
@@ -80,7 +80,7 @@
                         {% if reply.deleted == false %}
                             {% set replyCounter = replyCounter + 1 %}
                             <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
-                                <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
+                                <a href="{{ cevo_account_link(reply.author.username) }}"><img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" /></a>
                                 <div class="reply-body">
 
                                     {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ reply.author.cevoUserId %}

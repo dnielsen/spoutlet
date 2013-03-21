@@ -515,4 +515,9 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
 
         return false;
     }
+
+    public function getReportThreshold()
+    {
+        return 3;
+    }
 }

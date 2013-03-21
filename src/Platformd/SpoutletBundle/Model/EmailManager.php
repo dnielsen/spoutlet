@@ -23,8 +23,26 @@ class EmailManager
         $this->ses              = $ses;
     }
 
+    public function sendHtmlEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null)
+    {
+        $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
+        $finalEmail     = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Html' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
+
+        $this->processEmail($params, $finalEmail);
+    }
+
     public function sendEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null)
     {
+        $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
+        $finalEmail     = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
+
+        $this->processEmail($params, $finalEmail);
+    }
+
+    private function setupEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null) {
+
+        $params = array();
+
         if ($to == null) {
             $to = "emailNotSet@example.com";
         }
@@ -57,26 +75,36 @@ class EmailManager
             $to = $this->container->getParameter('email_destination_override_with');
         }
 
-        $finalEmail     = array('Subject'  => array('Data' => $subject, 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $body, 'Charset' => 'UTF-8')));
-        $finalFrom      = $fromName.' <'.$fromEmail.'>';
-        $finalTo        = array('ToAddresses'  => array($to));
+        $params['to'] = $to;
+        $params['subject'] = $subject;
+        $params['body'] = $body;
+        $params['site'] = $site;
+        $params['emailType'] = $emailType;
+        $params['from'] = $fromName.' <'.$fromEmail.'>';
+        $params['finalTo'] = array('ToAddresses'  => array($to));
 
-        $response       = $this->ses->send_email($finalFrom, $finalTo, $finalEmail);
+        return $params;
+
+    }
+
+    private function processEmail($params, $finalEmail)
+    {
+        $response       = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
 
         $messageId      = $response->body->SendEmailResult->MessageId;
         $status         = $response->isOk();
 
         $sentEmail      = new SentEmail();
 
-        $sentEmail->setRecipient($to);
-        $sentEmail->setFromFull($finalFrom);
-        $sentEmail->setSubject($subject);
-        $sentEmail->setBody($body);
+        $sentEmail->setRecipient($params['to']);
+        $sentEmail->setFromFull($params['from']);
+        $sentEmail->setSubject($params['subject']);
+        $sentEmail->setBody($params['body']);
         $sentEmail->setSesMessageId($messageId);
         $sentEmail->setSendStatusCode((int)$response->status);
         $sentEmail->setSendStatusOk($status);
-        $sentEmail->setSiteEmailSentFrom($site);
-        $sentEmail->setEmailType($emailType);
+        $sentEmail->setSiteEmailSentFrom($params['site']);
+        $sentEmail->setEmailType($params['emailType']);
 
         $this->em->persist($sentEmail);
         $this->em->flush();
