@@ -79,4 +79,3 @@ namespace :deploy do
 end
 
 before "deploy:finalize_update", "deploy:write_version_file"
-

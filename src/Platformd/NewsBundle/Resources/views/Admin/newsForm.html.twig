@@ -20,7 +20,7 @@
     <div class="form_row">
         {{ form_label(form.body) }}
         {{ form_errors(form.body) }}
-        {{ form_widget(form.body, { 'attr': { 'class': 'ckeditor' } }) }}
+        {{ form_widget(form.body) }}
     </div>
 
     {{ form_rest(form) }}

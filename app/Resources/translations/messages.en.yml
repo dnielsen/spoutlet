@@ -1,5 +1,21 @@
 edit: Edit
 
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover:
+    continue: Continue to Alienware Arena
+
 platformd:
 
     homepage:
@@ -236,6 +252,7 @@ platformd:
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+            please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
 
         login:
             title: Login to your account
@@ -359,7 +376,6 @@ platformd:
 source_alienware: Alienware
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
-
 
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions

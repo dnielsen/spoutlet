@@ -5,6 +5,7 @@
 /app/bootstrap*
 /app/cache/*
 /app/logs/*
+/app/config/config_*_local.yml
 /vendor/
 /app/config/parameters.ini
 /web/uploads/*

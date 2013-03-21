@@ -37,16 +37,19 @@ profile.show.mousepad: "Mousepad"
 profile.show.keyboard: "Keyboard"
 profile.show.monitor: "Monitor"
 
-fos_user_admin_user_edit_title: 'Edit user %username%'
+fos_user_admin_user_edit_title: 'Edit user "%username%"'
+fos_user_admin_user_show_title: 'Show user "%username%"'
 fos_user_admin_index_firstname: First Name
 fos_user_admin_index_lastname: Last Name
 fos_user_admin_delete: Delete
 fos_user_admin_edit: Edit
 
+fos_user_admin_reset_password: Reset password
 fos_user_admin_user_edit: Edit
 fos_user_admin_edit_success: User "%username%" has been successfully updated !
 fos_user_admin_delete_success: User "%username%" has been successfully deleted !
 fos_user_admin_approve_avatar: Approve avatar
+fos_user_admin_resetted_password_success: "The user's password has been reset and has been sent to %email%."
 
 # Security
 security.login.username: "Username:"
@@ -107,6 +110,21 @@ resetting.email: |
     Regards,<br/>
     the Team.
     </p>
+
+# Password resetted by admin
+resetted.email: |
+    Alienware Arena - Password Reset
+    <pre>
+    Your password has been reset on our website. Here is your new login information four your Alienware Arena account. Please login and change your password to something you will remember.
+
+    Username: %username%
+    Password: %plainPassword%
+
+    ** NOTE: Our Support Staff will never ask for your password.
+
+    Thanks,
+    Alienware Arena Web Team.
+    </pre>
 
 # Global strings
 layout.logout: Logout

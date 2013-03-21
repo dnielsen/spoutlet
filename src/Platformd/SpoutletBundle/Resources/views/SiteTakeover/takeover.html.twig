@@ -1,0 +1,18 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+<div class="takeover-wrapper">
+
+    <div class="takeover-continue">
+        <a href="{{ continueUrl }}">{{ 'site_takeover.continue' | trans }}</a>
+    </div>
+
+    <div class="takeover-body">
+        {{ takeover.content | raw }}
+    </div>
+
+</div>
+
+{% endblock %}
+

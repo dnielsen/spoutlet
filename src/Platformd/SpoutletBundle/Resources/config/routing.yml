@@ -95,3 +95,11 @@ SpoutletBundle_admin_contest:
 SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
+
+SpoutletBundle_takeover:
+    resource: "@SpoutletBundle/Resources/config/routing/takeover.yml"
+    prefix:   /takeover
+
+SpoutletBundle_admin_takeover:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_takeover.yml"
+    prefix:   /admin/takeover

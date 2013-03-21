@@ -1,3 +1,18 @@
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover:
+    continue: Continue to Alienware Arena
 
 platformd:
 
@@ -73,6 +88,10 @@ platformd:
         cancel: Cancelar
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
+
+    user:
+        register:
+            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.

@@ -222,3 +222,19 @@ services:
         arguments:
             - 'SpoutletBundle:ContentReport'
 
+    platformd.takeover.site_takeover_listener:
+        class: Platformd\SpoutletBundle\Takeover\SiteTakeoverListener
+        arguments:
+            - "@router"
+            - "@platformd.takeover.site_takeover_manager"
+            - %base_host%
+        scope: request
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    platformd.takeover.site_takeover_manager:
+        class: Platformd\SpoutletBundle\Takeover\SiteTakeoverManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.model.site_util"
+        scope: request

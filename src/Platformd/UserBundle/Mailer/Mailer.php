@@ -3,12 +3,27 @@
 namespace Platformd\UserBundle\Mailer;
 
 use FOS\UserBundle\Mailer\Mailer as BaseMailer;
+use FOS\UserBundle\Model\UserInterface;
 
 /**
  * Overridden to add HTML emails
  */
 class Mailer extends BaseMailer
 {
+    public function sendResettedPasswordMessage(UserInterface $user)
+    {
+        $rendered = $this->templating->render(
+            'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig',
+            array('user' => $user)
+        );
+
+        $this->sendEmailMessage(
+            $rendered,
+            $this->parameters['from_email']['confirmation'],
+            $user->getEmail()
+        );
+    }
+
     /**
      * Overridden to send an HTML email.
      *
@@ -29,7 +44,8 @@ class Mailer extends BaseMailer
             ->setSubject($subject)
             ->setFrom($fromEmail)
             ->setTo($toEmail)
-            ->setBody($body);
+            ->setBody($body)
+        ;
 
         $message->setContentType("text/html");
 

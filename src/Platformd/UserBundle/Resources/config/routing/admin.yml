@@ -2,12 +2,38 @@ Platformd_UserBundle_admin_index:
     pattern: /
     defaults: { _controller: UserBundle:Admin:index }
 
+Platformd_UserBundle_admin_filter:
+    pattern: /filter
+    requirements:
+        _method: POST
+    defaults: { _controller: UserBundle:Admin:filter }
+
+Platformd_UserBundle_admin_show:
+    pattern: /{id}
+    requirements:
+        _method: GET
+    defaults: { _controller: UserBundle:Admin:show }
+
 Platformd_UserBundle_admin_edit:
     pattern: /{id}/edit
+    requirements:
+        _method: GET
     defaults: { _controller: UserBundle:Admin:edit }
+
+Platformd_UserBundle_admin_update:
+    pattern: /{id}/edit
+    requirements:
+        _method: PUT
+    defaults: { _controller: UserBundle:Admin:update }
 
 Platformd_UserBundle_admin_delete:
     pattern: /{id}/delete
     defaults: { _controller: UserBundle:Admin:delete }
     requirements:
         _method: POST|DELETE
+
+Platformd_UserBundle_admin_rest_password:
+    pattern: /{id}/password/reset
+    defaults: { _controller: UserBundle:Admin:resetPassword }
+    requirements:
+        _method: GET

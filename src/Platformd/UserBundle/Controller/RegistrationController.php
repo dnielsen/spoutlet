@@ -4,81 +4,36 @@ namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
-use Platformd\CEVOBundle\CEVOAuthManager;
 
-/**
- * Overridden registration controller
- * 
- */
 class RegistrationController extends BaseRegistrationController
 {
-    /**
-     * Simply redirects to the CEVO site with the correct URL
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
     public function registerAction()
     {
-        // store the return URL that's on the request in the session, return it
-        $returnUrl = $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+        $form = $this->container->get('fos_user.registration.form');
+        $formHandler = $this->container->get('fos_user.registration.form.handler');
+        $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
 
-        // see if we have a return URL stored in the session, from hitting a denied page
-        if (!$returnUrl) {
-            $returnUrl = $this->container->get('session')->get('_security.target_path');
-            $this->container->get('session')->remove('_security.target_path');
+        $process = $formHandler->process($confirmationEnabled);
+        if ($process) {
+            $user = $form->getData();
+
+            if ($confirmationEnabled) {
+                $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
+                $route = 'fos_user_registration_check_email';
+            } else {
+                $this->authenticateUser($user);
+                $route = 'fos_user_registration_confirmed';
+            }
+
+            $this->setFlash('fos_user_success', 'registration.flash.user_created');
+            $url = $this->container->get('router')->generate($route);
+
+            return new RedirectResponse($url);
         }
 
-        // if there is no return URL, we'll ultimately send back to the homepage
-        $returnUrl = $returnUrl ? $returnUrl : '/';
-
-        $url = $this->getCevoAuthManager()->generateCevoUrl(
-            CEVOAuthManager::REGISTER_PATH,
-            $returnUrl
-        );
-        
-        return new RedirectResponse($url);
-        
-    }
-
-    /**
-     * Page that shows a message to people that are too young
-     */
-    public function tooYoungMessageAction()
-    {
-        return $this->container
-            ->get('templating')
-            ->renderResponse('UserBundle:Registration:tooYoung.html.twig')
-        ;
-    }
-
-    /**
-     * The Alienware video site expects to send us a ?return=, and we'll go
-     * back to that URL afterwards.
-     *
-     * We use this to store it on the session.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string The URL that we've stored that should be returned to
-     */
-    private function processAlienwareVideoReturnUrlParameter(Request $request)
-    {
-        if ($returnUrl = $request->query->get('return')) {
-            $request->getSession()->set(
-                AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
-                $returnUrl
-            );
-
-            return $returnUrl;
-        }
-    }
-
-    /**
-     * @return \Platformd\CEVOBundle\CEVOAuthManager
-     */
-    private function getCevoAuthManager()
-    {
-        return $this->container->get('pd.cevo.cevo_auth_manager');
+        return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.'.$this->getEngine(), array(
+            'form' => $form->createView(),
+            'theme' => $this->container->getParameter('fos_user.template.theme'),
+        ));
     }
 }

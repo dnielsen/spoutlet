@@ -1,3 +1,0 @@
-user_registration_too_young:
-    pattern: /register/too-young
-    defaults: { _controller: UserBundle:Registration:tooYoungMessage }

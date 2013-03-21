@@ -1,0 +1,15 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+
+{% block title %}Mass Unsubscribe{% endblock %}
+
+{% block content %}
+    <h1>Mass Unsubscribe Users From Alienware Arena Opt-In</h1>
+
+    <form action="{{ path('admin_mass_unsubscribe') }}" {{ form_enctype(form) }} method="POST">
+        {{ form_widget(form) }}
+
+        <input type="submit" class="btn success" value="Submit" />
+    </form>
+
+{% endblock %}

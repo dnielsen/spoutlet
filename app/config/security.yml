@@ -17,6 +17,8 @@ security:
             pattern: ^/
             cevo-auth: true
             anonymous:    true
+            form_login:
+                check_path: /login_check
             logout:
                 path:     /logout
                 target:   default_index
@@ -28,6 +30,7 @@ security:
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
+        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
         # protects games and game pages

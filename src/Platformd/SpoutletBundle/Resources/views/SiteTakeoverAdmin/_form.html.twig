@@ -1,0 +1,30 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>a) Basic Information</legend>
+        <div class="row-fluid first">
+            <div class="span6" style="width: 450px;">
+                {{ form_row(form.title) }}
+                {{ form_row(form.startsAt) }}
+                {{ form_row(form.endsAt) }}
+                {{ form_row(form.timezone) }}
+            </div>
+
+            <div class="span6">
+                {{ form_row(form.sites) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>b) Description</legend>
+        <div class="row-fluid" style="width:1000px">
+            {{ form_row(form.content) }}
+        </div>
+    </fieldset>
+
+    {{ form_rest(form) }}
+</div>

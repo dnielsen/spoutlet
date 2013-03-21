@@ -1,0 +1,25 @@
+admin_takeover_index:
+    pattern: /
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:index" }
+
+admin_takeover_list:
+    pattern: /list/{site}
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:list" }
+
+admin_takeover_new:
+    pattern: /new
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:new" }
+
+admin_takeover_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:edit" }
+
+admin_takeover_create:
+    pattern: /create
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:new" }
+    requirements: { _method: post }
+
+admin_takeover_update:
+    pattern: /update/{id}
+    defaults: { _controller: "SpoutletBundle:SiteTakeoverAdmin:edit" }
+    requirements: { _method: post }

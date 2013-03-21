@@ -306,6 +306,11 @@ class User extends BaseUser
     */
     private $groupMembershipActions;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $ipAddress;
+
     public function __construct()
     {
         parent::__construct();
@@ -811,6 +816,17 @@ class User extends BaseUser
         $this->monitor = $monitor;
     }
 
+    public function getIpAddress()
+    {
+
+        return $this->ipAddress;
+    }
+
+    public function setIpAddress($ipAddress)
+    {
+        $this->ipAddress = $ipAddress;
+    }
+
     public function getIsOrganizer()
     {
         return $this->hasRole('ROLE_ORGANIZER');
@@ -1066,5 +1082,9 @@ class User extends BaseUser
     public function setGroupMembershipActions($value)
     {
         $this->groupMembershipActions = $value;
+    }
+
+    public function eraseCredentials()
+    {
     }
 }

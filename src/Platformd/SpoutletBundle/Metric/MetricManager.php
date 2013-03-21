@@ -65,6 +65,8 @@ class MetricManager
      */
     private $groupDiscussionMetricRepository;
 
+    private $regionRepo;
+
     /**
      * An array of all available site keys and their names
      *
@@ -83,6 +85,7 @@ class MetricManager
         $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
+        $this->regionRepo = $em->getRepository('SpoutletBundle:Region');
         $this->sites = $sites;
     }
 
@@ -178,24 +181,50 @@ class MetricManager
      * in the system. The key to the array is the site key, and each array
      * contains several fields (see below).
      */
-    public function createMembershipByCountryReport(DateTime $since = null)
+    public function createMembershipByCountryReport($countries, $regions, $countryDates, $regionDates)
     {
-        $data = array();
+        $data       = array();
 
-        foreach ($this->sites as $key => $name) {
+        foreach ($countries as $country) {
+            $countryCode = $country->getCode();
 
-            $totalUsers = $this->userRepo->getTotalUsersForSite($key);
+            $totalUsers = $this->userRepo->getTotalUsersForCountry($countryCode);
+            $arenaOptIn = $this->userRepo->getArenaOptInForCountry($countryCode);
+            $dellOptIn = $this->userRepo->getDellOptInForCountry($countryCode);
+            $newUsers = $this->userRepo->countNewRegistrantsForCountry($countryCode, $countryDates['from'], $countryDates['to']);
 
-            $arenaOptIn = $this->userRepo->getArenaOptInForSite($key);
             $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
-
-            $dellOptIn = $this->userRepo->getDellOptInForSite($key);
             $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
 
-            $newUsers = $this->userRepo->countNewRegistrants($since, $key);
+            $data['country'][$country->getId()] = array(
+                'name'                 => $country->getName(),
+                'count'                => $totalUsers,
+                'arenaOptIn'           => $arenaOptIn,
+                'arenaOptInPercentage' => $arenaPercentage,
+                'dellOptIn'            => $dellOptIn,
+                'dellOptInPercentage'  => $dellPercentage,
+                'newUsers'             => $newUsers
+            );
+        }
 
-            $data[$key] = array(
-                'siteName'             => $name,
+        foreach ($regions as $region) {
+
+            $countries = array();
+
+            foreach ($region->getCountries() as $country) {
+                $countries[] = $country->getCode();
+            }
+
+            $totalUsers = $this->userRepo->getTotalUsersForCountries($countries);
+            $arenaOptIn = $this->userRepo->getArenaOptInForCountries($countries);
+            $dellOptIn = $this->userRepo->getDellOptInForCountries($countries);
+            $newUsers = $this->userRepo->countNewRegistrantsForCountries($countries, $regionDates['from'], $regionDates['to']);
+
+            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
+            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+
+            $data['region'][$region->getId()] = array(
+                'name'                 => $region->getName(),
                 'count'                => $totalUsers,
                 'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,

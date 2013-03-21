@@ -111,8 +111,9 @@ fos_user:
     registration:
         form:
             type: platformd_user_registration
+            handler: platformd_user.registration.form.handler
         confirmation:
-            enabled: true
+            enabled: false
     profile:
         form:
             type: platformd_user_profile
@@ -121,6 +122,9 @@ fos_user:
         mailer:       platformd_user.mailer
 
 parameters:
+    # Used by ReCAPTCHA bundle
+    kernel.default_locale: en
+
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false
 
@@ -325,6 +329,7 @@ ewz_recaptcha:
     public_key: %recaptcha.public_key%
     private_key: %recaptcha.private_key%
     secure: false
+    enabled: true
 
 stof_doctrine_extensions:
     default_locale: en_US

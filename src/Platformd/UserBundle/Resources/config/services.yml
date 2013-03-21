@@ -6,16 +6,29 @@ services:
             - %fos_user.model.user.class%
             - %platformd.news_source%
             - @session
+            - @translator
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
-            - { name: form.type, alias: platformd_user_registration } 
+            - { name: form.type, alias: platformd_user_registration }
     platformd_user.profile.form.type:
         class: Platformd\UserBundle\Form\Type\ProfileFormType
         arguments:
             - %fos_user.model.user.class%
         tags:
-            - { name: form.type, alias: platformd_user_profile } 
+            - { name: form.type, alias: platformd_user_profile }
+
+    platformd_user.registration.form.handler:
+        class: Platformd\UserBundle\Form\Handler\RegistrationFormHandler
+        arguments:
+            - @fos_user.registration.form
+            - @request
+            - @platformd_user.manager
+            - @platformd_user.mailer
+            - @doctrine.orm.entity_manager
+            - @service_container
+        scope: request
+
     # User
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager

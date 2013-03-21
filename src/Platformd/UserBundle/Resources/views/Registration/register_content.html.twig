@@ -1,4 +1,5 @@
 {% form_theme form theme %}
+{% form_theme form.recaptcha 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
 
 <h1>{{ 'platformd.user.register_title' | trans }}</h1>
 
@@ -43,6 +44,8 @@
     {{ form_row(form.hasAlienwareSystem) }}
 
     {{ form_row(form.latestNewsSource) }}
+
+    {{ form_widget(form.recaptcha) }}
 
     <div class="form_row">
         {{ form_errors(form.termsAccepted) }}

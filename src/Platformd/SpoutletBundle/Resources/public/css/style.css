@@ -870,3 +870,16 @@ nav.spoutlet-pager .current {
     background: #121212;
     border: 1px solid #01a2d2;
 }
+
+.takeover-continue {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.takeover-continue a {
+    text-decoration: underline;
+}
+
+.takeover-wrapper {
+    text-align: center;
+}
