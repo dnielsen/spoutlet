@@ -58,7 +58,7 @@
                             <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
                         </div>
                         {% if giveaway.group is defined %}
-                            {% if not groupManager.isMember(user, group) %}
+                            {% if not groupManager.isMember(user, giveaway.group) %}
                             <p>
                                 <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
                                     {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': giveaway.group.slug}), '%group%': giveaway.group.name}) | raw }}
