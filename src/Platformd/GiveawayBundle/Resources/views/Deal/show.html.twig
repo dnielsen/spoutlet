@@ -2,6 +2,8 @@
 
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
+{% block page_background_image "default" %}
+
 {% block open_graph %}
     {% if deal.openGraphOverride and deal.openGraphOverride.thumbnail and deal.openGraphOverride.thumbnail.filename %}
         {% set openGraphImage = deal.openGraphOverride.thumbnail %}
@@ -122,11 +124,13 @@
                                         {% endif %}
                                     </a>
                                     {% if deal.group is defined %}
-                                    <p>
-                                        <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
-                                            {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
-                                        </input>
-                                    </p>
+                                        {% if not groupManager.isMember(user, deal.group) %}
+                                        <p>
+                                            <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
+                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                            </input>
+                                        </p>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             </div>

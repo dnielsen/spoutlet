@@ -89,11 +89,11 @@
 
                                 {% if sweepstakes.group is defined %}
                                     {% if not groupManager.isMember(user, sweepstakes.group) %}
-                                    <p>
+                                    <div class="agree-row">
                                         <input id="join-group" name="join_checkbox" type="checkbox" style="margin:0px;" checked>&nbsp;
                                             {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
                                         </input>
-                                    </p>
+                                    </div>
                                     {% endif %}
                                 {% endif %}
 
@@ -101,7 +101,6 @@
 
                             <div class="clear"></div>
                         {% endif %}
-
                     </div>
                 </form>
             </div>
@@ -118,7 +117,6 @@
                     <ul class="sweepstakes-details">
                         <li class="tight">
                             <label style="display:inline;">{{ 'registration_opens' | trans }}</label>
-
                             {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
                         </li>
                         <li>
