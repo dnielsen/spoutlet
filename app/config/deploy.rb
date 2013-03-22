@@ -19,7 +19,7 @@ set :app8, "ec2-50-16-75-123.compute-1.amazonaws.com"
 set :app9, "ec2-50-16-37-33.compute-1.amazonaws.com"
 
 # campsite servers
-set :app10, "ec2-54-235-26-82.compute-1.amazonaws.com"
+# set :app10, "ec2-54-235-26-82.compute-1.amazonaws.com"
 
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
@@ -29,8 +29,8 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. staging)
 set :branch,      "master"
 
-role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9, app10                         # Your HTTP server, Apache/etc
-role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9, app10                        # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9#, app10                         # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9#, app10                        # This may be the same as your `Web` server
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 
 set  :keep_releases,  3
