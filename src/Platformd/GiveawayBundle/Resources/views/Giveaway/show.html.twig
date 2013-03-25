@@ -25,7 +25,7 @@
             {{ 'platformd.giveaway.assigned.key' | trans }}: {{ assignedKey.value }}
         </p>
         <p>
-            {% if giveaway.group is defined %}
+            {% if giveaway.group is not null %}
                 {% if groupManager.isMember(user, giveaway.group) %}
                     {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': giveaway.group.slug}), '%group%': giveaway.group.name}) | raw }}
                 {% endif %}
@@ -57,7 +57,7 @@
                         <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
                             <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
                         </div>
-                        {% if giveaway.group is defined %}
+                        {% if giveaway.group is not null %}
                             {% if not groupManager.isMember(user, giveaway.group) %}
                             <p>
                                 <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;

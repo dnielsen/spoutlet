@@ -39,7 +39,7 @@
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
 
-{% set joinGroup = deal.group is defined %}
+{% set joinGroup = deal.group is not null %}
 
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
@@ -60,7 +60,7 @@
                             </p>
                             <p>{{ 'deal_redeem_success' | trans }}</p>
                             <p>
-                                {% if deal.group is defined %}
+                                {% if deal.group is not null %}
                                     {% if groupManager.isMember(user, deal.group) %}
                                         {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
                                     {% endif %}
@@ -123,7 +123,7 @@
                                             {{ "CLAIM CODE NOW" }}
                                         {% endif %}
                                     </a>
-                                    {% if deal.group is defined %}
+                                    {% if deal.group is not null %}
                                         {% if not groupManager.isMember(user, deal.group) %}
                                         <p>
                                             <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
