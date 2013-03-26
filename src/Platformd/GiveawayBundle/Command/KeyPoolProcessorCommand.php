@@ -58,6 +58,7 @@ EOT
 
         $tick           = "<info>✔</info>";
         $cross          = "<fg=red>✘</fg=red>";
+        $yellowCross    = "<fg=yellow>✘</fg=yellow>";
 
         $output->write("\nRetrieving message from queue...");
 
@@ -103,14 +104,44 @@ EOT
 
                         $keys = $response->body;
                         $keysArr = explode("\n", $keys);
+
+                        foreach ($keysArr as $id => $key) {
+                            if (empty($key)) {
+                                unset($keysArr[$id]);
+                            }
+                        }
+
                         $keyCount = count($keysArr);
 
                         $output->write("Loading ".$keyCount." keys into database...");
 
-                        $poolLoader->loadKeysFromArray($keysArr, $pool, KeyPoolQueueMessage::$classTypeMap[$message->poolClass]);
+                        try {
+                            $poolLoader->loadKeysFromArray($keysArr, $pool, KeyPoolQueueMessage::$classTypeMap[$message->poolClass]);
+                        } catch(Exception $e) {
+                            $output->writeLn($cross);
+                            $output->write("\nException thrown during database loading:\n");
+                            $output->write("\n\t<error>".$e->getMessage()."</error>\n");
+                            $output->writeLn('');
+
+                            $this->sendErrorEmail($user, $output, $pool);
+
+                            $output->write("Deleting key pool from database...");
+
+                            $em->remove($pool);
+                            $em->flush();
+
+                            $output->writeLn($tick);
+
+                            $this->deleteSqsMessage($sqs, $queue_url, $receiptHandle, $output);
+                            exit;
+                        }
+
+                        $output->writeLn($tick);
 
                         $keyCount = count($keysArr);
                         $keysAdded = count($keyRepo->findByPool($pool->getId()));
+
+                        $output->write("Checking key count...");
 
                         if ($keyCount == $keysAdded) {
 
@@ -120,13 +151,17 @@ EOT
                         } else {
 
                             $output->writeLn($cross);
-                            $output->write("\n".$keyCount.' keys expected, but '.$keysAdded.' added'."\n");
+                            $output->write("\n\t<error>".$keyCount.' keys expected, but '.$keysAdded.' added'."</error>\n");
                             $output->writeLn('');
 
                             $this->sendErrorEmail($user, $output, $pool);
 
+                            $output->write("Deleting key pool from database...");
+
                             $em->remove($pool);
                             $em->flush();
+
+                            $output->writeLn($tick);
                         }
 
                     } else {
@@ -155,27 +190,19 @@ EOT
 
                     $this->sendErrorEmail($user, $output, $pool);
 
+                    $output->write("Deleting key pool from database...");
+
                     $em->remove($pool);
                     $em->flush();
-                }
 
-                $output->write("Deleting message from queue...");
-
-                $deleteResponse = $sqs->delete_message($queue_url, $receiptHandle);
-
-                if ($deleteResponse->isOK()) {
                     $output->writeLn($tick);
-                } else {
-                    $output->writeLn($cross);
-                    $output->write("\nThere was an error when trying to delete the message from the queue.\n");
-                    $output->write("\n\t<error>".$deleteResponse->body->Error->Message."</error>\n");
                 }
 
-                $output->writeLn('');
+                $this->deleteSqsMessage($sqs, $queue_url, $receiptHandle, $output);
 
             } else {
 
-                $output->writeLn($cross);
+                $output->writeLn($yellowCross);
                 $output->write(" - <comment>No messages queued.</comment>\n");
                 $output->writeLn('');
             }
@@ -228,5 +255,25 @@ EOT
         $emailManager->sendEmail($emailTo, $subject, $message);
 
         $output->writeLn($tick);
+    }
+
+    private function deleteSqsMessage($sqs, $queue_url, $receiptHandle, $output)
+    {
+        $tick  = "<info>✔</info>";
+        $cross = "<fg=red>✘</fg=red>";
+
+        $output->write("Deleting message from queue...");
+
+        $deleteResponse = $sqs->delete_message($queue_url, $receiptHandle);
+
+        if ($deleteResponse->isOK()) {
+            $output->writeLn($tick);
+        } else {
+            $output->writeLn($cross);
+            $output->write("\nThere was an error when trying to delete the message from the queue.\n");
+            $output->write("\n\t<error>".$deleteResponse->body->Error->Message."</error>\n");
+        }
+
+        $output->writeLn('');
     }
 }

@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Symfony\Component\Locale\Locale;
+use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
 /**
 *
@@ -55,14 +56,14 @@ class DealPoolAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->savePool($pool);
+                $result = $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_deal_pool_index', array(
-                    'dealId' => $deal->getId(),
-                )));
+                if ($result) {
+                    return $this->redirect($this->generateUrl('admin_deal_pool_index', array(
+                        'dealId' => $deal->getId(),
+                    )));
+                }
             }
-
-            var_dump($form->createView()->get('errors'));die;
         }
 
         $countries = Locale::getDisplayCountries('en');
@@ -97,11 +98,13 @@ class DealPoolAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->savePool($pool);
+                $result = $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_deal_pool_index', array(
-                    'dealId' => $dealId
-                )));
+                if ($result) {
+                    return $this->redirect($this->generateUrl('admin_deal_pool_index', array(
+                        'dealId' => $dealId
+                    )));
+                }
             }
         }
 
@@ -143,12 +146,54 @@ class DealPoolAdminController extends Controller
         $em->persist($pool);
         $em->flush();
 
-        if ($pool->getKeysfile()) {
-            $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
-            $loader->loadKeysFromFile($pool->getKeysfile(), $pool, 'DEAL');
-        }
+        $keysFile = $pool->getKeysfile();
 
-        $this->setFlash('success', 'platformd.deal_pool.admin.saved');
+        if ($keysFile) {
+
+            if ($keysFile->getSize() > DealPool::POOL_SIZE_QUEUE_THRESHOLD) {
+
+                $s3         = $this->container->get('aws_s3');
+                $bucket     = $this->container->getParameter('s3_bucket_name');
+
+                $handle     = fopen($keysFile, 'r');
+                $filename   = trim(DealPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
+
+                $response = $s3->create_object($bucket, $filename, array(
+                    'fileUpload'    => $handle,
+                    'acl'           => \AmazonS3::ACL_PRIVATE,
+                    'encryption'    => 'AES256',
+                    'contentType'   => 'text/plain',
+                ));
+
+                if ($response->isOk()) {
+
+                    $message = new KeyPoolQueueMessage();
+                    $message->bucket    = $bucket;
+                    $message->filename  = $filename;
+                    $message->siteId    = $this->getCurrentSite()->getId();
+                    $message->userId    = $this->getUser()->getId();
+                    $message->poolId    = $pool->getId();
+                    $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
+
+                    $sqs = $this->container->get('aws_sqs');
+                    $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
+                    $queue_response = $sqs->send_message($queue_url, json_encode($message));
+
+                    $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                    return $queue_response->isOk() ? true : false;
+                } else {
+                    $this->setFlash('error', 'platformd.giveaway_pool.adminupload_error');
+                    return false;
+                }
+
+            } else {
+
+                $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
+                $loader->loadKeysFromFile($pool->getKeysfile(), $pool, 'DEAL');
+                $this->setFlash('success', 'platformd.deal_pool.admin.saved');
+                return true;
+            }
+        }
     }
 
     /**

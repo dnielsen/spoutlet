@@ -168,7 +168,7 @@ class GiveawayPoolAdminController extends Controller
                     $message->bucket    = $bucket;
                     $message->filename  = $filename;
                     $message->siteId    = $this->getCurrentSite()->getId();
-                    $message->userId    = $this->getCurrentUser()->getId();
+                    $message->userId    = $this->getUser()->getId();
                     $message->poolId    = $pool->getId();
                     $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
 
