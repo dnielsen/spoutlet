@@ -141,7 +141,7 @@ EOT
                         $output->write("Checking key count...");
 
                         $keyCount = count($keysArr);
-                        $keysAdded = count($keyRepo->getTotalForPool($pool));
+                        $keysAdded = $keyRepo->getTotalForPool($pool);
 
                         if ($keyCount == $keysAdded) {
 
