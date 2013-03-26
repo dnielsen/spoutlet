@@ -138,10 +138,10 @@ EOT
 
                         $output->writeLn($tick);
 
-                        $keyCount = count($keysArr);
-                        $keysAdded = count($keyRepo->findByPool($pool->getId()));
-
                         $output->write("Checking key count...");
+
+                        $keyCount = count($keysArr);
+                        $keysAdded = count($keyRepo->getTotalForPool($pool));
 
                         if ($keyCount == $keysAdded) {
 
