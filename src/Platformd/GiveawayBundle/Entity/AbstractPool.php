@@ -14,6 +14,9 @@ Symfony\Component\Validator\Constraints as Assert;
  */
 abstract class AbstractPool
 {
+    const POOL_SIZE_QUEUE_THRESHOLD = 1; // Key files over 1MB in size will be passed to queue for processing
+    const POOL_FILE_S3_PREFIX = 'key_pool';
+
     /**
      * @var integer $id
      *

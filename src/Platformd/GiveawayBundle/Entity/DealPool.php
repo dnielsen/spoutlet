@@ -100,4 +100,9 @@ class DealPool extends AbstractPool
     {
         return $this->getIsActive() && $this->getDeal() && ($this->getDeal()->isActive() || $this->getDeal()->getTestOnly());
     }
+
+    public function getParentName()
+    {
+        return $this->getDeal()->getName();
+    }
 }

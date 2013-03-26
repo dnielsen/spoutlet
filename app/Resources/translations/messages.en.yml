@@ -320,6 +320,21 @@ platformd:
             edit_pool: Edit pool
             save_giveaway_pool: Save giveaway pool
             saved: Giveaway pool has been saved.
+            queued: Giveaway pool has been queued for processing. You will be notified by email when this is complete.
+            queue_error: There was a problem queueing your giveaway pool for processing. Please try again.
+            upload_error: There was a problem uploading your giveaway pool keys for processing. Please try again.
+            queue_processed_email:
+                title: Your key pool has been processed
+                message: |
+                    The key pool you added (%poolName%) for "%parentName%"" has been successfully processed and the keys added to the database.
+
+            queue_process_error:
+                title: Key pool not processed successfully
+                message: |
+                    There was a problem whilst processing the key pool you added (%poolName%) for "%parentName%". The keys have not been added to the database.
+
+                    Please go to the admin panel to retry.
+
         first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
 
     # used only in the admin area
