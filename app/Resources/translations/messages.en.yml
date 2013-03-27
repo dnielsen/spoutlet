@@ -326,7 +326,7 @@ platformd:
             queue_processed_email:
                 title: Your key pool has been processed
                 message: |
-                    The key pool you added (%poolName%) for "%parentName%"" has been successfully processed and the keys added to the database.
+                    The key pool you added (%poolName%) for "%parentName%" has been successfully processed and the keys added to the database.
 
             queue_process_error:
                 title: Key pool not processed successfully
