@@ -23,11 +23,6 @@ class SiteUtil
         $this->em = $em;
     }
 
-    public function getAllSites()
-    {
-        return $this->em->getRepository('SpoutletBundle:Site')->findAll();
-    }
-
     /**
      * @return \Platformd\SpoutletBundle\Entity\Site
      */
@@ -44,10 +39,5 @@ class SiteUtil
         if (!$this->currentSite) {
             die("Could not find current site (domain = '".$currentHost."').");
         }
-    }
-
-    public function getSiteForLocale($locale)
-    {
-        return $this->em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 }

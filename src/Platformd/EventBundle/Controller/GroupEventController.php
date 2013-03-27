@@ -60,7 +60,7 @@ class GroupEventController extends Controller
         // TODO improve this
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->container->get('platformd.model.site_util')->getSiteForLocale($locale);
+            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
             $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
         }
 

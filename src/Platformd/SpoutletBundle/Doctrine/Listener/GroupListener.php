@@ -29,7 +29,7 @@ class GroupListener  implements EventSubscriber
         }
 
         if ($entity->getAllLocales()) {
-            $siteArr = $this->container->get('platformd.model.site_util')->getAllSites();
+            $siteArr = $this->container->get('doctrine.orm.entity_manager')->getRepository('SpoutletBundle:Site')->getAllSites();
 
             foreach ($siteArr as $site) {
                 if (!$entity->getSites()->contains($site)) {
