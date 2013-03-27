@@ -1,4 +1,6 @@
 date_format: M j, Y
+submit: Enviar
+cancel: Cancelar
 
 platformd:
 
@@ -71,12 +73,14 @@ platformd:
                 change_rsvp: Cambio de RSVP
                 attending: Voy a ir.
                 not_attending: No gracias
+                submit: Enviar
+                cancel: Cancelar
             current_events: Próximos Eventos
             current_and_upcoming_events: Eventos actuales y próximos
             more_current_events: More Current Events
             start_date: Fecha de Inicio
             end_date: End Date
-            date: Date
+            date: Fecha
             details: Details
             event: Evento
             games: Juego(s)
@@ -86,15 +90,38 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: No hay eventos por el momento.
             past_events: Eventos Pasados
             more_past_Events: More Past Events
+            view_past_events: Ver eventos pasados
             online: En línea
             no_past_events: No hay eventos pasados ​​en este momento.
             no_current_events: No hay eventos por el momento.
             no_active_giveaways: There are no active giveaways at this moment.
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: Significa que estás registrado para asistir a este evento.
+            legend_sponsored: Evento de Alienware Arena Patrocinado
+            legend_group: Group Event
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
             register:       Registrar
+            event_details: Event Details
+            organizer: Organizador
+            attending: Asistiendo
+            registration_closed: Registracion para este evento a cerrado.
+            im_attending: Sí, yo voy a asistir!
+            event_details: Detalles del Evento
+            location: Ubicación
+            online_event: Este evento es en línea.
+            directions: Direcciones
+            contact_attendees: Contact Attendees
+            manage_attendees: Manage Attendees
+        event_attendees:
+            back_to_event: Volver al Evento
+            attendees: Asistentes
+            action: Acción
+            username: Nombre de usuario
+            remove: Eliminar
+            no_attendees: No hay asistentes!
+            remove_confirmation: ¿Está seguro que desea quitar "%username%" de este evento?
         # used only in the admin area
         admin:
             title: Event admin
@@ -116,7 +143,15 @@ platformd:
             no_registered_events: No events registered. Check out <a href="%url%">upcoming events</a>.
             no_created_events: No events created.
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
-
+            show_past_events: Ver eventos pasados
+            hide_past_events: Hide Past Events
+            edit_event: Editar Evento
+            cancelled: Cancelled
+            event_listing: Event Listing
+            registration_open: Registration Open
+            registration_closed: Registration Closed
+            Active: Active
+            pending_approval: Pending Approval by Group Organizer
 
     comment:
         add_your_comment: Añada tu comentario
@@ -183,16 +218,16 @@ platformd:
 
         email:
             attendees_contact:
-                title: Message from the event organizer about %eventName%
+                title: Mensaje del organizador del evento sobre %eventName%
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
+                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
 
                     %content%
 
-                    Sent from Alienware Arena on behalf of %organizerName%.
+                    Enviado desde Alienware Arena en nombre de %organizerName%.
 
-                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
-                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+                    Importante: Alienware Arena nunca te pedirá información personal como tu nombre de usuario, contraseña, fecha de nacimiento, dirección de correo electrónico, etc. Por favor, no la compartas con nadie.  Si sospechas que este correo electrónico de ser una estafa o inapropiado, por favor repórtalo a contact@alienwarearena.com.
+                    Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
 
             approved:
                 title: Your Event Has Been Approved

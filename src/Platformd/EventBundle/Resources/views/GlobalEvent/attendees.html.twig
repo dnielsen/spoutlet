@@ -1,7 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 {% set canRemove = app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
 
-{% block title 'Attendees - ' ~ event.name %}
+{% block title {{ 'platformd.events.event_attendees.attendees' | trans }} ~ ' - ' ~ event.name %}
 
 {% block content %}
 
@@ -20,21 +20,21 @@
     </div>
 
     <div class="std_1col" style="padding: 10px 0;">
-        <a href="{{ event | pd_link }}">Back to Event</a>
+        <a href="{{ event | pd_link }}">{{ 'platformd.events.event_attendees.back_to_event' | trans }}</a>
     </div>
 
     <div class="std_2col">
         <div class="left">
             <div class="widget-66">
                 <div class="widget-header">
-                    <div class="widget-title">Attendees</div>
+                    <div class="widget-title">{{ 'platformd.events.event_attendees.attendees' | trans }}</div>
                 </div>
                 <div class="widget-content">
                     <table style="width: 100%;">
                         <thead style="text-align:left;">
                             <tr>
-                                {% if canRemove %}<th style="padding:5px 0;">Action</th>{% endif %}
-                                <th style="padding:5px 0;">Username</th>
+                                {% if canRemove %}<th style="padding:5px 0;">{{ 'platformd.events.event_attendees.action' | trans }}</th>{% endif %}
+                                <th style="padding:5px 0;">{{ 'platformd.events.event_attendees.username' | trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,7 +42,7 @@
                                 <tr>
                                     {% if canRemove %}
                                         <td style="padding:5px 0;">
-                                            <a href="{{ path('global_event_remove_attendee', { 'slug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                            <a href="{{ path('global_event_remove_attendee', { 'slug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('{{ 'platformd.events.event_attendees.remove_confirmation' | trans({'%username%': attendee.username}) }}');">{{ 'platformd.events.event_attendees.remove' | trans }}</a>
                                         </td>
                                     {% endif %}
                                     <td style="padding:5px 0;">
@@ -52,7 +52,7 @@
                             {% else %}
                                 <tr>
                                     <td{% if canRemove %} colspan="2"{% endif %}>
-                                        <em>There are no attendees!</em>
+                                        <em>{{ 'platformd.events.event_attendees.no_attendees' | trans }}</em>
                                     </td>
                                 </tr>
                             {% endfor %}

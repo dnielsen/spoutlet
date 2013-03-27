@@ -25,7 +25,7 @@
                     </div>
                     <div class="widget-footer">
                         {% if pastEvents|length > 0 %}
-                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastEvents.0.contentType }}">Show past events</a>
+                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastEvents.0.contentType }}">{{ 'platformd.account_page.events.show_past_events' | trans }}</a>
                         {% else %}
                             &nbsp;
                         {% endif %}
@@ -50,7 +50,7 @@
                         </div>
                         <div class="widget-footer">
                             {% if pastOwnedEvents|length > 0 %}
-                                <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">Show past events</a>
+                                <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">{{ 'platformd.account_page.events.show_past_events' | trans }}</a>
                             {% else %}
                                 &nbsp;
                             {% endif %}
@@ -82,7 +82,7 @@
     $(function () {
 
         $('.event-show-past-link').click(function () {
-            var text = $(this).text() == "Show past events" ? "Hide past events" : "Show past events";
+            var text = $(this).text() == "{{ 'platformd.account_page.events.show_past_events' | trans }}" ? "{{ 'platformd.account_page.events.hide_past_events' | trans }}" : "{{ 'platformd.account_page.events.show_past_events' | trans }}";
             $(this).text(text);
             $('.past-' + $(this).attr('data-contentType')).fadeToggle();
         });

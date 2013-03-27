@@ -18,7 +18,7 @@
                     {% set editUrl = path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
                     {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
-                    {% if event.approved == 0 %}{% set status = "Pending Approval by Group Organizer" %}{% endif %}
+                    {% if event.approved == 0 %}{% set status = 'platformd.account_page.events.pending_approval' | trans %}{% endif %}
                 {% elseif event.contentType == "GlobalEvent" %}
                     {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
@@ -36,9 +36,9 @@
                             {{ status }}
                         {% else %}
                             {% if extendedStatus %}
-                                {% if event.active == false %}Cancelled{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}Registration Open{% else %}Event Listing{% endif %}
+                                {% if event.active == false %}{{ 'platformd.account_page.events.cancelled' | trans }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}{{ 'platformd.account_page.events.registration_open' | trans }}{% else %}{{ 'platformd.account_page.events.event_listing' | trans }}{% endif %}
                             {% else %}
-                                {% if event.active %}Active{% else %}Cancelled{% endif %}
+                                {% if event.active %}{{ 'platformd.account_page.events.active' | trans }}{% else %}{{ 'platformd.account_page.events.cancelled' | trans }}{% endif %}
                             {% endif %}
                         {% endif %}
                     </td>
@@ -48,13 +48,13 @@
                                 <div class="styled-select">
                                     <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
                                         <option>Select One...</option>
-                                        <option value="edit" data-route="{{ editUrl }}">Edit Event</option>
-                                        <option value="contact" data-route="{{ contactUrl }}">Contact Attendees</option>
-                                        <option value="manage" data-route="{{ manageUrl }}">Manage Attendees</option>
+                                        <option value="edit" data-route="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | trans }}</option>
+                                        <option value="contact" data-route="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | trans }}</option>
+                                        <option value="manage" data-route="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</option>
                                     </select>
                                 </div>
                             {% else %}
-                                <a href="{{ editUrl }}">Edit Event</a>
+                                <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | trans }}</a>
                             {% endif %}
 
                         {% else %}
@@ -82,7 +82,7 @@
                         <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                         <td><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></td>
                         <td style=" text-align:center;">{{ event.attendeeCount }}</td>
-                        <td>Registration Closed</td>
+                        <td>{{ 'platformd.account_page.events.registration_closed' | trans }}</td>
                         <td>&nbsp;</td>
                     </tr>
                 {% endfor %}

@@ -135,6 +135,8 @@ platformd:
                 change_rsvp: Change RSVP
                 attending: I'm going
                 not_attending: No thanks
+                submit: Submit
+                cancel: Cancel
             current_events: Upcoming Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
@@ -150,15 +152,38 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
             past_events: Past Events
             more_past_Events: More Past Events
+            view_past_events: View Past Events
             online: Online
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
             no_active_giveaways: There are no active giveaways at this moment.
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: Means you are registered to attend this event.
+            legend_sponsored: Alienware Arena Sponsored Event
+            legend_group: Group Event
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
             register:       Register
+            event_details: Event Details
+            organizer: Organizer
+            attending: Attending
+            registration_closed: Registration is no longer open for this event.
+            im_attending: Yes, I'm attending!
+            event_details: Event Details
+            location: Location
+            online_event: This is an online event.
+            directions: Directions
+            contact_attendees: Contact Attendees
+            manage_attendees: Manage Attendees
+        event_attendees:
+            back_to_event: Back to Event
+            attendees: Attendees
+            action: Action
+            username: Username
+            remove: Remove
+            no_attendees: There are no attendees!
+            remove_confirmation: Are you sure you want to remove "%username%" from this event?
         # used only in the admin area
         admin:
             title: Event admin
@@ -180,6 +205,15 @@ platformd:
             no_registered_events: No events registered. Check out <a href="%url%">upcoming events</a>.
             no_created_events: No events created.
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+            show_past_events: Show Past Events
+            hide_past_events: Hide Past Events
+            edit_event: Edit Event
+            registration_open: Registration Open
+            registration_closed: Registration Closed
+            cancelled: Cancelled
+            event_listing: Event Listing
+            active: Active
+            pending_approval: Pending Approval by Group Organizer
         account:
             welcome_to_control: Welcome to your Control Panel
             hello_user: "Hello %firstname%! You are logged in with the username %username%."

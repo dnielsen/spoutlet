@@ -1,5 +1,7 @@
 edit: 編集
 date_format: Y年m月d日
+submit: 出品
+cancel: キャンセル
 
 platformd:
 
@@ -121,12 +123,14 @@ platformd:
                 change_rsvp: RSVPを変更する
                 attending: 私は行く
                 not_attending: 不要です
+                submit: 出品
+                cancel: キャンセル
             current_events: 現在のイベント
             current_and_upcoming_events: 現在および今後のイベント
             more_current_events: 現在のイベントをもっと表示
             start_date: 開始日
             end_date: 終了日
-            date: Date
+            date: 年月日
             details: 詳細
             event: イベント名
             games: ゲーム名
@@ -136,15 +140,38 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: 予定されているイベントは現在ありません。
             past_events: 終了したイベント
             more_past_Events: 過去のイベントをもっと表示
+            view_past_events: 過去のイベントを見る
             online: オンライン
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
             no_active_giveaways: There are no active giveaways at this moment.
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: あなたはこのイベントに出席するため、登録されています。
+            legend_sponsored: ALIENWARE ARENAスポンサードイベント
+            legend_group: Group Event
         event_show:
             register_event: イベントに登録
             unregister_event: Unregister for event
             register:       登録
+            event_details: Event Details
+            organizer: 主催者
+            attending: 随伴者
+            registration_closed: このイベントの登録は締め切られました
+            im_attending: はい、私は参加しています!
+            event_details: イベントの詳細
+            location: 実施場所
+            online_event: オンラインイベントです。
+            directions: 使用方法
+            contact_attendees: Contact Attendees
+            manage_attendees: Manage Attendees
+        event_attendees:
+            back_to_event: イベントに戻る
+            attendees: 参加者
+            action: アクション
+            username: ユーザーネーム
+            remove: 除外する
+            no_attendees: 参加者はいません。
+            remove_confirmation: %username% をイベントからはずしますか？
         # used only in the admin area
         admin:
             title: イベント管理者
@@ -168,6 +195,16 @@ platformd:
                 イベントに参加するには、マイクロサイトで「登録」リンクからおねがいします。
                 <br/>
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
+            show_past_events: 過去のイベントを見る
+            hide_past_events: Hide Past Events
+            edit_event: イベントを編集する
+            cancelled: Cancelled
+            event_listing: Event Listing
+            registration_open: Registration Open
+            registration_closed: Registration Closed
+            Active: 有効
+            pending_approval: Pending Approval by Group Organizer
+
         account:
             welcome_to_control: 管理画面へようこそ
             hello_user: "こんにちは %username%."
@@ -384,16 +421,16 @@ platformd:
 
         email:
             attendees_contact:
-                title: Message from the event organizer about %eventName%
+                title: %eventName% について、イベント主催者からのメッセージ
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
+                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
 
                     %content%
 
-                    Sent from Alienware Arena on behalf of %organizerName%.
+                    %organizerName%を代表してALIENWARE ARENAより送られました
 
-                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
-                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+                    重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
 
             approved:
                 title: Your Event Has Been Approved
