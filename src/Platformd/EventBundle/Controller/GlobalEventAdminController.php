@@ -58,7 +58,9 @@ class GlobalEventAdminController extends Controller
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
             $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
-            $event->addTranslation(new GlobalEventTranslation($site));
+            if ($site) {
+                $event->addTranslation(new GlobalEventTranslation($site));
+            }
         }
 
         $form = $this->createForm('globalEvent', $event);
