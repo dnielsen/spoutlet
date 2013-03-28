@@ -4,7 +4,7 @@
 {% block title event.name %}
 
 {% block flash %}{% if flash is defined %}<p>{{ flash }}</p>{% endif %}{% endblock %}
-{% block flash_type %}{{ flash_type }}{% endblock %}
+{% block flash_type %}{% if flash_type is defined %}{{ flash_type }}{% endif %}{% endblock %}
 
 {% block content %}
 
