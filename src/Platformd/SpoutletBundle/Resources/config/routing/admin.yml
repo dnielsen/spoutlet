@@ -59,3 +59,7 @@ admin_homepage_banner_list:
 admin_locale_to_sites_migration:
     pattern: /admin/migrate-locales-to-sites
     defaults: { _controller: SpoutletBundle:SiteMigration:migrate }
+
+admin_upload_media:
+    pattern: /admin/manage-media
+    defaults: { _controller: SpoutletBundle:Admin:manageMedia }

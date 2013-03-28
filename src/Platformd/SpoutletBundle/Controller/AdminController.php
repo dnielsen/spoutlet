@@ -5,9 +5,13 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Event,
 	Platformd\SpoutletBundle\Entity\EventRepository,
 	Platformd\SpoutletBundle\Form\Type\EventType,
-	Platformd\UserBundle\Entity\User;
+	Platformd\UserBundle\Entity\User,
+    Platformd\MediaBundle\Entity\Media,
+    Platformd\MediaBundle\Form\Type\MediaType;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Admin controller for events
@@ -24,16 +28,16 @@ class AdminController extends Controller
         return $this->render('SpoutletBundle:Admin:index.html.twig');
     }
 
-    public function eventsAction() 
+    public function eventsAction()
     {
         $this->addEventsBreadcrumb();
 
         $events = $this->getEventsRepo()->findAllWithoutLocaleOrderedByNewest();
-    	return $this->render('SpoutletBundle:Admin:events.html.twig', 
+    	return $this->render('SpoutletBundle:Admin:events.html.twig',
             array('events' => $events));
     }
 
-    public function newEventAction(Request $request) 
+    public function newEventAction(Request $request)
     {
         $this->addEventsBreadcrumb()->addChild('New');
     	$event = new Event();
@@ -76,7 +80,7 @@ class AdminController extends Controller
         	}
         }
 
-    	return $this->render('SpoutletBundle:Admin:editEvent.html.twig', 
+    	return $this->render('SpoutletBundle:Admin:editEvent.html.twig',
     		array('form' => $form->createView(), 'event' => $event));
     }
 
@@ -86,13 +90,13 @@ class AdminController extends Controller
         $translator = $this->get('translator');
 
         if (!$event = $repository->findOneBy(array('id' => $id))) {
-            
+
             throw $this->createNotFoundException($translator->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
         }
 
         $event->setPublished(true);
         $this->getEventsManager()->flush();
-        
+
         $this->setFlash('success', $translator->trans('platformd.events.admin.approved', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
@@ -103,7 +107,7 @@ class AdminController extends Controller
         $translator = $this->get('translator');
         $event = $this->retrieveEvent($id);
         $event->setPublished(false);
-        
+
         $this->getEventsManager()->flush();
 
         $this->setFlash('success', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
@@ -111,16 +115,44 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
 
-    protected function retrieveEvent($id) 
+    public function manageMediaAction(Request $request)
     {
-        
+        $this->addManageMediaBreadcrumb();
+
+        $page   = $request->query->get('page', 1);
+        $pager  = $this->getMediaRepo()->getMediaForAdmin(50, $page);
+        $medias = $pager->getCurrentPageResults();
+
+        $media  = new Media();
+        $form   = $this->createForm(new MediaType(), $media);
+
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                $this->saveMedia($form);
+                return $this->redirect($this->generateUrl('admin_upload_media'));
+            }
+        }
+
+        return $this->render('SpoutletBundle:Admin:manageMedia.html.twig', array(
+            'medias' => $medias,
+            'pager'   => $pager,
+            'form'   => $form->createView(),
+        ));
+    }
+
+    protected function retrieveEvent($id)
+    {
+
         if (!$event = $this->getEventsRepo()->findOneBy(array('id' => $id))) {
-            
+
             throw $this->createNotFoundException();
         }
 
         return $event;
-    } 
+    }
     private function saveEvent($event_form)
     {
         // save to db
@@ -139,6 +171,18 @@ class AdminController extends Controller
         $this->setFlash('success', $this->get('translator')->trans('platformd.events.admin.saved'));
     }
 
+    private function saveMedia($mediaForm)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $media = $mediaForm->getData();
+        $media->setOwner($this->getUser());
+        $media->setIsAdmin(true);
+        $em->persist($media);
+        $em->flush();
+
+        $this->setFlash('success', 'Your media was uploaded succesfully');
+    }
+
     /**
      * @return \Platformd\SpoutletBundle\Entity\EventRepository
      */
@@ -152,6 +196,20 @@ class AdminController extends Controller
     {
         return $this->getDoctrine()
             ->getEntityManager();
+    }
+
+    private function getMediaRepo()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('MediaBundle:Media');
+    }
+
+    private function addManageMediaBreadcrumb()
+    {
+         $this->getBreadcrumbs()->addChild('Manage Media', array(
+            'route' => 'admin_upload_media'
+        ));
+
+        return $this->getBreadcrumbs();
     }
 
     /**
