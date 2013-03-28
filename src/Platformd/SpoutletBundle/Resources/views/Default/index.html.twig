@@ -36,12 +36,12 @@
             $('.ellipse').truncate({
                 width: '160'
             });
-            $('.news-ellipse').truncate();
-            $('.ellipse').qtip();
-
-            $('#news-content').mCustomScrollbar({
+            $('.news-ellipse').truncate({
                 width: '250'
             });
+            $('.ellipse').qtip();
+
+            $('#news-content').mCustomScrollbar();
 
             $(".featured-content-header a").click(function() {
                     var id = $(this).attr("id");
