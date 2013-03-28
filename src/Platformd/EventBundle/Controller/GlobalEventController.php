@@ -322,6 +322,8 @@ class GlobalEventController extends Controller
 
     public function contactAction($slug, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $event = $this->getGlobalEventService()->findOneBy(array(
             'slug' => $slug
         ));
