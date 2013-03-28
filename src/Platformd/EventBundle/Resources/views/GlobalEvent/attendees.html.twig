@@ -1,7 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 {% set canRemove = app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
 
-{% block title {{ 'platformd.events.event_attendees.attendees' | trans }} ~ ' - ' ~ event.name %}
+{% block title 'platformd.events.event_attendees.attendees' | trans ~ ' - ' ~ event.name %}
 
 {% block content %}
 
