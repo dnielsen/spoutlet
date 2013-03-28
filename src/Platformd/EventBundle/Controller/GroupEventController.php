@@ -346,24 +346,7 @@ class GroupEventController extends Controller
 
             if ($form->isValid()) {
 
-                $email = $form->getData();
                 $recipientsString = $form->get('users')->getData();
-                $email->setEvent($groupEvent);
-                $email->setSender($this->getUser());
-                $email->setSite($this->getCurrentSite());
-
-                $content = $email->getMessage();
-
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
-                    'platformd.event.email.attendees_contact.message',
-                    array(
-                        '%eventName%' => $groupEvent->getName(),
-                        '%organizerName%' => $this->getUser()->getUsername(),
-                    ),
-                    'messages',
-                    $emailLocale
-                ))));
-
                 $recipients = array();
 
                 if ($recipientsString === null) {
@@ -385,18 +368,36 @@ class GroupEventController extends Controller
                     }
                 }
 
+                if (count($recipients) < 1) {
+                    return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
+                        'group' => $group,
+                        'event' => $groupEvent,
+                        'form'  => $form->createView(),
+                        'flash_type' => 'error',
+                        'flash' =>'No valid recipients found.',
+                    ));
+                }
+
+                $email = $form->getData();
+
+                $email->setEvent($groupEvent);
+                $email->setSender($this->getUser());
+                $email->setSite($this->getCurrentSite());
                 $email->setRecipients($recipients);
 
-                if (count($email->getRecipients()) > 0) {
-                    $sendCount = $this->getGroupEventService()->sendEmail($email);
-                } else {
-                    $this->setFlash('error', 'No valid recipients found.');
-                    return $this->redirect($this->generateUrl('group_event_contact', array(
-                        'groupSlug' => $groupSlug,
-                        'eventSlug' => $groupEvent->getSlug(),
-                        'form'  => $form->createView(),
-                    )));
-                }
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $groupEvent->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
+
+                $sendCount = $this->getGroupEventService()->sendEmail($email);
 
                 $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
 

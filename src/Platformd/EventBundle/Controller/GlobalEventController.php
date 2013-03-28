@@ -364,24 +364,7 @@ class GlobalEventController extends Controller
 
             if ($form->isValid()) {
 
-                $email = $form->getData();
                 $recipientsString = $form->get('users')->getData();
-                $email->setEvent($event);
-                $email->setSender($this->getUser());
-                $email->setSite($this->getCurrentSite());
-
-                $content = $email->getMessage();
-
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
-                    'platformd.event.email.attendees_contact.message',
-                    array(
-                        '%eventName%' => $event->getName(),
-                        '%organizerName%' => $this->getUser()->getUsername(),
-                    ),
-                    'messages',
-                    $emailLocale
-                ))));
-
                 $recipients = array();
 
                 if ($recipientsString === null) {
@@ -403,17 +386,34 @@ class GlobalEventController extends Controller
                     }
                 }
 
+                if (count($recipients) < 1) {
+                    return $this->render('EventBundle:GlobalEvent:contact.html.twig', array(
+                        'event' => $event,
+                        'form'  => $form->createView(),
+                        'flash_type' => 'error',
+                        'flash' =>'No valid recipients found.',
+                    ));
+                }
+
+                $email = $form->getData();
+                $email->setEvent($event);
+                $email->setSender($this->getUser());
+                $email->setSite($this->getCurrentSite());
                 $email->setRecipients($recipients);
 
-                if (count($email->getRecipients()) > 0) {
-                    $sendCount = $this->getGlobalEventService()->sendEmail($email);
-                } else {
-                    $this->setFlash('error', 'No valid recipients found.');
-                    return $this->redirect($this->generateUrl('global_event_contact', array(
-                        'slug' => $slug,
-                        'form'  => $form->createView(),
-                    )));
-                }
+                $content = $email->getMessage();
+
+                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                    'platformd.event.email.attendees_contact.message',
+                    array(
+                        '%eventName%' => $event->getName(),
+                        '%organizerName%' => $this->getUser()->getUsername(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ))));
+
+                $sendCount = $this->getGlobalEventService()->sendEmail($email);
 
                 $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
 

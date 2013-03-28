@@ -24,8 +24,8 @@
                     {{ form_row(form.address2) }}
                 </div>
                 <div>
-                    <div style="display:inline-table">{{ form_row(form.startsAt) }}</div>
-                    <div style="display:inline-table">{{ form_row(form.endsAt) }}</div>
+                    <div class="start-date">{{ form_row(form.startsAt) }}</div>
+                    <div class="end-date">{{ form_row(form.endsAt) }}</div>
                 </div>
                 {{ form_row(form.timezone) }}
                 {{ form_row(form.sites) }}
@@ -52,6 +52,41 @@
         $('.event-date-picker').datepicker({
             minDate: 0,
             dateFormat: 'mm/dd/yy'
+        });
+
+        $('#global-event-form').submit(function() {
+
+            var errors = 0;
+            var errorString = '<div class="help-inline time-error">Please select a valid time for your event</div>';
+
+            if (!$('.start-date .hour-selection select').val() || !$('.start-date .minute-selection select').val()) {
+                $('.start-date .control-group').addClass('error');
+                if ($('.start-date .time-error').length < 1) {
+                    $('.start-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.start-date .control-group').removeClass('error');
+                $('.start-date .time-error').remove();
+            }
+
+            if (!$('.end-date .hour-selection select').val() || !$('.end-date .minute-selection select').val()) {
+                $('.end-date .control-group').addClass('error');
+                if ($('.end-date .time-error').length < 1) {
+                    $('.end-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.end-date .control-group').removeClass('error');
+                $('.end-date .time-error').remove();
+            }
+
+            if (errors > 0) {
+                $('html, body').animate({
+                    scrollTop: $(".start-date").offset().top - 100
+                }, 100);
+                return false;
+            }
         });
 
         var $i = 0;

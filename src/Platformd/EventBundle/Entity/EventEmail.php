@@ -41,7 +41,7 @@ abstract class EventEmail
      * Email message body
      *
      * @var string $message
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="(required field)")
      * @ORM\Column(name="message", type="text", nullable=true)
      */
     protected $message;

@@ -24,7 +24,7 @@
         {% else %}
         {% for event in events %}
         <tr class="eventListGroup_online">
-            <td style="width:121px;vertical-align:top">
+            <td style="vertical-align:top">
                 {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
@@ -37,7 +37,7 @@
                 <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" />
                 {% endif %}
             </td>
-            <td style="width:259px;vertical-align:top">
+            <td style="width:29%;vertical-align:top">
 
                 {% if event.group is defined %}
                     {{ event | pd_link_full(event.name) }}
@@ -46,7 +46,7 @@
                 {% endif %}
 
             </td>
-            <td style="width:191px;vertical-align:top" class="event-organizer">
+            <td style="width:29%;vertical-align:top" class="event-organizer">
                 {% if event.hostedBy is defined %}
                     {{ event.hostedBy }}
                 {% else %}
@@ -57,7 +57,7 @@
                     {% endif %}
                 {% endif %}
             </td>
-            <td style="width:213px;vertical-align:top">
+            <td style="width:29%;vertical-align:top">
                 {% if event.online %}
                     {{ 'platformd.events.event_listings.online' | trans }}
                 {% else %}

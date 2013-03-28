@@ -21,7 +21,7 @@
     {% endif %}
 
     {% set post_route = (importedGlobalEvent) ? path('admin_events_new_import', {'id': importedGlobalEvent.id }) : path('admin_events_new') %}
-    <form action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form id="global-event-form" action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
 
         <div class="form-actions">
@@ -36,6 +36,11 @@
                 window.location = $(this).attr('rel');
                 return false;
             });
+
+            if (document.referrer != window.location.href ) {
+                $('.hour-selection select').val(null);
+                $('.minute-selection select').val(null);
+            }
 
         });
     </script>

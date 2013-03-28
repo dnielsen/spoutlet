@@ -3,13 +3,16 @@
 
 {% block title event.name %}
 
+{% block flash %}{% if flash is defined %}<p>{{ flash }}</p>{% endif %}{% endblock %}
+{% block flash_type %}{{ flash_type }}{% endblock %}
+
 {% block content %}
 
     <div id="event-contact-page">
 
         <div class="std_1col" style="padding:0;">
             {% if event.bannerImage %}
-                <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%; margin: -10px 0 0 0;"></div>
+                <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%;"></div>
             {% else %}
                 <div id="event-banner" style="background:url('{{ asset('bundles/event/images/events_default_banner.jpg') }}') top left no-repeat; background-size: cover;"></div>
             {% endif %}
@@ -46,13 +49,6 @@
                     <div class="widget-content">
 
                         <div id="event-attendee-list">
-                            <hr class="faded" />
-                            <div class="event-attendee">
-                                <div class="event-hover-div"></div>
-                                <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
-                                <a href="javascript:void(0);"><span class="username">{{ event.user.username }}</span></a>
-                                <span id="event-host-tag">Event Host</span>
-                            </div>
                             {% for attendee in event.attendees %}
                                 {% if event.user != attendee %}
                                     <hr class="faded" />
@@ -94,8 +90,6 @@
                 var url = {% if event.externalUrl %}'{{ path("global_events_index") }}'{% else %}'{{ event | pd_link }}'{% endif %};
                 document.location.href = url;
             });
-
-            $('#form_users').attr('readonly', 'readonly');
 
             $('.event-attendee').hover(function() {
                 $(this).children('.event-hover-div').show();

@@ -5,7 +5,7 @@
 
     <h1>Edit Event</h1>
 
-    <form action="{{ path('admin_events_edit', {'id' : event.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form id="global-event-form" action="{{ path('admin_events_edit', {'id' : event.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
 
         <div class="form-actions">
