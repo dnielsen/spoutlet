@@ -3,6 +3,12 @@ security:
     factories:
         - "%kernel.root_dir%/../src/Platformd/CEVOBundle/Resources/config/security_factory.yml"
 
+    encoders:
+        "FOS\UserBundle\Model\UserInterface":
+            algorithm: sha512
+            encode_as_base64: false
+            iterations: 1
+
     providers:
         fos_userbundle:
             id: fos_user.user_manager
