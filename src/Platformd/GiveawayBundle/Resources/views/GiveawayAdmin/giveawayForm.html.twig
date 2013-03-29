@@ -18,9 +18,12 @@
             {{ form_row(form.externalUrl) }}
             {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
             <div class="control-group">
-            <label for="group-auto-complete" class="control-label">Group</label>
+            <label for="group-auto-complete" class="control-label">Link to a Group</label>
                 <div class="controls">
                     <input type="text" id="group-auto-complete" name="group-auto-complete" {% if group is not null %}value="{{ group.name }}"{% endif %}/>
+                    <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                        Leave blank or or type in the group name.
+                    </p>
                 </div>
             </div>
             {% if group is not null %}
