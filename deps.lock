@@ -13,7 +13,7 @@ JMSSecurityExtraBundle e752f888c51425f71382c056961f10f2be642102
 SensioDistributionBundle v2.0.22
 SensioGeneratorBundle v2.0.22
 AsseticBundle 6f15728c1aefa5246caa83730e3dbf70b0d46052
-FOSUserBundle v1.2.4
+FOSUserBundle 1bfbdb2783f12a89a47fb7f13426e9437492a71b
 doctrine-fixtures v1.0.0-ALPHA1~4
 DoctrineFixturesBundle a66be2f077f3a4e5c3801b356b42b8782f1abbd6
 JMSI18nRoutingBundle ad91318b3439e1a9e1a28735a63e07957754060b
@@ -26,7 +26,7 @@ WhiteOctoberPagerfantaBundle 60db33325971201cfacb3cbe90d8e25c8c89fd66
 doctrine-migrations 1a3d3533bd2b9b6d7cc42f78f628649caf9efa51
 DoctrineMigrationsBundle dd9a336c574301b0b6a7e82a0865cab3d4d95503
 Gaufrette e32cb543dd69f17bea455a2e33d114a2eebee9dd
-aws-sdk 1.5.14
+aws-sdk 1.6.2
 KnpGaufretteBundle ba80e707faf19c9912990897cb4ce8cde3232e94
 media-exposer 4abcf3b5a277f4fdf5b3181d9ee0dfcdc2acd3c6
 KnpMediaExposerBundle 783631716da39da226ed4268b359ccede967df9e
