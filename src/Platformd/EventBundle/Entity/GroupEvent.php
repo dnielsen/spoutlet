@@ -98,6 +98,14 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     protected $attendees;
 
     /**
+     * Event RSVP actions
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\GroupEventRsvpAction", mappedBy="event", cascade={"persist"})
+     */
+    protected $rsvpActions;
+
+
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $deletedReason;
@@ -121,10 +129,11 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      */
     public function __construct(Group $group)
     {
-        $this->group        = $group;
-        $this->translations = new ArrayCollection();
-        $this->sites        = new ArrayCollection();
-        $this->contentReports = new ArrayCollection();
+        $this->group            = $group;
+        $this->translations     = new ArrayCollection();
+        $this->sites            = new ArrayCollection();
+        $this->contentReports   = new ArrayCollection();
+        $this->rsvpActions      = new ArrayCollection();
 
         foreach ($this->getGroup()->getSites() as $site) {
             $this->sites->add($site);
@@ -362,5 +371,15 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     public function getReportThreshold()
     {
         return 3;
+    }
+
+    public function setRsvpActions($value)
+    {
+        $this->rsvpActions = $value;
+    }
+
+    public function getRsvpActions()
+    {
+        return $this->rsvpActions;
     }
 }

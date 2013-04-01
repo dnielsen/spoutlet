@@ -58,6 +58,13 @@ class GlobalEvent extends Event implements LinkableInterface
     protected $attendees;
 
     /**
+     * Event RSVP actions
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\GlobalEventRsvpAction", mappedBy="event", cascade={"persist"})
+     */
+    protected $rsvpActions;
+
+    /**
      * @var string hosted_by
      *
      * @ORM\Column(name="hosted_by", type="string", length=255, nullable=true)
@@ -75,6 +82,7 @@ class GlobalEvent extends Event implements LinkableInterface
     {
         $this->translations = new ArrayCollection();
         $this->sites        = new ArrayCollection();
+        $this->rsvpActions  = new ArrayCollection();
 
         parent::__construct();
     }
@@ -196,13 +204,23 @@ class GlobalEvent extends Event implements LinkableInterface
     }
 
     /**
-* @param \Doctrine\Common\Collections\ArrayCollection $attendees
-*/
+     * @param \Doctrine\Common\Collections\ArrayCollection $attendees
+     */
     public function setAttendees($attendees)
     {
         foreach ($attendees as $attendee) {
             $this->addAttendee($attendee);
         }
+    }
+
+    public function setRsvpActions($value)
+    {
+        $this->rsvpActions = $value;
+    }
+
+    public function getRsvpActions()
+    {
+        return $this->rsvpActions;
     }
 
     /**
