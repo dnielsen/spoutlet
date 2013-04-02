@@ -620,11 +620,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetEventsLink($locale) {
 
-        if ($this->currentSiteFeatures->getHasEvents()) {
-            $format         = '<a href="%s"><span style="color: #ff5711;padding-right: 2px;">CEVO</span> '.$this->trans('platformd.layout.main_menu.events').'</a>';
-        } else {
-            $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
-        }
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
 
         $internalUrl    = $this->router->generate('global_events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
