@@ -78,16 +78,31 @@ class EventRepository extends EntityRepository
             g2_.id = 1
         HAVING `yes` > `no`'*/
 
+        $ids = array(0);
+
+        $attendees = $this->createQueryBuilder('e')
+            ->select('a.id')
+            ->leftJoin('e.attendees', 'a')
+            ->where('e = :event')
+            ->setParameter('event', $event)
+            ->getQuery()
+            ->getArrayResult();
+
+        foreach ($attendees as $attendee) {
+            array_push($ids, $attendee['id']);
+        }
 
         $result = $this->createQueryBuilder('e')
             ->select('u.id, u.username, u.email, MAX(rsvp.rsvpAt) rsvpAt')
             ->leftJoin('e.attendees', 'a')
             ->leftJoin('e.rsvpActions', 'rsvp')
             ->leftJoin('rsvp.user', 'u')
-            ->andWhere('e = :event')
-            ->andWhere('rsvp.attendance = :attending')
+            ->where('e = :event')
+            ->andWhere('u.id in (:attendees)')
+            ->andWhere('rsvp.attendance = :attendance')
             ->setParameter('event', $event)
-            ->setParameter('attending', EventRsvpAction::ATTENDING_YES)
+            ->setParameter('attendees', $ids)
+            ->setParameter('attendance', EventRsvpAction::ATTENDING_YES)
             ->getQuery()
             ->getResult();
 
