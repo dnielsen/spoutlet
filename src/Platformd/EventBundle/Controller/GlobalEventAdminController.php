@@ -245,6 +245,10 @@ class GlobalEventAdminController extends Controller
 
         }
 
+        $event = $this->getGlobalEventService()->find(1);
+
+        $attendees = $this->getGlobalEventService()->getAttendeeList($event);
+
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
             'pager'    => $pager,
             'form'     => $form->createView(),
@@ -344,7 +348,7 @@ class GlobalEventAdminController extends Controller
             $factory->addRow(array(
                 $attendee['username'],
                 $attendee['email'],
-                'N/A'
+                $attendee['rsvpAt']
             ));
         }
 
