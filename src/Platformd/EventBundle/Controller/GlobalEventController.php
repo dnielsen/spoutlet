@@ -253,6 +253,7 @@ class GlobalEventController extends Controller
         }
 
         $event = $this->getGlobalEventService()->find($id);
+
         $user       = $this->getUser();
 
         if (!$event) {

@@ -12,6 +12,9 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Event\RegistrationEvent,
     Platformd\EventBundle\EventEvents,
+    Platformd\EventBundle\Entity\EventRsvpAction,
+    Platformd\EventBundle\Entity\GlobalEventRsvpAction,
+    Platformd\EventBundle\Entity\GroupEventRsvpAction,
     Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\SpoutletBundle\Model\EmailManager
@@ -28,6 +31,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher,
 ;
 
 use Knp\MediaBundle\Util\MediaUtil;
+
+use DateTime;
 
 class EventService
 {
@@ -251,6 +256,14 @@ class EventService
             return;
         }
 
+        $rsvpAction = ($event instanceof GroupEvent) ? new GroupEventRsvpAction() : new GlobalEventRsvpAction();
+
+        $rsvpAction->setUser($user);
+        $rsvpAction->setEvent($event);
+        $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
+        $rsvpAction->setRsvpAt(new DateTime('now'));
+
+        $event->getRsvpActions()->add($rsvpAction);
         $event->getAttendees()->add($user);
         $event->updateAttendeeCount();
 
@@ -273,6 +286,14 @@ class EventService
             return;
         }
 
+        $rsvpAction = ($event instanceof GroupEvent) ? new GroupEventRsvpAction() : new GlobalEventRsvpAction();
+
+        $rsvpAction->setUser($user);
+        $rsvpAction->setEvent($event);
+        $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_NO);
+        $rsvpAction->setRsvpAt(new DateTime('now'));
+
+        $event->getRsvpActions()->add($rsvpAction);
         $event->getAttendees()->removeElement($user);
         $event->updateAttendeeCount(-1);
 

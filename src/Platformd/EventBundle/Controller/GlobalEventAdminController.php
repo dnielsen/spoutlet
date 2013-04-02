@@ -245,6 +245,8 @@ class GlobalEventAdminController extends Controller
 
         }
 
+        $event = $this->getGlobalEventService()->find(1);
+
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
             'pager'    => $pager,
             'form'     => $form->createView(),
@@ -340,12 +342,14 @@ class GlobalEventAdminController extends Controller
             'RSVP Date'
         ));
 
-        foreach ($attendees as $attendee) {
-            $factory->addRow(array(
-                $attendee['username'],
-                $attendee['email'],
-                'N/A'
-            ));
+        if($attendees) {
+            foreach ($attendees as $attendee) {
+                $factory->addRow(array(
+                    $attendee['username'],
+                    $attendee['email'],
+                    $attendee['rsvpAt']
+                ));
+            }
         }
 
         $fileName = sprintf('%s_Attendees.csv', $eventName);

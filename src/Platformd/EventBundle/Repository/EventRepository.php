@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager,
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEventRepository;
 use Platformd\EventBundle\Entity\EventEmail;
+use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\UserBundle\Entity\User;
 use DateTime;
 
@@ -58,11 +59,50 @@ class EventRepository extends EntityRepository
 
     public function getAttendeeList($event)
     {
-        $result = $this->createQueryBuilder('e')
-            ->select('a.id, a.username, a.email')
+
+        # this is what i'd like to have...
+/*        '
+        SELECT
+            f0_.id AS id0,
+            f0_.username AS username1,
+            f0_.email AS email2,
+            SUM(CASE WHEN g1_.attendance = 'ATTENDING_YES' THEN 1 ELSE 0 END) `yes`,
+            SUM(CASE WHEN g1_.attendance = 'ATTENDING_NO' THEN 1 ELSE 0 END) `no`
+        FROM
+            global_event g2_
+        LEFT JOIN global_events_attendees g4_ ON g2_.id = g4_.globalevent_id
+        LEFT JOIN fos_user f3_ ON f3_.id = g4_.user_id
+        LEFT JOIN global_event_rsvp_actions g1_ ON g2_.id = g1_.event_id
+        LEFT JOIN fos_user f0_ ON g1_.user_id = f0_.id
+        WHERE
+            g2_.id = 1
+        HAVING `yes` > `no`'*/
+
+        $ids = array(0);
+
+        $attendees = $this->createQueryBuilder('e')
+            ->select('a.id')
             ->leftJoin('e.attendees', 'a')
-            ->andWhere('e = :event')
+            ->where('e = :event')
             ->setParameter('event', $event)
+            ->getQuery()
+            ->getArrayResult();
+
+        foreach ($attendees as $attendee) {
+            array_push($ids, $attendee['id']);
+        }
+
+        $result = $this->createQueryBuilder('e')
+            ->select('u.id, u.username, u.email, MAX(rsvp.rsvpAt) rsvpAt')
+            ->leftJoin('e.attendees', 'a')
+            ->leftJoin('e.rsvpActions', 'rsvp')
+            ->leftJoin('rsvp.user', 'u')
+            ->where('e = :event')
+            ->andWhere('u.id in (:attendees)')
+            ->andWhere('rsvp.attendance = :attendance')
+            ->setParameter('event', $event)
+            ->setParameter('attendees', $ids)
+            ->setParameter('attendance', EventRsvpAction::ATTENDING_YES)
             ->getQuery()
             ->getResult();
 
