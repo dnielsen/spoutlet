@@ -197,13 +197,15 @@ class GlobalEventController extends Controller
 
         $this->getGlobalEventService()->unregister($event, $user);
 
-        $subject = $this->translator->trans('platformd.event.email.attendee_removed.title', array(
+        $locale = $user->getLocale() ?: 'en';
+
+        $subject = $this->trans('platformd.event.email.attendee_removed.title', array(
             '%eventName%' => $event->getName(),
         ), 'messages', $locale);
 
         $url        = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()), true);
 
-        $message = nl2br($this->translator->trans('platformd.event.email.attendee_removed.message', array(
+        $message = nl2br($this->trans('platformd.event.email.attendee_removed.message', array(
             '%username%'       => $user->getUsername(),
             '%url%'            => $url,
             '%eventName%'      => $event->getName(),
@@ -351,11 +353,12 @@ class GlobalEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('users', 'text', array(
                 'property_path' => false,
-                'label' => 'Recipients',
-                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+                'label' => 'platformd.events.event_contact.form.recipients',
+                'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor')
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
@@ -415,7 +418,12 @@ class GlobalEventController extends Controller
 
                 $sendCount = $this->getGlobalEventService()->sendEmail($email);
 
-                $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
+                $this->setFlash('success', $this->trans(
+                    'platformd.events.event_contact.confirmation',
+                    array('%attendeeCount%' => $sendCount),
+                    'messages',
+                    $emailLocale
+                ));
 
                 if ($event->getExternalUrl()) {
                     return $this->redirect($this->generateUrl('global_events_index'));
@@ -451,11 +459,12 @@ class GlobalEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('users', 'text', array(
                 'property_path' => false,
-                'label' => 'Recipients',
-                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+                'label' => 'platformd.events.event_contact.form.recipients',
+                'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor')
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
@@ -484,7 +493,7 @@ class GlobalEventController extends Controller
             }
         }
 
-        $this->setFlash('error', 'There was an error previewing your email!');
+        $this->setFlash('error', 'platformd.events.event_contact.error');
         return $this->redirect($this->generateUrl('global_event_contact', array(
             'slug' => $slug,
             'form'  => $form->createView(),
@@ -504,7 +513,7 @@ class GlobalEventController extends Controller
 
         $this->getGlobalEventService()->register($event, $user);
 
-        $this->setFlash('success', sprintf('You are now attending this event.'));
+        $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
         return $this->redirect($this->generateUrl('global_event_view', array(
             'slug' => $event->getSlug(),
         )));

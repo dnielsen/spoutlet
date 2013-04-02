@@ -27,7 +27,7 @@
                 {% endif %}
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">
-                    <td>{{ event.startsAt | date('M j, Y') }}</td>
+                    <td>{{ event.startsAt | date_translate }}</td>
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                     <td><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></td>
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
@@ -47,7 +47,7 @@
                             {% if event.registrationOption == "REGISTRATION_ENABLED" %}
                                 <div class="styled-select">
                                     <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
-                                        <option>Select One...</option>
+                                        <option>{{ 'platformd.account_page.events.choose_one' | trans }}</option>
                                         <option value="edit" data-route="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | trans }}</option>
                                         <option value="contact" data-route="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | trans }}</option>
                                         <option value="manage" data-route="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</option>

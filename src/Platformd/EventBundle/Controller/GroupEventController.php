@@ -334,10 +334,12 @@ class GroupEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('users', 'text', array(
                 'property_path' => false,
-                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+                'label' => 'platformd.events.event_contact.form.recipients',
+                'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor')
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
@@ -399,7 +401,12 @@ class GroupEventController extends Controller
 
                 $sendCount = $this->getGroupEventService()->sendEmail($email);
 
-                $this->setFlash('success', sprintf('Email sent to %d attendees.', $sendCount));
+                $this->setFlash('success', $this->trans(
+                    'platformd.events.event_contact.confirmation',
+                    array('%attendeeCount%' => $sendCount),
+                    'messages',
+                    $emailLocale
+                ));
 
                 if ($groupEvent->getExternalUrl()) {
                     return $this->redirect($this->generateUrl('group_show', array(
@@ -445,10 +452,12 @@ class GroupEventController extends Controller
         $form = $this->createFormBuilder($email)
             ->add('users', 'text', array(
                 'property_path' => false,
-                'help' => 'Leave blank to send to all attendees or click on users to the right to choose specific recipients.',
+                'label' => 'platformd.events.event_contact.form.recipients',
+                'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor')
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
@@ -477,7 +486,7 @@ class GroupEventController extends Controller
             }
         }
 
-        $this->setFlash('error', 'There was an error previewing your email!');
+        $this->setFlash('error', 'platformd.events.event_contact.error');
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupSlug,
             'eventSlug' => $eventSlug,
@@ -547,13 +556,15 @@ class GroupEventController extends Controller
 
         $this->getGroupEventService()->unregister($groupEvent, $user);
 
-        $subject = $this->translator->trans('platformd.event.email.attendee_removed.title', array(
+        $locale = $user->getLocale() ?: 'en';
+
+        $subject = $this->trans('platformd.event.email.attendee_removed.title', array(
             '%eventName%' => $groupEvent->getName(),
         ), 'messages', $locale);
 
         $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()), true);
 
-        $message = nl2br($this->translator->trans('platformd.event.email.attendee_removed.message', array(
+        $message = nl2br($this->trans('platformd.event.email.attendee_removed.message', array(
             '%username%'       => $user->getUsername(),
             '%url%'            => $url,
             '%eventName%'      => $groupEvent->getName(),
@@ -791,7 +802,7 @@ class GroupEventController extends Controller
         }
 
         if (!$this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent')) {
-            $this->setFlash('error', "You are not allowed to rsvp to this event!");
+            $this->setFlash('error', $this->trans('platformd.events.event_show.not_allowed_register'));
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $groupEvent->getSlug(),
@@ -801,7 +812,11 @@ class GroupEventController extends Controller
         $this->getGroupEventService()->register($groupEvent, $user);
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
-        $this->setFlash('success', sprintf('To attend this event, you must join %s. You are now a member of this group.', $group->getName()));
+        $this->setFlash('success', $this->trans(
+            'platformd.events.event_show.group_joined',
+            array('%groupName%' => $group->getName()))
+        );
+
         return $this->redirect($this->generateUrl('group_event_view', array(
             'groupSlug' => $groupSlug,
             'eventSlug' => $groupEvent->getSlug(),

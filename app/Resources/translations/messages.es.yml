@@ -98,12 +98,11 @@ platformd:
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
             legend_registered: Significa que estás registrado para asistir a este evento.
             legend_sponsored: Evento de Alienware Arena Patrocinado
-            legend_group: Group Event
+            legend_group: Evento de Grupo
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
             register:       Registrar
-            event_details: Event Details
             organizer: Organizador
             attending: Asistiendo
             registration_closed: Registracion para este evento a cerrado.
@@ -112,8 +111,25 @@ platformd:
             location: Ubicación
             online_event: Este evento es en línea.
             directions: Direcciones
-            contact_attendees: Contact Attendees
-            manage_attendees: Manage Attendees
+            contact_attendees: Contactar los Asistentes
+            manage_attendees: Administrar los Asistentes
+            edit_event: Editar Evento
+            not_allowed_register: No se te permite a RSVP para el evento!
+            now_attending: Ahora estás asistiendo este evento.
+            group_joined: Para asistir a este evento, debes únete a %groupName%. Ahora eres un miembro de este grupo.
+        event_contact:
+            title: Contactar los asistentes por correo electrónico
+            help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
+            preview: Previo
+            send: Enviar
+            cancel: Cancelar
+            attending: Asistiendo
+            error: Hubo un error al previsualizar tu correo electrónico!
+            confirmation: Correo electrónico enviado a %attendeeCount% asistente(s).
+            form:
+                recipients: Destinatarios
+                message: Mensaje
+                recipient_help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
         event_attendees:
             back_to_event: Volver al Evento
             attendees: Asistentes
@@ -140,18 +156,19 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: No events registered. Check out <a href="%url%">upcoming events</a>.
-            no_created_events: No events created.
+            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">upcoming events</a>.
+            no_created_events: No hay eventos creados
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
             show_past_events: Ver eventos pasados
-            hide_past_events: Hide Past Events
+            hide_past_events: Esconder eventos pasados
             edit_event: Editar Evento
-            cancelled: Cancelled
-            event_listing: Event Listing
-            registration_open: Registration Open
-            registration_closed: Registration Closed
-            Active: Active
-            pending_approval: Pending Approval by Group Organizer
+            cancelled: Cancelado
+            event_listing: Lista de Eventos
+            registration_open: Registración Abierta
+            registration_closed: Registración Cerrada
+            active: Activo
+            pending_approval: Pendiente de aprobación por el organizador de grupo
+            choose_one: Elegir una acción:
 
     comment:
         add_your_comment: Añada tu comentario
@@ -322,34 +339,34 @@ platformd:
                     Sent from Alienware Arena on behalf of %groupOwnerName%.
 
             event_reminder:
-                title: Upcoming Event Reminder for %eventName%
+                title: Recordatorio para el Próximo Evento %eventName%
                 message: |
-                    Hi %username%,
+                    Hola %username%,
 
-                    Your event is almost here!
+                    Tu evento ya casi está aquí!
 
                     <a href="%eventUrl%">%eventName%</a>
                     %dateString% - %timeString% %timezone%
 
                     %location%
 
-                    Have questions about the event?
-                    Contact the event organizer, <a href="%organizerUrl%">%organizerName%</a>.
+                    ¿Tienes preguntas sobre el evento?
+                    Contactar al organizador de evento <a href="%organizerUrl%">%organizerName%</a>.
 
-                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+                    Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
 
-                    Sent from Alienware Arena on behalf of %organizerName%.
+                    Enviado desde Alienware Arena en nombre de %organizerName%.
 
             attendee_removed:
-                title: You are no longer attending %eventName%
+                title: Ya no estás asistiendo a %eventName%
                 message: |
-                    Hello %username%
+                    Hola %username%,
 
-                    This email confirms that you no longer attending <a href="%url%">%eventName%</a>.
+                    Este correo electrónico confirma que ya no estás asistiendo <a href="%url%">%eventName%</a>.
 
-                    If you believe this to be an error, please send contact the event organizer.
+                    Si crees que esto sea un error, por favor póngase en contacto con el organizador del evento.
 
-                    Alienware Arena Team
+                    Equipo Alienware Arena
 
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.

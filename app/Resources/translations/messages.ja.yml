@@ -153,7 +153,6 @@ platformd:
             register_event: イベントに登録
             unregister_event: Unregister for event
             register:       登録
-            event_details: Event Details
             organizer: 主催者
             attending: 随伴者
             registration_closed: このイベントの登録は締め切られました
@@ -162,8 +161,25 @@ platformd:
             location: 実施場所
             online_event: オンラインイベントです。
             directions: 使用方法
-            contact_attendees: Contact Attendees
-            manage_attendees: Manage Attendees
+            contact_attendees: 参加者に連絡する
+            manage_attendees: 参加者を管理する
+            edit_event: イベントを編集する
+            not_allowed_register: あなたは、このイベントへの参加連絡を許可されていません。
+            now_attending: あなたはこのイベントに参加しています。
+            group_joined: このイベントに参加するには、%groupName%.に参加する必要があります。これで、あなたはこのグループのメンバーです。
+        event_contact:
+            title: 参加者にEメールで連絡する
+            help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
+            preview: プレビュー
+            send: 送る
+            cancel: キャンセル
+            attending: イベントに出席
+            error: あなのEメールをプレビューする際にエラーが発生しました！
+            confirmation: メールは %attendeeCount%参加者（複数可）に送信されます。
+            form:
+                recipients: 受取人
+                message: メッセージ
+                recipient_help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
         event_attendees:
             back_to_event: イベントに戻る
             attendees: 参加者
@@ -189,22 +205,22 @@ platformd:
             banner_note: 推奨サイズ 950x120
     account_page:
         events:
-            no_registered_events: 現在、どのイベントにも登録していません。
-            no_created_events: No events created.
+            no_registered_events: イベントが登録されていません。 <a href="%url%">の今後のイベント</a>をチェックしてください。
+            no_created_events: イベントは作成されていません。
             join_event_message: |
                 イベントに参加するには、マイクロサイトで「登録」リンクからおねがいします。
                 <br/>
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
             show_past_events: 過去のイベントを見る
-            hide_past_events: Hide Past Events
+            hide_past_events: 過去のイベントを表示しない
             edit_event: イベントを編集する
-            cancelled: Cancelled
-            event_listing: Event Listing
-            registration_open: Registration Open
-            registration_closed: Registration Closed
-            Active: 有効
-            pending_approval: Pending Approval by Group Organizer
-
+            cancelled: キャンセルされました
+            event_listing: イベント一覧
+            registration_open: 登録可能
+            registration_closed: 登録終了
+            active: 有効
+            pending_approval: グループ主催者によって登録は保留中
+            choose_one: 選び出す
         account:
             welcome_to_control: 管理画面へようこそ
             hello_user: "こんにちは %username%."
@@ -525,34 +541,34 @@ platformd:
                     Sent from Alienware Arena on behalf of %groupOwnerName%.
 
             event_reminder:
-                title: Upcoming Event Reminder for %eventName%
+                title: %eventName%のイベントリマインダ
                 message: |
-                    Hi %username%,
+                    こんにちは%username%,さん
 
-                    Your event is almost here!
+                    あなたのイベントはほぼここにそろっています
 
                     <a href="%eventUrl%">%eventName%</a>
                     %dateString% - %timeString% %timezone%
 
                     %location%
 
-                    Have questions about the event?
-                    Contact the event organizer, <a href="%organizerUrl%">%organizerName%</a>.
+                    このイベントに関するご質問はありますか？
+                    <a href="%organizerUrl%">%organizerName%</a>主催者に問い合わせる
 
-                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
 
-                    Sent from Alienware Arena on behalf of %organizerName%.
+                    %organizerName%を代表してALIENWARE ARENAより送られました
 
             attendee_removed:
-                title: You are no longer attending %eventName%
+                title: あなたはもう、%eventName%に参加していません
                 message: |
-                    Hello %username%
+                    こんにちは%username%,さん
 
-                    This email confirms that you no longer attending <a href="%url%">%eventName%</a>.
+                    このメールで、あなたは<a href="%url%">%eventName%</a>に参加していないことを確認してください。
 
-                    If you believe this to be an error, please send contact the event organizer.
+                    もし、これがエラーだとお考えでしたら、イベント主催者にお問い合わせください。
 
-                    Alienware Arena Team
+                    ALIENWAREARENAチーム
 
 # I'm not sure how we have two different potential "wrong password messages"...
 "Bad credentials": "パスワードまたはメールアドレスが無効です"

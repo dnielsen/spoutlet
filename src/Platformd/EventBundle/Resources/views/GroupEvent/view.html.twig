@@ -31,10 +31,10 @@
             <div class="events-sub-nav-wrapper">
                <div class="events-sub-nav">
                     <ul>
-                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">Edit Event</a></li>
+                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | trans }}</a></li>
                         {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                            <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">Manage Attendees</a></li>
-                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">Contact Attendees</a></li>
+                            <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</a></li>
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | trans }}</a></li>
                         {% endif %}
                         <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
                     </ul>
@@ -71,7 +71,7 @@
 
             <div class="widget-33" id="event-details-widget" style="height: auto;">
                 <div class="widget-header">
-                    <div class="widget-title">Event Details</div>
+                    <div class="widget-title">{{ 'platformd.events.event_show.event_details' | trans }}</div>
                 </div>
                 <div class="widget-content" style="padding-left: 10px;">
 
@@ -89,25 +89,25 @@
                             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                     </div>
 
-                    <div id="event-organizer"><strong>Organizer: </strong><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></div>
+                    <div id="event-organizer"><strong>{{ 'platformd.events.event_show.organizer' | trans }}: </strong><a href="{{ cevo_account_link(event.user.username) }}">{{ event.user.username }}</a></div>
 
                     {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                        <div id="event-attendee-attendees"><strong>Attending: </strong><a href="{{ path('group_event_attendees', { 'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
+                        <div id="event-attendee-attendees"><strong>{{ 'platformd.events.event_show.attending' | trans }}: </strong><a href="{{ path('group_event_attendees', { 'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
                         <div id="event-registration">
                             {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
-                                <div id="event-registration-closed">Registration is no longer open for this event.</div>
+                                <div id="event-registration-closed">{{ 'platformd.events.event_show.registration_closed' | trans }}</div>
                             {% else %}
                                 {% if app.user is not null %}
                                     {% if canJoin %}
                                         {% if isMember %}
-                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">Register</a></div>
+                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | trans }}</a></div>
                                         {% else %}
-                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
+                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | trans }}</a></div>
                                         {% endif %}
 
                                         <div id="registration-response" style="display:none;"></div>
 
-                                        <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>Yes, I'm attending!</div>
+                                        <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>{{ 'platformd.events.event_show.im_attending' | trans }}</div>
 
                                         <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | trans }}</a></div>
 
@@ -119,12 +119,12 @@
                                                 </p>
                                             </div>
                                         {% else %}
-                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
+                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | trans }}</a></div>
                                         {% endif %}
                                     {% endif %}
                                 {% else %}
                                     <div id="event-registration-button">
-                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">Register</a>
+                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | trans }}</a>
                                     </div>
                                 {% endif %}
                             {% endif %}
@@ -145,17 +145,17 @@
 
             <div class="widget-33" id="event-location-widget" style="height: auto; margin-top:15px;">
                 <div class="widget-header">
-                    <div class="widget-title">Location</div>
+                    <div class="widget-title">{{ 'platformd.events.event_show.location' | trans }}</div>
                 </div>
                 <div class="widget-content">
                     {% if event.online %}
-                        <div id="event-location-online">This is an online event.</div>
+                        <div id="event-location-online">{{ 'platformd.events.event_show.online_event' | trans }}</div>
                     {% else %}
                         <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
                         <div id="event-location-name">{{ event.location }}</div>
                         <div id="event-location-address1">{{ event.address1 }}</div>
                         <div id="event-location-address2">{{ event.address2 }}</div>
-                        <div id="event-directions-link"><a href="http://maps.google.com/maps?saddr={{ event.fullAddress | url_encode }}" target="_blank">Directions</a></div>
+                        <div id="event-directions-link"><a href="http://maps.google.com/maps?saddr={{ event.fullAddress | url_encode }}" target="_blank">{{ 'platformd.events.event_show.directions' | trans }}</a></div>
                     {% endif %}
                 </div>
             </div>

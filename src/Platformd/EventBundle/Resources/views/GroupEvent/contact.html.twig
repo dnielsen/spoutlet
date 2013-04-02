@@ -23,16 +23,16 @@
                 <div class="widget-66">
                     <div class="widget-header" style="padding-bottom:10px;">
                         <div class="widget-title">
-                            <div id="event-contact-title">Contact Attendees By Email</div>
+                            <div id="event-contact-title">{{ 'platformd.events.event_contact.title' | trans }}</div>
                         </div>
                     </div>
                     <div class="widget-content">
                         <form id="event-contact-form" action="{{ path('group_event_contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
                             {{ form_widget(form) }}
                             <div class="form-actions" style="padding-left: 100px;">
-                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>Preview</button>
-                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>Send</button>
-                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>{{ 'platformd.events.event_contact.preview' | trans }}</button>
+                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'platformd.events.event_contact.send' | trans }}</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">{{ 'platformd.events.event_contact.cancel' | trans }}</button>
                             </div>
                         </form>
                     </div>
@@ -44,7 +44,7 @@
 
                 <div class="widget-33" id="event-details-widget" style="height: auto;">
                     <div class="widget-header">
-                        <div class="widget-title">{{ event.attendeeCount }} Attending</div>
+                        <div class="widget-title">{{ event.attendeeCount }} {{ 'platformd.events.event_contact.attending' | trans }}</div>
                     </div>
                     <div class="widget-content">
 
