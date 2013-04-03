@@ -77,7 +77,7 @@
                     if (data.success) {
                         rsvpDialog.dialog('close');
                         if (rsvp == 0) {
-                            $('.event-list #event-'+$('#event-type').val()+$('#event-id').val()).fadeOut();
+                            $('.event-list #event-'+$('#event-type').val()+'-'+$('#event-id').val()).fadeOut();
                             $('#event-show-page #event-attending-message').hide();
                             $('#event-show-page #event-rsvp-link').hide();
                             $('#event-show-page #event-registration-button').fadeIn();
