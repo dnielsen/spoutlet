@@ -350,8 +350,8 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-100 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; background: #252525; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
 .widget-100 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }
 
-.widget-100 th { color: #888888; font-size:12px; text-align:left; padding-bottom:4px; }
-.widget-100 td { color: #c6c6c6; font-size: 12px; padding: 4px 2px; }
+.widget-100 th, .widget-66 th, .widget-33 th { color: #888888; font-size:12px; text-align:left; padding-bottom:4px; }
+.widget-100 td, .widget-66 td, .widget-33 td { color: #c6c6c6; font-size: 12px; padding: 4px 2px; }
 
 .widget-100.no-header { background-image: url('../images/widget-100-bg-no-header.png'); }
 
