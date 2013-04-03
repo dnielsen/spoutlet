@@ -401,6 +401,8 @@ class EventService
 
     public function sendEmail(EventEmail $email, $type=null)
     {
+        $event = $email->getEvent();
+
         $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
         $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
 
