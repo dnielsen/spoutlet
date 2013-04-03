@@ -213,7 +213,7 @@ class GlobalEventController extends Controller
 
         $emailType  = "Event unregister notification";
         $emailTo    = $user->getEmail();
-        $this->get('platformd.model.email_manager')->sendEmail($emailTo, $subject, $message, $emailType);
+        $this->get('platformd.model.email_manager')->sendHtmlEmail($emailTo, $subject, $message, $emailType);
 
         $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
 
