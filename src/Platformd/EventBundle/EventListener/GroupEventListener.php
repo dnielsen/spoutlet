@@ -73,6 +73,10 @@ class GroupEventListener
             $fromName = $event->getUser()->getUsername();
 
             foreach ($event->getGroup()->getMembers() as $member) {
+                if ($member == $event->getUser()) {
+                    continue;
+                }
+
                 $emailTo            = $member->getEmail();
                 $emailLocale        = $member->getLocale() ? : 'en';
                 $subject            = $this->translator->trans('platformd.event.email.group_announcement.title', array('%eventName%'   => $name), 'messages', $emailLocale);
