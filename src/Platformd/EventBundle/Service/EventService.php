@@ -437,7 +437,7 @@ class EventService
 
         foreach ($email->getRecipients() as $recipient) {
             $emailTo = $recipient->getEmail();
-            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username$', $recipient->getUsername(), $message), $emailType, $site, $fromName);
+            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType, $site, $fromName);
             $sendCount++;
         }
 
