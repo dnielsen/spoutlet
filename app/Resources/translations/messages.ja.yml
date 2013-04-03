@@ -436,6 +436,18 @@ platformd:
             3rdparty: "Link event listing to 3rd party website."
 
         email:
+            global_event_contact:
+                title: %eventName% について、イベント主催者からのメッセージ
+                message: |
+                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
+
+                    %content%
+
+                    ALIENWAREARENAチーム
+
+                    重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
+
             attendees_contact:
                 title: %eventName% について、イベント主催者からのメッセージ
                 message: |

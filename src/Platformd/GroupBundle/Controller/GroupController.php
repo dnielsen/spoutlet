@@ -473,7 +473,7 @@ Alienware Arena Team
 
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Group Application Notification", $this->getCurrentSite()->getDefaultLocale());
 
-        $this->setFlash('success', 'Your application has been made. You will be notified if your application is successful.');
+        $this->setFlash('success', 'A request has been sent to the group organizer to accept you into the private group. Once approved, you will also be registered for the event.');
         return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 

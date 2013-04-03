@@ -1,5 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
-{% set canRemove = (app.user == event.user) or (app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
+{% set canRemove = (app.user == event.user) or (app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
 
 {% block title 'Attendees - ' ~ event.name %}
 
@@ -13,8 +13,21 @@
         {% endif %}
     </div>
 
-    <div class="std_1col" style="padding: 10px 0;">
-        <a href="{{ event | pd_link }}">Back to Event</a>
+    <div class="std_1col" style="padding: 0;">
+        <div class="events-sub-nav-wrapper">
+           <div class="events-sub-nav">
+                <ul>
+                    <li><a href="{{ event | pd_link }}">Back to Event</a></li>
+                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | trans }}</a></li>
+                        {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | trans }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                    <li><a href="{{ path(event.group.getLinkableRouteName, event.group.getLinkableRouteParameters) }}">Group Home</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="std_2col">
@@ -27,8 +40,9 @@
                     <table style="width: 100%;">
                         <thead style="text-align:left;">
                             <tr>
-                                {% if canRemove %}<th style="padding:5px 0;">Action</th>{% endif %}
+                                {% if canRemove %}<th style="width: 125px; padding:5px 0;">Action</th>{% endif %}
                                 <th style="padding:5px 0;">Username</th>
+                                <th style="width: 200px; padding:5px 0;">Joined</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,10 +56,11 @@
                                     <td style="padding:5px 0;">
                                         <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
                                     </td>
+                                    <td style="padding:5px 0;">{{ attendee.rsvpAt | date('date_format' | trans) }}</td>
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td{% if canRemove %} colspan="2"{% endif %}>
+                                    <td colspan={% if canRemove %}"3"{% else %}"2"{% endif %}>
                                         <em>There are no attendees!</em>
                                     </td>
                                 </tr>

@@ -1,6 +1,16 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
+    {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
+
+    <div class="std_1col" style="padding: 0;">
+        <div class="events-sub-nav-wrapper">
+           <div class="events-sub-nav">
+                <ul>
+                    <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
     <h1>Create Event {% if importedGroupEvent %} from: {{ importedGroupEvent.name }} {% endif %}</h1>
 

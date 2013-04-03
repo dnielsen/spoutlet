@@ -464,6 +464,18 @@ platformd:
             3rdparty: "Link event listing to 3rd party website."
 
         email:
+            global_event_contact:
+                title: Message from the event organizer about %eventName%
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Alienware Arena Team
+
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
             attendees_contact:
                 title: Message from the event organizer about %eventName%
                 message: |

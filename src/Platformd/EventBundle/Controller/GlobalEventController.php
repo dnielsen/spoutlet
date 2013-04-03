@@ -345,7 +345,7 @@ class GlobalEventController extends Controller
 
         $emailLocale = $this->getLocale() ?: 'en';
         $email->setSubject($this->trans(
-            'platformd.event.email.attendees_contact.title',
+            'platformd.event.email.global_event_contact.title',
             array('%eventName%' => $event->getName()),
             'messages',
             $emailLocale
@@ -408,7 +408,7 @@ class GlobalEventController extends Controller
                 $content = $email->getMessage();
 
                 $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
-                    'platformd.event.email.attendees_contact.message',
+                    'platformd.event.email.global_event_contact.message',
                     array(
                         '%eventName%' => $event->getName(),
                         '%organizerName%' => $this->getUser()->getUsername(),
@@ -451,7 +451,7 @@ class GlobalEventController extends Controller
 
         $emailLocale = $this->getLocale() ?: 'en';
         $email->setSubject($this->trans(
-            'platformd.event.email.attendees_contact.title',
+            'platformd.event.email.global_event_contact.title',
             array('%eventName%' => $event->getName()),
             'messages',
             $emailLocale
@@ -478,7 +478,7 @@ class GlobalEventController extends Controller
                 $content = $email->getMessage();
 
                 $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
-                    'platformd.event.email.attendees_contact.message',
+                    'platformd.event.email.global_event_contact.message',
                     array(
                         '%eventName%' => $event->getName(),
                         '%organizerName%' => $this->getUser()->getUsername(),

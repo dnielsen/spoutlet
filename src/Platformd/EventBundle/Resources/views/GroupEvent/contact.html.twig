@@ -18,6 +18,22 @@
             {% endif %}
         </div>
 
+        <div class="std_1col" style="padding: 0;">
+            <div class="events-sub-nav-wrapper">
+               <div class="events-sub-nav">
+                    <ul>
+                        {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                            <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | trans }}</a></li>
+                            {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                                <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
             <div class="left">
                 <div class="widget-66">

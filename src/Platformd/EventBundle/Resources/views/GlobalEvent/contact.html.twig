@@ -50,14 +50,12 @@
 
                         <div id="event-attendee-list">
                             {% for attendee in event.attendees %}
-                                {% if event.user != attendee %}
-                                    <hr class="faded" />
-                                    <div class="event-attendee">
-                                        <div class="event-hover-div"></div>
-                                        <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
-                                        <a href="javascript:void(0);"><span class="username">{{ attendee.username }}</span></a>
-                                    </div>
-                                {% endif %}
+                                <hr class="faded" />
+                                <div class="event-attendee">
+                                    <div class="event-hover-div"></div>
+                                    <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                    <a href="javascript:void(0);"><span class="username">{{ attendee.username }}</span></a>
+                                </div>
                             {% else %}
                             {% endfor %}
                             <hr class="faded" />

@@ -20,7 +20,7 @@
                 {{ 'platformd.events.event_listings.current_events' | trans }}<a style="float:right;font-size: 12px;" href="{{ path('accounts_events') }}">{{ 'platformd.events.event_listings.my_events' | trans }}</a>
             </div>
         </div>
-        <div class="widget-content" style="width:950px;">
+        <div class="widget-content">
             {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
                 'events': upcomingEvents,
                 'no_events_message': 'platformd.events.event_listings.no_current_events'
@@ -28,7 +28,7 @@
         </div>
 
         <div class="widget-footer">
-            <div style="width:100%;position:relative;height:16px;">
+            <div style="position:relative;height:16px;">
                 <a id="show-past-events" style="margin-right:10px;position:absolute;right:0px;" href="javascript:void(0);">{{ 'platformd.events.event_listings.view_past_events' | trans }}</a>
                 <div style="position:absolute;left:0px;">
                     <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" /><span class="attending" style="color:#c6c6c6">{{ 'platformd.events.event_listings.legend_registered' | trans }}</span>
