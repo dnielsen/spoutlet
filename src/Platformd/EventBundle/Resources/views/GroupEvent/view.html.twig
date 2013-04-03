@@ -43,6 +43,14 @@
         </div>
     </div>
 
+    {% if not event.approved %}
+        <div class="std_1col">
+            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                Your event is pending approval by the group organizer.  Once the group organizer approves your event, it will be displayed on the groups page.
+            </p>
+        </div>
+    {% endif %}
+
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
             <div class="widget-66">

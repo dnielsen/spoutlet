@@ -396,34 +396,11 @@ class EventService
         $email->setEvent($event);
         $email->setRecipients($recipients);
 
-        $locale = $event->getUser()->getLocale() ?: 'en';
-
-        $subject = $this->translator->trans('platformd.event.email.event_reminder.title', array(
-            '%eventName%' => $event->getName(),
-        ), 'messages', $locale);
-
-        $message = nl2br($this->translator->trans('platformd.event.email.event_reminder.message', array(
-            '%eventName%'       => $event->getName(),
-            '%dateString%'      => $event->getDateRangeString(),
-            '%timeString%'      => $event->getStartsAt()->format('g:i A'),
-            '%timezone%'        => $event->getTimezoneString(),
-            '%location%'        => $event->getOnline() ? 'Online' : $event->getHtmlFormattedAddress(),
-            '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
-            '%organizerUrl%'    => $event->getUser()->getAccountLink($locale),
-            '%organizerName%'   => $event->getUser()->getUsername(),
-        ), 'messages', $locale));
-
-        $email->setSubject($subject);
-        $email->setMessage($message);
-
         $this->sendEmail($email, "Event Reminder Email");
     }
 
     public function sendEmail(EventEmail $email, $type=null)
     {
-        $subject    = $email->getSubject();
-        $message    = $email->getMessage();
-
         $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
         $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
 
@@ -437,6 +414,27 @@ class EventService
 
         foreach ($email->getRecipients() as $recipient) {
             $emailTo = $recipient->getEmail();
+
+            $locale = $recipient->getLocale() ?: 'en';
+
+            $subject = $this->translator->trans('platformd.event.email.event_reminder.title', array(
+                '%eventName%' => $event->getName(),
+            ), 'messages', $locale);
+
+            $message = nl2br($this->translator->trans('platformd.event.email.event_reminder.message', array(
+                '%eventName%'       => $event->getName(),
+                '%dateString%'      => $event->getDateRangeString(),
+                '%timeString%'      => $event->getStartsAt()->format('g:i A'),
+                '%timezone%'        => $event->getTimezoneString(),
+                '%location%'        => $event->getOnline() ? 'Online' : $event->getHtmlFormattedAddress(),
+                '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                '%organizerUrl%'    => $event->getUser()->getAccountLink($locale),
+                '%organizerName%'   => $event->getUser()->getUsername(),
+            ), 'messages', $locale));
+
+            $email->setSubject($subject);
+            $email->setMessage($message);
+
             $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType, $site, $fromName);
             $sendCount++;
         }

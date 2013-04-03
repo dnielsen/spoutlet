@@ -267,8 +267,8 @@ class GroupEventController extends Controller
 
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
-            if (!$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
-                throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+            if ($this->getUser() != $groupEvent->getUser() && !$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedHttpException('This event has not been approved by the group owner yet.');
             }
         }
 
