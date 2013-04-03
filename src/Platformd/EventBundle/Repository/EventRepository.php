@@ -103,6 +103,7 @@ class EventRepository extends EntityRepository
             ->setParameter('event', $event)
             ->setParameter('attendees', $ids)
             ->setParameter('attendance', EventRsvpAction::ATTENDING_YES)
+            ->groupBy('u.id')
             ->getQuery()
             ->getResult();
 
