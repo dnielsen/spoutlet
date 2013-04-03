@@ -1,5 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
-{% set canRemove = app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+{% set canRemove = (app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
 
 {% block title 'platformd.events.event_attendees.attendees' | trans ~ ' - ' ~ event.name %}
 
@@ -33,8 +33,9 @@
                     <table style="width: 100%;">
                         <thead style="text-align:left;">
                             <tr>
-                                {% if canRemove %}<th style="padding:5px 0;">{{ 'platformd.events.event_attendees.action' | trans }}</th>{% endif %}
+                                {% if canRemove %}<th style="width: 125px;padding:5px 0;">{{ 'platformd.events.event_attendees.action' | trans }}</th>{% endif %}
                                 <th style="padding:5px 0;">{{ 'platformd.events.event_attendees.username' | trans }}</th>
+                                <th style="width: 200px; padding:5px 0;">Joined</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,10 +49,11 @@
                                     <td style="padding:5px 0;">
                                         <a href="{{ cevo_account_link(attendee.username) }}">{{ attendee.username }}</a>
                                     </td>
+                                    <td style="padding:5px 0;">{{ attendee.rsvpAt | date('date_format' | trans) }}</td>
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td{% if canRemove %} colspan="2"{% endif %}>
+                                    <td colspan={% if canRemove %}"3"{% else %}"2"{% endif %}>
                                         <em>{{ 'platformd.events.event_attendees.no_attendees' | trans }}</em>
                                     </td>
                                 </tr>
