@@ -19,6 +19,7 @@ class GroupEventRepository extends EventRepository
         $qb = $this->getBaseGroupQueryBuilder($group)
             ->andWhere('e.endsAt > :now')
             ->andWhere('e.published = 1')
+            ->andWhere('e.active = 1')
             ->orderBy('e.startsAt')
             ->setParameter('now', new \DateTime('now'));
 
@@ -36,6 +37,7 @@ class GroupEventRepository extends EventRepository
         $qb = $this->getBaseGroupQueryBuilder($group)
             ->andWhere('e.endsAt < :now')
             ->andWhere('e.published = 1')
+            ->andWhere('e.active = 1')
             ->orderBy('e.endsAt', 'DESC')
             ->setParameter('now', new \DateTime('now'));
 
