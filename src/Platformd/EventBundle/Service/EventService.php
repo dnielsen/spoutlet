@@ -396,21 +396,7 @@ class EventService
         $email->setEvent($event);
         $email->setRecipients($recipients);
 
-        $this->sendEmail($email, "Event Reminder Email");
-    }
-
-    public function sendEmail(EventEmail $email, $type=null)
-    {
-        $event = $email->getEvent();
-
-        $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
-        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
-
-        if ($type === null) {
-            $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
-        } else {
-            $emailType = $type;
-        }
+        $emailType  = $email instanceof GroupEventEmail ? "Group Event Reminder Email" : $email instanceof GlobalEventEmail ? "Global Event Reminder Email" : "Event Reminder Email";
 
         $sendCount = 0;
 
@@ -434,9 +420,34 @@ class EventService
                 '%organizerName%'   => $event->getUser()->getUsername(),
             ), 'messages', $locale));
 
-            $email->setSubject($subject);
-            $email->setMessage($message);
+            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType);
+            $sendCount++;
+        }
 
+        $email->setSubject($subject);
+        $email->setMessage($message);
+
+        $this->repository->saveEmail($email);
+    }
+
+    public function sendEmail(EventEmail $email, $type=null)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+
+        $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
+        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
+
+        if ($type === null) {
+            $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
+        } else {
+            $emailType = $type;
+        }
+
+        $sendCount = 0;
+
+        foreach ($email->getRecipients() as $recipient) {
+            $emailTo = $recipient->getEmail();
             $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType, $site, $fromName);
             $sendCount++;
         }
