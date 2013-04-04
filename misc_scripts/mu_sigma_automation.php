@@ -1,6 +1,6 @@
 <?php
 
-include '/home/ubuntu/scripts/mu-sigma_automation/config.php'
+include '/home/ubuntu/scripts/mu-sigma_automation/config.php';
 
 $ftpInfo        = array($ftpServer, $ftpUser, $ftpPassword);
 
