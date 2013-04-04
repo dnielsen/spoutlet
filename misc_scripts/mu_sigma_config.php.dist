@@ -1,0 +1,21 @@
+<?php
+
+// copy to /home/ubuntu/scripts/mu-sigma_automation/ and rename to config.php
+
+$dsn            = 'mysql:dbname=;host=';
+$user           = '';
+$password       = '';
+$awaDb          = '';
+
+// GPG key name given to us by Mu Sigma
+$recipient      = '';
+
+$ftpServer      = '';
+$ftpUser        = '';
+$ftpPassword    = '';
+
+// ssh tunnel is made to thie pldx server on port 33337
+$dsnPldx        = 'mysql:dbname=;host=127.0.0.1;port=33337';
+$userPldx       = '';
+$passwordPldx   = '';
+$videoDb        = '';
