@@ -16,7 +16,6 @@
         {
             $(element).parent('.thumbnail-vote-caption').fadeOut();
             $(element).closest('#media-likes-wrapper').fadeOut();
-            $(element).parent('.photo-like').fadeOut();
 
             $(element).closest('.gallery-media-thumb').block({
                 message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="height:auto;width:auto;cursor:default;" />',
@@ -37,11 +36,12 @@
                 }),
                 contentType: 'json',
                 success: function(data) {
-                    $(element).text('{{ "galleries.already_voted_caption"| trans }}');
                     $(element).removeClass('quick-vote-link');
+                    $(element).addClass('already-voted');
+                    $(element).closest('.gallery-media-thumb').unbind('hover');
                     $(element).closest('.gallery-media-thumb').unblock();
-                    $('#media-already-voted').fadeIn();
                     $(element).closest('#media-likes-wrapper').fadeIn();
+                    $('#media-already-voted').fadeIn();
                     $('#media-likes').text(data.likes);
                     voteRequestSent = false;
                 }

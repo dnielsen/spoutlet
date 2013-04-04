@@ -9,6 +9,11 @@
 <h3 class="contest-header">{{ contest.name }}</h3>
 <div class="std_2col">
     <div class="left">
+        {% if contest.category == 'image' and (contest.votingEndUtc | date('Y-m-d H:i:s') < 'now' | date('Y-m-d H:i:s')) %}
+            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                {{ 'contests.contest_finished_you_can_still_like' | trans }}
+            </p>
+        {% endif %}
         <div id="contest-voting-rules">
             {{ contest.voteInstructions | raw }}
         </div>

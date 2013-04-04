@@ -27,7 +27,6 @@
                     <th>Upload Date</th>
                     <th>Country</th>
                     <th>Likes</th>
-                    <th>Dislikes</th>
                     <th>FB Likes</th>
                     <th>Actions</th>
                 </tr>
@@ -42,8 +41,7 @@
                         <td>{{ image.author.lastname }}</td>
                         <td>{{ image.createdAt | date('m/d/Y') }}</td>
                         <td>{{ image.author.country }}</td>
-                        <td>{{ upVotes[image.id] }}%</td>
-                        <td>{{ downVotes[image.id] }}%</td>
+                        <td>{% if image.id in upVotes|keys %}{{ upVotes[image.id] }}{% else %}0{% endif %}</td>
                         <td>{{ likes[image.id] }}</td>
                         <td>
                             {% if image.deleted != true  %}

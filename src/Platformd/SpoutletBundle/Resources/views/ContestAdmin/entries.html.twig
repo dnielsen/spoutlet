@@ -38,6 +38,7 @@
             {% for entry in entries %}
                 {% for media in entry.medias %}
                     {% if not media.deleted and media.published %}
+                    {% set points = media.id in imageLikes|keys ? imageLikes[media.id] : 0 %}
                     <tr>
                         <td><img src="{{ media_path(media.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ media.title }}" /></td>
                         <td><a href="{{ media_path_nice(media.image) }}">{{ media_path_nice(media.image) }}</a></td>
@@ -46,7 +47,7 @@
                         <td>{{ media.author.lastname }}</td>
                         <td>{{ media.createdAt | date }}</td>
                         <td>{{ entry.ipAddress }}</td>
-                        <td>{% if upVotes[media.id] > 0 %}<a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ upVotes[media.id] }}</a>{% else %}0{% endif %}</td>
+                        <td>{% if points > 0 %}<a href="{{ path('admin_contest_votes_export', { 'slug' : slug, 'id' : media.id }) }}">{{ points }}</a>{% else %}0{% endif %}</td>
                         <td>{{ media.author.country }}</td>
                         <td>{{ likes[media.id] }}</td>
                         <td>
