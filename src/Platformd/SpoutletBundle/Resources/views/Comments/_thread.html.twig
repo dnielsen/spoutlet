@@ -111,7 +111,8 @@
             data: JSON.stringify({
                 'threadId' : '{{ thread }}',
                 'increment' : increment,
-                'offset' : offset
+                'offset' : offset,
+                'sort' : $('#comment-sort-method option:selected').val()
             }),
             contentType: 'json',
             success: function(data)

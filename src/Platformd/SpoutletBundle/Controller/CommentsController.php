@@ -308,7 +308,7 @@ class CommentsController extends Controller
 
         $params   = json_decode($content, true);
 
-        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset'])) {
+        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset']) || !isset($params['sort'])) {
             $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
             return $response;
         }
@@ -316,6 +316,7 @@ class CommentsController extends Controller
         $threadId    = $params['threadId'];
         $increment   = $params['increment'];
         $offset      = $params['offset'];
+        $sort        = $params['sort'];
 
         $em         = $this->getDoctrine()->getEntityManager();
         $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
@@ -325,7 +326,7 @@ class CommentsController extends Controller
             return $response;
         }
 
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotesWithOffset($threadId, $offset, $increment);
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByWithOffset($threadId, $sort, $offset, $increment);
 
         if (!$comments) {
             $response->setContent(json_encode(array("message" => "no_more_comments")));
