@@ -66,7 +66,7 @@
 [FOSUserBundle]
     git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
     target=/bundles/FOS/UserBundle
-    version=1.2.0
+    version=origin/1.2.x
 
 [doctrine-fixtures]
     git=http://github.com/doctrine/data-fixtures.git
