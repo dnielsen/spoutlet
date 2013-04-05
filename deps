@@ -88,6 +88,7 @@
 [EWZRecaptchaBundle]
     git=git://github.com/excelwebzone/EWZRecaptchaBundle.git
     target=/bundles/EWZ/Bundle/RecaptchaBundle
+    version=origin/2.0
 
 [DoctrineExtensions]
     git=git://github.com/l3pp4rd/DoctrineExtensions.git
