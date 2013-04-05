@@ -275,7 +275,7 @@ class Group implements LinkableInterface, ReportableContentInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\Event", mappedBy="group")
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", mappedBy="group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $events;

@@ -176,7 +176,7 @@ class DealController extends Controller
         $code->setCountry($country); # in addition to assigning the deal code, we need to set the country (this is one of the differences between a Code and a DealCode)
 
         # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup) {
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
             if($deal->getGroup()) {
                 $groupManager = $this->getGroupManager();
                 $group = $deal->getGroup();

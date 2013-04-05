@@ -59,6 +59,15 @@
                                 {%- endif -%}
                             </p>
                             <p>{{ 'deal_redeem_success' | trans }}</p>
+                            {% if features.hasGroups %}
+                                <p>
+                                    {% if deal.group is not null %}
+                                        {% if groupManager.isMember(user, deal.group) %}
+                                            {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -116,13 +125,13 @@
                                             {{ "CLAIM CODE NOW" }}
                                         {% endif %}
                                     </a>
-                                    {% if deal.group is not null %}
-                                        {% if not groupManager.isMember(user, deal.group) %}
-                                        <p>
-                                            <input id="join-group" type="checkbox" style="margin:0px;" checked>&nbsp;
+                                    {% if features.hasGroups %}
+                                        {% if deal.group is not null %}
+                                            {% if not groupManager.isMember(user, deal.group) %}
+                                            <p>
                                                 {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
-                                            </input>
-                                        </p>
+                                            </p>
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
