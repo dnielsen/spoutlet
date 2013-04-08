@@ -17,13 +17,15 @@
         <p>
             {{ 'platformd.sweepstakes.entered.message' | trans }}
         </p>
-        <p>
-            {% if sweepstakes.group is not null %}
-                {% if groupManager.isMember(user, sweepstakes.group) %}
-                    {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+        {% if features.hasGroups %}
+            <p>
+                {% if sweepstakes.group is not null %}
+                    {% if groupManager.isMember(user, sweepstakes.group) %}
+                        {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </p>
+            </p>
+        {% endif %}
     {% endif %}
 {% endblock %}
 
@@ -87,13 +89,13 @@
                                     <input type="submit" value="{{ 'enter' | trans }}" class="button" />
                                 </div>
 
-                                {% if sweepstakes.group is not null %}
-                                    {% if not groupManager.isMember(user, sweepstakes.group) %}
-                                    <div class="agree-row">
-                                        <input id="join-group" name="join_checkbox" type="checkbox" style="margin:0px;" checked>&nbsp;
-                                            {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
-                                        </input>
-                                    </div>
+                                {% if features.hasGroups %}
+                                    {% if sweepstakes.group is not null %}
+                                        {% if not groupManager.isMember(user, sweepstakes.group) %}
+                                        <div class="agree-row">
+                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+                                        </div>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
 

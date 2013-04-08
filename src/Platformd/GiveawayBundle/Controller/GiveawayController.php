@@ -142,7 +142,7 @@ class GiveawayController extends Controller
         }
 
         # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup) {
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
             if($giveaway->getGroup()) {
                 $groupManager = $this->getGroupManager();
                 $group = $giveaway->getGroup();

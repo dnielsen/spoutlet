@@ -106,7 +106,7 @@ class FrontendController extends Controller
         $joinGroup = $request->get('join_checkbox');
 
         # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup) {
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
             if($sweepstakes->getGroup()) {
                 $groupManager = $this->getGroupManager();
                 $group = $sweepstakes->getGroup();
