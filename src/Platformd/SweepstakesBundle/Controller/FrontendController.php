@@ -6,6 +6,10 @@ use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 
 class FrontendController extends Controller
 {
@@ -44,6 +48,7 @@ class FrontendController extends Controller
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
+            'groupManager' => $this->getGroupManager(),
         );
     }
 
@@ -96,6 +101,43 @@ class FrontendController extends Controller
             $this->setFlash('error', 'sweeps_not_open');
 
             return $this->redirectToShow($sweepstakes);
+        }
+
+        $joinGroup = $request->get('join_checkbox');
+
+        # if user has elected to join the group associated with this deal, we add them to the list of members
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
+            if($sweepstakes->getGroup()) {
+                $groupManager = $this->getGroupManager();
+                $group = $sweepstakes->getGroup();
+
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
+                    // TODO This should probably be refactored to use the global activity table
+                    $joinAction = new GroupMembershipAction();
+                    $joinAction->setGroup($group);
+                    $joinAction->setUser($user);
+                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+                    $group->getMembers()->add($user);
+                    $group->getUserMembershipActions()->add($joinAction);
+
+                    // TODO Add a service layer for managing groups and dispatching such events
+                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('event_dispatcher');
+                    $event = new GroupEvent($group, $user);
+                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+                    $groupManager->saveGroup($group);
+
+                    if($group->getIsPublic()) {
+                        try {
+                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                        } catch (ApiException $e) {
+
+                        }
+                    }
+                }
+            }
         }
 
         $entry = $this->getSweepstakesRepo()->createNewEntry(
@@ -152,5 +194,21 @@ class FrontendController extends Controller
             ->getEntityManager()
             ->getRepository('SweepstakesBundle:Entry')
         ;
+    }
+
+    /**
+     * @return \Platformd\GroupBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\Api\ApiManager
+     */
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

@@ -85,6 +85,11 @@ class Giveaway extends AbstractEvent
      */
     protected $displayRemainingKeysNumber = true;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", cascade={"persist"})
+     */
+    protected $group = null;
+
     public function __construct()
     {
         // auto-publish, this uses the "status" field instead
@@ -393,5 +398,15 @@ class Giveaway extends AbstractEvent
     public function setDisplayRemainingKeysNumber($displayRemainingKeysNumber)
     {
         $this->displayRemainingKeysNumber = $displayRemainingKeysNumber;
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

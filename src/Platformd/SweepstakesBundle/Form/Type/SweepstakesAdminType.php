@@ -57,6 +57,10 @@ class SweepstakesAdminType extends EventType
             'label' => 'Allow admin testing?',
             'help'  => 'This allows admins to still test the operation of the sweepstakes IF it is unpublished',
         ));
+
+        $builder->add('group', 'hidden', array(
+            'property_path' => false,
+        ));
     }
 
 

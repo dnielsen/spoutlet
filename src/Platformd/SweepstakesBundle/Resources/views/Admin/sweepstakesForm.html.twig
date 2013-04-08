@@ -18,7 +18,20 @@
                 {{ form_row(form.slug) }}
                 {{ form_row(form.externalUrl) }}
                 {{ form_row(form.testOnly) }}
-
+                <div class="control-group">
+                <label for="group-auto-complete" class="control-label">Link to a Group</label>
+                    <div class="controls">
+                        <input type="text" id="group-auto-complete" name="group-auto-complete" {% if group is not null %}value="{{ group.name }}"{% endif %}/>
+                        <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                            Leave blank or or type in the group name.
+                        </p>
+                    </div>
+                </div>
+                {% if group is not null %}
+                    {{ form_row(form.group, {value : group.id}) }}
+                {% else %}
+                    {{ form_row(form.group) }}
+                {% endif %}
             </div>
             <div class="span6">
                 {{ form_row(form.sites) }}
@@ -87,3 +100,16 @@
     <input type="submit" class="btn btn-primary" value="{{ "save" | trans }}" formnovalidate />
 
 </form>
+<script type="text/javascript">
+    $(function () {
+        $('#group-auto-complete').autocomplete({
+            source: '{{ path('admin_group_autocomplete') }}',
+            minLength: 3,
+            select: function(event, ui) {
+                $(this).val(ui.item.label);
+                $('#sweepstakes_group').val(ui.item.value);
+                event.preventDefault();
+            }
+        });
+    });
+</script>

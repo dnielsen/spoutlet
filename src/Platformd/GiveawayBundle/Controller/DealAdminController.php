@@ -68,7 +68,8 @@ class DealAdminController extends Controller
 
         return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
             'deal' => $deal,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'group' => null,
         ));
     }
 
@@ -94,6 +95,7 @@ class DealAdminController extends Controller
 
         $editForm   = $this->createForm(new DealType(), $deal);
         $deleteForm = $this->createDeleteForm($id);
+        $group      = $deal->getGroup();
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The deal was saved!');
@@ -105,6 +107,7 @@ class DealAdminController extends Controller
             'deal'      => $deal,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'group' => $group,
         ));
     }
 
@@ -187,6 +190,18 @@ class DealAdminController extends Controller
             if ($form->isValid()) {
                 /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
                 $deal = $form->getData();
+
+                # since we're using jquery autocomplete, have to use hidden field for the group id
+
+                $groupId = $form['group']->getData();
+                if($groupId) {
+                    $group = $em->getRepository('GroupBundle:Group')->find($groupId);
+
+                    if($group) {
+                        $deal->setGroup($group);
+                    }
+                }
+
 
                 $ruleset    = $deal->getRuleset();
                 $rules      = $ruleset->getRules();

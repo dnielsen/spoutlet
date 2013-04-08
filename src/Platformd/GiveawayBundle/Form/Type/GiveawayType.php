@@ -53,6 +53,11 @@ class GiveawayType extends AbstractType
             'label' => 'Allow admin testing?',
             'help'  => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
         ));
+
+        $builder->add('group', 'hidden', array(
+            'property_path' => false,
+        ));
+
         $builder->add('displayRemainingKeysNumber', null, array('label' => 'Show key count'));
     }
 

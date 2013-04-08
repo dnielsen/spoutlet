@@ -2,6 +2,8 @@
 
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
+{% block page_background_image "default" %}
+
 {% block open_graph %}
     {% if deal.openGraphOverride and deal.openGraphOverride.thumbnail and deal.openGraphOverride.thumbnail.filename %}
         {% set openGraphImage = deal.openGraphOverride.thumbnail %}
@@ -37,6 +39,8 @@
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
 
+{% set joinGroup = deal.group is not null %}
+
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
     <div class="xnotices">
@@ -55,6 +59,15 @@
                                 {%- endif -%}
                             </p>
                             <p>{{ 'deal_redeem_success' | trans }}</p>
+                            {% if features.hasGroups %}
+                                <p>
+                                    {% if deal.group is not null %}
+                                        {% if groupManager.isMember(user, deal.group) %}
+                                            {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -105,13 +118,22 @@
                                 {% elseif not hasKeys %}
                                     <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
                                 {% elseif is_granted('ROLE_USER') %}
-                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">
+                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug, "joinGroup" : joinGroup }) }}">
                                         {% if deal.claimCodeButton %}
                                             <img src="{{ media_path(deal.claimCodeButton) }}" />
                                         {% else %}
                                             {{ "CLAIM CODE NOW" }}
                                         {% endif %}
                                     </a>
+                                    {% if features.hasGroups %}
+                                        {% if deal.group is not null %}
+                                            {% if not groupManager.isMember(user, deal.group) %}
+                                            <p>
+                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': deal.group.slug}), '%group%': deal.group.name}) | raw }}
+                                            </p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
                             </div>
                             <div id="deal-instructions">
@@ -194,6 +216,12 @@
             });
 
             $('.deals-timeleft').fadeIn();
+
+            $('#join-group').change(function () {
+                var join = $(this).is(':checked') ? '/1' : '/0';
+                var url  = '{{ path('deal_redeem', { "slug" : deal.slug }) }}' + join;
+                $('#deal-redeem-link').attr('href', url);
+            });
         });
     </script>
 

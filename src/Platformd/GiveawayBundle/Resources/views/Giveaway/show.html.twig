@@ -24,6 +24,15 @@
             {# assignedKey.value #}
             {{ 'platformd.giveaway.assigned.key' | trans }}: {{ assignedKey.value }}
         </p>
+        {% if features.hasGroups %}
+        <p>
+            {% if giveaway.group is not null %}
+                {% if groupManager.isMember(user, giveaway.group) %}
+                    {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': giveaway.group.slug}), '%group%': giveaway.group.name}) | raw }}
+                {% endif %}
+            {% endif %}
+        </p>
+        {% endif %}
     {% endif %}
 {% endblock %}
 
@@ -50,6 +59,15 @@
                         <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
                             <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
                         </div>
+                        {% if features.hasGroups %}
+                            {% if giveaway.group is not null %}
+                                {% if not groupManager.isMember(user, giveaway.group) %}
+                                <p>
+                                    {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': giveaway.group.slug}), '%group%': giveaway.group.name}) | raw }}
+                                </p>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
 
                     {% if giveaway.allowMachineCodeSubmit %}

@@ -524,6 +524,17 @@ class GroupRepository extends EntityRepository
             ->execute();
     }
 
+
+    public function getAutoCompleteResultsByGroupName($groupName)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g.id as value, g.name as label')
+            ->where('g.name like :groupName')
+            ->setParameter('groupName', '%' . $groupName . '%')
+            ->getQuery()
+            ->execute();
+    }
+
     public function getMembershipCountByGroup($group)
     {
         return $this->createQueryBuilder('g')

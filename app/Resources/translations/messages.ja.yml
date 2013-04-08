@@ -560,6 +560,8 @@ deal_redeem_invalid_country: "Invalid country selection."
 deal_redeem_success: "You have successfully redeemed this deal.  Here is your deal code, please follow the redemption instructions."
 deal_redeem_code: Deal Code
 deal_show_expired: This deal has expired.
+deal_join_group: Join the <a href="%link%">%group%</a> to receive notifications about future offerings. You can leave this group at any time by visiting the <a href="%link%">%group%</a> page.
+deal_join_group_success: You are now a member of <a href="%link%">%group%</a>.
 
 featured_deals: Featured Deals
 expired_deals: Expired Deals

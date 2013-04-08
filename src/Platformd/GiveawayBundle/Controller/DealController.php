@@ -10,6 +10,10 @@ use Symfony\Component\Locale\Locale;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\GiveawayBundle\Entity\DealCode;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 
 class DealController extends Controller
 {
@@ -86,6 +90,7 @@ class DealController extends Controller
             'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
             'hasKeys' => $hasKeys > 0,
+            'groupManager' => $this->getGroupmanager(),
         );
     }
 
@@ -94,9 +99,8 @@ class DealController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @Template()
      */
-    public function redeemAction($slug, Request $request)
+    public function redeemAction($slug, Request $request, $joinGroup=true)
     {
-
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $em             = $this->getDoctrine()->getEntityManager();
@@ -171,6 +175,41 @@ class DealController extends Controller
         $code->assign($user, $clientIp, $locale);
         $code->setCountry($country); # in addition to assigning the deal code, we need to set the country (this is one of the differences between a Code and a DealCode)
 
+        # if user has elected to join the group associated with this deal, we add them to the list of members
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
+            if($deal->getGroup()) {
+                $groupManager = $this->getGroupManager();
+                $group = $deal->getGroup();
+
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
+                    // TODO This should probably be refactored to use the global activity table
+                    $joinAction = new GroupMembershipAction();
+                    $joinAction->setGroup($group);
+                    $joinAction->setUser($user);
+                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+                    $group->getMembers()->add($user);
+                    $group->getUserMembershipActions()->add($joinAction);
+
+                    // TODO Add a service layer for managing groups and dispatching such events
+                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('event_dispatcher');
+                    $event = new GroupEvent($group, $user);
+                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+                    $groupManager->saveGroup($group);
+
+                    if($group->getIsPublic()) {
+                        try {
+                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                        } catch (ApiException $e) {
+
+                        }
+                    }
+                }
+            }
+        }
+
         $em->flush();
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
@@ -190,5 +229,21 @@ class DealController extends Controller
     protected function getCommentManager()
     {
         return $this->container->get('fos_comment.manager.comment');
+    }
+
+    /**
+     * @return \Platformd\GroupBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\Api\ApiManager
+     */
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

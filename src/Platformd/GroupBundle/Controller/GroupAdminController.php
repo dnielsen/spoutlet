@@ -542,6 +542,29 @@ class GroupAdminController extends Controller
         return $factory->createResponse('Group_Discussion_Detailed'. $groupDiscussion->getId() .'.csv');
     }
 
+    public function groupAutoCompleteAction(Request $request)
+    {
+
+        $term = $request->get('term');
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $results = array();
+
+        if($term) {
+            $results = $this
+                ->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('GroupBundle:Group')
+                ->getAutoCompleteResultsByGroupName($term);
+        }
+
+        $response->setContent(json_encode($results));
+
+        return $response;
+    }
+
     private function getGroupVideoCount($group, $fromDate, $thruDate)
     {
         $repo = $this->getDoctrine()->getRepository('GroupBundle:GroupVideo');

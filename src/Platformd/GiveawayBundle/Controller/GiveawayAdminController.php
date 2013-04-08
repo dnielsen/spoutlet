@@ -54,6 +54,7 @@ class GiveawayAdminController extends Controller
         return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
             'form' => $form->createView(),
             'giveaway' => $giveaway,
+            'group' => null,
         ));
     }
 
@@ -188,8 +189,10 @@ class GiveawayAdminController extends Controller
             }
         }
 
+        $group = $giveaway->getGroup();
+
         return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
-            array('form' => $form->createView(), 'giveaway' => $giveaway));
+            array('form' => $form->createView(), 'giveaway' => $giveaway, 'group' => $group));
     }
 
     /**
@@ -457,6 +460,15 @@ class GiveawayAdminController extends Controller
 
         $giveaway->getRuleset()->setParentType('giveaway');
         $giveaway->getRuleset()->setDefaultAllow($defaultAllow);
+
+        $groupId = $giveawayForm['group']->getData();
+        if($groupId) {
+            $group = $this->getEntityManager()->getRepository('GroupBundle:Group')->find($groupId);
+
+            if($group) {
+                $giveaway->setGroup($group);
+            }
+        }
 
         $this
             ->get('platformd.events_manager')
