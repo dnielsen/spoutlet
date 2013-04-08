@@ -56,5 +56,8 @@ class GiveawayPool extends AbstractPool
         return $this->getIsActive() && $this->getGiveaway() && ($this->getGiveaway()->isActive() || $this->getGiveaway()->getTestOnly());
     }
 
-
+    public function getParentName()
+    {
+        return $this->getGiveaway()->getName();
+    }
 }
