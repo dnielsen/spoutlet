@@ -67,7 +67,8 @@ class DealRepository extends EntityRepository
     {
         $qb = $this->createSiteQueryBuilder($site);
         $this->addActiveQueryBuilder($qb);
-        $this->addOrderByQuery($qb);
+        $qb->andWhere('d.featured = 1');
+        $qb->orderBy('d.featuredAt', 'DESC');
 
         return $qb
             ->getQuery()
@@ -96,6 +97,7 @@ class DealRepository extends EntityRepository
         $qb = $this->createSiteQueryBuilder($site);
         $this->addActiveQueryBuilder($qb);
         $this->addOrderByQuery($qb);
+        $qb->andWhere('d.featured <> 1');
 
         return $qb->getQuery()
             ->execute()

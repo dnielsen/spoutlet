@@ -9,8 +9,9 @@ use Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
+use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -89,6 +90,26 @@ class Giveaway extends AbstractEvent
      * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", cascade={"persist"})
      */
     protected $group = null;
+
+    /**
+     * @var boolean $featured
+     * @ORM\Column(name="featured", type="boolean")
+     */
+    protected $featured = false;
+
+    /**
+     * @var \DateTime $featuredAt
+     *
+     * @ORM\Column(name="featured_at", type="datetime", nullable=true)
+     */
+    protected $featuredAt;
+
+    /**
+     * The large thumbnail for the giveaway (138px by 83px)
+     *
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    protected $thumbnail = null;
 
     public function __construct()
     {
@@ -408,5 +429,56 @@ class Giveaway extends AbstractEvent
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setFeatured($value)
+    {
+        $this->featured = $value;
+        if($value) {
+            $this->featuredAt = new DateTime('now');
+        }
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getFeaturedAt()
+    {
+        return $this->featuredAt;
+    }
+
+    /**
+     * @param DateTime $value
+     */
+    public function setFeaturedAt($value)
+    {
+        $this->featuredAt = $value;
+    }
+
+    /**
+     * @return Platformd\MediaBundle\Entity\Media
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * @param Platformd\MediaBundle\Entity\Media $value
+     */
+    public function setThumbnail($value)
+    {
+        $this->thumbnail = $value;
     }
 }

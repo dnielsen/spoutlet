@@ -226,6 +226,19 @@ class Deal implements LinkableInterface, CommentableInterface
      */
     protected $group = null;
 
+    /**
+     * @var boolean $featured
+     * @ORM\Column(name="featured", type="boolean")
+     */
+    protected $featured = false;
+
+    /**
+     * @var \DateTime $featuredAt
+     *
+     * @ORM\Column(name="featured_at", type="datetime", nullable=true)
+     */
+    protected $featuredAt;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
@@ -683,5 +696,40 @@ class Deal implements LinkableInterface, CommentableInterface
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setFeatured($value)
+    {
+        $this->featured = $value;
+        if($value) {
+            $this->featuredAt = new DateTime('now');
+        }
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getFeaturedAt()
+    {
+        return $this->featuredAt;
+    }
+
+    /**
+     * @param DateTime $value
+     */
+    public function setFeaturedAt($value)
+    {
+        $this->featuredAt = $value;
     }
 }

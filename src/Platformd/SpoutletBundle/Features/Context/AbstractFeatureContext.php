@@ -78,16 +78,16 @@ class AbstractFeatureContext extends MinkContext
             ->execute();
 
         $con
-            ->prepare("INSERT INTO `pd_site_features` (`id`,`site_id`,`has_video`,`has_steam_xfire_communities`,`has_sweepstakes`,`has_forums`,`has_arp`,`has_news`,`has_deals`,`has_games`,`has_games_nav_drop_down`,`has_messages`,`has_groups`,`has_wallpapers`,`has_microsoft`,`has_photos`,`has_contests`,`has_comments`) VALUES
-            (1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1),
-            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1),
-            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0),
-            (4,4,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1),
-            (5,5,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1),
-            (6,6,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,1),
-            (7,7,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0),
-            (8,8,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0),
-            (9,9,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0)")
+            ->prepare("INSERT INTO `pd_site_features` (`id`,`site_id`,`has_video`,`has_steam_xfire_communities`,`has_sweepstakes`,`has_forums`,`has_arp`,`has_news`,`has_deals`,`has_games`,`has_games_nav_drop_down`,`has_messages`,`has_groups`,`has_wallpapers`,`has_microsoft`,`has_photos`,`has_contests`,`has_comments`,`has_giveaways`,`has_events`) VALUES
+            (1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0),
+            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1),
+            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0),
+            (4,4,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0),
+            (5,5,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0),
+            (6,6,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,1,0,0),
+            (7,7,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,0),
+            (8,8,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,0),
+            (9,9,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,0)")
             ->execute();
 
         $con

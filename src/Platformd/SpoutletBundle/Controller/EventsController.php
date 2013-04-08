@@ -18,15 +18,11 @@ class EventsController extends Controller
         $past_events    = $this->getAbstractEventsRepo()
             ->getPastEventsAndSweepstakes($site, 50);
 
-        $allGiveaways = $this->getGiveawayRepo()
-            ->findActives($site)
-        ;
 
         return $this->render('SpoutletBundle:Events:index.html.twig',
             array(
                 'current_events' => $current_events,
                 'past_events'    => $past_events,
-                'giveaways'      => $allGiveaways,
             ));
     }
 

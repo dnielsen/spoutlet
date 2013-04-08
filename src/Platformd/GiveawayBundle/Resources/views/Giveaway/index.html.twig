@@ -3,32 +3,117 @@
 {% block title 'platformd.layout.main_menu.giveaways' | trans %}
 
 {% block content %}
+{% set defaultThumb = '/bundles/spoutlet/images/alienwarelogothumb-140x85.png' %}
 <div class="std_1col">
-    <div class="widget-100">
-        <div class="widget-header">
-            <div class="widget-title">
-                {{ 'platformd.giveaway.giveaways_listings.giveaways' | trans }}
+    <div id="giveaways-header" style="background:url('placeholder.png') top left no-repeat;width:950px;height:120px;">
+
+    </div>
+</div>
+<div class="std_2col">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+
+        <div class="widget-33" style="margin: 10px 0 0 0;">
+            <div class="widget-header">
+                <div class="widget-title">{{ 'platformd.giveaway.latest_comments' | trans }}</div>
+            </div>
+            <div class="widget-content">
+
+                {% for comment in comments %}
+                <div class="widget-item">
+                    <div class="picture">
+                        <a href="{{ cevo_account_link(comment.author.username) }}">
+                            <img src="{{ asset(get_avatar_url(comment.author)) }}">
+                        </a>
+                    </div>
+                    <div class="title">
+                        <a href="{{ comment.thread.permalink }}">{{ comment.body }}</a></div>
+                    <div class="about widget-item-subtext"><span class="who">{{ comment.author.username }}</span><span class="when" title="{{ comment.createdAt | date }}Z"></span></div>
+                    <div class="clear"></div>
+                </div>
+                {% endfor %}
+
             </div>
         </div>
+    </div>
+    <div class="left">
+        <div class="widget-66">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'platformd.giveaway.featured_giveaways' | trans }}
+                </div>
+            </div>
 
-        <div class="widget-content">
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
-                    </tr>
-                </thead>
-            {% for giveaway in giveaways %}
-                <tr>
-                    <td><a href="{{ path("giveaway_show", {"slug" : giveaway.slug}) }}">{{ giveaway.name }}</a></td>
-                </tr>
-            {% endfor %}
-            </table>
+            <div class="widget-content">
+                {% for giveaway in featured %}
+                    {% set thumb = giveaway.thumbnail ? media_path(giveaway.thumbnail) : defaultThumb %}
+                    <div class="deal-item">
+                        <a href="{{ giveaway | pd_link }}">
+                            <img src="{{ thumb }}" alt="{{ giveaway.name }}" />
+                        </a>
+                        <div><a class="deal-link" href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a></div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
+        <div class="widget-66" style="margin: 10px 0 0 0;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'platformd.giveaway.all_giveaways' | trans }}
+                </div>
+            </div>
 
-        <div class="widget-footer">
-            <a href="{{ path('events_current') }}">{{ 'platformd.events.event_listings.more_current_events' | trans }}</a>
+            <div class="widget-content">
+                {% for giveaway in giveaways %}
+                    {% set thumb = giveaway.thumbnail ? media_path(giveaway.thumbnail) : defaultThumb %}
+                    <div class="deal-item">
+                        <a href="{{ giveaway | pd_link }}">
+                            <img src="{{ thumb }}" alt="{{ giveaway.name }}" />
+                        </a>
+                        <div><a class="deal-link" href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a></div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    </div><br />
+        <div class="widget-66" style="margin: 10px 0 0 0;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'platformd.giveaway.previous_giveaways' | trans }}
+                </div>
+            </div>
+
+            <div class="widget-content">
+                {% for giveaway in expired %}
+                    {% set thumb = giveaway.thumbnail ? media_path(giveaway.thumbnail) : defaultThumb %}
+                    <div class="deal-item">
+                        <a href="{{ giveaway | pd_link }}">
+                            <img src="{{ thumb }}" alt="{{ giveaway.name }}" />
+                        </a>
+                        <div><a class="deal-link" href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/deals.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+    {% endif %}
+    <script type="text/javascript">
+        $(function () {
+           $('.deal-link').truncate({ width: 225 });
+           $('.title a').truncate({ width: 240 });
+           $('.when').timeago();
+        });
+    </script>
 {% endblock %}

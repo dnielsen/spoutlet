@@ -101,6 +101,7 @@ class GroupRepository extends EntityRepository
             ->where('g.category = :category')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
+            ->andWhere('g.featured <> 1')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
             ->orderBy('memberCount', 'DESC')

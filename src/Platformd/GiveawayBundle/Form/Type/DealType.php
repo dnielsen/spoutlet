@@ -117,6 +117,10 @@ class DealType extends AbstractType
                 'property_path' => false,
             ));
 
+            $builder->add('featured', null, array(
+                'label' => 'Featured'
+            ));
+
             $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
     }
 

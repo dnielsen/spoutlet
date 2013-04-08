@@ -23,6 +23,7 @@ class GiveawayRepository extends AbstractEventRepository
 
         return $this
             ->createActiveQueryBuilder($site)
+            ->andWhere('g.featured != 1')
             ->orderBy('g.created', 'DESC')
             ->getQuery()
             ->getResult();
@@ -85,6 +86,22 @@ class GiveawayRepository extends AbstractEventRepository
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * Returns top 4 (by default) featured giveaways
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
+     */
+    public function findActiveFeaturedForSite($site, $limit=4)
+    {
+        return $this->createBaseQueryBuilder($site)
+            ->andWhere('g.featured = 1')
+            ->andWhere('g.status != :flag')
+            ->orderBy('g.featuredAt', 'DESC')
+            ->setMaxResults($limit)
+            ->setParameter('flag', 'disabled')
+            ->getQuery()
+            ->execute();
     }
 
     /**

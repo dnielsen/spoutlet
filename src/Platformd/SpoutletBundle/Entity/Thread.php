@@ -110,4 +110,14 @@ class Thread
     {
         return $this->comments;
     }
+
+    public function setSite($value)
+    {
+        $this->site = $value;
+    }
+
+    public function getSite()
+    {
+        return $this->site;
+    }
 }

@@ -312,6 +312,10 @@ platformd:
             key: Key
             assigned_at: Assigned
             view_giveaway: View Giveaway
+        featured_giveaways: Alienware Arena Featured Giveaways
+        all_giveaways: All Giveaways
+        previous_giveaways: Previous Giveaways
+        latest_comments: Latest Comments
     giveaway_pool:
         pool: Giveaway pool
         admin:

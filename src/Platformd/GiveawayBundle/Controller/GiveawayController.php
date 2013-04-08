@@ -19,10 +19,26 @@ class GiveawayController extends Controller
 
     public function indexAction()
     {
+        $active    = array();
+        $expired   = array();
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
+        $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
+        $comments  = $this->getCommentRepository()->findCommentsForGiveaways();
+
+        foreach ($giveaways as $giveaway) {
+            $keyRepo = $this->getKeyRepository();
+            if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getGiveawayPools()) == 0) {
+                array_push($expired, $giveaway);
+            } else {
+                array_push($active, $giveaway);
+            }
+        }
 
         return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
-            'giveaways' => $giveaways
+            'giveaways' => $active,
+            'featured'  => $featured,
+            'expired'   => $expired,
+            'comments'  => $comments,
         ));
     }
 
@@ -315,5 +331,16 @@ class GiveawayController extends Controller
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Repository\CommentRepository
+     */
+    protected function getCommentRepository()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Comment');
     }
 }

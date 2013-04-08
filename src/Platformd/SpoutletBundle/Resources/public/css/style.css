@@ -300,8 +300,6 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .std_tbl .subheader td {text-align: center; font-weight: bold; color: white; font-size: 14px;}
 
 
-
-
 /* New Blue Buttons */
 .blueButton { background:url(/bundles/spoutlet/images/btnBlue-right.png) top right no-repeat; }
 .blueButton a { display:block; background:url(/bundles/spoutlet/images/btnBlue-left.png) top left no-repeat; height:25px; padding-top:5px;  color:#ffffff; font-weight: bold; margin-right: 3px; padding-left: 3px; }
@@ -353,6 +351,17 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-100 td { color: #c6c6c6; font-size: 12px; padding: 2px 0; }
 
 .widget-100.no-header { background-image: url('../images/widget-100-bg-no-header.png'); }
+
+.picture { float: left; width: 26px; height: 26px; padding-right: 6px; border: none; }
+.picture a { border: none; }
+.picture a img { width: 26px; height: 26px; }
+
+.title { float: left; width: 240px; height: 12px; font-size: 12px; font-weight: bold; }
+.widget-item-subtext { font-size: 11px; color: #b3b3b3; }
+.about { float: left; width: 240px; height: 15px; margin: 2px 0 0 0; }
+.about .who { display: block; float: left; font-size: 11px; font-weight: normal; }
+.about .when { display: block; float: right; font-size: 11px; font-weight: normal; }
+
 
 /** Rotator **/
 #rotator { width:634px; }

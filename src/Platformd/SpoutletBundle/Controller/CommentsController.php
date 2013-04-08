@@ -347,6 +347,7 @@ class CommentsController extends Controller
         $thread = new Thread();
         $thread->setId($threadId);
         $thread->setPermalink($this->getUrlForObject($object).'#comments');
+        $thread->setSite($this->getCurrentSite());
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($thread);

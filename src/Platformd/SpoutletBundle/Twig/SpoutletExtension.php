@@ -397,6 +397,7 @@ class SpoutletExtension extends Twig_Extension
             case 'CONTESTS':                        return $this->GetContestsLink($locale);
             case 'CONTESTS_IMAGE':                   return $this->GetContestsLink($locale, 'image');
             case 'CONTESTS_GROUP':                   return $this->GetContestsLink($locale, 'group');
+            case 'GIVEAWAYS':                       return $this->GetGiveawaysLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -740,8 +741,42 @@ class SpoutletExtension extends Twig_Extension
         }
     }
 
+
+    private function GetGiveawaysLink($locale) {
+
+        $format         = '<a href="%s">'.$this->trans('platformd.layout.page_content.giveaways').'</a>';
+        $internalUrl    = $this->router->generate('giveaway_index');
+        $externalUrl    = 'http://www.alienwarearena.com/';
+        $cevoCountry    = $this->GetCevoCountryLookup($locale);
+
+        if ($cevoCountry) {
+            $externalUrl .= $cevoCountry.'/';
+        }
+
+        $externalUrl .= 'event/';
+
+        switch($locale) {
+
+            case 'ja':      return sprintf($format, $internalUrl);
+            case 'zh':      return sprintf($format, $internalUrl);
+
+            case 'es':      return sprintf($format, $externalUrl);
+            case 'en_SG':
+            case 'en_AU':
+            case 'en_GB':
+            case 'en_IN':
+            case 'en_US':
+            case 'en':      return sprintf($format, $internalUrl);
+
+                return sprintf($format, $externalUrl);
+
+            default:        return false;
+        }
+    }
+
     public function canReport()
     {
         return !$this->contentReportRepo->hasUserReportedRecently($this->currentUser);
+
     }
 }

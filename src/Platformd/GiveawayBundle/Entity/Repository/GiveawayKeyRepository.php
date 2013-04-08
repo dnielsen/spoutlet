@@ -77,6 +77,27 @@ class GiveawayKeyRepository extends AbstractCodeRepository
         return $count > 0;
     }
 
+    /**
+     * Returns the total number of keys for the given array of pools
+     */
+    public function getTotalUnassignedKeysForPools($pools)
+    {
+        $ids = array(0);
+        foreach ($pools as $pool) {
+            array_push($ids, $pool->getId());
+        }
+
+        $qb = $this->createQueryBuilder('k');
+
+        return (int)$qb->select('COUNT(k.id)')
+            ->leftJoin('k.pool', 'kp')
+            ->where('k.user IS NULL')
+            ->andWhere('kp.isActive = 1')
+            ->andWhere($qb->expr()->in('kp.id', $ids))
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     private function createForGiveawayQueryBuilder(Giveaway $giveaway)
     {
         return $this->createQueryBuilder('k')

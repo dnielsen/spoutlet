@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
+use Platformd\MediaBundle\Form\Type\MediaType;
 
 class GiveawayType extends AbstractType
 {
@@ -59,6 +60,14 @@ class GiveawayType extends AbstractType
         ));
 
         $builder->add('displayRemainingKeysNumber', null, array('label' => 'Show key count'));
+        $builder->add('featured', null, array(
+            'label' => 'Featured'
+        ));
+        $builder->add('thumbnail', new MediaType(), array(
+                'image_label' => 'Thumbnail',
+                'image_help'  => 'Recommended size: 138x83',
+                'with_remove_checkbox' => true
+        ));
     }
 
     public function getName()
