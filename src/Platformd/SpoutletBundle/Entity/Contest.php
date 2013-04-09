@@ -364,6 +364,15 @@ class Contest implements LinkableInterface
         return TzUtil::getUtc($this->getSubmissionStart(), new \DateTimeZone($this->getTimezone()));
     }
 
+    public function getSubmissionStartTz()
+    {
+        if (!$this->getSubmissionStart()) {
+            return null;
+        }
+
+        return TzUtil::getDtMergedWithTz($this->getSubmissionStart(), new \DateTimeZone($this->getTimezone()));
+    }
+
     /**
      * Set submissionEnd
      *
@@ -391,6 +400,15 @@ class Contest implements LinkableInterface
         }
 
         return TzUtil::getUtc($this->getSubmissionEnd(), new \DateTimeZone($this->getTimezone()));
+    }
+
+    public function getSubmissionEndTz()
+    {
+        if (!$this->getSubmissionEnd()) {
+            return null;
+        }
+
+        return TzUtil::getDtMergedWithTz($this->getSubmissionEnd(), new \DateTimeZone($this-getTimezone()));
     }
 
     /**
@@ -422,6 +440,14 @@ class Contest implements LinkableInterface
         return TzUtil::getUtc($this->getVotingStart(), new \DateTimeZone($this->getTimezone()));
     }
 
+    public function getVotingStartTz() {
+        if (!$this->getVotingStart()) {
+            return null;
+        }
+
+        return TzUtil::getDtMergedWithTz($this->getVotingStart(), new \DateTimeZone($this->getTimezone()));
+    }
+
     /**
      * Set votingEnd
      *
@@ -451,6 +477,15 @@ class Contest implements LinkableInterface
     public function getVotingEndUtc()
     {
         return $this->votingEndUtc;
+    }
+
+    public function getVotingEndTz()
+    {
+        if (!$this->getVotingEnd()) {
+            return null;
+        }
+
+        return TzUtil::getDtMergedWithTz($this->getVotingEnd(), new \DateTimeZone($this->getTimezone()));
     }
 
     /**

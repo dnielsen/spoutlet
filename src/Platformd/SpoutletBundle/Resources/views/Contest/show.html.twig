@@ -44,6 +44,9 @@
                         {% endif %}
                     </ol>
                     <div class="form-msg-error" id="contest_error" style="display:none;margin-left:0;width:auto;"></div>
+                    <p>now = {{ 'now' | date('Y-m-d H:i:s') }}</p>
+                    <p>start = {{ contest.submissionStartUtc | date('Y-m-d H:i:s') }}</p>
+                    <p>end = {{ contest.submissionEndUtc | date('Y-m-d H:i:s') }}</p>
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         {% if isEligible %}
                             {% if (contest.submissionEndUtc | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
