@@ -408,7 +408,7 @@ class Contest implements LinkableInterface
             return null;
         }
 
-        return TzUtil::getDtMergedWithTz($this->getSubmissionEnd(), new \DateTimeZone($this-getTimezone()));
+        return TzUtil::getDtMergedWithTz($this->getSubmissionEnd(), new \DateTimeZone($this->getTimezone()));
     }
 
     /**
