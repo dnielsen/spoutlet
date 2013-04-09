@@ -300,7 +300,7 @@ platformd:
     giveaway_pool:
         pool: ギブアウェイプール
         admin:
-            title: "%giveaway_name%" 用のギブアウェイ
+            title: %giveaway_name% 用のギブアウェイ
             create:  新しいプール作成
             edit_pool:  プールを編集
             save_giveaway_pool: ギブアウェイプールを保存

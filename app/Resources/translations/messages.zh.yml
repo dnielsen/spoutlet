@@ -295,7 +295,7 @@ platformd:
     giveaway_pool:
         pool: 邀请码库
         admin:
-            title: "%giveaway_name%" 的邀请码库
+            title: %giveaway_name% 的邀请码库
             create: 创建新的邀请码库
             edit_pool: 编辑邀请码库
             save_giveaway_pool: 保存邀请码库
