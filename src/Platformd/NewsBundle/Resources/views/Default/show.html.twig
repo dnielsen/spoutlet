@@ -29,7 +29,7 @@
             </div>
 
             {% if features.hasComments %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : news.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             {% endif %}
         </div>
     </div>

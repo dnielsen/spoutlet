@@ -31,7 +31,12 @@
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
 
 <script type="text/javascript">
+
+    var ajaxRequestSent;
+
     $(function () {
+
+        loadPostsOnce();
 
         $('.comment-sorting select').change(function() {
             $('.thread').block({message: null});
@@ -81,24 +86,25 @@
         });
     });
 
-    var ajaxRequestSent;
-
     $(window).scroll(function() {
 
         if($(window).scrollTop() >= $(document).height() - $(window).height()) {
-
-            if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
-                return false;
-            }
-
-            if (ajaxRequestSent) {
-                return false; // don't make another request, let the current one complete, or
-                // ajax.abort(); // stop the current request, let it run again
-            }
-
-            ajaxRequestSent = loadMorePosts();
+            loadPostsOnce();
         }
     });
+
+    function loadPostsOnce() {
+        if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
+            return false;
+        }
+
+        if (ajaxRequestSent) {
+            return false; // don't make another request, let the current one complete, or
+            // ajax.abort(); // stop the current request, let it run again
+        }
+
+        ajaxRequestSent = loadMorePosts();
+    }
 
     function loadMorePosts()
     {

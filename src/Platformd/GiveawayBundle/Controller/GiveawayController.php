@@ -46,11 +46,14 @@ class GiveawayController extends Controller
 
         $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($giveaway);
+
         return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
             'giveaway'          => $giveaway,
             'redemptionSteps'   => $instruction,
             'available_keys'    => $availableKeys,
             'assignedKey'       => $assignedKey,
+            'permalink'         => $permalink,
         ));
     }
 

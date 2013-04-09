@@ -664,12 +664,15 @@ Alienware Arena Team
 
             $galleryMedia   = $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia')->findOneByImage($groupImage->getImage()->getId());
 
+            $permalink = $this->get('platformd.model.comment_manager')->checkThread($groupImage);
+
             return $this->render('GroupBundle:Group:showImage.html.twig', array(
                 'media'             => $groupImage,
                 'group'             => $group,
                 'otherMediaPages'   => $otherMediaPages,
                 'galleryMediaItem'  => $galleryMedia,
-                'groupManager' => $this->getGroupManager(),
+                'groupManager'      => $this->getGroupManager(),
+                'permalink'         => $permalink,
             ));
         }
 
@@ -1300,6 +1303,8 @@ Alienware Arena Team
             $isEntered = $contest->getVotingEnd() > new \DateTime('now');
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($group);
+
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'commentTotal'  => $commentTotal,
             'group'         => $group,
@@ -1310,6 +1315,7 @@ Alienware Arena Team
             'contest'       => $contest,
             'memberCount'   => $memberCount[0]['membershipCount'],
             'groupManager'  => $this->getGroupManager(),
+            'permalink'     => $permalink,
         ));
     }
 

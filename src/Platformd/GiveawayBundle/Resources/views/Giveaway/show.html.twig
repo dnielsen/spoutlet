@@ -100,7 +100,7 @@
             </div><!-- giveaway-info -->
 
                 {% if features.hasComments %}
-                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
+                    {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : giveaway.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
                 {% endif %}
 
         </div><!-- left -->

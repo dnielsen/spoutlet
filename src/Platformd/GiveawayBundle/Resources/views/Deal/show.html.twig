@@ -155,7 +155,7 @@
     {% if features.hasComments %}
         <div class="std_2col">
             <div class="left">
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : deal.getThreadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             </div>
             <div class="right">
             </div>

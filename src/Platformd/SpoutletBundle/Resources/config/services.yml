@@ -222,3 +222,17 @@ services:
         arguments:
             - 'SpoutletBundle:ContentReport'
 
+    platformd.repository.comment_thread:
+        class:           Platformd\SpoutletBundle\Entity\ThreadRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Thread'
+
+    platformd.model.comment_manager:
+        class: Platformd\SpoutletBundle\Model\CommentManager
+        arguments:
+            - "@platformd.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@doctrine.orm.entity_manager"
+

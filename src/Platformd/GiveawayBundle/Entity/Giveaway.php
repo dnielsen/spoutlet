@@ -31,6 +31,8 @@ class Giveaway extends AbstractEvent
 
     const REDEMPTION_LINE_PREFIX = '* ';
 
+    const COMMENT_PREFIX         = 'giveaway-';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -393,5 +395,17 @@ class Giveaway extends AbstractEvent
     public function setDisplayRemainingKeysNumber($displayRemainingKeysNumber)
     {
         $this->displayRemainingKeysNumber = $displayRemainingKeysNumber;
+    }
+
+    /**
+     * Used to return the commenting thread id that should be used for this deal
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A giveaway needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }

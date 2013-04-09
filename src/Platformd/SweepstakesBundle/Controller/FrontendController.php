@@ -40,10 +40,13 @@ class FrontendController extends Controller
             $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($sweepstakes);
+
         return array(
             'sweepstakes' => $sweepstakes,
             'assignedEntry' => $assignedEntry,
             'isEntered' => $isEntered,
+            'permalink' => $permalink,
         );
     }
 

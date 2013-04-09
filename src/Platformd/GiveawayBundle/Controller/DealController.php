@@ -79,6 +79,8 @@ class DealController extends Controller
 
         $instructions = $deal->getCleanedRedemptionInstructionsArray();
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($deal);
+
         return array(
             'deal' => $deal,
             'userAlreadyRedeemed' => $userAlreadyRedeemed,
@@ -86,6 +88,7 @@ class DealController extends Controller
             'dealCodeIsUrl' => $dealCodeIsUrl,
             'redemptionSteps' => $instructions,
             'hasKeys' => $hasKeys > 0,
+            'permalink' => $permalink,
         );
     }
 
