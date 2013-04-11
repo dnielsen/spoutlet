@@ -17,7 +17,8 @@ use
 
 use
     Platformd\EventBundle\Entity\GlobalEvent,
-    Platformd\MediaBundle\Entity\Media
+    Platformd\MediaBundle\Entity\Media,
+    Platformd\SpoutletBundle\Entity\Event
 ;
 
 class MigrateEventsCommand extends ContainerAwareCommand
@@ -41,6 +42,7 @@ EOT
         $em             = $container->get('doctrine')->getEntityManager();
         $userManager    = $container->get('platformd_user.manager');
         $eventUser      = $userManager->loadUserByName('jluong1');
+        $eventRepo      = $container->get('platformd_event.repository.global_event');
 
         $output->write('Getting old events...');
 
@@ -54,10 +56,18 @@ EOT
             exit;
         }
 
+        $newEvents = $eventRepo->findAll();
+
+        $newSlugs = array();
+
+        foreach ($newEvents as $newEvent) {
+            $newSlugs[] = $newEvent->getSlug();
+        }
+
         $eventsArr = array();
 
         foreach ($events as $event) {
-            if ($event instanceof Event and !$event->getProcessed()) {
+            if ($event instanceof Event and !in_array($event->getSlug(), $newSlugs)) {
                 $eventsArr[] = $event;
             }
         }
@@ -71,8 +81,6 @@ EOT
         $output->writeLn('Migrating '.$eventCount.' events...');
 
         foreach ($eventsArr as $event) {
-
-            // TODO - banner images, general image
 
             $globalEvent = new GlobalEvent();
             $globalEvent->setName($event->getName());
