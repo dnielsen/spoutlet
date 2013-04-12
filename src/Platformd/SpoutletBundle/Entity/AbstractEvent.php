@@ -34,7 +34,6 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
  *      "event"     = "Platformd\SpoutletBundle\Entity\Event",
- *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  *

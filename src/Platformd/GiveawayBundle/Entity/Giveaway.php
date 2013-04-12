@@ -12,7 +12,9 @@ use Platformd\UserBundle\Entity\User,
     Platformd\SpoutletBundle\Link\LinkableInterface
 ;
 
-use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Mapping\Annotation as Gedmo,
+    Gedmo\Sluggable\Util\Urlizer
+;
 
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity

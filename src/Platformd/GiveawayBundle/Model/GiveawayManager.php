@@ -12,6 +12,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Platformd\SpoutletBundle\Model\EmailManager;
 use Platformd\SpoutletBundle\Entity\Site;
+use Gaufrette\Filesystem;
 
 /**
  * Service class for dealing with the giveaway system
@@ -33,7 +34,9 @@ class GiveawayManager
 
     private $emailManager;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName)
+    private $filesystem;
+
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, Filesystem $filesystem)
     {
         $this->em = $em;
         $this->translator = $translator;
@@ -41,6 +44,7 @@ class GiveawayManager
         $this->emailManager = $emailManager;
         $this->fromAddress = $fromAddress;
         $this->fromName = $fromName;
+        $this->filesystem = $filesystem;
     }
 
     /**
@@ -345,5 +349,90 @@ class GiveawayManager
 
         // mark the notification email as sent
         $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
+    }
+
+    public function save(Giveaway $giveaway)
+    {
+        $threadRepo     = $this->em->getRepository('SpoutletBundle:Thread');
+        $commentRepo    = $this->em->getRepository('SpoutletBundle:Comment');
+
+        $unit = $this->em->getUnitOfWork();
+        $unit->computeChangeSets();
+        $changeset = $unit->getEntityChangeSet($giveaway);
+
+        if (array_key_exists('slug', $changeset) && $changeset['slug'][0] != $changeset['slug'][1]) {
+
+            $newThread = new Thread();
+            $thread = $threadRepo->find($changeset['slug'][0]);
+
+            if ($thread) {
+                $newThread->setIsCommentable($thread->isCommentable());
+                $newThread->setLastCommentAt($thread->getLastCommentAt());
+                $newThread->setCommentCount($thread->getCommentCount());
+
+                $permalink = str_replace($changeset['slug'][0], $changeset['slug'][1], $thread->getPermalink());
+
+                $newThread->setPermalink($permalink);
+                $newThread->setId($changeset['slug'][1]);
+                $this->em->persist($newThread);
+
+                $comments = $commentRepo->findByThread($changeset['slug'][0]);
+
+                if ($comments) {
+                    foreach ($comments as $comment) {
+                        $comment->setThread($newThread);
+                        $this->em->persist($comment);
+                    }
+                }
+
+                $this->em->flush();
+                $this->em->remove($thread);
+                $this->em->flush();
+            }
+        }
+
+        // Todo : handle upload to S3
+        $this->updateBannerImage($giveaway);
+        $this->updateGeneralImage($giveaway);
+        $this->em->persist($giveaway);
+        $this->em->flush();
+    }
+
+    /**
+     * Update an giveaway's banner image
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     */
+    protected function updateBannerImage(Giveaway $giveaway)
+    {
+        $file = $giveaway->getBannerImageFile();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
+        $giveaway->setBannerImage($filename);
+    }
+
+    /**
+     * Update a giveaway's general image
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     */
+    protected function updateGeneralImage(Giveaway $giveaway)
+    {
+        $file = $giveaway->getGeneralImageFile();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_GENERAL .$filename, file_get_contents($file->getPathname()));
+        $giveaway->setGeneralImage($filename);
     }
 }

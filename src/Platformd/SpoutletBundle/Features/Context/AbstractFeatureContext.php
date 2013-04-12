@@ -65,16 +65,16 @@ class AbstractFeatureContext extends MinkContext
             ->execute();
 
         $con
-            ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `supportEmailAddress`) VALUES
-            ('Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local'),
-            ('Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local'),
-            ('China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local'),
-            ('North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local'),
-            ('Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local'),
-            ('Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local'),
-            ('India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local'),
-            ('Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local'),
-            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local')")
+            ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `supportEmailAddress`, `theme`) VALUES
+            ('Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'default'),
+            ('Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local', 'default'),
+            ('China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local', 'default'),
+            ('North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local', 'default'),
+            ('Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local', 'default'),
+            ('Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local', 'default'),
+            ('India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local', 'default'),
+            ('Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local', 'default'),
+            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local', 'default')")
             ->execute();
 
         $con
