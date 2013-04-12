@@ -169,19 +169,6 @@ class GiveawayRepository extends EntityRepository
         return $items;
     }
 
-    public function getCurrentEventsOrderedByCreated($site, $limit = null)
-    {
-        $qb = $this->createActiveQueryBuilder($site);
-        $query = $this->addCurrentQuery($qb)
-            ->orderBy('g.created', 'DESC')
-            ->getQuery()
-        ;
-
-        $items = $this->addQueryLimit($query, $limit)->getResult();
-
-        return $items;
-    }
-
     public function getPastGiveaways($site, $limit = null)
     {
         $query = $this->createBaseQueryBuilder($site)
@@ -191,53 +178,6 @@ class GiveawayRepository extends EntityRepository
             ->getQuery();
 
         return $this->addQueryLimit($query, $limit)->getResult();
-    }
-
-    public function findPublished($site)
-    {
-        $items = $this->createBaseQueryBuilder($site)
-            ->orderBy('g.starts_at', 'DESC')
-            ->getQuery()
-            ->execute()
-        ;
-
-        return $items;
-    }
-
-    public function findOnePublishedBySlug($slug, $site)
-    {
-        $result = $this->createBaseQueryBuilder($site)
-            ->andWhere("g.slug = :slug")
-            ->setParameter('slug', $slug)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
-
-        return $result && count($result) > 0 ? $result[0] : null;
-    }
-
-
-    public function findOneBySlugWithoutPublished($slug, $site)
-    {
-        $qb = $this->createQueryBuilder('g')
-            ->leftJoin('g.sites', 's')
-            ->andWhere("g.slug = :slug")
-            ->setParameter('slug', $slug)
-            ->setMaxResults(1);
-
-        if (is_string($site)) {
-            $qb->andWhere('s.name = :site')
-                ->setParameter('site', $site);
-
-        } else {
-            $qb->andWhere('s = :site')
-                ->setParameter('site', $site);
-        }
-
-        $result = $qb->getQuery()
-                ->getResult();
-
-        return $result && count($result) > 0 ? $result[0] : null;
     }
 
     public function findAllWithoutLocaleOrderedByNewest()
