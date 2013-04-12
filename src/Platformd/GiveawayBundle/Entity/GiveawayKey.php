@@ -5,11 +5,10 @@ namespace Platformd\GiveawayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 /**
  * Platformd\GiveawayBundle\Entity\GiveawayKey
- * 
+ *
  * @ORM\Table(
  *      name="giveaway_key",
  *      indexes={

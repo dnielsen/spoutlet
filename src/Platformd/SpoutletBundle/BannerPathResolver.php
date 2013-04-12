@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle;
 
 use Platformd\SpoutletBundle\PathResolver;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
 * Path resolver for the event images
@@ -28,10 +29,10 @@ class BannerPathResolver extends PathResolver
     switch ($type) {
         // TODO - both of these prefixes are repeated in EventManager
         case 'general':
-            $path = AbstractEvent::PREFIX_PATH_GENERAL.$event->getGeneralImage();
+            $path = $media::PREFIX_PATH_GENERAL.$event->getGeneralImage();
             break;
         case 'banner':
-            $path = AbstractEvent::PREFIX_PATH_BANNER.$event->getBannerImage();
+            $path = $media::PREFIX_PATH_BANNER.$event->getBannerImage();
             break;
         default:
             throw new \InvalidArgumentException('Invalid type '.$type);
@@ -46,7 +47,7 @@ class BannerPathResolver extends PathResolver
   public function supports($media, array $options)
   {
 
-    return $media instanceof AbstractEvent;
+    return $media instanceof AbstractEvent || $media instanceof Giveaway;
   }
 
 }
