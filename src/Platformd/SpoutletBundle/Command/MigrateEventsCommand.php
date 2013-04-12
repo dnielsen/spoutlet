@@ -39,8 +39,8 @@ EOT
     {
         $container      = $this->getContainer();
         $em             = $container->get('doctrine')->getEntityManager();
-        $userManager    = $container->get('platformd_user.manager');
-        $eventUser      = $userManager->loadUserByName('jluong1');
+        $userManager    = $container->get('fos_user.user_manager');
+        $eventUser      = $userManager->findUserByUsername('admin');
         $eventRepo      = $container->get('platformd_event.repository.global_event');
         $siteRepo       = $em->getRepository('SpoutletBundle:Site');
 
@@ -53,7 +53,7 @@ EOT
             $password = $this->getContainer()->getParameter('database_password');
             $dbh = new \PDO($dsn, $user, $password);
 
-            $sql    = 'SELECT * FROM `alienware_production`.`event` e LEFT JOIN `alienware_production`.`pd_event_site` s ON `s`.`abstractevent_id` = e.`id` WHERE e.`discr`="event"';
+            $sql    = 'SELECT * FROM `alienwarearena`.`event` e LEFT JOIN `alienwarearena`.`pd_event_site` s ON `s`.`abstractevent_id` = e.`id` WHERE e.`discr`="event" AND s.`site_id` = 2';
             $events = $dbh->query($sql);
 
         } catch (PDOException $e) {
@@ -61,7 +61,7 @@ EOT
         }
 
 
-        if (count($events) < 1) {
+        if (!$events || count($events) < 1) {
             $output->writeLn('<comment>✔</comment>');
             $output->writeLn(' - No events found');
             $output->writeLn('');
@@ -97,20 +97,21 @@ EOT
             $globalEvent = new GlobalEvent();
             $globalEvent->setName($event['name']);
             $globalEvent->setSlug($event['slug']);
-            $globalEvent->setStartsAt($event['starts_at']);
-            $globalEvent->setEndsAt($event['ends_at']);
+            $globalEvent->setStartsAt(new \DateTime($event['starts_at']));
+            $globalEvent->setEndsAt(new \DateTime($event['ends_at']));
             $globalEvent->setPublished($event['published']);
-            $globalEvent->setHostedBy($event['hosted_by']);
-            $globalEvent->setCreatedAt($event['created']);
-            $globalEvent->setUpdatedAt($event['updated']);
+            $globalEvent->setCreatedAt(new \DateTime($event['created']));
+            $globalEvent->setUpdatedAt(new \DateTime($event['updated']));
             $globalEvent->setContent($event['content']);
             $globalEvent->setTimezone($event['timezone']);
             $globalEvent->setExternalUrl($event['external_url']);
             $globalEvent->setDisplayTimezone($event['display_timezone']);
-            $globalEvent->setLocation($event['location']);
-            $globalEvent->setAddress2($event['city'].', '.$event['country']);
+            $globalEvent->setAddress2('Japan');
             $globalEvent->setActive($event['ready']);
-            $globalEvent->setSites(array($siteRepo->find($event['site_id'])));
+            $globalEvent->getSites()->add($siteRepo->find($event['site_id']));
+
+            $globalEvent->setHostedBy('');
+            $globalEvent->setLocation('');
 
             $globalEvent->setApproved(true);
             $globalEvent->setOnline(false);
@@ -119,18 +120,20 @@ EOT
             $globalEvent->setAttendeeCount(0);
             $globalEvent->setUser($eventUser);
 
-            $banner = new Media();
-            $banner->setFilename('banner/'.$event['bannerImage']);
-            $banner->setCreatedAt(new DateTime());
-            $banner->setUpdatedAt(new DateTime());
-            $banner->setMimeType('image/jpeg');
-            $banner->setOwner($eventUser);
-            $banner->setLocale($event['locale'] ?: 'en');
+            if ($event['bannerImage']) {
+                $banner = new Media();
+                $banner->setFilename('banner/'.$event['bannerImage']);
+                $banner->setCreatedAt(new \DateTime());
+                $banner->setUpdatedAt(new \DateTime());
+                $banner->setMimeType('image/jpeg');
+                $banner->setOwner($eventUser);
+                $banner->setLocale($event['locale'] ?: 'en');
 
-            $em->persist($banner);
-            $em->flush();
+                $em->persist($banner);
+                $em->flush();
 
-            $globalEvent->setBanner($banner);
+                $globalEvent->setBannerImage($banner);
+            }
 
             $em->persist($globalEvent);
             $em->flush();
