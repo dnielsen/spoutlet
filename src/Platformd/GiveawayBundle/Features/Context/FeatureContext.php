@@ -51,8 +51,8 @@ class FeatureContext extends AbstractFeatureContext
             if (isset($data['type'])) {
                 $giveaway->setGiveawayType($data['type']);
             }
-
-            $giveaway->setSites(array($this->currentSite));
+            $giveaway->getSites()->add($this->currentSite);
+            //$giveaway->setSites(array($this->currentSite));
 
             $keys = isset($data['keys']) ? explode(',', $data['keys']) : array();
             if (count($keys) > 0) {

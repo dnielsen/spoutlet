@@ -5,7 +5,6 @@ namespace Platformd\GiveawayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GiveawayBundle\Entity\AbstractCode;
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 
 /**

@@ -107,6 +107,18 @@
                                 {% endif %}
                             {% endfor %}
 
+                            {% for feedGiveaway in feedGiveaways %}
+                                {% if feedItemCount < maxFeedItems %}
+                                    <li class="widget-item">
+                                        <a href="{{ feedGiveaway | pd_link }}" {{ feedGiveaway | pd_link_target }}>
+                                            {{ feedGiveaway.name }}
+                                        </a>
+                                    </li>
+
+                                    {% set feedItemCount = feedItemCount + 1 %}
+                                {% endif %}
+                            {% endfor %}
+
                             {% for feedNewsItem in feedNewsItems %}
                                 {% if feedItemCount < maxFeedItems %}
                                     <li class="widget-item">

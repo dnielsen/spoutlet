@@ -75,6 +75,12 @@ class GamePageController extends Controller
             ->findActivesForGame($gamePage->getGame(), $site)
         ;
 
+        $feedGiveaways = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findActivesForGame($gamePage->getGame(), $site)
+        ;
+
         $dealRepo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal');
@@ -87,7 +93,7 @@ class GamePageController extends Controller
             || $gamePage->getyoutubeIdTrailer1() != ''
             || $gamePage->getyoutubeIdTrailer1() != '';
 
-        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos;
+        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos || count($feedGiveaways) > 0;
 
         $hasFeatures = $gamePage->getKeyFeature1() != ''
             || $gamePage->getKeyFeature2() != ''
@@ -101,6 +107,7 @@ class GamePageController extends Controller
             'hasVideos' => $hasVideos,
             'hasFeedItems' => $hasFeedItems,
             'hasFeatures' => $hasFeatures,
+            'feedGiveaways' => $feedGiveaways,
         );
     }
 

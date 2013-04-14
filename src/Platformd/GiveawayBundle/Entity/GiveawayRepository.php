@@ -2,15 +2,18 @@
 
 namespace Platformd\GiveawayBundle\Entity;
 
-use Platformd\SpoutletBundle\Entity\AbstractEventRepository;
-
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityRepository;
+
+use DateTime;
+use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\GameBundle\Entity\Game;
 
 /**
  * Giveaway Repository
  */
-class GiveawayRepository extends AbstractEventRepository
+class GiveawayRepository extends EntityRepository
 {
     /**
      * Find actives giveaways
@@ -119,6 +122,7 @@ class GiveawayRepository extends AbstractEventRepository
 
         $qb->leftJoin('g.sites', 's');
         $qb->andWhere(is_string($site) ? 's.name = :site' : 's = :site');
+        $qb->andWhere('g.published = true');
         $qb->setParameter('site', $site);
 
         return $qb;
@@ -139,5 +143,75 @@ class GiveawayRepository extends AbstractEventRepository
         ;
 
         return $qb;
+    }
+
+    /**
+     * @param Game $game
+     * @param $siteKey
+     * @return \Platformd\GiveawayBundle\Entity\Giveaway[]
+     */
+    public function findActivesForGame(Game $game, $site)
+    {
+        $qb = $this->createActiveQueryBuilder($site);
+        $query = $this->addCurrentQuery($qb)
+            ->orderBy('g.created', 'DESC')
+            ->andWhere('g.game = :game')
+            ->setParameter('game', $game)
+            ->getQuery()
+        ;
+
+        return $query->getResult();
+    }
+
+    private function addCurrentQuery(QueryBuilder $qb)
+    {
+        $qb
+            ->andWhere('g.ends_at > :cut_off OR g.ends_at IS NULL')
+            ->setParameter('cut_off', new \DateTime())
+        ;
+
+        return $qb;
+    }
+
+    public function getCurrentGiveaways($site, $limit = null)
+    {
+        $qb = $this->createActiveQueryBuilder($site);
+        $query = $this->addCurrentQuery($qb)
+            ->orderBy('g.starts_at', 'DESC')
+            ->getQuery()
+        ;
+
+        $items = $this->addQueryLimit($query, $limit)->getResult();
+
+        return $items;
+    }
+
+    public function getPastGiveaways($site, $limit = null)
+    {
+        $query = $this->createBaseQueryBuilder($site)
+            ->andWhere('g.ends_at < :cut_off')
+            ->setParameter('cut_off', new \DateTime())
+            ->orderBy('g.ends_at', 'DESC')
+            ->getQuery();
+
+        return $this->addQueryLimit($query, $limit)->getResult();
+    }
+
+    public function findAllWithoutLocaleOrderedByNewest()
+    {
+        return $this->createQueryBuilder('g')
+            ->orderBy('g.created', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    private function addQueryLimit(Query $query, $limit)
+    {
+        if  (null === $limit) {
+            return $query;
+        }
+
+        return $query->setMaxResults($limit);
     }
 }

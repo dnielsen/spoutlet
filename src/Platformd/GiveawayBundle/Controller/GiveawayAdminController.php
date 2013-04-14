@@ -475,7 +475,7 @@ class GiveawayAdminController extends Controller
         }
 
         $this
-            ->get('platformd.events_manager')
+            ->get('pd_giveaway.giveaway_manager')
             ->save($giveaway);
 
         $this->setFlash('success', 'platformd.giveaway.admin.saved');

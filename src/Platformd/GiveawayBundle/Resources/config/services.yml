@@ -8,6 +8,7 @@ services:
             - "@platformd.model.email_manager"
             - "%sender_email_address%"
             - "%sender_email_name%"
+            - @event_filesystem
 
     platformd.model.deal_manager:
         class: Platformd\GiveawayBundle\Model\DealManager
