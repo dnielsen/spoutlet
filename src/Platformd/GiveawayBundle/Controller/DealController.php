@@ -3,6 +3,11 @@
 namespace Platformd\GiveawayBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Platformd\GiveawayBundle\ViewModel\deal_show_data;
+use Platformd\SpoutletBundle\Entity\ThreadRepository;
+use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\GiveawayBundle\ViewModel\deal_index_data;
+use Platformd\GiveawayBundle\ViewModel\deal_show_main_actions_data;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Platformd\SpoutletBundle\Controller\Controller;
@@ -14,30 +19,114 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\GiveawayBundle\ViewModel\deal_show_key_data;
 
 class DealController extends Controller
 {
+
+    public function _dealFlashMessageAction($dealId)
+    {
+        $currentSiteId = $this->getCurrentSiteCached()->getId();
+        $currentUser   = $this->getCurrentUser();
+        $deal          = $this->getDealRepo()->findOneByIdAndSiteId((int) $dealId, $currentSiteId);
+
+        if ($currentUser) {
+            $key      = $this->getDealCodeRepo()->getUserAssignedCodeForDeal($currentUser, $deal);
+            $keyValue = $key ? $key->getValue() : null;
+        } else {
+            $keyValue = null;
+        }
+
+        if (!$deal) {
+            die('No giveaway found');
+        }
+
+        $group        = $deal->getGroup();
+        $groupManager = $this->get('platformd.model.group_manager');
+
+        if ($keyValue) {
+
+            $data                     = new deal_show_key_data();
+            $data->deal_code_assigned = $keyValue;
+            $data->deal_code_is_url   = (bool) $key->getPool()->getKeysAreUrls();
+
+            if ($group) {
+                $data->deal_group_name = $group->getName();
+                $data->deal_group_slug = $group->getSlug();
+            }
+
+            $response = $this->render('GiveawayBundle:Deal:_showKey.html.twig', array(
+                'data' => $data
+            ));
+        } else {
+            $response = new Response();
+        }
+
+        $response->setSharedMaxAge(30);
+
+        return $response;
+    }
+
+
+    public function _dealShowActionsAction($dealId)
+    {
+        $dealId        = (int) $dealId;
+        $currentSiteId = $this->getCurrentSiteCached()->getId();
+        $deal          = $this->getDealRepo()->findOneByIdWithOpengraphAndMediaForSiteId($dealId, $this->getCurrentSiteId());
+
+        if (!$deal) {
+            return $this->generateErrorPage();
+        }
+
+        $currentUser       = $this->getCurrentUser();
+        $dealCodeRepo      = $this->getDealCodeRepo();
+        $dealManager       = $this->getDealManager();
+        $mediaPathResolver = $this->getMediaPathResolver();
+        $groupManager      = $this->get('platformd.model.group_manager');
+
+        $totalAvailableKeys = $dealCodeRepo->getTotalAvailableForDeal($deal);
+        $currentlyAssigned  = $currentUser ? $dealCodeRepo->getUserAssignedCodeForDeal($currentUser, $deal) : null;
+        $group              = $deal->getGroup();
+
+        $data = new deal_show_main_actions_data();
+
+        $data->deal_claim_code_button     = $deal->getClaimCodeButton() ? $mediaPathResolver->getPath($deal->getClaimCodeButton(), array()) : null;
+        $data->deal_group_name            = $group ? $group->getName() : null;
+        $data->deal_group_slug            = $group ? $group->getSlug() : null;
+        $data->deal_has_expired           = $deal->hasExpired();
+        $data->deal_has_keys              = $totalAvailableKeys ? $totalAvailableKeys > 0 : false;
+        $data->deal_redemption_steps      = $deal->getCleanedRedemptionInstructionsArray();
+        $data->deal_slug                  = $deal->getSlug();
+        $data->deal_user_already_redeemed = (bool) $currentlyAssigned;
+        $data->is_member_of_deal_group    = $group ? $groupManager->isMember($currentUser, $group) : false;
+
+        $response = $this->render('GiveawayBundle:Deal:_dealShowActions.html.twig', array(
+            'data' => $data
+        ));
+
+        $response->setSharedMaxAge(30);
+
+        return $response;
+    }
+
     /**
      * The main deals "list" page
      * @Template
      */
     public function indexAction()
     {
-        $site = $this->getCurrentSite();
+        $data = $this->getDealManager()->getAnonDealIndexData();
 
-        $featuredDeals = $this->getDealManager()->findFeaturedDeals($site);
-        $mainDeal = empty($featuredDeals) ? null : $featuredDeals[0];
-        $allDeals = $this->getDealManager()->findActiveDeals($site);
-        $expiredDeals = $this->getDealManager()->findExpiredDeals($site);
-        $comments = $this->getCommentRepository()->findCommentsForDeals();
+        if (!$data) {
+            return $this->generateErrorPage();
+        }
 
-        return array(
-            'mainDeal'          => $mainDeal,
-            'featuredDeals'     => $featuredDeals,
-            'allDeals'          => $allDeals,
-            'expiredDeals'      => $expiredDeals,
-            'comments'          => $comments,
-        );
+        $response = $this->render('GiveawayBundle:Deal:index.html.twig', array('data' => $data));
+
+        $response->setSharedMaxAge(30);
+        $response->setMaxAge(30);
+
+        return $response;
     }
 
     /**
@@ -46,50 +135,68 @@ class DealController extends Controller
      */
     public function showAction($slug, Request $request)
     {
-
-        $em                     = $this->getDoctrine()->getEntityManager();
-        $site                   = $this->getCurrentSite();
-        $deal                   = $em->getRepository('GiveawayBundle:Deal')->findOneBySlug($slug, $site);
-        $dealCodeRepo           = $em->getRepository('GiveawayBundle:DealCode');
-        $countries              = Locale::getDisplayCountries('en');
-
-        $user                   = $this->getUser();
-        $userAlreadyRedeemed    = false;
-        $dealCode               = '';
-        $dealCodeIsUrl          = false;
+        $deal = $this->getDealRepo()->findOneBySlugWithOpengraphAndMediaForSiteId($slug, $this->getCurrentSiteId());
 
         if (!$deal) {
-            throw $this->createNotFoundException('No deal found in this site for slug '.$slug);
+            return $this->generateErrorPage();
         }
 
-        $dealPools  = $deal->getDealPools();
+        $threadId         = $deal->getThreadId();
+        $thread           = $this->getCommentThreadRepo()->find($threadId);
+        $correctPermalink = $this->getLinkableManager()->link($deal).'#comments';
 
-        $loggedIn   = $this->get('security.context')->isGranted('ROLE_USER');
+        if (!$thread) {
+            $thread = new Thread();
+            $thread->setId($threadId);
+            $thread->setPermalink($correctPermalink);
 
-        $hasKeys = $dealCodeRepo->getTotalAvailableForDeal($deal);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($thread);
+            $em->flush();
+        }
 
-        if ($loggedIn) {
+        $mediaPathResolver = $this->getMediaPathResolver();
+        $openGraph         = $deal->getOpenGraphOverride();
+        $ogDescription     = $openGraph ? $openGraph->getDescription() ?: $deal->getDescription() : $deal->getDescription();
+        $ogDescription     = strlen($ogDescription) > 140 ? substr($ogDescription, 0, 139)."…" : $ogDescription;
+        $ogThumbnail       = $openGraph ? $openGraph->getThumbnail() ?: $deal->getThumbnailLarge() : $deal->getThumbnailLarge();
+        $ogThumbnail       = $ogThumbnail ? $mediaPathResolver->getPath($ogThumbnail, array()) : null;
 
-            $currentlyAssigned = $dealCodeRepo->getUserAssignedCodeForDeal($user, $deal);
+        $mediaGalleryMedias = $deal->getMediaGalleryMedias();
+        $medias             = array();
 
-            if ($currentlyAssigned) {
-                $userAlreadyRedeemed = true;
-                $dealCode = $currentlyAssigned->getValue();
-                $dealCodeIsUrl = $currentlyAssigned->getPool()->getKeysAreUrls();
+        if ($mediaGalleryMedias) {
+            foreach($mediaGalleryMedias as $media) {
+                $medias[] = $mediaPathResolver->getPath($media, array());
             }
         }
 
-        $instructions = $deal->getCleanedRedemptionInstructionsArray();
+        $data                                 = new deal_show_data();
 
-        return array(
-            'deal' => $deal,
-            'userAlreadyRedeemed' => $userAlreadyRedeemed,
-            'dealCode' => $dealCode,
-            'dealCodeIsUrl' => $dealCodeIsUrl,
-            'redemptionSteps' => $instructions,
-            'hasKeys' => $hasKeys > 0,
-            'groupManager' => $this->getGroupmanager(),
-        );
+        $data->deal_banner                    = $deal->getBanner() ? $mediaPathResolver->getPath($deal->getBanner(), array()) : null;
+        $data->deal_bottom_color              = $deal->getBottomColor();
+        $data->deal_comment_permalink         = $correctPermalink;
+        $data->deal_comment_thread_id         = $threadId;
+        $data->deal_description               = $deal->getDescription();
+        $data->deal_ends_at_utc               = $deal->getEndsAtUtc();
+        $data->deal_has_expired               = $deal->hasExpired();
+        $data->deal_has_keys                  = $this->getDealCodeRepo()->getTotalAvailableForDeal($deal) > 0;
+        $data->deal_id                        = $deal->getId();
+        $data->deal_legal_verbiage            = $deal->getLegalVerbiage();
+        $data->deal_media_gallery_media       = $medias;
+        $data->deal_name                      = $deal->getName();
+        $data->deal_slug                      = $deal->getSlug();
+        $data->deal_visit_website_button      = $deal->getVisitWebsiteButton() ? $mediaPathResolver->getPath($deal->getVisitWebsiteButton(), array()) : null;
+        $data->deal_website_url               = $deal->getWebsiteUrl();
+        $data->opengraph_override_description = $ogDescription;
+        $data->opengraph_override_thumbnail   = $ogThumbnail;
+
+        $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
+
+        $response->setSharedMaxAge(30);
+        $response->setMaxAge(30);
+
+        return $response;
     }
 
     /**
@@ -213,7 +320,7 @@ class DealController extends Controller
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
     }
 
-     /**
+    /**
      * @return \Platformd\SpoutletBundle\Model\DealManager
      */
     private function getDealManager()
@@ -254,5 +361,33 @@ class DealController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Comment');
+    }
+
+    protected function getDealCodeRepo()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:DealCode');
+    }
+
+    protected function getCommentThreadRepo() {
+        return $this->get('platformd.entity.repository.comment_thread');
+    }
+
+    protected function getLinkableManager() {
+        return $this->get('platformd.link.linkable_manager');
+    }
+
+    protected function getMediaPathResolver() {
+        return $this->get('platformd.media_path_resolver');
+    }
+
+    protected function getDealRepo()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Deal');
     }
 }

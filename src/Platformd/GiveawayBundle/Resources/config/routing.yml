@@ -6,7 +6,15 @@ _admin_giveaway_metrics:
     resource: "routing/metrics.yml"
     prefix:   /admin/metrics/giveaways
 
-giveaway_index:
+_giveaway_flash_message:
+    pattern: /esi/USER_SPECIFIC/giveawayFlashMessage/{giveawayId}
+    defaults: { _controller: GiveawayBundle:Giveaway:_giveawayFlashMessage }
+
+_giveaway_show_actions:
+    pattern: /esi/USER_SPECIFIC/giveawayShowMainActions/{giveawayId}
+    defaults: { _controller: GiveawayBundle:Giveaway:_giveawayShowActions }
+
+giveaway_index: 
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
 

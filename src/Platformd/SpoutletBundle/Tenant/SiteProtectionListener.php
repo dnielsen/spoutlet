@@ -51,6 +51,7 @@ class SiteProtectionListener
         '^/contest',
         '^/giveaways',
         '^/microsoft',
+        '^/esi'
     );
 
     static private $urlMap = array(

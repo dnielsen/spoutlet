@@ -11,6 +11,8 @@
 
     acl_database_name       = platformd_acl
 
+    allow_caching           = true
+
     mailer_transport        = smtp
     mailer_host             = localhost
     mailer_user             =

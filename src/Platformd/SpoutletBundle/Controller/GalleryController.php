@@ -923,11 +923,6 @@ class GalleryController extends Controller
         return $breadCrumb;
     }
 
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
-    }
-
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');

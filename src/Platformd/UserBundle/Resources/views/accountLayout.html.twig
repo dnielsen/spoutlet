@@ -23,13 +23,9 @@
 
             {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
 
-            {% if app.session.locale == 'en_SG' %}
+            <li>
                 {{ giveaway_link | raw }}
-            {% else %}
-                <li>
-                    {{ giveaway_link | raw }}
-                </li>
-            {% endif %}
+            </li>
 
             {% if features.hasDeals %}
                 <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>

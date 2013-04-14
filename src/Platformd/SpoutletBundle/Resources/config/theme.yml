@@ -3,6 +3,6 @@ services:
         class: Platformd\SpoutletBundle\Theme\SiteThemeDetection
         arguments:
             - "@liip_theme.active_theme"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         tags:
             - { name: kernel.event_listener, event: "kernel.request", method: "onKernelRequest" }

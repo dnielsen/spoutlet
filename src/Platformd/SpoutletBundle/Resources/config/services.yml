@@ -82,7 +82,7 @@ services:
             - "@media_exposer"
             - "@router"
             - "@security.context"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
             - "@translator"
             - "@fos_user.user_manager"
             - "@platformd.repository.content_reporting"
@@ -96,19 +96,43 @@ services:
             - { name: form.type_extension, alias: field }
 
 
+    platformd.entity.repository.comment_thread:
+        class: Platformd\SpoutletBundle\Entity\ThreadRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'SpoutletBundle:Thread'
+
+    platformd.repository.site:
+        class: Platformd\SpoutletBundle\Entity\SiteRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'SpoutletBundle:Site'
+
     platformd.listener.site_translation_listener:
         class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
         arguments:
-            - "@platformd.model.site_util"
+            - "@logger"
         tags:
+            - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentLocale }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
-        calls:
-            - [ setLogger, [ @logger] ]
 
-    platformd.model.site_util:
+    platformd.util.cache_util:
+        class: Platformd\SpoutletBundle\Util\CacheUtil
+        arguments:
+            - "@platformd.cache.memcached"
+            - "@logger"
+            - %allow_caching%
+        tags:
+            - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentSiteId }
+
+    platformd.util.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@platformd.repository.site"
+            - "@platformd.util.cache_util"
+            - "@event_dispatcher"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
 
@@ -162,6 +186,13 @@ services:
             - "@session"
         scope: request
 
+    platformd.cache.cache_failure_exception_listener:
+        class: Platformd\SpoutletBundle\EventListener\CacheFailureExceptionListener
+        arguments:
+            - "@templating"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
     platformd.age.insufficient_age_listener:
         class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
         arguments:
@@ -188,6 +219,8 @@ services:
 
     platformd.cache.memcached:
         class: Memcached
+        calls:
+            - [ addServer, [ "%memcached_server1_ip%", "%memcached_server1_port%" ] ]
 
     pagerfanta.view.spoutlet:
         class: Platformd\SpoutletBundle\Pagerfanta\View\SpoutletView

@@ -1,7 +1,7 @@
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 {{ 'platformd.layout.top_menu.logged_in_as' | trans({
-    '%username%': app.user.username,
-    '%route%': cevo_account_link(app.user.username)
+    '%username%': user,
+    '%route%': current_user_cevo_account_link()
 }) | raw }}
 	<li class="separator"><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>

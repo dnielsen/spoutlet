@@ -100,10 +100,6 @@ class GroupController extends Controller
             ->getRepository('GroupBundle:GroupApplication');
     }
 
-    private function getCurrentUser() {
-        return $this->get('security.context')->getToken()->getUser();
-    }
-
     private function sendApplicationAcceptedEmail($application) {
 
         $currentHost        = $this->getRequest()->getHost();
@@ -1404,13 +1400,13 @@ Alienware Arena Team
     public function membersAction($id) {
         $group = $this->getGroup($id);
         $currentUser = $this->getCurrentUser();
-        $canRemove = $group->isOwner($currentUser) && $currentUser != 'anon.';
+        $canRemove = $group->isOwner($currentUser) && $currentUser !== null;
 
         $repo = $this->getEntityManager()->getRepository('GroupBundle:Group');
 
         $members = $repo->getGroupMembers($id);
 
-        if($currentUser != 'anon.') {
+        if($currentUser !== null) {
             $canRemove = $currentUser->getAdminLevel() == 'ROLE_SUPER_ADMIN';
         }
 

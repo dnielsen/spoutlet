@@ -14,6 +14,9 @@ parameters:
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: true
 
+    # keep this (allow_caching) off as you can get inconsistent results in a dev/test environment.
+    allow_caching: false
+
 framework:
     test: ~
     session:

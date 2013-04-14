@@ -1,0 +1,48 @@
+{%  if data.giveaway_show_keys %}
+    <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : data.giveaway_available_keys }) }}</h3>
+{%  endif %}
+
+{% if data.giveaway_show_get_key_button %}
+    <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
+        <a href="{{ path('giveaway_get_key', { "slug" : data.giveaway_slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
+    </div>
+{% endif %}
+
+{% if features.hasGroups %}
+    {% if data.promotion_group_slug %}
+        {% if data.user_is_member_of_promotion_group %}
+        <p>
+            {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': data.promotion_group_slug}), '%group%': data.promotion_group_name }) | raw }}
+        </p>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{% if data.giveaway_allow_machine_code_submit %}
+    <div style="margin-bottom: 10px;">
+        {% if is_granted('ROLE_USER') %}
+            {% if data.can_user_apply_to_giveaway %}
+                <form action="{{ path('giveaway_submit_machine_code', {'slug': data.giveaway_slug}) }}" method="POST" class="machine-code-form">
+                    <div class="form-error">{{ 'no_machine_code_submitted' | trans }}</div>
+                    <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
+                    <input type="text" name="machine_code" id="machine_code_input" class="txt" />
+
+                    <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
+                </form>
+            {% else %}
+                {{ 'platformd.sweepstakes.entered.message' | trans }}
+            {% endif %}
+    {% endif %}
+    </div>
+{% endif %}
+
+<ol>
+    {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway_slug': data.giveaway_slug } %}
+    {% if (data.giveaway_redemption_steps is not empty)  %}
+        {% for redemptionStep in data.giveaway_redemption_steps %}
+        <li>
+            <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
+        </li>
+        {% endfor %}
+    {% endif %}
+</ol>

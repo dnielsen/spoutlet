@@ -1,3 +1,11 @@
+_deal_flash_message:
+    pattern: /esi/USER_SPECIFIC/dealFlashMessage/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealFlashMessage }
+
+_deal_show_actions:
+    pattern: /esi/USER_SPECIFIC/dealShowMainActions/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealShowActions }
+
 deal_list:
     pattern:  /
     defaults: { _controller: "GiveawayBundle:Deal:index" }

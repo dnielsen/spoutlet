@@ -30,7 +30,7 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/                     |             |
       | Profile                       | http://www.alienwarearena.com/latam/member/55/                  |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |             |
-      | My Giveaways                  | http://www.alienwarearena.com/latam/account/my-giveaway-keys/   |             |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                         | http://latam.alienwarearena.local/app_test.php/account/profile/giveaways             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                       |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                 |             |
       | Media >> My Gallery           | /app_test.php/account/profile/photos                            | http://latam.alienwarearena.local/app_test.php/account/profile/photos |
@@ -46,7 +46,7 @@ Feature: User Navigation
       | Profile                       | http://www.alienwarearena.com/member/55/                  |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                  |                                                                    |
       | My Events                     | http://www.alienwarearena.com/account/events/             |                                                                    |
-      | My Giveaways                  | http://www.alienwarearena.com/account/my-giveaway-keys/   |                                                                    |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                   | http://na.alienwarearena.local/app_test.php/account/profile/giveaways |
       | My Deals                      | /app_test.php/account/profile/deals                       | http://na.alienwarearena.local/app_test.php/account/profile/deals  |
       | My Groups                     | /app_test.php/account/profile/groups                      | http://na.alienwarearena.local/app_test.php/account/profile/groups |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                 |                                                                    |
@@ -63,7 +63,7 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/                     |                                                                    |
       | Profile                       | http://www.alienwarearena.com/europe/member/55/                 |                                                                    |
       | Messages                      | http://alienwarearena.com/account/inbox/                        |                                                                    |
-      | My Giveaways                  | http://www.alienwarearena.com/europe/account/my-giveaway-keys/  |                                                                    |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                         | http://eu.alienwarearena.local/app_test.php/account/profile/giveaways |
       | My Deals                      | /app_test.php/account/profile/deals                             | http://eu.alienwarearena.local/app_test.php/account/profile/deals  |
       | My Groups                     | /app_test.php/account/profile/groups                            | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                       |                                                                    |
@@ -80,7 +80,7 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/                       |             |
       | Profile                       | http://www.alienwarearena.com/in/member/55/                       |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                          |             |
-      | My Giveaways                  | http://www.alienwarearena.com/in/account/my-giveaway-keys/        |             |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                           | http://in.alienwarearena.local/app_test.php/account/profile/giveaways |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                         |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/                   |             |
       | Sign Out                      | /app_test.php/logout                                              | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fin.alienwarearena.local%2Fapp_test.php%2F |
@@ -95,8 +95,7 @@ Feature: User Navigation
       | Profile                       | http://www.alienwarearena.com/sg/member/55/                   |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                      |             |
       | My Events                     | http://www.alienwarearena.com/sg/account/events/              |             |
-      | Giveaways >> Giveaway Keys    | http://www.alienwarearena.com/sg/account/my-giveaway-keys/    |             |
-      | Giveaways >> System Tag Keys  | /app_test.php/account/profile/giveaways                       | http://mysg.alienwarearena.local/app_test.php/account/profile/giveaways |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                       | http://mysg.alienwarearena.local/app_test.php/account/profile/giveaways |
       | Tournaments >> Game IDs       | http://www.alienwarearena.com/account/ids/                    |             |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                     |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |             |
@@ -111,7 +110,7 @@ Feature: User Navigation
       | Change Pass                   | http://alienwarearena.com/account/password/                   |             |
       | Profile                       | http://www.alienwarearena.com/anz/member/55/                  |             |
       | Messages                      | http://alienwarearena.com/account/inbox/                      |             |
-      | My Giveaways                  | http://www.alienwarearena.com/anz/account/my-giveaway-keys/   |             |
+      | My Giveaways                  | /app_test.php/account/profile/giveaways                       | http://anz.alienwarearena.local/app_test.php/account/profile/giveaways |
       | Tournaments >> Match Client   | http://alienwarearena.com/account/client/                     |             |
       | Tournaments >> Match Lobby    | http://alienwarearena.com/external/match-lobby/               |             |
       | Sign Out                      | /app_test.php/logout                                          | http://demo.alienwarearena.local/app_test.php/cevo/api/stub/cmd/account/logout?return=http%3A%2F%2Fanz.alienwarearena.local%2Fapp_test.php%2F |

@@ -11,40 +11,140 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Platformd\SpoutletBundle\Model\EmailManager;
+use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 use Platformd\SpoutletBundle\Entity\Site;
 use Gaufrette\Filesystem;
+use Platformd\SpoutletBundle\Util\CacheUtil;
+use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository;
+use Platformd\GiveawayBundle\Entity\GiveawayRepository;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_data;
+use Platformd\GiveawayBundle\ViewModel\giveaway_index_data;
+use Doctrine\ORM\EntityManager;
+use Platformd\SpoutletBundle\Entity\ThreadRepository;
+use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\SpoutletBundle\Link\LinkableManager;
+use Platformd\SpoutletBundle\BannerPathResolver;
 
-/**
- * Service class for dealing with the giveaway system
- */
 class GiveawayManager
 {
     private $em;
-
-    private $router;
-
-    /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
-    private $translator;
-
-    private $fromAddress;
-
-    private $fromName;
-
     private $emailManager;
-
+    private $fromAddress;
+    private $fromName;
+    private $router;
+    private $translator;
+    private $cacheUtil;
+    private $giveawayRepo;
+    private $siteUtil;
+    private $keyCounterUtil;
+    private $giveawayKeyRepo;
+    private $threadRepo;
+    private $linkableManager;
+    private $bannerPathResolver;
     private $filesystem;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, Filesystem $filesystem)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, BannerPathResolver $bannerPathResolver, Filesystem $filesystem)
     {
-        $this->em = $em;
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->emailManager = $emailManager;
-        $this->fromAddress = $fromAddress;
-        $this->fromName = $fromName;
-        $this->filesystem = $filesystem;
+        $this->emailManager       = $emailManager;
+        $this->em                 = $em;
+        $this->fromAddress        = $fromAddress;
+        $this->fromName           = $fromName;
+        $this->router             = $router;
+        $this->translator         = $translator;
+        $this->cacheUtil          = $cacheUtil;
+        $this->giveawayRepo       = $giveawayRepo;
+        $this->siteUtil           = $siteUtil;
+        $this->keyCounterUtil     = $keyCounterUtil;
+        $this->giveawayKeyRepo    = $giveawayKeyRepo;
+        $this->em                 = $em;
+        $this->threadRepo         = $threadRepo;
+        $this->linkableManager    = $linkableManager;
+        $this->bannerPathResolver = $bannerPathResolver;
+        $this->filesystem         = $filesystem;
+    }
+
+    public function getAnonGiveawayIndexData() {
+
+        $giveawaysArr   = array();
+        $siteId         = $this->siteUtil->getCurrentSiteCached()->getId();
+        $giveaways      = $this->giveawayRepo->findActives($siteId);
+
+        foreach ($giveaways as $giveaway) {
+            $giveawaysArr[] = array(
+                'slug'  => $giveaway->getSlug(),
+                'name'  => $giveaway->getName(),
+            );
+        }
+
+        $data            = new giveaway_index_data();
+        $data->giveaways = $giveawaysArr;
+
+        return $data;
+    }
+
+    public function getAvailableKeysForGiveaway($giveaway) {
+
+        $keyCounterUtil = $this->keyCounterUtil;
+        $keyRepo        = $this->giveawayKeyRepo;
+        $activePool     = $giveaway->getActivePool();
+
+        if ($activePool) {
+            $availableKeys = $this->cacheUtil->getOrGen(array(
+
+                'key'                  => 'GIVEAWAY::AVAILABLE_KEY_COUNT::GIVEAWAY_ID='.(int) $giveaway->getId(),
+                'hashKey'              => false,
+                'cacheDurationSeconds' => 30,
+                'genFunction'          => function () use (&$keyCounterUtil, &$activePool, &$keyRepo) {
+                    return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($activePool), $keyRepo->getUnassignedForPool($activePool), $activePool->getLowerLimit(), $activePool->getUpperLimit());
+                }));
+
+            return $availableKeys ? (int) $availableKeys : 0;
+        }
+
+        return 0;
+    }
+
+    public function getAnonGiveawayShowData($slug) {
+
+        $giveaway = $this->giveawayRepo->findOneBySlugAndSiteId($slug, $this->siteUtil->getCurrentSiteCached()->getId());
+
+        if (!$giveaway) {
+            return null;
+        }
+
+        $threadId         = $giveaway->getThreadId();
+        $thread           = $this->threadRepo->find($threadId);
+        $correctPermalink = $this->linkableManager->link($giveaway).'#comments';
+
+        if (!$thread) {
+            $thread = new Thread();
+            $thread->setId($threadId);
+            $thread->setPermalink($correctPermalink);
+
+            $this->em->persist($thread);
+            $this->em->flush();
+        } else {
+
+            if ($thread->getPermalink() != $correctPermalink) {
+                $thread->setPermalink($correctPermalink);
+                $this->em->persist($thread);
+                $this->em->flush();
+            }
+        }
+
+        $data                                      = new giveaway_show_data();
+        $data->giveaway_name                       = $giveaway->getName();
+        $data->giveaway_content                    = $giveaway->getContent();
+        $data->giveaway_banner_image               = $giveaway->getBannerImage() ? $this->bannerPathResolver->getPath($giveaway, array()) : null;
+        $data->giveaway_redemption_steps           = $giveaway->getCleanedRedemptionInstructionsArray();
+        $data->giveaway_allow_machine_code_submit  = $giveaway->allowMachineCodeSubmit();
+        $data->giveaway_id                         = $giveaway->getId();
+
+        $data->giveaway_comment_thread_id          = $giveaway->getThreadId();
+        $data->giveaway_comment_permalink          = $thread->getPermalink();
+
+        return $data;
     }
 
     /**

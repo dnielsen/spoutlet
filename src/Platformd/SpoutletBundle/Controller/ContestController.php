@@ -401,9 +401,4 @@ class ContestController extends Controller
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:ContestEntry');
     }
-
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
-    }
 }

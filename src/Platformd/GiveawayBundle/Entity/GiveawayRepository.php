@@ -23,7 +23,6 @@ class GiveawayRepository extends EntityRepository
      */
     public function findActives($site)
     {
-
         return $this
             ->createActiveQueryBuilder($site)
             ->andWhere('g.featured != 1')
@@ -76,7 +75,47 @@ class GiveawayRepository extends EntityRepository
             return null;
         }
     }
+    # with eager fetching of pools
+    public function findOneBySlugAndSiteId($slug, $siteId) {
+        $qb = $this->createQueryBuilder('g');
 
+        $results = $qb->addSelect('p')
+            ->leftJoin('g.giveawayPools', 'p')
+            ->leftJoin('g.sites', 's')
+            ->where('s.id = :siteId')
+            ->andWhere('g.slug = :slug')
+            ->setParameter('siteId', (int) $siteId)
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getResult();
+
+        if (!$results) {
+            return null;
+        }
+
+        return $results[0];
+    }
+
+    # with eager fetching of pools
+    public function findOneByIdAndSiteId($id, $siteId) {
+        $qb = $this->createQueryBuilder('g');
+
+        $results = $qb->addSelect('p')
+            ->leftJoin('g.giveawayPools', 'p')
+            ->leftJoin('g.sites', 's')
+            ->where('s.id = :siteId')
+            ->andWhere('g.id = :giveawayId')
+            ->setParameter('siteId', (int) $siteId)
+            ->setParameter('giveawayId', (int) $id)
+            ->getQuery()
+            ->getResult();
+
+        if (!$results) {
+            return null;
+        }
+
+        return $results[0];
+    }
     /**
      * Returns ALL giveaways, from newest to oldest
      *
@@ -118,6 +157,14 @@ class GiveawayRepository extends EntityRepository
     {
         if ($qb === null) {
             $qb = $this->createQueryBuilder('g');
+        }
+
+        if (is_numeric($site)) {
+            $qb->andWhere('s.id = :site');
+        } elseif (is_string($site)) {
+            $qb->andWhere('s.name = :site');
+        } else {
+            $qb->andWhere('s = :site');
         }
 
         $qb->leftJoin('g.sites', 's');

@@ -8,6 +8,8 @@ use Platformd\SpoutletBundle\Util\HttpUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Our custom base controller
@@ -15,8 +17,95 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 class Controller extends BaseController
 {
 
+    protected $cache;
+
     protected function getCurrentSite() {
-        return $this->container->get('platformd.model.site_util')->getCurrentSite();
+        return $this->container->get('platformd.util.site_util')->getCurrentSite();
+    }
+
+    protected function getCurrentSiteCached() {
+        return $this->container->get('platformd.util.site_util')->getCurrentSiteCached();
+    }
+
+    protected function getCurrentSiteId() {
+        return $this->getCurrentSiteCached()->getId();
+    }
+
+    protected function getCurrentUser() {
+        $token = $this->container->get('security.context')->getToken();
+        $user  = $token === null ? null : $token->getUser();
+
+        if ($user === 'anon.') {
+            return null;
+        }
+
+        return $user;
+    }
+
+    protected function getCache() {
+
+        if ($this->cache) {
+            return $this->cache;
+        }
+
+        $this->cache = $this->container->get('platformd.util.cache_util');
+
+        return $this->cache;
+    }
+
+    protected function getTemplating() {
+        return $this->container->get('templating');
+    }
+
+    public function getOrGenResponse($params) {
+
+        $params['withMetaData'] = true;
+
+        $data = $this->getCache()->getOrGen($params);
+
+        # do no replace this isset with array_key_exists as we want to fail EVEN if cachedContent exists but is null
+        if ($data === null || !is_array($data) || !isset($data['cachedContent'])) {
+            return $this->render('SpoutletBundle::error.html.twig',
+                array(
+                    'title' => 'platformd.not_found.title',
+                    'body'  => 'platformd.not_found.body'));
+        }
+
+        return $this->generateCachedResponse($data);
+    }
+
+    public function genResponse($html) {
+        $data = array('generatedDateTime' => new \DateTime(),
+            'cachedContentMd5' => md5($html),
+            'cachedContent' => $html);
+
+        return $this->generateCachedResponse($data);
+    }
+
+    public function generateCachedResponse($data) {
+
+        $request  = $this->getRequest();
+        $response = new Response();
+
+        $response->setEtag($data['cachedContentMd5']);
+        $response->setLastModified($data['generatedDateTime']);
+        #$response->setPrivate(); # this should NEVER be changed to public... EVER for any reason... non-public stuff uses this function
+        $response->setSharedMaxAge(30);
+
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $response->setContent($data['cachedContent']);
+
+        return $response;
+    }
+
+    public function generateErrorPage($title = 'platformd.not_found.title', $body = 'platformd.not_found.body') {
+        return $this->render('SpoutletBundle::error.html.twig',
+            array(
+                'title' => $title,
+                'body'  => $body));
     }
 
     /**
@@ -62,14 +151,10 @@ class Controller extends BaseController
         return $this->container->get('session')->setFlash($key, $message);
     }
 
-    /**
-     * @return \Platformd\UserBundle\Entity\User
-     */
+    # this function getUser is only here because it exists in many files... we should no longer use this one and should instead use getCurrentUser()
     protected function getUser()
     {
-        return $this->container->get('security.context')
-            ->getToken()
-            ->getUser();
+        return $this->getCurrentUser();
     }
 
     /**

@@ -29,6 +29,7 @@ framework:
         auto_start:     true
         domain:         .%base_host%
         storage_id:     session.storage.pdo
+    esi: true
 
 cybernox_amazon_web_services:
     key:                        %s3.access_key%
@@ -472,10 +473,6 @@ liip_imagine:
                 crop: { start: [0, 0], size: [250, 250] }
 
 knp_time: ~
-
-spoutlet:
-    elasticache_servers:
-        %memcached_server1_ip%: %memcached_server1_port%
 
 exercise_html_purifier:
     default:

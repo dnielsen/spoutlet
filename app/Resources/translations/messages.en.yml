@@ -17,6 +17,10 @@ platformd:
         error_title: Error!
         success_title: Success!
 
+    cache:
+       currently_under_heavy_load_title: Please try again shortly...
+       currently_under_heavy_load_body: Our servers are currently experiencing a high volume of traffic and cannot process your request at this time. Please try again shortly. We apologize for any inconvenience.
+        
     layout:
         # title used by default (if not overridden)
         default_title: Alienware Arena - Gamers Wanted

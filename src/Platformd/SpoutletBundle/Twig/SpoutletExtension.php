@@ -56,13 +56,12 @@ class SpoutletExtension extends Twig_Extension
             return;
         }
 
+        $token                     = $this->securityContext->getToken();
+        $this->currentUser         = $token ? $token->getUser() : null;
         $this->request             = $event->getRequest();
         $this->session             = $this->request->getSession();
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
-
-        $token = $this->securityContext->getToken();
-        $this->currentUser = $token ? $token->getUser() : null;
     }
 
     public function getFilters()
@@ -81,17 +80,17 @@ class SpoutletExtension extends Twig_Extension
     public function getFunctions()
     {
         return array(
-            'can_user_apply_to_giveaway'   => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
-            'cevo_account_link'            => new Twig_Function_Method($this, 'cevoAccountLink'),
-            'change_link_domain'           => new Twig_Function_Method($this, 'changeLinkDomain'),
-            'ends_with'                    => new Twig_Function_Method($this, 'endsWith'),
-            'get_avatar_url'               => new Twig_Function_Method($this, 'getAvatarUrl'),
-            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
-            'is_admin_page'                => new Twig_Function_Method($this, 'isAdminPage'),
-            'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
-            'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
-            'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
-            'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
+            'cevo_account_link'              => new Twig_Function_Method($this, 'cevoAccountLink'),
+            'current_user_cevo_account_link' => new Twig_Function_Method($this, 'currentUserCevoAccountLink'),
+            'change_link_domain'             => new Twig_Function_Method($this, 'changeLinkDomain'),
+            'ends_with'                      => new Twig_Function_Method($this, 'endsWith'),
+            'get_avatar_url'                 => new Twig_Function_Method($this, 'getAvatarUrl'),
+            'has_user_applied_to_giveaway'   => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
+            'is_admin_page'                  => new Twig_Function_Method($this, 'isAdminPage'),
+            'media_path_nice'                => new Twig_Function_Method($this, 'mediaPathNice'),
+            'site_link'                      => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
+            'target_blank'                   => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
+            'can_user_report'                => new Twig_Function_Method($this, 'canReport'),
         );
     }
 
@@ -140,10 +139,29 @@ class SpoutletExtension extends Twig_Extension
         return sprintf('%s/media/%s', $cf, $media->getFilename());
     }
 
-    public function cevoAccountLink($username)
+    public function currentUserCevoAccountLink() {
+
+        if (!$this->currentUser || !$this->currentUser->hasRole('ROLE_USER')) {
+            return null;
+        }
+
+        return $this->cevoAccountLinkFromCevoUserId($this->currentUser->getCevoUserId());
+    }
+
+    public function cevoAccountLink($user)
     {
-        $user           = $this->userManager->loadUserByUsername($username);
-        $cevoUserId     = $user->getCevoUserId();
+        $isCurrentUser = $user instanceof User && $user->getId() == $this->currentUser->getId();
+
+        if ($isCurrentUser) {
+            return $this->currentUserCevoAccountLink();
+        }
+
+        $user = $user instanceof User ? $user : $this->userManager->loadUserByUsername($user);
+
+        return $this->cevoAccountLinkFromCevoUserId($user->getCevoUserId());
+    }
+
+    private function cevoAccountLinkFromCevoUserId($cevoUserId) {
         $locale         = $this->session->getLocale();
 
         switch ($locale) {
@@ -189,11 +207,9 @@ class SpoutletExtension extends Twig_Extension
         }
 
         $parsedUrl = parse_url($link);
-
-        $query = array_key_exists('query', $parsedUrl) != "" ? "?".$parsedUrl['query'] : '';
-        $anchor = array_key_exists('fragment', $parsedUrl) != "" ? "#".$parsedUrl['fragment'] : '';
-
-        $url = $parsedUrl['scheme'].'://'.$fullDomain.$parsedUrl['path'].$query.$anchor;
+        $query     = isset($parsedUrl['query']) ? '?'.$parsedUrl['query'] : '';
+        $anchor    = isset($parsedUrl['fragment']) ? '#'.$parsedUrl['fragment'] : '';
+        $url       = $parsedUrl['scheme'].'://'.$fullDomain.$parsedUrl['path'].$query.$anchor;
 
         return $url;
     }
@@ -321,19 +337,6 @@ class SpoutletExtension extends Twig_Extension
     public function translateSiteName($key)
     {
         return MultitenancyManager::getSiteName($key);
-    }
-
-    /**
-     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
-     * @return bool
-     */
-    public function canUserApplyToGiveaway(Giveaway $giveaway)
-    {
-        if (!$user = $this->currentUser) {
-            return false;
-        }
-
-        return $this->giveawayManager->canUserApplyToGiveaway($user, $giveaway);
     }
 
     public function hasUserAppliedToGiveaway(Giveaway $giveaway)
@@ -669,15 +672,6 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, $internalUrl);
             case 'zh':      return sprintf($format, $internalUrl);
             case 'en_SG':
-
-                return '<li class="more">
-                    <a class="blue" style="background: url(\'/bundles/spoutlet/images/nav-arrow-1.png\') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">Giveaways</a>
-                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                        <li><a href="http://www.alienwarearena.com/sg/account/my-giveaway-keys/">Giveaway Keys</a></li>
-                        <li><a href="'.$this->router->generate('accounts_giveaways').'">System Tag Keys</a></li>
-                    </ul>
-                </li>';
-
             case 'es':
             case 'en_AU':
             case 'en_GB':
@@ -685,7 +679,7 @@ class SpoutletExtension extends Twig_Extension
             case 'en_US':
             case 'en':
 
-                return sprintf($format, $externalUrl);
+                return sprintf($format, $internalUrl);
 
             default:        return false;
         }

@@ -8,6 +8,15 @@ services:
             - "@platformd.model.email_manager"
             - "%sender_email_address%"
             - "%sender_email_name%"
+            - "@platformd.util.cache_util"
+            - "@pd_giveaway.entity.repository.giveaway"
+            - "@platformd.util.site_util"
+            - "@pd_giveaway.util.key_counter_util"
+            - "@pd_giveaway.entity.repository.giveaway_key"
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.entity.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@platformd.event_banner_resolver"
             - @event_filesystem
 
     platformd.model.deal_manager:
@@ -15,4 +24,42 @@ services:
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@knp_media.util.media_util"
+            - "@platformd.util.cache_util"
+            - "@pd_giveaway.entity.repository.deal"
+            - "@platformd.util.site_util"
+            - "@pd_giveaway.entity.repository.deal_code"
+            - "@platformd.entity.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@platformd.media_path_resolver"
+            - "@fos_comment.manager.comment"
 
+    pd_giveaway.util.key_counter_util:
+        class: Platformd\GiveawayBundle\Util\KeyCounterUtil
+
+    pd_giveaway.entity.repository.giveaway:
+        class: Platformd\GiveawayBundle\Entity\GiveawayRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:Giveaway'
+
+    pd_giveaway.entity.repository.giveaway_key:
+        class: Platformd\GiveawayBundle\Entity\GiveawayKeyRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:GiveawayKey'
+
+    pd_giveaway.entity.repository.deal:
+        class: Platformd\GiveawayBundle\Entity\Repository\DealRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:Deal'
+
+    pd_giveaway.entity.repository.deal_code:
+        class: Platformd\GiveawayBundle\Entity\Repository\DealCodeRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:DealCode'

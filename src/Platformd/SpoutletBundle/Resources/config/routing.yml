@@ -1,3 +1,7 @@
+_main_user_strip:
+    pattern: /esi/USER_SPECIFIC/mainUserStrip
+    defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

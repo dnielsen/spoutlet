@@ -3,35 +3,38 @@
 {% block title 'deals' | trans %}
 
 {% block content %}
-{% set dealDeafultImage = '/bundles/spoutlet/images/alienwarelogothumb-140x85.png' %}
+{% set dealDefaultImage = '/bundles/spoutlet/images/alienwarelogothumb-140x85.png' %}
 
-    {% if mainDeal %}
-        {% include 'GiveawayBundle:Deal:_dealHeaderCountdown.html.twig' with { 'deal': mainDeal } %}
+    {% if data.main_deal %}
+        {% include 'GiveawayBundle:Deal:_dealHeaderCountdown.html.twig' with { 'deal': data.main_deal } %}
     {% endif %}
     <div class="std_2col">
         <div class="right">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
 
             <div class="widget-33" style="margin: 10px 0 0 0;">
-                <div class="widget-header">
-                    <div class="widget-title">{{ 'platformd.giveaway.latest_comments' | trans }}</div>
-                </div>
+                <div class="widget-header"><div class="widget-title">{{ 'platformd.giveaway.latest_comments' | trans }}</div></div>
                 <div class="widget-content">
-
-                    {% for comment in comments %}
-                    <div class="widget-item">
-                        <div class="picture">
-                            <a href="{{ cevo_account_link(comment.author.username) }}">
-                                <img src="{{ asset(get_avatar_url(comment.author)) }}">
-                            </a>
+                    <div class="deals-comments">
+                        {% for comment in data.comments %}
+                            {% set dealCommentImage = comment.deal_thumbnail ? comment.deal_thumbnail : dealDefaultImage %}
+                            <div class="dealListItem">
+                            <div>
+                                <img class="dealListItemThumb" src="{{ dealCommentImage }}" title="{{ comment.deal_name }}" alt="{{ comment.deal_name }}">
+                                <div class="commentListItemDetails">
+                                    <ul class="dealDetails">
+                                        <li class="dealTitle"><a class="movie_ellipsis" title="" href="{{ comment.deal_url }}">{{ comment.deal_name }}</a></li>
+                                        <li class="dealCommentAuthor">{{ 'by' | trans }} {{ comment.author }}</li>
+                                        <li class="dealCommentAt">{{ 'deal_comments_posted_on' | trans}} {{ 'platformd.comment.date_format' | trans(comment.created_at) }}</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div class="title">
-                            <a href="{{ comment.thread.permalink }}">{{ comment.body }}</a></div>
+                        <div class="title"><a href="{{ comment.thread.permalink }}">{{ comment.body }}</a></div>
                         <div class="about widget-item-subtext"><span class="who">{{ comment.author.username }}</span><span class="when" title="{{ comment.createdAt | date }}Z"></span></div>
                         <div class="clear"></div>
-                    </div>
                     {% endfor %}
-
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,21 +46,21 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    {% for deal in featuredDeals %}
-                    {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
+                    {% for deal in data.featured_deals %}
+                    {% set dealImage = deal.thumbnail ? deal.thumbnail : dealDefaultImage %}
 
                         <div class="deal-item">
-                            <a href="{{ deal | pd_link }}">
+                            <a href="{{ deal.url }}">
                                 <img src="{{ dealImage }}" alt="{{ deal.name }}" />
                             </a>
 
-                            <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
+                            <div><a class="deal-link" href="{{ deal.url }}">{{ deal.name }}</a></div>
 
                             {# todo - run this through the KnpTimeBundle #}
                             <div>
-                                {% if deal.endsAtUtc %}
+                                {% if deal.ends_at_utc %}
                                     <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                    <div>{{ time_diff(deal.endsAtUtc) }}</div>
+                                    <div>{{ time_diff(deal.ends_at_utc) }}</div>
                                 {% else %}
                                     <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
                                     <div>&nbsp;</div>
@@ -74,23 +77,23 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    {% if allDeals %}
+                    {% if data.all_deals %}
 
-                        {% for deal in allDeals %}
-                        {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
+                        {% for deal in data.all_deals %}
+                        {% set dealImage = deal.thumbnail ? deal.thumbnail : dealDefaultImage %}
 
                             <div class="deal-item">
-                                <a href="{{ deal | pd_link }}">
+                                <a href="{{ deal.url }}">
                                     <img src="{{ dealImage }}" alt="{{ deal.name }}" />
                                 </a>
 
-                                <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
+                                <div><a class="deal-link" href="{{ deal.url }}">{{ deal.name }}</a></div>
 
                                 {# todo - run this through the KnpTimeBundle #}
                                 <div>
-                                    {% if deal.endsAtUtc %}
+                                    {% if deal.ends_at_utc %}
                                         <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
-                                        <div>{{ time_diff(deal.endsAtUtc) }}</div>
+                                        <div>{{ time_diff(deal.ends_at_utc) }}</div>
                                     {% else %}
                                         <div  style="padding-top: 3px; font-weight: bold;">{{ 'deal_time_remaining' | trans }}</div>
                                         <div>&nbsp;</div>
@@ -109,20 +112,20 @@
                     </div>
                 </div>
                 <div class="widget-content">
-                    {% if expiredDeals %}
-                            {% for deal in expiredDeals %}
-                            {% set dealImage = deal.thumbnailLarge ? media_path(deal.thumbnailLarge) : dealDeafultImage %}
+                    {% if data.expired_deals %}
+                            {% for deal in data.expired_deals %}
+                            {% set dealImage = deal.thumbnail ? deal.thumbnail : dealDefaultImage %}
 
                             {# We need to improve this, but it does work #}
 
                             <div class="deal-item-expired">
                                 <div class="deal-item" style="background: url({{ dealImage }}); background-repeat: no-repeat; padding: 0px;">
-                                    <a href="{{ deal | pd_link }}">
+                                    <a href="{{ deal.url }}">
 
                                         <img src="/bundles/spoutlet/images/expired.png" alt="deal expired" />
                                     </a>
 
-                                    <div><a class="deal-link" href="{{ deal | pd_link }}">{{ deal.name }}</a></div>
+                                    <div><a class="deal-link" href="{{ deal.url }}">{{ deal.name }}</a></div>
                                 </div>
                             </div>
                             {% endfor %}

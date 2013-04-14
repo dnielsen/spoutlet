@@ -30,6 +30,43 @@ class GiveawayKeyRepository extends AbstractCodeRepository
             ;
     }
 
+    public function getUserAssignedCodeForGiveaway($user, Giveaway $giveaway)
+    {
+        if (!$user) {
+            return null;
+        }
+
+        return $this
+            ->createQueryBuilder('k')
+            ->leftJoin('k.pool', 'p')
+            ->andWhere('k.user = :user')
+            ->andWhere('p.giveaway = :giveaway')
+            ->setParameters(array(
+                'user'      => $user,
+                'giveaway'  => $giveaway,
+            ))
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    public function getKeyValueByKeyIdAndUserId($keyId, $userId) {
+
+        $result = $this->createQueryBuilder('key')
+            ->select('key.value')
+            ->leftJoin('key.user', 'user')
+            ->andWhere('key.id = :keyId')
+            ->andWhere('user.id = :userId')
+            ->setParameter('keyId', $keyId)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result[0];
+    }
+
     public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, $from, $to)
     {
         $qb  = $this->createForGiveawayQueryBuilder($giveaway);

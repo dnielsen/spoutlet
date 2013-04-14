@@ -78,9 +78,4 @@ class VoteController extends Controller
         $response->setContent(json_encode(array("success" => true, "messageForUser" => $votes)));
         return $response;
     }
-
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
-    }
 }

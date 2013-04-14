@@ -12,6 +12,7 @@ use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Mapping\Annotation as Gedmo;
 use DateTime;
+use Platformd\SpoutletBundle\Model\CommentableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
@@ -34,8 +35,7 @@ use Symfony\Component\HttpFoundation\File\File;
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-
-class Giveaway implements LinkableInterface
+class Giveaway implements LinkableInterface, CommentableInterface
 {
     const TYPE_KEY_GIVEAWAY = 'key_giveaway'; // the traditional key giveaway type
     const TYPE_MACHINE_CODE_SUBMIT = 'machine_code_submit'; // the machine-submit giveaway type
@@ -230,6 +230,8 @@ class Giveaway implements LinkableInterface
      *
      */
     protected $testOnly = false;
+
+    const COMMENT_PREFIX = 'giveaway-';
 
     /**
      * One to Many with GiveawayPool
@@ -772,6 +774,15 @@ class Giveaway implements LinkableInterface
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A giveaway needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 
     /**
