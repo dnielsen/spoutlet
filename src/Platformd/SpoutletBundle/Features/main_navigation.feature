@@ -51,7 +51,7 @@ Feature: Main Navigation
       | Groups >> All Groups        | /app_test.php/groups/                           | http://na.alienwarearena.local/app_test.php/groups/                 |
       | Groups >> Create Group      | /app_test.php/groups/new/                       | http://na.alienwarearena.local/app_test.php/groups/new/             |
       | Games                       | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify              |
-      | Events                      | /app_test.php/events                            | http://na.alienwarearena.local/app_test.php/events                  |
+      | Events                      | http://www.alienwarearena.com/event/            |                                                                     |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
       | Media >> NewContests        | /app_test.php/contests                          | http://na.alienwarearena.local/app_test.php/contests                |
       | Media >> NewImage Gallery   | /app_test.php/galleries/                        | http://na.alienwarearena.local/app_test.php/galleries/              |
@@ -73,7 +73,7 @@ Feature: Main Navigation
       | Groups >> All Groups        | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
       | Groups >> Create Group      | /app_test.php/groups/new/                                                                         | http://eu.alienwarearena.local/app_test.php/groups/new/ |
       | Games                       | /app_test.php/games/                                                                              | http://eu.alienwarearena.local/app_test.php/age/verify  |
-      | Events                      | /app_test.php/events                                                                              | http://eu.alienwarearena.local/app_test.php/events      |
+      | Events                      | http://www.alienwarearena.com/event/                                                              |                                                         |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | Media >> NewContests        | /app_test.php/contests                                                                            | http://eu.alienwarearena.local/app_test.php/contests    |
       | Media >> NewImage Gallery   | /app_test.php/galleries/                                                                          | http://eu.alienwarearena.local/app_test.php/galleries/  |
