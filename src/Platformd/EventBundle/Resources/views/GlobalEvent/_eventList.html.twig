@@ -1,4 +1,4 @@
-<table style="width:100%;">
+<table style="width:100%;" id="events-table" class="tablesorter">
     <thead>
         <tr>
             <th>{{ 'platformd.events.event_listings.start_date' | trans }}</th>
@@ -24,7 +24,7 @@
         {% else %}
         {% for event in events %}
         <tr class="eventListGroup_online">
-            <td style="vertical-align:top">
+            <td style="vertical-align:top" data-starts="{{ event.startsAt | date('U') }}">
                 {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
@@ -78,6 +78,30 @@
 
     <script type="text/javascript">
         $(function () {
+
+            $.tablesorter.addParser({
+                // set a unique id
+                id: 'myParser',
+                is: function(s) {
+                  // return false so this parser is not auto detected
+                  return false;
+                },
+                format: function(s, table, cell, cellIndex) {
+                  // get data attributes from $(cell).attr('data-something');
+                  // check specific column using cellIndex
+                  return $(cell).attr('data-starts');
+                },
+                // set type, either numeric or text
+                type: 'text'
+            });
+
+            $('#events-table').tablesorter({
+                headers: {
+                    0: {
+                        sorter: 'myParser'
+                    }
+                }
+            });
 
             $('.event-link a').truncate({
                 width: 420
