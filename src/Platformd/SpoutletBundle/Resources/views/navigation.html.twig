@@ -59,7 +59,7 @@
                 {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
                 {% if features.hasEvents %}
                     <li>
-                        <a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }} <span style="color: #ff5711;padding-right: 2px;">BETA</span></a>
+                        <a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }}</a>
                     </li>
                 {% else %}
                     <li>{{ site_link('EVENTS') | raw }}</a></li>
