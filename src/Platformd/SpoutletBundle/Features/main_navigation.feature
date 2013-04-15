@@ -28,8 +28,7 @@ Feature: Main Navigation
       | Novedades >> Artículos      | http://www.alienwarearena.com/articles/        |                                                            |
       | Novedades >> Anuncios       | http://www.alienwarearena.com/news/            |                                                            |
       | ARP                         | /app_test.php/arp                              | http://www.alienwarearena.com/arp/sweepstakes/             |
-      | Juegos >> Starcraft II      | http://www.alienwarearena.com/latam/game/sc2/  |                                                            |
-      | Juegos >> Más Juegos        | /app_test.php/games/                           | http://latam.alienwarearena.local/app_test.php/age/verify  |
+      | Juegos                      | /app_test.php/games/                           | http://latam.alienwarearena.local/app_test.php/age/verify  |
       | Eventos                     | http://www.alienwarearena.com/latam/event/     |                                                            |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
       | Medios >> NewConcursos      | /app_test.php/contests                         | http://latam.alienwarearena.local/app_test.php/contests    |
