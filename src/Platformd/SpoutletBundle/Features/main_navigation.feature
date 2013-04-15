@@ -29,7 +29,7 @@ Feature: Main Navigation
       | Novedades >> Anuncios       | http://www.alienwarearena.com/news/            |                                                            |
       | ARP                         | /app_test.php/arp                              | http://www.alienwarearena.com/arp/sweepstakes/             |
       | Juegos                      | /app_test.php/games/                           | http://latam.alienwarearena.local/app_test.php/age/verify  |
-      | Eventos                     | http://www.alienwarearena.com/latam/event/     |                                                            |
+      | Eventos                     | http://www.alienwarearena.com/event/           |                                                            |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
       | Medios >> NewConcursos      | /app_test.php/contests                         | http://latam.alienwarearena.local/app_test.php/contests    |
       | Medios >> NewGalería de Fotos   | /app_test.php/galleries/                   | http://latam.alienwarearena.local/app_test.php/galleries/  |
@@ -92,7 +92,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                          |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
       | Games                       | /app_test.php/games/                      | http://in.alienwarearena.local/app_test.php/age/verify   |
-      | Events                      | http://www.alienwarearena.com/in/event/   |                                                          |
+      | Events                      | http://www.alienwarearena.com/event/      |                                                          |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                          |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://in.alienwarearena.local/app_test.php/wallpapers   |
@@ -109,7 +109,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                          |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/           |
       | Games                       | /app_test.php/games/                      | http://mysg.alienwarearena.local/app_test.php/age/verify |
-      | Events                      | http://www.alienwarearena.com/sg/event/   |                                                          |
+      | Events                      | http://www.alienwarearena.com/event/      |                                                          |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                     |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                          |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://mysg.alienwarearena.local/app_test.php/wallpapers |
@@ -126,7 +126,7 @@ Feature: Main Navigation
       | News >> Announcements       | http://www.alienwarearena.com/news/       |                                                         |
       | ARP                         | /app_test.php/arp                         | http://www.alienwarearena.com/arp/sweepstakes/          |
       | Games                       | /app_test.php/games/                      | http://anz.alienwarearena.local/app_test.php/age/verify |
-      | Events                      | http://www.alienwarearena.com/anz/event/  |                                                         |
+      | Events                      | http://www.alienwarearena.com/event/      |                                                         |
       | Forums                      | /app_test.php/forums                      | http://www.alienwarearena.com/forums                    |
       | Media >> Videos             | http://video.alienwarearena.com/          |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                  | http://anz.alienwarearena.local/app_test.php/wallpapers |
