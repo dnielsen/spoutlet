@@ -525,7 +525,7 @@ class GlobalEventController extends Controller
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;
         }
-        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+        return ($a->getStartsAt() < $b->getStartsAt()) ? 1 : -1;
 
     }
 
