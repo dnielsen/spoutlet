@@ -219,7 +219,7 @@ class CountryAgeRestrictionRule
         if ($country instanceof Country) {
             $thisCountry = $this->getCountry();
         } else {
-            $thisCountry = $this->getCountry()->getCode();
+            $thisCountry = $this->getCountry() ? $this->getCountry()->getCode() : null;
         }
 
         if ($country == $thisCountry || !$country || !$thisCountry){
