@@ -30,17 +30,26 @@ class GroupRepository extends EntityRepository
 
     public function getAllGroupsForUserAndSite($user, $site)
     {
+        $groupIds   = array();
+        $actions    = $user->getGroupMembershipActions();
+
+        foreach ($actions as $action) {
+            array_push($groupIds, $action->getGroup()->getId());
+        }
+
         return $this->createQueryBuilder('g')
             ->select('g, COUNT(DISTINCT m.id) memberCount')
             ->leftJoin('g.members', 'm')
             ->leftJoin('g.sites', 's')
-            ->andWhere('g.deleted = false')
-            ->andWhere('m.id = :userId')
+            ->where('g.deleted = false')
             ->andWhere('s.id = :siteId')
+            ->andWhere('g.id IN (:groupIds) OR g.owner = :user')
             ->orderBy('g.name')
             ->setParameters(array(
-                'userId' => $user->getId(),
-                'siteId' => $site->getId()
+                'siteId' => $site->getId(),
+                'groupIds' => $groupIds,
+                'user' => $user
+
             ))
             ->groupBy('g.id')
             ->getQuery()
