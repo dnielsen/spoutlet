@@ -222,9 +222,9 @@ class CountryAgeRestrictionRule
             $thisCountry = $this->getCountry()->getCode();
         }
 
-        if ($country == $thisCountry || !$country){
+        if ($country == $thisCountry || !$country || !$thisCountry){
 
-            if (!$age || (($age > $this->getMinAge() || !$this->getMinAge()) && ($age < $this->getMaxAge() || !$this->getMaxAge()))) {
+            if (!$age || (($age >= $this->getMinAge() || !$this->getMinAge()) && ($age <= $this->getMaxAge() || !$this->getMaxAge()))) {
 
                 return $this->getRuleType() == "allow";
             }
