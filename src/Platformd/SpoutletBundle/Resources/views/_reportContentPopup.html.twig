@@ -41,14 +41,15 @@
             resizable: false,
             dialogClass: 'content-report-dialog-wrapper',
             close: function (e, ui) {
-
+                if (reported) {
+                    location.reload(true);
+                }
             }
         });
 
         $('.report-content').click(function () {
             var reportId = $(this).attr('report-data');
             $('#report-id-{{ reportContentType }}').val(reportId);
-
             $('.report-option').prop('checked', false);
             $('#report-response').hide();
             $('#report-options').show();
@@ -56,6 +57,8 @@
             $('#submit-report-{{ reportContentType }}').show();
             reportDialog.dialog('open');
         });
+
+        var reported = false;
 
         $('#submit-report-{{ reportContentType }}').click(function () {
             $('#report-options').fadeOut();
@@ -73,6 +76,7 @@
                     $('#report-response').fadeIn();
                     $('#close-dialog-{{ reportContentType }}').text('OK');
                     $('#submit-report-{{ reportContentType }}').hide();
+                    reported = true;
                 }
             })
 

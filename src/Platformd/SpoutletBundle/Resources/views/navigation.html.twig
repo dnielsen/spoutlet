@@ -3,35 +3,6 @@
         <div id="nav-wrapper">
             <ul class="sf-menu sf-js-enabled sf-shadow" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
-                <li>{{ site_link('ALIENWARE_LINK') }}</li>
-
-                {% if features.hasGamesNavDropDown %}
-                    <li class="more">
-                        <a class="blue">{{ 'games' | trans }}</a>
-                        <ul>
-                            {% if app.session.locale == 'es' %}
-
-                                <li><a href="http://www.alienwarearena.com/latam/game/sc2/">Starcraft II</a></li>
-
-                            {% else %}
-
-                                <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
-                                <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
-                                <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
-                                <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
-
-                            {% endif %}
-
-                            {% if features.hasGames -%}
-                                <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
-                            {%- endif %}
-                        </ul>
-                    </li>
-                {% elseif features.hasGames %}
-                    <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
-                {% endif %}
-
-                <li>{{ site_link('EVENTS') | raw }}</a></li>
 
                 {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
@@ -45,66 +16,78 @@
                     </li>
                 {% endif %}
 
-                {% if features.hasSweepstakes %}
-                    <li><a href="{{ path('sweepstakes_index') }}">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
-                {% endif %}
-
-                {% if features.hasVideo and not features.hasWallpapers and not features.hasPhotos and not features.hasContests %}
-                    <li>{{ site_link('VIDEOS') }}</li>
-
-                {% elseif features.hasVideo or features.hasWallpapers or features.hasPhotos or features.hasContests %}
-                    <li class="more">
-                        <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
-                        <ul>
-                            {% if features.hasVideo %}
-                            <li>{{ site_link('VIDEOS') }}</li>
-                            {% endif %}
-                            {% if features.hasWallpapers %}
-                            <li>{{ site_link('WALLPAPERS') }}</li>
-                            {% endif %}
-                            {% if features.hasPhotos %}
-                            <li>{{ site_link('PHOTOS') }}</li>
-                            {% endif %}
-                            {% if features.hasContests %}
-                            <li>{{ site_link('CONTESTS_IMAGE') }}</li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                {% endif %}
-
                 {% if features.hasDeals %}
                     <li><a href="{{ path('deal_list') }}">{{ 'deals' | trans }}</a></li>
                 {% endif %}
 
+                {% if features.hasArp %}
+                    <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
+                {% endif %}
+
                 {% if features.hasGroups %}
                     <li class="more">
-                        <a class="blue">
-                            {{ 'platformd.layout.main_menu.groups' | trans }}
-                        </a>
+                        <a class="blue">{{ 'platformd.layout.main_menu.groups' | trans }}</a>
                         <ul>
-                            <li>
-                                <a href="{{ path('groups') }}">All Groups</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('accounts_groups') }}">My Groups</a>
-                            </li>
-                            <li>
-                                <a href="{{ path('group_new') }}">Create Group</a>
-                            </li>
-                            {% if features.hasContests %}
-                            <li>{{ site_link('CONTESTS_GROUP') }}</li>
-                            {% endif %}
+                            <li><a href="{{ path('groups') }}">All Groups</a></li>
+                            <li><a href="{{ path('group_new') }}">Create Group</a></li>
                         </ul>
                     </li>
+                {% endif %}
+
+                {% if features.hasGamesNavDropDown %}
+                    <li class="more">
+                        <a class="blue">{{ 'games' | trans }}</a>
+                        <ul>
+                            {% if app.session.locale == 'es' %}
+                                <li><a href="http://www.alienwarearena.com/latam/game/sc2/">Starcraft II</a></li>
+                            {% else %}
+                                <li><a href="http://alienwarearena.com/game/bf3/">Battlefield 3</a></li>
+                                <li><a href="http://alienwarearena.com/game/lol/">League of Legends</a></li>
+                                <li><a href="http://alienwarearena.com/game/sc2/">Starcraft II</a></li>
+                                <li><a href="http://alienwarearena.com/game/rift/">Rift</a></li>
+                            {% endif %}
+
+                            {% if features.hasGames -%}
+                                <li><a href="{{ path('game_page_list') }}">{{ 'more_games' | trans }}</a></li>
+                            {%- endif %}
+                        </ul>
+                    </li>
+                {% elseif features.hasGames %}
+                    <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
+                {% endif %}
+
+                {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
+                {% if features.hasEvents %}
+                    <li>
+                        <a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | trans }} <span style="color: #ff5711;padding-right: 2px;">BETA</span></a>
+                    </li>
+                {% else %}
+                    <li>{{ site_link('EVENTS') | raw }}</a></li>
                 {% endif %}
 
                 {% if features.hasForums %}
                     <li><a href="{{ path('forums') }}">{{ 'platformd.layout.main_menu.forums' | trans }}</a></li>
                 {% endif %}
 
-                {% if features.hasArp %}
-                    <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
+                {% if features.hasVideo and not features.hasWallpapers and not features.hasPhotos and not features.hasContests %}
+                    <li>{{ site_link('VIDEOS') }}</li>
+                {% elseif features.hasVideo or features.hasWallpapers or features.hasPhotos or features.hasContests %}
+                    <li class="more">
+                        <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
+                        <ul>
+                            {% if features.hasContests %} <li>{{ site_link('CONTESTS') }}</li>{% endif %}
+                            {% if features.hasPhotos %} <li>{{ site_link('PHOTOS') }}</li>{% endif %}
+                            {% if features.hasVideo %}<li>{{ site_link('VIDEOS') }}</li>{% endif %}
+                            {% if features.hasWallpapers %}<li>{{ site_link('WALLPAPERS') }}</li>{% endif %}
+                        </ul>
+                    </li>
                 {% endif %}
+
+                {% if features.hasSweepstakes %}
+                    <li><a href="{{ path('sweepstakes_index') }}">{{ 'platformd.layout.main_menu.sweeps' | trans }}</a></li>
+                {% endif %}
+
+                <li>{{ site_link('ALIENWARE_LINK') }}</li>
 
                 {% if features.hasMicrosoft %}
                 <li><a href="{{ path('microsoft') }}">{{ 'platformd.layout.main_menu.microsoft' | trans }}</a></li>

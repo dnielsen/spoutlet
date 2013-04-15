@@ -110,6 +110,11 @@ class SiteFeatures
     private $hasComments = false;
 
     /**
+     * @ORM\Column(name="has_events", type="boolean")
+     */
+    private $hasEvents = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -306,5 +311,14 @@ class SiteFeatures
         return $this;
     }
 
+    public function getHasEvents()
+    {
+        return $this->hasEvents;
+    }
 
+    public function setHasEvents($value = true)
+    {
+        $this->hasEvents = $value;
+        return $this;
+    }
 }

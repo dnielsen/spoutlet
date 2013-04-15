@@ -9,6 +9,7 @@ imports:
     - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
     - { resource: "@MediaBundle/Resources/config/services.yml" }
     - { resource: "@CommentBundle/Resources/config/services.yml" }
+    - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@GameBundle/Resources/config/services.yml" }
 
 framework:
@@ -119,6 +120,9 @@ fos_user:
     service:
         user_manager: platformd_user.manager
         mailer:       platformd_user.mailer
+
+vich_geographical:
+    db_driver: orm
 
 parameters:
     # a setting used in the test environment with CEVOAuthenticationListener

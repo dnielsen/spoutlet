@@ -41,4 +41,26 @@ jQuery(document).ready(function() {
 
         return false;
     });
+
+    $('span.hour-selection option').each(function() {
+        var hour    = parseInt($(this).text());
+
+        if (isNaN(hour)) {
+            return;
+        }
+
+        var newHour = hour;
+        var amPm    = 'AM';
+
+        if ((hour - 12) >= 0) {
+            newHour = (hour > 12) ? (hour - 12) : hour;
+            amPm    = 'PM';
+        }
+
+        if (hour == 0) {
+            newHour = 12;
+        }
+
+        $(this).text($(this).text() + ' ('+ newHour + ' ' + amPm +')');
+    });
 });

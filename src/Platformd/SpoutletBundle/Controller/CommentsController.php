@@ -5,7 +5,6 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Comment;
 use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Form\Type\CommentType;
@@ -402,9 +401,7 @@ class CommentsController extends Controller
             $url = $this->container->get('platformd.link.linkable_manager')->link($obj);
         } else {
             // todo - refactor everything to be a LinkableInterface
-            if ($obj instanceof Event) {
-                $route = 'events_detail';
-            } elseif ($obj instanceof Giveaway) {
+            if ($obj instanceof Giveaway) {
                 $route = 'giveaway_show';
             } elseif ($obj instanceof Sweepstakes) {
                 $route = 'sweepstakes_show';

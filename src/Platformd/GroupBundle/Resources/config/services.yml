@@ -5,6 +5,8 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@session"
             - "@knp_media.util.media_util"
+            - "@platformd.model.site_util"
+            - "@pd.cevo.api.api_manager"
             - "@security.context"
             - "@event_dispatcher"
 

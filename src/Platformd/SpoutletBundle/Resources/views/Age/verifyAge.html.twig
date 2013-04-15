@@ -20,7 +20,7 @@
 
             {% set attr = { 'class': 'dark' } %}
 
-            {{ 'date_format' | trans({
+            {{ 'age_confirm.date_format' | trans({
                 '%year%':   form_widget(form.year, { 'attr': attr }),
                 '%month%':  form_widget(form.month, { 'attr': attr }),
                 '%day%':    form_widget(form.day, { 'attr': attr })

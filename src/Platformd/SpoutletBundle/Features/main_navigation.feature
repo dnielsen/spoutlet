@@ -15,7 +15,7 @@ Feature: Main Navigation
       | Link        | Target                   | Destination                                                |
       | ホーム        | /app_test.php/           | http://japan.alienwarearena.local/app_test.php/            |
       | Alienware   | http://alienware.jp/     |                                                            |
-      | イベント       | /app_test.php/events/    | http://japan.alienwarearena.local/app_test.php/events/     |
+      | イベント       | /app_test.php/events    | http://japan.alienwarearena.local/app_test.php/events     |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
 
@@ -51,7 +51,7 @@ Feature: Main Navigation
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/             |                                                                     |
       | Games >> Rift               | http://alienwarearena.com/game/rift/            |                                                                     |
       | Games >> More Games         | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify              |
-      | Events                      | http://www.alienwarearena.com/event/            |                                                                     |
+      | Events                      | /app_test.php/events                            | http://na.alienwarearena.local/app_test.php/events                  |
       | News >> Articles            | http://www.alienwarearena.com/articles/         |                                                                     |
       | News >> Announcements       | http://www.alienwarearena.com/news/             |                                                                     |
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
@@ -79,7 +79,7 @@ Feature: Main Navigation
       | Games >> Starcraft II       | http://alienwarearena.com/game/sc2/                                                               |                                                         |
       | Games >> Rift               | http://alienwarearena.com/game/rift/                                                              |                                                         |
       | Games >> More Games         | /app_test.php/games/                                                                              | http://eu.alienwarearena.local/app_test.php/age/verify  |
-      | Events                      | http://www.alienwarearena.com/europe/event/                                                       |                                                         |
+      | Events                      | /app_test.php/events                                                                              | http://eu.alienwarearena.local/app_test.php/events      |
       | News >> Articles            | http://www.alienwarearena.com/articles/                                                           |                                                         |
       | News >> Announcements       | http://www.alienwarearena.com/news/                                                               |                                                         |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
@@ -89,7 +89,7 @@ Feature: Main Navigation
       | Deals                       | /app_test.php/deal/                                                                               | http://eu.alienwarearena.local/app_test.php/deal/       |
       | Groups >> All Groups        | /app_test.php/groups/                                                                             | http://eu.alienwarearena.local/app_test.php/groups/     |
       | Groups >> My Groups         | /app_test.php/account/profile/groups                                                              | http://eu.alienwarearena.local/app_test.php/account/profile/groups |
-      | Groups >> Create Group      | /app_test.php/groups/new/                                                                          | http://eu.alienwarearena.local/app_test.php/groups/new/             |
+      | Groups >> Create Group      | /app_test.php/groups/new/                                                                         | http://eu.alienwarearena.local/app_test.php/groups/new/ |
       | Groups >> NewContests       | /app_test.php/contests/group                                                                      | http://eu.alienwarearena.local/app_test.php/contests/group               |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
       | ARP                         | /app_test.php/arp                                                                                 | http://www.alienwarearena.com/arp/sweepstakes/          |

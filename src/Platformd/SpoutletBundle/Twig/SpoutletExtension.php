@@ -75,6 +75,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link'            => new Twig_Filter_Method($this, 'linkToObject'),
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
+            'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
         );
     }
 
@@ -269,19 +270,20 @@ class SpoutletExtension extends Twig_Extension
      * @param $obj
      * @return string
      */
-    public function linkToObjectFull($obj, $urlText = null)
+    public function linkToObjectFull($obj, $urlText = null, $classes=null)
     {
         $this->ensureLinkable($obj);
 
         $url        = $this->linkableManager->link($obj);
         $target     = $this->linkToObjectTarget($obj);
         $urlText    = $urlText ?: $url;
+        $classes    = is_array($classes) ? 'class=' . implode(' ', $classes) : '';
 
         if (strlen($target) > 0) {
             $target = ' '.$target;
         }
 
-        return sprintf('<a href="%s"%s>%s</a>', $url, $target, $urlText);
+        return sprintf('<a href="%s"%s %s>%s</a>', $url, $target, $classes, $urlText);
     }
 
     /**
@@ -538,7 +540,8 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserEventLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.user.account.my_events').'</a>';
+
+        $format         = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.layout.page_content.competitions').'</a>';
 
         switch($locale) {
             case 'ja':      return sprintf($format, '/japan');
@@ -621,7 +624,8 @@ class SpoutletExtension extends Twig_Extension
     private function GetEventsLink($locale) {
 
         $format         = '<a href="%s">'.$this->trans('platformd.layout.main_menu.events').'</a>';
-        $internalUrl    = $this->router->generate('events_index');
+
+        $internalUrl    = $this->router->generate('global_events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
 
@@ -652,7 +656,7 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetUserGiveawayLink($locale) {
 
-        $format         = '<a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a>';
+        $format         = '<li><a href="%s">'.$this->trans('platformd.user.account.my_giveaways').'</a></li>';
         $internalUrl    = $this->router->generate('accounts_giveaways');
         $externalUrl    = 'http://www.alienwarearena.com/';
         $cevoCountry    = $this->GetCevoCountryLookup($locale);
@@ -730,11 +734,12 @@ class SpoutletExtension extends Twig_Extension
     }
 
     private function GetUserGameIdLink($locale) {
-        $format = '<a href="http://www.alienwarearena.com/%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
+        $format = '<a href="http://www.alienwarearena.com%s/account/ids/">'.$this->trans('platformd.user.account.game_ids').'</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, 'japan');
-            case 'zh':      return sprintf($format, 'china');
+            case 'ja':      return sprintf($format, '/japan');
+            case 'zh':      return sprintf($format, '/china');
+            case 'en_SG':   return sprintf($format, '');
 
             default:        return false;
         }
@@ -743,5 +748,10 @@ class SpoutletExtension extends Twig_Extension
     public function canReport()
     {
         return !$this->contentReportRepo->hasUserReportedRecently($this->currentUser);
+    }
+
+    public function dateTranslate($datetime)
+    {
+        return $datetime->format($this->translator->trans('date_format', array(), 'messages', $this->session->getLocale()));
     }
 }

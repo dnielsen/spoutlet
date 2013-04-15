@@ -3,10 +3,12 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Platformd\SpoutletBundle\Entity\ContentReport;
 
 class ContentReportRepository extends EntityRepository
 {
     private static $validTypes = array(
+        'GroupEvent',
         'GroupImage',
         'GroupNews',
         'GroupVideo',
@@ -26,6 +28,7 @@ class ContentReportRepository extends EntityRepository
         'GalleryMedia'          => 'SpoutletBundle',
         'GroupDiscussion'       => 'GroupBundle',
         'GroupDiscussionPost'   => 'GroupBundle',
+        'GroupEvent'            => 'EventBundle',
     );
 
     public function getBundleFromType($type)
@@ -127,6 +130,25 @@ class ContentReportRepository extends EntityRepository
             ')
             ->setParameter('site', $site)
             ->execute();
+    }
+
+    public function deleteAllContentReportsForGroupEvent($content) {
+
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, c FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.groupEvent c
+            WHERE report.deleted = false
+            AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
     }
 
     public function deleteAllContentReportsForGroupNews($content) {

@@ -181,6 +181,11 @@
     target=htmlpurifier
     version=344e0640b6610883a0aa6766cc6750d26d091c76
 
+[VichGeographicalBundle]
+   git=git://github.com/dustin10/VichGeographicalBundle.git
+   target=/bundles/Vich/GeographicalBundle
+   version=fc68b2c52e3b925fb31e51ee87fefe325491d266
+
 [LiipThemeBundle]
     git=http://github.com/liip/LiipThemeBundle.git
     target=bundles/Liip/ThemeBundle

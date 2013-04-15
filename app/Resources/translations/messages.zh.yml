@@ -1,4 +1,5 @@
 edit: 编辑
+date_format: Y年m月d日
 
 platformd:
 
@@ -107,7 +108,13 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: 我的活动
+            header: "Alienware Arena Events"
+            organizer: Organizer
+            attendees: Attendees
+            action: Action
+            your_owned_events: My Event Listings
+            your_registered_events: Events I'm Registered In
+            your_past_events: My Past Events
             current_events: 当前活动
             current_and_upcoming_events: 当前活动及活动预告
             more_current_events: 更多当前活动
@@ -126,6 +133,7 @@ platformd:
             no_past_events: 无以往活动
             no_current_events: 无当前活动
             no_active_giveaways: 目前没有活动赠品。
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
         event_show:
             register_event: 注册活动
             unregister_event: Unregister for event
@@ -356,7 +364,6 @@ platformd.sweepstakes.entered.message: 感谢参与！
 na: N/A
 instructions: 说明
 sweepstakes_date_format: %year%年%month%月%day%日
-date_format: %year%年%month%月%day%日
 eligibility: 参赛资格
 sweeps_not_open: This sweepstakes is not currently open
 
@@ -417,6 +424,7 @@ username: 用户名
 age_confirm:
     headline: Please Confirm Your Date of Birth
     message: The content is intended for mature audiences. Please confirm your age below
+    date_format: %year%年%month%月%day%日
 confirm: Confirm
 
 forms:

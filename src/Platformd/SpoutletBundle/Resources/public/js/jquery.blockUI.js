@@ -1,10 +1,6 @@
 /*!
  * jQuery blockUI plugin
-<<<<<<< HEAD
  * Version 2.54 (17-DEC-2012)
-=======
- * Version 2.53 (01-NOV-2012)
->>>>>>> feature/media_gallery
  * @requires jQuery v1.3 or later
  *
  * Examples at: http://malsup.com/jquery/block/

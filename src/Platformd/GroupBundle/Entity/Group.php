@@ -25,6 +25,7 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface
 {
@@ -35,8 +36,8 @@ class Group implements LinkableInterface, ReportableContentInterface
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     static private $validCategories = array(
-        'location',
         'topic',
+        'location',
     );
 
     static private $validDeletedReasons = array(
@@ -117,7 +118,7 @@ class Group implements LinkableInterface, ReportableContentInterface
      * @Assert\NotNull
      * @ORM\Column(name="isPublic", type="boolean")
      */
-    private $isPublic;
+    private $isPublic = true;
 
     /**
      * @var \Platformd\MediaBundle\Entity\Media
@@ -186,7 +187,7 @@ class Group implements LinkableInterface, ReportableContentInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupApplication", mappedBy="group")
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupApplication", mappedBy="group", cascade={"persist"})
      */
     private $applications;
 
@@ -861,6 +862,11 @@ class Group implements LinkableInterface, ReportableContentInterface
     {
         $this->facebookLikes = $facebookLikes;
         $this->facebookLikesUpdatedAt = new \DateTime;
+    }
+
+    public function getClass()
+    {
+        return get_class($this);
     }
 
     public function getLeftMemberCount()

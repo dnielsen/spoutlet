@@ -165,6 +165,12 @@ class ContentReportingController extends Controller
                 $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
+                break;
+
             case 'GroupDiscussionPost':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();

@@ -28,35 +28,39 @@ class GroupType extends AbstractType
         $builder
             ->add('name', null, array(
                 'label' => 'Group Name*',
-                'help' => 'Do not use the word "Official" in the group name. All groups containing the word "Official" will be renamed.',
+                'help'  => 'Do not use the word "Official" in the group name. All groups containing the word "Official" will be renamed.',
             ))
             ->add('category', 'choice', array(
-                'choices' => self::getCategoryChoices(),
-                'label' => 'Group Category',
+                'choices'   => self::getCategoryChoices(),
+                'label'     => 'Group Category',
             ))
             ->add('groupAvatar', new MediaType(), array(
-                'image_label'   => 'Group Header Image',
-                'image_help'    => 'Recommended size: 950x120',
+                'image_label'   => 'Group Banner',
+                'image_help'    => 'Recommended size: 950x120. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
             ->add('backgroundImage', new MediaType(), array(
                 'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
+                'image_help'    => 'Recommended width: 2000px. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('thumbNail', new MediaType(), array(
                 'image_label'   => 'Thumbnail Image',
-                'image_help'    => 'Recommended size: 135x80',
+                'image_help'    => 'Recommended size: 135x80. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('description', 'purifiedTextarea', array(
-                'label' => 'Information about Group*',
+                'label' => 'Group Description*',
                 'attr'  => array('class' => 'ckeditor')
             ))
-            ->add('isPublic', 'checkbox', array(
-                'required' => true,
-                'label' => 'Is this a public group?',
-                'help' => 'Yes (If left unchecked, you will need to approve users in order to give them access to your group page.)',
+            ->add('isPublic', 'choice', array(
+                'choices'   => array(
+                    1 => 'Public Group',
+                    0 => 'Private Group',
+                ),
+                'expanded'  => true,
+                'label'     => 'Group Visibility',
+                'help'      => 'Public: Group information is visible to all users and any user can join your group. Private: Group information is visible to approved group members only. Group organizer must approve users to be in group.',
             ))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',

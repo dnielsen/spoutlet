@@ -1,0 +1,73 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.layout.main_menu.events' | trans %}
+
+{% block content %}
+<h2 style="margin:0 0 10px 0;">{{ 'platformd.events.event_listings.header' | trans }}</h2>
+
+{% if features.hasGroups %}
+    <div class="std_1col" style="padding:0 0 10px 0">
+        <div>
+            {{ 'platformd.events.event_listings.create_event_message' | trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) | raw  }}
+        </div>
+    </div>
+{% endif %}
+
+<div class="std_1col">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ 'platformd.events.event_listings.current_events' | trans }}<a style="float:right;font-size: 12px;" href="{{ path('accounts_events') }}">{{ 'platformd.events.event_listings.my_events' | trans }}</a>
+            </div>
+        </div>
+        <div class="widget-content">
+            {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+                'events': upcomingEvents,
+                'no_events_message': 'platformd.events.event_listings.no_current_events'
+            } %}
+        </div>
+
+        <div class="widget-footer">
+            <div style="position:relative;height:16px;">
+                <a id="show-past-events" style="margin-right:10px;position:absolute;right:0px;" href="javascript:void(0);">{{ 'platformd.events.event_listings.view_past_events' | trans }}</a>
+                <div style="position:absolute;left:0px;">
+                    <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" /><span class="attending" style="color:#c6c6c6">{{ 'platformd.events.event_listings.legend_registered' | trans }}</span>
+                    <div style="display:inline-table; background-color:#9BC744; height: 10px; width:10px; margin:0 5px 0 35px;"></div><span style="color:#c6c6c6">{{ 'platformd.events.event_listings.legend_sponsored' | trans }}</span>
+                    {% if features.hasGroups %}<div style="display:inline-table; background-color:#009cda; height: 10px; width:10px; margin:0 5px 0 35px;"></div><span style="color:#c6c6c6">{{ 'platformd.events.event_listings.legend_group' | trans }}</span>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="past-events" class="widget-100" style="margin-top:15px;display:none;">
+    <div class="widget-header">
+        <div class="widget-title">
+            {{ 'platformd.events.event_listings.past_events' | trans }}
+        </div>
+    </div>
+
+    <div class="widget-content">
+        {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+            'events': pastEvents,
+            'no_events_message': 'platformd.events.event_listings.no_past_events'
+        } %}
+    </div>
+
+    <div class="widget-footer">
+        &nbsp;
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#show-past-events').click(function () {
+                $('#past-events').slideToggle();
+            });
+            $('table.tablesorter').tablesorter();
+        });
+    </script>
+{% endblock %}

@@ -28,39 +28,41 @@
         <div class="widget-title">Applications</div>
     </div>
     <div class="widget-content">
-        <table style="width: 99%;" class="table table-striped table-bordered tablesorter">
-            <thead><tr>
-                <th style="width:15%;">Action</th>
-                <th style="width:15%;">Username</th>
-                <th style="width:15%;">Date</th>
-                <th style="width:55%;">Reason</th>
-            </tr></thead>
-            <tbody>
-            {% for application in applications %}
-                <tr class="eventListGroup_lan">
-                    <td>
-                        <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Accept</a> |
-                        <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Reject</a>
-                    </td>
-                    <td>
-                        {{ application.applicant.username }}
-                    </td>
-                    <td>
-                        {{ application.createdAt | date('F d, Y') }}
-                    </td>
-                    <td>
-                        {{ application.reason }}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">
-                        <em>There are no applications!</em>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="text">
+            <table style="width: 99%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
+                <thead><tr>
+                    <th style="width:15%; color:#FFF;">Action</th>
+                    <th style="width:15%; color:#FFF;">Username</th>
+                    <th style="width:15%; color:#FFF;">Date</th>
+                    <th style="width:55%; color:#FFF;">Reason</th>
+                </tr></thead>
+                <tbody>
+                {% for application in applications %}
+                    <tr class="eventListGroup_lan">
+                        <td>
+                            <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Accept</a> |
+                            <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Reject</a>
+                        </td>
+                        <td>
+                            {{ application.applicant.username }}
+                        </td>
+                        <td>
+                            {{ application.createdAt | date('F d, Y') }}
+                        </td>
+                        <td>
+                            {{ application.reason }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <em>There are no applications!</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="widget-footer">&nbsp;</div>
 </div>
@@ -91,9 +93,11 @@
                     modal: true,
                     resizable: false,
                     movable: false,
-                    height: 150,
+                    height: 200,
+                    width: 320,
                     buttons: {
                         "Yes": function() {
+                            $(this).dialog("close");
                             document.location = path;
                         },
                         "No": function() {
@@ -113,9 +117,11 @@
                     modal: true,
                     resizable: false,
                     movable: false,
-                    height: 150,
+                    height: 200,
+                    width: 320,
                     buttons: {
                         "Yes": function() {
+                            $(this).dialog("close");
                             document.location = path;
                         },
                         "No": function() {

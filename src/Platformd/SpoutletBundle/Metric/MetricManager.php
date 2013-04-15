@@ -462,7 +462,7 @@ class MetricManager
     /**
      * Generate Group Metrics
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \DateTime $date
      */
     private function generateGroupDiscussionMetricsFromDate(GroupDiscussion $groupDiscussion, DateTime $date)

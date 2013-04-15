@@ -108,6 +108,11 @@ class GamePageManager
         return $this->getRepository()->findOneBySlugForSite($slug, $site);
     }
 
+    public function findOneByGame($game, $site)
+    {
+        return $this->getRepository()->findOneByGame($game, $site);
+    }
+
     /**
      * Properly persists or unsets the media fields
      *

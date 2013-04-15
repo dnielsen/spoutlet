@@ -1,4 +1,7 @@
 edit: 編集
+date_format: Y年m月d日
+submit: 出品
+cancel: キャンセル
 
 platformd:
 
@@ -104,12 +107,30 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: 参加済みイベント
+            header: ALIENWARE ARENAイベント
+            create: Create Event
+            show_map: マップを見る
+            organizer: 主催者
+            attendees: 参加者
+            actions: アクション
+            status: ステータス
+            my_events: マイイベント
+            my_owned_events: My Listed Events
+            my_registered_events: 自分が登録したイベント
+            my_past_events: My Past Events
+            rsvp:
+                dialog_title: イベントRSVP
+                change_rsvp: RSVPを変更する
+                attending: 私は行く
+                not_attending: 不要です
+                submit: 出品
+                cancel: キャンセル
             current_events: 現在のイベント
-            current_and_upcoming_events: 現在および将来のイベント
+            current_and_upcoming_events: 現在および今後のイベント
             more_current_events: 現在のイベントをもっと表示
             start_date: 開始日
             end_date: 終了日
+            date: 年月日
             details: 詳細
             event: イベント名
             games: ゲーム名
@@ -119,14 +140,54 @@ platformd:
             there_are_no_upcoming_events_at_this_moment: 予定されているイベントは現在ありません。
             past_events: 終了したイベント
             more_past_Events: 過去のイベントをもっと表示
+            view_past_events: 過去のイベントを見る
             online: オンライン
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
             no_active_giveaways: There are no active giveaways at this moment.
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: あなたはこのイベントに出席するため、登録されています。
+            legend_sponsored: ALIENWARE ARENAスポンサードイベント
+            legend_group: Group Event
         event_show:
             register_event: イベントに登録
             unregister_event: Unregister for event
             register:       登録
+            organizer: 主催者
+            attending: 随伴者
+            registration_closed: このイベントの登録は締め切られました
+            im_attending: はい、私は参加しています!
+            event_details: イベントの詳細
+            location: 実施場所
+            online_event: オンラインイベントです。
+            directions: 使用方法
+            contact_attendees: 参加者に連絡する
+            manage_attendees: 参加者を管理する
+            edit_event: イベントを編集する
+            not_allowed_register: あなたは、このイベントへの参加連絡を許可されていません。
+            now_attending: あなたはこのイベントに参加しています。
+            group_joined: このイベントに参加するには、%groupName%.に参加する必要があります。これで、あなたはこのグループのメンバーです。
+        event_contact:
+            title: 参加者にEメールで連絡する
+            help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
+            preview: プレビュー
+            send: 送る
+            cancel: キャンセル
+            attending: イベントに出席
+            error: あなのEメールをプレビューする際にエラーが発生しました！
+            confirmation: メールは %attendeeCount%参加者（複数可）に送信されます。
+            form:
+                recipients: 受取人
+                message: メッセージ
+                recipient_help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
+        event_attendees:
+            back_to_event: イベントに戻る
+            attendees: 参加者
+            action: アクション
+            username: ユーザーネーム
+            remove: 除外する
+            no_attendees: 参加者はいません。
+            remove_confirmation: %username% をイベントからはずしますか？
         # used only in the admin area
         admin:
             title: イベント管理者
@@ -142,14 +203,24 @@ platformd:
             unpublished_title: 未公開イベントの編集
             published_title: 公開済みイベントの編集
             banner_note: 推奨サイズ 950x120
-
     account_page:
         events:
-            no_registered_events: 現在、どのイベントにも登録していません。
+            no_registered_events: イベントが登録されていません。 <a href="%url%">の今後のイベント</a>をチェックしてください。
+            no_created_events: イベントは作成されていません。
             join_event_message: |
                 イベントに参加するには、マイクロサイトで「登録」リンクからおねがいします。
                 <br/>
                 参加したイベントを確認する場合は　<a href="%events_url%">「参加済みキャンペーン」をクリックしてください </a>。
+            show_past_events: 過去のイベントを見る
+            hide_past_events: 過去のイベントを表示しない
+            edit_event: イベントを編集する
+            cancelled: キャンセルされました
+            event_listing: イベント一覧
+            registration_open: 登録可能
+            registration_closed: 登録終了
+            active: 有効
+            pending_approval: グループ主催者によって登録は保留中
+            choose_one: 選び出す
         account:
             welcome_to_control: 管理画面へようこそ
             hello_user: "こんにちは %username%."
@@ -323,6 +394,194 @@ platformd:
             deleted: Your news item has been deleted !
             edit_title: Edit a news item
 
+    event:
+        form:
+            name: "Title"
+            banner_image: "Event Banner"
+            url: "URL"
+            description: イベントの詳細
+            game: 試合
+            event_type: ロケーション
+            location: "Location Name"
+            address1: "Street"
+            address2: "City, State, Zip"
+            starts_at: 開始日時
+            ends_at: "End Date & Time"
+            hosted_by: "Hosted By"
+            timezone: "Timezone"
+            display_timezone: "Display Timezone"
+            external_url: "External Url"
+            event_options: "Event Options"
+            sites: "Regions"
+            private_public: "Is this a public or private event?"
+            published: "Do you want your event published?"
+
+            choice:
+                private_event: "Private Event"
+                public_event: "Public Event"
+                online_event: "Online Event"
+                physical_event: "In-Person"
+                published: "Published"
+                unpublished: "Unpublished"
+
+            help:
+                address1: "Example: 1021 Washington Drive"
+                address2: "Example: San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
+                banner_image: "Recommended size: 950x120. File formats accepted: JPEG and PNG."
+                external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
+
+        registration:
+            enabled: "Manage event registration on this site."
+            disabled: "List my event only. Event registration is managed elsewhere."
+            3rdparty: "Link event listing to 3rd party website."
+
+        email:
+            global_event_contact:
+                title: %eventName% について、イベント主催者からのメッセージ
+                message: |
+                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
+
+                    %content%
+
+                    ALIENWAREARENAチーム
+
+                    重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
+
+            attendees_contact:
+                title: %eventName% について、イベント主催者からのメッセージ
+                message: |
+                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
+
+                    %content%
+
+                    %organizerName%を代表してALIENWARE ARENAより送られました
+
+                    重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
+
+            approved:
+                title: Your Event Has Been Approved
+                message: |
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Alienware Arena.
+
+                    We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
+
+                    Note: You are receiving this email because you submitted an event for approval.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+            cancel:
+                title: %eventName% has been canceled
+                message: |
+                    This is an automated email to inform you that %eventName% has been cancelled.
+
+                    Alienware Arena Team
+            activate:
+                title: %eventName% is active again
+                message: |
+                    This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Alienware Arena Team
+
+            group_announcement:
+                title: You’re Invited to %eventName%
+                message: |
+                    %groupName% added a new event – <a href="%url%">%eventName%</a>
+
+                    <strong><u>When</u></strong>
+
+                    %startDate%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
+
+                    Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+            require_approval:
+                title:  Request to Approve My Event for %groupName%
+                message: |
+                    Hi %groupOwnerName%,
+
+                    Please approve my upcoming event - <a href="%eventUrl%">%eventName%</a> to be listed on the "%groupName%" page.
+
+                    <strong><u>When</u></strong>
+
+                    %dateRange%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to approve the event.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+
+            group_join_application_from_event:
+                title: Group Member Approval Request
+                message: |
+                    %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to review their request.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %userName%.
+
+            group_application_accepted_event_registered:
+                title: You’re approved to be in %groupName%!
+                message: |
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit the group's page to join the conversation and share information with your fellow group members.
+
+                    You are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %groupOwnerName%.
+
+            event_reminder:
+                title: %eventName%のイベントリマインダ
+                message: |
+                    こんにちは%username%,さん
+
+                    あなたのイベントはほぼここにそろっています
+
+                    <a href="%eventUrl%">%eventName%</a>
+                    %dateString% - %timeString% %timezone%
+
+                    %location%
+
+                    このイベントに関するご質問はありますか？
+                    <a href="%organizerUrl%">%organizerName%</a>主催者に問い合わせる
+
+                    注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
+
+                    %organizerName%を代表してALIENWARE ARENAより送られました
+
+            attendee_removed:
+                title: あなたはもう、%eventName%に参加していません
+                message: |
+                    こんにちは%username%,さん
+
+                    このメールで、あなたは<a href="%url%">%eventName%</a>に参加していないことを確認してください。
+
+                    もし、これがエラーだとお考えでしたら、イベント主催者にお問い合わせください。
+
+                    ALIENWAREARENAチーム
+
 # I'm not sure how we have two different potential "wrong password messages"...
 "Bad credentials": "パスワードまたはメールアドレスが無効です"
 "The presented password is invalid.": "パスワードまたはメールアドレスが無効です"
@@ -365,7 +624,6 @@ platformd.sweepstakes.entered.message: 参加ありがとうございます。
 na: N/A
 instructions: 説明書
 sweepstakes_date_format: %year%年%month%月%day%日
-date_format: %year%年%month%月%day%日
 eligibility: 応募資格
 sweeps_not_open: この懸賞は、現在オープンされていない
 comments_date_format: %year%年%month%月%day%日
@@ -459,6 +717,7 @@ age_confirm:
     message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
+    date_format: %year%年%month%月%day%日
 confirm: 確認
 
 forms:

@@ -31,6 +31,7 @@ class AppKernel extends Kernel
             new Liip\ThemeBundle\LiipThemeBundle(),
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
+            new Vich\GeographicalBundle\VichGeographicalBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
@@ -51,6 +52,7 @@ class AppKernel extends Kernel
             new Platformd\GameBundle\GameBundle(),
             new Platformd\TranslationBundle\TranslationBundle(),
             new Platformd\MediaBundle\MediaBundle(),
+            new Platformd\EventBundle\EventBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
