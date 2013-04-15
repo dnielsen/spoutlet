@@ -15,7 +15,7 @@ Feature: Main Navigation
       | Link        | Target                   | Destination                                                |
       | ホーム        | /app_test.php/           | http://japan.alienwarearena.local/app_test.php/            |
       | ニュース       | /app_test.php/news       | http://japan.alienwarearena.local/app_test.php/news        |
-      | イベント       | /app_test.php/events    | http://japan.alienwarearena.local/app_test.php/events     |
+      | イベント BETA  | /app_test.php/events    | http://japan.alienwarearena.local/app_test.php/events     |
       | ビデオ         | /video                  | http://japan.alienwarearena.local/video                    |
       | Alienware   | http://alienware.jp/     |                                                            |
 
