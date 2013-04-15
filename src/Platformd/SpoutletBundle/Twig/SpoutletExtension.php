@@ -624,7 +624,7 @@ class SpoutletExtension extends Twig_Extension
 
         $internalUrl    = $this->router->generate('global_events_index');
         $externalUrl    = 'http://www.alienwarearena.com/';
-        $cevoCountry    = $this->GetCevoCountryLookup($locale);
+        //$cevoCountry    = $this->GetCevoCountryLookup($locale);
 
         if ($cevoCountry) {
             $externalUrl .= $cevoCountry.'/';
