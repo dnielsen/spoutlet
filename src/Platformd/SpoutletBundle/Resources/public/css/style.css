@@ -908,3 +908,8 @@ hr.faded:before {
 .attending {
     padding-left: 5px;
 }
+
+.beta {
+    color: #ff5711;
+    padding-right: 2px;
+}

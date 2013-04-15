@@ -71,7 +71,7 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            events: Events
+            events: Events <span class="beta">BETA</span>
             video: Videos
             news: News
             articles: Articles
