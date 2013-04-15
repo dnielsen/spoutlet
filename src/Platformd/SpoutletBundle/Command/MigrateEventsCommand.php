@@ -73,7 +73,7 @@ EOT
             $locations  = array();
             $hosts      = array();
 
-            if (($handle = fopen("/home/ubuntu/old_events_locations.csv", "r")) !== FALSE) {
+            if (($handle = fopen("/home/ubuntu/events_migration/old_events_locations.csv", "r")) !== FALSE) {
                 while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
                     $locations[$data[0]]    = trim($data[1]);
                     $hosts[$data[0]]        = trim($data[2]);
@@ -159,7 +159,7 @@ EOT
 
         $output->write('Getting CEVO events...');
 
-        if (($handle = fopen("/home/ubuntu/cevo_events.csv", "r")) !== FALSE) {
+        if (($handle = fopen("/home/ubuntu/events_migration/cevo_events.csv", "r")) !== FALSE) {
 
             $output->writeLn('<info>✔</info>');
             $output->write(' - Migrating CEVO events...');
