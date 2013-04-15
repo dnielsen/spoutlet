@@ -32,7 +32,7 @@ Feature: Main Navigation
       | Juegos >> Más Juegos        | /app_test.php/games/                           | http://latam.alienwarearena.local/app_test.php/age/verify  |
       | Eventos                     | http://www.alienwarearena.com/latam/event/     |                                                            |
       | Foros                       | /app_test.php/forums                           | http://www.alienwarearena.com/forums                       |
-      | Medios >> NewConcursos      | /app_test.php/contests/image                   | http://latam.alienwarearena.local/app_test.php/contests/image   |
+      | Medios >> NewConcursos      | /app_test.php/contests                         | http://latam.alienwarearena.local/app_test.php/contests    |
       | Medios >> NewGalería de Fotos   | /app_test.php/galleries/                   | http://latam.alienwarearena.local/app_test.php/galleries/  |
       | Medios >> Vídeos            | http://video.alienwarearena.com/               |                                                            |
       | Medios >> Explorar          | /app_test.php/wallpapers                       | http://latam.alienwarearena.local/app_test.php/wallpapers  |
@@ -54,7 +54,7 @@ Feature: Main Navigation
       | Games                       | /app_test.php/games/                            | http://na.alienwarearena.local/app_test.php/age/verify              |
       | Events                      | /app_test.php/events                            | http://na.alienwarearena.local/app_test.php/events                  |
       | Forums                      | /app_test.php/forums                            | http://www.alienwarearena.com/forums                                |
-      | Media >> NewContests        | /app_test.php/contests/image                    | http://na.alienwarearena.local/app_test.php/contests/image          |
+      | Media >> NewContests        | /app_test.php/contests                          | http://na.alienwarearena.local/app_test.php/contests                |
       | Media >> NewImage Gallery   | /app_test.php/galleries/                        | http://na.alienwarearena.local/app_test.php/galleries/              |
       | Media >> Videos             | http://video.alienwarearena.com/                |                                                                     |
       | Media >> Wallpapers         | /app_test.php/wallpapers                        | http://na.alienwarearena.local/app_test.php/wallpapers              |
@@ -76,7 +76,7 @@ Feature: Main Navigation
       | Games                       | /app_test.php/games/                                                                              | http://eu.alienwarearena.local/app_test.php/age/verify  |
       | Events                      | /app_test.php/events                                                                              | http://eu.alienwarearena.local/app_test.php/events      |
       | Forums                      | /app_test.php/forums                                                                              | http://www.alienwarearena.com/forums                    |
-      | Media >> NewContests        | /app_test.php/contests/image                                                                      | http://eu.alienwarearena.local/app_test.php/contests/image   |
+      | Media >> NewContests        | /app_test.php/contests                                                                            | http://eu.alienwarearena.local/app_test.php/contests    |
       | Media >> NewImage Gallery   | /app_test.php/galleries/                                                                          | http://eu.alienwarearena.local/app_test.php/galleries/  |
       | Media >> Videos             | http://video.alienwarearena.com/                                                                  |                                                         |
       | Media >> Wallpapers         | /app_test.php/wallpapers                                                                          | http://eu.alienwarearena.local/app_test.php/wallpapers  |
