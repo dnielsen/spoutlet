@@ -83,14 +83,17 @@
                         <td>Members</td>
                         <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ memberCount }}</a></td>
                     </tr>
-                    <tr>
-                        <td>Upcoming Events</td>
-                        <td>{{ upcomingEvents|length }}</td>
-                    </tr>
-                    <tr>
-                        <td>Past Events</td>
-                        <td>{{ pastEvents|length }}</td>
-                    </tr>
+
+                    {% if features.hasEvents %}
+                        <tr>
+                            <td>Upcoming Events</td>
+                            <td>{{ upcomingEvents|length }}</td>
+                        </tr>
+                        <tr>
+                            <td>Past Events</td>
+                            <td>{{ pastEvents|length }}</td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <td>Comments</td>
                         <td><span class="comment-count">{{ commentTotal }}</span></td>
@@ -156,7 +159,9 @@
             <div class="featured-content-header">
                 {% if isAllowedToViewGroupContent %}
                     <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                    <a href="javascript:void(0);" id="group-events">Events</a>
+                    {% if features.hasEvents %}
+                        <a href="javascript:void(0);" id="group-events">Events</a>
+                    {% endif %}
                     <a href="javascript:void(0);" id="group-images">Images</a>
                     <a href="javascript:void(0);" id="group-videos">Videos</a>
                     {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
@@ -173,7 +178,9 @@
                     <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                    <div id="content-group-events" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    {% if features.hasEvents %}
+                        <div id="content-group-events" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+                    {% endif %}
                     <div id="content-group-discussions" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                     <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
                 {% elseif isAllowedToViewGroup %}
@@ -292,6 +299,7 @@
                 });
             }
 
+            {% if features.hasEvents %}
             var loadEventContent = function(id) {
                 var content = $('.featured-content-category#content-group-news');
 
@@ -300,6 +308,7 @@
                     $('#group-widget-content').unblock();
                 });
             }
+            {% endif %}
 
             var loadContent = function(tab) {
                 if(tab == 'group-' || tab.indexOf('comment') > 0) {
@@ -357,9 +366,11 @@
                         case 'group-about':
                             loadAboutContent(id);
                             break;
+                        {% if features.hasEvents %}
                         case 'group-events':
                             loadEventContent(id);
                             break;
+                        {% endif %}
                     }
 
                     //$(this).delay(500);

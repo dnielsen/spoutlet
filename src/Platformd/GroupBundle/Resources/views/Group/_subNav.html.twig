@@ -7,7 +7,7 @@
         {% if groupManager.isAllowedTo(app.user, group, site, 'ManageApplications') and not group.isPublic %}
             <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
         {% endif %}
-        {% if groupManager.isAllowedTo(app.user, group, site, 'ApproveEvent') %}
+        {% if groupManager.isAllowedTo(app.user, group, site, 'ApproveEvent')  and features.hasEvents %}
             <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Event Approvals</a></li>
         {% endif %}
         {% if groupManager.isAllowedTo(app.user, group, site, 'LeaveGroup') %}
