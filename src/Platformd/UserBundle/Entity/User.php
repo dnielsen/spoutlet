@@ -270,10 +270,7 @@ class User extends BaseUser
     protected $updated;
 
     /**
-     * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"},
-        groups={"Profile"})
+     * @Assert\File(maxSize="6000000", mimeTypes={"image/png", "image/jpeg", "image/jpg"}, groups={"Profile"})
      */
     public $file;
 
@@ -293,10 +290,17 @@ class User extends BaseUser
     private $cevoUserId;
 
      /**
-    * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
-    * @ORM\JoinColumn(onDelete="SET NULL")
-    */
+      * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
+      * @ORM\JoinColumn(onDelete="SET NULL")
+      */
     private $groupMembershipActions;
+
+    /**
+      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\LoginRecord", mappedBy="user", cascade={"persist"})
+      * @ORM\JoinColumn(onDelete="SET NULL")
+      * @ORM\OrderBy({"dateTime" = "DESC"})
+      */
+    private $loginRecords;
 
     public function __construct()
     {
@@ -304,6 +308,7 @@ class User extends BaseUser
         $this->events = new ArrayCollection();
         $this->giveawayKeys = new ArrayCollection();
         $this->groupMembershipActions = new ArrayCollection();
+        $this->loginRecords = new ArrayCollection();
     }
 
     /**
@@ -1045,5 +1050,10 @@ class User extends BaseUser
         }
 
         return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $this->cevoUserId);
+    }
+
+    public function getLoginRecords()
+    {
+        return $this->loginRecords;
     }
 }

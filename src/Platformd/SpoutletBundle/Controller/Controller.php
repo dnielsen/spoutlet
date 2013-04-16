@@ -19,6 +19,12 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.site_util')->getCurrentSite();
     }
 
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        return $this->getIpLookupUtil()->get('countryShort', $ipAddress);
+    }
+
     /**
      * @return string
      */
@@ -218,5 +224,10 @@ class Controller extends BaseController
     protected function getMediaUtil()
     {
         return $this->container->get('knp_media.util.media_util');
+    }
+
+    protected function getIpLookupUtil()
+    {
+        return $this->container->get('platformd.model.ip_lookup_util');
     }
 }
