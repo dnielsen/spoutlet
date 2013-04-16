@@ -835,6 +835,8 @@ class GalleryController extends Controller
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
+        $site = null;
+
         foreach ($siteRepo->findAll() as $dbSite) {
             if ($dbSite->getSubDomain() == $subdomain) {
                 $site = $dbSite;
