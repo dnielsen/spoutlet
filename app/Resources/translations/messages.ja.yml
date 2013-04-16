@@ -107,6 +107,7 @@ platformd:
 
     events:
         event_listings:
+            events: イベント
             header: ALIENWARE ARENAイベント
             create: Create Event
             show_map: マップを見る

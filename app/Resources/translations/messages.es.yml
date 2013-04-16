@@ -57,6 +57,7 @@ platformd:
 
     events:
         event_listings:
+            events: Eventos
             header: Evento de Alienware Arena
             create: Create Event
             show_map: Mostrar mapa
