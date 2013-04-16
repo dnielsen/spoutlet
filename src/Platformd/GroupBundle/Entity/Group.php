@@ -290,6 +290,10 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->deals                    = new ArrayCollection();
     }
 
+    public function __toString() {
+        return 'Group => { Id = '.$this->id.', Name = "'.$this->name.'" }';
+    }
+
     /**
      * Get id
      *

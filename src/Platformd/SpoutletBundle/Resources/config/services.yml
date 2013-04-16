@@ -4,6 +4,11 @@ services:
         arguments:
             - { key: %s3.access_key%, secret: %s3.secret_key% }
 
+    platformd.sqs:
+        class: AmazonSQS
+        arguments:
+            - { key: %s3.access_key%, secret: %s3.secret_key% }
+
     # adapters for Gaufrette filesystems
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
@@ -126,6 +131,13 @@ services:
             - %allow_caching%
         tags:
             - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentSiteId }
+
+    platformd.util.queue_util:
+        class: Platformd\SpoutletBundle\Util\QueueUtil
+        arguments:
+            - "@platformd.sqs"
+            - "@logger"
+            - "%queue_prefix%"
 
     platformd.util.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil

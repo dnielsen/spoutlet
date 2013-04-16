@@ -314,6 +314,10 @@ class User extends BaseUser
         $this->groupMembershipActions = new ArrayCollection();
     }
 
+    public function __toString() {
+        return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').', Country = "'.$this->getCountry().'" }';
+    }
+
     /**
      * Return true if the user's avatar has been approved
      *

@@ -37,7 +37,7 @@ class DealRepository extends EntityRepository
         $qb = $this->createQueryBuilder('d');
 
         $results = $qb->addSelect('p')
-            ->leftJoin('d.dealPools', 'p')
+            ->leftJoin('d.pools', 'p')
             ->leftJoin('d.sites', 's')
             ->where('s.id = :siteId')
             ->andWhere('d.id = :dealId')

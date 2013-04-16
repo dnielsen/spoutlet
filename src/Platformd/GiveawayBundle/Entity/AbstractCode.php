@@ -58,6 +58,10 @@ abstract class AbstractCode
         $this->setValue($value);
     }
 
+    public function __toString() {
+        return 'Key => { Id = '.$this->getId().', Value = "'.$this->getProtectedValue().'" }';
+    }
+
     public function getId()
     {
         return $this->id;
@@ -71,6 +75,20 @@ abstract class AbstractCode
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function getProtectedValue() {
+        if (!$this->value || !is_string($this->value)) {
+            return 'BLANK';
+        }
+
+        $length = strlen($this->value);
+
+        if ($length < 8) {
+            return str_repeat('*', $length);
+        }
+
+        return str_repeat('*', $length - 4).substr($this->value,-4,4);
     }
 
     public function assign(User $user, $ipAddress, $site)

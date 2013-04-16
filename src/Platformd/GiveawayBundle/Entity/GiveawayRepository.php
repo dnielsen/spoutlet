@@ -80,7 +80,7 @@ class GiveawayRepository extends EntityRepository
         $qb = $this->createQueryBuilder('g');
 
         $results = $qb->addSelect('p')
-            ->leftJoin('g.giveawayPools', 'p')
+            ->leftJoin('g.pools', 'p')
             ->leftJoin('g.sites', 's')
             ->where('s.id = :siteId')
             ->andWhere('g.slug = :slug')
@@ -101,7 +101,7 @@ class GiveawayRepository extends EntityRepository
         $qb = $this->createQueryBuilder('g');
 
         $results = $qb->addSelect('p')
-            ->leftJoin('g.giveawayPools', 'p')
+            ->leftJoin('g.pools', 'p')
             ->leftJoin('g.sites', 's')
             ->where('s.id = :siteId')
             ->andWhere('g.id = :giveawayId')

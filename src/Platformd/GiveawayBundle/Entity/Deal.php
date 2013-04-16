@@ -185,7 +185,7 @@ class Deal implements LinkableInterface, CommentableInterface
     /**
      * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\DealPool", mappedBy="deal")
      */
-    protected $dealPools;
+    protected $pools;
 
     /**
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
@@ -242,8 +242,12 @@ class Deal implements LinkableInterface, CommentableInterface
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
-        $this->dealPools = new ArrayCollection();
-        $this->sites = new ArrayCollection();
+        $this->pools              = new ArrayCollection();
+        $this->sites              = new ArrayCollection();
+    }
+
+    public function __toString() {
+        return 'Deal => { Id = '.$this->getId().', Name = "'.$this->getName().'", Status = "'.$this->getStatus().'", TestOnly = '.($this->getTestOnly() ? 'True' : 'False').' }';
     }
 
     public function setSitifiedAt($sitifiedAt)
@@ -554,19 +558,19 @@ class Deal implements LinkableInterface, CommentableInterface
         return $this->getStatus() == self::STATUS_PUBLISHED;
     }
 
-    public function setDealPools($pools)
+    public function setPools($pools)
     {
-        $this->dealPools = $pools;
+        $this->pools = $pools;
     }
 
-    public function getDealPools()
+    public function getPools()
     {
-        return $this->dealPools;
+        return $this->pools;
     }
 
     public function getActivePool()
     {
-        foreach($this->getDealPools() as $pool) {
+        foreach($this->getPools() as $pool) {
             if ($pool->getIsActive()) {
                 return $pool;
             }

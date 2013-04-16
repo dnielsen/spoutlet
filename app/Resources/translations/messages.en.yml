@@ -275,6 +275,15 @@ platformd:
             my_media: My Media
             sign_out: Sign Out
 
+
+    key_request_processor_command:
+        key_assigned_email_subject: Your Key Has Been Assigned!
+        key_assigned_email_body: |
+            Congratulations, you've successfully been assigned a key for the %promotion_title%.<br /><br />
+            Key: %promotion_key%<br /><br />
+            Please follow the instructions found on the <a href="%promotion_show_page%">%promotion_title%</a> page to redeem your key.<br /><br />
+            Questions? Email contact@alienwarearena.com.<br />
+            Alienware Arena Team
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem

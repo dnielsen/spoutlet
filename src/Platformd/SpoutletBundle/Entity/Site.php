@@ -74,6 +74,10 @@ class Site
         $this->siteFeatures->setSite($this);
     }
 
+    public function __toString() {
+         return 'Site => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
+    }
+
     /**
      * Get id
      *

@@ -151,6 +151,11 @@ class Controller extends BaseController
         return $this->container->get('session')->setFlash($key, $message);
     }
 
+    protected function getQueueUtil()
+    {
+        return $this->container->get('platformd.util.queue_util');
+    }
+
     # this function getUser is only here because it exists in many files... we should no longer use this one and should instead use getCurrentUser()
     protected function getUser()
     {

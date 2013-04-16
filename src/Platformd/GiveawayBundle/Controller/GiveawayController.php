@@ -13,6 +13,7 @@ use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_main_actions_data;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
+use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 
 /**
 *
@@ -123,7 +124,7 @@ class GiveawayController extends Controller
 
         foreach ($giveaways as $giveaway) {
             $keyRepo = $this->getKeyRepository();
-            if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getGiveawayPools()) == 0) {
+            if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
                 array_push($expired, $giveaway);
             } else {
                 array_push($active, $giveaway);
@@ -174,121 +175,30 @@ class GiveawayController extends Controller
      */
     public function keyAction($slug, Request $request, $joinGroup=true)
     {
-        if ($slug == 'dota-2') {
-            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
-        }
-
-        // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
-        $user = $this->getUser();
 
-        $giveaway = $this->findGiveaway($slug);
-        $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
+        $giveawayManager         = $this->container->get('pd_giveaway.giveaway_manager');
+        $currentUser             = $this->getUser();
+        $giveaway                = $this->findGiveaway($slug);
+        $message                 = new KeyRequestQueueMessage();
+        $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY;
+        $message->promotionId    = $giveaway->getId();
+        $message->dateTime       = new \DateTime();
+        $message->slug           = $giveaway->getSlug();
+        $message->userId         = $currentUser->getId();
+        $message->siteId         = $this->getCurrentSite()->getId();
+        $message->ipAddress      = $request->getClientIp(true);
 
-        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
-        if (!$giveaway->getStatus() == "active" && !$canTest) {
-            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+        $result = $this->getQueueUtil()->addToQueue($message);
 
-            return $this->redirectToShow($giveawayShow);
+        if (!$result) {
+
         }
 
-        // make sure this is the type of giveaway that actually allows this
-        if (!$giveaway->allowKeyFetch()) {
-            throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
-        }
+        var_dump($result);
+        exit();
 
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
-        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($giveawayShow);
-        }
-
-        // check that they pass the new style age-country restriction ruleset
-        if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
-            $this->setFlash('error', 'platformd.giveaway.not_eligible');
-            return $this->redirect($giveawayShow);
-        }
-
-        $pool = $giveaway->getActivePool();
-
-        if (!$pool) {
-            // repeated below if there is no unassigned keys
-            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        $clientIp = $request->getClientIp(true);
-
-        // check the IP limit
-        if (!$this->getKeyRepository()->canIpHaveMoreKeys($clientIp, $pool)) {
-            $this->setFlash('error', 'platformd.giveaway.max_ip_limit');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        // does this user already have a key?
-        if ($this->getKeyRepository()->doesUserHaveKeyForGiveaway($this->getUser(), $giveaway)) {
-            $this->setFlash('error', 'platformd.giveaway.already_assigned');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        $key = $this->getKeyRepository()
-            ->getUnassignedKey($pool)
-        ;
-
-        if (!$key) {
-            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
-            if($giveaway->getGroup()) {
-                $groupManager = $this->getGroupManager();
-                $group = $giveaway->getGroup();
-
-                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
-                    // TODO This should probably be refactored to use the global activity table
-                    $joinAction = new GroupMembershipAction();
-                    $joinAction->setGroup($group);
-                    $joinAction->setUser($user);
-                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
-
-                    $group->getMembers()->add($user);
-                    $group->getUserMembershipActions()->add($joinAction);
-
-                    // TODO Add a service layer for managing groups and dispatching such events
-                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-                    $dispatcher = $this->get('event_dispatcher');
-                    $event = new GroupEvent($group, $user);
-                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
-
-                    $groupManager->saveGroup($group);
-
-                    if($group->getIsPublic()) {
-                        try {
-                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
-                        } catch (ApiException $e) {
-
-                        }
-                    }
-                }
-            }
-        }
-
-        // assign this key to this user - record ip address
-        $key->assign($this->getUser(), $clientIp, $this->getLocale());
-        $this->getDoctrine()->getEntityManager()->flush();
-
-        return $this->redirect($this->generateUrl('giveaway_show', array(
-            'slug' => $slug,
-            'keyId' => $key->getId(),
-        )));
+        //pass them to the show action
     }
 
     /**

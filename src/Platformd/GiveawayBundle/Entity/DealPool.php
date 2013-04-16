@@ -19,7 +19,7 @@ class DealPool extends AbstractPool
      * Many to one with Deal
      *
      * @var Deal
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Deal", inversedBy="dealPools")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Deal", inversedBy="pools")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $deal;

@@ -21,7 +21,7 @@ class GiveawayPool extends AbstractPool
      * Many to one with Giveaway
      *
      * @var Giveaway
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="giveawayPools", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="pools", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $giveaway;

@@ -239,7 +239,7 @@ class Giveaway implements LinkableInterface, CommentableInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", mappedBy="giveaway")
      */
-    protected $giveawayPools;
+    protected $pools;
 
     /**
      * This is a raw HTML field, but with a special format.
@@ -302,8 +302,8 @@ class Giveaway implements LinkableInterface, CommentableInterface
     {
         // auto-publish, this uses the "status" field instead
         $this->published = true;
-        $this->giveawayPools = new ArrayCollection();
-        $this->sites = new ArrayCollection();
+        $this->sites     = new ArrayCollection();
+        $this->pools     = new ArrayCollection();
     }
 
     /**
@@ -773,7 +773,7 @@ class Giveaway implements LinkableInterface, CommentableInterface
 
     public function __toString()
     {
-        return $this->getName();
+        return 'Giveaway => { Id = '.$this->getId().', Name = "'.$this->getName().'", Status = "'.$this->getStatus().'", TestOnly = '.($this->getTestOnly() ? 'True' : 'False').', Type = "'.$this->getGiveawayType().'" }';
     }
 
     public function getThreadId()
@@ -788,27 +788,14 @@ class Giveaway implements LinkableInterface, CommentableInterface
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getGiveawayPools()
+    public function getPools()
     {
-        return $this->giveawayPools;
+        return $this->pools;
     }
 
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $giveawayPools
-     */
-    public function setGiveawayPools($giveawayPools)
+    public function setPools($value)
     {
-        $this->giveawayPools = $giveawayPools;
-    }
-
-    /**
-     * Add an user
-     *
-     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
-     */
-    public function addUser(GiveawayPool $pool)
-    {
-        $this->giveawayPools->add($pool);
+        $this->pools = $value;
     }
 
     /**
@@ -972,7 +959,7 @@ class Giveaway implements LinkableInterface, CommentableInterface
      */
     public function getActivePool()
     {
-        foreach($this->getGiveawayPools() as $pool) {
+        foreach($this->getPools() as $pool) {
             if ($pool->getIsActive()) {
                 return $pool;
             }

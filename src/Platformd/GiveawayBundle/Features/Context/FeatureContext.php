@@ -61,7 +61,7 @@ class FeatureContext extends AbstractFeatureContext
                 $pool->setIsActive(true);
 
                 // make sure to set the inverse side of the relationship...
-                $giveaway->getGiveawayPools()->add($pool);
+                $giveaway->getPools()->add($pool);
 
                 foreach ($keys as $key) {
                     $gKey = new GiveawayKey($key);

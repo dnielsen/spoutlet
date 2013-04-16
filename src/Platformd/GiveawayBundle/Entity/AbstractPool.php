@@ -87,6 +87,10 @@ abstract class AbstractPool
      */
     abstract public function isTotallyActive();
 
+    public function __toString() {
+        return 'Pool => { Id = '.$this->getId().', MaxKeysPerIP = '.$this->getMaxKeysPerIp().', Description = "'.$this->getDescription().'" }';
+    }
+
     public function getId()
     {
         return $this->id;

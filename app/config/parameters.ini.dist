@@ -51,3 +51,5 @@
     liip_enabled_themes[] = test_theme
 
     admin_prod_url_scheme = https
+
+    queue_prefix          = https://sqs.us-east-1.amazonaws.com/042124576429/PD_TESTING_

@@ -40,6 +40,10 @@ class Country
      */
     private $name;
 
+    public function __toString() {
+        return 'Country => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
+    }
+
      /**
      * Get id
      *
