@@ -87,7 +87,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers(false)
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $china->getSiteFeatures()
@@ -107,7 +107,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $na->getSiteFeatures()
@@ -167,7 +167,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $in->getSiteFeatures()
@@ -187,7 +187,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $mysg->getSiteFeatures()
@@ -207,7 +207,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $anz->getSiteFeatures()
@@ -227,7 +227,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
-          ->setHasEvents(false)
+          ->setHasEvents()
         ;
 
         $this->manager->flush();
