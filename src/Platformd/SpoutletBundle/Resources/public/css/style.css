@@ -273,7 +273,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 #content-wrapper { width: 970px; margin:0px auto;}
 #content-background { width: 970px; float: left; background-color: #000;}
-#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px;}
+#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px; min-height: 800px; }
 .wide-950 { width: 950px; margin: 0 auto; }
 
 
