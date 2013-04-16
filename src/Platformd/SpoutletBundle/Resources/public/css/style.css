@@ -119,7 +119,7 @@ select.dark { color: #b3b3b3; font-weight: bold; font-size: 16px; background: #3
 #omni { width: 100%; height: 100%; }
 body.staff #omni { background:url(/bundles/spoutlet/images/aw_staff_header.jpg) top center no-repeat; }
 html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top left repeat-x #000000; }
-#page { background: url('/bundles/spoutlet/images/content-bg-2.jpg') center 164px no-repeat; }
+#page { background: url('/bundles/spoutlet/images/content-bg-2.jpg') center 164px no-repeat; min-height: 1100px; }
 
 /** HEADER **/
 #header { width:100%; height:135px; font-size:11px; background: url('/bundles/spoutlet/images/header.png') no-repeat center center; }
@@ -273,7 +273,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 #content-wrapper { width: 970px; margin:0px auto;}
 #content-background { width: 970px; float: left; background-color: #000;}
-#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px; min-height: 800px; }
+#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px; }
 .wide-950 { width: 950px; margin: 0 auto; }
 
 
