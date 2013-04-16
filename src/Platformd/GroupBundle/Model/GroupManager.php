@@ -2,26 +2,34 @@
 
 namespace Platformd\GroupBundle\Model;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\GroupBundle\GroupEvents;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\GroupBundle\Entity\GroupNews;
 use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\GroupBundle\Entity\GroupImage;
 use Platformd\GroupBundle\Entity\GroupDiscussion;
 use Platformd\GroupBundle\Entity\GroupDiscussionPost;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupDiscussionEvent;
 use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
-use Platformd\GroupBundle\GroupEvents;
-use Platformd\SpoutletBundle\Entity\Location;
-use Doctrine\ORM\EntityManager;
-use Platformd\GameBundle\Entity\GamePageLocale;
-use Symfony\Component\HttpFoundation\Session;
-use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\EventBundle\Entity\GroupEvent as GroupEventEntity;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\CEVOBundle\Api\ApiManager;
+use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
+
+use Doctrine\ORM\EntityManager;
+use Knp\MediaBundle\Util\MediaUtil;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Manager for Group:
@@ -38,6 +46,10 @@ class GroupManager
 
     private $mediaUtil;
 
+    private $siteUtil;
+
+    private $CEVOApiManager;
+
     private $securityContext;
 
     private $eventDispatcher;
@@ -45,22 +57,43 @@ class GroupManager
     private $isMemberCache;
     private $isApplicantCache;
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'LeaveGroup');
-    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
     static private $applicantIsAllowedTo         = array('ViewGroup');
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        EntityManager $em,
+        Session $session,
+        MediaUtil $mediaUtil,
+        SiteUtil $siteUtil,
+        ApiManager $CEVOApiManager,
+        SecurityContextInterface $securityContext,
+        EventDispatcherInterface $eventDispatcher
+    )
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
+        $this->siteUtil = $siteUtil;
+        $this->CEVOApiManager = $CEVOApiManager;
         $this->securityContext = $securityContext;
         $this->eventDispatcher = $eventDispatcher;
         $this->isMemberCache = array();
         $this->isApplicantCache = array();
+    }
+
+    /**
+     * Find one by
+     *
+     * @param $criteria
+     * @return object
+     */
+    public function getGroupBy($criteria)
+    {
+        return $this->getRepository()->findOneBy($criteria);
     }
 
     /**
@@ -95,6 +128,85 @@ class GroupManager
         if ($flush) {
             $this->em->flush();
         }
+    }
+
+    /**
+     * Automatically makes a user join a group
+     *
+     * @param \Platformd\GroupBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function autoJoinGroup(Group $group, User $user)
+    {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
+            return;
+        }
+
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        // TODO This should probably be refactored to use the global activity table
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+        $group->getMembers()->add($user);
+        $group->getUserMembershipActions()->add($joinAction);
+
+        $event = new GroupEvent($group, $user);
+        $this->eventDispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+        $this->saveGroup($group);
+
+        if ($group->getIsPublic()) {
+            try {
+                $this->CEVOApiManager->GiveUserXp('joingroup');
+            } catch (ApiException $e) {
+                // We do nothing
+            }
+        }
+    }
+
+    /**
+     * Automatically makes a user apply to a group
+     *
+     * @param \Platformd\GroupBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws \Exception
+     */
+    public function autoApplyToGroup(Group $group, User $user, GroupEventEntity $event=null)
+    {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
+            return;
+        }
+
+        /** @var $applicationRepo \Platformd\GroupBundle\Entity\GroupApplicationRepository */
+        $applicationRepo = $this->em->getRepository('GroupBundle:GroupApplication');
+
+        if ($application = $applicationRepo->getOneForGroupAndUser($group, $user)) {
+            throw new \Exception('You have already applied to this group!');
+        }
+
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'ApplyToGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $application = new GroupApplication();
+
+        $application->setGroup($group);
+        $application->setApplicant($user);
+        $application->setSite($this->getCurrentSite());
+        $application->setReason('This is an automated application because user has registered for an event belonging to this group.');
+
+        if ($event) {
+            $application->setEvent($event);
+        }
+
+        $this->em->persist($application);
+        $this->em->flush();
     }
 
     public function saveGroupNews(GroupNews $groupNews, $flush = true)
@@ -354,6 +466,16 @@ class GroupManager
         return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
     }
 
+    public function getAllGroupsForUser(User $user)
+    {
+        return $this->getRepository()->getAllGroupsForUser($user);
+    }
+
+    private function getCurrentSite()
+    {
+        return $this->siteUtil->getCurrentSite();
+    }
+
     public function getMembershipCountByGroup($group)
     {
         return $this->getRepository()->getMembershipCountByGroup($group);
@@ -420,7 +542,7 @@ class GroupManager
 
     public function isMember($user, Group $group)
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -439,7 +561,7 @@ class GroupManager
 
     public function isApplicant($user, Group $group)
     {
-        if(!$user) {
+        if(!$user instanceof User) {
             return false;
         }
 

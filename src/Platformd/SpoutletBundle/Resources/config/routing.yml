@@ -44,10 +44,6 @@ arp:
 _spoutlet_admin:
     resource: routing/admin.yml
 
-_spoutlet_events:
-    resource: routing/events.yml
-    prefix:   /events
-
 _spoutlet_account:
     resource: routing/account.yml
     prefix:   /account

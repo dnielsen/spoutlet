@@ -1,0 +1,7 @@
+services:
+    platformd.event.doctrine.listener.group_event:
+        class: Platformd\EventBundle\Doctrine\Listener\GroupEventListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }

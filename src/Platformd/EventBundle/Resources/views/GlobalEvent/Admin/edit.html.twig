@@ -1,0 +1,31 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+
+    <h1>Edit Event</h1>
+
+    <form id="global-event-form" action="{{ path('admin_events_edit', {'id' : event.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'EventBundle:GlobalEvent/Admin:_form.html.twig' %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" formnovalidate>Save</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+{% endblock %}

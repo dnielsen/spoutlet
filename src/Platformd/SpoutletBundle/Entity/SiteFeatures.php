@@ -321,7 +321,7 @@ class SiteFeatures
         return $this->hasGiveaways;
     }
 
-    public function setHasGiveaways($value)
+    public function setHasGiveaways($value = true)
     {
         $this->hasGiveaways = $value;
         return $this;
@@ -332,10 +332,9 @@ class SiteFeatures
         return $this->hasEvents;
     }
 
-    public function setHasEvents($value)
+    public function setHasEvents($value = true)
     {
         $this->hasEvents = $value;
         return $this;
     }
-
 }

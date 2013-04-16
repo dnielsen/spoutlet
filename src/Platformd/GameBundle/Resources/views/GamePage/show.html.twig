@@ -151,6 +151,10 @@
                                 {{ _self._renderYoutubeFeedLink(gamePage.youtubeIdTrailer4, gamePage.youtubeIdTrailer4Headline) }}
                                 {% set feedItemCount = feedItemCount + 1 %}
                             {% endif %}
+
+                            {% for event in events %}
+                                <li class="widget-item">{{ event | pd_link_full(event.name, ['global-event-link']) }}</li>
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>

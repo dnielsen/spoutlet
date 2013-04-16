@@ -16,6 +16,7 @@ parameters:
 
     # keep this (allow_caching) off as you can get inconsistent results in a dev/test environment.
     allow_caching: false
+    test_acl_database: %acl_database_name%_test
 
 framework:
     test: ~
@@ -40,4 +41,4 @@ doctrine:
             default:
                 dbname:   %database_name%_test
             acl:
-                dbname:   %acl_database_name%_test
+                dbname:   %test_acl_database%

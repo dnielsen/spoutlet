@@ -93,11 +93,15 @@ class GamePageController extends Controller
             || $gamePage->getyoutubeIdTrailer1() != ''
             || $gamePage->getyoutubeIdTrailer1() != '';
 
-        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos || count($feedGiveaways) > 0;
+        $events = $this->getGlobalEventService()->findEventsForGamePage($site, $gamePage->getGame());
+
+        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos || count($events) > 0;
 
         $hasFeatures = $gamePage->getKeyFeature1() != ''
             || $gamePage->getKeyFeature2() != ''
             || $gamePage->getKeyFeature3() != '';
+
+
 
         return array(
             'gamePage' => $gamePage,
@@ -108,6 +112,7 @@ class GamePageController extends Controller
             'hasFeedItems' => $hasFeedItems,
             'hasFeatures' => $hasFeatures,
             'feedGiveaways' => $feedGiveaways,
+            'events' => $events,
         );
     }
 
@@ -117,5 +122,13 @@ class GamePageController extends Controller
     private function getGamePageManager()
     {
         return $this->get('platformd.model.game_page_manager');
+    }
+
+    /**
+     * @return GlobalEventService
+     */
+    private function getGlobalEventService()
+    {
+        return $this->get('platformd_event.service.global_event');
     }
 }

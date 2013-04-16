@@ -1,0 +1,5 @@
+_group_event:
+    resource: group_event.yml
+
+_global_event:
+    resource: global_event.yml

@@ -239,4 +239,9 @@ class Comment implements ReportableContentInterface
     {
         return 1;
     }
+
+    public function getClass()
+    {
+        return get_class($this);
+    }
 }

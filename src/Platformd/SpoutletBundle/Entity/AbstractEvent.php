@@ -34,7 +34,6 @@ use Platformd\GroupBundle\Entity\Group;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *      "event"     = "Platformd\SpoutletBundle\Entity\Event",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  *

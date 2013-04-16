@@ -1,0 +1,26 @@
+parameters:
+    platformd_event.entity.event.class: Platformd\EventBundle\Entity\Event
+    platformd_event.entity.group_event.class: Platformd\EventBundle\Entity\GroupEvent
+    platformd_event.entity.global_event.class: Platformd\EventBundle\Entity\GlobalEvent
+    platformd_event.repository.event.class: Platformd\EventBundle\Repository\EventRepository
+    platformd_event.repository.group_event.class: Platformd\EventBundle\Repository\GroupEventRepository
+    platformd_event.repository.global_event.class: Platformd\EventBundle\Repository\GlobalEventRepository
+
+services:
+    platformd_event.repository.event:
+        class: %platformd_event.repository.event.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+            - %platformd_event.entity.event.class%
+
+    platformd_event.repository.group_event:
+        class: %platformd_event.repository.group_event.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+            - %platformd_event.entity.group_event.class%
+
+    platformd_event.repository.global_event:
+        class: %platformd_event.repository.global_event.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+            - %platformd_event.entity.global_event.class%

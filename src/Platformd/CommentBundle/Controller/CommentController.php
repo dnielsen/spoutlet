@@ -5,7 +5,6 @@ use FOS\CommentBundle\Controller\CommentController as BaseCommentController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;

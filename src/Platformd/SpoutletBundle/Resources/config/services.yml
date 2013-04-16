@@ -155,36 +155,22 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
 
+    platformd.model.group_manager:
+        class: Platformd\GroupBundle\Model\GroupManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@session"
+            - "@knp_media.util.media_util"
+            - "@platformd.util.site_util"
+            - "@pd.cevo.api.api_manager"
+            - "@security.context"
+            - "@event_dispatcher"
+
     # activity manager service
     platformd.model.activity_manager:
         class: Platformd\SpoutletBundle\Model\ActivityManager
         arguments:
             - "@doctrine.orm.entity_manager"
-
-    platformd.listener.group_discussion_listener:
-        class: Platformd\SpoutletBundle\EventListener\GroupDiscussionListener
-        arguments:
-            - "@platformd.model.group_manager"
-        tags:
-            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
-            - { name: kernel.event_listener, event: awa.content.reinstate, method: onAddToDiscussion }
-            - { name: kernel.event_listener, event: awa.discussionPost.delete, method: onRemoveFromDiscussion }
-            - { name: kernel.event_listener, event: awa.content.report, method: onRemoveFromDiscussion }
-        scope: request
-
-    platformd.listener.global_activity_listener:
-        class: Platformd\SpoutletBundle\EventListener\GlobalActivityListener
-        arguments:
-            - "@platformd.model.activity_manager"
-        tags:
-            - { name: kernel.event_listener, event: awa.group.join, method: onGroupJoin }
-            - { name: kernel.event_listener, event: awa.group.leave, method: onGroupLeave }
-            - { name: kernel.event_listener, event: awa.discussion.create, method: onDiscussionCreate }
-            - { name: kernel.event_listener, event: awa.discussion.view, method: onDiscussionView }
-            - { name: kernel.event_listener, event: awa.discussion.delete, method: onDiscussionDelete }
-            - { name: kernel.event_listener, event: awa.content.report, method: onReportDiscussion }
-            - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
-        scope: request
 
     platformd.doctrine.locales_relationship_listener:
         class: Platformd\SpoutletBundle\Doctrine\LocalesRelationshipListener
@@ -197,37 +183,6 @@ services:
             - "@security.context"
             - "@session"
         scope: request
-
-    platformd.cache.cache_failure_exception_listener:
-        class: Platformd\SpoutletBundle\EventListener\CacheFailureExceptionListener
-        arguments:
-            - "@templating"
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
-
-    platformd.age.insufficient_age_listener:
-        class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
-        arguments:
-            - "@router"
-            - "@platformd.age.age_manager"
-            - "@templating"
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
-        scope: request
-
-    platformd.tenant.site_protection_listener:
-        class: Platformd\SpoutletBundle\Tenant\SiteProtectionListener
-        arguments:
-            - "%allowed_sites%"
-            - "@pd.cevo.cevo_auth_manager"
-            - %allow_cevo_forwarding%
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
-
-    platformd.locale.locales_relationship_helper:
-        class: Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper
-        arguments:
-            - "@doctrine.orm.entity_manager"
 
     platformd.cache.memcached:
         class: Memcached
@@ -267,3 +222,19 @@ services:
         arguments:
             - 'SpoutletBundle:ContentReport'
 
+    platformd.doctrine.listener.group:
+        class: Platformd\SpoutletBundle\Doctrine\Listener\GroupListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    platformd.locale.locales_relationship_helper:
+        class: Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    platformd.form.type.gmtOffsetTimezone:
+        class: Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType
+        tags:
+            - { name: form.type, alias: gmtTimezone }

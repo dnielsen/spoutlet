@@ -56,10 +56,10 @@
                                     <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'content_reporting.report' | trans }}</a></li>
                                     <div class="report-options" id="report-options-{{ comment.id }}">
                                         <ul>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
                                         </ul>
                                     </div>
                                 </ul>
@@ -98,10 +98,10 @@
                                                 <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | trans }}</a></li>
                                                 <div class="report-options" id="report-options-{{ reply.id }}">
                                                     <ul>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
                                                     </ul>
                                                 </div>
                                             </ul>
@@ -223,7 +223,7 @@
             });
         });
 
-        $('.report-link').click(function (event) {
+        $('.comment-report-link').click(function (event) {
             {% if app.user %}
             $('.thread').block({message: null});
             var contentId = $(this).attr('data-id');

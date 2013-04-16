@@ -1,0 +1,541 @@
+src/Platformd/CommentBundle/Model/CommentManager.php:115:        if (strpos($id, 'group-') === 0) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:46:        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:54:            return $this->redirect($this->generateUrl('group_event_new_import', array('groupSlug' => $group->getSlug(), 'eventId' => $importedGroupEvent->getId())));
+src/Platformd/EventBundle/Controller/GroupEventController.php:90:                            'slug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:95:                        'groupSlug' => $group->getSlug(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:102:                        'slug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:131:        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'AddEvent')) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:167:                            'slug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:172:                        'groupSlug' => $group->getSlug(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:179:                        'slug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:205:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:234:                    'groupSlug' => $group->getSlug(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:258:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:270:            if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:299:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:318:        $emailLocale = $group->getOwner()->getLocale() ?: 'en';
+src/Platformd/EventBundle/Controller/GroupEventController.php:385:                        'slug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:454:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:481:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:543:        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:569:        if (!$group->isAllowedTo($this->getUser(), $this->getCurrentSite(), 'ApproveEvent')) {
+src/Platformd/EventBundle/Controller/GroupEventController.php:575:            'group' => $group->getId(),
+src/Platformd/EventBundle/Controller/GroupEventController.php:588:            'groupSlug' => $group->getSlug()
+src/Platformd/EventBundle/Controller/GroupEventController.php:706:        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinEvent')) {
+src/Platformd/EventBundle/Entity/GroupEvent.php:301:        return 'group-event-'.$this->getId();
+src/Platformd/EventBundle/Entity/GroupEvent.php:313:            'groupSlug' => $this->group->getSlug(),
+src/Platformd/EventBundle/EventListener/GroupEventListener.php:107:                $groupOwner     = $group->getOwner();
+src/Platformd/EventBundle/EventListener/GroupEventListener.php:113:                $approvalUrl    = $this->router->generate('group_event_pending_approval', array('groupSlug' => $group->getSlug()), true);
+src/Platformd/EventBundle/EventListener/GroupEventListener.php:124:                    '%groupName%' => $group->getName()
+src/Platformd/EventBundle/EventListener/GroupEventListener.php:130:                    "%groupName%" => $group->getName(),
+src/Platformd/EventBundle/Features/group_events.feature:12:#                | Group 1         | group-1        | en    | topic    | this is group 1              | yes    | no       |       |
+src/Platformd/EventBundle/Features/group_events.feature:15:#                | Test group event      | test-group-event     | en    | +2 days  | +4 days | Some description       | Group 1 | 0       | 1      |
+src/Platformd/EventBundle/Features/group_events.feature:16:#                | Inactive group event  | inactive-group-event | en    | +2 days  | +4 days | Some description       | Group 1 | 0       | 0      |
+src/Platformd/EventBundle/Features/group_events.feature:24:#        Given I am on "/groups/group-1"
+src/Platformd/EventBundle/Resources/config/routing/group_event.yml:2:    pattern: /group-events/ajax/rsvp
+src/Platformd/EventBundle/Resources/config/routing/group_event.yml:9:    pattern: /group-events/ajax/disable
+src/Platformd/EventBundle/Resources/config/routing/group_event.yml:16:    pattern: /group-events/{eventId}/cancel
+src/Platformd/EventBundle/Resources/config/routing/group_event.yml:20:    pattern: /group-events/{eventId}/activate
+src/Platformd/EventBundle/Resources/views/GroupEvent/pending.html.twig:14:        <div id="group-avatar">
+src/Platformd/EventBundle/Resources/views/GroupEvent/view.html.twig:110:                                        <div id="event-registration-public-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_join', { 'id': group.id, 'event': event.id }) }}" class="btn btn-primary">Register</a></div>
+src/Platformd/EventBundle/Resources/views/GroupEvent/view.html.twig:119:                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">Register</a></div>
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:105:        $this->addFindGroupsBreadcrumb()->addChild($group->getName());
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:138:                'comments'  => $this->getGroupCommentTotal('group-' . $group->getId(), $from, $thru),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:139:                'likes'     => $group->getFacebookLikes(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:163:        if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:164:            $group->Region = 'All Sites';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:166:            foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:167:                $group->Region .= '[' . $site->getName() . ']';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:171:        $this->addFindGroupsBreadcrumb()->addChild($group->getName());
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:221:        if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:222:            $group->Region = 'All Sites';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:224:            foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:225:                $group->Region .= '[' . $site->getName() . ']';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:252:            $group->Region,
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:253:            $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:310:            if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:311:                $group->Region = 'All Sites';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:313:                foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:314:                    $group->Region .= '[' . $site->getName() . ']';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:425:        if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:428:            foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:450:            $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:489:        if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:492:            foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:511:            $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:584:            $total += $group->getMembers()->count();
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:625:            $type = $group->getIsPublic() ? 'Public' : 'Private';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:628:            if ($group->getAllLocales()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:631:                foreach ($group->getSites() as $site) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:636:            $status = $group->getDeleted() ? 'Inactive' : 'Active';
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:638:            $newMemberCount = $group->getMembershipActions()
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:646:            $leftMemberCount = $group->getMembershipActions()
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:654:                $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:655:                $group->getCategory(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:658:                $group->getCreatedAt()->format('Y-m-d H:i:s'),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:660:                $group->getOwner()->getUsername(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:661:                $group->getOwner()->getEmail(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:662:                $group->getMembers()->count(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:664:                $group->getVideos()->count(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:665:                $group->getImages()->count(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:666:                $group->getNewsArticles()->count(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:667:                $group->getDiscussions()->count(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:668:                $group->getFacebookLikes(),
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:718:                $itemCollection = $group->getVideos();
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:728:                $itemCollection = $group->getImages();
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:739:                $itemCollection = $group->getNewsArticles();
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:748:                $itemCollection = $group->getDiscussions();
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:766:        $joinActions = $group->getMembershipActions()->filter(function($x) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:804:            if ($author->getId() == $group->getOwner()->getId()) {
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:805:                $createdAt = $group->getCreatedAt()->format('Y-m-d H:i:s');
+src/Platformd/GroupBundle/Controller/GroupAdminController.php:816:                $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupController.php:151:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:159:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:172:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:180:        $group->getMembers()->add($user);
+src/Platformd/GroupBundle/Controller/GroupController.php:181:        $group->getUserMembershipActions()->add($joinAction);
+src/Platformd/GroupBundle/Controller/GroupController.php:189:        $group->getApplications()->removeElement($application);
+src/Platformd/GroupBundle/Controller/GroupController.php:199:                '%groupUrl%' => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
+src/Platformd/GroupBundle/Controller/GroupController.php:200:                '%groupName%' => $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupController.php:218:        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:232:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:239:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:252:            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:260:        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:326:        if ($group->isOwner($user)) {
+src/Platformd/GroupBundle/Controller/GroupController.php:328:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:333:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:343:        $group->getMembers()->removeElement($user);
+src/Platformd/GroupBundle/Controller/GroupController.php:344:        $group->getUserMembershipActions()->add($leaveAction);
+src/Platformd/GroupBundle/Controller/GroupController.php:356:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:371:        if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
+src/Platformd/GroupBundle/Controller/GroupController.php:384:        $group->getMembers()->add($user);
+src/Platformd/GroupBundle/Controller/GroupController.php:385:        $group->getUserMembershipActions()->add($joinAction);
+src/Platformd/GroupBundle/Controller/GroupController.php:397:        if($group->getIsPublic()) {
+src/Platformd/GroupBundle/Controller/GroupController.php:407:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:422:            return $this->redirect($this->generateUrl($group->getLinkableRouteName(), $grpup->getLinkableRouteParameters()));
+src/Platformd/GroupBundle/Controller/GroupController.php:425:        if ($group->isMember($user) || $group->isOwner($user)) {
+src/Platformd/GroupBundle/Controller/GroupController.php:435:                if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
+src/Platformd/GroupBundle/Controller/GroupController.php:446:        $emailLocale = $group->getOwner()->getLocale() ?: 'en';
+src/Platformd/GroupBundle/Controller/GroupController.php:450:            '%groupUrl%' => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
+src/Platformd/GroupBundle/Controller/GroupController.php:451:            '%groupName%' => $group->getName(),
+src/Platformd/GroupBundle/Controller/GroupController.php:452:            '%approvalUrl%' => $this->generateUrl('group_applications', array('id' => $group->getId()), true),
+src/Platformd/GroupBundle/Controller/GroupController.php:455:        $emailTo = $group->getOwner()->getEmail();
+src/Platformd/GroupBundle/Controller/GroupController.php:475:        if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
+src/Platformd/GroupBundle/Controller/GroupController.php:477:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:485:                if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
+src/Platformd/GroupBundle/Controller/GroupController.php:487:                    return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:515:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:535:        foreach($group->getMembers() as $member)
+src/Platformd/GroupBundle/Controller/GroupController.php:546:            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:551:        if ($group->isOwner($user)) {
+src/Platformd/GroupBundle/Controller/GroupController.php:553:            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:558:            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:568:        $group->getMembers()->removeElement($user);
+src/Platformd/GroupBundle/Controller/GroupController.php:569:        $group->getUserMembershipActions()->add($removeAction);
+src/Platformd/GroupBundle/Controller/GroupController.php:575:        return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+src/Platformd/GroupBundle/Controller/GroupController.php:632:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+src/Platformd/GroupBundle/Controller/GroupController.php:655:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+src/Platformd/GroupBundle/Controller/GroupController.php:675:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+src/Platformd/GroupBundle/Controller/GroupController.php:698:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+src/Platformd/GroupBundle/Controller/GroupController.php:707:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+src/Platformd/GroupBundle/Controller/GroupController.php:803:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+src/Platformd/GroupBundle/Controller/GroupController.php:826:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+src/Platformd/GroupBundle/Controller/GroupController.php:844:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+src/Platformd/GroupBundle/Controller/GroupController.php:867:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+src/Platformd/GroupBundle/Controller/GroupController.php:876:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+src/Platformd/GroupBundle/Controller/GroupController.php:940:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+src/Platformd/GroupBundle/Controller/GroupController.php:963:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+src/Platformd/GroupBundle/Controller/GroupController.php:983:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+src/Platformd/GroupBundle/Controller/GroupController.php:1006:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+src/Platformd/GroupBundle/Controller/GroupController.php:1015:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+src/Platformd/GroupBundle/Controller/GroupController.php:1044:        $group->setDiscussionsEnabled(true);
+src/Platformd/GroupBundle/Controller/GroupController.php:1047:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1056:        $group->setDiscussionsEnabled(false);
+src/Platformd/GroupBundle/Controller/GroupController.php:1059:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1090:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1113:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1135:                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1160:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1167:        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1179:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1242:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+src/Platformd/GroupBundle/Controller/GroupController.php:1316:                    'id' => $group->getId(),
+src/Platformd/GroupBundle/Controller/GroupController.php:1356:            'id' => $group->getId(),
+src/Platformd/GroupBundle/Controller/GroupController.php:1377:        if ($group && $group->getDeleted()) {
+src/Platformd/GroupBundle/Controller/GroupController.php:1386:        $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+src/Platformd/GroupBundle/Controller/GroupController.php:1438:            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to upload relevant images and videos, or start a discussion on this topic.');
+src/Platformd/GroupBundle/Controller/GroupController.php:1463:                    $url = $this->generateUrl('group_event_new', array('groupSlug' => $group->getSlug()));
+src/Platformd/GroupBundle/Controller/GroupController.php:1476:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:1497:            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+src/Platformd/GroupBundle/Controller/GroupController.php:1519:        $group->setDeleted(true);
+src/Platformd/GroupBundle/Controller/GroupController.php:1531:        $canRemove = $group->isOwner($currentUser) && $currentUser != 'anon.';
+src/Platformd/GroupBundle/Controller/GroupController.php:1562:                $noSitePicked = !$group->getAllLocales() && $group->getSites()->count() < 1;
+src/Platformd/GroupBundle/Controller/GroupController.php:1565:                    $group->setAllLocales(false);
+src/Platformd/GroupBundle/Controller/GroupController.php:1566:                    $group->getSites()->clear();
+src/Platformd/GroupBundle/Controller/GroupController.php:1567:                    $group->getSites()->add($this->getCurrentSite());
+src/Platformd/GroupBundle/Controller/GroupController.php:1570:                $deleted = $group->getDeleted();
+src/Platformd/GroupBundle/Controller/GroupController.php:1577:                    $group->setDeletedReason(GROUP::DELETED_BY_ADMIN);
+src/Platformd/GroupBundle/Controller/GroupController.php:1580:                if ($group->getFeatured()) {
+src/Platformd/GroupBundle/Controller/GroupController.php:1581:                    $group->setFeaturedAt(new \DateTime('now'));
+src/Platformd/GroupBundle/Entity/Group.php:50:    const COMMENT_PREFIX = 'group-';
+src/Platformd/GroupBundle/Entity/GroupDiscussionRepository.php:31:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupImageRepository.php:23:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupImageRepository.php:34:        $qb->setParameter('groupId', $group->getId());
+src/Platformd/GroupBundle/Entity/GroupNewsRepository.php:23:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupNewsRepository.php:34:        $qb->setParameter('groupId', $group->getId());
+src/Platformd/GroupBundle/Entity/GroupRepository.php:501:            array_push($groupIds, $group->getId());
+src/Platformd/GroupBundle/Entity/GroupRepository.php:533:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupRepository.php:546:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupVideoRepository.php:23:            ->setParameter('groupId', $group->getId())
+src/Platformd/GroupBundle/Entity/GroupVideoRepository.php:34:        $qb->setParameter('groupId', $group->getId());
+src/Platformd/GroupBundle/Features/groups.feature:15:                | Group 1         | group-1        | en    | topic    | this is group 1              | yes    | no       |       |
+src/Platformd/GroupBundle/Features/groups.feature:36:        Then I should be on "/groups/group-1/"
+src/Platformd/GroupBundle/Features/groups.feature:53:            And I press "join-group-button"
+src/Platformd/GroupBundle/Features/groups.feature:59:            And I click on "join-group-button"
+src/Platformd/GroupBundle/Features/groups.feature:86:        Given I am on "/groups/group-1/"
+src/Platformd/GroupBundle/Features/groups.feature:113:        Given I am on "/groups/group-1"
+src/Platformd/GroupBundle/Features/groups.feature:123:        Given I am on "/groups/group-1"
+src/Platformd/GroupBundle/Features/groups.feature:133:        Given I am on "/groups/group-1"
+src/Platformd/GroupBundle/Features/groups.feature:150:        When I go to "/groups/group-1"
+src/Platformd/GroupBundle/Features/groups.feature:158:        When I go to "/groups/group-1"
+src/Platformd/GroupBundle/Form/Type/GroupType.php:40:                'with_remove_checkbox' => $this->group->getId() == null ? false : true
+src/Platformd/GroupBundle/Form/Type/GroupType.php:45:                'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
+src/Platformd/GroupBundle/Form/Type/GroupType.php:50:                'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
+src/Platformd/GroupBundle/Form/Type/GroupType.php:80:                if ($this->group->getId() > 0) {
+src/Platformd/GroupBundle/Model/GroupManager.php:109:        if (!$group->getOwner()) {
+src/Platformd/GroupBundle/Model/GroupManager.php:111:            $group->setOwner($user);
+src/Platformd/GroupBundle/Model/GroupManager.php:114:        $owner      = $group->getOwner();
+src/Platformd/GroupBundle/Model/GroupManager.php:115:        $members    = $group->getMembers();
+src/Platformd/GroupBundle/Model/GroupManager.php:119:            $group->setMembers($members);
+src/Platformd/GroupBundle/Model/GroupManager.php:122:        $groupDescription = $group->getDescription();
+src/Platformd/GroupBundle/Model/GroupManager.php:124:        $group->setDescription($groupDescription);
+src/Platformd/GroupBundle/Model/GroupManager.php:145:        if ($group->isMember($user) || $group->isOwner($user)) {
+src/Platformd/GroupBundle/Model/GroupManager.php:149:        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'JoinGroup')) {
+src/Platformd/GroupBundle/Model/GroupManager.php:159:        $group->getMembers()->add($user);
+src/Platformd/GroupBundle/Model/GroupManager.php:160:        $group->getUserMembershipActions()->add($joinAction);
+src/Platformd/GroupBundle/Model/GroupManager.php:167:        if ($group->getIsPublic()) {
+src/Platformd/GroupBundle/Model/GroupManager.php:186:        if ($group->isMember($user) || $group->isOwner($user)) {
+src/Platformd/GroupBundle/Model/GroupManager.php:197:        if (!$group->isAllowedTo($user, $this->getCurrentSite(), 'ApplyToGroup')) {
+src/Platformd/GroupBundle/Model/GroupManager.php:414:        if (!$mUtil->persistRelatedMedia($group->getBackgroundImage())) {
+src/Platformd/GroupBundle/Model/GroupManager.php:415:            $group->setBackgroundImage(null);
+src/Platformd/GroupBundle/Model/GroupManager.php:418:        if (!$mUtil->persistRelatedMedia($group->getGroupAvatar())) {
+src/Platformd/GroupBundle/Model/GroupManager.php:419:            $group->setGroupAvatar(null);
+src/Platformd/GroupBundle/Model/GroupManager.php:422:        if (!$mUtil->persistRelatedMedia($group->getThumbNail())) {
+src/Platformd/GroupBundle/Model/GroupManager.php:423:            $group->setThumbNail(null);
+src/Platformd/GroupBundle/Model/GroupManager.php:431:        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
+src/Platformd/GroupBundle/Model/GroupManager.php:438:        $sites = $group->getSites();
+src/Platformd/GroupBundle/Model/GroupManager.php:442:            $url .= sprintf('http://%s.alienwarearena.com/groups/%s/show/,', $site->getSubDomain(), $group->getId());
+src/Platformd/GroupBundle/Model/GroupManager.php:467:        $group->setFacebookLikes($total);
+src/Platformd/GroupBundle/Model/GroupManager.php:507:        if ($group->getDeleted() && $action != "EditGroup") {
+src/Platformd/GroupBundle/Model/GroupManager.php:511:        if (!$group->isVisibleOnSite($site)) {
+src/Platformd/GroupBundle/Model/GroupManager.php:518:            $isOwner        = $group->isOwner($user);
+src/Platformd/GroupBundle/Model/GroupManager.php:540:        if ($group->getIsPublic()) {
+src/Platformd/GroupBundle/Model/GroupManager.php:544:        if (!$group->getIsPublic()) {
+src/Platformd/GroupBundle/Model/GroupManager.php:557:        $cacheKey = $user->getId().'-'.$group->getId();
+src/Platformd/GroupBundle/Model/GroupManager.php:576:        $cacheKey = $user->getId().'-'.$group->getId();
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:21:    pattern: /metrics/group-summary
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:25:    pattern: /{groupId}/metrics/group-export/{type}
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:29:    pattern: /metrics/group-content-report/{id}
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:41:   pattern: /metrics/group-discussion-summary
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:45:    pattern: /{id}/metrics/group-discussions-summary-export
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:49:    pattern: /{id}/metrics/group-discussions-details-export
+src/Platformd/GroupBundle/Resources/config/routing/admin_group.yml:53:    pattern: /{id}/metrics/group-discussions-replies-export
+src/Platformd/GroupBundle/Resources/public/css/groups.css:1:#group-avatar {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:5:#group-avatar img {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:16:#group-name {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:31:#group-like-wrapper {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:36:#group-invite-wrapper {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:42:#report-group-wrapper {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:48:#group-video-form-wrapper h2 {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:52:#group-video-form-wrapper ul {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:56:#group-image-form-wrapper h2 {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:60:#group-image-form-wrapper ul {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:99:#group-member-count {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:108:#group-comment-count {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:117:#group-blurb {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:125:#group-location-address {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:130:.join-group-options {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:134:.join-group-options a {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:142:.join-group-options a:hover {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:150:button#join-group-button {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:160:button#join-group-button:hover {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:165:#group-invite {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:204:.group-news-date {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:208:#content-group-news {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:212:#content-group-events {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:216:#content-group-photos {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:220:#content-group-videos {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:241:.group-image-item {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:248:.group-image-image img {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:253:.group-image-title {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:258:.group-image-actions {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:311:.group-list-item {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:319:.group-list-item .details {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:323:.group-list-item .item-detail {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:327:.group-list-item img {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:341:.group-details-table {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:345:.group-details-table td {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:349:.group-list-item .report-group-caption {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:353:.group-list-item .report-group-caption a {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:357:.group-event-actions {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:361:.group-event-item {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:368:.group-event-date {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:373:.group-event-title,
+src/Platformd/GroupBundle/Resources/public/css/groups.css:374:.group-event-date {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:378:.group-event-details {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:383:.group-event-title,
+src/Platformd/GroupBundle/Resources/public/css/groups.css:384:.group-event-location {
+src/Platformd/GroupBundle/Resources/public/css/groups.css:388:.group-upcoming-events,
+src/Platformd/GroupBundle/Resources/public/css/groups.css:389:.group-past-events {
+src/Platformd/GroupBundle/Resources/views/Group/_form.html.twig:17:            <div id="group-location-controls">
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupDiscussionPostPopup.html.twig:37:        $('.report-group-discussion-post').click(function () {
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:5:        <div id="report-group-response" style="display:none;">
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:8:        <div id="report-group-options">
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:9:            <input class="report-group-option" type="radio" name="group-reason" value="inappropriate_content"> Inappropriate content <br />
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:10:            <input class="report-group-option" type="radio" name="group-reason" value="spam"> Spam <br />
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:11:            <input class="report-group-option" type="radio" name="group-reason" value="violates_intellectual_property"> Violates intellectual property <br />
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:12:            <input class="report-group-option" type="radio" name="group-reason" value="individual_harrassing_me"> Harassment
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:41:            $('.report-group-option').prop('checked', false);
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:42:            $('#report-group-response').hide();
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:43:            $('#report-group-options').show();
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:50:            $('#report-group-options').fadeOut();
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:56:                    'Reason' : $('input:radio[name=group-reason]:checked').val(),
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:62:                        $('#report-group-response').text(data.messageForUser);
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:63:                        $('#report-group-response').fadeIn();
+src/Platformd/GroupBundle/Resources/views/Group/_reportGroupPopup.html.twig:65:                        $('#report-group-response').fadeIn();
+src/Platformd/GroupBundle/Resources/views/Group/addDiscussion.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/addDiscussion.html.twig:30:    <div class="left" id="group-discussion-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/addDiscussion.html.twig:33:            <li>Only group-related discussions, everything else will get deleted without notice.</li>
+src/Platformd/GroupBundle/Resources/views/Group/addImage.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/addImage.html.twig:30:    <div class="left" id="group-image-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/addImage.html.twig:36:            <li>Only group-related images, everything else will get deleted without notice.</li>
+src/Platformd/GroupBundle/Resources/views/Group/addNews.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/addVideo.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/addVideo.html.twig:30:    <div class="left" id="group-video-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/addVideo.html.twig:36:            <li>Only group-related videos, everything else will get deleted without notice.</li>
+src/Platformd/GroupBundle/Resources/views/Group/applications.html.twig:14:        <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/applyToGroup.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/applyToGroup.html.twig:30:    <div class="left" id="group-image-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/discussions.html.twig:65:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/edit.html.twig:35:                $('#group-location-controls').hide();
+src/Platformd/GroupBundle/Resources/views/Group/edit.html.twig:46:                    $('#group-location-controls').fadeOut();
+src/Platformd/GroupBundle/Resources/views/Group/edit.html.twig:48:                    $('#group-location-controls').fadeIn();
+src/Platformd/GroupBundle/Resources/views/Group/editDiscussion.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/editImage.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/editImage.html.twig:30:    <div class="left" id="group-image-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/editImage.html.twig:36:            <li>Only group-related images, everything else will get deleted without notice.</li>
+src/Platformd/GroupBundle/Resources/views/Group/editNews.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/editVideo.html.twig:15:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/editVideo.html.twig:30:    <div class="left" id="group-video-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/editVideo.html.twig:36:            <li>Only group-related videos, everything else will get deleted without notice.</li>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:24:        <div class="group-event-item" id="event-item-{{ event.id }}">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:25:            <div class="group-event-date">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:29:            <div class="group-event-details">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:30:                <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:31:                <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:32:                <div class="group-event-location"><strong>Where:</strong>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:39:                <div class="group-event-actions">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:53:        <div id="group-past-events" style="display: none;">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:57:                <div class="group-event-item" id="event-item-{{ event.id }}"{% if loop.index > 3 %} style="display:none;"{% endif %}>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:58:                    <div class="group-event-date">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:62:                    <div class="group-event-details">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:63:                        <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:64:                        <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:65:                        <div class="group-event-location"><strong>Where:</strong>
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:72:                        <div class="group-event-actions">
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:98:            $('#group-past-events').toggle();
+src/Platformd/GroupBundle/Resources/views/Group/events.html.twig:103:            $('.group-event-item').show();
+src/Platformd/GroupBundle/Resources/views/Group/images.html.twig:34:                    <div class="group-image-item">
+src/Platformd/GroupBundle/Resources/views/Group/images.html.twig:35:                        <div class="group-image-image">
+src/Platformd/GroupBundle/Resources/views/Group/images.html.twig:40:                        <div class="group-image-title">
+src/Platformd/GroupBundle/Resources/views/Group/images.html.twig:43:                        <div class="group-image-actions">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:27:                        <div class="group-list-item">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:35:                            <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:41:                                <div class="report-group-caption">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:58:                                <div class="group-list-item">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:66:                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:72:                                        <div class="report-group-caption">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:96:                                <div class="group-list-item">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:104:                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:110:                                        <div class="report-group-caption">
+src/Platformd/GroupBundle/Resources/views/Group/index.html.twig:188:            $('.group-index-link').truncate();
+src/Platformd/GroupBundle/Resources/views/Group/members.html.twig:8:        <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/new.html.twig:31:                    $('#group-location-controls').fadeOut();
+src/Platformd/GroupBundle/Resources/views/Group/new.html.twig:33:                    $('#group-location-controls').fadeIn();
+src/Platformd/GroupBundle/Resources/views/Group/new.html.twig:39:                $('#group-location-controls').fadeOut();
+src/Platformd/GroupBundle/Resources/views/Group/newGettingStarted.html.twig:6:    <div class="group-new-getting-started-page" style="margin: 0px 5px 0px 20px;">
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:17:            <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:18:                <div class="group-news-actions">
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:27:                <div class="group-news-date">
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:31:                <div class="group-news-article">
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:46:        $('.group-news-article').expander({
+src/Platformd/GroupBundle/Resources/views/Group/news.html.twig:60:        $('.group-news-item').hover(
+src/Platformd/GroupBundle/Resources/views/Group/replyDiscussion.html.twig:39:        <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/replyDiscussion.html.twig:54:        <div class="left" id="group-discussion-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:32:    <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:48:        <div class="join-group-options">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:50:                <button id="join-group-button" type="submit"></button>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:56:        <div class="join-group-options">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:57:            <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:74:                <table class="group-details-table">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:120:                <div id="group-like-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:124:                <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:125:                <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">Report this Group</a></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:127:                <div id="group-location-address" class="location-info">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:159:                    <a href="javascript:void(0);" id="group-news" class="active">News</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:160:                    <a href="javascript:void(0);" id="group-events">Events</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:161:                    <a href="javascript:void(0);" id="group-images">Images</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:162:                    <a href="javascript:void(0);" id="group-videos">Videos</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:164:                        <a href="javascript:void(0);" id="group-discussions">Discussions</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:166:                    <a href="javascript:void(0);" id="group-about">About</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:168:                    <a href="javascript:void(0);" id="group-about" class="active">About</a>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:172:            <div class="widget-content" id="group-widget-content" style="min-height: 560px;background: #191919;overflow: hidden;">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:174:                    <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:175:                    <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:176:                    <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:177:                    <div id="content-group-events" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:178:                    <div id="content-group-discussions" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:179:                    <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:181:                    <div id="content-group-about" class="featured-content-category active" style="height: 550px;background: #191919;">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:189:                <div id="group-comments">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:193:                <div id="group-comments">
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:238:            $('#group-invite').click(function () {
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:250:            var tab = 'group-' + hash;
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:253:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:258:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:263:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:265:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:270:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:274:                    $('.group-image-title').truncate();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:275:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:280:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:283:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:288:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:291:                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:292:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:297:                var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:301:                    $('#group-widget-content').unblock();
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:306:                if(tab == 'group-' || tab.indexOf('comment') > 0) {
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:307:                    loadNewsContent('group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:318:                $('#content-group-news').html('');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:322:                $('#group-widget-content').block({
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:336:                window.location.hash = id.replace('group-', '');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:340:                $('.featured-content-category#content-group-news').fadeOut('fast', function () {
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:343:                    var content = $('.featured-content-category#content-group-news');
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:346:                        case 'group-videos':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:349:                        case 'group-news':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:352:                        case 'group-images':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:355:                        case 'group-discussions':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:358:                        case 'group-about':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:361:                        case 'group-events':
+src/Platformd/GroupBundle/Resources/views/Group/show.html.twig:370:            $('#content-group-about').mCustomScrollbar();
+src/Platformd/GroupBundle/Resources/views/Group/videos.html.twig:39:                                <div class="group-image-item">
+src/Platformd/GroupBundle/Resources/views/Group/videos.html.twig:41:                                    <div class="group-image-image">
+src/Platformd/GroupBundle/Resources/views/Group/videos.html.twig:54:                                        <div class="group-image-actions">
+src/Platformd/GroupBundle/Resources/views/Group/viewDiscussion.html.twig:47:        <div id="group-avatar">
+src/Platformd/GroupBundle/Resources/views/Group/viewDiscussion.html.twig:62:        <div class="left" id="group-discussion-form-wrapper">
+src/Platformd/GroupBundle/Resources/views/Group/viewDiscussion.html.twig:67:                <div class="group-discussion-actions">
+src/Platformd/GroupBundle/Resources/views/Group/viewDiscussion.html.twig:132:                                                <a href="javascript:void(0);" class="report-group-discussion-post" report-data="{{ discussionPost.id }}">Report</a>
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:10:            $('#group-metrics-thru').datepicker();
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:11:            $('#group-metrics-from').datepicker();
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:17:                if($('#group-metrics-from').val() != '' && $('#group-metrics-thru').val() != '') {
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:18:                    return '?from=' + $('#group-metrics-from').val() + '&thru=' + $('#group-metrics-thru').val();
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:69:                <label class="control-label" for="group-metrics-from">Starts Date</label>
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:71:                    <input type="text" id="group-metrics-from" name="group-metrics-from" value="{{ from|date('m/d/Y') }}">
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:75:                <label class="control-label" for="group-metrics-thru">Ends Date</label>
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/details.html.twig:77:                    <input type="text" id="group-metrics-thru" name="group-metrics-thru" value="{{ thru|date('m/d/Y') }}">
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:45:                <label class="control-label" for="group-metrics-from">Starts Date</label>
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:47:                    <input type="text" id="group-metrics-from" name="group-metrics-from">
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:53:                <label class="control-label" for="group-metrics-thru">Ends Date</label>
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:55:                    <input type="text" id="group-metrics-thru" name="group-metrics-thru">
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:97:            $('#group-metrics-thru').datepicker();
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:98:            $('#group-metrics-from').datepicker();
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:103:                    data: JSON.stringify({ from: $('#group-metrics-from').val(), thru: $('#group-metrics-thru').val() }),
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:126:                if($('#group-metrics-from').val() != '' && $('#group-metrics-thru').val() != '') {
+src/Platformd/GroupBundle/Resources/views/GroupAdmin/show.html.twig:127:                    return '?from=' + $('#group-metrics-from').val() + '&thru=' + $('#group-metrics-thru').val();
+src/Platformd/SpoutletBundle/Command/MetricsGenerateCommand.php:25:            ->addOption('type', null, InputOption::VALUE_OPTIONAL, 'The type of metrics to build. Choices are: group, group-discussion. By default, will build all types.')
+src/Platformd/SpoutletBundle/Command/MetricsGenerateCommand.php:47:                case 'group-discussion':
+src/Platformd/SpoutletBundle/Command/UpdateGroupsFacebookLikesCommand.php:43:            $output->writeLn(sprintf('updated group: %d with %d likes', $group->getId(), $total));
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:153:            $group->setDeleted(false);
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:154:            $group->setDeletedReason(null);
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:157:            $id = $group->getId();
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:239:            $group->setDeleted(true);
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:240:            $group->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:245:                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getCevoUserId());
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:343:            $group->setDeleted(false);
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:344:            $group->setDeletedReason(null);
+src/Platformd/SpoutletBundle/Controller/ContentReportAdminController.php:347:            $id = $group->getId();
+src/Platformd/SpoutletBundle/Controller/ContestAdminController.php:554:        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
+src/Platformd/SpoutletBundle/Controller/GalleryAdminController.php:327:        http://graph.facebook.com/?ids=http://[site].alienwarearena.com/groups/[$group->getId()]/show/
+src/Platformd/SpoutletBundle/Entity/ContestRepository.php:130:            ->where($qb->expr()->in('eg.id', array($group->getId())))
+src/Platformd/SpoutletBundle/Entity/GlobalActivityRepository.php:42:            ->setParameter('objectId', $group->getId())
+src/Platformd/SpoutletBundle/EventListener/GlobalActivityListener.php:55:                ->setObjectId($group->getId())
+src/Platformd/SpoutletBundle/EventListener/GlobalActivityListener.php:80:                ->setObjectId($group->getId())
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1183:                $group->setName($data['name']);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1186:                $group->setName('Default Group '.$counter);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1189:            $group->setSlug(isset($data['slug']) ? $data['slug'] : "default-group-".$counter);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1193:                $group->setSites(array($site));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1196:                $group->setSites(array($site));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1199:            $group->setCategory(    isset($data['category'])    ? $data['category']             : "topic");
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1200:            $group->setDescription( isset($data['description']) ? $data['description']          : "default description");
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1201:            $group->setIsPublic(    isset($data['public'])      ? $data['public'] == "yes"      : 1);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1202:            $group->setFeatured(    isset($data['featured'])    ? $data['featured'] == "yes"    : 0);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1203:            $group->setFeaturedAt(  isset($data['featured'])    ? new \DateTime('now') : null);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1205:            $group->setCreatedAt(new \DateTime('now'));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1206:            $group->setUpdatedAt(new \DateTime('now'));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1209:            $group->setOwner($owner ?: $this->getCurrentUser());
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1267:                    $url = $this->getContainer()->get('router')->generate('group_add_news', array('id' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1272:                    $url = $this->getContainer()->get('router')->generate('group_add_video', array('id' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1277:                    $url = $this->getContainer()->get('router')->generate('group_add_discussion', array('id' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1282:                    $url = $this->getContainer()->get('router')->generate('group_event_new', array('groupSlug' => $group->getSlug()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1305:            $applications = $em->getRepository('GroupBundle:GroupApplication')->findBy(array('group' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1312:                ? $this->getContainer()->get('router')->generate('group_accept_application', array('id' => $group->getId(), 'applicationId' => $application->getId()))
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1313:                : $url = $this->getContainer()->get('router')->generate('group_reject_application', array('id' => $group->getId(), 'applicationId' => $application->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1334:            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1356:            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1388:                $group->getMembers()->add($member);
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1421:            $thread     = $em->getRepository('SpoutletBundle:Thread')->find($group->getThreadId());
+src/Platformd/SpoutletBundle/Features/Context/AbstractFeatureContext.php:1424:                $thread->setId($group->getThreadId());
+src/Platformd/SpoutletBundle/Metric/MetricManager.php:341:        $arr['discussions'] = $group->getDiscussions()->count();
+src/Platformd/SpoutletBundle/Metric/MetricManager.php:349:        foreach($group->getDiscussions() as $discussion) {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:52:.group-contest-content {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:56:.group-contest-content .group-list-item {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:65:.group-contest-content .group-list-item:hover {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:71:.group-contest-content .group-list-item.selected {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:83:.group-list-item.contest {
+src/Platformd/SpoutletBundle/Resources/public/css/contests.css:88:.group-list-item.contest.first {
+src/Platformd/SpoutletBundle/Resources/public/css/custom-theme/jquery-ui-1.8.16.custom.css:529:.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0; }
+src/Platformd/SpoutletBundle/Resources/public/css/custom-theme/jquery-ui-1.8.16.custom.css:530:.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0; }
+src/Platformd/SpoutletBundle/Resources/public/css/custom-theme/jquery-ui-1.8.16.custom.css:544:.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+src/Platformd/SpoutletBundle/Resources/public/css/custom-theme/jquery-ui-1.8.16.custom.css:545:.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0; border-left-width:1px; }
+src/Platformd/SpoutletBundle/Resources/public/css/discussions.css:87:.group-discussion-actions {
+src/Platformd/SpoutletBundle/Resources/public/css/jquery.multiselect.css:20:.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align:center; font-weight:bold; border-bottom:1px solid }
+src/Platformd/SpoutletBundle/Resources/public/css/jquery.multiselect.css:21:.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display:block; padding:3px; margin:1px 0; text-decoration:none }
+src/Platformd/SpoutletBundle/Resources/public/js/jquery-ui-1.8.16.custom.min.js:541:"";this.maxRows=4;for(var G=0;G<i[1];G++){var P=this._daylightSavingAdjust(new Date(m,g,a.selectedDay)),t=" ui-corner-all",y="";if(l){y+='<div class="ui-datepicker-group';if(i[1]>1)switch(G){case 0:y+=" ui-datepicker-group-first";t=" ui-corner-"+(c?"right":"left");break;case i[1]-1:y+=" ui-datepicker-group-last";t=" ui-corner-"+(c?"left":"right");break;default:y+=" ui-datepicker-group-middle";t="";break}y+='">'}y+='<div class="ui-datepicker-header ui-widget-header ui-helper-clearfix'+t+'">'+(/all|left/.test(t)&&
+src/Platformd/SpoutletBundle/Resources/public/js/jquery.multiselect.filter.min.js:15:(function(a){var f=/[\-\[\]{}()*+?.,\\\^$|#\s]/g;a.widget("ech.multiselectfilter",{options:{label:"Filter:",width:null,placeholder:"Enter keywords",autoReset:!1},_create:function(){var e;var b=this,c=this.options,d=this.instance=a(this.element).data("multiselect");this.header=d.menu.find(".ui-multiselect-header").addClass("ui-multiselect-hasfilter");e=this.wrapper=a('<div class="ui-multiselect-filter">'+(c.label.length?c.label:"")+'<input placeholder="'+c.placeholder+'" type="search"'+(/\d/.test(c.width)?  'style="width:'+c.width+'px"':"")+" /></div>").prependTo(this.header),c=e;this.inputs=d.menu.find('input[type="checkbox"], input[type="radio"]');this.input=c.find("input").bind({keydown:function(a){13===a.which&&a.preventDefault()},keyup:a.proxy(b._handler,b),click:a.proxy(b._handler,b)});this.updateCache();d._toggleChecked=function(c,d){var e=d&&d.length?d:this.labels.find("input"),i=this,e=e.not(b.instance._isOpen?":disabled, :hidden":":disabled").each(this._toggleState("checked",c));this.update(); var j=e.map(function(){return this.value}).get();this.element.find("option").filter(function(){!this.disabled&&-1<a.inArray(this.value,j)&&i._toggleState("selected",c).call(this)})};d=a(document).bind("multiselectrefresh",function(){b.updateCache();b._handler()});this.options.autoReset&&d.bind("multiselectclose",a.proxy(this._reset,this))},_handler:function(b){var c=a.trim(this.input[0].value.toLowerCase()),d=this.rows,g=this.inputs,h=this.cache;if(c){d.hide();var e=RegExp(c.replace(f,"\\$&"),"gi"); this._trigger("filter",b,a.map(h,function(a,b){return-1!==a.search(e)?(d.eq(b).show(),g.get(b)):null}))}else d.show();this.instance.menu.find(".ui-multiselect-optgroup-label").each(function(){var b=a(this),c=b.nextUntil(".ui-multiselect-optgroup-label").filter(function(){return"none"!==a.css(this,"display")}).length;b[c?"show":"hide"]()})},_reset:function(){this.input.val("").trigger("keyup")},updateCache:function(){this.rows=this.instance.menu.find(".ui-multiselect-checkboxes li:not(.ui-multiselect-optgroup-label)");this.cache=this.element.children().map(function(){var b=a(this);"optgroup"===this.tagName.toLowerCase()&&(b=b.children());return b.map(function(){return this.innerHTML.toLowerCase()}).get()}).get()},widget:function(){return this.wrapper},destroy:function(){a.Widget.prototype.destroy.call(this);this.input.val("").trigger("keyup");this.wrapper.remove()}})})(jQuery);
+src/Platformd/SpoutletBundle/Resources/public/js/jquery.multiselect.min.js:20:(function(d){var j=0;d.widget("ech.multiselect",{options:{header:!0,height:175,minWidth:225,classes:"",checkAllText:"Check all",uncheckAllText:"Uncheck all",noneSelectedText:"Select options",selectedText:"# selected",selectedList:0,show:"",hide:"",autoOpen:!1,multiple:!0,position:{}},_create:function(){var a=this.element.hide(),b=this.options;this.speed=d.fx.speeds._default;this._isOpen=!1;a=(this.button=d('<button type="button"><span class="ui-icon ui-icon-triangle-2-n-s"></span></button>')).addClass("ui-multiselect ui-widget ui-state-default ui-corner-all").addClass(b.classes).attr({title:a.attr("title"), "aria-haspopup":!0,tabIndex:a.attr("tabIndex")}).insertAfter(a);(this.buttonlabel=d("<span />")).html(b.noneSelectedText).appendTo(a);var a=(this.menu=d("<div />")).addClass("ui-multiselect-menu ui-widget ui-widget-content ui-corner-all").addClass(b.classes).appendTo(document.body),c=(this.header=d("<div />")).addClass("ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix").appendTo(a);(this.headerLinkContainer=d("<ul />")).addClass("ui-helper-reset").html(function(){return!0=== b.header?'<li><a class="ui-multiselect-all" href="#"><span class="ui-icon ui-icon-check"></span><span>'+b.checkAllText+'</span></a></li><li><a class="ui-multiselect-none" href="#"><span class="ui-icon ui-icon-closethick"></span><span>'+b.uncheckAllText+"</span></a></li>":"string"===typeof b.header?"<li>"+b.header+"</li>":""}).append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><span class="ui-icon ui-icon-circle-close"></span></a></li>').appendTo(c);(this.checkboxContainer= d("<ul />")).addClass("ui-multiselect-checkboxes ui-helper-reset").appendTo(a);this._bindEvents();this.refresh(!0);b.multiple||a.addClass("ui-multiselect-single")},_init:function(){!1===this.options.header&&this.header.hide();this.options.multiple||this.headerLinkContainer.find(".ui-multiselect-all, .ui-multiselect-none").hide();this.options.autoOpen&&this.open();this.element.is(":disabled")&&this.disable()},refresh:function(a){var b=this.element,c=this.options,e=this.menu,h=this.checkboxContainer, g=[],f=[],i=b.attr("id")||j++;b.find("option").each(function(b){d(this);var a=this.parentNode,e=this.innerHTML,h=this.title,j=this.value,b=this.id||"ui-multiselect-"+i+"-option-"+b,k=this.disabled,m=this.selected,l=["ui-corner-all"];"optgroup"===a.tagName.toLowerCase()&&(a=a.getAttribute("label"),-1===d.inArray(a,g)&&(f.push('<li class="ui-multiselect-optgroup-label"><a href="#">'+a+"</a></li>"),g.push(a)));k&&l.push("ui-state-disabled");m&&!c.multiple&&l.push("ui-state-active");f.push('<li class="'+ (k?"ui-multiselect-disabled":"")+'">');f.push('<label for="'+b+'" title="'+h+'" class="'+l.join(" ")+'">');f.push('<input id="'+b+'" name="multiselect_'+i+'" type="'+(c.multiple?"checkbox":"radio")+'" value="'+j+'" title="'+e+'"');m&&(f.push(' checked="checked"'),f.push(' aria-selected="true"'));k&&(f.push(' disabled="disabled"'),f.push(' aria-disabled="true"'));f.push(" /><span>"+e+"</span></label></li>")});h.html(f.join(""));this.labels=e.find("label");this._setButtonWidth();this._setMenuWidth(); this.button[0].defaultValue=this.update();a||this._trigger("refresh")},update:function(){var a=this.options,b=this.labels.find("input"),c=b.filter("[checked]"),e=c.length,a=0===e?a.noneSelectedText:d.isFunction(a.selectedText)?a.selectedText.call(this,e,b.length,c.get()):/\d/.test(a.selectedList)&&0<a.selectedList&&e<=a.selectedList?c.map(function(){return d(this).next().text()}).get().join(", "):a.selectedText.replace("#",e).replace("#",b.length);this.buttonlabel.html(a);return a},_bindEvents:function(){function a(){b[b._isOpen?  "close":"open"]();return!1}var b=this,c=this.button;c.find("span").bind("click.multiselect",a);c.bind({click:a,keypress:function(a){switch(a.which){case 27:case 38:case 37:b.close();break;case 39:case 40:b.open()}},mouseenter:function(){c.hasClass("ui-state-disabled")||d(this).addClass("ui-state-hover")},mouseleave:function(){d(this).removeClass("ui-state-hover")},focus:function(){c.hasClass("ui-state-disabled")||d(this).addClass("ui-state-focus")},blur:function(){d(this).removeClass("ui-state-focus")}}); this.header.delegate("a","click.multiselect",function(a){if(d(this).hasClass("ui-multiselect-close"))b.close();else b[d(this).hasClass("ui-multiselect-all")?"checkAll":"uncheckAll"]();a.preventDefault()});this.menu.delegate("li.ui-multiselect-optgroup-label a","click.multiselect",function(a){a.preventDefault();var c=d(this),g=c.parent().nextUntil("li.ui-multiselect-optgroup-label").find("input:visible:not(:disabled)"),f=g.get(),c=c.parent().text();!1!==b._trigger("beforeoptgrouptoggle",a,{inputs:f, label:c})&&(b._toggleChecked(g.filter("[checked]").length!==g.length,g),b._trigger("optgrouptoggle",a,{inputs:f,label:c,checked:f[0].checked}))}).delegate("label","mouseenter.multiselect",function(){d(this).hasClass("ui-state-disabled")||(b.labels.removeClass("ui-state-hover"),d(this).addClass("ui-state-hover").find("input").focus())}).delegate("label","keydown.multiselect",function(a){a.preventDefault();switch(a.which){case 9:case 27:b.close();break;case 38:case 40:case 37:case 39:b._traverse(a.which, this);break;case 13:d(this).find("input")[0].click()}}).delegate('input[type="checkbox"], input[type="radio"]',"click.multiselect",function(a){var c=d(this),g=this.value,f=this.checked,i=b.element.find("option");this.disabled||!1===b._trigger("click",a,{value:g,text:this.title,checked:f})?a.preventDefault():(c.focus(),c.attr("aria-selected",f),i.each(function(){if(this.value===g)this.selected=f;else if(!b.options.multiple)this.selected=!1}),b.options.multiple||(b.labels.removeClass("ui-state-active"), c.closest("label").toggleClass("ui-state-active",f),b.close()),b.element.trigger("change"),setTimeout(d.proxy(b.update,b),10))});d(document).bind("mousedown.multiselect",function(a){b._isOpen&&!d.contains(b.menu[0],a.target)&&!d.contains(b.button[0],a.target)&&a.target!==b.button[0]&&b.close()});d(this.element[0].form).bind("reset.multiselect",function(){setTimeout(d.proxy(b.refresh,b),10)})},_setButtonWidth:function(){var a=this.element.outerWidth(),b=this.options;if(/\d/.test(b.minWidth)&&a<b.minWidth)a= b.minWidth;this.button.width(a)},_setMenuWidth:function(){var a=this.menu,b=this.button.outerWidth()-parseInt(a.css("padding-left"),10)-parseInt(a.css("padding-right"),10)-parseInt(a.css("border-right-width"),10)-parseInt(a.css("border-left-width"),10);a.width(b||this.button.outerWidth())},_traverse:function(a,b){var c=d(b),e=38===a||37===a,c=c.parent()[e?"prevAll":"nextAll"]("li:not(.ui-multiselect-disabled, .ui-multiselect-optgroup-label)")[e?"last":"first"]();c.length?c.find("label").trigger("mouseover"): (c=this.menu.find("ul").last(),this.menu.find("label")[e?"last":"first"]().trigger("mouseover"),c.scrollTop(e?c.height():0))},_toggleState:function(a,b){return function(){this.disabled||(this[a]=b);b?this.setAttribute("aria-selected",!0):this.removeAttribute("aria-selected")}},_toggleChecked:function(a,b){var c=b&&b.length?b:this.labels.find("input"),e=this;c.each(this._toggleState("checked",a));c.eq(0).focus();this.update();var h=c.map(function(){return this.value}).get();this.element.find("option").each(function(){!this.disabled&& -1<d.inArray(this.value,h)&&e._toggleState("selected",a).call(this)});c.length&&this.element.trigger("change")},_toggleDisabled:function(a){this.button.attr({disabled:a,"aria-disabled":a})[a?"addClass":"removeClass"]("ui-state-disabled");this.menu.find("input").attr({disabled:a,"aria-disabled":a}).parent()[a?"addClass":"removeClass"]("ui-state-disabled");this.element.attr({disabled:a,"aria-disabled":a})},open:function(){var a=this.button,b=this.menu,c=this.speed,e=this.options;if(!(!1===this._trigger("beforeopen")|| a.hasClass("ui-state-disabled")||this._isOpen)){var h=b.find("ul").last(),g=e.show,f=a.offset();d.isArray(e.show)&&(g=e.show[0],c=e.show[1]||this.speed);h.scrollTop(0).height(e.height);d.ui.position&&!d.isEmptyObject(e.position)?(e.position.of=e.position.of||a,b.show().position(e.position).hide().show(g,c)):b.css({top:f.top+a.outerHeight(),left:f.left}).show(g,c);this.labels.eq(0).trigger("mouseover").trigger("mouseenter").find("input").trigger("focus");a.addClass("ui-state-active");this._isOpen= !0;this._trigger("open")}},close:function(){if(!1!==this._trigger("beforeclose")){var a=this.options,b=a.hide,c=this.speed;d.isArray(a.hide)&&(b=a.hide[0],c=a.hide[1]||this.speed);this.menu.hide(b,c);this.button.removeClass("ui-state-active").trigger("blur").trigger("mouseleave");this._isOpen=!1;this._trigger("close")}},enable:function(){this._toggleDisabled(!1)},disable:function(){this._toggleDisabled(!0)},checkAll:function(){this._toggleChecked(!0);this._trigger("checkAll")},uncheckAll:function(){this._toggleChecked(!1); this._trigger("uncheckAll")},getChecked:function(){return this.menu.find("input").filter("[checked]")},destroy:function(){d.Widget.prototype.destroy.call(this);this.button.remove();this.menu.remove();this.element.show();return this},isOpen:function(){return this._isOpen},widget:function(){return this.menu},_setOption:function(a,b){var c=this.menu;switch(a){case "header":c.find("div.ui-multiselect-header")[b?"show":"hide"]();break;case "checkAllText":c.find("a.ui-multiselect-all span").eq(-1).text(b); break;case "uncheckAllText":c.find("a.ui-multiselect-none span").eq(-1).text(b);break;case "height":c.find("ul").last().height(parseInt(b,10));break;case "minWidth":this.options[a]=parseInt(b,10);this._setButtonWidth();this._setMenuWidth();break;case "selectedText":case "selectedList":case "noneSelectedText":this.options[a]=b;this.update();break;case "classes":c.add(this.button).removeClass(this.options.classes).addClass(b)}d.Widget.prototype._setOption.apply(this,arguments)}})})(jQuery);
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:20:    	<div class="group-contest-content">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:36:					<div class="group-list-item entered selected" data-id="{{ group.id }}">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:44:			            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:64:						<div class="group-list-item" data-id="{{ group.id }}">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:72:				            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}" target="_blank">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:104:		$('.group-list-item').click(function (e) {
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:126:				$('.group-list-item').removeClass('selected');
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groupSubmit.html.twig:135:			$('.group-list-item.selected').each(function () {
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groups.html.twig:4:        <div class="group-list-item contest{% if isFirstInRow %} first{% endif %}">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_groups.html.twig:12:            <a href="{{ path('group_show', { slug: group.slug}) }}" class="group-index-link" title="{{ group.name }}">
+src/Platformd/SpoutletBundle/Resources/views/Contest/_imageSubmit.html.twig:94:                                        <input class="group-checkbox" type="checkbox" id="group-{{ group.id }}" name="group-{{ group.id }}" value="{{ group.id }}" />
+src/Platformd/SpoutletBundle/Resources/views/Contest/submit.html.twig:202:                $('.group-checkbox').prop('checked', false);
+src/Platformd/SpoutletBundle/Resources/views/Contest/submit.html.twig:204:                    $('#group-' + groups[i]).prop('checked', true);
+src/Platformd/SpoutletBundle/Resources/views/Contest/submit.html.twig:211:                $('.group-checkbox').each(function () {
+src/Platformd/SpoutletBundle/Resources/views/Contest/submit.html.twig:277:            $('.group-checkbox').change(function () {
+src/Platformd/SpoutletBundle/Resources/views/Contest/submit.html.twig:343:            $('.group-index-link').truncate({
+src/Platformd/SpoutletBundle/Resources/views/Contest/vote.html.twig:60:            $('.group-index-link').truncate({
+src/Platformd/SpoutletBundle/Resources/views/ContestAdmin/list.html.twig:70:<table class="table table-striped table-bordered tablesorter" id="group-contest-list">
+src/Platformd/SpoutletBundle/Resources/views/Gallery/submit.html.twig:97:                                        <input class="group-checkbox" type="checkbox" id="group-{{ group.id }}" name="group-{{ group.id }}" value="{{ group.id }}" />
+src/Platformd/SpoutletBundle/Resources/views/Gallery/submit.html.twig:312:                $('.group-checkbox').prop('checked', false);
+src/Platformd/SpoutletBundle/Resources/views/Gallery/submit.html.twig:314:                    $('#group-' + groups[i]).prop('checked', true);
+src/Platformd/SpoutletBundle/Resources/views/Gallery/submit.html.twig:321:                $('.group-checkbox').each(function () {
+src/Platformd/SpoutletBundle/Resources/views/Gallery/submit.html.twig:350:            $('.group-checkbox').change(function () {
+src/Platformd/SpoutletBundle/Tenant/SiteProtectionListener.php:54:        '^/group-events',

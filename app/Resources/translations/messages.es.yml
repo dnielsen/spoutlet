@@ -1,3 +1,6 @@
+date_format: M j, Y
+submit: Enviar
+cancel: Cancelar
 
 platformd:
 
@@ -52,6 +55,122 @@ platformd:
             link: "¿Busca un equipo poderoso? <br/> ¡Encuéntrelo en Alienware!"
             copyright_2012: "Copyright 2013 Alienware Corporation. All Rights Reserved."
 
+    events:
+        event_listings:
+            events: Eventos
+            header: Evento de Alienware Arena
+            create: Create Event
+            show_map: Mostrar mapa
+            organizer: Organizador
+            attendees: Asistentes
+            actions: Acciónes
+            status: Estatus
+            my_events: Mis Eventos
+            my_owned_events: My Listed Events
+            my_registered_events: Eventos en cual estoy registrado
+            my_past_events: My Past Events
+            rsvp:
+                dialog_title: RSVP de Evento
+                change_rsvp: Cambio de RSVP
+                attending: Voy a ir.
+                not_attending: No gracias
+                submit: Enviar
+                cancel: Cancelar
+            current_events: Próximos Eventos
+            current_and_upcoming_events: Eventos actuales y próximos
+            more_current_events: More Current Events
+            start_date: Fecha de Inicio
+            end_date: End Date
+            date: Fecha
+            details: Details
+            event: Evento
+            games: Juego(s)
+            hosted_by: Organizador/Grupo
+            location: Ubicación
+            upcoming_events: Próximos Eventos
+            there_are_no_upcoming_events_at_this_moment: No hay eventos por el momento.
+            past_events: Eventos Pasados
+            more_past_Events: More Past Events
+            view_past_events: Ver eventos pasados
+            online: En línea
+            no_past_events: No hay eventos pasados ​​en este momento.
+            no_current_events: No hay eventos por el momento.
+            no_active_giveaways: There are no active giveaways at this moment.
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: Significa que estás registrado para asistir a este evento.
+            legend_sponsored: Evento de Alienware Arena Patrocinado
+            legend_group: Evento de Grupo
+        event_show:
+            register_event: Register for event
+            unregister_event: Unregister for event
+            register:       Registrar
+            organizer: Organizador
+            attending: Asistiendo
+            registration_closed: Registracion para este evento a cerrado.
+            im_attending: Sí, yo voy a asistir!
+            event_details: Detalles del Evento
+            location: Ubicación
+            online_event: Este evento es en línea.
+            directions: Direcciones
+            contact_attendees: Contactar los Asistentes
+            manage_attendees: Administrar los Asistentes
+            edit_event: Editar Evento
+            not_allowed_register: No se te permite a RSVP para el evento!
+            now_attending: Ahora estás asistiendo este evento.
+            group_joined: Para asistir a este evento, debes únete a %groupName%. Ahora eres un miembro de este grupo.
+        event_contact:
+            title: Contactar los asistentes por correo electrónico
+            help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
+            preview: Previo
+            send: Enviar
+            cancel: Cancelar
+            attending: Asistiendo
+            error: Hubo un error al previsualizar tu correo electrónico!
+            confirmation: Correo electrónico enviado a %attendeeCount% asistente(s).
+            form:
+                recipients: Destinatarios
+                message: Mensaje
+                recipient_help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
+        event_attendees:
+            back_to_event: Volver al Evento
+            attendees: Asistentes
+            action: Acción
+            username: Nombre de usuario
+            remove: Eliminar
+            no_attendees: No hay asistentes!
+            remove_confirmation: ¿Está seguro que desea quitar "%username%" de este evento?
+        # used only in the admin area
+        admin:
+            title: Event admin
+            edit_event: Editar Evento | %event_title%
+            create: Create New Event
+            publish: Publish
+            unpublish: Unpublish
+            published: Event "%event_title%" has been published.
+            unpublished: Event "%event_title%" has been unpublished.
+            saved: Event has been saved.
+            unknown: Unknown event \#%event_id% !
+            save_event: Save Event
+            unpublished_title: Edit your unpublished event
+            published_title: Edit your published event
+            banner_note: Image is best at 950x120
+
+    account_page:
+        events:
+            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">upcoming events</a>.
+            no_created_events: No hay eventos creados
+            join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+            show_past_events: Ver eventos pasados
+            hide_past_events: Esconder eventos pasados
+            edit_event: Editar Evento
+            cancelled: Cancelado
+            event_listing: Lista de Eventos
+            registration_open: Registración Abierta
+            registration_closed: Registración Cerrada
+            active: Activo
+            pending_approval: Pendiente de aprobación por el organizador de grupo
+            choose_one: Elegir una acción:
+
     comment:
         add_your_comment: Añada tu comentario
         login_to_comment: Para poner un comentario, favor de <a href="%login_url%">iniciar sesión.</a>
@@ -74,11 +193,200 @@ platformd:
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
 
+    event:
+        form:
+            name: "Title"
+            banner_image: "Event Banner"
+            url: "URL"
+            description: "Event Details"
+            game: Juego
+            event_type: Ubicación
+            location: "Location Name"
+            address1: "Street"
+            address2: "City, State, Zip"
+            starts_at: "Start Date & Time"
+            ends_at: "End Date & Time"
+            hosted_by: "Hosted By"
+            timezone: "Timezone"
+            display_timezone: "Display Timezone"
+            external_url: "External Url"
+            event_options: "Event Options"
+            sites: "Regions"
+            private_public: "Is this a public or private event?"
+            published: "Do you want your event published?"
+
+            choice:
+                private_event: "Private Event"
+                public_event: "Public Event"
+                online_event: "Online Event"
+                physical_event: "In-Person"
+                published: "Published"
+                unpublished: "Unpublished"
+
+            help:
+                address1: "Example: 1021 Washington Drive"
+                address2: "Example: San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
+                banner_image: "Recommended size: 950x120. File formats accepted: JPEG and PNG."
+                external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
+
+        registration:
+            enabled: "Manage event registration on this site."
+            disabled: "List my event only. Event registration is managed elsewhere."
+            3rdparty: "Link event listing to 3rd party website."
+
+        email:
+            global_event_contact:
+                title: Mensaje del organizador del evento sobre %eventName%
+                message: |
+                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
+
+                    %content%
+
+                    Equipo Alienware Arena
+
+                    Importante: Alienware Arena nunca te pedirá información personal como tu nombre de usuario, contraseña, fecha de nacimiento, dirección de correo electrónico, etc. Por favor, no la compartas con nadie.  Si sospechas que este correo electrónico de ser una estafa o inapropiado, por favor repórtalo a contact@alienwarearena.com.
+                    Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
+
+            attendees_contact:
+                title: Mensaje del organizador del evento sobre %eventName%
+                message: |
+                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
+
+                    %content%
+
+                    Enviado desde Alienware Arena en nombre de %organizerName%.
+
+                    Importante: Alienware Arena nunca te pedirá información personal como tu nombre de usuario, contraseña, fecha de nacimiento, dirección de correo electrónico, etc. Por favor, no la compartas con nadie.  Si sospechas que este correo electrónico de ser una estafa o inapropiado, por favor repórtalo a contact@alienwarearena.com.
+                    Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
+
+            approved:
+                title: Your Event Has Been Approved
+                message: |
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Alienware Arena.
+
+                    We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
+
+                    Note: You are receiving this email because you submitted an event for approval.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+            cancel:
+                title: %eventName% has been canceled
+                message: |
+                    This is an automated email to inform you that %eventName% has been cancelled.
+
+                    Alienware Arena Team
+            activate:
+                title: %eventName% is active again
+                message: |
+                    This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Alienware Arena Team
+
+            group_announcement:
+                title: You’re Invited to %eventName%
+                message: |
+                    %groupName% added a new event – <a href="%url%">%eventName%</a>
+
+                    <strong><u>When</u></strong>
+
+                    %startDate%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
+
+                    Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+            require_approval:
+                title:  Request to Approve My Event for %groupName%
+                message: |
+                    Hi %groupOwnerName%,
+
+                    Please approve my upcoming event - <a href="%eventUrl%">%eventName%</a> to be listed on the "%groupName%" page.
+
+                    <strong><u>When</u></strong>
+
+                    %dateRange%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to approve the event.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+
+            group_join_application_from_event:
+                title: Group Member Approval Request
+                message: |
+                    %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to review their request.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %userName%.
+
+            group_application_accepted_event_registered:
+                title: You’re approved to be in %groupName%!
+                message: |
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit the group's page to join the conversation and share information with your fellow group members.
+
+                    You are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %groupOwnerName%.
+
+            event_reminder:
+                title: Recordatorio para el Próximo Evento %eventName%
+                message: |
+                    Hola %username%,
+
+                    Tu evento ya casi está aquí!
+
+                    <a href="%eventUrl%">%eventName%</a>
+                    %dateString% - %timeString% %timezone%
+
+                    %location%
+
+                    ¿Tienes preguntas sobre el evento?
+                    Contactar al organizador de evento <a href="%organizerUrl%">%organizerName%</a>.
+
+                    Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
+
+                    Enviado desde Alienware Arena en nombre de %organizerName%.
+
+            attendee_removed:
+                title: Ya no estás asistiendo a %eventName%
+                message: |
+                    Hola %username%,
+
+                    Este correo electrónico confirma que ya no estás asistiendo <a href="%url%">%eventName%</a>.
+
+                    Si crees que esto sea un error, por favor póngase en contacto con el organizador del evento.
+
+                    Equipo Alienware Arena
+
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.
     message: El contenido está dirigido a un público maduro.
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
+    date_format: %month% %day% %year%
 confirm: Confirmar
 
 forms:

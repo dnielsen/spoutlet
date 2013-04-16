@@ -57,7 +57,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -67,6 +67,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
         ;
 
         $japan->getSiteFeatures()
@@ -86,6 +87,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers(false)
+          ->setHasEvents(false)
         ;
 
         $china->getSiteFeatures()
@@ -105,6 +107,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents(false)
         ;
 
         $na->getSiteFeatures()
@@ -114,7 +117,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -124,6 +127,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
         ;
 
         $eu->getSiteFeatures()
@@ -133,7 +137,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -143,6 +147,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
         ;
 
         $latam->getSiteFeatures()
@@ -152,7 +157,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -162,6 +167,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents(false)
         ;
 
         $in->getSiteFeatures()
@@ -171,7 +177,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -181,6 +187,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents(false)
         ;
 
         $mysg->getSiteFeatures()
@@ -190,7 +197,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -200,6 +207,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents(false)
         ;
 
         $anz->getSiteFeatures()
@@ -209,7 +217,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -219,6 +227,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents(false)
         ;
 
         $this->manager->flush();

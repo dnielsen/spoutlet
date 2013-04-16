@@ -10,7 +10,8 @@ input[type="text"] {
     color: #AAAAAA;
 }
 
-.styled-select select {
+.styled-select select,
+.time-selection select {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -968,11 +969,19 @@ select,
   margin-bottom: 9px;
   font-size: 13px;
   line-height: 18px;
-  color: #AAA;
   background-color: #ffffff;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
+}
+
+input,
+textarea {
+  color: #AAA;
+}
+
+select {
+  color: #555;
 }
 
 .uneditable-textarea {
@@ -1357,7 +1366,6 @@ input[type="checkbox"][readonly] {
 input:focus:required:invalid,
 textarea:focus:required:invalid,
 select:focus:required:invalid {
-  color: #ff0000;
   border-color: #ee5f5b;
 }
 

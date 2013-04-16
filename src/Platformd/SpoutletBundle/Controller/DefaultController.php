@@ -2,7 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -85,7 +84,7 @@ class DefaultController extends Controller
         $giveaways_list = array();
         foreach($giveaways as $giveaway) {
             // filter out proper Event objects
-            if (!$giveaway instanceof Event) {
+            if ($giveaway instanceof Giveaway) {
                 $giveaways_list[] = $giveaway;
             }
         }

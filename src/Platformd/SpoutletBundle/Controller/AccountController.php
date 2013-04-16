@@ -3,6 +3,9 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\UserBundle\Entity\User;
+use Platformd\EventBundle\Service\GroupEventService;
+use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
 {
@@ -75,7 +78,45 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        return $this->render('SpoutletBundle:Account:events.html.twig');
+        /** @var $groupEventService GroupEventService */
+        $groupEventService = $this->get('platformd_event.service.group_event');
+        $globalEventService = $this->get('platformd_event.service.global_event');
+
+        $upcomingGroupEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGroupEvents       = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGroupEvents        = $groupEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGroupEvents   = $groupEventService->findPastEventsForUser($this->getUser(), true);
+
+        $upcomingGlobalEvents   = $globalEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGlobalEvents      = $globalEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGlobalEvents       = $globalEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGlobalEvents  = $globalEventService->findPastEventsForUser($this->getUser(), true);
+
+        $upcomingEvents     = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $ownedEvents        = array_merge($ownedGroupEvents, $ownedGlobalEvents);
+        $pastEvents         = array_merge($pastGroupEvents, $pastGlobalEvents);
+        $pastOwnedEvents    = array_merge($pastOwnedGroupEvents, $pastOwnedGlobalEvents);
+
+        uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($ownedEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
+        uasort($pastOwnedEvents, array($this, 'eventCompare'));
+
+        return $this->render('SpoutletBundle:Account:events.html.twig', array(
+            'events'            => $upcomingEvents,
+            'ownedEvents'       => $ownedEvents,
+            'pastEvents'        => $pastEvents,
+            'pastOwnedEvents'   => $pastOwnedEvents,
+        ));
+    }
+
+    private function eventCompare($a, $b) {
+
+        if ($a->getStartsAt() == $b->getStartsAt()) {
+            return 0;
+        }
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+
     }
 
     public function videosAction()
@@ -122,7 +163,7 @@ class AccountController extends Controller
         ));
     }
 
-    public function groupsAction()
+    public function groupsAction(Request $request)
     {
         $this->checkSecurity();
 
@@ -130,8 +171,15 @@ class AccountController extends Controller
 
         $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
 
+        $action = null;
+
+        if ($then = $request->query->get('then')) {
+            $action = $then;
+        }
+
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
             'groups' => $groups,
+            'action' => $action,
         ));
     }
 

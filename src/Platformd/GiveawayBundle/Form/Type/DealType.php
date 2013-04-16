@@ -42,7 +42,7 @@ class DealType extends AbstractType
                 'format' => 'yyyy-MM-dd HH:mm',
                 'label'  => 'Ends At'
             ))
-            ->add('timezone', 'timezone', array('label' => 'Timezone'))
+            ->add('timezone', 'gmtTimezone')
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950x270',
