@@ -28,7 +28,7 @@
                 {% endfor %}
             </td>
             <td>
-                {{ giveaway | pd_link_full }}
+                <a href="{{ giveaway | pd_link_front_end }}" target="_blank">{{ giveaway | pd_link_front_end }}</a>
             </td>
             <td>
                 {{ giveaway.statusText | trans }}

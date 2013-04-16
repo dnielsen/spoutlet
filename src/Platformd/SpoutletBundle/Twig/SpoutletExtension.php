@@ -76,6 +76,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
             'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
+            'pd_link_front_end'  => new Twig_Filter_Method($this, 'linkToObjectFrontEnd'),
         );
     }
 
@@ -203,11 +204,13 @@ class SpoutletExtension extends Twig_Extension
      * @return string
      */
 
-    public function getAbsoluteUrl($obj)
+    public function getAbsoluteUrl($obj, $scheme=null)
     {
         # look at the url that is being passed in and if it is relative, return base path + url... if it is not, then return obj
 
-        $base = $this->request->getScheme() . '://' . $this->request->getHost();
+        $http = $scheme ? $scheme : $this->request->getScheme();
+
+        $base = $http . '://' . $this->request->getHost();
         $path = $obj[0] == '/' ? $obj : '/' . $obj;
 
         /* return if already absolute URL */
@@ -284,6 +287,22 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return sprintf('<a href="%s"%s %s>%s</a>', $url, $target, $classes, $urlText);
+    }
+
+    /**
+     * @param $obj
+     * @param $useHttps
+     * @return string
+     *
+     * The intended use is for linking to objects outside of admin, which runs on https.
+     */
+    public function linkToObjectFrontEnd($obj, $useHttps=false)
+    {
+        $this->ensureLinkable($obj);
+
+        $url = $this->linkableManager->link($obj);
+
+        return $useHttps ? $this->getAbsoluteUrl($url, 'https') : $this->getAbsoluteUrl($url);
     }
 
     /**
