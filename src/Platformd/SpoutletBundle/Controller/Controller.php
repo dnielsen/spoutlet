@@ -19,6 +19,20 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.site_util')->getCurrentSite();
     }
 
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
+    }
+
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
+    }
+
     /**
      * @return string
      */
@@ -218,5 +232,10 @@ class Controller extends BaseController
     protected function getMediaUtil()
     {
         return $this->container->get('knp_media.util.media_util');
+    }
+
+    protected function getIpLookupUtil()
+    {
+        return $this->container->get('platformd.model.ip_lookup_util');
     }
 }

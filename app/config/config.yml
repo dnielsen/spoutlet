@@ -141,6 +141,14 @@ parameters:
     # used in security.yml to enforce https for viewing admin pages
     admin_url_scheme: %admin_prod_url_scheme%
 
+    # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
+    # in the %ip2location_lookup_directory% directory and return it after an ip address lookup.
+    # This allows developers to fake the country that they are logged in from by writing a string
+    # to this file that is the 2 character country code of the desired country.
+    # If the file does not exist or is empty, default country is "US".
+    ip_lookup_override: false
+    ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
+
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future

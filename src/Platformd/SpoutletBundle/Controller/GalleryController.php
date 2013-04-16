@@ -615,7 +615,7 @@ class GalleryController extends Controller
         $media              = $galleryMediaRepo->find($id);
 
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
-        $country            = $countryRepo->findOneByCode($user->getCountry());
+        $country            = $this->getCurrentCountry();
 
         if ($contest && !$contest->isFinished()) {
 

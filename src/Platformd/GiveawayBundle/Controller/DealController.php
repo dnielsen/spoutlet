@@ -122,7 +122,7 @@ class DealController extends Controller
             return $this->redirect($dealShow);
         }
 
-        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+        $country = $this->getCurrentCountry();
 
         if (!$country) {
             $this->setFlash('error', 'deal_redeem_invalid_country');
