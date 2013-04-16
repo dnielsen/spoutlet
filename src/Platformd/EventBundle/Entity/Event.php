@@ -563,9 +563,9 @@ abstract class Event implements LinkableInterface
     /**
      * @param \DateTime $startsAt
      */
-    public function setStartsAt($startsAt)
+    public function setStartsAt($startsAt, $allowPast = false)
     {
-        if ($startsAt === null) {
+        if ($startsAt === null || $allowPast) {
             $this->startsAt = $startsAt;
         } else {
             $todayDt = new \DateTime('now');

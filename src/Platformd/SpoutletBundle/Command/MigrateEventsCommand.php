@@ -109,7 +109,7 @@ EOT
                     $globalEvent = new GlobalEvent();
                     $globalEvent->setName($event['name']);
                     $globalEvent->setSlug($event['slug']);
-                    $globalEvent->setStartsAt(new \DateTime($event['starts_at']));
+                    $globalEvent->setStartsAt(new \DateTime($event['starts_at']), true);
                     $globalEvent->setEndsAt(new \DateTime($event['ends_at']));
                     $globalEvent->setPublished($event['published']);
                     $globalEvent->setCreatedAt(new \DateTime($event['created']));
@@ -220,8 +220,106 @@ EOT
 
                     $globalEvent = new GlobalEvent();
                     $globalEvent->setName($name);
-                    $globalEvent->setStartsAt(new \DateTime($startString));
+                    $globalEvent->setStartsAt(new \DateTime($startString), true);
                     $globalEvent->setEndsAt(new \DateTime($endString));
+                    $globalEvent->setPublished(true);
+                    $globalEvent->setCreatedAt(new \DateTime());
+                    $globalEvent->setUpdatedAt(new \DateTime());
+                    $globalEvent->setContent('External Event');
+                    $globalEvent->setTimezone('UTC');
+                    $globalEvent->setExternalUrl($url);
+                    $globalEvent->setDisplayTimezone(true);
+                    $globalEvent->setActive($status != 'inactive');
+                    $globalEvent->setSites($eventSites);
+                    $globalEvent->setHostedBy($host);
+                    $globalEvent->setApproved(true);
+                    $globalEvent->setOnline(true);
+                    $globalEvent->setRegistrationOption('REGISTRATION_3RDPARTY');
+                    $globalEvent->setAttendeeCount(0);
+                    $globalEvent->setUser($eventUser);
+
+                    $em->persist($globalEvent);
+                    $em->flush();
+
+                    $cevoMigratedCount++;
+                }
+            }
+
+            fclose($handle);
+        }
+
+        if ($cevoMigratedCount) {
+            $output->writeLn('<info>✔</info>');
+            $output->writeLn(' - '.$cevoMigratedCount.' events migrated!');
+            $output->writeLn('');
+        } else {
+            $output->writeLn('<info>✔</info>');
+            $output->writeLn(' - No events to migrate!');
+            $output->writeLn('');
+        }
+
+        $output->write('Getting archived CEVO events...');
+
+        if (($handle = fopen("/home/ubuntu/events_migration/archived_cevo_events.csv", "r")) !== FALSE) {
+
+            $output->writeLn('<info>✔</info>');
+            $output->write(' - Migrating archived CEVO events...');
+
+            $cevoMigratedCount = 0;
+
+            $sites['DEMO']   = $siteRepo->find(1);
+            $sites['NA']     = $siteRepo->find(4);
+            $sites['EURO']   = $siteRepo->find(5);
+            $sites['LATAM']  = $siteRepo->find(6);
+            $sites['IN']     = $siteRepo->find(7);
+            $sites['MYSG']   = $siteRepo->find(8);
+            $sites['ANZ']    = $siteRepo->find(9);
+
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+
+                $status     = strtolower($data[4]);
+                $startsAt   = DateTime::createFromFormat('d/m/Y', $data[5]);
+
+                if ($alreadyMigrated = $eventService->findOneBy(array('name' => $data[7], 'startsAt' => $startsAt))) {
+                    continue;
+                }
+
+                if ($status == 'archived') {
+                    $endsAt = DateTime::createFromFormat('d/m/Y', $data[5]);
+                    $endsAt->modify('+1 day');
+
+                    $name                   = htmlspecialchars_decode($data[6], ENT_QUOTES);
+                    $url                    = $data[7];
+                    $host                   = htmlspecialchars_decode($data[10], ENT_QUOTES);
+                    $enabledSites           = $data[13];
+
+                    if (substr($url, 0, 1) == '/') {
+                        $url = 'http://www.alienwarearena.com'.$url;
+                    }
+
+                    $enabledSitesArr = explode(',', $enabledSites);
+
+                    $eventSitesArr = array();
+
+                    foreach ($enabledSitesArr as $siteKey) {
+                        if ($value) {
+                            $key = str_replace('/', '', trim($siteKey));
+                            if (isset($sites[$key])) {
+                                $eventSitesArr[] = $sites[$key];
+                            }
+                        }
+                    }
+
+                    if (count($eventSitesArr) < 1) {
+                        $eventSitesArr[] = $sites['DEMO'];
+                    }
+
+                    $eventSites = new ArrayCollection($eventSitesArr);
+
+                    $globalEvent = new GlobalEvent();
+                    $globalEvent->setName($name);
+                    $globalEvent->setStartsAt($startsAt, true);
+                    $globalEvent->setEndsAt($endsAt);
                     $globalEvent->setPublished(true);
                     $globalEvent->setCreatedAt(new \DateTime());
                     $globalEvent->setUpdatedAt(new \DateTime());

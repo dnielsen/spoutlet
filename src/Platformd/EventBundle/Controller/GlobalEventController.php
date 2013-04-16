@@ -31,9 +31,9 @@ class GlobalEventController extends Controller
         $site = $this->getCurrentSite();
 
         $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
-        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site);
+        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
         $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
-        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site);
+        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site, 0);
 
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
@@ -55,7 +55,7 @@ class GlobalEventController extends Controller
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => array_reverse($pastEvents),
+            'pastEvents'     => $pastEvents,
             'groupsCount'    => $groupsCount,
             'userGlobal'     => $userGlobal,
             'userGroup'      => $userGroup,
