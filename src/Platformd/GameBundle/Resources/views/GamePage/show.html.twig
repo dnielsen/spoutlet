@@ -50,7 +50,7 @@
 {% if gamePage.backgroundImage %}
     {% set customPageBackgroundImage = media_path(gamePage.backgroundImage) %}
 {% else %}
-    {% set customPageBackgroundImage = false %}
+    {% set customPageBackgroundImage = "default" %}
 {% endif %}
 
 {% block page_background_image customPageBackgroundImage %}

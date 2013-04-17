@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle;
 
 use Platformd\SpoutletBundle\PathResolver;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
+use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
 
 /**
 * Path resolver for the event images
@@ -45,8 +46,6 @@ class BannerPathResolver extends PathResolver
    */
   public function supports($media, array $options)
   {
-
-    return $media instanceof AbstractEvent;
+      return ($media instanceof AbstractEvent || $media instanceof GiveawayTranslation) && !empty($options['type']) && in_array($options['type'], array('banner', 'general'));
   }
-
 }

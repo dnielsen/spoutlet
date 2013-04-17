@@ -4,7 +4,7 @@
     {{ 'platformd.giveaway.admin.create' | trans }}
 </h1>
 
-<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm">
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form giveawayForm form-horizontal">
 
     {{ form_errors(form) }}
 
@@ -17,6 +17,16 @@
             {{ form_row(form.slug) }}
             {{ form_row(form.externalUrl) }}
             {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
+
+            {% if form.get('mediaObjects') %}
+                {% set objPath = media_path(form.get('mediaObjects'), {type: "banner"}) %}
+
+                {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
+                    <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
+                {% endif %}
+            {% endif %}
+
+            {{ form_row(form.removeBannerImage) }}
         </div>
 
         <div class="span6">
@@ -31,6 +41,10 @@
         <legend>b) Redemption Instructions</legend>
         {{ form_errors(form.redemptionInstructionsArray) }}
 
+        <p class="alert alert-info help"><i class="icon-info-sign"></i>
+            {{ 'platformd.giveaway.admin.redemption_instructions_note' | trans }}
+        </p>
+
         <ol class="input">
             {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
             {% for redemptionForm in form.redemptionInstructionsArray %}
@@ -40,11 +54,35 @@
             {% endfor %}
         </ol>
 
-        <div class="help-block input">{{ 'platformd.giveaway.admin.redemption_instructions_note' | trans }}</div>
         {{ form_widget(form.redemptionInstructionsArray) }}
     </div>
 
-    <legend>c) Restrictions</legend>
+    <legend>c) Content</legend>
+
+    {{ form_row(form.content) }}
+    {{ form_row(form.game) }}
+    {{ form_row(form.slug) }}
+    {{ form_row(form.externalUrl) }}
+    {{ form_row(form.sites) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.giveawayType) }}
+    {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
+    {{ form_row(form.backgroundImage) }}
+
+    {% if form.get('mediaObjects') %}
+        {% set objPath = media_path(form.get('mediaObjects')) %}
+
+        {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
+            <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
+        {% endif %}
+    {% endif %}
+
+    {{ form_row(form.removeBackgroundImage) }}
+
+    {{ form_row(form.backgroundLink) }}
+    {{ form_row(form.displayRemainingKeysNumber) }}
+
+    <legend>e) Restrictions</legend>
     <div class="game-page-form">
         <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
         <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
@@ -60,13 +98,8 @@
         </ul>
     </div>
 
-    <legend>d) Description</legend>
-
-    <div class="form_row">
-        {{ form_errors(form.content) }}
-        {{ form_label(form.content) }}
-        {{ form_widget(form.content, { 'attr': { 'class': 'ckeditor' } }) }}
-    </div>
+    <legend>d) Translations</legend>
+    {{ form_row(form.translations) }}
 
     <div style="display: none;">
         {{ form_row(form.ruleset) }}
@@ -77,3 +110,23 @@
 
     <input type="submit" style="margin-top:15px;" class="btn btn-primary" value="{{ "platformd.giveaway.admin.save_giveaway" | trans }}" formnovalidate />
 </form>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.add-translation-to-collection').click(function(event) {
+            event.preventDefault();
+            var collection = $(event.target).parent();
+            var prototype = collection.data('prototype');
+            var num = collection.children().length + 1;
+            var item = prototype.replace(/\$\$name\$\$/g, num);
+
+            $(item).insertBefore(this);
+            CKEDITOR.replace('giveaway_translations_' + num + '_content', {toolbar: "AdminToolbar"});
+        });
+        $(document.body).delegate('.translation-collection-remove-link', 'click', function(event) {
+            event.preventDefault();
+            $(event.target).parent().remove();
+        });
+    });
+</script>
+

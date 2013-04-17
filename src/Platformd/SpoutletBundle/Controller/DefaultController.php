@@ -107,7 +107,7 @@ class DefaultController extends Controller
 
         });
 
-    	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+        return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,

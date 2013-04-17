@@ -42,8 +42,7 @@ class GiveawayAdminController extends Controller
         {
             $form->bindRequest($request);
 
-            if($form->isValid())
-            {
+            if($form->isValid()) {
                 $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
@@ -428,6 +427,32 @@ class GiveawayAdminController extends Controller
         $giveaway = $giveawayForm->getData();
         $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
+
+        if ($giveawayForm['removeBannerImage'] && $removeBannerImage = $giveawayForm['removeBannerImage']->getData()) {
+            $giveaway->setBannerImage(null);
+        }
+
+        if ($giveawayForm['removeBackgroundImage'] && $removeBackgroundImage = $giveawayForm['removeBackgroundImage']->getData()) {
+            $giveaway->setBackgroundImagePath(null);
+        }
+
+        /*foreach ($giveawayForm->getChildren() as $key => $child) {
+            if ($key == 'translations') {
+                foreach ($child as $translationForm) {
+                    $translation = $translationForm->getData();
+
+                    if ($translationForm->has('removeBannerImage') && $removeBannerImage = $translationForm->get('removeBannerImage')->getData()) {
+                        $translation->setBannerImage(null);
+                    }
+
+                    if ($translationForm->has('removeBackgroundImage') && $removeBackgroundImage = $translationForm->get('removeBackgroundImage')->getData()) {
+                        $translation->setBackgroundImagePath(null);
+                    }
+
+                    $translationForm->setData($translation);
+                }
+            }
+        }*/
 
         $ruleset    = $giveaway->getRuleset();
         $rules      = $ruleset->getRules();

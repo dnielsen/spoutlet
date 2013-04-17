@@ -17,6 +17,7 @@ use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Twig extension for generic things
@@ -35,8 +36,9 @@ class SpoutletExtension extends Twig_Extension
     private $translator;
     private $userManager;
     private $contentReportRepo;
+    private $backgroundAdRepo;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $backgroundAdRepo)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -48,6 +50,7 @@ class SpoutletExtension extends Twig_Extension
         $this->translator          = $translator;
         $this->userManager         = $userManager;
         $this->contentReportRepo   = $contentReportRepo;
+        $this->backgroundAdRepo    = $backgroundAdRepo;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -93,6 +96,8 @@ class SpoutletExtension extends Twig_Extension
             'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
             'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
             'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
+            'current_background_ad_url'    => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
+            'current_background_ad_link'   => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
         );
     }
 
@@ -128,6 +133,48 @@ class SpoutletExtension extends Twig_Extension
     public function addLinks($string)
     {
         return preg_replace("/(http:\/\/[^\s]+)/", "<a href=\"$1\">$1</a>", $string);
+    }
+
+    public function getCurrentBackgroundLink($link = null, $timezone = 'UTC')
+    {
+        if (!empty($link)) {
+            return $link;
+        }
+
+        if ($adSite = $this->getCurrentBackgroundAdSite($this->currentSite, $timezone)) {
+            return $adSite->getUrl();
+        }
+    }
+
+    public function getCurrentBackgroundUrl($url = null, $timezone = 'UTC')
+    {
+        if ($url === "default") {
+            return;
+        }
+
+        if (empty($url)) {
+            if ($adSite = $this->getCurrentBackgroundAdSite($this->currentSite, $timezone)) {
+                $exposer = $this->container->get('twig.extension.media_exposer');
+                if ($file =  $adSite->getAd()->getFile()) {
+                    $url = $exposer->getPath($file);
+                }
+            }
+        }
+
+        if (!$url) {
+            return;
+        }
+
+        return sprintf('style="background-image: url(\'%s\');"', $url);
+    }
+
+    private function getCurrentBackgroundAdSite(Site $site = null, $timezone = 'UTC')
+    {
+        return $this->backgroundAdRepo->getCurrentBackgroundAdSite($site, $timezone);
+    }
+
+    private function getEntityManager() {
+        return $this->container->get('doctrine.orm.entity_manager');
     }
 
     public function mediaPathNice($media) {

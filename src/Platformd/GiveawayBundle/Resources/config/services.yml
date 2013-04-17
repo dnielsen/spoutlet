@@ -15,3 +15,9 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@knp_media.util.media_util"
 
+    platformd.doctrine.listener.giveaway:
+        class: Platformd\GiveawayBundle\Doctrine\Listener\GiveawayListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }

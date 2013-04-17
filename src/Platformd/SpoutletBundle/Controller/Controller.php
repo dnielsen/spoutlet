@@ -14,9 +14,12 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
  */
 class Controller extends BaseController
 {
-
     protected function getCurrentSite() {
         return $this->container->get('platformd.model.site_util')->getCurrentSite();
+    }
+
+    protected function getSiteFromLocale($locale) {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 
     /**

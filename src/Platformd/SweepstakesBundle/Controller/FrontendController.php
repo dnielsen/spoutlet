@@ -13,7 +13,7 @@ class FrontendController extends Controller
     {
         $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getCurrentSite());
 
-    	return $this->render('SweepstakesBundle:Frontend:index.html.twig', array(
+        return $this->render('SweepstakesBundle:Frontend:index.html.twig', array(
             'sweepstakess' => $sweepstakess
         ));
     }

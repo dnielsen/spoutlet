@@ -5,13 +5,14 @@ namespace Platformd\GiveawayBundle\Entity;
 use Platformd\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
-use Doctrine\Common\Collections\Collection,
-    Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Platformd\GiveawayBundle\Entity\Giveaway
@@ -52,6 +53,11 @@ class Giveaway extends AbstractEvent
     protected $redemptionInstructions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayTranslation", mappedBy="translatable", cascade={"all"})
+     */
+    protected $translations;
+
+    /**
      * A string enum status
      *
      * @var string
@@ -64,6 +70,10 @@ class Giveaway extends AbstractEvent
      * @ORM\Column(type="string", length=30)
      */
     protected $giveawayType = self::TYPE_KEY_GIVEAWAY;
+
+    protected $currentLocale;
+
+    protected $defaultLocale = 'en';
 
     /**
      * Key of valid status to a text translation key for that status
@@ -85,16 +95,117 @@ class Giveaway extends AbstractEvent
      */
     protected $displayRemainingKeysNumber = true;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $backgroundImagePath;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $backgroundLink;
+
+    /**
+     * @Assert\File(
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
+     * )
+     */
+    protected $backgroundImage;
+
     public function __construct()
     {
+        parent::__construct();
+
         // auto-publish, this uses the "status" field instead
         $this->published = true;
         $this->giveawayPools = new ArrayCollection();
+        $this->translations = new ArrayCollection();
+    }
+
+    public function __call($method, array $arguments = array())
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = call_user_func_array(array($translation, $method), $arguments);
+        }
+
+        return $value;
+    }
+
+    private function translate(Site $locale = null)
+    {
+        $currentLocale = $locale ?: $this->getCurrentLocale();
+
+        return $this->translations->filter(function($translation) use($currentLocale) {
+            return $translation->getLocale() === $currentLocale;
+        })->first();
+    }
+
+    public function getName()
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getName();
+        }
+
+        return $value ?: $this->name;
+    }
+
+    public function getContent()
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getContent();
+        }
+
+        return $value ?: $this->content;
+    }
+
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale ?: $this->defaultLocale;
+    }
+
+    public function setCurrentLocale(Site $locale = null)
+    {
+        $this->currentLocale = $locale;
     }
 
     public function __toString()
     {
         return $this->getName();
+    }
+
+    public function getTranslations()
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(GiveawayTranslation $translation)
+    {
+        $this->translations->add($translation);
+        $translation->setTranslatable($this);
+    }
+
+    public function setTranslations(Collection $translations)
+    {
+        foreach ($translations as $translation) {
+            $this->addTranslation($translation);
+        }
+    }
+
+    public function removeTranslation(GiveawayTranslation $translation)
+    {
+        $this->translations->removeElement($translation);
     }
 
     /**
@@ -111,82 +222,6 @@ class Giveaway extends AbstractEvent
     public function setGiveawayPools($giveawayPools)
     {
         $this->giveawayPools = $giveawayPools;
-    }
-
-    /**
-     * Add an user
-     *
-     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
-     */
-    public function addUser(GiveawayPool $pool)
-    {
-        $this->giveawayPools->add($pool);
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        if (!$status) {
-            return;
-        }
-
-        if (!in_array($status, array_keys(self::$validStatuses))) {
-            throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
-        }
-
-        $this->status = $status;
-    }
-
-    /**
-     * Returns the "text" for the current status
-     *
-     * The text is actually just a translation key
-     *
-     * @return string
-     */
-    public function getStatusText()
-    {
-        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
-    }
-
-    /**
-     * Returns a key-value pair of valid status keys and their text translation
-     *
-     * Useful in forms
-     *
-     * @return array
-     */
-    static public function getValidStatusesMap()
-    {
-        return self::$validStatuses;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisabled()
-    {
-        return $this->getStatus() == 'disabled';
-    }
-
-    public function isActive()
-    {
-        return $this->getStatus() == 'active';
-    }
-
-    public function setAsActive()
-    {
-        $this->setStatus('active');
     }
 
     /**
@@ -266,6 +301,17 @@ class Giveaway extends AbstractEvent
      */
     public function getCleanedRedemptionInstructionsArray()
     {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getCleanedRedemptionInstructionsArray();
+
+            if ($value) {
+                return $value;
+            }
+        }
+
         $cleaned = array();
         foreach ($this->getRedemptionInstructionsArray() as $item) {
             if ($item) {
@@ -274,6 +320,93 @@ class Giveaway extends AbstractEvent
         }
 
         return $cleaned;
+    }
+
+    /**
+     * Makes sure the redemption instructions are trimmed
+     *
+     * @ORM\prePersist
+     * @ORM\preUpdate
+     */
+    public function trimRedemptionInstructions()
+    {
+        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
+    }
+
+    /**
+     * Add an user
+     *
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     */
+    public function addUser(GiveawayPool $pool)
+    {
+        $this->giveawayPools->add($pool);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        if (!$status) {
+            return;
+        }
+
+        if (!in_array($status, array_keys(self::$validStatuses))) {
+            throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Returns the "text" for the current status
+     *
+     * The text is actually just a translation key
+     *
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
+    }
+
+    /**
+     * Returns a key-value pair of valid status keys and their text translation
+     *
+     * Useful in forms
+     *
+     * @return array
+     */
+    static public function getValidStatusesMap()
+    {
+        return self::$validStatuses;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->getStatus() == 'disabled';
+    }
+
+    public function isActive()
+    {
+        return $this->getStatus() == 'active';
+    }
+
+    public function setAsActive()
+    {
+        $this->setStatus('active');
     }
 
     /**
@@ -289,17 +422,6 @@ class Giveaway extends AbstractEvent
                 return $pool;
             }
         }
-    }
-
-    /**
-     * Makes sure the redemption instructions are trimmed
-     *
-     * @ORM\prePersist
-     * @ORM\preUpdate
-     */
-    public function trimRedemptionInstructions()
-    {
-        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
     }
 
     /**
@@ -393,5 +515,63 @@ class Giveaway extends AbstractEvent
     public function setDisplayRemainingKeysNumber($displayRemainingKeysNumber)
     {
         $this->displayRemainingKeysNumber = $displayRemainingKeysNumber;
+    }
+
+    public function getBackgroundImagePath()
+    {
+        if ($translation = $this->translate()) {
+            if ($path = $translation->getBackgroundImagePath()) {
+                return $path;
+            }
+        }
+
+        return $this->backgroundImagePath;
+    }
+
+    public function setBackgroundImagePath($backgroundImagePath)
+    {
+        $this->backgroundImagePath = $backgroundImagePath;
+    }
+
+    public function getBackgroundImage()
+    {
+        return $this->backgroundImage;
+    }
+
+    public function setBackgroundImage($backgroundImage)
+    {
+        $this->backgroundImage = $backgroundImage;
+    }
+
+    public function getBackgroundLink($bypassTranslations = false)
+    {
+        if (!$bypassTranslations && $translation = $this->translate()) {
+            if ($link = $translation->getBackgroundLink()) {
+                return $link;
+            }
+        }
+
+        return $this->backgroundLink;
+    }
+
+    public function setBackgroundLink($backgroundLink)
+    {
+        $this->backgroundLink = $backgroundLink;
+    }
+
+    public function getBannerImage($bypassTranslations = false)
+    {
+        if (!$bypassTranslations && $translation = $this->translate()) {
+            if ($path = $translation->getBannerImage()) {
+                return $path;
+            }
+        }
+
+        return $this->bannerImage;
+    }
+
+    public function setBannerImage($bannerImage)
+    {
+        $this->bannerImage = $bannerImage;
     }
 }

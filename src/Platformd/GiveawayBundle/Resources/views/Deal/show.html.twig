@@ -2,6 +2,8 @@
 
 {% block title deal.name ~ ' '~ ('deal' | trans) %}
 
+{% block page_background_image "default" %}
+
 {% block open_graph %}
     {% if deal.openGraphOverride and deal.openGraphOverride.thumbnail and deal.openGraphOverride.thumbnail.filename %}
         {% set openGraphImage = deal.openGraphOverride.thumbnail %}

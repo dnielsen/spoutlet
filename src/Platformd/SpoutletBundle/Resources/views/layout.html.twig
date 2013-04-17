@@ -121,6 +121,10 @@
                 }).superfish({
                     delay:      150
                 });
+
+                {% if current_background_ad_link(block('page_background_link')) %}
+                    $('#custom_background_top').css('cursor', 'pointer');
+                {% endif %}
 		    });
 		</script>
 		<script type="text/javascript">
@@ -156,16 +160,16 @@
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
-	            <div class="background-takeover" id="custom_background_top">
-	                <div class="background-takeover" id="custom_background_bot">
-	                    <div id="header">
-	                    	{% include 'SpoutletBundle::header.html.twig' %}
-	                    </div>
-	                    <div id="mainNav-wrapper">
-	                        {% include 'SpoutletBundle::navigation.html.twig' %}
-	                    </div>
-	                    <div id="content-wrapper">
+            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} data-background-link="{{ current_background_ad_link(block('page_background_link')) }}">
+                <div class="background-takeover" id="custom_background_top">
+                    <div id="header">
+                    	{% include 'SpoutletBundle::header.html.twig' %}
+                    </div>
+                    <div id="mainNav-wrapper">
+                        {% include 'SpoutletBundle::navigation.html.twig' %}
+                    </div>
+                    <div class="background-takeover" id="custom_background_bot">
+                        <div id="content-wrapper">
                             <div id="content-background">
                                 <div id="content">
                                     {% block pre_content_nav %}{% endblock %}

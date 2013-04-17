@@ -27,11 +27,21 @@
     {% endif %}
 {% endblock %}
 
+{% if giveaway.backgroundImagePath is not null %}
+    {% set bgImage = media_path(giveaway) %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
+
+{% block page_background_image bgImage %}
+
+{% block page_background_link giveaway.backgroundLink %}
+
 {% block content %}
     <div class="std_1col">
 
         {% if giveaway.bannerImage %}
-            <div id="eventHeader" style="background:url('{{ asset(media_path(giveaway)) }}') no-repeat;"></div>
+            <div id="eventHeader" style="background:url('{{ media_path(giveaway, {type: "banner"}) }}') no-repeat;"></div>
         {% endif %}
     </div><!-- std_1col -->
 
@@ -73,14 +83,18 @@
                     <ol>
                         {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
                         {% if  (redemptionSteps is not empty)  %}
-                        {% for redemptionStep in redemptionSteps %}
-                        <li>
-                            <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
-                        </li>
-                        {% endfor %}
+                            {% for redemptionStep in redemptionSteps %}
+                            <li>
+                                <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
+                            </li>
+                            {% endfor %}
                         {% endif %}
                     </ol>
                 </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
 
         </div><!-- right -->
@@ -96,19 +110,18 @@
 
                 </div><!-- giveaway-details -->
 
-
             </div><!-- giveaway-info -->
 
-                {% if features.hasComments %}
-                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
-                {% endif %}
-
+            {% if features.hasComments %}
+                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
+            {% endif %}
         </div><!-- left -->
 
         <div class="clear">
 
         </div><!-- clear -->
     </div><!-- std_2col -->
+
 {% endblock %}
 
 {% block javascripts %}

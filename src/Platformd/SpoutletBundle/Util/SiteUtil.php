@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-
 class SiteUtil
 {
     private $em;

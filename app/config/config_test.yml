@@ -32,6 +32,9 @@ swiftmailer:
 mink:
     base_url:   %mink_base_url%
     goutte: ~
+    selenium: ~
+    javascript_session: selenium
+    show_cmd: firefox %s
 
 doctrine:
     dbal:

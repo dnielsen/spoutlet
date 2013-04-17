@@ -57,6 +57,7 @@ abstract class AbstractEvent implements LinkableInterface
 
     const PREFIX_PATH_BANNER = 'banner/';
     const PREFIX_PATH_GENERAL = 'general/';
+    const PREFIX_PATH_BACKGROUND = 'background/';
 
     /**
      * @var integer $id
@@ -133,7 +134,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @Assert\File(
      *   maxSize="6000000",
-     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
      * )
      */
     protected $bannerImageFile;
@@ -176,7 +177,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @Assert\File(
      *   maxSize="6000000",
-     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
      * )
      */
     protected $generalImageFile;

@@ -100,6 +100,8 @@ class GiveawayRepository extends AbstractEventRepository
             $qb = $this->createQueryBuilder('g');
         }
 
+        $qb->addSelect('gt'); // eager fetch translations
+        $qb->leftJoin('g.translations', 'gt');
         $qb->leftJoin('g.sites', 's');
         $qb->andWhere(is_string($site) ? 's.name = :site' : 's = :site');
         $qb->setParameter('site', $site);
