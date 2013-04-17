@@ -31,6 +31,7 @@ class AbstractEventRepository extends EntityRepository
 
         $items = $this->addQueryLimit($query, $limit)->getResult();
         $items = $this->removeDisabledGiveaways($items);
+        $items = $this->removeHidden($items);
 
         return $items;
     }
@@ -52,6 +53,7 @@ class AbstractEventRepository extends EntityRepository
 
         $items = $this->addQueryLimit($query, $limit)->getResult();
         $items = $this->removeDisabledGiveaways($items);
+        $items = $this->removeHidden($items);
 
         return $items;
     }
@@ -134,7 +136,10 @@ class AbstractEventRepository extends EntityRepository
             ->orderBy('e.ends_at', 'DESC')
             ->getQuery();
 
-        return $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->addQueryLimit($query, $limit)->getResult();
+        $items = $this->removeHidden($items);
+
+        return $items;
     }
 
     /**
@@ -172,6 +177,7 @@ class AbstractEventRepository extends EntityRepository
         ;
 
         $items = $this->removeDisabledGiveaways($items);
+        $items = $this->removeHidden($items);
 
         return $items;
     }
@@ -249,6 +255,7 @@ class AbstractEventRepository extends EntityRepository
 
         $items = $query->getResult();
         $items = $this->removeDisabledGiveaways($items);
+        $items = $this->removeHidden($items);
 
         return $items;
     }
@@ -317,6 +324,18 @@ class AbstractEventRepository extends EntityRepository
         foreach ($abstractEvents as $key => $item) {
             // todo - remove this hack - see #18
             if ($item instanceof Giveaway && $item->isDisabled()) {
+                unset($abstractEvents[$key]);
+            }
+        }
+
+        return $abstractEvents;
+    }
+
+    private function removeHidden($abstractEvents)
+    {
+        foreach ($abstractEvents as $key => $item) {
+            // todo - remove this hack - see #18
+            if ($item->getHidden()) {
                 unset($abstractEvents[$key]);
             }
         }

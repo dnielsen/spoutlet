@@ -56,7 +56,12 @@
         {% set attr = attr|merge({'class': 'required'}) %}
     {% endif %}
     {% set attr = attr|merge({'class': 'control-label'}) %}
-    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ label|trans }}</label>
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+        {{ label|trans }}
+        {% if required %}
+            <span class="required">*</span>
+        {% endif %}
+    </label>
 {% endspaceless %}
 {% endblock %}
 
