@@ -209,7 +209,8 @@ services:
             - { name: validator.constraint_validator, alias: unique_background_ad_time_per_site }
 
     platformd.repository.background_ads:
-        class: Platformd\SpoutletBundle\Entity\BackgroundAdRepository
+        class:           Platformd\SpoutletBundle\Entity\BackgroundAdRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - Platformd\SpoutletBundle\Entity\BackgroundAd
+            - 'SpoutletBundle:BackgroundAd'
