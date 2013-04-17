@@ -282,10 +282,11 @@ class Giveaway extends AbstractEvent
      *
      * @return \Platformd\GiveawayBundle\Entity\GiveawayPool
      */
-    public function getActivePool()
+    public function getActivePoolForCountry($country)
     {
         foreach($this->getGiveawayPools() as $pool) {
-            if ($pool->getIsActive()) {
+
+            if ($pool->isEnabledForCountry($country) && $pool->getIsActive()) {
                 return $pool;
             }
         }

@@ -138,6 +138,36 @@ class GiveawayPoolAdminController extends Controller
     protected function savePool(GiveawayPool $pool)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
+        $ruleset    = $pool->getRuleset();
+        $rules      = $ruleset->getRules();
+
+        $newRulesArray = array();
+
+        $defaultAllow = true;
+
+        foreach ($rules as $rule) {
+            if ($rule->getCountry()) {
+                $rule->setRuleset($ruleset);
+                $newRulesArray[] = $rule;
+
+                $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+            }
+        }
+
+        $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+        if ($oldRules) {
+            foreach ($oldRules as $oldRule) {
+                if (!in_array($oldRule, $newRulesArray)) {
+                    $oldRule->setRuleset(null);
+                }
+            }
+        }
+
+        $pool->getRuleset()->setParentType('giveaway-pool');
+        $pool->getRuleset()->setDefaultAllow($defaultAllow);
+
         $em->persist($pool);
         $em->flush();
 

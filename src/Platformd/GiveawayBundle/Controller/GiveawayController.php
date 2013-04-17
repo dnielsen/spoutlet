@@ -30,9 +30,11 @@ class GiveawayController extends Controller
      */
     public function showAction($slug, $keyId)
     {
-        $giveaway = $this->findGiveaway($slug);
+        $giveaway   = $this->findGiveaway($slug);
+        $country    = $this->getCurrentCountry();
+        $em         = $this->getDoctrine()->getEntityManager();
 
-        $pool = $giveaway->getActivePool();
+        $pool = $giveaway->getActivePoolForCountry($country);
 
         if ($keyId) {
             $assignedKey = $this->getKeyRepository()->findOneByIdAndUser($keyId, $this->getUser());
@@ -71,6 +73,7 @@ class GiveawayController extends Controller
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
         $user = $this->getUser();
+        $clientIp = $request->getClientIp(true);
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
@@ -87,13 +90,7 @@ class GiveawayController extends Controller
             throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
         }
 
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
-        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($giveawayShow);
-        }
+        $country = $this->getCurrentCountry();
 
         // check that they pass the new style age-country restriction ruleset
         if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
@@ -101,7 +98,7 @@ class GiveawayController extends Controller
             return $this->redirect($giveawayShow);
         }
 
-        $pool = $giveaway->getActivePool();
+        $pool = $giveaway->getActivePoolForCountry($country);
 
         if (!$pool) {
             // repeated below if there is no unassigned keys
@@ -109,8 +106,6 @@ class GiveawayController extends Controller
 
             return $this->redirect($giveawayShow);
         }
-
-        $clientIp = $request->getClientIp(true);
 
         // check the IP limit
         if (!$this->getKeyRepository()->canIpHaveMoreKeys($clientIp, $pool)) {
@@ -163,6 +158,7 @@ class GiveawayController extends Controller
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
         $user = $this->getUser();
+        $clientIp = $request->getClientIp(true);
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
@@ -183,13 +179,7 @@ class GiveawayController extends Controller
             $this->createNotFoundException('No machine code submitted');
         }
 
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
-        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($giveawayShow);
-        }
+        $country = $this->getCurrentCountry();
 
         // check that they pass the new style age-country restriction ruleset
         if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
@@ -197,7 +187,14 @@ class GiveawayController extends Controller
             return $this->redirect($giveawayShow);
         }
 
-        $clientIp = $request->getClientIp(true);
+        $pool = $giveaway->getActivePoolForCountry($country);
+
+        if (!$pool) {
+            // repeated below if there is no unassigned keys
+            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
+
+            return $this->redirect($giveawayShow);
+        }
 
         $machineCode = new MachineCodeEntry($giveaway, $code);
         $machineCode->attachToUser($this->getUser(), $clientIp);

@@ -57,6 +57,7 @@ services:
             - "@doctrine.orm.entity_manager"
             # TODO this should NOT be hardcoded
             - %platformd_sites%
+            - @platformd.model.ip_lookup_util
 
     # the custom slug constraint for AbstractEvent
     platformd.validation.abstract_event_unique_slug_validator:
@@ -95,7 +96,6 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
-
     platformd.listener.site_translation_listener:
         class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
         arguments:
@@ -104,6 +104,12 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
         calls:
             - [ setLogger, [ @logger] ]
+
+    platformd.model.ip_lookup_util:
+        class: Platformd\SpoutletBundle\Util\IpLookupUtil
+        arguments:
+            - %ip2location_lookup_directory%
+            - %ip_lookup_override%
 
     platformd.model.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil

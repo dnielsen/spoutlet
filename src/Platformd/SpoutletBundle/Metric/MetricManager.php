@@ -15,7 +15,8 @@ use Platformd\GiveawayBundle\Entity\Giveaway,
     Platformd\GroupBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
     Platformd\GroupBundle\Entity\Metric\GroupMetric,
-    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric
+    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric,
+    Platformd\SpoutletBundle\Util\IpLookupUtil
 ;
 
 class MetricManager
@@ -66,13 +67,27 @@ class MetricManager
     private $groupDiscussionMetricRepository;
 
     /**
+     * @var \Platformd\SpoutletBundle\Entity\RegionRepository
+     */
+    private $regionRepository;
+
+    /**
      * An array of all available site keys and their names
      *
      * @var array
      */
     private $sites;
 
-    public function __construct(EntityManager $em, array $sites)
+    /**
+     * An array of all available regions (country groups)
+     *
+     * @var array
+     */
+    private $regions;
+
+    private $ipLookupUtil;
+
+    public function __construct(EntityManager $em, array $sites, IpLookupUtil $ipLookupUtil)
     {
         $this->siteRepository = $em->getRepository('SpoutletBundle:Site');
         $this->userRepo = $em->getRepository('UserBundle:User');
@@ -83,7 +98,10 @@ class MetricManager
         $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
+        $this->regionRepository = $em->getRepository('SpoutletBundle:Region');
         $this->sites = $sites;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->regions = $this->regionRepository->findAll();
     }
 
     /**
@@ -94,6 +112,22 @@ class MetricManager
     public function getSites()
     {
         return $this->sites;
+    }
+
+    /**
+     * Returns an array of the regions that are reported on
+     *
+     * @return array
+     */
+    public function getRegions()
+    {
+        $return = array();
+
+        foreach ($this->regions as $region) {
+            $return[] = $region->getName();
+        }
+
+        return $return;
     }
 
     /**
@@ -125,9 +159,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $from, $to);
+        $assignedKeys = $this->giveawayKeyRepository->getAssignedForGiveawayByDate($giveaway, $from, $to);
+
+        foreach ($assignedKeys as $key) {
+            $country = $this->ipLookupUtil->getCountryCode($key['ipAddress']);
+            $regions = $this->regionRepository->findRegionNamesForCountry($country);
+
+            if ($regions) {
+                foreach ($regions as $region) {
+                    $data['sites'][$region['name']] = array_key_exists($region['name'], $data['sites']) ? $data['sites'][$region['name']] + 1 : 1;
+                }
+            }
         }
 
         return $data;
@@ -165,9 +207,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->dealCodeRepository->getAssignedForDealAndSite($deal, $key, $from, $to);
+        $assignedCodes = $this->dealCodeRepository->getAssignedForDealByDate($deal, $from, $to);
+
+        foreach ($assignedCodes as $key) {
+            $country = $this->ipLookupUtil->getCountryCode($key['ipAddress']);
+            $regions = $this->regionRepository->findRegionNamesForCountry($country);
+
+            if ($regions) {
+                foreach ($regions as $region) {
+                    $data['sites'][$region['name']] = array_key_exists($region['name'], $data['sites']) ? $data['sites'][$region['name']] + 1 : 1;
+                }
+            }
         }
 
         return $data;

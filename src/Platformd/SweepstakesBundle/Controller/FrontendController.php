@@ -81,12 +81,9 @@ class FrontendController extends Controller
         }
 
         // check that they pass the new style age-country restriction ruleset
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
+        $user = $this->getUser();
 
-        $user           = $this->getUser();
-        $country        = $countryRepo->findOneByCode($user->getCountry());
-
-        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
             return $this->redirectToShow($sweepstakes);
         }

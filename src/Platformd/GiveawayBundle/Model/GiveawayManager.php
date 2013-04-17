@@ -106,14 +106,14 @@ class GiveawayManager
      *
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
      */
-    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site)
+    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site, $country)
     {
         // see if it's already assigned to a key
         if ($machineCode->getKey()) {
             return;
         }
 
-        $pool = $machineCode->getGiveaway()->getActivePool();
+        $pool = $machineCode->getGiveaway()->getActivePoolForCountry($country);
 
         $key = $this->getGiveawayKeyRepository()->getUnassignedKey($pool);
         if (!$key) {

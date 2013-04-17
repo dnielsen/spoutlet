@@ -63,7 +63,7 @@ class DealAdminController extends Controller
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The deal was created!');
 
-            return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $deal->getId())));
+            return $this->redirect($this->generateUrl('admin_deal_pool_new', array('dealId' => $deal->getId())));
         }
 
         return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
@@ -164,7 +164,7 @@ class DealAdminController extends Controller
 
         return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(
             'metrics' => $dealMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         ));
     }

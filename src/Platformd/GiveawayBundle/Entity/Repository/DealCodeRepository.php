@@ -42,6 +42,27 @@ class DealCodeRepository extends AbstractCodeRepository
             ;
     }
 
+    public function getAssignedForDealByDate(Deal $deal, $from, $to)
+    {
+        $qb  = $this->createForDealQueryBuilder($deal)
+            ->select('k.id', 'k.ipAddress');
+
+        $this->addAssignedQueryBuilder($qb);
+
+        if ($from) {
+            $qb->andWhere('k.assignedAt >= :from')
+                ->setParameter('from', $from);
+        }
+
+        if ($to) {
+            $qb->andWhere('k.assignedAt <= :to')
+                ->setParameter('to', $to);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     public function getAssignedForDealAndSite(Deal $deal, $site, $from, $to)
     {
         $qb  = $this->createForDealQueryBuilder($deal);

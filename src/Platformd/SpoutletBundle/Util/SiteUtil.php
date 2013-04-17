@@ -40,4 +40,8 @@ class SiteUtil
             die("Could not find current site (domain = '".$currentHost."').");
         }
     }
+
+    public function getSiteFromCountry($country) {
+        return $this->em->getRepository('SpoutletBundle:Region')->findOneByCountry($country);
+    }
 }

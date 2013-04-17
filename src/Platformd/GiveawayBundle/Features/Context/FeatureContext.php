@@ -52,13 +52,18 @@ class FeatureContext extends AbstractFeatureContext
                 $giveaway->setGiveawayType($data['type']);
             }
 
-            $giveaway->setSites(array($this->currentSite));
+            $site = $this->currentSite;
+            $giveaway->setSites(array($site));
+
+            $region = $em->getRepository('SpoutletBundle:Region')->findRegionForSite($site);
 
             $keys = isset($data['keys']) ? explode(',', $data['keys']) : array();
             if (count($keys) > 0) {
                 $pool = new GiveawayPool();
                 $pool->setGiveaway($giveaway);
                 $pool->setIsActive(true);
+
+                $pool->getRegions()->add($region);
 
                 // make sure to set the inverse side of the relationship...
                 $giveaway->getGiveawayPools()->add($pool);
@@ -135,7 +140,10 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $this->currentSite);
+        $ipAddress = $this->getSession()->getDriver()->getClient()->getRequest()->getClientIp(true);
+        $country = $this->getContainer()->get('platformd.model.ip_lookup_util')->getCountryCode($ipAddress);
+
+        $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $this->getCurrentSite(), $country);
     }
 
     /**
