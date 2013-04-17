@@ -1699,6 +1699,7 @@ class AbstractFeatureContext extends MinkContext
         if ($statusCode != $httpOk) {
             throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
         }
+    }
 
     /**
      * @Given /^I attach a background ad image$/
