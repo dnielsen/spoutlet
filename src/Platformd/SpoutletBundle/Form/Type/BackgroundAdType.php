@@ -30,6 +30,7 @@ class BackgroundAdType extends AbstractType
                 'class' => 'SpoutletBundle:Site',
                 'expanded' => true,
                 'multiple' => true,
+                'property' => 'name',
             ))
             ->add('adSites', 'collection', array(
                 'type' => new BackgroundAdSiteType,
