@@ -77,10 +77,7 @@ class ContestController extends Controller
 
             $isEntered = $entry ? true : false;
 
-            $countryRepo    = $this->getCountryRepository();
-            $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
                 $isEligible = false;
             }
 
@@ -122,10 +119,7 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $countryRepo    = $this->getCountryRepository();
-        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
             $this->setFlash('error', $this->trans('contests.contest_not_eligible'));
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
@@ -151,7 +145,7 @@ class ContestController extends Controller
             $entry = new ContestEntry();
             $entry->setUser($user);
             $entry->setContest($contest);
-            $entry->setIpAddress($request->getClientIp());
+            $entry->setIpAddress($request->getClientIp(true));
 
             $em->persist($entry);
             $em->flush();

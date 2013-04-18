@@ -139,6 +139,12 @@ services:
             - "@logger"
             - "%queue_prefix%"
 
+    platformd.model.ip_lookup_util:
+        class: Platformd\SpoutletBundle\Util\IpLookupUtil
+        arguments:
+            - %ip2location_lookup_directory%
+            - %ip_lookup_override%
+
     platformd.util.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:

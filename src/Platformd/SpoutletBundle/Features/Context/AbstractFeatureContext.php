@@ -124,6 +124,15 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I am located in "([^"]*)"$/
+     */
+    public function iAmLocatedIn($countryCode)
+    {
+        $file = $this->getContainer()->getParameter('ip2location_lookup_directory').'overrideCountry';
+        file_put_contents($file, trim($countryCode));
+    }
+
+    /**
      * @Given /^the response is JSON$/
      */
     public function theResponseIsJson()

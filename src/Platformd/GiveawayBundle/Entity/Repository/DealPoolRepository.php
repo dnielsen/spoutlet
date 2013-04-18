@@ -10,13 +10,16 @@ class DealPoolRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('pool')
             ->leftJoin('pool.deal', 'deal')
-            ->leftJoin('pool.allowedCountries', 'country')
             ->andWhere('deal = :deal')
             ->andWhere('pool.isActive = true')
-            ->andWhere('country.code = :countryCode')
             ->setParameter('deal', $deal)
-            ->setParameter('countryCode', $country->getCode())
         ;
+
+        if ($country != null) {
+            $qb->leftJoin('pool.allowedCountries', 'country')
+                ->andWhere('country.code = :countryCode')
+                ->setParameter('countryCode', $country->getCode());
+        }
 
        return $qb->getQuery()->execute();
     }

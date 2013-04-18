@@ -74,6 +74,7 @@ EOT
         $keyRepo      = $this->getRepo('GiveawayBundle:GiveawayKey');
         $userRepo     = $this->getRepo('UserBundle:User');
         $countryRepo  = $this->getRepo('SpoutletBundle:Country');
+        $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
@@ -113,18 +114,6 @@ EOT
                 continue;
             }
 
-            $country = $this->findWithOutput(array(
-                'type'         => 'Country',
-                'repo'         => $countryRepo,
-                'repoFunction' => 'findOneByCode',
-                'id'           => strtoupper($user->getCountry()),
-            ));
-
-            if (!$country) {
-                $this->output(2, 'Invalid country.');
-                continue;
-            }
-
             $clientIp = $message->ipAddress;
 
             if (!$clientIp) {
@@ -133,6 +122,27 @@ EOT
             }
 
             $this->output(2, 'ClientIP => { IP = '.$clientIp.' }');
+
+            $countryCode = $ipLookupUtil->getCountryCode($clientIp);
+
+            if (!$countryCode) {
+                $this->output(2, 'Country code was null.');
+                continue;
+            }
+
+            $this->output(2, 'CountryCode => { Code = '.$countryCode.' }');
+
+            $country = $this->findWithOutput(array(
+                'type'         => 'Country',
+                'repo'         => $countryRepo,
+                'repoFunction' => 'findOneByCode',
+                'id'           => strtoupper($countryCode),
+            ));
+
+            if (!$country) {
+                $this->output(2, 'Invalid country.');
+                continue;
+            }
 
             switch ($message->keyRequestType) {
 
