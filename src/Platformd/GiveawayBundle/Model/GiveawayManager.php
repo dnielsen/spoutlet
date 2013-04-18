@@ -87,7 +87,6 @@ class GiveawayManager
 
         $keyCounterUtil = $this->keyCounterUtil;
         $keyRepo        = $this->giveawayKeyRepo;
-        $activePool     = $giveaway->getActivePool();
 
         $activePool     = $giveaway->getActivePoolForCountry($country);
 

@@ -221,6 +221,8 @@ class GiveawayPoolAdminController extends Controller
                 return true;
             }
         }
+
+        return true;
     }
 
     /**

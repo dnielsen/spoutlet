@@ -14,7 +14,7 @@ class IpLookupUtil
 
         if ($override) {
             $overrideFile = $lookupDir.'overrideCountry';
-            $this->testCountryCode = trim(file_get_contents($overrideFile)) ?: "US";
+            $this->testCountryCode = file_exists($overrideFile) ? trim(file_get_contents($overrideFile)) ?: "US" : "US";
         }
     }
 
