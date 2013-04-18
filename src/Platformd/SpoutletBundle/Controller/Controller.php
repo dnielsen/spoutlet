@@ -118,6 +118,14 @@ class Controller extends BaseController
         return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
     }
 
+    // See comment in config_dev.yml re. ip_lookup_override parameter when using this function in a dev environment.
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
+    }
+
     /**
      * @return string
      */

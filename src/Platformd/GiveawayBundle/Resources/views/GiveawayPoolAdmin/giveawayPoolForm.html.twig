@@ -8,19 +8,50 @@
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.description)}}
+    <p class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign"></i>
+        If you do not select any regions and add no restrictions, the key pool will be available to all users.
+    </p>
 
-    {{ form_row(form.maxKeysPerIp)}}
+    <legend>a) Basic Information</legend>
 
-    {{ form_row(form.lowerLimit)}}
+    <div class="row-fluid first">
+        <div class="span4">
+            {{ form_row(form.description)}}
+            {{ form_row(form.maxKeysPerIp)}}
+            {{ form_row(form.lowerLimit)}}
+            {{ form_row(form.upperLimit)}}
+            {{ form_row(form.isActive)}}
+            {{ form_row(form.keysfile)}}
+        </div>
+        <div class="span5">
+            {{ form_row(form.regions)}}
+        </div>
+    </div>
 
-    {{ form_row(form.upperLimit)}}
+    <legend>b) Restrictions</legend>
 
-    {{ form_row(form.isActive)}}
+    <div class="game-page-form">
+        <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
+        <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
+            {# see the CSS file this explanation #}
+            <li class="dummy"></li>
+            {% for rule in form.ruleset.rules %}
+                <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
 
-    {{ form_row(form.keysfile)}}
+                {% if loop.index is even %}
+                    <li class="clear"></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div style="display: none;">
+        {{ form_row(form.ruleset) }}
+        {{ form_label(form.ruleset.rules) }}
+    </div>
 
     {{ form_rest(form) }}
-
-    <input type="submit" class="btn btn-primary" value="{{ "platformd.giveaway_pool.admin.save_giveaway_pool" | trans }}" formnovalidate />
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{{ "platformd.giveaway_pool.admin.save_giveaway_pool" | trans }}" formnovalidate />
+    </div>
 </form>

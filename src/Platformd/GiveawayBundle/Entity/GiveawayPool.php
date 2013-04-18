@@ -27,6 +27,12 @@ class GiveawayPool extends AbstractPool
     protected $giveaway;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Region", cascade={"persist"})
+     * @ORM\JoinTable(name="giveaway_pool_region")
+     */
+    protected $regions;
+
+    /**
      * @return \Platformd\GiveawayBundle\Entity\Giveaway
      */
     public function getGiveaway()

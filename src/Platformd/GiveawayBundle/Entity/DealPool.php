@@ -38,7 +38,13 @@ class DealPool extends AbstractPool
     protected $allowedCountries;
 
     /**
-     * @return \Platformd\GiveawayBundle\Entity\Deal
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Region")
+     * @ORM\JoinTable(name="deal_pool_region")
+     */
+    protected $regions;
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function getDeal()
     {

@@ -277,6 +277,8 @@ class DealController extends Controller
             return $this->redirect($dealShow);
         }
 
+        $country = $countryRepo->findOneByCode($country->getCode());
+
         $code->assign($user, $clientIp, $locale);
         $code->setCountry($country); # in addition to assigning the deal code, we need to set the country (this is one of the differences between a Code and a DealCode)
 

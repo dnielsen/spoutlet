@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile,
 Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\SpoutletBundle\Entity\Country;
 
 /**
  * A mapped super class that all other pools inherit from
@@ -74,6 +76,16 @@ abstract class AbstractPool
      * @Assert\File(maxSize="6000000")
      */
     protected $keysfile;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    protected $ruleset;
+
+    public function __construct()
+    {
+        $this->regions = new ArrayCollection();
+    }
 
     /**
      * Returns whether or not this pool should be treated as active
@@ -202,5 +214,58 @@ abstract class AbstractPool
     {
 
         return $this->keysfile;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
+    }
+
+    public function getRegions()
+    {
+        return $this->regions;
+    }
+
+    public function setRegions($regions)
+    {
+        $this->regions = $regions;
+    }
+
+    public function isEnabledForCountry($country)
+    {
+        $allowed    = false;
+        $rules      = $this->getRuleset();
+        $regions    = $this->getRegions();
+
+        if (count($regions) < 1 && count($rules->getRules()) < 1) {
+            return true;
+        }
+
+        if ($country instanceof Country) {
+            $country = $country->getCode();
+        } else {
+            $country = $country;
+        }
+
+        foreach ($regions as $region) {
+            foreach ($region->getCountries() as $regionCountry) {
+                if ($regionCountry->getCode() == $country) {
+                    $allowed = true;
+                    break 2;
+                }
+            }
+        }
+
+        if ($rules) {
+            $ruleCheck = $rules->doesCountryPassRules($country);
+            $allowed = $ruleCheck === null ? $allowed : $ruleCheck;
+        }
+
+        return $allowed;
     }
 }

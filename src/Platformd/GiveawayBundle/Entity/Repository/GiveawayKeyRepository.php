@@ -67,6 +67,27 @@ class GiveawayKeyRepository extends AbstractCodeRepository
         return $result[0];
     }
 
+    public function getAssignedForGiveawayByDate(Giveaway $giveaway, $from, $to)
+    {
+        $qb  = $this->createForGiveawayQueryBuilder($giveaway)
+            ->select('k.id', 'k.ipAddress');
+
+        $this->addAssignedQueryBuilder($qb);
+
+        if ($from) {
+            $qb->andWhere('k.assignedAt >= :from')
+                ->setParameter('from', $from);
+        }
+
+        if ($to) {
+            $qb->andWhere('k.assignedAt <= :to')
+                ->setParameter('to', $to);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, $from, $to)
     {
         $qb  = $this->createForGiveawayQueryBuilder($giveaway);

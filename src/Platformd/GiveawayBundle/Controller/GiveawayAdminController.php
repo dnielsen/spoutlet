@@ -242,16 +242,18 @@ class GiveawayAdminController extends Controller
                     }
 
                     // pop up the first one, ideally there's only one
-                    $machineCode = $machineCodes[0];
+                    $machineCode    = $machineCodes[0];
+                    $ipAddress      = $machineCode->getIpAddress();
+                    $country        = $this->getIpLookupUtil()->getCountryCode($ipAddress);
 
                     try {
-                        $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite());
+                        $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite(), $country);
 
                         $successEmails[] = $email;
                     } catch (MissingKeyException $e) {
                         $form->addError(new FormError(
-                            'There are no more unassigned giveaway keys for this giveaway. The following email was not assigned a key: %email%',
-                            array('%email%' => $email)
+                            'There are no more unassigned giveaway keys for %country%. The following email was not assigned a key: %email%',
+                            array('%country%' => ucfirst(strtolower($this->getIpLookupUtil()->getCountryName($ipAddress))), '%email%' => $email)
                         ));
                     }
                 }
@@ -400,7 +402,7 @@ class GiveawayAdminController extends Controller
 
         return array(
             'metrics' => $giveawayMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         );
     }

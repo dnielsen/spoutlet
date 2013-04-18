@@ -96,4 +96,8 @@ class SiteUtil extends Event
 
         $this->eventDispatcher->dispatch('awa.site_util.current_site_set', $this);
     }
+
+    public function getSiteFromCountry($country) {
+        return $this->em->getRepository('SpoutletBundle:Region')->findOneByCountry($country);
+    }
 }

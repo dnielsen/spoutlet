@@ -167,7 +167,7 @@ class DealAdminController extends Controller
 
         return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(
             'metrics' => $dealMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         ));
     }

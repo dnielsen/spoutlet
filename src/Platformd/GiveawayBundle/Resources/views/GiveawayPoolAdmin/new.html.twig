@@ -8,3 +8,8 @@
         'giveawayId': giveawayId
     } %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include 'SpoutletBundle:CountryAgeRestrictionRule:_formJavascript.html.twig' %}
+{% endblock %}

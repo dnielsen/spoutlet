@@ -83,11 +83,13 @@ class GiveawayManager
         return $data;
     }
 
-    public function getAvailableKeysForGiveaway($giveaway) {
+    public function getAvailableKeysForGiveaway($giveaway, $country) {
 
         $keyCounterUtil = $this->keyCounterUtil;
         $keyRepo        = $this->giveawayKeyRepo;
         $activePool     = $giveaway->getActivePool();
+
+        $activePool     = $giveaway->getActivePoolForCountry($country);
 
         if ($activePool) {
             $availableKeys = $this->cacheUtil->getOrGen(array(
@@ -213,14 +215,14 @@ class GiveawayManager
      *
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
      */
-    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site)
+    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site, $country)
     {
         // see if it's already assigned to a key
         if ($machineCode->getKey()) {
             return;
         }
 
-        $pool = $machineCode->getGiveaway()->getActivePool();
+        $pool = $machineCode->getGiveaway()->getActivePoolForCountry($country);
 
         $key = $this->getGiveawayKeyRepository()->getUnassignedKey($pool);
         if (!$key) {

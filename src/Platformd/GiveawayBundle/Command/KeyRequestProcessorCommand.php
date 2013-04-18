@@ -219,6 +219,11 @@ EOT
                     continue;
                 }
 
+                if (!$pool->isEnabledForCountry($country)) {
+                    $this->output(4, 'Pool not enabled for the user\'s country');
+                    continue;
+                }
+
                 $key = $keyRepo->getUnassignedKey($pool);
 
                 if (!$key) {

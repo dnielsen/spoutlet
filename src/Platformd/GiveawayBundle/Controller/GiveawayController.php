@@ -72,7 +72,8 @@ class GiveawayController extends Controller
         $giveawayManager = $this->getGiveawayManager();
         $data            = new giveaway_show_main_actions_data();
 
-        $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveaway);
+
+        $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveaway, $this->getCurrentCountry());
 
         if ($currentUser) {
             $data->can_user_apply_to_giveaway = !$this->getMachineCodeEntryRepository()->activeOrPendingExistsForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
@@ -218,6 +219,7 @@ class GiveawayController extends Controller
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
         $user = $this->getUser();
+        $clientIp = $request->getClientIp(true);
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
@@ -246,7 +248,14 @@ class GiveawayController extends Controller
             return $this->redirect($giveawayShow);
         }
 
-        $clientIp = $request->getClientIp(true);
+        $pool = $giveaway->getActivePoolForCountry($country);
+
+        if (!$pool) {
+            // repeated below if there is no unassigned keys
+            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
+
+            return $this->redirect($giveawayShow);
+        }
 
         $machineCode = new MachineCodeEntry($giveaway, $code);
         $machineCode->attachToUser($this->getUser(), $clientIp);

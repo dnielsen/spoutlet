@@ -62,6 +62,7 @@ services:
             - "@doctrine.orm.entity_manager"
             # TODO this should NOT be hardcoded
             - %platformd_sites%
+            - @platformd.model.ip_lookup_util
 
     # the custom slug constraint for AbstractEvent
     platformd.validation.abstract_event_unique_slug_validator:
