@@ -24,7 +24,7 @@ use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\ThreadRepository;
 use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Link\LinkableManager;
-use Platformd\SpoutletBundle\BannerPathResolver;
+use MediaExposer\Exposer;
 
 class GiveawayManager
 {
@@ -41,10 +41,10 @@ class GiveawayManager
     private $giveawayKeyRepo;
     private $threadRepo;
     private $linkableManager;
-    private $bannerPathResolver;
+    private $mediaExposer;
     private $filesystem;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, BannerPathResolver $bannerPathResolver, Filesystem $filesystem)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem)
     {
         $this->emailManager       = $emailManager;
         $this->em                 = $em;
@@ -60,7 +60,7 @@ class GiveawayManager
         $this->em                 = $em;
         $this->threadRepo         = $threadRepo;
         $this->linkableManager    = $linkableManager;
-        $this->bannerPathResolver = $bannerPathResolver;
+        $this->mediaExposer = $mediaExposer;
         $this->filesystem         = $filesystem;
     }
 
@@ -136,13 +136,16 @@ class GiveawayManager
         $data                                      = new giveaway_show_data();
         $data->giveaway_name                       = $giveaway->getName();
         $data->giveaway_content                    = $giveaway->getContent();
-        $data->giveaway_banner_image               = $giveaway->getBannerImage() ? $this->bannerPathResolver->getPath($giveaway, array()) : null;
+        $data->giveaway_banner_image               = $giveaway->getBannerImage() ? $this->mediaExposer->getPath($giveaway, array('type' => 'banner')) : null;
         $data->giveaway_redemption_steps           = $giveaway->getCleanedRedemptionInstructionsArray();
         $data->giveaway_allow_machine_code_submit  = $giveaway->allowMachineCodeSubmit();
         $data->giveaway_id                         = $giveaway->getId();
 
         $data->giveaway_comment_thread_id          = $giveaway->getThreadId();
         $data->giveaway_comment_permalink          = $thread->getPermalink();
+
+        $data->giveaway_background_image_path      = $giveaway->getBackgroundImagePath() ? $this->mediaExposer->getPath($giveaway, array('type' => 'background')) : null;
+        $data->giveaway_background_link            = $giveaway->getBackgroundLink();
 
         return $data;
     }
@@ -453,6 +456,9 @@ class GiveawayManager
 
     public function save(Giveaway $giveaway)
     {
+        $this->em->persist($giveaway);
+        $this->em->flush();
+
         $threadRepo     = $this->em->getRepository('SpoutletBundle:Thread');
         $commentRepo    = $this->em->getRepository('SpoutletBundle:Comment');
 
@@ -494,6 +500,8 @@ class GiveawayManager
         // Todo : handle upload to S3
         $this->updateBannerImage($giveaway);
         $this->updateGeneralImage($giveaway);
+        $this->updateBackgroundImage($giveaway);
+
         $this->em->persist($giveaway);
         $this->em->flush();
     }
@@ -505,6 +513,22 @@ class GiveawayManager
      */
     protected function updateBannerImage(Giveaway $giveaway)
     {
+        foreach ($giveaway->getTranslations() as $translation) {
+            if ($translation->getRemoveBannerImage()) {
+                $translation->setBannerImage(null);
+            }
+
+            $file = $translation->getBannerImageFile();
+            if (null == $file) {
+                continue;
+            }
+            $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+            // prefix repeated in BannerPathResolver
+            $this->filesystem->write($giveaway::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
+            $translation->setBannerImage($filename);
+        }
+
+
         $file = $giveaway->getBannerImageFile();
 
         if (null == $file) {
@@ -534,5 +558,34 @@ class GiveawayManager
         // prefix repeated in BannerPathResolver
         $this->filesystem->write($giveaway::PREFIX_PATH_GENERAL .$filename, file_get_contents($file->getPathname()));
         $giveaway->setGeneralImage($filename);
+    }
+
+    protected function updateBackgroundImage($giveaway)
+    {
+        foreach ($giveaway->getTranslations() as $translation) {
+            if ($translation->getRemoveBackgroundImage()) {
+                $translation->setBackgroundImagePath(null);
+            }
+
+            $file = $translation->getBackgroundImage();
+            if (null == $file) {
+                continue;
+            }
+            $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+            // prefix repeated in BannerPathResolver
+            $this->filesystem->write($giveaway::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+            $translation->setBackgroundImagePath($filename);
+        }
+
+        $file = $giveaway->getBackgroundImage();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+        $giveaway->setBackgroundImagePath($filename);
     }
 }

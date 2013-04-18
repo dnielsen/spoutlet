@@ -15,6 +15,7 @@ class GiveawayTranslationType extends AbstractType
         $builder->add('locale', 'entity', array(
             'label' => 'Language',
             'class' => 'Platformd\SpoutletBundle\Entity\Site',
+            'property' => 'name',
             'query_builder' => function($repository) {
                 return $repository->createQueryBuilder('s')
                     ->andWhere('s.defaultLocale IN (:siteNames)')

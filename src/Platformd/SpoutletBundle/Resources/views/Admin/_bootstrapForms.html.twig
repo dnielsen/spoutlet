@@ -136,7 +136,7 @@
 
                 {{ form_row(form.backgroundImage) }}
                 {% if form.get('mediaObjects') %}
-                    {% set objPath = media_path(form.get('mediaObjects')) %}
+                    {% set objPath = media_path(form.get('mediaObjects'), {'type': 'background'}) %}
 
                     {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
                         <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />

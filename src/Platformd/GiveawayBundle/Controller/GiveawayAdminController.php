@@ -443,24 +443,6 @@ class GiveawayAdminController extends Controller
             $giveaway->setBackgroundImagePath(null);
         }
 
-        /*foreach ($giveawayForm->getChildren() as $key => $child) {
-            if ($key == 'translations') {
-                foreach ($child as $translationForm) {
-                    $translation = $translationForm->getData();
-
-                    if ($translationForm->has('removeBannerImage') && $removeBannerImage = $translationForm->get('removeBannerImage')->getData()) {
-                        $translation->setBannerImage(null);
-                    }
-
-                    if ($translationForm->has('removeBackgroundImage') && $removeBackgroundImage = $translationForm->get('removeBackgroundImage')->getData()) {
-                        $translation->setBackgroundImagePath(null);
-                    }
-
-                    $translationForm->setData($translation);
-                }
-            }
-        }*/
-
         $ruleset    = $giveaway->getRuleset();
         $rules      = $ruleset->getRules();
 

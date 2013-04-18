@@ -15,4 +15,6 @@ class giveaway_show_data
     public $giveaway_slug;
     public $giveaway_comment_thread_id;
     public $giveaway_comment_permalink;
+    public $giveaway_background_image_path;
+    public $giveaway_background_link;
 }

@@ -8,15 +8,15 @@
 
 {% block title data.giveaway_name %}
 
-{% if giveaway.backgroundImagePath is not null %}
-    {% set bgImage = media_path(giveaway) %}
+{% if data.giveaway_background_image_path is not null %}
+    {% set bgImage = data.giveaway_background_image_path %}
 {% else %}
     {% set bgImage = "default" %}
 {% endif %}
 
 {% block page_background_image bgImage %}
 
-{% block page_background_link giveaway.backgroundLink %}
+{% block page_background_link data.giveaway_background_link %}
 
 {% block content %}
 

@@ -12,6 +12,10 @@ use Platformd\SpoutletBundle\Entity\Site;
  */
 class GiveawayTranslation
 {
+    const PREFIX_PATH_BANNER = 'banner/';
+    const PREFIX_PATH_GENERAL = 'general/';
+    const PREFIX_PATH_BACKGROUND = 'background/';
+
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -43,7 +47,7 @@ class GiveawayTranslation
     protected $locale;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Giveaway", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="translations")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Assert\NotNull
      */

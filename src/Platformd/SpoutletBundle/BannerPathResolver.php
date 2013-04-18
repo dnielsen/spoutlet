@@ -12,7 +12,6 @@ use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
 */
 class BannerPathResolver extends PathResolver
 {
-
   /**
    * Returns the path to either the banner image or the general image
    *
@@ -23,17 +22,18 @@ class BannerPathResolver extends PathResolver
    */
   public function getPath($event, array $options)
   {
-    /** @var $event \Platformd\SpoutletBundle\Entity\AbstractEvent */
-
     $type = isset($options['type']) ? $options['type'] : 'banner';
 
     switch ($type) {
         // TODO - both of these prefixes are repeated in EventManager
         case 'general':
-            $path = $media::PREFIX_PATH_GENERAL.$event->getGeneralImage();
+            $path = $event::PREFIX_PATH_GENERAL.$event->getGeneralImage();
             break;
         case 'banner':
-            $path = $media::PREFIX_PATH_BANNER.$event->getBannerImage();
+            $path = $event::PREFIX_PATH_BANNER.$event->getBannerImage();
+            break;
+        case 'background':
+            $path = $event::PREFIX_PATH_BACKGROUND.$event->getBackgroundImagePath();
             break;
         default:
             throw new \InvalidArgumentException('Invalid type '.$type);
@@ -47,6 +47,6 @@ class BannerPathResolver extends PathResolver
    */
   public function supports($media, array $options)
   {
-      return ($media instanceof AbstractEvent || $media instanceof GiveawayTranslation || $media instanceof Giveaway) && !empty($options['type']) && in_array($options['type'], array('banner', 'general'));
+      return ($media instanceof AbstractEvent || $media instanceof GiveawayTranslation || $media instanceof Giveaway) && !empty($options['type']) && in_array($options['type'], array('banner', 'general', 'background'));
   }
 }

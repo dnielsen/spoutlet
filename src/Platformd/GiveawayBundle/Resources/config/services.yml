@@ -16,7 +16,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@platformd.entity.repository.comment_thread"
             - "@platformd.link.linkable_manager"
-            - "@platformd.event_banner_resolver"
+            - "@media_exposer"
             - @event_filesystem
 
     platformd.model.deal_manager:
@@ -70,11 +70,3 @@ services:
             - @service_container
         tags:
             - { name: doctrine.event_subscriber }
-
-    platformd.giveaway_background_resolver:
-        class:  'Platformd\SpoutletBundle\BackgroundPathResolver'
-        arguments:
-            - @event_filesystem
-        parent: platformd.path_resolver
-        tags:
-            - { name: 'knp_media_exposer.resolver' }

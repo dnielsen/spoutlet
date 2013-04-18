@@ -6,22 +6,24 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\Collection,
     Doctrine\Common\Collections\ArrayCollection
 ;
+use Platformd\SpoutletBundle\Entity\AbstractEvent,
+    Platformd\GiveawayBundle\Entity\GiveawayPool,
+    Platformd\MediaBundle\Entity\Media,
+    Platformd\SpoutletBundle\Model\CommentableInterface,
+    Platformd\UserBundle\Entity\User,
+    Platformd\SpoutletBundle\Link\LinkableInterface,
+    Platformd\SpoutletBundle\Entity\Site
+;
 
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-use Platformd\SpoutletBundle\Entity\AbstractEvent;
-use Platformd\GiveawayBundle\Entity\GiveawayPool;
-use Platformd\MediaBundle\Entity\Media;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert,
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
+    Symfony\Component\HttpFoundation\File\File
+;
+
+use Gedmo\Mapping\Annotation as Gedmo,
+    Gedmo\Sluggable\Util\Urlizer;
+
 use DateTime;
-use Platformd\SpoutletBundle\Model\CommentableInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Gedmo\Sluggable\Util\Urlizer;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\HttpFoundation\File\File;
-use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Platformd\GiveawayBundle\Entity\Giveaway
@@ -34,7 +36,7 @@ use Platformd\SpoutletBundle\Entity\Site;
  *          )
  *      }
  * )
- * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing deal is already using this deal name.")
+ * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing giveaway is already using this giveaway name.")
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -69,6 +71,7 @@ class Giveaway implements LinkableInterface, CommentableInterface
 
     const PREFIX_PATH_BANNER = 'banner/';
     const PREFIX_PATH_GENERAL = 'general/';
+    const PREFIX_PATH_BACKGROUND = 'background/';
 
     /**
      * @var integer $id
@@ -308,7 +311,7 @@ class Giveaway implements LinkableInterface, CommentableInterface
      *
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
      */
-    protected $thumbnail = null;
+    protected $thumbnail;
 
     /**
      * @var string
@@ -332,8 +335,6 @@ class Giveaway implements LinkableInterface, CommentableInterface
 
     public function __construct()
     {
-        parent::__construct();
-
         // auto-publish, this uses the "status" field instead
         $this->published    = true;
         $this->sites        = new ArrayCollection();
