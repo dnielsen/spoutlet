@@ -2,6 +2,10 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
+_anon_login_link:
+    pattern: /esi/USER_SPECIFIC/anonLoginLink
+    defaults: { _controller: SpoutletBundle:Default:_anonLoginLink }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

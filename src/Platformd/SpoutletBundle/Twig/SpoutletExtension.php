@@ -114,6 +114,7 @@ class SpoutletExtension extends Twig_Extension
             'site'      => $this->currentSite,
             'features'  => $this->currentSiteFeatures,
             'user'      => $this->currentUser,
+            'currentUrl' => $this->request->getUri(),
         );
     }
 

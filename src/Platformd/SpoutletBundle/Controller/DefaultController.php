@@ -15,6 +15,15 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _anonLoginLinkAction()
+    {
+        $response = $this->render('SpoutletBundle::_anonLoginLink.html.twig');
+
+        $response->setSharedMaxAge(1);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *
