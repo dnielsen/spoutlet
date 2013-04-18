@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+
 class SiteUtil extends Event
 {
     private $currentHost;

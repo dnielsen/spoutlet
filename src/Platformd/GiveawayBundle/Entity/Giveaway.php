@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection
 ;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\MediaBundle\Entity\Media;
@@ -19,6 +21,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * Platformd\GiveawayBundle\Entity\Giveaway
@@ -254,6 +257,11 @@ class Giveaway implements LinkableInterface, CommentableInterface
     protected $redemptionInstructions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayTranslation", mappedBy="translatable", cascade={"all"})
+     */
+    protected $translations;
+
+    /**
      * A string enum status
      *
      * @var string
@@ -266,6 +274,10 @@ class Giveaway implements LinkableInterface, CommentableInterface
      * @ORM\Column(type="string", length=30)
      */
     protected $giveawayType = self::TYPE_KEY_GIVEAWAY;
+
+    protected $currentLocale;
+
+    protected $defaultLocale = 'en';
 
     /**
      * @var bool
@@ -298,12 +310,35 @@ class Giveaway implements LinkableInterface, CommentableInterface
      */
     protected $thumbnail = null;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $backgroundImagePath;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $backgroundLink;
+
+    /**
+     * @Assert\File(
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
+     * )
+     */
+    protected $backgroundImage;
+
     public function __construct()
     {
+        parent::__construct();
+
         // auto-publish, this uses the "status" field instead
-        $this->published = true;
-        $this->sites     = new ArrayCollection();
-        $this->pools     = new ArrayCollection();
+        $this->published    = true;
+        $this->sites        = new ArrayCollection();
+        $this->pools        = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     /**
@@ -343,16 +378,6 @@ class Giveaway implements LinkableInterface, CommentableInterface
 
             $this->setSlug($slug);
         }
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -416,16 +441,6 @@ class Giveaway implements LinkableInterface, CommentableInterface
     }
 
     /**
-     * Get content
-     *
-     * @return text
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
      * @return string
      */
     public function getLocale()
@@ -455,17 +470,6 @@ class Giveaway implements LinkableInterface, CommentableInterface
     public function setSites($sites)
     {
         $this->sites = $sites;
-    }
-
-
-    public function getBannerImage()
-    {
-        return $this->bannerImage;
-    }
-
-    public function setBannerImage($bannerImage)
-    {
-        $this->bannerImage = $bannerImage;
     }
 
     /**
@@ -798,70 +802,82 @@ class Giveaway implements LinkableInterface, CommentableInterface
         $this->pools = $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function __call($method, array $arguments = array())
     {
-        return $this->status;
-    }
+        $translation = $this->translate();
 
-    /**
-     * @param string $status
-     */
-    public function setStatus($status)
-    {
-        if (!$status) {
-            return;
+        $value = null;
+        if ($translation) {
+            $value = call_user_func_array(array($translation, $method), $arguments);
         }
 
-        if (!in_array($status, array_keys(self::$validStatuses))) {
-            throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
+        return $value;
+    }
+
+    private function translate(Site $locale = null)
+    {
+        $currentLocale = $locale ?: $this->getCurrentLocale();
+
+        return $this->translations->filter(function($translation) use($currentLocale) {
+            return $translation->getLocale() === $currentLocale;
+        })->first();
+    }
+
+    public function getName()
+    {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getName();
         }
 
-        $this->status = $status;
+        return $value ?: $this->name;
     }
 
-    /**
-     * Returns the "text" for the current status
-     *
-     * The text is actually just a translation key
-     *
-     * @return string
-     */
-    public function getStatusText()
+    public function getContent()
     {
-        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getContent();
+        }
+
+        return $value ?: $this->content;
     }
 
-    /**
-     * Returns a key-value pair of valid status keys and their text translation
-     *
-     * Useful in forms
-     *
-     * @return array
-     */
-    static public function getValidStatusesMap()
+    public function getCurrentLocale()
     {
-        return self::$validStatuses;
+        return $this->currentLocale ?: $this->defaultLocale;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisabled()
+    public function setCurrentLocale(Site $locale = null)
     {
-        return $this->getStatus() == 'disabled';
+        $this->currentLocale = $locale;
     }
 
-    public function isActive()
+    public function getTranslations()
     {
-        return $this->getStatus() == 'active';
+        return $this->translations;
     }
 
-    public function setAsActive()
+    public function addTranslation(GiveawayTranslation $translation)
     {
-        $this->setStatus('active');
+        $this->translations->add($translation);
+        $translation->setTranslatable($this);
+    }
+
+    public function setTranslations(Collection $translations)
+    {
+        foreach ($translations as $translation) {
+            $this->addTranslation($translation);
+        }
+    }
+
+    public function removeTranslation(GiveawayTranslation $translation)
+    {
+        $this->translations->removeElement($translation);
     }
 
     /**
@@ -941,6 +957,17 @@ class Giveaway implements LinkableInterface, CommentableInterface
      */
     public function getCleanedRedemptionInstructionsArray()
     {
+        $translation = $this->translate();
+
+        $value = null;
+        if ($translation) {
+            $value = $translation->getCleanedRedemptionInstructionsArray();
+
+            if ($value) {
+                return $value;
+            }
+        }
+
         $cleaned = array();
         foreach ($this->getRedemptionInstructionsArray() as $item) {
             if ($item) {
@@ -949,6 +976,93 @@ class Giveaway implements LinkableInterface, CommentableInterface
         }
 
         return $cleaned;
+    }
+
+    /**
+     * Makes sure the redemption instructions are trimmed
+     *
+     * @ORM\prePersist
+     * @ORM\preUpdate
+     */
+    public function trimRedemptionInstructions()
+    {
+        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
+    }
+
+    /**
+     * Add an user
+     *
+     * @param \Platformd\GiveawayBundle\Entity\GiveawayPool $pool
+     */
+    public function addUser(GiveawayPool $pool)
+    {
+        $this->giveawayPools->add($pool);
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        if (!$status) {
+            return;
+        }
+
+        if (!in_array($status, array_keys(self::$validStatuses))) {
+            throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Returns the "text" for the current status
+     *
+     * The text is actually just a translation key
+     *
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return self::$validStatuses[$this->getStatus() ?: 'disabled'];
+    }
+
+    /**
+     * Returns a key-value pair of valid status keys and their text translation
+     *
+     * Useful in forms
+     *
+     * @return array
+     */
+    static public function getValidStatusesMap()
+    {
+        return self::$validStatuses;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->getStatus() == 'disabled';
+    }
+
+    public function isActive()
+    {
+        return $this->getStatus() == 'active';
+    }
+
+    public function setAsActive()
+    {
+        $this->setStatus('active');
     }
 
     /**
@@ -964,17 +1078,6 @@ class Giveaway implements LinkableInterface, CommentableInterface
                 return $pool;
             }
         }
-    }
-
-    /**
-     * Makes sure the redemption instructions are trimmed
-     *
-     * @ORM\prePersist
-     * @ORM\preUpdate
-     */
-    public function trimRedemptionInstructions()
-    {
-        $this->setRedemptionInstructions(trim($this->getRedemptionInstructions()));
     }
 
     /**
@@ -1129,5 +1232,63 @@ class Giveaway implements LinkableInterface, CommentableInterface
     public function setThumbnail($value)
     {
         $this->thumbnail = $value;
+    }
+
+    public function getBackgroundImagePath()
+    {
+        if ($translation = $this->translate()) {
+            if ($path = $translation->getBackgroundImagePath()) {
+                return $path;
+            }
+        }
+
+        return $this->backgroundImagePath;
+    }
+
+    public function setBackgroundImagePath($backgroundImagePath)
+    {
+        $this->backgroundImagePath = $backgroundImagePath;
+    }
+
+    public function getBackgroundImage()
+    {
+        return $this->backgroundImage;
+    }
+
+    public function setBackgroundImage($backgroundImage)
+    {
+        $this->backgroundImage = $backgroundImage;
+    }
+
+    public function getBackgroundLink($bypassTranslations = false)
+    {
+        if (!$bypassTranslations && $translation = $this->translate()) {
+            if ($link = $translation->getBackgroundLink()) {
+                return $link;
+            }
+        }
+
+        return $this->backgroundLink;
+    }
+
+    public function setBackgroundLink($backgroundLink)
+    {
+        $this->backgroundLink = $backgroundLink;
+    }
+
+    public function getBannerImage($bypassTranslations = false)
+    {
+        if (!$bypassTranslations && $translation = $this->translate()) {
+            if ($path = $translation->getBannerImage()) {
+                return $path;
+            }
+        }
+
+        return $this->bannerImage;
+    }
+
+    public function setBannerImage($bannerImage)
+    {
+        $this->bannerImage = $bannerImage;
     }
 }

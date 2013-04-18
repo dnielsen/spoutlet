@@ -11,58 +11,90 @@ use Symfony\Component\Form\FormInterface;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
 
 class GiveawayType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'textarea');
-        $builder->add('slug', new SlugType(), array('label' => 'URL'));
-    	$builder->add('content', 'purifiedTextarea', array(
-            'label' => 'Description',
-            'attr' => array(
-                'class' => 'ckeditor'
-            )
-        ));
-    	$builder->add('giveawayType', 'choice', array(
-    			'choices' => Giveaway::getTypeChoices(),
+        $builder
+            ->add('name', 'textarea')
+            ->add('content', 'purifiedTextarea', array(
+                'label' => 'Description',
+                'attr' => array(
+                    'class' => 'ckeditor'
+                )
+            ))
+            ->add('translations', 'collection', array(
+                'type' => new GiveawayTranslationType,
+                'allow_add'      => true,
+                'allow_delete'   => true,
+                'by_reference' => false,
+                'options' => array(
+                    'data' => new GiveawayTranslation,
+                ),
+            ))
+            ->add('slug', new SlugType(), array('label' => 'URL'))
+            ->add('giveawayType', 'choice', array(
+                'choices' => Giveaway::getTypeChoices(),
                 'label' => 'Giveaway Type'
-    	));
-        $builder->add('bannerImageFile', 'file');
-        $builder->add('redemptionInstructionsArray', 'collection', array(
-            'type' => 'textarea',
-            'label' => 'Redemption Instructions'
-        ));
-        $builder->add('status', 'choice', array(
-            'choices' => Giveaway::getValidStatusesMap(),
-            'empty_value' => 'platformd.giveaway.status.blank_value',
-        ));
-        $builder->add('game', null, array('empty_value' => 'N/A'));
-        $builder->add('sites', 'entity', array(
-            'class'    => 'SpoutletBundle:Site',
-            'multiple' => true,
-            'expanded' => true,
-            'property' => 'name',
-        ));
-        $builder->add('externalUrl', null, array('label' => 'External URL', 'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'));
-        $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
-        $builder->add('testOnly', 'choice', array(
-            'choices' => array(
-                1 => 'Yes',
-                0 => 'No',
-            ),
-            'label' => 'Allow admin testing?',
-            'help'  => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
-        ));
+            ))
+            ->add('bannerImageFile', 'file')
+            ->add('removeBannerImage', 'checkbox', array(
+                'label' => 'Remove Banner',
+                'property_path' => false,
+            ))
+            ->add('backgroundImage', 'file', array(
+                'label' => 'Background file',
+            ))
+            ->add('removeBackgroundImage', 'checkbox', array(
+                'label' => 'Remove Background',
+                'property_path' => false,
+            ))
+            ->add('backgroundLink', 'text', array(
+                'label' => 'Background link'
+            ))
+            ->add('redemptionInstructionsArray', 'collection', array(
+                'type' => 'textarea',
+                'label' => 'Redemption Instructions'
+            ))
+            ->add('status', 'choice', array(
+                'choices' => Giveaway::getValidStatusesMap(),
+                'empty_value' => 'platformd.giveaway.status.blank_value',
+            ))
+            ->add('game', null, array('empty_value' => 'N/A'))
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
+            ))
+            ->add('externalUrl', null, array(
+                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.')
+            )
+            ->add('testOnly', 'choice', array(
+                'choices' => array(
+                    1 => 'Yes',
+                    0 => 'No',
+                ),
+                'label' => 'Allow admin testing?',
+                'help'  => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
+            ))
+            ->add('displayRemainingKeysNumber', null, array(
+                'label' => 'Show key count'
+            ))
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array(
+                'label' => 'Restrictions'
+            ));
 
         $builder->add('group', 'hidden', array(
             'property_path' => false,
         ));
 
-        $builder->add('displayRemainingKeysNumber', null, array('label' => 'Show key count'));
         $builder->add('featured', null, array(
             'label' => 'Featured'
         ));
+
         $builder->add('thumbnail', new MediaType(), array(
                 'image_label' => 'Thumbnail',
                 'image_help'  => 'Recommended size: 138x83',
@@ -83,4 +115,12 @@ class GiveawayType extends AbstractType
 
         return $options;
     }
+
+    public function buildViewBottomUp(FormView $view, FormInterface $form)
+    {
+        if ($data = $form->getData()) {
+            $view->set('mediaObjects', $data);
+        }
+    }
+
 }

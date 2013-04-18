@@ -1,0 +1,51 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div style="width: 800px;">
+    {{ form_row(form.title) }}
+    {{ form_row(form.file) }}
+
+    <div class="ad-sites">
+        {{ form_row(form.sites) }}
+    </div>
+
+    <div id="admin_background_ad_adSites" data-prototype="{{ form_row(form.adSites.vars.prototype)|e }}">
+        <div class="control-group">
+        {% for adSite in form.adSites %}
+        {{ form_row(adSite, {'label': adSite.vars.value.site}) }}
+        {% endfor %}
+        </div>
+    </div>
+
+    {{ form_row(form.published) }}
+    {{ form_row(form.dateStart) }}
+    {{ form_row(form.dateEnd) }}
+    {{ form_row(form.timezone) }}
+
+    <div style="display:none;">
+        {{ form_rest(form) }}
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        $('.ad-sites').delegate('input[type=checkbox]', 'change', function(event) {
+            var div = $('#admin_background_ad_adSites');
+            var prototype = div.data('prototype');
+            var row = $(prototype.replace(/\$\$name\$\$/g, $('.adSiteUrl').length));
+
+            if (event.target.checked) {
+                div.append(row);
+                row.find('.adSiteId').val($(event.target).val());
+                row.find('> label').text($(event.target).parent().text());
+            }
+            else {
+                var el = $('.adSiteId[value="'+ $(event.target).val() +'"]');
+                el.closest('.control-group').remove();
+            }
+        });
+    });
+</script>

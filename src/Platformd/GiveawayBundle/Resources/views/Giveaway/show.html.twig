@@ -8,6 +8,16 @@
 
 {% block title data.giveaway_name %}
 
+{% if giveaway.backgroundImagePath is not null %}
+    {% set bgImage = media_path(giveaway) %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
+
+{% block page_background_image bgImage %}
+
+{% block page_background_link giveaway.backgroundLink %}
+
 {% block content %}
 
     {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
@@ -33,6 +43,10 @@
                 </div>
             </div>
 
+            <div style="margin-top: 10px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
         </div><!-- right -->
 
         <div class="left">
@@ -46,12 +60,11 @@
 
                 </div><!-- giveaway-details -->
 
-
             </div><!-- giveaway-info -->
 
-                {% if features.hasComments %}
-                    {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.giveaway_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.giveaway_comment_permalink } %}
-                {% endif %}
+            {% if features.hasComments %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.giveaway_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.giveaway_comment_permalink } %}
+            {% endif %}
 
         </div><!-- left -->
 
@@ -59,6 +72,7 @@
 
         </div><!-- clear -->
     </div><!-- std_2col -->
+
 {% endblock %}
 
 {% block javascripts %}

@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+
+<h1>
+    <i class="icon-pencil"></i>
+    Background Ad edit
+</h1>
+
+<form action="{{ path('admin_background_ads_update', { 'id': ad.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'SpoutletBundle:BackgroundAdAdmin:_form.html.twig' with {
+        'form': form
+    } %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_background_ads_index') }}">
+    Back to the list
+</a>
+{% endblock %}

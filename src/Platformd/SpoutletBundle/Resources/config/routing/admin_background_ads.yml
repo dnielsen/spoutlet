@@ -1,0 +1,26 @@
+admin_background_ads_index:
+    pattern:  /
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:index" }
+
+admin_background_ads_list:
+    pattern:  /list/{site}
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:list", site: ~ }
+
+admin_background_ads_new:
+    pattern:  /new
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:new" }
+
+admin_background_ads_create:
+    pattern:  /create
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:create" }
+    requirements: { _method: POST }
+
+admin_background_ads_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:edit" }
+    requirements: { _method: GET }
+
+admin_background_ads_update:
+    pattern:  /{id}/edit
+    defaults: { _controller: "SpoutletBundle:BackgroundAdAdmin:update" }
+    requirements: { _method: POST }

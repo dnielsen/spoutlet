@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Controller extends BaseController
 {
-
     protected $cache;
 
     protected function getCurrentSite() {
@@ -106,6 +105,10 @@ class Controller extends BaseController
             array(
                 'title' => $title,
                 'body'  => $body));
+    }
+
+    protected function getSiteFromLocale($locale) {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 
     /**

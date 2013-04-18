@@ -63,3 +63,18 @@ services:
         factory_method: getRepository
         arguments:
             - 'GiveawayBundle:DealCode'
+
+    platformd.doctrine.listener.giveaway:
+        class: Platformd\GiveawayBundle\Doctrine\Listener\GiveawayListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    platformd.giveaway_background_resolver:
+        class:  'Platformd\SpoutletBundle\BackgroundPathResolver'
+        arguments:
+            - @event_filesystem
+        parent: platformd.path_resolver
+        tags:
+            - { name: 'knp_media_exposer.resolver' }

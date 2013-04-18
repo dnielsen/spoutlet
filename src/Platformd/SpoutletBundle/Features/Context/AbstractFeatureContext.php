@@ -17,6 +17,7 @@ use Behat\Behat\Context\Step\Then;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
+
 use Platformd\GameBundle\Entity\Game;
 use Platformd\GameBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Contest;
@@ -30,6 +31,8 @@ use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GlobalEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Platformd\SpoutletBundle\Entity\BackgroundAd;
+use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 
 /**
  * Base Feature context.
@@ -586,7 +589,7 @@ class AbstractFeatureContext extends MinkContext
             if ($this->getSession()->getDriver() instanceof GoutteDriver
                 && $this->getSession()->getDriver()->getClient()->getRequest()) {
 
-                $this->printLastResponse();
+                //$this->printLastResponse();
             }
         }
     }
@@ -1690,5 +1693,51 @@ class AbstractFeatureContext extends MinkContext
         if ($statusCode != $httpOk) {
             throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
         }
+    }
+
+    /**
+     * @Given /^I attach a background ad image$/
+     */
+    public function iAttachABackgroundAdImage()
+    {
+        $this->attachFileToField('Image', __DIR__.'/image.png');
+    }
+
+    /**
+     * @Given /^I fill in background ad's date with "([^""]*)"$/
+     */
+    public function iFillInDateWith($date)
+    {
+        $dt = new \DateTime($date);
+
+        $this->fillField('admin_background_ad_date_date_month', $dt->format('m'));
+        $this->fillField('admin_background_ad_date_date_day', $dt->format('d'));
+        $this->fillField('admin_background_ad_date_date_year', $dt->format('Y'));
+    }
+
+    /**
+     * @Given /^there is an already existing background ad at date "([^""]*)" - "([^""]*)" for site "([^""]*)"(?: with url "([^""]*)")?$/
+     */
+    public function thereIsAnAlreadyExistingBackgroundAdAtDate($dateStart, $dateEnd, $siteName, $url = null)
+    {
+        $ad = new BackgroundAd('test');
+        $ad->setDateStart(new \DateTime($dateStart));
+        $ad->setDateEnd(new \DateTime($dateEnd));
+        $ad->setTimezone('Europe/Paris');
+
+        $em   = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('name' => $siteName));
+        $ad->addAdSite(new BackgroundAdSite($site, $url));
+
+        $this->getEntityManager()->persist($ad);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @When /I click background/
+     */
+    public function iClickBackground()
+    {
+        $this->getSession()->getPage()->find('css', '.background-takeover')->click();
     }
 }

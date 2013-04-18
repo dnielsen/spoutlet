@@ -167,8 +167,11 @@ class GiveawayRepository extends EntityRepository
             $qb->andWhere('s = :site');
         }
 
+        $qb->addSelect('gt'); // eager fetch translations
+        $qb->leftJoin('g.translations', 'gt');
+
         $qb->leftJoin('g.sites', 's');
-        $qb->andWhere(is_string($site) ? 's.name = :site' : 's = :site');
+
         $qb->andWhere('g.published = true');
         $qb->setParameter('site', $site);
 

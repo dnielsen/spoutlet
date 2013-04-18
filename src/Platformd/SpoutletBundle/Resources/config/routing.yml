@@ -95,3 +95,7 @@ SpoutletBundle_admin_contest:
 SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
+
+SpoutletBundle_admin_background_ads:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_background_ads.yml"
+    prefix:   /admin/background-ads

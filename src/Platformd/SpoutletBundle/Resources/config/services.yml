@@ -91,6 +91,7 @@ services:
             - "@translator"
             - "@fos_user.user_manager"
             - "@platformd.repository.content_reporting"
+            - "@platformd.repository.background_ads"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
@@ -99,7 +100,6 @@ services:
         class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
         tags:
             - { name: form.type_extension, alias: field }
-
 
     platformd.entity.repository.comment_thread:
         class: Platformd\SpoutletBundle\Entity\ThreadRepository
@@ -238,3 +238,17 @@ services:
         class: Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType
         tags:
             - { name: form.type, alias: gmtTimezone }
+
+    platformd.validator.unique.background_ad_per_site:
+        class: Platformd\SpoutletBundle\Validator\Constraints\UniqueBackgroundAdPerTimeValidator
+        arguments:
+            - @doctrine
+        tags:
+            - { name: validator.constraint_validator, alias: unique_background_ad_time_per_site }
+
+    platformd.repository.background_ads:
+        class:           Platformd\SpoutletBundle\Entity\BackgroundAdRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:BackgroundAd'

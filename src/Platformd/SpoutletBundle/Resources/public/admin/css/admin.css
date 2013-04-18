@@ -129,6 +129,16 @@ fieldset .row-fluid.first div[class*="span"] {
     margin-bottom: 15px;
 }
 
+.collection-item {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #CCCCCC;
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
 .game-page-form label.control-label {
     width: 100px;
 }
@@ -267,4 +277,8 @@ a.down {
 a.down:hover {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
     background-position: 29px 29px;
+}
+
+legend {
+    margin-top: 15px;
 }
