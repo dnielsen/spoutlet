@@ -11,13 +11,15 @@
 {% else %}
 	<li class="separator"><a id="header-login-link" href="http://alienwarearena.com/account/login?return={{ url('default_index') | url_encode }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
+
+    <script type="text/javascript">
+        $(function () {
+
+            var newUrl = 'http://alienwarearena.com/account/login?return=' + encodeURIComponent(window.location.href);
+
+            $('#header-login-link').attr('href', newUrl);
+        });
+    </script>
 {% endif %}
 
-<script type="text/javascript">
-    $(function () {
 
-        var newUrl = 'http://alienwarearena.com/account/login?return=' + encodeURIComponent(window.location.href);
-
-        $('#header-login-link').attr('href', newUrl);
-    });
-</script>
