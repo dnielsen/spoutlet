@@ -9,6 +9,15 @@
     <li class="separator"><a href="{{ path('admin_index') }}">{{ "platformd.layout.top_menu.admin" | trans }}</a></li>
     {% endif %}
 {% else %}
-	<li class="separator">{% render url('_anon_login_link') with {}, {'standalone': true } %}</li>
+	<li class="separator"><a id="header-login-link" href="http://alienwarearena.com/account/login?return={{ url('default_index') | url_encode }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
 {% endif %}
+
+<script type="text/javascript">
+    $(function () {
+
+        var newUrl = 'http://alienwarearena.com/account/login?return=' + encodeURIComponent(window.location.href);
+
+        $('#header-login-link').attr('href', newUrl);
+    });
+</script>
