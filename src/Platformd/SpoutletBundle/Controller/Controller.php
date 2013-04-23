@@ -112,11 +112,13 @@ class Controller extends BaseController
     }
 
     // See comment in config_dev.yml re. ip_lookup_override parameter when using this function in a dev environment.
-    protected function getCurrentCountry()
-    {
-        $ipAddress = $this->getRequest()->getClientIp(true);
-        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
+    protected function getCurrentCountry() {
+        $countryCode = $this->getCurrentCountryCode();
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+    }
+
+    protected function getCurrentCountryCode() {
+        return $this->getIpLookupUtil()->getCountryCode($this->getRequest()->getClientIp(true));
     }
 
     /**

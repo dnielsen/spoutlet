@@ -4,7 +4,7 @@
 
 {% if data.giveaway_show_get_key_button %}
     <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
-        <a href="{{ path('giveaway_get_key', { "slug" : data.giveaway_slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
+        <a href="{{ path('giveaway_get_key', { "giveawayId" : data.giveaway_id, "slug" : data.giveaway_slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
     </div>
 {% endif %}
 

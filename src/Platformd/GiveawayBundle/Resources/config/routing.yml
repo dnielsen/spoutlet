@@ -25,7 +25,7 @@ giveaway_show:
         keyId: \d+
 
 giveaway_get_key:
-    pattern: /giveaways/{slug}/key/{joinGroup}
+    pattern: /giveaways/{giveawayId}/{slug}/key/{joinGroup}
     defaults: { _controller: GiveawayBundle:Giveaway:key, joinGroup: true }
 
 giveaway_submit_machine_code:

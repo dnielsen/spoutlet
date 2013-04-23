@@ -18,6 +18,7 @@ services:
             - "@platformd.link.linkable_manager"
             - "@media_exposer"
             - @event_filesystem
+            - "@platformd.repository.country"
 
     platformd.model.deal_manager:
         class: Platformd\GiveawayBundle\Model\DealManager
@@ -49,6 +50,13 @@ services:
         factory_method: getRepository
         arguments:
             - 'GiveawayBundle:GiveawayKey'
+
+    pd_giveaway.entity.repository.key_request_state:
+        class: Platformd\GiveawayBundle\Entity\Repository\KeyRequestStateRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:KeyRequestState'
 
     pd_giveaway.entity.repository.deal:
         class: Platformd\GiveawayBundle\Entity\Repository\DealRepository

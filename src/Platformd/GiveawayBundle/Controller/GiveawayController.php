@@ -72,8 +72,7 @@ class GiveawayController extends Controller
         $giveawayManager = $this->getGiveawayManager();
         $data            = new giveaway_show_main_actions_data();
 
-
-        $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveaway, $this->getCurrentCountry());
+        $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveawayId, $this->getCurrentCountryCode());
 
         if ($currentUser) {
             $data->can_user_apply_to_giveaway = !$this->getMachineCodeEntryRepository()->activeOrPendingExistsForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
@@ -100,6 +99,7 @@ class GiveawayController extends Controller
         $assignedKey = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
 
         $data->giveaway_slug                      = $giveaway->getSlug();
+        $data->giveaway_id                        = $giveaway->getId();
         $data->giveaway_show_keys                 = $giveaway->getShowKeys();
         $data->giveaway_allow_key_fetch           = $giveaway->allowKeyFetch();
         $data->giveaway_allow_machine_code_submit = $giveaway->allowMachineCodeSubmit();
@@ -166,21 +166,43 @@ class GiveawayController extends Controller
         return $this->container->get('pd_giveaway.giveaway_manager');
     }
 
-    /**
-     * The action that actually assigns a key to a user
-     *
-     * @param $slug
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     */
-    public function keyAction($slug, Request $request, $joinGroup=true)
+    private function getKeyRequestStateRepo()
+    {
+        return $this->container->get('pd_giveaway.entity.repository.key_request_state');
+    }
+
+    public function keyAction($giveawayId, $slug, Request $request, $joinGroup=true)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
+        $stateRepo   = $this->getKeyRequestStateRepo();
+        $currentUser = $this->getCurrentUser();
+        $userId      = $currentUser->getId();
+        $state       = $stateRepo->findForUserIdAndGiveawayId($userId, $giveawayId);
+
+        if ($state) {
+            switch ($state->getState()) {
+                case KeyRequestState::STATE_IN_QUEUE:
+                case KeyRequestState::STATE_ASSIGNED:
+
+                    return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+
+                default:
+
+                    # happy to continue
+            }
+        }
+
+        $giveawayManager = $this->getGiveawayManager();
+        $keysRemaining   = $giveawayManager->getAvailableKeysForGiveaway($giveawayId, $this->getCurrentCountryCode());
+
+        if (!$keysRemaining) {
+            die('no key remaining');
+        }
+
         $giveawayManager         = $this->container->get('pd_giveaway.giveaway_manager');
         $currentUser             = $this->getUser();
-        $giveaway                = $this->findGiveaway($slug);
+        $giveaway                = $this->getRepository()->find($giveawayId);
         $message                 = new KeyRequestQueueMessage();
         $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY;
         $message->promotionId    = $giveaway->getId();
@@ -194,6 +216,15 @@ class GiveawayController extends Controller
 
         if (!$result) {
 
+        }
+
+        if (!$state) {
+            $state = new KeyRequestState();
+
+            $state->setGiveaway      = $giveaway;
+            $state->setUser          = $currentUser;
+            $state->setPromotionType = KeyRequestState::PROMOTION_TYPE_GIVEAWAY;
+            $state->
         }
 
         var_dump($result);

@@ -12,6 +12,7 @@ class giveaway_show_main_actions_data
     public $giveaway_show_keys;
     public $giveaway_show_get_key_button;
     public $giveaway_slug;
+    public $giveaway_id;
     public $user_is_member_of_promotion_group;
     public $promotion_group_name;
     public $promotion_group_slug;

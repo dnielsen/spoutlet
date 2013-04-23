@@ -17,6 +17,7 @@ use Gaufrette\Filesystem;
 use Platformd\SpoutletBundle\Util\CacheUtil;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository;
+use Platformd\SpoutletBundle\Entity\CountryRepository;
 use Platformd\GiveawayBundle\Entity\GiveawayRepository;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_data;
 use Platformd\GiveawayBundle\ViewModel\giveaway_index_data;
@@ -43,25 +44,27 @@ class GiveawayManager
     private $linkableManager;
     private $mediaExposer;
     private $filesystem;
+    private $countryRepo;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo)
     {
-        $this->emailManager       = $emailManager;
-        $this->em                 = $em;
-        $this->fromAddress        = $fromAddress;
-        $this->fromName           = $fromName;
-        $this->router             = $router;
-        $this->translator         = $translator;
-        $this->cacheUtil          = $cacheUtil;
-        $this->giveawayRepo       = $giveawayRepo;
-        $this->siteUtil           = $siteUtil;
-        $this->keyCounterUtil     = $keyCounterUtil;
-        $this->giveawayKeyRepo    = $giveawayKeyRepo;
-        $this->em                 = $em;
-        $this->threadRepo         = $threadRepo;
-        $this->linkableManager    = $linkableManager;
-        $this->mediaExposer = $mediaExposer;
-        $this->filesystem         = $filesystem;
+        $this->emailManager    = $emailManager;
+        $this->em              = $em;
+        $this->fromAddress     = $fromAddress;
+        $this->fromName        = $fromName;
+        $this->router          = $router;
+        $this->translator      = $translator;
+        $this->cacheUtil       = $cacheUtil;
+        $this->giveawayRepo    = $giveawayRepo;
+        $this->siteUtil        = $siteUtil;
+        $this->keyCounterUtil  = $keyCounterUtil;
+        $this->giveawayKeyRepo = $giveawayKeyRepo;
+        $this->em              = $em;
+        $this->threadRepo      = $threadRepo;
+        $this->linkableManager = $linkableManager;
+        $this->mediaExposer    = $mediaExposer;
+        $this->filesystem      = $filesystem;
+        $this->countryRepo     = $countryRepo;
     }
 
     public function getAnonGiveawayIndexData() {
@@ -83,27 +86,42 @@ class GiveawayManager
         return $data;
     }
 
-    public function getAvailableKeysForGiveaway($giveaway, $country) {
+    public function getAvailableKeysForGiveaway($giveawayId, $countryCode) {
+
+        if (!$giveawayId || !$countryCode) {
+            return 0;
+        }
+
+        $giveawayId = (int) $giveawayId;
+
+        if ($giveawayId < 1 || strlen($countryCode) < 2) {
+            return 0;
+        }
 
         $keyCounterUtil = $this->keyCounterUtil;
         $keyRepo        = $this->giveawayKeyRepo;
+        $countryRepo    = $this->countryRepo;
+        $giveawayRepo   = $this->giveawayRepo;
 
-        $activePool     = $giveaway->getActivePoolForCountry($country);
+        $availableKeys = $this->cacheUtil->getOrGen(array(
 
-        if ($activePool) {
-            $availableKeys = $this->cacheUtil->getOrGen(array(
+            'key'                  => 'GIVEAWAY::AVAILABLE_KEY_COUNT::GIVEAWAY_ID='.$giveawayId.'::COUNTRY_CODE='.$countryCode,
+            'hashKey'              => false,
+            'cacheDurationSeconds' => 30,
+            'genFunction'          => function () use (&$keyCounterUtil, &$giveawayId, &$countryCode, &$keyRepo, &$countryRepo, &$giveawayRepo) {
 
-                'key'                  => 'GIVEAWAY::AVAILABLE_KEY_COUNT::GIVEAWAY_ID='.(int) $giveaway->getId(),
-                'hashKey'              => false,
-                'cacheDurationSeconds' => 30,
-                'genFunction'          => function () use (&$keyCounterUtil, &$activePool, &$keyRepo) {
-                    return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($activePool), $keyRepo->getUnassignedForPool($activePool), $activePool->getLowerLimit(), $activePool->getUpperLimit());
-                }));
+                $giveaway   = $giveawayRepo->find($giveawayId);
+                $country    = $countryRepo->findOneByCode($countryCode);
+                $activePool = $giveaway->getActivePoolForCountry($country);
 
-            return $availableKeys ? (int) $availableKeys : 0;
-        }
+                if (!$activePool) {
+                    return 0;
+                }
 
-        return 0;
+                return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($activePool), $keyRepo->getUnassignedForPool($activePool), $activePool->getLowerLimit(), $activePool->getUpperLimit());
+            }));
+
+        return $availableKeys ? (int) $availableKeys : 0;
     }
 
     public function getAnonGiveawayShowData($slug) {

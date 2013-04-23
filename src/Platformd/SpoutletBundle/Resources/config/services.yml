@@ -229,6 +229,13 @@ services:
         arguments:
             - 'SpoutletBundle:ContentReport'
 
+    platformd.repository.country:
+        class:           Platformd\SpoutletBundle\Entity\CountryRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Country'
+
     platformd.doctrine.listener.group:
         class: Platformd\SpoutletBundle\Doctrine\Listener\GroupListener
         arguments:
