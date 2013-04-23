@@ -2,6 +2,10 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\MediaBundle\Entity\Media,
+    Platformd\MediaBundle\Form\Type\MediaType
+;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
