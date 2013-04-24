@@ -19,6 +19,8 @@ platformd:
     flash:
         error_title: Error!
         success_title: Success!
+        info_title: Information!
+        warning_title: Warning!
 
     cache:
        currently_under_heavy_load_title: Please try again shortly...
@@ -369,6 +371,23 @@ platformd:
         in_process_1: If you have registered for a key giveaway and your status is showing as “Pending”,
         in_process_2: please allow at least 2 weeks for it to be posted into your account.
         in_process_3: If after 2 weeks it has not been posted, please email
+        queue:
+            you_are_queued: Your approximate wait time is less than 5 minutes. In the meantime, please check out our events and groups page. You will receive an automated email once a key has been assigned to you.
+            rejected: Your attempt to get a key have been rejected.
+            problem: There was a problem processing your key request.
+            reason: Reason
+            reasons:
+                none: No reason
+                no_keys: No keys left.
+                already_assigned: You already have a key.
+                invalid_country_or_age: You are not eligible (based on your age and country).
+                invalid_site: Unknown site.
+                client_ip_null: Client IP not found.
+                country_code_null: Unknown country.
+                invalid_country: Unknown country.
+                invalid_promotion: Could not find promotion.
+                inactive_promotion: This promotion is not active.
+                key_fetch_disallowed: Key fetch is not allowed for this promotion.
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%

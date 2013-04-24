@@ -12,6 +12,7 @@ use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_main_actions_data;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
@@ -59,34 +60,34 @@ class GiveawayController extends Controller
                 'data' => $data
             ));
 
-            $response->setSharedMaxAge(30);
+            $response->setSharedMaxAge(60);
 
             return $response;
         }
 
-        if ($state && $state->getState()) { # they have joined the queue, been rejected or something else
+        $statesToNotifyUserOf = array(KeyRequestState::STATE_IN_QUEUE, KeyRequestState::STATE_REJECTED, KeyRequestState::STATE_REQUEST_PROBLEM);
 
-            switch ($state->getState()) {
-                case KeyRequestState::STATE_IN_QUEUE:
+        if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf)) { # they have joined the queue, been rejected or something else
 
-                    $response = new Response('IN QUEUE');
-                    $response->setSharedMaxAge(30);
+            $data = new giveaway_show_current_queue_state();
 
-                    return $response;
+            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'info' : 'error';
+            $data->current_state        = $state->getCurrentState();
+            $data->current_state_reason = $state->getStateReason();
 
-                case KeyRequestState::STATE_REJECTED:
+            $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
+                'data' => $data
+            ));
 
-                    $response = new Response('REJECTED');
-                    $response->setSharedMaxAge(30);
+            $response->setSharedMaxAge(1);
 
-                    return $response;
-            }
+            return $response;
         }
 
         # at this stage, there are no notifications for the user
 
         $response = new Response();
-        $response->setSharedMaxAge(30);
+        $response->setSharedMaxAge(1);
 
         return $response;
     }
@@ -189,7 +190,6 @@ class GiveawayController extends Controller
         $response = $this->render('GiveawayBundle:Giveaway:show.html.twig', array('data' => $data));
 
         $response->setSharedMaxAge(30);
-        $response->setMaxAge(30);
 
         return $response;
     }

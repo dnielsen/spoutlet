@@ -25,23 +25,23 @@ class KeyRequestState
     const PROMOTION_TYPE_GIVEAWAY = 'giveaway';
     const PROMOTION_TYPE_DEAL     = 'deal';
 
-    const STATE_IN_QUEUE            = 'in-queue';
+    const STATE_IN_QUEUE            = 'in_queue';
     const STATE_REJECTED            = 'rejected';
     const STATE_ASSIGNED            = 'assigned';
     const STATE_NONE                = 'none';
-    const STATE_REQUEST_PROBLEM     = 'problem-with-request';
+    const STATE_REQUEST_PROBLEM     = 'problem_with_request';
 
     const REASON_NONE                   = 'none';
-    const REASON_NO_KEYS_LEFT           = 'no-keys';
-    const REASON_ALREADY_ASSIGNED       = 'already-assigned';
-    const REASON_INVALID_COUNTRY_AGE    = 'invalid-country-or-age';
-    const REASON_INVALID_SITE           = 'invalid-site';
-    const REASON_CLIENT_IP_NULL         = 'client-ip-null';
-    const REASON_COUNTRY_CODE_NULL      = 'country-code-null';
-    const REASON_INVALID_COUNTRY        = 'invalid-country';
-    const REASON_INVALID_PROMOTION      = 'invalid-promotion';
-    const REASON_INACTIVE_PROMOTION     = 'inactive-promotion';
-    const REASON_KEY_FETCH_DISALLOWED   = 'key-fetch-disallowed';
+    const REASON_NO_KEYS_LEFT           = 'no_keys';
+    const REASON_ALREADY_ASSIGNED       = 'already_assigned';
+    const REASON_INVALID_COUNTRY_AGE    = 'invalid_country_or_age';
+    const REASON_INVALID_SITE           = 'invalid_site';
+    const REASON_CLIENT_IP_NULL         = 'client_ip_null';
+    const REASON_COUNTRY_CODE_NULL      = 'country_code_null';
+    const REASON_INVALID_COUNTRY        = 'invalid_country';
+    const REASON_INVALID_PROMOTION      = 'invalid_promotion';
+    const REASON_INACTIVE_PROMOTION     = 'inactive_promotion';
+    const REASON_KEY_FETCH_DISALLOWED   = 'key_fetch_disallowed';
 
     private static $validPromotionTypes = array(
         self::PROMOTION_TYPE_GIVEAWAY,
