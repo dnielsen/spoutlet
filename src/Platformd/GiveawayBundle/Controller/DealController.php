@@ -225,7 +225,6 @@ class DealController extends Controller
         $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
 
         $response->setSharedMaxAge(30);
-        $response->setMaxAge(30);
 
         return $response;
     }
