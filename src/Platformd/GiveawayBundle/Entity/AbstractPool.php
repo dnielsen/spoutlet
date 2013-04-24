@@ -2,12 +2,18 @@
 
 namespace Platformd\GiveawayBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection
+;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile,
-Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
-use Platformd\SpoutletBundle\Entity\Country;
+    Symfony\Component\Validator\Constraints as Assert
+;
+
+use Platformd\SpoutletBundle\Entity\Country,
+    Platformd\GiveawayBundle\Entity\DealPool,
+    Platformd\GiveawayBundle\Entity\GiveawayPool
+;
 
 /**
  * A mapped super class that all other pools inherit from
@@ -239,33 +245,42 @@ abstract class AbstractPool
     public function isEnabledForCountry($country)
     {
         $allowed    = false;
-        $rules      = $this->getRuleset();
-        $regions    = $this->getRegions();
-
-        if (count($regions) < 1 && count($rules->getRules()) < 1) {
-            return true;
-        }
 
         if ($country instanceof Country) {
             $country = $country->getCode();
-        } else {
-            $country = $country;
         }
 
-        foreach ($regions as $region) {
-            foreach ($region->getCountries() as $regionCountry) {
-                if ($regionCountry->getCode() == $country) {
-                    $allowed = true;
-                    break 2;
+        if ($this instanceof GiveawayPool) {
+            $rules      = $this->getRuleset();
+            $regions    = $this->getRegions();
+
+            if (count($regions) < 1 && count($rules->getRules()) < 1) {
+                return true;
+            }
+
+            foreach ($regions as $region) {
+                foreach ($region->getCountries() as $regionCountry) {
+                    if ($regionCountry->getCode() == $country) {
+                        $allowed = true;
+                        break 2;
+                    }
                 }
             }
-        }
 
-        if ($rules) {
-            $ruleCheck = $rules->doesCountryPassRules($country);
-            $allowed = $ruleCheck === null ? $allowed : $ruleCheck;
-        }
+            if ($rules) {
+                $ruleCheck = $rules->doesCountryPassRules($country);
+                $allowed = $ruleCheck === null ? $allowed : $ruleCheck;
+            }
 
-        return $allowed;
+            return $allowed;
+        } else {
+            foreach ($this->getAllowedCountries() as $allowedCountry) {
+                if ($allowedCountry->getCode() == $country) {
+                    return true;
+                }
+            }
+
+            return $allowed;
+        }
     }
 }

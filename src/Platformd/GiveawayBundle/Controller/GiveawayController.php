@@ -65,7 +65,6 @@ class GiveawayController extends Controller
             return $response;
         }
 
-        $statesToNotifyUserOf = array(KeyRequestState::STATE_IN_QUEUE, KeyRequestState::STATE_REJECTED, KeyRequestState::STATE_REQUEST_PROBLEM);
 
         if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf)) { # they have joined the queue, been rejected or something else
 
@@ -233,8 +232,6 @@ class GiveawayController extends Controller
             die('no key remaining');
         }
 
-        $giveawayManager         = $this->container->get('pd_giveaway.giveaway_manager');
-        $currentUser             = $this->getUser();
         $giveaway                = $this->getRepository()->find($giveawayId);
         $message                 = new KeyRequestQueueMessage();
         $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY;

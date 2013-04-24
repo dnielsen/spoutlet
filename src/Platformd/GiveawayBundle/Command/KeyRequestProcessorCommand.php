@@ -69,15 +69,17 @@ EOT
     {
         $this->output($indentationLevel, $outputMessage);
 
-        $this->output($indentationLevel, 'Old '.$state);
+        if ($state) {
+            $this->output($indentationLevel, 'Old '.$state);
 
-        $state->setCurrentState($rejectedDueToInvalidMessage ? KeyRequestState::STATE_REQUEST_PROBLEM : KeyRequestState::STATE_REJECTED);
-        $state->setStateReason($reason);
+            $state->setCurrentState($rejectedDueToInvalidMessage ? KeyRequestState::STATE_REQUEST_PROBLEM : KeyRequestState::STATE_REJECTED);
+            $state->setStateReason($reason);
 
-        $this->em->persist($state);
-        $this->em->flush();
+            $this->em->persist($state);
+            $this->em->flush();
 
-        $this->output($indentationLevel, 'New '.$state);
+            $this->output($indentationLevel, 'New '.$state);
+        }
 
         $this->deleteMessageWithOutput($sqsMessage);
 
@@ -101,11 +103,11 @@ EOT
         $giveawayRepo = $this->getRepo('GiveawayBundle:Giveaway');
         $dealRepo     = $this->getRepo('GiveawayBundle:Deal');
         $siteRepo     = $this->getRepo('SpoutletBundle:Site');
-        $keyRepo      = $this->getRepo('GiveawayBundle:GiveawayKey');
         $userRepo     = $this->getRepo('UserBundle:User');
         $countryRepo  = $this->getRepo('SpoutletBundle:Country');
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
+        $groupManager = $this->getContainer()->get('platformd.model.group_manager');
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
@@ -137,35 +139,100 @@ EOT
             }
 
             switch ($message->keyRequestType) {
+
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
+
+                    $keyRepo   = $this->getRepo('GiveawayBundle:GiveawayKey');
+
+                    $promotion = $this->findWithOutput(array(
+                        'type'       => 'Giveaway',
+                        'repo'       => $giveawayRepo,
+                        'id'         => $message->promotionId,
+                    ));
+
+                    if (!$promotion) {
+                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', null, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
+                        continue 2;
+                    }
+
                     $state = $stateRepo->findForUserIdAndGiveawayId($message->userId, $message->promotionId);
+
+                    if (!$state) {
+                        $state = new KeyRequestState();
+
+                        $state->setDeal($promotion);
+                        $state->setUser($user);
+                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
+                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                    }
+
+                    if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                        $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
+                        continue 2;
+                    }
+
+                    if (!$promotion->allowKeyFetch()) {
+                        $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);
+                        continue 2;
+                    }
+
+                    $userAlreadyHasAKey = $keyRepo->doesUserHaveKeyForGiveaway($user, $promotion);
+
+                    if ($userAlreadyHasAKey) {
+                        $this->rejectRequestWithOutput(4, 'This user already has a key assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
+                        continue 2;
+                    }
+
+                    $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
+
                     break;
 
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
+
+                    $keyRepo   = $this->getRepo('GiveawayBundle:DealCode');
+
+                    $promotion = $this->findWithOutput(array(
+                        'repo'       => $dealRepo,
+                        'id'         => $message->promotionId,
+                    ));
+
+                    if (!$promotion) {
+                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', null, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
+                        continue 2;
+                    }
+
                     $state = $stateRepo->findForUserIdAndDealId($message->userId, $message->promotionId);
+
+                    if (!$state) {
+                        $state = new KeyRequestState();
+
+                        $state->setDeal($promotion);
+                        $state->setUser($user);
+                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
+                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                    }
+
+                    if ($promotion->getStatus() != 'published' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                        $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
+                        continue 2;
+                    }
+
+                    $userAlreadyHasACode = $keyRepo->doesUserHaveCodeForDeal($user, $promotion);
+
+                    if ($userAlreadyHasACode) {
+                        $this->rejectRequestWithOutput(4, 'This user already has a code assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
+                        continue 2;
+                    }
+
+                    $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
+
                     break;
 
                 default:
                     $this->output(2, 'Unable to retrieve state information for message type - "'.$message->keyRequestType.'"');
                     $this->deleteMessageWithOutput($message);
-                    continue;
-            }
+                    continue 2;
 
-
-            if (!$state) {
-
-                $this->output(2, 'Unable to find request state information for user and promotion - generating new information.');
-
-                $state = new KeyRequestState();
-
-                if ($message->keyRequestType == KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY) {
-                    $state->setGiveaway($promotion);
-                } else {
-                    $state->setDeal($promotion);
-                }
-                $state->setUser($user);
-                $state->setPromotionType($message->keyRequestType);
-                $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
             }
 
             $this->output(2, $state);
@@ -208,71 +275,6 @@ EOT
 
             if (!$country) {
                 $this->rejectRequestWithOutput(2, 'Invalid country.', $state, KeyRequestState::REASON_INVALID_COUNTRY, $message, true);
-                continue;
-            }
-
-            switch ($message->keyRequestType) {
-
-                case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
-
-                    $promotion = $this->findWithOutput(array(
-                        'type'       => 'Giveaway',
-                        'repo'       => $giveawayRepo,
-                        'id'         => $message->promotionId,
-                    ));
-
-                    if (!$promotion) {
-                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', $state, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
-                        continue;
-                    }
-
-                    if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
-                        $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
-                        continue;
-                    }
-
-                    if (!$promotion->allowKeyFetch()) {
-                        $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);
-                        continue;
-                    }
-
-                    $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
-
-                    break;
-
-                case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
-
-                    $promotion = $this->findWithOutput(array(
-                        'repo'       => $dealRepo,
-                        'id'         => $message->promotionId,
-                    ));
-
-                    if (!$promotion) {
-                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', $state, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
-                        continue;
-                    }
-
-                    $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
-
-                    $state = $stateRepo->findForUserIdAndDealId($message->userId, $message->promotionId);
-
-                    if (!$state) {
-                        $state = new KeyRequestState();
-
-                        $state->setDeal($promotion);
-                        $state->setUser($user);
-                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
-                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
-                    }
-
-                    break;
-
-            }
-
-            $userAlreadyHasAKey = $keyRepo->doesUserHaveKeyForGiveaway($user, $promotion);
-
-            if ($userAlreadyHasAKey) {
-                $this->rejectRequestWithOutput(4, 'This user already has a key assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
                 continue;
             }
 
@@ -335,8 +337,6 @@ EOT
                 $this->output(2, 'Auto join user to group.');
                 $this->output(3, $group);
 
-                $groupManager = $this->getGroupManager();
-
                 if ($groupManager->isAllowedTo($user, $group, $site, 'JoinGroup')) {
                     $joinAction = new GroupMembershipAction();
 
@@ -347,7 +347,7 @@ EOT
                     $group->getMembers()->add($user);
                     $group->getUserMembershipActions()->add($joinAction);
 
-                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher = $this->getContainer()->get('event_dispatcher');
                     $event      = new GroupEvent($group, $user);
                     $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
@@ -355,7 +355,7 @@ EOT
 
                     if($group->getIsPublic()) {
                         try {
-                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                            $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
                         } catch (ApiException $e) {
 
                         }
