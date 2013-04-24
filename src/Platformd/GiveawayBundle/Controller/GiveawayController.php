@@ -233,8 +233,6 @@ class GiveawayController extends Controller
             die('no key remaining');
         }
 
-        $giveawayManager         = $this->container->get('pd_giveaway.giveaway_manager');
-        $currentUser             = $this->getUser();
         $giveaway                = $this->getRepository()->find($giveawayId);
         $message                 = new KeyRequestQueueMessage();
         $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY;

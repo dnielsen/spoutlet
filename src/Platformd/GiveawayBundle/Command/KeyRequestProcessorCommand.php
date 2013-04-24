@@ -103,7 +103,6 @@ EOT
         $giveawayRepo = $this->getRepo('GiveawayBundle:Giveaway');
         $dealRepo     = $this->getRepo('GiveawayBundle:Deal');
         $siteRepo     = $this->getRepo('SpoutletBundle:Site');
-        $keyRepo      = $this->getRepo('GiveawayBundle:GiveawayKey');
         $userRepo     = $this->getRepo('UserBundle:User');
         $countryRepo  = $this->getRepo('SpoutletBundle:Country');
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
@@ -143,6 +142,8 @@ EOT
 
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
 
+                    $keyRepo   = $this->getRepo('GiveawayBundle:GiveawayKey');
+
                     $promotion = $this->findWithOutput(array(
                         'type'       => 'Giveaway',
                         'repo'       => $giveawayRepo,
@@ -175,11 +176,20 @@ EOT
                         continue 2;
                     }
 
+                    $userAlreadyHasAKey = $keyRepo->doesUserHaveKeyForGiveaway($user, $promotion);
+
+                    if ($userAlreadyHasAKey) {
+                        $this->rejectRequestWithOutput(4, 'This user already has a key assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
+                        continue 2;
+                    }
+
                     $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
 
                     break;
 
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
+
+                    $keyRepo   = $this->getRepo('GiveawayBundle:DealCode');
 
                     $promotion = $this->findWithOutput(array(
                         'repo'       => $dealRepo,
@@ -200,6 +210,18 @@ EOT
                         $state->setUser($user);
                         $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
                         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                    }
+
+                    if ($promotion->getStatus() != 'published' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                        $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
+                        continue 2;
+                    }
+
+                    $userAlreadyHasACode = $keyRepo->doesUserHaveCodeForDeal($user, $promotion);
+
+                    if ($userAlreadyHasACode) {
+                        $this->rejectRequestWithOutput(4, 'This user already has a code assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
+                        continue 2;
                     }
 
                     $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
@@ -253,13 +275,6 @@ EOT
 
             if (!$country) {
                 $this->rejectRequestWithOutput(2, 'Invalid country.', $state, KeyRequestState::REASON_INVALID_COUNTRY, $message, true);
-                continue;
-            }
-
-            $userAlreadyHasAKey = $keyRepo->doesUserHaveKeyForGiveaway($user, $promotion);
-
-            if ($userAlreadyHasAKey) {
-                $this->rejectRequestWithOutput(4, 'This user already has a key assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
                 continue;
             }
 

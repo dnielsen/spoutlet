@@ -20,6 +20,8 @@ use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\deal_show_key_data;
+use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
+use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
 class DealController extends Controller
 {
@@ -208,112 +210,55 @@ class DealController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $em             = $this->getDoctrine()->getEntityManager();
-        $site           = $this->getCurrentSite();
-        $dealCodeRepo   = $em->getRepository('GiveawayBundle:DealCode');
-        $dealPoolRepo   = $em->getRepository('GiveawayBundle:DealPool');
-        $deal           = $this->getDealManager()->findOneBySlug($slug, $site);
-        $clientIp       = $request->getClientIp(true);
-        $user           = $this->getUser();
-        $locale         = $site->getDefaultLocale();
-        $dealShow       = $this->generateUrl('deal_show', array('slug' => $slug));
+        $site = $this->getCurrentSite();
 
-        $canTest = $deal->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
-        if ($deal->getStatus() != "published" && !$canTest) {
-            $this->setFlash('error', 'deal_not_eligible');
+        $deal        = $this->getDealManager()->findOneBySlug($slug, $site);
+        $stateRepo   = $this->getKeyRequestStateRepo();
+        $currentUser = $this->getCurrentUser();
+        $userId      = $currentUser->getId();
+        $state       = $stateRepo->findForUserIdAndDealId($userId, $deal->getId());
 
-            return $this->redirect($dealShow);
-        }
+        if ($state) {
+            switch ($state->getCurrentState()) {
+                case KeyRequestState::STATE_IN_QUEUE:
+                case KeyRequestState::STATE_ASSIGNED:
 
-        if ($dealCodeRepo->doesUserHaveCodeForDeal($user, $deal)) {
-            $this->setFlash('error', 'deal_redeem_user_already_redeemed');
-            return $this->redirect($dealShow);
-        }
+                    return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
 
-        $country = $this->getCurrentCountry();
+                default:
 
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($dealShow);
-        }
-
-        // check that they pass the new style age-country restriction ruleset
-        if ($deal->getRuleset() && !$deal->getRuleset()->doesUserPassRules($user, $country)) {
-            $this->setFlash('error', 'deal_not_eligible');
-            return $this->redirect($dealShow);
-        }
-
-        $pools = $dealPoolRepo->getAllPoolsForDealGivenCountry($deal, $country);
-
-        if (!$pools || count($pools) < 1) {
-            $this->setFlash('error', 'deal_redeem_no_keys_for_your_country');
-            return $this->redirect($dealShow);
-        }
-
-        $code = null;
-        $lastFail = null;
-
-        foreach ($pools as $pool) {
-
-            if (!$dealCodeRepo->canIpHaveMoreKeys($clientIp, $pool)) {
-                $lastFail = 'deal_redeem_max_ip_hit';
-                continue;
-            }
-
-            $code = $dealCodeRepo->getUnassignedKey($pool);
-
-            if (!$code) {
-                $lastFail = 'deal_redeem_no_keys_left';
-                continue;
-            }
-
-            $lastFail = null;
-            break;
-        }
-
-        if ($lastFail) {
-            $this->setFlash('error', $lastFail);
-            return $this->redirect($dealShow);
-        }
-
-        $code->assign($user, $clientIp, $locale);
-        $code->setCountry($country); # in addition to assigning the deal code, we need to set the country (this is one of the differences between a Code and a DealCode)
-
-        # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
-            if($deal->getGroup()) {
-                $groupManager = $this->getGroupManager();
-                $group = $deal->getGroup();
-
-                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
-                    // TODO This should probably be refactored to use the global activity table
-                    $joinAction = new GroupMembershipAction();
-                    $joinAction->setGroup($group);
-                    $joinAction->setUser($user);
-                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
-
-                    $group->getMembers()->add($user);
-                    $group->getUserMembershipActions()->add($joinAction);
-
-                    // TODO Add a service layer for managing groups and dispatching such events
-                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-                    $dispatcher = $this->get('event_dispatcher');
-                    $event = new GroupEvent($group, $user);
-                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
-
-                    $groupManager->saveGroup($group);
-
-                    if($group->getIsPublic()) {
-                        try {
-                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
-                        } catch (ApiException $e) {
-
-                        }
-                    }
-                }
+                    # happy to continue
             }
         }
 
+        $message                 = new KeyRequestQueueMessage();
+        $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL;
+        $message->promotionId    = $deal->getId();
+        $message->dateTime       = new \DateTime();
+        $message->slug           = $deal->getSlug();
+        $message->userId         = $currentUser->getId();
+        $message->siteId         = $this->getCurrentSite()->getId();
+        $message->ipAddress      = $request->getClientIp(true);
+
+        $result = $this->getQueueUtil()->addToQueue($message);
+
+        if (!$result) {
+
+        }
+
+        if (!$state) {
+            $state = new KeyRequestState();
+
+            $state->setDeal($deal);
+            $state->setUser($currentUser);
+            $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
+        }
+
+        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+        $state->setStateReason(null);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($state);
         $em->flush();
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
@@ -388,5 +333,10 @@ class DealController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal');
+    }
+
+    protected function getKeyRequestStateRepo()
+    {
+        return $this->container->get('pd_giveaway.entity.repository.key_request_state');
     }
 }
