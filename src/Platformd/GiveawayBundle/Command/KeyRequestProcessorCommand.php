@@ -162,7 +162,7 @@ EOT
 
                         $state->setDeal($promotion);
                         $state->setUser($user);
-                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
+                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
                         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
                     }
 
