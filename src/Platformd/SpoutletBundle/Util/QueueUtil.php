@@ -75,7 +75,7 @@ class QueueUtil
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'deleteFromQueue - deleting message "'.$message->amazonSqsId.'" from queue "'.$fullQueueUrl.'".');
 
-        $result = $this->sqsClient->delete_message($fullQueueUrl, $message->amazonSqsId);
+        $result = $this->sqsClient->delete_message($fullQueueUrl, $message->amazonReceiptHandle);
 
         if (!$result->isOK()) {
             $this->logger->err(self::LOG_MESSAGE_PREFIX.'deleteFromQueue - could not delete message "'.$message->amazonSqsId.'" from queue "'.$fullQueueUrl.'" because of error => "'.$result->body->Error->Message.'".');
