@@ -87,22 +87,22 @@ sub vcl_recv {
         return (pass);
     }
 
+    if (req.url ~ "^(:?/app_dev.php)/deal/$") {
+        remove req.http.Cookie;
+        return (lookup);
+    }
+
+    if (req.url ~ "^(:?/app_dev.php)/deal/.*$" && !req.url ~ "/redeem") {
+        remove req.http.Cookie;
+        return (lookup);
+    }
+
     if (req.url ~ "^(:?/app_dev.php)/giveaways$") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/giveaways/" && !req.url ~ "^(:?/app_dev.php)/giveaways/.*/.*/key") {
-        remove req.http.Cookie;
-        return (lookup);
-    }
-
-    if (req.url ~ "^(:?/app_dev.php)/deal") {
-        remove req.http.Cookie;
-        return (lookup);
-    }
-
-    if (req.url ~ "/^(:?/app_dev.php)/deal/") {
+    if (req.url ~ "^(:?/app_dev.php)/giveaways/.*$" && !req.url ~ "/key") {
         remove req.http.Cookie;
         return (lookup);
     }

@@ -194,6 +194,7 @@ EOT
                     $promotion = $this->findWithOutput(array(
                         'repo'       => $dealRepo,
                         'id'         => $message->promotionId,
+                        'type'       => 'deal',
                     ));
 
                     if (!$promotion) {
