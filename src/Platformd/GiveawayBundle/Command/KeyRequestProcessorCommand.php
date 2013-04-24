@@ -215,7 +215,7 @@ EOT
 
                     $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
 
-                    $state = $stateRepo->findForUserIdAndDealId($userId, , $promotion->getId());
+                    $state = $stateRepo->findForUserIdAndDealId($userId, $promotion->getId());
 
                     if (!$state) {
                         $state = new KeyRequestState();
