@@ -18,16 +18,16 @@ backend default {
 
 sub vcl_recv {
 
-    if (req.esi_level < 1 && req.url ~ "/esi/") { # an external client is requesting an esi
+    if (req.esi_level < 1 && req.url ~ "^(:?/app_dev.php)/esi/") { # an external client is requesting an esi
         error 403 "Access Denied.";
     }
 
     if (req.esi_level > 0) {
-        if (!req.url ~ "/esi/") { # varnish is being asked to process an esi that doesn't have /esi/ in the path
+        if (!req.url ~ "^(:?/app_dev.php)/esi/") { # varnish is being asked to process an esi that doesn't have /esi/ in the path
             error 404 "Incorrect ESI path.";
         }
 
-        if (!req.url ~ "/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
+        if (!req.url ~ "^(:?/app_dev.php)/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
             remove req.http.Cookie;
         }
     }
@@ -79,30 +79,30 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.url ~ "/esi/USER_SPECIFIC/") {
+    if (req.url ~ "^(:?/app_dev.php)/esi/USER_SPECIFIC/") {
         return (lookup);
     }
 
-    if (req.url ~ "^/admin/") {
+    if (req.url ~ "^(:?/app_dev.php)/admin/") {
         return (pass);
     }
 
-    if (req.url ~ "/giveaways$") {
+    if (req.url ~ "^(:?/app_dev.php)/giveaways$") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "/giveaways/" && !req.url ~ "/giveaways/.*/.*/key") {
+    if (req.url ~ "^(:?/app_dev.php)/giveaways/" && !req.url ~ "^(:?/app_dev.php)/giveaways/.*/.*/key") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "/deal") {
+    if (req.url ~ "^(:?/app_dev.php)/deal") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "/deal/") {
+    if (req.url ~ "/^(:?/app_dev.php)/deal/") {
         remove req.http.Cookie;
         return (lookup);
     }
