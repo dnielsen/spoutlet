@@ -1,48 +1,61 @@
-# This is a basic VCL configuration file for varnish.  See the vcl(7)
-# man page for details on VCL syntax and semantics.
+# This $value a basic VCL configuration file for varnish.  See the vcl(7)
+# man page for details on VCL syntax and semanticsupdatedAt
 #
-# Default backend definition.  Set this to point to your content
+#value Default backend definition.  Set this to point to your content
 # server.
 #
 
-acl internal {
-  "localhost";
-  "127.0.0.1";
-}
+#backend local { .host = "127.0.0.1";                                  .port = "http"; }
+backend awa1  { .host = "ec2-54-224-27-105.compute-1.amazonaws.com";  .port = "http"; }
+backend awa2  { .host = "ec2-204-236-207-80.compute-1.amazonaws.com"; .port = "http"; }
+backend awa3  { .host = "ec2-107-22-71-108.compute-1.amazonaws.com";  .port = "http"; }
+backend awa4  { .host = "ec2-75-101-223-7.compute-1.amazonaws.com";   .port = "http"; }
+backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; }
+backend awa6  { .host = "ec2-54-242-181-100.compute-1.amazonaws.com"; .port = "http"; }
+backend awa7  { .host = "ec2-50-16-75-123.compute-1.amazonaws.com";   .port = "http"; }
+backend awa8  { .host = "ec2-50-16-37-33.compute-1.amazonaws.com";    .port = "http"; }
+backend awa9  { .host = "ec2-50-16-66-61.compute-1.amazonaws.com";    .port = "http"; }
 
-backend default {
-    .host = "127.0.0.1";
-    .port = "80";
-    .first_byte_timeout = 300s;
+director awa round-robin {
+    #{ .backend = local; }
+    { .backend = awa1; }
+    { .backend = awa2; }
+    { .backend = awa3; }
+    { .backend = awa4; }
+    { .backend = awa5; }
+    { .backend = awa6; }
+    { .backend = awa7; }
+    { .backend = awa8; }
+    { .backend = awa9; }
 }
 
 sub vcl_recv {
 
-    if (req.esi_level < 1 && req.url ~ "^(:?/app_dev.php)/esi/") { # an external client is requesting an esi
+    set req.backend = awa;
+
+    if (req.esi_level < 1 && req.url ~ "^(/app_dev.php)?/esi/") { # an external client is requesting an esi
         error 403 "Access Denied.";
     }
 
     if (req.esi_level > 0) {
-        if (!req.url ~ "^(:?/app_dev.php)/esi/") { # varnish is being asked to process an esi that doesn't have /esi/ in the path
+        if (!req.url ~ "^(/app_dev.php)?/esi/") { # varnish is being asked to process an esi that doesn't have /esi/ in the path
             error 404 "Incorrect ESI path.";
         }
 
-        if (!req.url ~ "^(:?/app_dev.php)/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
+        if (!req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
             remove req.http.Cookie;
         }
     }
 
     if (req.request == "PURGE") {
-        if (!client.ip ~ internal) {
-            error 405 "Not Allowed.";
-        }
+        error 405 "Not Allowed.";
     }
 
     set req.http.Surrogate-Capability = "abc=ESI/1.0";
 
     set req.grace = 1m;
 
-    if (req.url ~ "^/(bundles|css|js|images)/") {
+    if (req.url ~ "^/(bundles|css|js|images|plugins)/") {
         unset req.http.cookie;
     }
 
@@ -79,30 +92,30 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/esi/USER_SPECIFIC/") {
+    if (req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") {
         return (lookup);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/admin/") {
+    if (req.url ~ "^(/app_dev.php)?/admin/") {
         return (pass);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/deal/$") {
+    if (req.url ~ "^(/app_dev.php)?/deal/$") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/deal/.*$" && !req.url ~ "/redeem") {
+    if (req.url ~ "^(/app_dev.php)?/deal/.*$" && !req.url ~ "/redeem$") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/giveaways$") {
+    if (req.url ~ "^(/app_dev.php)?/giveaways$") {
         remove req.http.Cookie;
         return (lookup);
     }
 
-    if (req.url ~ "^(:?/app_dev.php)/giveaways/.*$" && !req.url ~ "/key") {
+    if (req.url ~ "^(/app_dev.php)?/giveaways/.*$" && !req.url ~ "/key$") {
         remove req.http.Cookie;
         return (lookup);
     }
@@ -120,7 +133,7 @@ sub vcl_fetch {
         set beresp.do_esi = true;
     }
 
-    if (req.url ~ "^/(bundles|css|js|images)/") {
+    if (req.url ~ "^/(bundles|css|js|images|plugins)/") {
         unset beresp.http.set-cookie;
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age = 900";
