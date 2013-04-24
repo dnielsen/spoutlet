@@ -228,6 +228,7 @@ class GiveawayController extends Controller
         }
 
         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+        $state->setStateReason(null);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($state);

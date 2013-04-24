@@ -25,15 +25,23 @@ class KeyRequestState
     const PROMOTION_TYPE_GIVEAWAY = 'giveaway';
     const PROMOTION_TYPE_DEAL     = 'deal';
 
-    const STATE_IN_QUEUE = 'in-queue';
-    const STATE_REJECTED = 'rejected';
-    const STATE_ASSIGNED = 'assigned';
-    const STATE_NONE     = 'none';
+    const STATE_IN_QUEUE            = 'in-queue';
+    const STATE_REJECTED            = 'rejected';
+    const STATE_ASSIGNED            = 'assigned';
+    const STATE_NONE                = 'none';
+    const STATE_REQUEST_PROBLEM     = 'problem-with-request';
 
-    const REASON_NONE         = 'none';
-    const REASON_NO_KEYS_LEFT = 'no-keys';
-    const REASON_ALREADY_ASSIGNED = 'already-assigned';
-    const REASON_INVALID_COUNTRY_AGE = 'invalid-country-or-age';
+    const REASON_NONE                   = 'none';
+    const REASON_NO_KEYS_LEFT           = 'no-keys';
+    const REASON_ALREADY_ASSIGNED       = 'already-assigned';
+    const REASON_INVALID_COUNTRY_AGE    = 'invalid-country-or-age';
+    const REASON_INVALID_SITE           = 'invalid-site';
+    const REASON_CLIENT_IP_NULL         = 'client-ip-null';
+    const REASON_COUNTRY_CODE_NULL      = 'country-code-null';
+    const REASON_INVALID_COUNTRY        = 'invalid-country';
+    const REASON_INVALID_PROMOTION      = 'invalid-promotion';
+    const REASON_INACTIVE_PROMOTION     = 'inactive-promotion';
+    const REASON_KEY_FETCH_DISALLOWED   = 'key-fetch-disallowed';
 
     private static $validPromotionTypes = array(
         self::PROMOTION_TYPE_GIVEAWAY,
@@ -45,6 +53,7 @@ class KeyRequestState
         self::STATE_ASSIGNED,
         self::STATE_NONE,
         self::STATE_REJECTED,
+        self::STATE_REQUEST_PROBLEM,
     );
 
     private static $validReasons = array(
@@ -52,6 +61,13 @@ class KeyRequestState
         self::REASON_NO_KEYS_LEFT,
         self::REASON_ALREADY_ASSIGNED,
         self::REASON_INVALID_COUNTRY_AGE,
+        self::REASON_INVALID_SITE,
+        self::REASON_CLIENT_IP_NULL,
+        self::REASON_COUNTRY_CODE_NULL,
+        self::REASON_INVALID_COUNTRY,
+        self::REASON_INVALID_PROMOTION,
+        self::REASON_INACTIVE_PROMOTION,
+        self::REASON_KEY_FETCH_DISALLOWED,
     );
 
     /**
@@ -197,5 +213,10 @@ class KeyRequestState
     public function setUpdatedAt($value)
     {
         $this->updatedAt = $value;
+    }
+
+    public function __toString()
+    {
+        return 'KeyRequestState => { State = '.$this->getCurrentState().', Reason = "'.$this->getStateReason().'" }';
     }
 }

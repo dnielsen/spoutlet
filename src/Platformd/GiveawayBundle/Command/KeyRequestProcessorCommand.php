@@ -63,15 +63,19 @@ EOT
         return $result;
     }
 
-    protected function rejectRequestWithOutput($indentationLevel, $outputMessage, $state, $reason, $sqsMessage)
+    protected function rejectRequestWithOutput($indentationLevel, $outputMessage, $state, $reason, $sqsMessage, $rejectedDueToInvalidMessage = false)
     {
         $this->output($indentationLevel, $outputMessage);
 
-        $state->setCurrentState(KeyRequestState::STATE_REJECTED);
+        $this->output($indentationLevel, 'Old '.$state);
+
+        $state->setCurrentState($rejectedDueToInvalidMessage ? KeyRequestState::STATE_REQUEST_PROBLEM : KeyRequestState::STATE_REJECTED);
         $state->setStateReason($reason);
 
         $this->em->persist($state);
         $this->em->flush();
+
+        $this->output($indentationLevel, 'New '.$state);
 
         $this->deleteMessageWithOutput($sqsMessage);
 
@@ -112,7 +116,7 @@ EOT
             $this->output(2, $message);
 
             if (!$message->hasValidKeyRequestType()) {
-                $this->output(2, 'Unknown message type = "'.$message->messageType.'".');
+                $this->output(2, 'Unknown message type = "'.$message->keyRequestType.'".');
                 $this->deleteMessageWithOutput($message);
                 continue;
             }
@@ -129,6 +133,40 @@ EOT
                 continue;
             }
 
+            switch ($message->keyRequestType) {
+                case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
+                    $state = $stateRepo->findForUserIdAndGiveawayId($message->userId, $message->promotionId);
+                    break;
+
+                case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
+                    $state = $stateRepo->findForUserIdAndDealId($message->userId, $message->promotionId);
+                    break;
+
+                default:
+                    $this->output(2, 'Unable to retrieve state information for message type - "'.$message->keyRequestType.'"');
+                    $this->deleteMessageWithOutput($message);
+                    continue;
+            }
+
+
+            if (!$state) {
+
+                $this->output(2, 'Unable to find request state information for user and promotion - generating new information.');
+
+                $state = new KeyRequestState();
+
+                if ($message->keyRequestType == KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY) {
+                    $state->setGiveaway($promotion);
+                } else {
+                    $state->setDeal($promotion);
+                }
+                $state->setUser($user);
+                $state->setPromotionType($message->keyRequestType);
+                $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+            }
+
+            $this->output(2, $state);
+
             $site = $this->findWithOutput(array(
                 'type'       => 'Site',
                 'repo'       => $siteRepo,
@@ -136,16 +174,14 @@ EOT
             ));
 
             if (!$site) {
-                $this->output(2, 'Invalid site.');
-                $this->deleteMessageWithOutput($message);
+                $this->rejectRequestWithOutput(2, 'Invalid site.', $state, KeyRequestState::REASON_INVALID_SITE, $message, true);
                 continue;
             }
 
             $clientIp = $message->ipAddress;
 
             if (!$clientIp) {
-                $this->output(2, 'Client IP was null.');
-                $this->deleteMessageWithOutput($message);
+                $this->rejectRequestWithOutput(2, 'Client IP was null.', $state, KeyRequestState::REASON_CLIENT_IP_NULL, $message, true);
                 continue;
             }
 
@@ -154,8 +190,7 @@ EOT
             $countryCode = $ipLookupUtil->getCountryCode($clientIp);
 
             if (!$countryCode) {
-                $this->output(2, 'Country code was null.');
-                $this->deleteMessageWithOutput($message);
+                $this->rejectRequestWithOutput(2, 'Country code was null.', $state, KeyRequestState::REASON_COUNTRY_CODE_NULL, $message, true);
                 continue;
             }
 
@@ -169,8 +204,7 @@ EOT
             ));
 
             if (!$country) {
-                $this->output(2, 'Invalid country.');
-                $this->deleteMessageWithOutput($message);
+                $this->rejectRequestWithOutput(2, 'Invalid country.', $state, KeyRequestState::REASON_INVALID_COUNTRY, $message, true);
                 continue;
             }
 
@@ -185,35 +219,21 @@ EOT
                     ));
 
                     if (!$promotion) {
-                        $this->output(3, 'Could not find promotion.');
-                        $this->deleteMessageWithOutput($message);
+                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', $state, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
                         continue;
                     }
 
                     if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
-                        $this->output(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.');
-                        $this->deleteMessageWithOutput($message);
+                        $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
                         continue;
                     }
 
                     if (!$promotion->allowKeyFetch()) {
-                        $this->output(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).');
-                        $this->deleteMessageWithOutput($message);
+                        $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);
                         continue;
                     }
 
                     $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
-
-                    $state = $stateRepo->findForUserIdAndGiveawayId($message->userId, $message->promotionId);
-
-                    if (!$state) {
-                        $state = new KeyRequestState();
-
-                        $state->setGiveaway($promotion);
-                        $state->setUser($user);
-                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
-                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
-                    }
 
                     break;
 
@@ -225,8 +245,7 @@ EOT
                     ));
 
                     if (!$promotion) {
-                        $this->output(3, 'Could not find promotion.');
-                        $this->deleteMessageWithOutput($message);
+                        $this->rejectRequestWithOutput(3, 'Could not find promotion.', $state, KeyRequestState::REASON_INVALID_PROMOTION, $message, true);
                         continue;
                     }
 
@@ -298,8 +317,13 @@ EOT
                 continue;
             }
 
+            $this->output(5, 'Old '.$state);
+
             $state->setCurrentState(KeyRequestState::STATE_ASSIGNED);
+            $state->setStateReason(null);
             $this->em->persist($state);
+
+            $this->output(5, 'New '.$state);
 
             $group = $promotion->getGroup();
 
