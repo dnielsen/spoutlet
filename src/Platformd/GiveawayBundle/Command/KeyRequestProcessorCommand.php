@@ -15,6 +15,7 @@ use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\Finder\Finder;
 
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
+use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
 class KeyRequestProcessorCommand extends ContainerAwareCommand
 {
@@ -62,6 +63,21 @@ EOT
         return $result;
     }
 
+    protected function rejectRequestWithOutput($indentationLevel, $outputMessage, $state, $reason, $sqsMessage)
+    {
+        $this->output($indentationLevel, $outputMessage);
+
+        $state->setCurrentState(KeyRequestState::STATE_REJECTED);
+        $state->setStateReason($reason);
+
+        $this->em->persist($state);
+        $this->em->flush();
+
+        $queueUtil = $this->getContainer()->get('platformd.util.queue_util');
+        $queueUtil->deleteFromQueue($sqsMessage);
+
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -74,6 +90,7 @@ EOT
         $keyRepo      = $this->getRepo('GiveawayBundle:GiveawayKey');
         $userRepo     = $this->getRepo('UserBundle:User');
         $countryRepo  = $this->getRepo('SpoutletBundle:Country');
+        $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
 
         $this->output(0, 'Processing queue for the Key Requests.');
@@ -171,6 +188,17 @@ EOT
 
                     $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
 
+                    $state = $stateRepo->findForUserIdAndGiveawayId($userId, $promotion->getId());
+
+                    if (!$state) {
+                        $state = new KeyRequestState();
+
+                        $state->setGiveaway($promotion);
+                        $state->setUser($user);
+                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
+                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                    }
+
                     break;
 
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
@@ -187,6 +215,17 @@ EOT
 
                     $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
 
+                    $state = $stateRepo->findForUserIdAndDealId($userId, , $promotion->getId());
+
+                    if (!$state) {
+                        $state = new KeyRequestState();
+
+                        $state->setDeal($promotion);
+                        $state->setUser($user);
+                        $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
+                        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                    }
+
                     break;
 
             }
@@ -194,7 +233,7 @@ EOT
             $userAlreadyHasAKey = $keyRepo->doesUserHaveKeyForGiveaway($user, $promotion);
 
             if ($userAlreadyHasAKey) {
-                $this->output(4, 'This user already has a key assigned for this promotion.');
+                $this->rejectRequestWithOutput(4, 'This user already has a key assigned for this promotion.', $state, KeyRequestState::REASON_ALREADY_ASSIGNED, $message);
                 continue;
             }
 
@@ -203,7 +242,7 @@ EOT
             $ruleSet = $promotion->getRuleset();
 
             if ($ruleSet && !$ruleSet->doesUserPassRules($user, $country)) {
-                $this->output(3, 'Not allowed key based on age or country specific rules.');
+                $this->rejectRequestWithOutput(3, 'Not allowed key based on age or country specific rules.', $state, KeyRequestState::REASON_INVALID_COUNTRY_AGE, $message);
                 continue;
             }
 
@@ -233,12 +272,17 @@ EOT
 
                 $this->output(4, $key);
                 $key->assign($user, $clientIp, $site->getDefaultLocale());
+
+                break;
             }
 
             if (!$key) {
-                $this->output(5, 'No keys left for user.');
+                $this->rejectRequestWithOutput(5, 'No keys left for user.', $state, KeyRequestState::REASON_NO_KEYS_LEFT, $message);
                 continue;
             }
+
+            $state->setCurrentStatus(KeyRequestState::STATE_ASSIGNED);
+            $this->em->persist($state);
 
             $group = $promotion->getGroup();
 

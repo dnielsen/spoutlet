@@ -32,6 +32,10 @@ class KeyRequestState
 
     const REASON_NONE         = 'none';
     const REASON_NO_KEYS_LEFT = 'no-keys';
+    const REASON_ALREADY_ASSIGNED = 'already-assigned';
+    const REASON_INVALID_COUNTRY_AGE = 'invalid-country-or-age';
+    const REASON_MAX_PER_IP = 'max-per-ip';
+    const REASON_NOT_ENABLED_FOR_COUNTRY = 'not-enabled-for-country';
 
     private static $validPromotionTypes = array(
         self::PROMOTION_TYPE_GIVEAWAY,

@@ -221,14 +221,16 @@ class GiveawayController extends Controller
         if (!$state) {
             $state = new KeyRequestState();
 
-            $state->setGiveaway      = $giveaway;
-            $state->setUser          = $currentUser;
-            $state->setPromotionType = KeyRequestState::PROMOTION_TYPE_GIVEAWAY;
+            $state->setGiveaway($giveaway);
+            $state->setUser($currentUser);
+            $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
         }
 
-        $state->setState = inqueue;
+        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
 
-        // save state
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($state);
+        $em->flush();
 
         return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }

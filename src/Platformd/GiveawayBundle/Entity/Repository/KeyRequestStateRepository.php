@@ -25,4 +25,19 @@ class KeyRequestStateRepository extends EntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    public function findForUserIdAndDealId($userId, $dealId) {
+
+        $qb = $this->createQueryBuilder('s');
+
+        $query = $qb ->join('s.user', 'u')
+            ->join('s.deal', 'd')
+            ->andWhere('u.id = :userId')
+            ->andWhere('d.id = :dealId')
+            ->setParameter('userId', $userId)
+            ->setParameter('dealId', $dealId)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
 }
