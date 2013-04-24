@@ -14,6 +14,7 @@ use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_main_actions_data;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
+use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
 /**
 *
@@ -181,7 +182,7 @@ class GiveawayController extends Controller
         $state       = $stateRepo->findForUserIdAndGiveawayId($userId, $giveawayId);
 
         if ($state) {
-            switch ($state->getState()) {
+            switch ($state->getCurrentState()) {
                 case KeyRequestState::STATE_IN_QUEUE:
                 case KeyRequestState::STATE_ASSIGNED:
 

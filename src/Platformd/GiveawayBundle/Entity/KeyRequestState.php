@@ -34,8 +34,6 @@ class KeyRequestState
     const REASON_NO_KEYS_LEFT = 'no-keys';
     const REASON_ALREADY_ASSIGNED = 'already-assigned';
     const REASON_INVALID_COUNTRY_AGE = 'invalid-country-or-age';
-    const REASON_MAX_PER_IP = 'max-per-ip';
-    const REASON_NOT_ENABLED_FOR_COUNTRY = 'not-enabled-for-country';
 
     private static $validPromotionTypes = array(
         self::PROMOTION_TYPE_GIVEAWAY,
@@ -52,6 +50,8 @@ class KeyRequestState
     private static $validReasons = array(
         self::REASON_NONE,
         self::REASON_NO_KEYS_LEFT,
+        self::REASON_ALREADY_ASSIGNED,
+        self::REASON_INVALID_COUNTRY_AGE,
     );
 
     /**
@@ -104,7 +104,7 @@ class KeyRequestState
     protected $currentState;
 
     /**
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string", length=100, nullable=true)
      */
     protected $stateReason;
 
@@ -167,7 +167,7 @@ class KeyRequestState
 
     public function setStateReason($value)
     {
-        if ($value && !in_array($value, self::$validStateReasons)) {
+        if ($value && !in_array($value, self::$validReasons)) {
             throw new \InvalidArgumentException(sprintf('Invalid state reason passed: "%s"', $value));
         }
 

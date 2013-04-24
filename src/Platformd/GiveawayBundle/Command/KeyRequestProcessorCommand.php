@@ -188,7 +188,7 @@ EOT
 
                     $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
 
-                    $state = $stateRepo->findForUserIdAndGiveawayId($userId, $promotion->getId());
+                    $state = $stateRepo->findForUserIdAndGiveawayId($message->userId, $message->promotionId);
 
                     if (!$state) {
                         $state = new KeyRequestState();
@@ -215,7 +215,7 @@ EOT
 
                     $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
 
-                    $state = $stateRepo->findForUserIdAndDealId($userId, $promotion->getId());
+                    $state = $stateRepo->findForUserIdAndDealId($message->userId, $message->promotionId);
 
                     if (!$state) {
                         $state = new KeyRequestState();
@@ -281,7 +281,7 @@ EOT
                 continue;
             }
 
-            $state->setCurrentStatus(KeyRequestState::STATE_ASSIGNED);
+            $state->setCurrentState(KeyRequestState::STATE_ASSIGNED);
             $this->em->persist($state);
 
             $group = $promotion->getGroup();
