@@ -64,9 +64,9 @@ class GiveawayController extends Controller
             return $response;
         }
 
-        if ($state && $state->getState()) { # they have joined the queue, been rejected or something else
+        if ($state && $state->getCurrentState()) { # they have joined the queue, been rejected or something else
 
-            switch ($state->getState()) {
+            switch ($state->getCurrentState()) {
                 case KeyRequestState::STATE_IN_QUEUE:
 
                     $response = new Response('IN QUEUE');

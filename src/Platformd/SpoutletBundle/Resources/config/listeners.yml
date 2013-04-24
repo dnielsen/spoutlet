@@ -22,7 +22,6 @@ services:
             - { name: kernel.event_listener, event: awa.discussion.delete, method: onDiscussionDelete }
             - { name: kernel.event_listener, event: awa.content.report, method: onReportDiscussion }
             - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
-        scope: request
 
     platformd.age.insufficient_age_listener:
         class: Platformd\SpoutletBundle\Age\InsufficientAgeListener

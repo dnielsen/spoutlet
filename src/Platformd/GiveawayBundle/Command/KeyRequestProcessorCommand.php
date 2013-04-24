@@ -108,6 +108,7 @@ EOT
         $countryRepo  = $this->getRepo('SpoutletBundle:Country');
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
+        $groupManager = $this->getContainer()->get('platformd.model.group_manager');
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
@@ -321,8 +322,6 @@ EOT
                 $this->output(2, 'Auto join user to group.');
                 $this->output(3, $group);
 
-                $groupManager = $this->getGroupManager();
-
                 if ($groupManager->isAllowedTo($user, $group, $site, 'JoinGroup')) {
                     $joinAction = new GroupMembershipAction();
 
@@ -333,7 +332,7 @@ EOT
                     $group->getMembers()->add($user);
                     $group->getUserMembershipActions()->add($joinAction);
 
-                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher = $this->getContainer()->get('event_dispatcher');
                     $event      = new GroupEvent($group, $user);
                     $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
@@ -341,7 +340,7 @@ EOT
 
                     if($group->getIsPublic()) {
                         try {
-                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                            $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
                         } catch (ApiException $e) {
 
                         }
