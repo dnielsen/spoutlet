@@ -45,6 +45,10 @@ web_profiler:
 
 monolog:
     handlers:
+        key_request_processor:
+            type:  stream
+            path:  %kernel.logs_dir%/keypool_request_processor.log
+            level: debug
         main:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log

@@ -22,6 +22,7 @@ class KeyRequestProcessorCommand extends ContainerAwareCommand
     const DELAY_BETWEEN_KEYS_MILLISECONDS = 50;
 
     private $em;
+    private $logger;
 
     protected function getRepo($key) {
         return $this->em->getRepository($key);
@@ -34,6 +35,7 @@ class KeyRequestProcessorCommand extends ContainerAwareCommand
         }
 
         echo str_repeat(' ', $indentationLevel).$message.($withNewLine ? "\n" : '');
+        $this->logger->info($message);
     }
 
     protected function configure()
@@ -91,7 +93,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->em     = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->logger = $this->getContainer()->get('pd_giveaway.logger.key_request_processor_logger');
 
         $queueUtil    = $this->getContainer()->get('platformd.util.queue_util');
         $router       = $this->getContainer()->get('router');

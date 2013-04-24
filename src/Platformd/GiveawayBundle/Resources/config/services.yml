@@ -78,3 +78,14 @@ services:
             - @service_container
         tags:
             - { name: doctrine.event_subscriber }
+
+    pd_giveaway.logger.key_request_processor_logger:
+        class:     Symfony\Bridge\Monolog\Logger
+        arguments:
+            - 'key_request_processor'
+        calls:
+            - [pushHandler, [@pd_giveaway.log_handler.key_request]]
+
+    pd_giveaway.log_handler.key_request:
+        class:     Monolog\Handler\StreamHandler
+        arguments: [%kernel.logs_dir%/keypool_request_processor.log, 200] #200 = INFO
