@@ -73,9 +73,16 @@ EOT
         $this->em->persist($state);
         $this->em->flush();
 
-        $queueUtil = $this->getContainer()->get('platformd.util.queue_util');
-        $queueUtil->deleteFromQueue($sqsMessage);
+        $this->deleteMessageWithOutput($sqsMessage);
 
+    }
+
+    protected function deleteMessageWithOutput($message)
+    {
+        $queueUtil    = $this->getContainer()->get('platformd.util.queue_util');
+
+        $this->output(2, 'Deleting message from queue.');
+        $this->output(2, ($queueUtil->deleteFromQueue($message) ? 'Message deleted successfully.' : 'Unable to delete message.'));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -106,6 +113,7 @@ EOT
 
             if (!$message->hasValidKeyRequestType()) {
                 $this->output(2, 'Unknown message type = "'.$message->messageType.'".');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -117,6 +125,7 @@ EOT
 
             if (!$user) {
                 $this->output(2, 'Invalid user.');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -128,6 +137,7 @@ EOT
 
             if (!$site) {
                 $this->output(2, 'Invalid site.');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -135,6 +145,7 @@ EOT
 
             if (!$clientIp) {
                 $this->output(2, 'Client IP was null.');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -144,6 +155,7 @@ EOT
 
             if (!$countryCode) {
                 $this->output(2, 'Country code was null.');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -158,6 +170,7 @@ EOT
 
             if (!$country) {
                 $this->output(2, 'Invalid country.');
+                $this->deleteMessageWithOutput($message);
                 continue;
             }
 
@@ -173,16 +186,19 @@ EOT
 
                     if (!$promotion) {
                         $this->output(3, 'Could not find promotion.');
+                        $this->deleteMessageWithOutput($message);
                         continue;
                     }
 
                     if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
                         $this->output(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.');
+                        $this->deleteMessageWithOutput($message);
                         continue;
                     }
 
                     if (!$promotion->allowKeyFetch()) {
                         $this->output(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).');
+                        $this->deleteMessageWithOutput($message);
                         continue;
                     }
 
@@ -210,6 +226,7 @@ EOT
 
                     if (!$promotion) {
                         $this->output(3, 'Could not find promotion.');
+                        $this->deleteMessageWithOutput($message);
                         continue;
                     }
 
@@ -328,7 +345,7 @@ EOT
 
             $this->output(5, 'Email sent.');
 
-            $queueUtil->deleteFromQueue($message);
+            $this->deleteMessageWithOutput($message);
         }
 
         $this->output();
