@@ -307,7 +307,7 @@ class User extends BaseUser
     }
 
     public function __toString() {
-        return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').', Country = "'.$this->getCountry().'" }';
+        return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').' }';
     }
 
     /**
