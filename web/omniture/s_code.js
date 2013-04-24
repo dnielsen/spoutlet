@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0101)https://igames.atlassian.net/secure/attachment/13908/s_code_dell_PROD_2011_06_17%20%28Omniture%29.txt -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">// SiteCatalyst code version: H.22.1
+// SiteCatalyst code version: H.22.1
 // SUPPORTED ENVIRONMENTS: Dell Storm, Dell Nextgen, Dell Third-party sites
 // UPDATED: 25-Apr-2011
 
@@ -240,16 +238,16 @@ function s_dell_doPlugins(s){
 			if(!spg&amp;&amp;urlpn.indexOf('/order-support')&gt;=0)spg=true;
 			if(!spg&amp;&amp;urlpn.indexOf('/support')&gt;=0)spg=true;
 		}
-	}      
+	}
 	s.events=s.apl(s.events,(spg?'event22':'event23'),',',2);
-	
+
 	/** added by Jason Case 25 Apr 2011 to include these events in tl calls**/
 	if(typeof(s.linkType)!='undefined'){
 	    s.linkTrackVars=s.apl(s.linkTrackVars,'events',',',2);
         s.linkTrackEvents=s.apl(s.linkTrackEvents,'event22',',',2);
         s.linkTrackEvents=s.apl(s.linkTrackEvents,'event23',',',2);
     }
-   
+
 	/* BEGIN dell.com Only Logic */
 
 	if(s.onDellCMS()){
@@ -546,7 +544,7 @@ function s_dell_doPlugins(s){
                     if(s.pdvalue == 2) s.events=s.apl(s.events,'event45',',',2);
                     s.ActionDepthTest=false;
                 }
-            	
+
             }
 		}
 	}
@@ -572,10 +570,10 @@ function s_dell_doPlugins(s){
 	s.linkTrackVars=s.apl(s.linkTrackVars,'prop46',',',2);
 	s.linkTrackVars=s.apl(s.linkTrackVars,'server',',',2); //Add 'server' to link track vars
 
-     
+
     /**
      * Tracking Site Search for KW on 3rd party sites - implemented by Jason Case 25 Apr 2011
-     */ 
+     */
      if(s.isInternal(document.location.href) &amp;&amp; !s.onDellCMS()){
         s.prop7 = s.getQueryParam('sk,k,q','::');
         if(s.prop7){
@@ -588,24 +586,24 @@ function s_dell_doPlugins(s){
 			}
 		}
      }
-     
-     /** This is for reading the EQuoteID cookie into an eVar - implemented by Jason Case 25 Apr 2011 */    
-        s.eVar7 = s.c_r('EQuoteID');  
+
+     /** This is for reading the EQuoteID cookie into an eVar - implemented by Jason Case 25 Apr 2011 */
+        s.eVar7 = s.c_r('EQuoteID');
      /** Read the link_number parameter for EPP info  - implemented by Jason Case 25 Apr 2011 **/
-        s.eVar45 = s.getQueryParam('link_number'); 
+        s.eVar45 = s.getQueryParam('link_number');
      /** Capture the Release ID for a driver download - implemented by Jason Case 25 Apr 2011 **/
-        s.prop24 = s.getQueryParam('releaseid');  
+        s.prop24 = s.getQueryParam('releaseid');
      /** Capture the Doc ID - implemented by Jason Case 25 Apr 2011 **/
-        s.prop51 = s.getQueryParam('docid');     
+        s.prop51 = s.getQueryParam('docid');
      /** Custom Pageview Metric - implemented by Jason Case 25 Apr 2011 **/
-        s.events = s.events=s.apl(s.events,'event37',',',2);  
+        s.events = s.events=s.apl(s.events,'event37',',',2);
      /** View by Usage tabs and sub tabs - implemented by Jason Case 27 Apr 2011 **/
-        s.eVar14 = s.getQueryParam('avt,avtsub'); 
-        
-    
-     
+        s.eVar14 = s.getQueryParam('avt,avtsub');
+
+
+
     /** Grab s_vi value, strip prefix and suffix, and store in prop47 **/
-	s.prop47='D=s_vi';    
+	s.prop47='D=s_vi';
 
 
 }
@@ -1458,4 +1456,3 @@ w.s_ft=new Function("c","c+='';var s,e,o,a,d,q,f,h,x;s=c.indexOf('=function(');w
 +"f(h==q&amp;&amp;!x)q='';if(h=='\\\\')x=x?0:1;else x=0}else{if(h=='\"'||h==\"'\")q=h;if(h=='{')d++;if(h=='}')d--}if(d&gt;0)e++}c=c.substring(0,s)+'new Function('+(a?a+',':'')+'\"'+s_fe(c.substring(o+1,e))+'\")"
 +"'+c.substring(e+1);s=c.indexOf('=function(')}return c;");
 c=s_d(c);if(e&gt;0){a=parseInt(i=v.substring(e+5));if(a&gt;3)a=parseFloat(i)}else if(m&gt;0)a=parseFloat(u.substring(m+10));else a=parseFloat(v);if(a&gt;=5&amp;&amp;v.indexOf('Opera')&lt;0&amp;&amp;u.indexOf('Opera')&lt;0){w.s_c=new Function("un","pg","ss","var s=this;"+c);return new s_c(un,pg,ss)}else s=new Function("un","pg","ss","var s=new Object;"+s_ft(c)+";return s");return s(un,pg,ss)}
-</pre></body></html>
