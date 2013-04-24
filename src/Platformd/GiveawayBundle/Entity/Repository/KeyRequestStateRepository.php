@@ -15,14 +15,14 @@ class KeyRequestStateRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('s');
 
-        $qb->join('s.user', 'u');
-        $qb->join('s.giveaway', 'g');
-        $qb->andWhere('u.id = :userId');
-        $qb->andWhere('g.id = :giveawayId');
+        $query = $qb ->join('s.user', 'u')
+            ->join('s.giveaway', 'g')
+            ->andWhere('u.id = :userId')
+            ->andWhere('g.id = :giveawayId')
+            ->setParameter('userId', $userId)
+            ->setParameter('giveawayId', $giveawayId)
+            ->getQuery();
 
-        $qb->setParameter('userId', $userId);
-        $qb->setParameter('giveawayId', $giveawayId);
-
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 }

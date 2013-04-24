@@ -224,7 +224,6 @@ class GiveawayController extends Controller
             $state->setGiveaway      = $giveaway;
             $state->setUser          = $currentUser;
             $state->setPromotionType = KeyRequestState::PROMOTION_TYPE_GIVEAWAY;
-            $state->
         }
 
         var_dump($result);
