@@ -92,7 +92,7 @@ sub vcl_recv {
         return (lookup);
     }
 
-    if (req.url ~ "/giveaways/") {
+    if (req.url ~ "/giveaways/" && !req.url ~ "/giveaways/.*/.*/key") {
         remove req.http.Cookie;
         return (lookup);
     }
