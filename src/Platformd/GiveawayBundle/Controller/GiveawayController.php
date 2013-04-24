@@ -51,7 +51,8 @@ class GiveawayController extends Controller
             $groupManager = $this->get('platformd.model.group_manager');
 
             $data                               = new giveaway_show_key_data();
-            $data->giveaway_assigned_key        = $keyValue;
+
+            $data->promotion_assigned_key        = $keyValue;
             $data->promotion_group_slug         = $group ? $group->getSlug() : null;
             $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
             $data->promotion_group_name         = $group ? $group->getName() : null;

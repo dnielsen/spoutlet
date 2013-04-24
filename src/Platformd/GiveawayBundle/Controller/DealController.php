@@ -20,6 +20,7 @@ use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\deal_show_key_data;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
@@ -31,40 +32,68 @@ class DealController extends Controller
         $currentSiteId = $this->getCurrentSiteCached()->getId();
         $currentUser   = $this->getCurrentUser();
         $deal          = $this->getDealRepo()->findOneByIdAndSiteId((int) $dealId, $currentSiteId);
-
-        if ($currentUser) {
-            $key      = $this->getDealCodeRepo()->getUserAssignedCodeForDeal($currentUser, $deal);
-            $keyValue = $key ? $key->getValue() : null;
-        } else {
-            $keyValue = null;
-        }
+        $keyValue      = null;
+        $state         = null;
 
         if (!$deal) {
-            die('No giveaway found');
+            die('No deal found');
         }
 
-        $group        = $deal->getGroup();
-        $groupManager = $this->get('platformd.model.group_manager');
+        if ($currentUser) {
+            $key       = $this->getDealCodeRepo()->getUserAssignedCodeForDeal($currentUser, $deal);
+            $keyValue  = $key ? $key->getValue() : null;
 
-        if ($keyValue) {
-
-            $data                     = new deal_show_key_data();
-            $data->deal_code_assigned = $keyValue;
-            $data->deal_code_is_url   = (bool) $key->getPool()->getKeysAreUrls();
-
-            if ($group) {
-                $data->deal_group_name = $group->getName();
-                $data->deal_group_slug = $group->getSlug();
+            if (!$keyValue) {
+                $stateRepo = $this->getKeyRequestStateRepo();
+                $state     = $stateRepo->findForUserIdAndDealId($currentUser->getId(), $deal->getId());
             }
+        }
+
+        if ($keyValue) { # the user has a key, so let's display it for them
+
+            $group        = $deal->getGroup();
+            $groupManager = $this->get('platformd.model.group_manager');
+
+            $data                               = new deal_show_key_data();
+
+            $data->deal_code_is_url             = (bool) $key->getPool()->getKeysAreUrls();
+            $data->promotion_assigned_key       = $keyValue;
+            $data->promotion_group_slug         = $group ? $group->getSlug() : null;
+            $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
+            $data->promotion_group_name         = $group ? $group->getName() : null;
 
             $response = $this->render('GiveawayBundle:Deal:_showKey.html.twig', array(
                 'data' => $data
             ));
-        } else {
-            $response = new Response();
+
+            $response->setSharedMaxAge(60);
+
+            return $response;
         }
 
-        $response->setSharedMaxAge(30);
+        $statesToNotifyUserOf = array(KeyRequestState::STATE_IN_QUEUE, KeyRequestState::STATE_REJECTED, KeyRequestState::STATE_REQUEST_PROBLEM);
+
+        if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf)) { # they have joined the queue, been rejected or something else
+
+            $data = new giveaway_show_current_queue_state();
+
+            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'info' : 'error';
+            $data->current_state        = $state->getCurrentState();
+            $data->current_state_reason = $state->getStateReason();
+
+            $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
+                'data' => $data
+            ));
+
+            $response->setSharedMaxAge(1);
+
+            return $response;
+        }
+
+        # at this stage, there are no notifications for the user
+
+        $response = new Response();
+        $response->setSharedMaxAge(1);
 
         return $response;
     }
