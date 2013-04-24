@@ -25,7 +25,7 @@ platformd:
     cache:
        currently_under_heavy_load_title: Please try again shortly...
        currently_under_heavy_load_body: Our servers are currently experiencing a high volume of traffic and cannot process your request at this time. Please try again shortly. We apologize for any inconvenience.
-        
+
     layout:
         # title used by default (if not overridden)
         default_title: Alienware Arena - Gamers Wanted
@@ -925,7 +925,7 @@ deal_comments: Deals Comments
 deal_comments_posted_on: Posted on
 deal_not_eligible: Sorry, you are not eligible to participate in this deal.
 choose_country: Choose your country
-deal_join_group: Join the <a href="%link%">%group%</a> to receive notifications about future offerings. You can leave this group at any time by visiting the <a href="%link%">%group%</a> page.
+deal_join_group: By claiming a code, you will automatically become a member of the <a href="%link%">%group%</a> so you can receive notifications about future offerings. You can leave this group at any time by visiting the group page and clicking "leave group."
 deal_join_group_success: You are now a member of <a href="%link%">%group%</a>.
 
 featured_deals: Alienware Arena Featured Deals

@@ -10,7 +10,7 @@
 
 {% if features.hasGroups %}
     {% if data.promotion_group_slug %}
-        {% if data.user_is_member_of_promotion_group %}
+        {% if not data.user_is_member_of_promotion_group %}
         <p>
             {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': data.promotion_group_slug}), '%group%': data.promotion_group_name }) | raw }}
         </p>
