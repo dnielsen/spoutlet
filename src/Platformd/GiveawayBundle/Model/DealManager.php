@@ -97,7 +97,7 @@ class DealManager
         }
 
         $mainDealArr = array(
-            'banner'        => $mainDeal ? $mainDeal->getBanner() ? $this->mediaPathResolver->getPath($deal->getBanner(), array()) : null : null,
+            'banner'        => $mainDeal ? $mainDeal->getBanner() ? $this->mediaPathResolver->getPath($mainDeal->getBanner(), array()) : null : null,
             'url'           => $mainDeal ? $this->linkableManager->link($mainDeal) : null,
             'ends_at_utc'   => $mainDeal ? $mainDeal->getEndsAtUtc() : null,
             'has_expired'   => $mainDeal ? $mainDeal->hasExpired() : null,
