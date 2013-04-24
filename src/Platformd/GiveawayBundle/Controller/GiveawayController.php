@@ -226,10 +226,11 @@ class GiveawayController extends Controller
             $state->setPromotionType = KeyRequestState::PROMOTION_TYPE_GIVEAWAY;
         }
 
-        var_dump($result);
-        exit();
+        $state->setState = inqueue;
 
-        //pass them to the show action
+        // save state
+
+        return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }
 
     /**
