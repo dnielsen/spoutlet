@@ -91,7 +91,3 @@ SpoutletBundle_admin_contest:
 SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
-
-contest_temp_index:
-    pattern: /contests/
-    defaults: { _controller: SpoutletBundle:Contest:index, category: null }
