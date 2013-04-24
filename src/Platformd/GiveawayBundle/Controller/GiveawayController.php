@@ -27,33 +27,65 @@ class GiveawayController extends Controller
         $currentSiteId = $this->getCurrentSiteCached()->getId();
         $currentUser   = $this->getCurrentUser();
         $giveaway      = $this->getRepository()->findOneByIdAndSiteId((int) $giveawayId, $currentSiteId);
-
-        if ($currentUser) {
-            $key      = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
-            $keyValue = $key ? $key->getValue() : null;
-        } else {
-            $keyValue = null;
-        }
+        $keyValue      = null;
+        $state         = null;
 
         if (!$giveaway) {
             die('No giveaway found');
         }
 
-        $group        = $giveaway->getGroup();
-        $groupManager = $this->get('platformd.model.group_manager');
+        if ($currentUser) {
+            $key       = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
+            $keyValue  = $key ? $key->getValue() : null;
 
-        if ($keyValue) {
+            if (!$keyValue) {
+                $stateRepo = $this->getKeyRequestStateRepo();
+                $state     = $stateRepo->findForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
+            }
+        }
 
-            $data = new giveaway_show_key_data();
-            $data->giveaway_assigned_key = $keyValue;
+        if ($keyValue) { # the user has a key, so let's display it for them
+
+            $group        = $giveaway->getGroup();
+            $groupManager = $this->get('platformd.model.group_manager');
+
+            $data                               = new giveaway_show_key_data();
+            $data->giveaway_assigned_key        = $keyValue;
+            $data->promotion_group_slug         = $group ? $group->getSlug() : null;
+            $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
+            $data->promotion_group_name         = $group ? $group->getName() : null;
 
             $response = $this->render('GiveawayBundle:Giveaway:_showKey.html.twig', array(
                 'data' => $data
             ));
-        } else {
-            $response = new Response();
+
+            $response->setSharedMaxAge(30);
+
+            return $response;
         }
 
+        if ($state && $state->getState()) { # they have joined the queue, been rejected or something else
+
+            switch ($state->getState()) {
+                case KeyRequestState::STATE_IN_QUEUE:
+
+                    $response = new Response('IN QUEUE');
+                    $response->setSharedMaxAge(30);
+
+                    return $response;
+
+                case KeyRequestState::STATE_REJECTED:
+
+                    $response = new Response('REJECTED');
+                    $response->setSharedMaxAge(30);
+
+                    return $response;
+            }
+        }
+
+        # at this stage, there are no notifications for the user
+
+        $response = new Response();
         $response->setSharedMaxAge(30);
 
         return $response;
