@@ -14,6 +14,14 @@ _giveaway_show_actions:
     pattern: /esi/USER_SPECIFIC/giveawayShowMainActions/{giveawayId}
     defaults: { _controller: GiveawayBundle:Giveaway:_giveawayShowActions }
 
+_deal_flash_message:
+    pattern: /esi/USER_SPECIFIC/dealFlashMessage/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealFlashMessage }
+
+_deal_show_actions:
+    pattern: /esi/USER_SPECIFIC/dealShowMainActions/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealShowActions }
+
 giveaway_index: 
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
