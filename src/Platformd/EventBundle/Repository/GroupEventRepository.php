@@ -225,4 +225,11 @@ class GroupEventRepository extends EventRepository
         return $qb->andWhere($alias.'.deleted = 0')
             ->andWhere($alias.'.approved = 1');
     }
+
+    public function findAllForGroup($group)
+    {
+        return $this->getBaseGroupQueryBuilder($group)
+            ->getQuery()
+            ->getResult();
+    }
 }
