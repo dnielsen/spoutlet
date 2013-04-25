@@ -52,11 +52,14 @@ class SpoutletExtension extends Twig_Extension
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        $this->request  = $event->getRequest();
+        $exception      = $this->request->get('exception');
+        $isException    = $exception ? in_array($exception->getStatusCode(), array(403, 404), true) : false;
+
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType() && !$isException) {
             return;
         }
 
-        $this->request             = $event->getRequest();
         $this->session             = $this->request->getSession();
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
