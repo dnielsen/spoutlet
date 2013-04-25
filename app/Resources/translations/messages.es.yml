@@ -157,7 +157,7 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">upcoming events</a>.
+            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">próximos eventos</a>.
             no_created_events: No hay eventos creados
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
             show_past_events: Ver eventos pasados
