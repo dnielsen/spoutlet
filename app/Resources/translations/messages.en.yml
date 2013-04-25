@@ -13,8 +13,8 @@ platformd:
     alienware: Alienware
 
     not_found:
-        title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        title: Page Not Found
+        body: We're sorry, but this page does not exist.
 
     flash:
         error_title: Error!
