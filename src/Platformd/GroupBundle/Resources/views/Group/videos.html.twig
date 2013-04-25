@@ -7,13 +7,13 @@
     <div>
     {% if pages | length > 0 %}
         {% if canAdd %}
-            <a href='{{ path('group_add_video') }}'>Submit Video</a>
+            <a href='{{ path('group_add_video', { 'id': group.id }) }}'>Submit Video</a>
         {% else %}
             Want to add an video? Become a member of our group.
         {% endif %}
     {% else %}
         {% if canAdd %}
-            There are no videos. <a href='{{ path('group_add_video') }}'>Submit Video</a>
+            There are no videos. <a href='{{ path('group_add_video', { 'id': group.id }) }}'>Submit Video</a>
         {% else %}
             There are no videos. Want to add an video? Become a member of our group.
         {% endif %}
