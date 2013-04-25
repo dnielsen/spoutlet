@@ -20,6 +20,7 @@ use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\CEVOBundle\Api\ApiManager;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
+use Platformd\EventBundle\Service\GroupEventService;
 
 use Doctrine\ORM\EntityManager;
 use Knp\MediaBundle\Util\MediaUtil;
@@ -54,6 +55,8 @@ class GroupManager
 
     private $eventDispatcher;
 
+    private $groupEventService;
+
     private $isMemberCache;
     private $isApplicantCache;
 
@@ -71,7 +74,8 @@ class GroupManager
         SiteUtil $siteUtil,
         ApiManager $CEVOApiManager,
         SecurityContextInterface $securityContext,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        GroupEventService $groupEventService
     )
     {
         $this->em = $em;
@@ -81,6 +85,7 @@ class GroupManager
         $this->CEVOApiManager = $CEVOApiManager;
         $this->securityContext = $securityContext;
         $this->eventDispatcher = $eventDispatcher;
+        $this->groupEventService = $groupEventService;
         $this->isMemberCache = array();
         $this->isApplicantCache = array();
     }
@@ -117,6 +122,18 @@ class GroupManager
         if (!in_array($owner, $members->toArray())) {
             $members[] = $owner;
             $group->setMembers($members);
+        }
+
+        $groupEvents = $this->groupEventService->findAllForGroup($group);
+
+        foreach ($groupEvents as $event) {
+            foreach ($event->getSites() as $site) {
+                if (!$group->getSites()->contains($site)) {
+                    $event->getSites()->removeElement($site);
+                }
+            }
+
+            $this->em->persist($event);
         }
 
         $this->em->persist($group);

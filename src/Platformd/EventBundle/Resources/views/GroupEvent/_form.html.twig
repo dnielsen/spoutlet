@@ -121,7 +121,8 @@
                 $(this).has('input#groupEvent_externalUrl').length ||
                 $(this).has('#groupEvent_translations').length ||
                 $(this).has('div[id^="groupEvent_translations_"]').length ||
-                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length);
+                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length ||
+                $(this).has('input[id^="groupEvent_sites_"]').length);
         }).wrap(displayDiv);
 
         $('.file-upload').wrap(displayDiv);
