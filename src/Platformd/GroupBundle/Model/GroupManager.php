@@ -124,16 +124,18 @@ class GroupManager
             $group->setMembers($members);
         }
 
-        $groupEvents = $this->groupEventService->findAllForGroup($group);
+        if ($group->getId()) {
+            $groupEvents = $this->groupEventService->findAllForGroup($group);
 
-        foreach ($groupEvents as $event) {
-            foreach ($event->getSites() as $site) {
-                if (!$group->getSites()->contains($site)) {
-                    $event->getSites()->removeElement($site);
+            foreach ($groupEvents as $event) {
+                foreach ($event->getSites() as $site) {
+                    if (!$group->getSites()->contains($site)) {
+                        $event->getSites()->removeElement($site);
+                    }
                 }
-            }
 
-            $this->em->persist($event);
+                $this->em->persist($event);
+            }
         }
 
         $this->em->persist($group);
