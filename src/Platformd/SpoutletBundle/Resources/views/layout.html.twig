@@ -160,7 +160,7 @@
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} data-background-link="{{ current_background_ad_link(block('page_background_link')) }}">
+            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} {{ current_background_ad_link(block('page_background_link')) }}>
                 <div class="background-takeover" id="custom_background_top">
                     <div id="header">
                     	{% include 'SpoutletBundle::header.html.twig' %}

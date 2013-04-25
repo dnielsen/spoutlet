@@ -282,5 +282,12 @@ class BackgroundAd
     {
         $this->isPublished = $isPublished;
     }
+
+    public function isActive()
+    {
+        $now = new \DateTime();
+
+        return ($this->getDateStart() <= $now && $this->getDateEnd() >= $now);
+    }
 }
 

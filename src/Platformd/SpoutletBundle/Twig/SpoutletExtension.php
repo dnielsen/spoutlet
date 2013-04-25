@@ -137,12 +137,16 @@ class SpoutletExtension extends Twig_Extension
 
     public function getCurrentBackgroundLink($link = null, $timezone = 'UTC')
     {
+        $format = 'data-background-link=%s';
+
         if (!empty($link)) {
-            return $link;
+            return sprintf($format, $link);
         }
 
-        if ($adSite = $this->getCurrentBackgroundAdSite($this->currentSite, $timezone)) {
-            return $adSite->getUrl();
+        $adSite = $this->getCurrentBackgroundAdSite($this->currentSite, $timezone);
+
+        if ($adSite && $adSite->getUrl()) {
+            return sprintf($format, $adSite->getUrl());
         }
     }
 

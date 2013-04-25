@@ -50,13 +50,21 @@ class BackgroundAdAdminController extends Controller
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $form = $this->createForm(new BackgroundAdType(true), new BackgroundAd);
+        $em     = $this->getDoctrine()->getEntityManager();
+        $form   = $this->createForm(new BackgroundAdType(true), new BackgroundAd);
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
+            $ad = $form->getData();
+
+            foreach ($ad->getAdSites() as $adSite) {
+                $adSite->setSite($em->getRepository('SpoutletBundle:Site')->find($adSite->getSiteId()));
+            }
+
             if ($form->isValid()) {
-                $this->persist($form->getData());
+
+                $this->persist($ad);
                 $this->setFlash('success', 'Background ad successully created');
 
                 return $this->redirect($this->generateUrl('admin_background_ads_edit', array(
@@ -119,12 +127,8 @@ class BackgroundAdAdminController extends Controller
             $ad->setFile(null);
         }
 
-        foreach ($ad->getAdSites() as $adSite) {
-            $adSite->setSite($em->getRepository('SpoutletBundle:Site')->find($adSite->getSiteId()));
-        }
-
-        $this->get('doctrine')->getEntityManager()->persist($ad);
-        $this->get('doctrine')->getEntityManager()->flush();
+        $em->persist($ad);
+        $em->flush();
     }
 
     private function findOr404($id)

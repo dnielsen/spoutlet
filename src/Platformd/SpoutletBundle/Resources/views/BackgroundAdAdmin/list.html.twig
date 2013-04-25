@@ -9,6 +9,7 @@
             <th>Title</th>
             <th>Image</th>
             <th>URL</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -25,7 +26,22 @@
                 {% for adSite in ad.adSites if adSite.url and adSite.site == site %}
                     <a href="{{ adSite.url }}">{{ adSite.url }}</a>
                     <br />
+                {% else %}
+                    <em>none</em>
                 {% endfor %}
+            </td>
+            <td>
+                {% if ad.isPublished %}
+                    <span class="label label-success">Published</span>
+                {% else %}
+                    <span class="label label-warning">Unpublished</span>
+                {% endif %}
+
+                {% if ad.isActive %}
+                    <span class="label label-success">Active</span>
+                {% else %}
+                    <span class="label label-warning">Inactive</span>
+                {% endif %}
             </td>
             <td>
                 <a href="{{ path('admin_background_ads_edit', { 'id': ad.id }) }}">edit</a>

@@ -20,9 +20,16 @@ class UniqueBackgroundAdPerTimeValidator extends ConstraintValidator
     {
         $nonUnique = $this->hasSameTimeForSites($value);
         if ($nonUnique) {
-            $propertyPath = $this->context->getPropertyPath().'.date';
-            $this->context->setPropertyPath($propertyPath);
+
             $this->context->addViolation($constraint->message, array(), null);
+            $oldPath = $this->context->getPropertyPath();
+            $propertyPath = $oldPath.'.dateStart';
+            $this->context->setPropertyPath($propertyPath);
+            $this->context->addViolation('', array(), null);
+            $propertyPath = $oldPath.'.dateEnd';
+            $this->context->setPropertyPath($propertyPath);
+            $this->context->addViolation('', array(), null);
+            $this->context->setPropertyPath($oldPath);
 
             return false;
         }
