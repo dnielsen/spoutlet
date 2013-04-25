@@ -809,7 +809,7 @@ class User extends BaseUser
             $this->setIsSuperAdmin(false);
             $this->switchRole('ROLE_PARTNER', true);
         } else {
-            $this->setIsSuperAdmin(false);
+            $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
         }
     }
