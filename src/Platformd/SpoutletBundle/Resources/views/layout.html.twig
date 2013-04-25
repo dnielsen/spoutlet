@@ -122,8 +122,10 @@
                     delay:      150
                 });
 
-                {% if current_background_ad_link(block('page_background_link')) %}
-                    $('#custom_background_bot').css('cursor', 'pointer');
+                {% if not block('page_background_image') or block('page_background_link') %}
+                    {% if current_background_ad_link(block('page_background_link')) %}
+                        $('#custom_background_bot').css('cursor', 'pointer');
+                    {% endif %}
                 {% endif %}
 		    });
 		</script>
@@ -160,7 +162,7 @@
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} {{ current_background_ad_link(block('page_background_link')) }}>
+            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} {% if not block('page_background_image') or block('page_background_link') %} {{ current_background_ad_link(block('page_background_link')) }}{% endif %}>
                 <div class="background-takeover" id="custom_background_top">
                     <div id="header">
                     	{% include 'SpoutletBundle::header.html.twig' %}
