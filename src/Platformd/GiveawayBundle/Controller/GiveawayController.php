@@ -157,9 +157,9 @@ class GiveawayController extends Controller
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
         $comments  = $this->getCommentRepository()->findCommentsForGiveaways();
+        $keyRepo   = $this->getKeyRepository();
 
         foreach ($giveaways as $giveaway) {
-            $keyRepo = $this->getKeyRepository();
             if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
                 array_push($expired, $giveaway);
             } else {
@@ -247,7 +247,7 @@ class GiveawayController extends Controller
         $result = $this->getQueueUtil()->addToQueue($message);
 
         if (!$result) {
-
+            die('Could not add you to the queue... please try again shortly.');
         }
 
         if (!$state) {

@@ -352,13 +352,17 @@ platformd:
 
 
     key_request_processor_command:
-        key_assigned_email_subject: Your Key Has Been Assigned!
+        key_assigned_email_subject: Your Key is Assigned: %promotion_title%
         key_assigned_email_body: |
-            Congratulations, you've successfully been assigned a key for the %promotion_title%.<br /><br />
-            Key: %promotion_key%<br /><br />
-            Please follow the instructions found on the <a href="%promotion_show_page%">%promotion_title%</a> page to redeem your key.<br /><br />
-            Questions? Email contact@alienwarearena.com.<br />
-            Alienware Arena Team
+                                    <p>
+                                        Congratulations, you've successfully been assigned a key for the <a href="%promotion_show_page%">%promotion_title%</a>.<br />
+                                        Click <a href="%promotion_show_page%">here</a> for instructions on how to redeem your key.
+                                    </p>
+                                    <p>Your Key: <span style="font-weight:bold;">%promotion_key%</span></p>
+                                    %group_section%
+                                    <p>Note: You are receiving this email because you submitted a request for a key.</p>
+                                    <p>Alienware Arena Team</p>
+        key_assigned_email_body_group_section: <p>Thank you for becoming a member of <a href="%promotion_group_show_page%">%promotion_group_name%</a>. We encourage you to post discussions, add events, upload images and videos on our groups page!</p>
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
@@ -372,7 +376,7 @@ platformd:
         in_process_2: please allow at least 2 weeks for it to be posted into your account.
         in_process_3: If after 2 weeks it has not been posted, please email
         queue:
-            you_are_queued: Your approximate wait time is less than 5 minutes. In the meantime, please check out our events and groups page. You will receive an automated email once a key has been assigned to you.
+            you_are_queued: Your approximate wait time is less than 5 minutes. In the meantime, please check out our other <a href="%giveaway_show_page_link%">giveaways</a> and <a href="%events_index_page_link%">upcoming events</a>. You will receive an automated email once a key has been assigned to you.
             rejected: Your attempt to get a key has been rejected.
             problem: There was a problem processing your key request.
             reason: Reason
@@ -410,15 +414,13 @@ platformd:
             giveaways: Giveaways
         assigned:
             message: |
-                You have been assigned a key. You may review this key at any
-                time by visiting your giveaway key page from your Alienware
-                Arena user account panel.
+                    Your key may require activation! See below for details.  Your key has also been emailed to you.
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
             assigned_at: Assigned
             view_giveaway: View Giveaway
         featured_giveaways: Alienware Arena Featured Giveaways
-        all_giveaways: All Giveaways
+        all_giveaways: New Giveaways
         previous_giveaways: Previous Giveaways
         latest_comments: Latest Comments
     giveaway_pool:

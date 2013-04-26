@@ -160,7 +160,7 @@ EOT
                     if (!$state) {
                         $state = new KeyRequestState();
 
-                        $state->setDeal($promotion);
+                        $state->setGiveaway($promotion);
                         $state->setUser($user);
                         $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
                         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
@@ -333,12 +333,15 @@ EOT
 
             $group = $promotion->getGroup();
 
-            if($site->getSiteFeatures()->getHasGroups() && $group) {
+            $linkToGroupIsValid = $site->getSiteFeatures()->getHasGroups() && $group;
+
+            if($linkToGroupIsValid) {
 
                 $this->output(2, 'Auto join user to group.');
                 $this->output(3, $group);
 
                 if ($groupManager->isAllowedTo($user, $group, $site, 'JoinGroup')) {
+
                     $joinAction = new GroupMembershipAction();
 
                     $joinAction->setGroup($group);
@@ -369,7 +372,10 @@ EOT
             $this->output(5, 'Key assigned successfully.');
             $this->output(5, 'Sending user email.');
 
-            $this->emailUser($user, $promotion->getName(), $key->getValue(), $urlToShowPage, $site);
+            $urlToGroupShowPage = $linkToGroupIsValid ? $router->generate('group_show', array('slug' => $group->getSlug())) : null;
+            $groupName          = $linkToGroupIsValid ? $group->getName() : null;
+
+            $this->emailUser($user, $promotion->getName(), $key->getValue(), $urlToShowPage, $site, $groupName, $urlToGroupShowPage);
 
             $this->output(5, 'Email sent.');
 
@@ -380,21 +386,34 @@ EOT
         $this->output(1, 'No more messages in queue.');
     }
 
-    private function emailUser($user, $promotionTitle, $promotionKey, $promotionShowPage, $site) {
+    private function emailUser($user, $promotionTitle, $promotionKey, $promotionShowPage, $site, $promotionGroupName = null, $promotionGroupShowPage = null) {
 
         $emailManager = $this->getContainer()->get('platformd.model.email_manager');
         $translator   = $this->getContainer()->get('translator');
         $locale       = $site->getDefaultLocale();
 
-        $messageReplacements = array(
+        $mainReplacements = array(
             '%promotion_key%'       => $promotionKey,
             '%promotion_title%'     => $promotionTitle,
-            '%promotion_show_page%' => 'http://'.$site->getFullDomain().$promotionShowPage
+            '%promotion_show_page%' => 'http://'.$site->getFullDomain().$promotionShowPage,
+            '%group_section%'       => '',
         );
 
+        if ($promotionGroupName && $promotionGroupShowPage) {
+
+            $groupReplacements = array(
+                '%promotion_group_name%'      => $promotionGroupName,
+                '%promotion_group_show_page%' => 'http://'.$site->getFullDomain().$promotionGroupShowPage,
+            );
+
+            $groupSection = $translator->trans('platformd.key_request_processor_command.key_assigned_email_body_group_section', $groupReplacements, 'messages', $locale);
+
+            $mainReplacements['%group_section%'] = $groupSection;
+        }
+
         $emailTo = $user->getEmail();
-        $subject = $translator->trans('platformd.key_request_processor_command.key_assigned_email_subject', array(), 'messages', $locale);
-        $message = $translator->trans('platformd.key_request_processor_command.key_assigned_email_body', $messageReplacements, 'messages', $locale);
+        $subject = $translator->trans('platformd.key_request_processor_command.key_assigned_email_subject', $mainReplacements, 'messages', $locale);
+        $message = $translator->trans('platformd.key_request_processor_command.key_assigned_email_body', $mainReplacements, 'messages', $locale);
 
         $emailManager->sendHtmlEmail($emailTo, $subject, $message, 'promotion_assigned', $site->getName());
     }
