@@ -330,7 +330,6 @@ platformd:
             edit_account: Edit Account
             change_password: Change Pass
             profile:      Profile
-            # checked up until here
             registered_events: Registered Events
             my_giveaways: Giveaways
             my_videos: Videos
@@ -343,6 +342,12 @@ platformd:
             media_upload: Upload
             my_media: My Media
             sign_out: Sign Out
+            deals: Deals
+            messages: Messages
+            gameids: Game IDs
+            match_client: Match Client
+            match_lobby: Match Lobby
+            gallery: Gallery
 
     giveaway:
         giveaway: Giveaway
@@ -878,11 +883,6 @@ choose_country: Choose your country
 featured_deals: Alienware Arena Featured Deals
 expired_deals: Expired Deals
 
-platformd.user.account.deals: Deals
-platformd.user.account.messages: Messages
-platformd.user.account.gameids: Game IDs
-platformd.user.account.match_client: Match Client
-platformd.user.account.match_lobby: Match Lobby
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
 platformd.deal.assigned.assigned_at: Assigned
@@ -898,11 +898,7 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 deny_codes: Deny Codes
-platformd.user.account.messages: Messages
-platformd.user.account.match_client: Match Client
-platformd.user.account.match_lobby: Match Lobby
 
-platformd.user.account.gallery: Gallery
 platformd.account_page.photos.submit: Submit Images
 
 groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
