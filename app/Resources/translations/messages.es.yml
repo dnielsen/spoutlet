@@ -157,7 +157,7 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">upcoming events</a>.
+            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">próximos eventos</a>.
             no_created_events: No hay eventos creados
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
             show_past_events: Ver eventos pasados
@@ -170,6 +170,13 @@ platformd:
             active: Activo
             pending_approval: Pendiente de aprobación por el organizador de grupo
             choose_one: Elegir una acción:
+        account:
+            welcome_to_control: Panel de control
+            hello_user: Hola %firstname%! Registrado como: %username%.
+            ready_to_game: ""
+            warning: Advertencia: Nunca des tu contraseña a nadie!
+            under_construction: "Nota: Alienware Arena se encuentra en construcción, por lo tanto regrese más tarde si una característica no está habilitada todavía."
+            change_your_password: Contraseña
 
     comment:
         add_your_comment: Añada tu comentario
@@ -192,6 +199,33 @@ platformd:
         cancel: Cancelar
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
+
+    user:
+        account:
+            account_home: Inicio de Cuenta
+            edit_account: Edit Account
+            change_password: Contraseña
+            profile:      Perfíl
+            registered_events: Mis Eventos
+            my_giveaways: Regalo
+            my_videos: Videos
+            my_events: Mis Eventos
+            my_groups: Grupos
+            help: Help
+            game_ids: IDs de Juego
+            tournaments: Torneos
+            media: Medios
+            media_upload: Upload
+            my_media: My Media
+            sign_out: Cerrar sesión
+            deals: Deals
+            messages: Mensajes
+            gameids: IDs de Juego
+            match_client: Match Client
+            match_lobby: Match Lobby
+            gallery: Imágen
+            images: Imágen
+            videos: Vídeos
 
     event:
         form:
@@ -493,8 +527,6 @@ deal_show_expired: This deal has expired.
 featured_deals: Featured Deals
 expired_deals: Expired Deals
 
-platformd.user.account.deals: My Deals
-
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
 platformd.deal.assigned.assigned_at: Assigned
@@ -510,7 +542,6 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
-platformd.user.account.photos: Mis Imágenes
 platformd.account_page.photos.my_photos: Mis Imágenes
 platformd.account_page.photos.submit: Enviar Imágenes
 
