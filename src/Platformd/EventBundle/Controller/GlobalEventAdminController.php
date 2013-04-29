@@ -228,10 +228,21 @@ class GlobalEventAdminController extends Controller
         $data = new EventFindWrapper();
         $form = $this->createForm(new EventFindType(), $data);
 
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $data->setSites(array('ja'));
+            $form->setData($data);
+        }
+
         if ('POST' == $request->getMethod()) {
             $form->bindRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
+
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data->setSites(array('ja'));
+                    $form->setData($data);
+                }
+
                 $this->setEventsFilterFormData(array(
                     'eventName' => $data->getEventName(),
                     'published' => $data->getPublished(),

@@ -381,14 +381,25 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
+        $em     = $this->getDoctrine()->getEntityManager();
+        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('giveaway', 'entity', array(
                 'class' => 'GiveawayBundle:Giveaway',
                 'property' => 'name',
                 'empty_value' => 'All Giveaways',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('g')
+                'query_builder' => function(EntityRepository $er) use ($site) {
+                    $qb = $er->createQueryBuilder('g')
                         ->orderBy('g.name', 'ASC');
+
+                    if ($site) {
+                        $qb->leftJoin('g.sites', 's')
+                            ->andWhere('s = :site')
+                            ->setParameter('site', $site);
+                    }
+
+                    return $qb;
                 },
             ))
             ->getForm()
@@ -412,9 +423,9 @@ class GiveawayAdminController extends Controller
         }
 
         if ($giveaway == null) {
-            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest();
+            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         } else {
-            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest();
+            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         }
 
         $giveawayMetrics = array();

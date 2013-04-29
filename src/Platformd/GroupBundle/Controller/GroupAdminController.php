@@ -63,6 +63,11 @@ class GroupAdminController extends Controller
 
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
         $filters = $this->getFilterFormData();
+
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $filters['sites'] = array('ja');
+        }
+
         $qb = $groupRepo->findGroupStatsQB($filters);
 
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
@@ -282,10 +287,25 @@ class GroupAdminController extends Controller
         $data = new DiscussionFindWrapper();
         $form = $this->createForm(new DiscussionFindType(), $data);
 
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $data->setSites(array('ja'));
+            $form->setData($data);
+        }
+
         if ('POST' == $request->getMethod()) {
             $form->bindRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
+
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data->setSites(array('ja'));
+                    $form->setData($data);
+                }
+
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data->setSites(array('ja'));
+                }
+
                 $this->setDiscussionsFilterFormData(array(
                     'discussionName' => $data->getDiscussionName(),
                     'deleted' => $data->getDeleted(),

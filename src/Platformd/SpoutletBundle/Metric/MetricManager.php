@@ -178,11 +178,13 @@ class MetricManager
      * in the system. The key to the array is the site key, and each array
      * contains several fields (see below).
      */
-    public function createMembershipByCountryReport(DateTime $since = null)
+    public function createMembershipByCountryReport(DateTime $since = null, $site = null)
     {
         $data = array();
 
-        foreach ($this->sites as $key => $name) {
+        $sites = $site ? array($site->getDefaultLocale() => $site->getName()) : $this->sites;
+
+        foreach ($sites as $key => $name) {
 
             $totalUsers = $this->userRepo->getTotalUsersForSite($key);
 
