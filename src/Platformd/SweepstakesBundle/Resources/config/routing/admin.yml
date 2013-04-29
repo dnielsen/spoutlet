@@ -2,6 +2,10 @@ admin_sweepstakes_index:
     pattern: /
     defaults: { _controller: SweepstakesBundle:Admin:index }
 
+admin_sweepstakes_list:
+    pattern: /list/{site}
+    defaults: { _controller: SweepstakesBundle:Admin:list }
+
 admin_sweepstakes_new:
     pattern: /new
     defaults: { _controller: SweepstakesBundle:Admin:new }

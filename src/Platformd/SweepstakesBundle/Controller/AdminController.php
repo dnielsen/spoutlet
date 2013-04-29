@@ -11,16 +11,34 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class AdminController extends Controller
 {
     public function indexAction()
     {
         $this->addSweepstakesBreadcrumb();
-        $sweepstakess = $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
 
-    	return $this->render('SweepstakesBundle:Admin:index.html.twig',
-            array('sweepstakess' => $sweepstakess));
+        return $this->render('SweepstakesBundle:Admin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        $this->addSweepstakesBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+
+        $sweepstakess = $this->getSweepstakesRepo()->findAllForSite($site);
+
+        return $this->render('SweepstakesBundle:Admin:list.html.twig', array(
+            'sweepstakess'  => $sweepstakess,
+            'site'          => $site,
+        ));
     }
 
     public function newAction(Request $request)
@@ -276,5 +294,18 @@ class AdminController extends Controller
             ->getEntityManager()
             ->getRepository('SweepstakesBundle:Entry')
         ;
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_sweepstakes_list',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
     }
 }
