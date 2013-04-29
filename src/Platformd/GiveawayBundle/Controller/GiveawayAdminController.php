@@ -20,7 +20,7 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class GiveawayAdminController extends Controller
 {
-     public function indexAction()
+    public function indexAction()
     {
         $this->addGiveawayBreadcrumb();
 
