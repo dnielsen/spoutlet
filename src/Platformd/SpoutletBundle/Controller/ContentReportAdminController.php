@@ -12,52 +12,57 @@ use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 class ContentReportAdminController extends Controller
 {
 
-    public function listAction($mode)
+    public function listAction($mode, $site=null)
     {
-
         if ($mode != "manage" && $mode != "archived" && $mode != "deletedContent") {
             throw new \Exception(sprintf("Unknown mode = '%s'.", $mode));
         }
 
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = '2';
+        }
+
         $this->addReportedContentsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $site ? $em->getRepository('SpoutletBundle:Site')->find($site) : null;
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
         $allowArchived = $mode == "archived";
 
         if ($mode == "archived") {
-            $comments               = $repo->getContentReportTypeForAllSitesArchived("Comment");
-            $groupNews              = $repo->getContentReportTypeForAllSitesArchived("GroupNews");
-            $groupVideos            = $repo->getContentReportTypeForAllSitesArchived("GroupVideo");
-            $groupImages            = $repo->getContentReportTypeForAllSitesArchived("GroupImage");
-            $galleryMedia           = $repo->getContentReportTypeForAllSitesArchived("GalleryMedia");
-            $groups                 = $repo->getContentReportTypeForAllSitesArchived("Group");
-            $groupDiscussions       = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussion");
-            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesArchived("GroupDiscussionPost");
-            $groupEvents            = $repo->getContentReportTypeForAllSitesArchived("GroupEvent");
+            $comments               = $repo->getContentReportTypeArchived("Comment", $site);
+            $groupNews              = $repo->getContentReportTypeArchived("GroupNews", $site);
+            $groupVideos            = $repo->getContentReportTypeArchived("GroupVideo", $site);
+            $groupImages            = $repo->getContentReportTypeArchived("GroupImage", $site);
+            $galleryMedia           = $repo->getContentReportTypeArchived("GalleryMedia", $site);
+            $groups                 = $repo->getContentReportTypeArchived("Group", $site);
+            $groupDiscussions       = $repo->getContentReportTypeArchived("GroupDiscussion", $site);
+            $groupDiscussionPosts   = $repo->getContentReportTypeArchived("GroupDiscussionPost", $site);
+            $groupEvents            = $repo->getContentReportTypeArchived("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         } elseif ($mode == "deletedContent") {
-            $comments               = $repo->getContentReportTypeForAllSitesDeletedContent("Comment");
-            $groupNews              = $repo->getContentReportTypeForAllSitesDeletedContent("GroupNews");
-            $groupVideos            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupVideo");
-            $groupImages            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupImage");
-            $galleryMedia           = $repo->getContentReportTypeForAllSitesDeletedContent("GalleryMedia");
-            $groups                 = $repo->getContentReportTypeForAllSitesDeletedContent("Group");
-            $groupDiscussions       = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussion");
-            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSitesDeletedContent("GroupDiscussionPost");
-            $groupEvents            = $repo->getContentReportTypeForAllSitesDeletedContent("GroupEvent");
+            $comments               = $repo->getContentReportTypeDeletedContent("Comment", $site);
+            $groupNews              = $repo->getContentReportTypeDeletedContent("GroupNews", $site);
+            $groupVideos            = $repo->getContentReportTypeDeletedContent("GroupVideo", $site);
+            $groupImages            = $repo->getContentReportTypeDeletedContent("GroupImage", $site);
+            $galleryMedia           = $repo->getContentReportTypeDeletedContent("GalleryMedia", $site);
+            $groups                 = $repo->getContentReportTypeDeletedContent("Group", $site);
+            $groupDiscussions       = $repo->getContentReportTypeDeletedContent("GroupDiscussion", $site);
+            $groupDiscussionPosts   = $repo->getContentReportTypeDeletedContent("GroupDiscussionPost", $site);
+            $groupEvents            = $repo->getContentReportTypeDeletedContent("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         } elseif ($mode == "manage") {
-            $comments               = $repo->getContentReportTypeForAllSites("Comment");
-            $groupNews              = $repo->getContentReportTypeForAllSites("GroupNews");
-            $groupVideos            = $repo->getContentReportTypeForAllSites("GroupVideo");
-            $groupImages            = $repo->getContentReportTypeForAllSites("GroupImage");
-            $galleryMedia           = $repo->getContentReportTypeForAllSites("GalleryMedia");
-            $groups                 = $repo->getContentReportTypeForAllSites("Group");
-            $groupDiscussions       = $repo->getContentReportTypeForAllSites("GroupDiscussion");
-            $groupDiscussionPosts   = $repo->getContentReportTypeForAllSites("GroupDiscussionPost");
-            $groupEvents            = $repo->getContentReportTypeForAllSites("GroupEvent");
+            $comments               = $repo->getContentReportType("Comment", $site);
+            $groupNews              = $repo->getContentReportType("GroupNews", $site);
+            $groupVideos            = $repo->getContentReportType("GroupVideo", $site);
+            $groupImages            = $repo->getContentReportType("GroupImage", $site);
+            $galleryMedia           = $repo->getContentReportType("GalleryMedia", $site);
+            $groups                 = $repo->getContentReportType("Group", $site);
+            $groupDiscussions       = $repo->getContentReportType("GroupDiscussion", $site);
+            $groupDiscussionPosts   = $repo->getContentReportType("GroupDiscussionPost", $site);
+            $groupEvents            = $repo->getContentReportType("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
         }
 
@@ -90,6 +95,11 @@ class ContentReportAdminController extends Controller
             'mode' => $mode,
             'contests' => $contests,
         ));
+    }
+
+    public function siteListAction($mode, $site)
+    {
+
     }
 
     public function hideComplaintAction($contentReportId)

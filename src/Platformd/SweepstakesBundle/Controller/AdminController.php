@@ -17,6 +17,11 @@ class AdminController extends Controller
 {
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_sweepstakes_list', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addSweepstakesBreadcrumb();
 
         return $this->render('SweepstakesBundle:Admin:index.html.twig', array(
@@ -26,6 +31,10 @@ class AdminController extends Controller
 
     public function listAction($site)
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
         $this->addSweepstakesBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 

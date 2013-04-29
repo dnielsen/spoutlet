@@ -22,6 +22,11 @@ class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_giveaway_list', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addGiveawayBreadcrumb();
 
         return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig', array(
@@ -31,6 +36,10 @@ class GiveawayAdminController extends Controller
 
     public function listAction($site)
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
         $this->addGiveawayBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
@@ -525,7 +534,7 @@ class GiveawayAdminController extends Controller
         if ($site) {
 
             $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
-                'route' => 'admin_giveaway_site',
+                'route' => 'admin_giveaway_list',
                 'routeParameters' => array('site' => $site)
             ));
         }

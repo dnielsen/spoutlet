@@ -22,6 +22,11 @@ class GlobalEventAdminController extends Controller
 {
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_events_list', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addEventsBreadcrumb();
 
         return $this->render('EventBundle:GlobalEvent\Admin:index.html.twig', array(
@@ -31,6 +36,10 @@ class GlobalEventAdminController extends Controller
 
     public function listAction($site)
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
         $this->addEventsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 

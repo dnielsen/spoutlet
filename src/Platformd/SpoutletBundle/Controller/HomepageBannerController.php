@@ -13,6 +13,11 @@ class HomepageBannerController extends Controller
 
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_homepage_banner_list', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addBannersBreadcrumb();
 
         return $this->render('SpoutletBundle:HomepageBanner:index.html.twig', array(
@@ -22,6 +27,10 @@ class HomepageBannerController extends Controller
 
     public function listAction($site)
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
         $this->addBannersBreadcrumb();
 
         $em = $this->getDoctrine()->getEntityManager();

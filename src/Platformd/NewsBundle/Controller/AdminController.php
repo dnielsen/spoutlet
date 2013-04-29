@@ -17,6 +17,11 @@ class AdminController extends Controller
 {
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addNewsBreadcrumb();
 
         return $this->render('NewsBundle:Admin:index.html.twig', array(
@@ -26,6 +31,10 @@ class AdminController extends Controller
 
     public function listAction($site)
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
         $this->addNewsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
