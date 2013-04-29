@@ -9,7 +9,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
     Platformd\EventBundle\Entity\EventFindWrapper,
     Platformd\EventBundle\Form\Type\EventFindType,
-    Platformd\SpoutletBundle\Util\CsvResponseFactory;
+    Platformd\SpoutletBundle\Util\CsvResponseFactory,
+    Platformd\SpoutletBundle\Tenant\MultitenancyManager
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -19,19 +20,28 @@ use Symfony\Component\HttpFoundation\Request,
 
 class GlobalEventAdminController extends Controller
 {
-    /**
-     * Lists all global events
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listAction()
+    public function indexAction()
     {
         $this->addEventsBreadcrumb();
 
-        $events = $this->getGlobalEventService()->findBy(array(), array('createdAt' => 'DESC'));
+        return $this->render('EventBundle:GlobalEvent\Admin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
 
-        return $this->render('EventBundle:GlobalEvent\Admin:list.html.twig',
-            array('events' => $events));
+    public function listAction($site)
+    {
+        $this->addEventsBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($site);
+
+        $events = $this->getGlobalEventService()->findAllForSite($site);
+
+        return $this->render('EventBundle:GlobalEvent\Admin:list.html.twig', array(
+            'events'    => $events,
+            'site'      => $site,
+        ));
     }
 
     /**
@@ -382,6 +392,19 @@ class GlobalEventAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Events', array(
             'route' => 'admin_events_index'
         ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_events_list',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
 
         return $this->getBreadcrumbs();
     }

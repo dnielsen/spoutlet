@@ -2,13 +2,13 @@ NewsBundle_admin_homepage:
     pattern:  /admin/news
     defaults: { _controller: NewsBundle:Admin:index }
 
-NewsBundle_admin_siteList:
-    pattern:  /admin/news/{site}
-    defaults: { _controller: NewsBundle:Admin:list }
-
 NewsBundle_admin_new:
     pattern:  /admin/news/new
     defaults: { _controller: NewsBundle:Admin:new }
+
+NewsBundle_admin_siteList:
+    pattern:  /admin/news/list/{site}
+    defaults: { _controller: NewsBundle:Admin:list }
 
 NewsBundle_admin_edit:
     pattern:  /admin/news/{id}/edit
