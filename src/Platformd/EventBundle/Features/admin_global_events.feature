@@ -13,7 +13,7 @@ Feature: Global Events
 
     Scenario: I can view an existing event
         Given I am on "/events"
-        When I click on "Test global event"
+            And I click on "Test global event"
         Then I should be on the "global" event called "Test global event" on "en"
 
     Scenario: I can create a new event
@@ -33,6 +33,7 @@ Feature: Global Events
     Scenario: I can edit an event
         Given I am on "/admin"
         When I click on "Events"
+            And I click on "Demo"
             And I click on "Test global event"
             And I fill in the following:
                 | Title         | Test Event Updated  |
@@ -40,9 +41,10 @@ Feature: Global Events
             And I press "Save"
         Then I should see "Event saved successfully"
 
-    Scenario: List existing contests for admins
+    Scenario: List existing events for admins
         Given I am on "/admin"
         When I click on "Events"
+            And I click on "Demo"
         Then I should see 2 data rows
             And I should see "Test global event"
             And I should see "Other global event"

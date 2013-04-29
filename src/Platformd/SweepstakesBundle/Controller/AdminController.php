@@ -138,10 +138,9 @@ class AdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
-        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $site = $em->getRepository('SpoutletBundle:Site')->find(2);
-        }
+        $em = $this->getDoctrine()->getEntityManager();
+        $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $sweepstakes = $site ? $this->getSweepstakesRepo()->findAllForSite($site) : $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
 
         $this->addMetricsBreadcrumbs();
