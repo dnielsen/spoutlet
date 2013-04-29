@@ -2,6 +2,10 @@ admin_giveaway_index:
     pattern: /
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:index }
 
+admin_giveaway_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "GiveawayBundle:GiveawayAdmin:list", site: ~ }
+
 admin_giveaway_new:
     pattern: /new
     defaults: { _controller: GiveawayBundle:GiveawayAdmin:new }

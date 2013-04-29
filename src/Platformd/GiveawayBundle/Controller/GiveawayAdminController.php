@@ -16,16 +16,34 @@ use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class GiveawayAdminController extends Controller
 {
-    public function indexAction()
+     public function indexAction()
     {
         $this->addGiveawayBreadcrumb();
-        $giveaways = $this->getGiveawayRepo()->findAllWithoutLocaleOrderedByNewest();
 
-        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
-            array('giveaways' => $giveaways));
+        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        $this->addGiveawayBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+
+        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
+
+        return $this->render('GiveawayBundle:GiveawayAdmin:list.html.twig', array(
+            'giveaways' => $giveaways,
+            'site'     => $site,
+        ));
     }
 
     public function newAction(Request $request)
@@ -500,5 +518,18 @@ class GiveawayAdminController extends Controller
     private function getMachineCodeRepository()
     {
         return $this->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_giveaway_site',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
     }
 }

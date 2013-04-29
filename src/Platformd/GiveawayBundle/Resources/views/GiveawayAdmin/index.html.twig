@@ -1,61 +1,16 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.giveaway.admin.title" | trans }}{% endblock %}
+
+{% block title 'Giveaway Regions' %}
 
 {% block content %}
+<h1>Giveaway Regions</h1>
 
-<h1>{{ "platformd.giveaway.admin.title" | trans }}</h1>
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_giveaway_site'
+}%}
 
-
-<table class="table table-striped table-bordered tablesorter">
-    <thead>
-        <tr>
-            <th>{{ "platformd.giveaway.giveaway" | trans }}</th>
-            <th>{{ "tenant_site" | trans({}, 'admin') }}</th>
-            <th>{{ 'url' | trans }}</th>
-            <th>{{ "giveaway_status" | trans({}, 'forms') }}</th>
-            <th>{{ 'giveaway.type.type' | trans }}</th>
-            <th>{{ "platformd.help.actions" | trans }}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for giveaway in giveaways %}
-        <tr>
-            <td><a href="{{ path('admin_giveaway_edit', { 'id' : giveaway.id }) }}">{{ giveaway.name }}</a></td>
-            <td>
-                {% for site in giveaway.sites %}
-                    {{ site.name -}}
-                    {{- loop.last ? '' : ',' }}
-                {% endfor %}
-            </td>
-            <td>
-                {{ giveaway | pd_link_full }}
-            </td>
-            <td>
-                {{ giveaway.statusText | trans }}
-            </td>
-            <td>
-                {{ (giveaway.giveawayTypeText) | trans }}
-            </td>
-            <td>
-                <a href="{{ path('admin_giveaway_edit', {"id" : giveaway.id}) }}">{{ "edit" | trans  }}</a>
-                |
-                <a href="{{ path('admin_giveaway_pool_index', {"giveaway" : giveaway.id}) }}">{{ "platformd.giveaway.admin.manage_pools" | trans  }}</a>
-                {% if giveaway.allowMachineCodeSubmit %}
-                    |
-                    <a href="{{ path('admin_giveaway_export_machine_codes', {'id' : giveaway.id}) }}">{{ 'export_pending_machine_codes' | trans({}, 'admin')  }}</a>
-                    |
-                    <a href="{{ path('admin_giveaway_export_approved_and_denied_machine_codes', {'id' : giveaway.id}) }}">{{ 'export_approved_and_denied_machine_codes' | trans({}, 'admin')  }}</a>
-                    |
-                    <a href="{{ path('admin_giveaway_machine_codes', {'id' : giveaway.id}) }}">{{ "approve_machine_codes" | trans  }}</a>
-                    |
-                    <a href="{{ path('admin_giveaway_machine_deny_codes', {'id' : giveaway.id}) }}">{{ "deny_machine_codes" | trans  }}</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<a class="btn btn-primary" href="{{ path('admin_giveaway_new') }}" style="margin-right:10px;">{{ "platformd.giveaway.admin.create" | trans }}</a>
-
+<a class="btn btn-primary" href="{{ path('admin_giveaway_new') }}">
+    Create a new giveaway
+</a>
 {% endblock %}
