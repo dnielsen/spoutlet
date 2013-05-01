@@ -813,6 +813,10 @@ class User extends BaseUser
             $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
             $this->switchRole('ROLE_PARTNER', true);
+        } elseif ($role == 'ROLE_JAPAN_ADMIN') {
+            $this->setIsOrganizer(false);
+            $this->setIsSuperAdmin(false);
+            $this->switchRole('ROLE_JAPAN_ADMIN', true);
         } else {
             $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
@@ -846,6 +850,8 @@ class User extends BaseUser
             return 'Dell Partner';
         } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
             return 'Full Admin';
+        } elseif ($this->hasRole('ROLE_JAPAN_ADMIN')) {
+            return 'Japan Regional Admin';
         } else {
             return 'no admin';
         }

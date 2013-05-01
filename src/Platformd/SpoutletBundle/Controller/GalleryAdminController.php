@@ -119,6 +119,11 @@ class GalleryAdminController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
 
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data['sites'] = array('ja');
+                    $form->setData($data);
+                }
+
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
 

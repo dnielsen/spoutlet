@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 
 use Platformd\NewsBundle\Entity\News;
 use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -14,22 +15,46 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends Controller
 {
-
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addNewsBreadcrumb();
 
-        $manager = $this
+        return $this->render('NewsBundle:Admin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
+        $this->addNewsBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this
             ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('NewsBundle:News');
-        $query = $manager->getFindNewsQuery();
+            ->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+
+        $repo   = $em->getRepository('NewsBundle:News');
+        $query  = $repo->getFindNewsForSiteQuery($site);
 
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
-        return $this->render('NewsBundle:Admin:index.html.twig', array(
-            'news' => $pager
+        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
+
+        return $this->render('NewsBundle:Admin:list.html.twig', array(
+            'news'  => $pager,
+            'site'  => $site,
         ));
     }
 
@@ -144,6 +169,19 @@ class AdminController extends Controller
         $this->getBreadcrumbs()->addChild('News', array(
             'route' => 'NewsBundle_admin_homepage'
         ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'NewsBundle_admin_siteList',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
 
         return $this->getBreadcrumbs();
     }

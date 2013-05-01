@@ -1,16 +1,16 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block title 'News Regions' %}
+{% block title 'Event Regions' %}
 
 {% block content %}
-<h1>News Regions</h1>
+<h1>Event Regions</h1>
 
 {% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
     'sites': sites,
-    'route': 'NewsBundle_admin_siteList'
+    'route': 'admin_events_list'
 }%}
 
-<a class="btn btn-primary" href="{{ path('NewsBundle_admin_new') }}">
-    Create a new item
+<a class="btn btn-primary" href="{{ path('admin_events_new') }}">
+    Create a new event
 </a>
 {% endblock %}

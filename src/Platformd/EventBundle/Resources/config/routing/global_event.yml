@@ -48,11 +48,15 @@ global_event_view:
 
 admin_events_index:
     pattern: /admin/events
-    defaults: { _controller: EventBundle:GlobalEventAdmin:list }
+    defaults: { _controller: EventBundle:GlobalEventAdmin:index }
 
 admin_events_new:
     pattern: /admin/events/new
     defaults: { _controller: EventBundle:GlobalEventAdmin:newEvent }
+
+admin_events_list:
+    pattern: /admin/events/list/{site}
+    defaults: { _controller: EventBundle:GlobalEventAdmin:list }
 
 admin_events_new_import:
     pattern: /admin/events/new/import/{id}

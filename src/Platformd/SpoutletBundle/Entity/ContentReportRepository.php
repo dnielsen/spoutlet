@@ -36,18 +36,19 @@ class ContentReportRepository extends EntityRepository
         return self::$typeToBundleMap[$type];
     }
 
-    public function getContentReportTypeForAllSites($type)
+    public function getContentReportType($type, $site = null)
     {
-
         if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
+
+        $siteString = $site ? ' AND report.site = '.$site->getId() : '';
 
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
-            WHERE report.deleted = false
+            WHERE report.deleted = false'.$siteString.'
             GROUP BY item
             ORDER BY reportCount DESC, report.reportedAt
             ',
@@ -56,18 +57,20 @@ class ContentReportRepository extends EntityRepository
             ->execute();
     }
 
-    public function getContentReportTypeForAllSitesArchived($type) {
+    public function getContentReportTypeArchived($type, $site = null) {
 
         if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
+
+        $siteString = $site ? ' AND report.site = '.$site->getId() : '';
 
         return $this->getEntityManager()->createQuery(sprintf('
             SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
             WHERE item.deleted = false AND
-            report.deleted = true
+            report.deleted = true'.$siteString.'
             GROUP BY item
             HAVING reportCount > 0
             ORDER BY reportCount DESC, report.reportedAt
@@ -77,11 +80,13 @@ class ContentReportRepository extends EntityRepository
             ->execute();
     }
 
-    public function getContentReportTypeForAllSitesDeletedContent($type) {
+    public function getContentReportTypeDeletedContent($type, $site = null) {
 
         if (!in_array($type, self::$validTypes)) {
             throw new \Exception(sprintf("Unknown content report type = '%s'.", $type));
         }
+
+        $siteString = $site ? ' AND report.site = '.$site->getId() : '';
 
         $reason = "REPORTED_AND_REMOVED_BY_ADMIN";
 
@@ -89,7 +94,7 @@ class ContentReportRepository extends EntityRepository
             SELECT item, COUNT(DISTINCT report.id) reportCount, site.defaultLocale locale, site.fullDomain fullDomain FROM %s:%s item
             LEFT JOIN item.contentReports report
             LEFT JOIN report.site site
-            WHERE item.deleted = true AND report.deleted = true
+            WHERE item.deleted = true AND report.deleted = true'.$siteString.'
             GROUP BY item
             HAVING reportCount > 0
             ORDER BY reportCount DESC, report.reportedAt

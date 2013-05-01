@@ -285,7 +285,7 @@ class AbstractEventRepository extends EntityRepository
      * @param String $alias
      * @return Doctrine\ORM\QueryBuilder
      */
-    private function getBaseQueryBuilder($site, $alias = 'e')
+    protected function getBaseQueryBuilder($site, $alias = 'e')
     {
         $qb = $this->createQueryBuilder($alias)
             ->leftJoin($alias.'.sites', 's')

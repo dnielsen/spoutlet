@@ -19,6 +19,11 @@ class TranslationAdminController extends Controller
     {
         $this->basicSecurityCheck('ROLE_ADMIN_TRANSLATIONS');
 
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('pd_translation_admin_edit_locale', array('locale' => 'ja'));
+            return $this->redirect($url);
+        }
+
         $this->addTranslationAdminBreadcrumbs();
 
         $localesReport = $this->getTokenRepository()->getLocalesStatusArray($this->getAvailableLocales());
@@ -40,6 +45,10 @@ class TranslationAdminController extends Controller
     public function editLocaleAction($locale)
     {
         $this->basicSecurityCheck('ROLE_ADMIN_TRANSLATIONS');
+
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $locale = 'ja';
+        }
 
         if (!in_array($locale, $this->getAvailableLocales())) {
             throw $this->createNotFoundException(sprintf('Locale "%s" is not a valid locale', $locale));
