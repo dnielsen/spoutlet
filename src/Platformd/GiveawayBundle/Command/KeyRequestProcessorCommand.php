@@ -404,6 +404,7 @@ EOT
             $groupReplacements = array(
                 '%promotion_group_name%'      => $promotionGroupName,
                 '%promotion_group_show_page%' => 'http://'.$site->getFullDomain().$promotionGroupShowPage,
+                '%promotion_title%'           => $promotionTitle,
             );
 
             $groupSection = $translator->trans('platformd.key_request_processor_command.key_assigned_email_body_group_section', $groupReplacements, 'messages', $locale);
