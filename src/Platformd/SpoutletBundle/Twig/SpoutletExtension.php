@@ -551,7 +551,7 @@ class SpoutletExtension extends Twig_Extension
             case 'en_US':   return sprintf($format, '');
             case 'en_SG':   return sprintf($format, '/sg');
             case 'es':      return sprintf($format, '/latam');
-            case 'en_GB':   return sprintf($format, '/eu');
+            case 'en_GB':   return sprintf($format, '');
             case 'en_AU':   return sprintf($format, '/anz');
             case 'en_IN':   return sprintf($format, '/in');
 
