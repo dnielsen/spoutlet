@@ -547,10 +547,13 @@ class SpoutletExtension extends Twig_Extension
         $format         = '<a href="http://www.alienwarearena.com%s/account/events/">'.$this->trans('platformd.layout.page_content.competitions').'</a>';
 
         switch($locale) {
-            case 'ja':      return sprintf($format, '/japan');
             case 'zh':      return sprintf($format, '/china');
             case 'en_US':   return sprintf($format, '');
             case 'en_SG':   return sprintf($format, '/sg');
+            case 'es':      return sprintf($format, '/latam');
+            case 'en_GB':   return sprintf($format, '');
+            case 'en_AU':   return sprintf($format, '/anz');
+            case 'en_IN':   return sprintf($format, '/in');
 
             default:        return false;
         }
@@ -743,6 +746,11 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, '/japan');
             case 'zh':      return sprintf($format, '/china');
             case 'en_SG':   return sprintf($format, '');
+            case 'en_US':   return sprintf($format, '');
+            case 'es':      return sprintf($format, '');
+            case 'en_GB':   return sprintf($format, '');
+            case 'en_AU':   return sprintf($format, '');
+            case 'en_IN':   return sprintf($format, '');
 
             default:        return false;
         }

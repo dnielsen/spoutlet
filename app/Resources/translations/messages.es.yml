@@ -46,6 +46,21 @@ platformd:
             photos: Galería de Fotos
             contests: Concursos
 
+        page_content:
+            featured: Featured
+            giveaways: Giveaways
+            all: All
+            see_more: See More
+            photo_gallery: Image Gallery
+            view_all: View All
+            competitions: Competencias
+            hot_stories: Hot Stories
+            videos: Videos
+            view_more: View More
+            views: Views
+            rating: Rating
+            all_news: All
+
         bottom_menu:
             contact_us: Contáctenos
             privacy_policy: Política de Privacidad
