@@ -417,7 +417,7 @@ platformd:
             giveaways: Giveaways
         assigned:
             message: |
-                    Please follow the instructions below to activate you key. If you require any additional support, please email contact@alienwarearena.com.
+                    Please follow the instructions below to activate your key. If you require any additional support, please email %contact_email%.
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
             assigned_at: Assigned
