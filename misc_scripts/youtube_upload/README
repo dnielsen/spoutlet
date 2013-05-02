@@ -1,0 +1,6 @@
+Run "python upload_video.py" with some dummy data and authenticate properly until you see the "upload_video.py-oauth2.json"
+file has been created.
+
+Setup config.php (use config.php.dist as a base).
+Setup client_secrets.json (get this from google api console - see client_secrets.json.dist for info)
+Run "php uploadScript.php".
