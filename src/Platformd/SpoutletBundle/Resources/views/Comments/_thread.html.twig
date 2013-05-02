@@ -31,6 +31,9 @@
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
 
 <script type="text/javascript">
+
+    var commentRequestInProgress = false;
+
     $(function () {
 
         $('.comment-sorting select').change(function() {
@@ -54,6 +57,8 @@
 
         $('#new-comment-submit').click(function () {
 
+            if (commentRequestInProgress) return;
+
             if ($('#new-comment-body').val() == "") {
                 return false;
             }
@@ -66,6 +71,9 @@
                 'parent' : 0,
                 'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
+
+            commentRequestInProgress = true;
+
             $.ajax({
                 url: '{{ path('comments_new') }}',
                 type: 'post',
@@ -76,6 +84,7 @@
                     $('.thread').unblock();
                     $('#new-comment-body').val('');
                     $('.comment-count').text(parseInt($('.comment-count').text())+1);
+                    commentRequestInProgress = false;
                 }
             });
         });
