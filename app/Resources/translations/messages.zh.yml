@@ -2,6 +2,22 @@
 edit: 编辑
 date_format: Y年m月d日
 
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover:
+    continue: Continue to Alienware Arena
+
 platformd:
 
     homepage:
@@ -236,6 +252,7 @@ platformd:
             dell_privacy_label: 隐私条款
             country_label: 选择国家
             underage_message: 抱歉，您不符合最低年龄要求。我们暂时不能为您完成注册。
+            please_wait: 系统正在创建多个账户，暂时无法为您创建,请稍后重试。
 
         login:
             title: 登陆您的账户
@@ -305,7 +322,7 @@ platformd:
     giveaway_pool:
         pool: 邀请码库
         admin:
-            title: "%giveaway_name%" 的邀请码库
+            title: %giveaway_name% 的邀请码库
             create: 创建新的邀请码库
             edit_pool: 编辑邀请码库
             save_giveaway_pool: 保存邀请码库

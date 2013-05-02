@@ -21,6 +21,7 @@ use Platformd\CEVOBundle\Api\ApiManager;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
+use Platformd\SpoutletBundle\Entity\Site;
 
 use Doctrine\ORM\EntityManager;
 use Knp\MediaBundle\Util\MediaUtil;
@@ -60,7 +61,7 @@ class GroupManager
     private $isMemberCache;
     private $isApplicantCache;
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup');
     static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
     static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
@@ -464,13 +465,15 @@ class GroupManager
 
         $results = json_decode(curl_exec($curl), true);
 
-        foreach($results as $result)
-        {
-            if(isset($result))
+        if ($results) {
+            foreach($results as $result)
             {
-                if(array_key_exists('likes', $result))
+                if(isset($result))
                 {
-                    $total += $result['likes'];
+                    if(array_key_exists('likes', $result))
+                    {
+                        $total += $result['likes'];
+                    }
                 }
             }
         }
@@ -488,6 +491,16 @@ class GroupManager
     public function getAllGroupsForUser(User $user)
     {
         return $this->getRepository()->getAllGroupsForUser($user);
+    }
+
+    public function getAllGroupsForSite(Site $site)
+    {
+        return $this->getRepository()->findAllGroupsRelevantForSite($site);
+    }
+
+    public function getAllLocationGroupsForSite(Site $site)
+    {
+        return $this->getRepository()->findAllLocationGroupsRelevantForSite($site);
     }
 
     private function getCurrentSite()
@@ -515,48 +528,7 @@ class GroupManager
 
     public function isAllowedTo($user, $group, $site, $action) {
 
-        if ($group->getDeleted() && $action != "EditGroup") {
-            return false;
-        }
-
-        if (!$group->isVisibleOnSite($site)) {
-            return false;
-        }
-
-        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
-
-            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
-            $isOwner        = $group->isOwner($user);
-            $isMember       = $this->isMember($user, $group);
-            $isApplicant    = $this->isApplicant($user, $group);
-
-            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
-
-                return true;
-            }
-
-            if ($isOwner) {
-                return in_array($action, self::$ownerIsAllowedTo);
-            }
-
-            if ($isMember) {
-                return in_array($action, self::$memberIsAllowedTo);
-            }
-
-            if ($isApplicant) {
-                return in_array($action, self::$applicantIsAllowedTo);
-            }
-        }
-
-        if ($group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPublicIsAllowedTo);
-        }
-
-        if (!$group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
-        }
-
-        return false;
+        return in_array($action, $this->getPermissions($user, $group, $site));
     }
 
     public function isMember($user, Group $group)
@@ -605,5 +577,86 @@ class GroupManager
     public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
     {
         return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersJoinedCountByGroup($group, $fromDate, $thruDate);
+    }
+
+    public function getPermissions($user, $group, $site)
+    {
+        $membershipRequiredActions = array(
+            'LeaveGroup',
+        );
+
+        $nonMembershipRequiredActions = array(
+            'JoinGroup',
+            'ApplyToGroup',
+        );
+
+        if ($group->getDeleted() && $action != "EditGroup") {
+            return array();
+        }
+
+        if (!$group->isVisibleOnSite($site)) {
+            return array();
+        }
+
+        $permissions = array();
+
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
+
+            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
+            $isOwner        = $group->isOwner($user);
+            $isMember       = $this->isMember($user, $group);
+            $isApplicant    = $this->isApplicant($user, $group);
+
+            if ($isSuperAdmin) {
+                $permissions = self::$superAdminIsAllowedTo;
+            } elseif ($isOwner) {
+                $permissions = self::$ownerIsAllowedTo;
+            } elseif ($isMember) {
+                $permissions = self::$memberIsAllowedTo;
+            } elseif ($isApplicant) {
+                $permissions = self::$applicantIsAllowedTo;
+            }
+
+            if (count($permissions) > 0) {
+
+                $permissionsMap = array_flip($permissions);
+
+                if (!$this->isMember($user, $group)) {
+                    foreach ($membershipRequiredActions as $action) {
+                        if(in_array($action, $permissions)) {
+                            unset($permissions[$permissionsMap[$action]]);
+                        }
+                    }
+                }
+
+                if ($this->isMember($user, $group)) {
+                    foreach ($nonMembershipRequiredActions as $action) {
+                        if(in_array($action, $permissions)) {
+                            unset($permissions[$permissionsMap[$action]]);
+                        }
+                    }
+                }
+
+                if ($group->getIsPublic()) {
+                    if(in_array('ApplyToGroup', $permissions)) {
+                        unset($permissions[$permissionsMap['ApplyToGroup']]);
+                    }
+                } else {
+                    if(in_array('JoinGroup', $permissions)) {
+                        unset($permissions[$permissionsMap['JoinGroup']]);
+                    }
+                }
+
+                return $permissions;
+            }
+        }
+
+        if ($group->getIsPublic()) {
+            $permissions = self::$nonMemberPublicIsAllowedTo;
+        } else {
+            $permissions = self::$nonMemberPrivateIsAllowedTo;
+        }
+
+        return $permissions;
     }
 }

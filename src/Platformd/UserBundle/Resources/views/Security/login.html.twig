@@ -1,16 +1,16 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
-{% block title 'platformd.user.login.title' | trans %}
+{% block title 'platformd.user.login.title' | pd_trans %}
 
 {% block fos_user_content %}
-<h2>{{ 'platformd.user.login_header' | trans }}</h2>
+<h2>{{ 'platformd.user.login_header' | pd_trans }}</h2>
 
 <div class="login_page_interstitial interstitial">
 
-<form action="{{ path("_fos_user_security_check") }}" method="post" class="form">
+<form action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
 
     {% if error %}
-        <div class="form-msg-error">{{ error | trans }}</div>
+        <div class="form-msg-error">{{ error | pd_trans }}</div>
     {% endif %}
 
     <div class="form_row">
@@ -29,9 +29,14 @@
         <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
     #}
 
-    <input type="submit" id="_submit" class="button" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
-    
-    <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | trans }}</a>
+    <input type="submit" id="_submit" class="button btn btn-primary" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
+
+    <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>
+
+    <div class="login_page_register">
+        Don't have an account? <a href="{{ path('fos_user_registration_register') }}">Register now!</a>
+    </div>
+
 </form>
 
 </div>

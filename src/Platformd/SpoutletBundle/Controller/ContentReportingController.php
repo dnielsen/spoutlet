@@ -193,8 +193,6 @@ class ContentReportingController extends Controller
                 break;
         }
 
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
@@ -203,7 +201,7 @@ class ContentReportingController extends Controller
         $message            = nl2br(sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
 
 
-        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale());
     }
 
     private function getEmailManager()

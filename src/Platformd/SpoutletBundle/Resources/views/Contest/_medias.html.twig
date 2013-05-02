@@ -13,14 +13,14 @@
                         {% endif %}
                     {% else %}
                         <div class="thumbnail-vote-caption">
-                            <a href="http://alienwarearena.com/account/login?return={{ ("http://" ~  app.request.headers.get('Host') ~ path('contest_vote', { 'slug': contest.slug }) ~ '?vote=' ~ media.id) | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                            <a href="{{ login_link(url('contest_vote', { 'slug': contest.slug }) ~ '?vote=' ~ media.id) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                         </div>
                     {% endif %}
                 </a>
             </div>
             <div style="width:135px;">
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                <div>by: <a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                <div>by: <a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
             </div>
         </div>
     {% endfor %}

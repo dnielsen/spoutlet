@@ -11,7 +11,7 @@
                 {{ 'galleries.vote_success' | trans }}
             </div>
             <div id="media-voting-login-required" style="display: none;">
-                {{ 'galleries.login_to_vote_linked' | trans({ 'login_url' : "http://alienwarearena.com/account/login?return=" ~ app.request.uri | url_encode }) }}
+                {{ 'galleries.login_to_vote_linked' | trans({ 'login_url' : login_link(app.request.uri) }) }}
             </div>
         </div>
     </div>

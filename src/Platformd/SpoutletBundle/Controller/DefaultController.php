@@ -20,6 +20,10 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasIndex()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
@@ -144,11 +148,19 @@ class DefaultController extends Controller
 
     public function aboutAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasAbout()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:about.html.twig');
     }
 
     public function contactAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasContact()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:contact.html.twig');
     }
 
@@ -231,5 +243,38 @@ class DefaultController extends Controller
             default:
                 return 'http://video.alienwarearena.com/ajax/moviexml';
         }
+    }
+
+    public function eventsAction()
+    {
+        $site = $this->getCurrentSite();
+
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
+        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        uasort($upcomingEvents, array($this->getGlobalEventService(), 'eventCompare'));
+
+        $events = array_slice($upcomingEvents, 0, 6);
+
+        return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
+    }
+
+    public function groupsMapAction()
+    {
+        $site = $this->getCurrentSite();
+
+        $groups = $this->get('platformd.model.group_manager')->getAllLocationGroupsForSite($site);
+
+        $groupsArray = array();
+
+        foreach ($groups as $group) {
+            $groupsArray[] = array(
+                'name' => $group->getName(),
+                'location' => $group->getLocation(),
+                'url' => $this->getLinkableUrl($group),
+            );
+        }
+
+        return $this->render('SpoutletBundle:Default:groupsMap.html.twig', array('groups' => $groupsArray));
     }
 }

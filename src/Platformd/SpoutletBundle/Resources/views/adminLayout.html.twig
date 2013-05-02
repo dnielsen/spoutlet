@@ -8,6 +8,8 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
+        {% include 'SpoutletBundle::_favicon.html.twig' ignore missing %}
+
 		<script type="text/javascript">
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
@@ -60,7 +62,7 @@
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 
         <script type="text/javascript">
-            CKEDITOR.config.customConfig = 'config.admin.js';
+            CKEDITOR.config.customConfig = 'ckeditor/config.admin.js';
         </script>
 	</head>
 	<body>
@@ -68,11 +70,11 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="{{ path('admin_index') }}">Alienware Arena Admin</a>
+                <a class="brand" href="{{ path('admin_index') }}">Admin</a>
                 <ul class="nav">
                     <li><a href="{{ path('admin_index') }}">Admin Home</a></li>
                     <li>
-                        <a href="{{ path('admin_index') }}">
+                        <a href="{{ path('default_index') }}">
                             <i class="icon-home icon-white"></i>
                             Website Frontend
                         </a>
@@ -87,7 +89,7 @@
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="admin-container container-fluid">
         <div class="row-fluid">
             <div class="sidebar span3">
                 <div class="well">
@@ -209,6 +211,15 @@
                             </li>
                             {% endif %}
 
+                            <li>
+                                <a href="{{ path('admin_takeover_index') }}">Site Takeovers</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_takeover_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
                                     <a href="{{ path('pd_translation_admin_list_locales') }}">{{ 'translations_admin' | trans }}</a>
@@ -233,6 +244,18 @@
                                     </li>
                                 </ul>
                             </li>
+
+                            {% if features.hasHtmlWidgets %}
+                                <li>
+                                    <a href="{{ path('admin_html_widget_index') }}">Html Widgets</a>
+                                    <ul>
+                                    <li>
+                                        <a href="{{ path('admin_html_widget_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+
+                                </li>
+                            {% endif %}
                         </ul>
                     {% endif %}
 
@@ -269,7 +292,7 @@
                         <h5>Members</h5>
                         <ul>
                             <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
-                            <li><a href="#">Mass Unsubscribe</a></li>
+                            <li><a href="{{ path('admin_mass_unsubscribe') }}">Mass Unsubscribe</a></li>
                         </ul>
                     {% endif %}
                 </div>
@@ -277,25 +300,26 @@
             <div class="content span9">
 
                 {{ knp_menu_render('admin_breadcrumbs', {}, "breadcrumbs") }}
+                {% block flash %}
+                    {% if app.session.hasFlash('success') %}
+                        <div class="alert alert-success">
+                            <i class="icon-ok"></i>
+                            {{ app.session.getflash('success') | trans }}
+                        </div>
+                    {% endif %}
 
-                {% if app.session.hasFlash('success') %}
-                    <div class="alert alert-success">
-                        <i class="icon-ok"></i>
-                        {{ app.session.getflash('success') | trans }}
-                    </div>
-                {% endif %}
-
-                {% if app.session.hasFlash('error') %}
-                    <div class="alert alert-error">
-                        <i class="icon-ok"></i>
-                        {{ app.session.getflash('error') | trans }}
-                    </div>
-                {% endif %}
+                    {% if app.session.hasFlash('error') %}
+                        <div class="alert alert-error">
+                            <i class="icon-ok"></i>
+                            {{ app.session.getflash('error') | trans }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
 
                 {% block content %}{% endblock %}
 
                 <footer>
-                    <p>&copy; Alienware Arena {{ '' | date('Y') }}</p>
+                    <p>&copy; {{ '' | date('Y') }}</p>
                 </footer>
             </div>
         </div>

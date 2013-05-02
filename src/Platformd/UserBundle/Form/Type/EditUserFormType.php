@@ -7,14 +7,25 @@ use Symfony\Component\Form\FormBuilder;
 
 class EditUserFormType extends AbstractType
 {
-
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
             ->add('username')
+            ->add('email', 'email')
             ->add('firstname')
-            ->add('lastname')
-            ->add('email');
+            ->add('lastname');
+
+
+        if ($options['local_auth']) {
+            $builder
+                ->add('birthdate', 'birthday', array(
+                    'empty_value' => '',
+                ))
+                ->add('phoneNumber')
+                ->add('country', 'country')
+                ->add('state')
+            ;
+        }
 
         if ($options['allow_promote']) {
             $builder->add('admin_level', 'choice', array(
@@ -38,7 +49,8 @@ class EditUserFormType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array_merge($options, array(
-            'allow_promote' => false
+            'allow_promote' => false,
+            'local_auth' => false
         ));
     }
 

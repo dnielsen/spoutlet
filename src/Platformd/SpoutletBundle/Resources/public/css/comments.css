@@ -26,6 +26,8 @@
 .comment-wrapper .comment-author {
     width: 84px;
     float: left;
+    z-index: 1000;
+    position: relative;
 }
 
 .comment-wrapper .author-level {
@@ -45,7 +47,8 @@
     padding: 2px 3px 0 0;
 }
 
-.comment-wrapper .comment-author img {
+.comment-wrapper .comment-author img,
+.comment-wrapper .default-avatar {
     width: 84px;
     height: 84px;
 }
@@ -234,7 +237,8 @@
     display: none;
 }
 
-.comment-reply img {
+.comment-reply img,
+.comment-reply .default-avatar {
     float: left;
     width: 32px;
     height: 32px;
@@ -244,10 +248,6 @@
     margin-left: 37px;
     padding-bottom: 5px;
     width: 570px;
-}
-
-.comment-reply a {
-    padding-right: 5px;
 }
 
 .replied-at {

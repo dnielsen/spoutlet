@@ -34,6 +34,8 @@
 #event-banner {
     width: 950px;
     height: 120px;
+    background:url('/bundles/event/images/events_default_banner.jpg') top left no-repeat;
+    border: none;
 }
 
 #event-registration-button {
@@ -46,10 +48,11 @@
     cursor: pointer;
 }
 
-#event-attendee-list img {
+#event-attendee-list img,
+#event-attendee-list .default-avatar {
     width: 48px;
     height: 48px;
-
+    display: inline-block;
 }
 
 #event-attendee-list a,

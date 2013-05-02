@@ -1,0 +1,51 @@
+<?php
+
+namespace Platformd\UserBundle\Validator;
+
+use Symfony\Component\Validator\ConstraintValidator,
+    Symfony\Component\Validator\Constraint
+;
+
+use Platformd\SpoutletBundle\Util\SiteUtil;
+
+/**
+ * Provides the actual validation for UniqueEntityValidator
+ */
+class UserValidator extends ConstraintValidator
+{
+    protected $siteUtil;
+
+    const ERROR_MESSAGE_BIRTHDATE_REQUIRED = 'birthdate_not_blank';
+
+    public function __construct(SiteUtil $siteUtil)
+    {
+        $this->siteUtil = $siteUtil;
+    }
+
+    public function isValid($entity, Constraint $constraint)
+    {
+        $site = $this->siteUtil->getCurrentSite();
+
+        if (!$site) {
+            return true;
+        }
+
+        $config = $site->getSiteConfig();
+
+        if ($config->getBirthdateRequired() && (!$entity->getBirthdate() || $entity->getBirthdate() == "")) {
+
+            // Set error message at top of form
+            if ($this->context->getViolations()->count() < 1) {
+                $this->context->addViolation($constraint->message, array(), $entity->getBirthdate());
+            }
+
+            // Set field error
+            $oldPath = $this->context->getPropertyPath();
+            $this->context->setPropertyPath(empty($oldPath) ? 'birthdate' : $oldPath.'.birthdate');
+            $this->context->addViolation(self::ERROR_MESSAGE_BIRTHDATE_REQUIRED, array(), $entity->getBirthdate());
+            $this->context->setPropertyPath($oldPath);
+        }
+
+        return true;
+    }
+}

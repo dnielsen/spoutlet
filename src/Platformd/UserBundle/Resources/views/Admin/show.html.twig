@@ -1,0 +1,69 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title %}{{ "fos_user_admin_user_show_title" | trans({ "%username%" : user.username }, "FOSUserBundle") }}{% endblock %}
+
+{% block content %}
+    <h1>User "{{ user.username }}"</h1>
+
+    <a
+        href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}"
+        class="btn btn-large btn-primary">
+        {{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}
+    </a>
+    <a
+        href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}"
+        class="btn btn-large btn-primary">
+        {{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}
+    </a>
+
+    <br />
+    <br />
+
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'Username'|trans }}</th>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Firstname'|trans }}</th>
+            <td>{{ user.firstname }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Lastname'|trans }}</th>
+            <td>{{ user.lastname }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'email'|trans }}</th>
+            <td>{{ user.email }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Date of birth'|trans }}</th>
+            <td>{{ user.birthdate|date }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Country'|trans }}</th>
+            <td>{{ user.country }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'State'|trans }}</th>
+            <td>{{ user.state }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Phone'|trans }}</th>
+            <td>{{ user.phoneNumber }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Last seen'|trans }}</th>
+            <td>{{ user.lastLogin|date }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Created'|trans }}</th>
+            <td>{{ user.created|date }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'IP Address at creation'|trans }}</th>
+            <td>{{ user.ipAddress }}</td>
+        </tr>
+    </table>
+
+{% endblock %}

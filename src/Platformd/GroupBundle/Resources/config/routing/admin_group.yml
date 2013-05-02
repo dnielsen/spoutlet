@@ -1,8 +1,3 @@
-admin_group_filter:
-    pattern: /metrics/find-groups
-    defaults: { _controller: "GroupBundle:GroupAdmin:filter" }
-    requirements: { _method: POST }
-
 admin_group_filter_reset:
     pattern: /metrics/find-groups/reset
     defaults: { _controller: "GroupBundle:GroupAdmin:filterReset" }
@@ -11,7 +6,6 @@ admin_group_filter_reset:
 admin_group_find:
     pattern: /metrics/find-groups
     defaults: { _controller: "GroupBundle:GroupAdmin:find" }
-    requirements: { _method: GET }
 
 admin_group_show:
     pattern: /{id}

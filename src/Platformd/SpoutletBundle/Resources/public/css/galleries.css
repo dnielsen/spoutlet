@@ -33,9 +33,11 @@
     padding: 3px 0 0 0;
 }
 
-.photo-author img {
+.photo-author img,
+.photo-author .default-avatar {
     width: 84px;
     height: 84px;
+    display: inline-block;
 }
 
 .photo-date {

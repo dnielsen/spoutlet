@@ -103,3 +103,11 @@ SpoutletBundle_admin_rsvp:
 SpoutletBundle_rsvp:
     resource: "@SpoutletBundle/Resources/config/routing/rsvp.yml"
     prefix:   /rsvp
+
+SpoutletBundle_takeover:
+    resource: "@SpoutletBundle/Resources/config/routing/takeover.yml"
+    prefix:   /takeover
+
+SpoutletBundle_admin_takeover:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_takeover.yml"
+    prefix:   /admin/takeover

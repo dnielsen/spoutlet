@@ -61,7 +61,9 @@ class GroupEventController extends Controller
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
             $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
-            $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+            if ($site) {
+                $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
+            }
         }
 
         $form = $this->createForm('groupEvent', $groupEvent);
@@ -542,7 +544,6 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        // check for edit access (permissions match those required to send email)
         if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
         {
             throw new AccessDeniedException();
@@ -606,10 +607,12 @@ class GroupEventController extends Controller
         }
 
         $pendingApprovals = $this->getGroupEventService()->getPendingApprovalEventsForGroup($group);
+        $groupPermissions = $this->getGroupManager()->getPermissions($this->getUser(), $group, $this->getCurrentSite());
 
         return $this->render('EventBundle:GroupEvent:pending.html.twig', array(
             'pendingApprovals' => $pendingApprovals,
-            'group' => $group
+            'group' => $group,
+            'permissions' => $groupPermissions,
         ));
     }
 
@@ -915,13 +918,5 @@ class GroupEventController extends Controller
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
-    }
-
-    /**
-     * @return \Platformd\EventBundle\Service\GroupEventService
-     */
-    private function getGroupEventService()
-    {
-        return $this->get('platformd_event.service.group_event');
     }
 }

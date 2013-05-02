@@ -12,6 +12,7 @@ imports:
     - { resource: "@CommentBundle/Resources/config/services.yml" }
     - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@GameBundle/Resources/config/services.yml" }
+    - { resource: "@HtmlWidgetBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -113,6 +114,7 @@ fos_user:
     registration:
         form:
             type: platformd_user_registration
+            handler: platformd_user.registration.form.handler
         confirmation:
             enabled: true
     profile:
@@ -126,7 +128,15 @@ vich_geographical:
     db_driver: orm
 
 parameters:
+
     doctrine.orm.validator.unique.class: Knp\Validator\UniqueEntityValidator
+
+    # false = CEVO login, true = local login
+    local_auth: false
+
+    # Used by ReCAPTCHA bundle
+    kernel.default_locale: en
+
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false
 
@@ -193,6 +203,7 @@ parameters:
     # used by the SiteProtectionListener to prevent, for example, Latin America users
     # from accessing pages on our site, other than the few that we host of theirs
     allowed_sites: [en, ja, zh]
+
 
     # Used for the translation admin
     locale_translations:
@@ -339,6 +350,7 @@ ewz_recaptcha:
     public_key: %recaptcha.public_key%
     private_key: %recaptcha.private_key%
     secure: false
+    enabled: true
 
 stof_doctrine_extensions:
     default_locale: en_US

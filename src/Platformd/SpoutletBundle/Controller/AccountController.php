@@ -24,35 +24,46 @@ class AccountController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $locale = $this->getLocale();
+        $localAuth = $this->container->getParameter('local_auth');
 
-        switch ($locale) {
-            case 'ja':
-                $subdomain = '/japan';
-                break;
+        if (!$localAuth) {
 
-            case 'zh':
-                $subdomain = '/china';
-                break;
+            $locale = $this->getLocale();
 
-            case 'es':
-                $subdomain = '/latam';
-                break;
+            switch ($locale) {
+                case 'ja':
+                    $subdomain = '/japan';
+                    break;
 
-            default:
-                $subdomain = '';
-                break;
-        }
+                case 'zh':
+                    $subdomain = '/china';
+                    break;
 
-        if ($user) {
-            $cevoUserId = $user->getCevoUserId();
+                case 'es':
+                    $subdomain = '/latam';
+                    break;
 
-            if ($cevoUserId && $cevoUserId > 0) {
-                return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                default:
+                    $subdomain = '';
+                    break;
             }
+
+            if ($user) {
+                $cevoUserId = $user->getCevoUserId();
+
+                if ($cevoUserId && $cevoUserId > 0) {
+                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                }
+            }
+
+            return $this->redirect('http://www.alienwarearena.com/account/profile');
+        } else {
+            return $this->render('UserBundle:Profile:show.html.twig', array(
+                'user' => $user,
+            ));
         }
 
-        return $this->redirect('http://www.alienwarearena.com/account/profile');
+
 	}
 
 

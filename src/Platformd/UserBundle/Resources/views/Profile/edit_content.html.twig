@@ -1,20 +1,20 @@
 {% form_theme form theme %}
 
-<h2>{{ 'platformd.user.edit_account_header' | trans }}</h2>
+<h2>{{ 'platformd.user.edit_account_header' | pd_trans }}</h2>
 
 <form novalidate="novalidate" action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit form">
 
     {{ form_errors(form) }}
 
     {{ form_row(form.user.username) }}
-    
+
     {{ form_row(form.user.email) }}
 
-    {{ 'platformd.user.name_fields_order' | trans({
+    {{ 'platformd.user.name_fields_order' | pd_trans({
         '%first_name%': form_row(form.user.firstname),
         '%last_name%': form_row(form.user.lastname)
     }) | raw }}
-    
+
     {{ form_row(form.current) }}
 
     {% if app.user.avatar and app.user.isAvatarApproved %}
@@ -25,35 +25,35 @@
     {% endif %}
 
     {{ form_row(form.user.file) }}
-    
+
     {{ form_row(form.user.type) }}
 
     {{ form_row(form.user.manufacturer) }}
-    
+
     {{ form_row(form.user.operating_system) }}
-    
+
     {{ form_row(form.user.cpu) }}
-    
+
     {{ form_row(form.user.memory) }}
-    
+
     {{ form_row(form.user.video_card) }}
-    
+
     {{ form_row(form.user.sound_card) }}
-    
+
     {{ form_row(form.user.hard_drive) }}
-    
+
     {{ form_row(form.user.headphones) }}
-    
+
     {{ form_row(form.user.mouse) }}
-    
+
     {{ form_row(form.user.mousepad) }}
-    
+
     {{ form_row(form.user.keyboard) }}
-    
+
     {{ form_row(form.user.monitor) }}
 
     <div>
         {{ form_rest(form) }}
-        <input type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" class="button" />
+        <input type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary" />
     </div>
 </form>

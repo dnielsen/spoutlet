@@ -3,6 +3,12 @@ security:
     factories:
         - "%kernel.root_dir%/../src/Platformd/CEVOBundle/Resources/config/security_factory.yml"
 
+    encoders:
+        "FOS\UserBundle\Model\UserInterface":
+            algorithm: sha512
+            encode_as_base64: false
+            iterations: 1
+
     providers:
         fos_userbundle:
             id: fos_user.user_manager
@@ -28,6 +34,7 @@ security:
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
+        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
         # protects games and game pages

@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.5              |"
+echo "|  Alienware Arena Reset Script v1.7              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -49,12 +49,28 @@ echo
 sudo ntpdate -u pool.ntp.org
 
 echo
+echo "Nuking cache from orbit..."
+
+sudo rm -rf app/cache/* >> bin/AwaReset.log
+
+echo
 echo "Updating Vendor files..."
 echo
 
-./bin/vendors install >> bin/AwaReset.log
+./bin/vendors install 2>&1 >> bin/AwaReset.log
 
 sudo ls > /dev/null
+
+echo
+echo "Updating all themes..."
+echo
+
+./app/console themes:update 2>&1 >> bin/AwaReset.log
+
+echo
+echo "Creating necessary symlinks for themes..."
+
+./app/console themes:install web --symlink >> bin/AwaReset.log
 
 echo
 echo "Resetting development database:"
@@ -119,11 +135,6 @@ echo "  - Initialising ACL structure..."
 ./app/console init:acl --env=test >> bin/AwaReset.log
 
 echo
-echo "Nuking cache from orbit..."
-
-sudo rm -rf app/cache/* >> bin/AwaReset.log
-
-echo
 echo "Clearing caches:"
 echo "  - Development..."
 
@@ -152,7 +163,7 @@ wget demo.alienwarearena.local/app_test.php --quiet -O /dev/null  >> bin/AwaRese
 echo
 echo "Changing cache & logs permissions..."
 
-sudo chmod 777 -R app/cache/ app/logs/
+sudo chmod -R 777 app/cache/ app/logs/
 
 echo
 echo "Running Behat tests..."

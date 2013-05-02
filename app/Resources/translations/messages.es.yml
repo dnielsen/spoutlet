@@ -2,6 +2,21 @@ date_format: M j, Y
 submit: Enviar
 cancel: Cancelar
 
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Continuar a Alienware Arena
+
 platformd:
 
     not_found:
@@ -133,6 +148,7 @@ platformd:
             not_allowed_register: No se te permite a RSVP para el evento!
             now_attending: Ahora estás asistiendo este evento.
             group_joined: Para asistir a este evento, debes únete a %groupName%. Ahora eres un miembro de este grupo.
+            group_home: Group Home
         event_contact:
             title: Contactar los asistentes por correo electrónico
             help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
@@ -154,6 +170,7 @@ platformd:
             remove: Eliminar
             no_attendees: No hay asistentes!
             remove_confirmation: ¿Está seguro que desea quitar "%username%" de este evento?
+            joined: Joined
         # used only in the admin area
         admin:
             title: Event admin
@@ -429,6 +446,10 @@ platformd:
                     Si crees que esto sea un error, por favor póngase en contacto con el organizador del evento.
 
                     Equipo Alienware Arena
+
+    user:
+        register:
+            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.

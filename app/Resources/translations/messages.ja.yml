@@ -3,6 +3,21 @@ date_format: Y年m月d日
 submit: 出品
 cancel: キャンセル
 
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Alienware Arenaを続行する
+
 platformd:
 
     homepage:
@@ -168,6 +183,7 @@ platformd:
             not_allowed_register: あなたは、このイベントへの参加連絡を許可されていません。
             now_attending: あなたはこのイベントに参加しています。
             group_joined: このイベントに参加するには、%groupName%.に参加する必要があります。これで、あなたはこのグループのメンバーです。
+            group_home: Group Home
         event_contact:
             title: 参加者にEメールで連絡する
             help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
@@ -189,6 +205,7 @@ platformd:
             remove: 除外する
             no_attendees: 参加者はいません。
             remove_confirmation: %username% をイベントからはずしますか？
+            joined: Joined
         # used only in the admin area
         admin:
             title: イベント管理者
@@ -301,6 +318,7 @@ platformd:
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
             underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
+            please_wait: 現在アクセスが集中しているため、作成要求を処理することができませんでした。時間を置いてからもう一度試してください。
 
         login:
             title: アカウントにログイン
@@ -372,7 +390,7 @@ platformd:
     giveaway_pool:
         pool: ギブアウェイプール
         admin:
-            title: "%giveaway_name%" 用のギブアウェイ
+            title: %giveaway_name% 用のギブアウェイ
             create:  新しいプール作成
             edit_pool:  プールを編集
             save_giveaway_pool: ギブアウェイプールを保存

@@ -83,9 +83,10 @@ services:
             - "@router"
             - "@security.context"
             - "@platformd.model.site_util"
-            - "@translator"
+            - "@platformd.model.translator"
             - "@fos_user.user_manager"
             - "@platformd.repository.content_reporting"
+            - "%local_auth%"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
@@ -231,3 +232,39 @@ services:
             - "@doctrine.orm.entity_manager"
         tags:
             - { name: validator.constraint_validator, alias: platformd.validator.rsvp_attendee }
+
+    platformd.takeover.site_takeover_listener:
+        class: Platformd\SpoutletBundle\Takeover\SiteTakeoverListener
+        arguments:
+            - "@router"
+            - "@platformd.takeover.site_takeover_manager"
+            - %base_host%
+        scope: request
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    platformd.takeover.site_takeover_manager:
+        class: Platformd\SpoutletBundle\Takeover\SiteTakeoverManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.model.site_util"
+        scope: request
+
+    platformd.repository.site:
+        class:           Platformd\SpoutletBundle\Entity\SiteRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Site'
+
+    platformd.model.site_manager:
+        class: Platformd\SpoutletBundle\Tenant\SiteManager
+        arguments:
+            - "@platformd.repository.site"
+
+    platformd.model.translator:
+        class: Platformd\SpoutletBundle\Model\Translator
+        arguments:
+            - '@translator'
+            - '@platformd.model.site_util'
+            - '@session'

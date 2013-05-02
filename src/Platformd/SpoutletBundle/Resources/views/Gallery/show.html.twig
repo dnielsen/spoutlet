@@ -135,8 +135,12 @@
                 </div>
                 <div class="widget-content">
                     <div class="photo-author">
-                        <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
-                        <div class="photo-author-link"><a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                        {% if get_avatar_url(media.author) != false %}
+                            <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
+                        {% else %}
+                            <div class="default-avatar"></div>
+                        {% endif %}
+                        <div class="photo-author-link"><a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                     </div>
 
                     {% if isVotable %}
@@ -151,7 +155,7 @@
                                 {% endif %}
                             {% else %}
                                 <div class="photo-like">
-                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="http://alienwarearena.com/account/login?return={{ app.request.uri ~ '?vote=' ~ media.id | url_encode }}"></a>
+                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="{{ login_link(app.request.uri ~ '?vote=' ~ media.id) }}"></a>
                                 </div>
                             {% endif %}
 

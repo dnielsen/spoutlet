@@ -2,6 +2,8 @@
 /* CSS Document */
 
 #boardList { width:100%;}
+#boardList.cant-add { height:534px; }
+#boardList.can-add { height:518px; }
 #boardList table { width:621px; border-spacing:2px; border-collapse: separate;}
 #boardList table td { margin:1px; height: 32px;}
 #boardList .sectionHeader { background:url(/bundles/spoutlet/images/discussions/section-bg.png) top right no-repeat; padding:0; height:42px; }
@@ -105,11 +107,11 @@
     text-align: center;
 }
 
-#form_content {
+#group-discussion-form-wrapper #form_content {
     width: 440px;
     height: 180px;
 }
 
-#form_title {
+#group-discussion-form-wrapper #form_title {
     width: 440px;
 }

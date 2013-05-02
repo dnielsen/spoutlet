@@ -11,28 +11,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class AdminController extends Controller
 {
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_sweepstakes_list', array('site' => 'ja'));
+            $url = $this->generateUrl('admin_sweepstakes_list', array('site' => 2));
             return $this->redirect($url);
         }
 
         $this->addSweepstakesBreadcrumb();
 
         return $this->render('SweepstakesBundle:Admin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
     public function listAction($site)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = 'ja';
+            $site = 2;
         }
 
         $this->addSweepstakesBreadcrumb();
@@ -40,7 +39,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $sweepstakess = $this->getSweepstakesRepo()->findAllForSite($site);
 
@@ -313,7 +312,7 @@ class AdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_sweepstakes_list',
                 'routeParameters' => array('site' => $site)
             ));

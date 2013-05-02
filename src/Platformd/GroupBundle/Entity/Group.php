@@ -14,6 +14,7 @@ use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Platformd\GroupBundle\Validator\GroupSlugCollision;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
@@ -25,6 +26,7 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface

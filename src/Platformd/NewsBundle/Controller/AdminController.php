@@ -6,33 +6,34 @@ use Platformd\SpoutletBundle\Controller\Controller;
 
 use Platformd\NewsBundle\Entity\News;
 use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
+use Knp\MediaBundle\Util\MediaUtil;
+
 class AdminController extends Controller
 {
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 'ja'));
+            $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 2));
             return $this->redirect($url);
         }
 
         $this->addNewsBreadcrumb();
 
         return $this->render('NewsBundle:Admin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
     public function listAction($site)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = 'ja';
+            $site = 2;
         }
 
         $this->addNewsBreadcrumb();
@@ -42,7 +43,7 @@ class AdminController extends Controller
             ->getDoctrine()
             ->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $repo   = $em->getRepository('NewsBundle:News');
         $query  = $repo->getFindNewsForSiteQuery($site);
@@ -70,7 +71,7 @@ class AdminController extends Controller
 
             $request
                 ->getSession()
-                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
+                ->setFlash('success', $this->trans('platformd.admin.news.created'));
 
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
@@ -99,7 +100,7 @@ class AdminController extends Controller
         if ($this->processForm($form, $request)) {
             $request
                 ->getSession()
-                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.modified'));
+                ->setFlash('success', $this->trans('platformd.admin.news.modified'));
 
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
@@ -128,7 +129,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.deleted'));
+            ->setFlash('success', $this->trans('platformd.admin.news.deleted'));
 
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
     }
@@ -145,9 +146,10 @@ class AdminController extends Controller
                 // either persist the image, or remove it
                 /** @var $news \Platformd\NewsBundle\Entity\News */
                 $news = $form->getData();
-                if ($news->getImage()->getFileObject()) {
-                    $em->persist($news->getImage());
-                } else {
+
+                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+
+                if (!$mUtil->persistRelatedMedia($news->getImage())) {
                     $news->setImage(null);
                 }
 
@@ -177,7 +179,7 @@ class AdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'NewsBundle_admin_siteList',
                 'routeParameters' => array('site' => $site)
             ));

@@ -7,7 +7,6 @@ use Platformd\GiveawayBundle\Form\Type\DealType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
@@ -24,8 +23,10 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('GiveawayBundle:DealAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -39,7 +40,7 @@ class DealAdminController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
@@ -241,7 +242,7 @@ class DealAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_deal_site',
                 'routeParameters' => array('site' => $site)
             ));

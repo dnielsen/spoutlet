@@ -114,17 +114,36 @@ EOT
                     }
                 }
 
-                $assetsTemplateFile = $theme . '_assets.html.twig';
+                $assetsTemplateFile = 'assets.html.twig';
                 $output->writeln(sprintf("Installing assets template file <comment>%s</comment> in Assetic exposed directory", $assetsTemplateFile));
 
                 $viewDir = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/views';
                 // Create the views directory otherwise symlink will fail.
                 $filesystem->mkdir($viewDir, 0777);
 
+                $oldAssets    = Finder::create()->files()->name('theme_*.*')->in($viewDir);
+                $filesystem->remove($oldAssets);
+
                 $originAssetsTemplateFile = $themeDir . DIRECTORY_SEPARATOR . $assetsTemplateFile;
-                $targetAssetsTemplateFile = $viewDir . DIRECTORY_SEPARATOR . $assetsTemplateFile;
+                $targetAssetsTemplateFile = $viewDir . DIRECTORY_SEPARATOR . 'theme_' . $theme . '_' . $assetsTemplateFile;
 
                 $filesystem->symlink($originAssetsTemplateFile, $targetAssetsTemplateFile);
+
+                $translationsDir    = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/translations';
+                $oldTranslations    = Finder::create()->files()->name('theme_*.*.yml')->in($translationsDir);
+
+                $filesystem->remove($oldTranslations);
+
+                $translations       = Finder::create()->files()->name('translation_overrides.*.yml')->in($themeDir);
+
+                foreach ($translations as $translationFile) {
+                    $output->writeln(sprintf("Symlinking translations file <comment>%s</comment> in main translations folder", $translationFile->getFileName()));
+
+                    $originTranslationsFile = $translationFile->getRealpath();
+                    $targetTranslationsFile = $translationsDir . DIRECTORY_SEPARATOR . 'theme_' . $theme . ltrim($translationFile->getFileName(), 'translation_overrides');
+
+                    $filesystem->symlink($originTranslationsFile, $targetTranslationsFile);
+                }
             }
         }
     }

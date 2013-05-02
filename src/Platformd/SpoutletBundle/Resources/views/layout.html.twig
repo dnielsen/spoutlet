@@ -27,14 +27,13 @@
                 'bundles/spoutlet/css/default.css'
                 'bundles/spoutlet/css/legal.css'
                 'bundles/spoutlet/css/new.css'
-                'bundles/comment/css/comments.css'
                 'bundles/spoutlet/css/comments.css'
                 'ckeditor/skins/kama/editor.css'
                 'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
                 'bundles/spoutlet/css/qtip.css'
                 'bundles/spoutlet/css/rsvp.css'
 		        filter='cssrewrite'
-		        output='css/packed/layout.css'
+		        output='css/packed/layout_default.css'
 		    %}
 		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
 		    {% endstylesheets %}
@@ -68,7 +67,7 @@
                 'ckeditor/lang/en.js'
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
                 'bundles/spoutlet/js/jquery.blockUI.js'
-		        output='js/packed/layout.js'
+		        output='js/packed/layout_default.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
 
@@ -80,9 +79,6 @@
                 CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
             </script>
         {% endif %}
-
-        {{ vichgeo_include_js() }}
-        {{ vichgeo_include_css() }}
 
         {# Here we include assets for the current active theme #}
         {% include '::' ~ site.theme ~ '_assets.html.twig' ignore missing %}
@@ -101,7 +97,7 @@
                 $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
                 $('a[href*="alienwarearena"]').attr('target','');
 
-		        $("ul.sf-menu").supersubs({
+		        $("ul.sf-list").supersubs({
 		            minWidth:   12,
 		            maxWidth:   27,
 		            extraWidth: 1
@@ -115,13 +111,10 @@
                 });
                 $('#nav-wrapper').width(width);
 
-                $("ul.sf-menu-account").supersubs({
-                    minWidth:   12,
-                    maxWidth:   27,
-                    extraWidth: 1
-                }).superfish({
-                    delay:      150
-                });
+                // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
+                $.blockUI.defaults.overlayCSS = {};
+
+                $.fn.qtip.defaults.style.classes = 'qtip-dark qtip-shadow qtip-rounded';
 		    });
 		</script>
 		<script type="text/javascript">
@@ -142,16 +135,20 @@
 				});
 			});
 		</script>
-        {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
-        {% include 'SpoutletBundle::_analytics.html.twig' %}
+
+        {% if features.hasGoogleAnalytics and config.googleAnalyticsAccount %}
+            {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
+            {% include 'SpoutletBundle::_analytics.html.twig' %}
+        {% endif %}
+
 	</head>
 	<body class="site-{{ app.session.locale }}">
-        {% if facebook_app_id %}
+        {% if features.hasFacebook and config.facebookAppId %}
         <div id="fb-root"></div>
         <script src="http://connect.facebook.net/en_US/all.js"></script>
         <script>
           // assume we are already logged in
-          FB.init({appId: '{{ facebook_app_id }}', xfbml: true, cookie: true});
+          FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});
         </script>
         {% endif %}
 
@@ -190,6 +187,8 @@
                                         {% set sessionFlashType = 'error' %}
                                     {% elseif (app.session.hasFlash('success')) %}
                                         {% set sessionFlashType = 'success' %}
+                                    {% elseif (app.session.hasFlash('info')) %}
+                                        {% set sessionFlashType = 'info' %}
                                     {% else %}
                                         {% set sessionFlashType = block('flash_type') %}
                                     {% endif %}

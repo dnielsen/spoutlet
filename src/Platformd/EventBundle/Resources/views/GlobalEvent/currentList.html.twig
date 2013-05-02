@@ -1,13 +1,14 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
-<h2>{{ 'platformd.events.event_listings.header' | trans }}</h2>
+
+<h2>{{ 'platformd.events.event_listings.header' | pd_trans }}</h2>
 <div class="std_1col" style="padding:0 0 10px 0">
     <div>
         {% if groupsCount > 0 %}
             <div style="width:100%;">To create an event, <a href="{{ path('accounts_groups', { 'then': "group_event" }) }}">select a group</a>.</div>
         {% else %}
-            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary" style="float:right;">{{ 'platformd.events.event_listings.create' | trans }}</a>
+            <a href="{{ path('group_new', { 'then': "group_event" }) }}" class="btn btn-primary" style="float:right;">{{ 'platformd.events.event_listings.create' | pd_trans }}</a>
         {% endif %}
     </div>
 </div>
@@ -15,12 +16,12 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                {{ "platformd.events.event_listings.current_and_upcoming_events" | trans }}
+                {{ "platformd.events.event_listings.current_and_upcoming_events" | pd_trans }}
             </div>
         </div>
 
         <div class="widget-content">
-            {% set no_events_message %}{{ "platformd.events.event_listings.no_current_events" | trans }}{% endset %}
+            {% set no_events_message %}{{ "platformd.events.event_listings.no_current_events" | pd_trans }}{% endset %}
             {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
                 'events': events,
                 'no_events_message': no_events_message
@@ -41,4 +42,9 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 {% endblock %}

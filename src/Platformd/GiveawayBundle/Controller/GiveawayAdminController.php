@@ -16,28 +16,27 @@ use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_giveaway_list', array('site' => 'ja'));
+            $url = $this->generateUrl('admin_giveaway_list', array('site' => 2));
             return $this->redirect($url);
         }
 
         $this->addGiveawayBreadcrumb();
 
         return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
     public function listAction($site)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = 'ja';
+            $site = 2;
         }
 
         $this->addGiveawayBreadcrumb();
@@ -45,7 +44,7 @@ class GiveawayAdminController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
 
@@ -544,7 +543,7 @@ class GiveawayAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_giveaway_list',
                 'routeParameters' => array('site' => $site)
             ));

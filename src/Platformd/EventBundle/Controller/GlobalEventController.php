@@ -19,7 +19,6 @@ class GlobalEventController extends Controller
 {
     private $globalEventService;
 
-
     /**
      * Lists all events, upcoming and past
      *
@@ -523,22 +522,6 @@ class GlobalEventController extends Controller
         }
         return ($a->getStartsAt() < $b->getStartsAt()) ? 1 : -1;
 
-    }
-
-    /**
-     * @return GlobalEventService
-     */
-    private function getGlobalEventService()
-    {
-        return $this->get('platformd_event.service.global_event');
-    }
-
-    /**
-     * @return GroupEventService
-     */
-    private function getGroupEventService()
-    {
-        return $this->get('platformd_event.service.group_event');
     }
 
     private function getGamePageManager()

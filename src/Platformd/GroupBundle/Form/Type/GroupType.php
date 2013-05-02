@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\LocationType;
 use Platformd\SpoutletBundle\Entity\Location;
@@ -29,6 +28,9 @@ class GroupType extends AbstractType
             ->add('name', null, array(
                 'label' => 'Group Name*',
                 'help'  => 'Do not use the word "Official" in the group name. All groups containing the word "Official" will be renamed.',
+            ))
+            ->add('slug', new SlugType(), array(
+                'label' => 'URL Text',
             ))
             ->add('category', 'choice', array(
                 'choices'   => self::getCategoryChoices(),

@@ -5,7 +5,6 @@ namespace Platformd\GiveawayBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Platformd\SpoutletBundle\Form\Type\SlugType;

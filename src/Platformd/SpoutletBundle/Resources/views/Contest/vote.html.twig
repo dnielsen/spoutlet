@@ -36,8 +36,7 @@
     {{ parent() }}
     <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

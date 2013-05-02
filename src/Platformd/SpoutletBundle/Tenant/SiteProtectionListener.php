@@ -30,37 +30,16 @@ class SiteProtectionListener
      *
      * @var array
      */
-    static private $allowedPatterns = array(
-        '^/games',
-        '^/age',
-        '^/admin',
-        '^/deal',
-        // our little "fake" CEVO - without this, we'll get a redirect loop locally
-        '^/cevo/api/stub',
-        '^/media',
-        '^/login',
-        '^/account',
-        // we have to "ok" comments, since they're used on some features for everyone
-        '^/comments',
-        '^/groups',
-        '^/wallpapers',
-        '^/report',
-        // media galleries
-        '^/galleries',
-        '^/contests',
-        '^/contest',
-        '^/giveaways',
-        '^/microsoft',
-        '^/events',
-        '^/group-events',
-        '^/rsvp',
+    static private $disallowedPatterns = array(
+        '^/arp',
+        '^/forums',
+        '^/contact',
+        '^/about',
     );
 
     static private $urlMap = array(
-        '/login'    => '/account/login/',
         '/about'    => '/pages/about',
         '/contact'  => '/pages/contact',
-        '/events'   => '/event/',
     );
 
     /**
@@ -75,6 +54,8 @@ class SiteProtectionListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
+        return;
+
         $request = $event->getRequest();
         $session = $request->getSession();
         $locale = $session->getLocale();
@@ -86,28 +67,28 @@ class SiteProtectionListener
 
         $matcher = new RequestMatcher();
 
-        foreach (self::$allowedPatterns as $allowedPattern) {
+        foreach (self::$disallowedPatterns as $disallowedPattern) {
             $matcher->matchPath($allowedPattern);
 
             // if we match, then we're definitely good
             if ($matcher->matches($request)) {
-                return;
+                $path = $request->getPathInfo();
+
+                // at this point, we don't match, so we need to redirect back to CEVO
+                $url = $this->translateToCEVOUrl($path);
+
+                if ($this->allowCevoForwarding == false) {
+                    throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "<a href="http://www.alienwarearena.com%s">http://www.alienwarearena.com%s</a>"', $url, $url));
+                }
+
+                $absoluteUrl = sprintf('%s%s', "http://www.alienwarearena.com", $url);
+
+                $response = new RedirectResponse($absoluteUrl);
+                $event->setResponse($response);
             }
         }
 
-        $path = $request->getPathInfo();
-
-        // at this point, we don't match, so we need to redirect back to CEVO
-        $url = $this->translateToCEVOUrl($path);
-
-        if ($this->allowCevoForwarding == false) {
-            throw new NotFoundHttpException(sprintf('CEVO forwarding is currently off and there is no access to this URL on this site. If CEVO forwarding was turned on, we would redirect to the main CEVO site at "<a href="http://www.alienwarearena.com%s">http://www.alienwarearena.com%s</a>"', $url, $url));
-        }
-
-        $absoluteUrl = sprintf('%s%s', "http://www.alienwarearena.com", $url);
-
-        $response = new RedirectResponse($absoluteUrl);
-        $event->setResponse($response);
+        return;
     }
 
     /**

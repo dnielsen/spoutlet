@@ -14,8 +14,8 @@
 
         <div class="article-blurb">
             <h6>
-                {{ 'announced_date' | trans({
-                    '%posted_date%': ('sweepstakes_date_format' | trans(item.postedAtArray))
+                {{ 'announced_date' | pd_trans({
+                    '%posted_date%': ('sweepstakes_date_format' | pd_trans(item.postedAtArray))
                 })}}
             </h6>
 
@@ -26,9 +26,9 @@
 
         <div class="article-actions">
             {% if item is external %}
-            <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | trans }}</a>
+            <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | pd_trans }}</a>
             {% else %}
-            <a href="{{ item | pd_link }}">{{ 'read_more' | trans }}</a>
+            <a href="{{ item | pd_link }}">{{ 'read_more' | pd_trans }}</a>
             {% endif %}
             <div class="clear"></div>
         </div>

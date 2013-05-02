@@ -36,9 +36,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
 
 {% block content %}
@@ -47,7 +45,7 @@
             {% if group.groupAvatar %}
                 <img src="{{ media_path(group.groupAvatar) }}" />
             {% else %}
-                <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+                <div id="groups-main-banner"></div>
             {% endif %}
         </div>
     </div>
@@ -92,7 +90,11 @@
                         <div class="profileInfo png">
                             <div class="profileAvatar">
                                 <span class="png"></span>
-                                <img src="{{ asset(get_avatar_url(discussion.author)) }}" alt="{{ discussion.author.username }}" />
+                                {% if get_avatar_url(discussion.author) != false %}
+                                    <img src="{{ asset(get_avatar_url(discussion.author)) }}" alt="{{ discussion.author.username }}" />
+                                {% else %}
+                                    <div class="default-avatar"></div>
+                                {% endif %}
                             </div>
                             <div class="profileName">
                                 <a href="{{ path('accounts_profile', {'username': discussion.author.username }) }}">
@@ -137,7 +139,11 @@
                                         <div class="profileInfo png">
                                             <div class="profileAvatar">
                                                 <span class="png"></span>
-                                                <img src="{{ asset(get_avatar_url(discussionPost.author)) }}" alt="{{ discussionPost.author.username }}" />
+                                                {% if get_avatar_url(discussionPost.author) != false %}
+                                                    <img src="{{ asset(get_avatar_url(discussionPost.author)) }}" alt="{{ discussionPost.author.username }}" />
+                                                {% else %}
+                                                    <div class="default-avatar"></div>
+                                                {% endif %}
                                             </div>
                                             <div class="profileName">
                                                 <a href="{{ path('accounts_profile', {'username': discussionPost.author.username }) }}">
@@ -159,7 +165,8 @@
                         {{ pagerfanta(pager, 'spoutlet', {
                             'previous_message': '',
                             'next_message': '',
-                            'routeName': 'group_view_discussion'
+                            'routeName': 'group_view_discussion',
+                            'routeParams': { 'id': group.id, 'discussionId': discussion.id }
                         }) }}
                     </div>
                 </div>

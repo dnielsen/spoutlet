@@ -9,13 +9,21 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpFoundation\RequestMatcher;
 
 class PageNotFoundExceptionListener
 {
     private $router;
+    private $siteUtil;
 
-    public function __construct(RouterInterface $router) {
+    static private $urlMap = array(
+        '/about'    => '/pages/about',
+        '/contact'  => '/pages/contact',
+    );
+
+    public function __construct(RouterInterface $router, $siteUtil) {
         $this->router = $router;
+        $this->siteUtil = $siteUtil;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -33,29 +41,64 @@ class PageNotFoundExceptionListener
 
         $path = $event->getRequest()->getPathInfo();
 
-        if (substr($path, -1, 1) != '/') {
+        if (substr($path, -1, 1) == '/') {
+            $path = substr($path, 0, -1);
+
+            try {
+                $routeInfo = $this->router->match($path);
+
+                // Prevent redirection loop from Symfony re-adding a trailing slash
+                if ($routeInfo['_controller'] != 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction') {
+                    $baseUrl = $this->router->generate('default_index');
+
+                    $url = rtrim($baseUrl, '/').$path;
+
+                    $response = new RedirectResponse($url);
+                    $event->setResponse($response);
+                }
+
+            } catch (ResourceNotFoundException $e) {
+
+            }
+        }
+
+        $currentSite = $this->siteUtil->getCurrentSite();
+
+        if (!$currentSite) {
             return;
         }
 
-        $path = substr($path, 0, -1);
+        $features    = $currentSite->getSiteFeatures();
 
-        try {
-            $routeInfo = $this->router->match($path);
-        } catch (ResourceNotFoundException $e) {
+        if (!$features->getHasForwardOn404()) {
             return;
         }
 
-        // Prevent redirection loop from Symfony re-adding a trailing slash
-        if ($routeInfo['_controller'] == 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction') {
-            return;
+        $config      = $currentSite->getSiteConfig();
+
+        $forwardBaseUrl = $config->getForwardBaseUrl();
+        $forwardedPaths = $config->getForwardedPaths();
+        $request        = $event->getRequest();
+        $matcher        = new RequestMatcher();
+
+        foreach ($forwardedPaths as $forwardedPath) {
+            $matcher->matchPath($forwardedPath);
+
+            if ($matcher->matches($request)) {
+                $path = $request->getPathInfo();
+
+                if (isset(self::$urlMap[$path])) {
+                    $path = self::$urlMap[$path];
+                }
+
+                $absoluteUrl = sprintf('%s%s', $forwardBaseUrl, $path);
+
+                $response = new RedirectResponse($absoluteUrl);
+                $event->setResponse($response);
+            }
         }
 
-        $baseUrl = $this->router->generate('default_index');
-
-        $url = rtrim($baseUrl, '/').$path;
-
-        $response = new RedirectResponse($url);
-        $event->setResponse($response);
+        return;
     }
 }
 
