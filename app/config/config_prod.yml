@@ -3,18 +3,8 @@ imports:
 
 doctrine:
     orm:
-        metadata_cache_driver:
-            type: memcache
-            host: %memcached_server1_ip%
-            port: %memcached_server1_port%
-            instance_class: Memcache
-            class: Doctrine\Common\Cache\MemcacheCache
-        query_cache_driver:
-            type: memcache
-            host: %memcached_server1_ip%
-            port: %memcached_server1_port%
-            instance_class: Memcache
-            class: Doctrine\Common\Cache\MemcacheCache
+        metadata_cache_driver: apc
+        query_cache_driver: apc
 
 monolog:
     handlers:
