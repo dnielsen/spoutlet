@@ -15,7 +15,7 @@ class QueueUtil implements QueueUtilInterface
     private $sqsClient;
     private $queueUrlPrefix;
 
-    public function __construct(\AmazonSQS $sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile)
+    public function __construct($sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile)
     {
         $this->sqsClient      = $sqsClient;
         $this->logger         = $logger;
