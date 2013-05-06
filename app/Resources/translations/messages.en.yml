@@ -418,7 +418,7 @@ platformd:
             giveaways: Giveaways
         assigned:
             message: |
-                    Please follow the instructions below to activate your key. If you require any additional support, please email %contact_email%.
+                    Please follow the instructions below to activate your key. If you require any additional support, please email <a href="mailto:%contact_email%">%contact_email%</a>.
             may_require_activation: Your key may require activation! Check the giveaway page for details.
             key: Key
             assigned_at: Assigned
