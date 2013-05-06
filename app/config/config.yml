@@ -126,6 +126,11 @@ vich_geographical:
     db_driver: orm
 
 parameters:
+    services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
+    
+    mock_data_directory: %kernel.root_dir%/../mock_data/
+    mock_queue_util_full_filename: %mock_data_directory%queue_util_mock_data.txt
+
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false
 

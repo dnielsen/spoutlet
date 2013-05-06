@@ -134,11 +134,12 @@ services:
             - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentSiteId }
 
     platformd.util.queue_util:
-        class: Platformd\SpoutletBundle\Util\QueueUtil
+        class: %services_queue_util_class%
         arguments:
             - "@platformd.sqs"
             - "@logger"
             - "%queue_prefix%"
+            - "%mock_queue_util_full_filename%"
 
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil

@@ -228,11 +228,6 @@ class GiveawayController extends Controller
         }
 
         $giveawayManager = $this->getGiveawayManager();
-        $keysRemaining   = $giveawayManager->getAvailableKeysForGiveaway($giveawayId, $this->getCurrentCountryCode());
-
-        if (!$keysRemaining) {
-            die('no key remaining');
-        }
 
         $giveaway                = $this->getRepository()->find($giveawayId);
         $message                 = new KeyRequestQueueMessage();

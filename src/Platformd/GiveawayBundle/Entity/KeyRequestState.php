@@ -35,6 +35,7 @@ class KeyRequestState
     const REASON_NO_KEYS_LEFT           = 'no_keys';
     const REASON_ALREADY_ASSIGNED       = 'already_assigned';
     const REASON_INVALID_COUNTRY_AGE    = 'invalid_country_or_age';
+    const REASON_IP_REACHED_MAX         = 'ip_reached_max';
     const REASON_INVALID_SITE           = 'invalid_site';
     const REASON_CLIENT_IP_NULL         = 'client_ip_null';
     const REASON_COUNTRY_CODE_NULL      = 'country_code_null';
@@ -63,6 +64,7 @@ class KeyRequestState
         self::REASON_INVALID_COUNTRY_AGE,
         self::REASON_INVALID_SITE,
         self::REASON_CLIENT_IP_NULL,
+        self::REASON_IP_REACHED_MAX,
         self::REASON_COUNTRY_CODE_NULL,
         self::REASON_INVALID_COUNTRY,
         self::REASON_INVALID_PROMOTION,

@@ -271,7 +271,7 @@ class DealController extends Controller
         $result = $this->getQueueUtil()->addToQueue($message);
 
         if (!$result) {
-
+            die('Could not add you to the queue... please try again shortly.');
         }
 
         if (!$state) {

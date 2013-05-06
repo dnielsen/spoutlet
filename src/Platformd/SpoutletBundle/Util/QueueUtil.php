@@ -5,8 +5,9 @@ namespace Platformd\SpoutletBundle\Util;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Platformd\SpoutletBundle\Exception\QueueFailureException;
 use Platformd\SpoutletBundle\QueueMessage\SqsMessageBase;
+use Platformd\SpoutletBundle\Util\Interfaces\QueueUtilInterface;
 
-class QueueUtil
+class QueueUtil implements QueueUtilInterface
 {
     const LOG_MESSAGE_PREFIX = "[QueueUtil] ";
 
@@ -14,7 +15,7 @@ class QueueUtil
     private $sqsClient;
     private $queueUrlPrefix;
 
-    public function __construct(\AmazonSQS $sqsClient, $logger, $queueUrlPrefix)
+    public function __construct(\AmazonSQS $sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile)
     {
         $this->sqsClient      = $sqsClient;
         $this->logger         = $logger;

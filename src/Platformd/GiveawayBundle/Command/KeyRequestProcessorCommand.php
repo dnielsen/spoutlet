@@ -290,17 +290,20 @@ EOT
 
             $pools = $promotion->getPools();
             $key   = null;
+            $lastReason = null;
 
             foreach ($pools as $pool) {
 
                 $this->output(3, $pool);
 
                 if (!$keyRepo->canIpHaveMoreKeys($clientIp, $pool)) {
+                    $lastReason = KeyRequestState::REASON_IP_REACHED_MAX;
                     $this->output(4, 'This IP has hit the max per IP setting for this pool.');
                     continue;
                 }
 
                 if (!$pool->isEnabledForCountry($country)) {
+                    $lastReason = KeyRequestState::REASON_INVALID_COUNTRY_AGE;
                     $this->output(4, 'Pool not enabled for the user\'s country');
                     continue;
                 }
@@ -308,6 +311,7 @@ EOT
                 $key = $keyRepo->getUnassignedKey($pool);
 
                 if (!$key) {
+                    $lastReason = KeyRequestState::REASON_NO_KEYS_LEFT;
                     $this->output(4, 'No more keys left for this pool.');
                     continue;
                 }
@@ -319,9 +323,19 @@ EOT
             }
 
             if (!$key) {
-                $this->rejectRequestWithOutput(5, 'No keys left for user.', $state, KeyRequestState::REASON_NO_KEYS_LEFT, $message);
+
+                if (!$lastReason) {
+                    $lastReason = KeyRequestState::REASON_NO_KEYS_LEFT;
+                }
+
+                $this->rejectRequestWithOutput(5, 'No keys left for user.', $state, $lastReason, $message);
+
+                $lastReason = null;
+
                 continue;
             }
+
+            $lastReason = null;
 
             $this->output(5, 'Old '.$state);
 

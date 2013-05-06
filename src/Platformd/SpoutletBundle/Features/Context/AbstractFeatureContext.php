@@ -45,6 +45,7 @@ class AbstractFeatureContext extends MinkContext
     protected $cacheUtil;
     protected $purger;
     protected $dbConnection;
+    protected $queueUtilMock;
 
     public function __construct(HttpKernelInterface $kernel) {
         parent::__construct($kernel);
@@ -54,6 +55,14 @@ class AbstractFeatureContext extends MinkContext
         $this->cacheUtil     = $this->getContainer()->get('platformd.util.cache_util');
         $this->purger        = new ORMPurger($this->entityManager);
         $this->dbConnection  = $this->entityManager->getConnection();
+        $this->queueUtilMock = $this->getContainer()->get('platformd.util.queue_util');
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function emptyQueue() {
+        $this->queueUtilMock->emptyWorkingFile();
     }
 
     /**
@@ -606,7 +615,7 @@ class AbstractFeatureContext extends MinkContext
             if ($this->getSession()->getDriver() instanceof GoutteDriver
                 && $this->getSession()->getDriver()->getClient()->getRequest()) {
 
-                //$this->printLastResponse();
+                $this->printLastResponse();
             }
         }
     }
@@ -1756,5 +1765,13 @@ class AbstractFeatureContext extends MinkContext
     public function iClickBackground()
     {
         $this->getSession()->getPage()->find('css', '.background-takeover')->click();
+    }
+
+    /**
+     * @Given /^The Key Queue Processor is run$/
+     */
+    public function theKeyQueueProcessorIsRun()
+    {
+        exec($this->getContainer()->getParameter('kernel.root_dir').'/console pd:keyRequestQueue:process --env=test');
     }
 }

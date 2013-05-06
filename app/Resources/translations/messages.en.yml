@@ -386,6 +386,7 @@ platformd:
             reasons:
                 none: No reason
                 no_keys: Unfortunately, at this time there are no longer any keys available.
+                ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
                 already_assigned: You already have a key.
                 invalid_country_or_age: You are not eligible (based on your age and/or country).
                 invalid_site: Unknown site.

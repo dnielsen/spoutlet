@@ -2,6 +2,8 @@ imports:
     - { resource: config_dev.yml }
 
 parameters:
+    services_queue_util_class: Platformd\SpoutletBundle\Util\Mocks\QueueUtilMock
+
     allow_faked_auth:   true
 
     # This says to use the current host, but prefix the URLs with this

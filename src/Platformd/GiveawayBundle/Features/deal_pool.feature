@@ -30,15 +30,6 @@ Feature: Deal Pool
             And I go to "/admin/deal/list/en"
             And I click on "Manage pools"
             And I click on "Create New Pool"
-            And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/ie_only_sample_keys.csv" to "Keysfile"
-            And I check "Isactive"
-            And I fill in "1" for "Maxkeysperip"
-            And I select "Ireland" from "Eligible Countries"
-            And I press "Save Pool"
-
-            And I go to "/admin/deal/list/en"
-            And I click on "Manage pools"
-            And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/not_valid_sample_keys.csv" to "Keysfile"
             And I uncheck "Isactive"
             And I select "United States" from "Eligible Countries"
@@ -76,50 +67,79 @@ Feature: Deal Pool
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
 
+            And I go to "/admin/deal/list/en"
+            And I click on "Manage pools"
+            And I click on "Create New Pool"
+            And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/ie_only_sample_keys.csv" to "Keysfile"
+            And I check "Isactive"
+            And I fill in "1" for "Maxkeysperip"
+            And I select "Ireland" from "Eligible Countries"
+            And I press "Save Pool"
+
     Scenario: I am a user from the UK I should get a valid UK key
         Given I am authenticated as a user
             And I am located in "UK"
-        When I go to "/deal/diablo-3-bonus"
+            And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And I should see "You're in the Queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
         Then I should see "UK_only_1"
 
     Scenario: I am a user from the US I should get a valid US key
         Given I am authenticated as a user
             And I am located in "US"
-        When I go to "/deal/diablo-3-bonus"
+            And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And I should see "You're in the Queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
         Then I should see "US_only_1"
 
     Scenario: I am a user from a country that doesn't have any keys available to it
         Given I am authenticated as a user
             And I am located in "JP"
-        When I go to "/deal/diablo-3-bonus"
+            And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-        Then I should see "Sorry! This offer is not available at your location."
+            And I should see "You're in the Queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "You are not eligible (based on your age and/or country)"
 
     Scenario: I am the third user from the UK I should get the third valid UK key
         Given I re-login as the user "William"
             And I am located in "UK"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "UK_only_1"
             And I re-login as the user "Harry"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "UK_only_2"
         When I re-login as the user "Charles"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
         Then I should see "UK_only_3"
 
-    Scenario: The same IP address should not be able to claim more than 2 IP addresses
+    Scenario: The same IP address should not be able to claim more than 1 IP addresses
         Given I re-login as the user "William"
             And I am located in "IE"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "IE_only_1"
         When I re-login as the user "Harry"
+            And I am located in "IE"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-        Then I should see "Your IP address is not allowed to redeem any more deals."
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "Your IP address is not allowed to redeem any more keys from this promotion."
 
