@@ -5,6 +5,7 @@ namespace Platformd\GiveawayBundle\ViewModel;
 class deal_show_main_actions_data
 {
     public $deal_claim_code_button;
+    public $deal_show_claim_button;
     public $deal_group_name;
     public $deal_group_slug;
     public $deal_has_expired;

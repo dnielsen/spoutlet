@@ -379,7 +379,7 @@ platformd:
             If there has been no change after 2 weeks, please email
         queue:
             you_are_queued: You're in the Queue!
-            queue_explanation: Your approximate wait time is less than 5 minutes. You will receive an email with your key once it has been assigned to you. In the meantime, please check out our other <a href="%giveaway_show_page_link%">giveaways</a> and upcoming <a href="%events_index_page_link%">upcoming events</a>.
+            queue_explanation: Your approximate wait time is less than 5 minutes. You will receive an email with your key code once it has been assigned to you.  In the meantime, please check out our <a href="%events_index_page_link%">other site events and activities</a>.
             rejected: Your attempt to get a key has been rejected.
             problem: There was a problem processing your key request.
             reason: Reason

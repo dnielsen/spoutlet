@@ -119,7 +119,14 @@ class DealController extends Controller
         $currentlyAssigned  = $currentUser ? $dealCodeRepo->getUserAssignedCodeForDeal($currentUser, $deal) : null;
         $group              = $deal->getGroup();
 
-        $data = new deal_show_main_actions_data();
+        $data    = new deal_show_main_actions_data();
+        $inQueue = false;
+
+        if ($currentUser) {
+            $stateRepo = $this->getKeyRequestStateRepo();
+            $state     = $stateRepo->findForUserIdAndDealId($currentUser->getId(), $deal->getId());
+            $inQueue   = $state ? $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE : false;
+        }
 
         $data->deal_claim_code_button     = $deal->getClaimCodeButton() ? $mediaPathResolver->getPath($deal->getClaimCodeButton(), array()) : null;
         $data->deal_group_name            = $group ? $group->getName() : null;
@@ -129,7 +136,8 @@ class DealController extends Controller
         $data->deal_redemption_steps      = $deal->getCleanedRedemptionInstructionsArray();
         $data->deal_slug                  = $deal->getSlug();
         $data->deal_user_already_redeemed = (bool) $currentlyAssigned;
-        $data->is_member_of_deal_group    = $group ? $groupManager->isMember($currentUser, $group) : false;
+        $data->is_member_of_deal_group    = $group && $currentUser ? $groupManager->isMember($currentUser, $group) : false;
+        $data->deal_show_claim_button     = !$deal->hasExpired() && $data->deal_has_keys && !$inQueue && !$currentlyAssigned;
 
         $response = $this->render('GiveawayBundle:Deal:_dealShowActions.html.twig', array(
             'data' => $data

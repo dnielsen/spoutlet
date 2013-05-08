@@ -6,13 +6,15 @@
     {% elseif not data.deal_has_keys %}
         <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
     {% elseif is_granted('ROLE_USER') %}
-        <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : data.deal_slug }) }}">
+        {% if data.deal_show_claim_button %}
+            <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : data.deal_slug }) }}">
             {% if data.deal_claim_code_button %}
                 <img src="{{ data.deal_claim_code_button }}" />
             {% else %}
                 {{ "CLAIM CODE NOW" }}
             {% endif %}
-        </a>
+            </a>
+        {% endif %}
         {% if features.hasGroups %}
             {% if data.deal_group_slug and not data.user_is_member_of_deal_group %}
                 <p>

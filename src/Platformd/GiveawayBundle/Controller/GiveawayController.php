@@ -108,6 +108,7 @@ class GiveawayController extends Controller
         $data            = new giveaway_show_main_actions_data();
 
         $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveawayId, $this->getCurrentCountryCode());
+        $inQueue = false;
 
         if ($currentUser) {
             $data->can_user_apply_to_giveaway = !$this->getMachineCodeEntryRepository()->activeOrPendingExistsForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
@@ -119,8 +120,11 @@ class GiveawayController extends Controller
                 $data->can_user_apply_to_giveaway = true;
             }
 
+            $stateRepo = $this->getKeyRequestStateRepo();
+            $state     = $stateRepo->findForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
+            $inQueue   = $state ? $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE : false;
         } elseif ($giveaway->getStatus() != 'active') { #not logged in
-            $data->giveaway_available_keys             = 0;
+            $data->giveaway_available_keys    = 0;
             $data->can_user_apply_to_giveaway = true;
         }
 
@@ -139,7 +143,7 @@ class GiveawayController extends Controller
         $data->giveaway_allow_key_fetch           = $giveaway->allowKeyFetch();
         $data->giveaway_allow_machine_code_submit = $giveaway->allowMachineCodeSubmit();
         $data->giveaway_redemption_steps          = $giveaway->getCleanedRedemptionInstructionsArray();
-        $data->giveaway_show_get_key_button       = $giveaway->allowKeyFetch() && $data->giveaway_available_keys > 0 && !$assignedKey;
+        $data->giveaway_show_get_key_button       = $giveaway->allowKeyFetch() && $data->giveaway_available_keys > 0 && !$assignedKey && !$inQueue;
 
         $response = $this->render('GiveawayBundle:Giveaway:_giveawayShowActions.html.twig', array(
             'data' => $data
