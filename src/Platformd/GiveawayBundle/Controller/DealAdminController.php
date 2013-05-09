@@ -164,7 +164,7 @@ class DealAdminController extends Controller
         if ($deal == null) {
             $deals  = $site ? $this->getDealManager()->findAllForSiteNewestFirst($site) : $this->getDealManager()->findAllOrderedByNewest();
         } else {
-            $deals  = $site ? $deal ? array($deal) : $this->getDealManager()->findAllForSiteNewestFirst($site) : $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = array($deal);
         }
 
         $dealMetrics = array();
