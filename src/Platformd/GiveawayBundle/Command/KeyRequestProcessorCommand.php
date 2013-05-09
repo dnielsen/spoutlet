@@ -330,6 +330,13 @@ EOT
 
                 $this->rejectRequestWithOutput(5, 'No keys left for user.', $state, $lastReason, $message);
 
+
+                if ($lastReason == KeyRequestState::REASON_NO_KEYS_LEFT) {
+                    $this->output(5, 'Sending user email.');
+                    $this->emailUserNoKeysLeft($user, $promotion->getName(), $urlToShowPage, $site);
+                    $this->output(5, 'Email sent.');
+                }
+
                 $lastReason = null;
 
                 continue;
@@ -398,6 +405,24 @@ EOT
 
         $this->output();
         $this->output(1, 'No more messages in queue.');
+    }
+
+    private function emailUserNoKeysLeft($user, $promotionTitle, $promotionShowPage, $site) {
+
+        $emailManager = $this->getContainer()->get('platformd.model.email_manager');
+        $translator   = $this->getContainer()->get('translator');
+        $locale       = $site->getDefaultLocale();
+
+        $mainReplacements = array(
+            '%promotion_title%'     => $promotionTitle,
+            '%promotion_show_page%' => 'http://'.$site->getFullDomain().$promotionShowPage,
+        );
+
+        $emailTo = $user->getEmail();
+        $subject = $translator->trans('platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject', $mainReplacements, 'messages', $locale);
+        $message = $translator->trans('platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body', $mainReplacements, 'messages', $locale);
+
+        $emailManager->sendHtmlEmail($emailTo, $subject, $message, 'promotion_not_assigned_no_keys_left', $site->getName());
     }
 
     private function emailUser($user, $promotionTitle, $promotionKey, $promotionShowPage, $site, $promotionGroupName = null, $promotionGroupShowPage = null) {

@@ -369,6 +369,12 @@ platformd:
                                     %group_section%
                                     <p>Alienware Arena Team</p>
         key_assigned_email_body_group_section: In addition to receiving a key for %promotion_title%, you are now a member of <a href="%promotion_group_show_page%">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images.
+        key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
+        key_not_assigned_no_keys_left_email_body: |
+                                    <p>
+                                        Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. Please check back later as more codes may be added!
+                                    </p>
+                                    <p>Alienware Arena Team</p>
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
@@ -384,7 +390,7 @@ platformd:
             If there has been no change after 2 weeks, please email
         queue:
             you_are_queued: You're in the Queue!
-            queue_explanation: Your approximate wait time is less than 5 minutes. You will receive an email with your key code once it has been assigned to you.  In the meantime, please check out our <a href="%events_index_page_link%">other site events and activities</a>.
+            queue_explanation: Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.
             rejected: Your attempt to get a key has been rejected.
             problem: There was a problem processing your key request.
             reason: Reason
