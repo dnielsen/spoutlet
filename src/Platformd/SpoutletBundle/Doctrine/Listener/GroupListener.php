@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Doctrine\Common\EventSubscriber,
     Doctrine\ORM\Event\LifecycleEventArgs,
-    Doctrine\ORM\Events
+    Doctrine\ORM\Events,
+    Doctrine\Common\Collections\ArrayCollection
 ;
 
 class GroupListener  implements EventSubscriber
@@ -31,10 +32,10 @@ class GroupListener  implements EventSubscriber
         if ($entity->getAllLocales()) {
             $siteArr = $this->container->get('doctrine.orm.entity_manager')->getRepository('SpoutletBundle:Site')->findAll();
 
+            $entity->setSites(new ArrayCollection());
+
             foreach ($siteArr as $site) {
-                if (!$entity->getSites()->contains($site)) {
-                    $entity->getSites()->add($site);
-                }
+                $entity->getSites()->add($site);
             }
         }
     }
