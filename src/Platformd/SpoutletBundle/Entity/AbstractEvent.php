@@ -104,6 +104,11 @@ abstract class AbstractEvent implements LinkableInterface
     protected $published = false;
 
     /**
+     * @ORM\Column(name="hidden", type="boolean", nullable="true")
+     */
+    protected $hidden = false;
+
+    /**
      * @var text $content
      *
      * @ORM\Column(name="content", type="text", nullable=true)
@@ -580,6 +585,16 @@ abstract class AbstractEvent implements LinkableInterface
     public function getPublished()
     {
         return $this->published;
+    }
+
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    public function getHidden()
+    {
+        return $this->hidden;
     }
 
     public function getGeneralImage()

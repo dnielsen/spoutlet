@@ -14,19 +14,19 @@ use Platformd\UserBundle\Form\Type\EditUserFormType;
  */
 class AdminController extends Controller
 {
-    
-    public function indexAction() 
+
+    public function indexAction()
     {
         $this->addUserBreadcrumb();
         $manager = $this->get('fos_user.user_manager');
-        
+
         if ($this->getRequest()->get('search')) {
         	// There is a search query
             $query = $manager->getFindUserQuery('email', $this->getRequest()->get('search', ''));
         } else {
             $query = $manager->getFindUserQuery();
         }
-        
+
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
@@ -34,7 +34,7 @@ class AdminController extends Controller
             'pager' => $pager
         ));
     }
-    
+
     public function editAction($id)
     {
         $this->addUserBreadcrumb()->addChild('Edit');
@@ -42,7 +42,7 @@ class AdminController extends Controller
         $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
-            
+
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
@@ -54,7 +54,7 @@ class AdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                
+
                 $manager->updateUser($user);
 
                 $request
@@ -66,20 +66,20 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
             }
         }
-        
+
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
             'form' => $form->createView()
         ));
     }
-    
+
     public function deleteAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
         $translator = $this->get('translator');
-        
+
         if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
-            
+
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
@@ -91,18 +91,18 @@ class AdminController extends Controller
             ->getRequest()
             ->getSession()
             ->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
-                '%username' => $user->getUsername() 
+                '%username' => $user->getUsername()
             ), 'FOSUserBundle'));
-            
+
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 
-    public function approveAvatarAction($id) 
+    public function approveAvatarAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
-            
+
             throw $this->createNotFoundException();
         }
 
@@ -110,6 +110,26 @@ class AdminController extends Controller
         $manager->updateUser($user);
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+    }
+
+    public function loginsAction($id)
+    {
+        $this->addUserBreadcrumb()->addChild('User Logins');
+
+        $manager = $this->get('fos_user.user_manager');
+
+        if (!$user = $manager->findUserBy(array('id' => $id))) {
+
+            throw $this->createNotFoundException();
+        }
+
+        $allLogins = $user->getLoginRecords()->toArray();
+        $logins = array_slice($allLogins, 0, 100);
+
+        return $this->render('UserBundle:Admin:logins.html.twig', array(
+            'user'      => $user,
+            'logins'    => $logins,
+        ));
     }
 
     /**

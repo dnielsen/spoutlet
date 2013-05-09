@@ -1,11 +1,3 @@
-admin_content_reports_with_mode:
-    pattern:  /list/{mode}
-    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list" }
-
-admin_content_reports:
-    pattern:  /list/
-    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", mode: "manage" }
-
 admin_content_reports_hide_complaint:
     pattern:  /list/hideComplaint/{contentReportId}
     defaults: { _controller: "SpoutletBundle:ContentReportAdmin:hideComplaint"  }
@@ -17,3 +9,19 @@ admin_content_reports_remove_content:
 admin_content_reports_reinstate_content:
     pattern:  /list/reinstateContent/{contentReportId}
     defaults: { _controller: "SpoutletBundle:ContentReportAdmin:reinstateContent" }
+
+admin_content_reports_with_site:
+    pattern:  /list/{site}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", mode: "manage" }
+    requirements:
+        site:  \d+
+
+admin_content_reports_with_mode:
+    pattern:  /list/{mode}/{site}
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", site: ~ }
+    requirements:
+        site:  \d+
+
+admin_content_reports:
+    pattern:  /list/
+    defaults: { _controller: "SpoutletBundle:ContentReportAdmin:list", mode: "manage" }

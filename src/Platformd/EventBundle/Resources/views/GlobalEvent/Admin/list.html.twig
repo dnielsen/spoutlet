@@ -30,7 +30,7 @@
                 {% endfor %}
             </td>
             <td>
-                {{ event | pd_link_full }}
+                <a href="{{ url('global_event_view', {'slug': event.slug, '_locale': site.defaultLocale }) }}">{{ url('global_event_view', {'slug': event.slug, '_locale': site.defaultLocale }) }}</a>
             </td>
             <td title="{{ event.startsAt|date }}">
                 {{ event.startsAt|date_translate }}

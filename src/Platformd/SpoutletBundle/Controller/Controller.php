@@ -121,6 +121,12 @@ class Controller extends BaseController
         return $this->getIpLookupUtil()->getCountryCode($this->getRequest()->getClientIp(true));
     }
 
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        return $this->getIpLookupUtil()->get('countryShort', $ipAddress);
+    }
+
     /**
      * @return string
      */

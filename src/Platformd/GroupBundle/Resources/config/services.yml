@@ -9,4 +9,5 @@ services:
             - "@pd.cevo.api.api_manager"
             - "@security.context"
             - "@event_dispatcher"
+            - "@platformd_event.service.group_event"
 

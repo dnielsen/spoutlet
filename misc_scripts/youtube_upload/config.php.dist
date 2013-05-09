@@ -1,0 +1,22 @@
+<?php
+
+$dsn        = 'mysql:dbname=;host=;port=';
+$user       = '';
+$password   = '';
+$videoDb    = '';
+
+/**
+ * Array key is the serverid field returned from the database `files` table
+ * Ensure directories have a trailing slash
+ */
+$fileLocations = array(
+    '2' => '/disk1/server2/',
+    '3' => '/disk2/server3/',
+);
+
+/**
+ * I used this on my local dev machine to allow a connection to PLDX - not required on production.
+ */
+$sshUser    = '';
+$sshAddress = '';
+shell_exec('ssh '.$sshUser.'@'.$sshAddress.' -f -L 33337:localhost:3306 sleep 30 >> logfile');

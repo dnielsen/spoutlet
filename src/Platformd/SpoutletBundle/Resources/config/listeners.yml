@@ -57,3 +57,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    platformd.listener.page_not_found_exception_listener:
+        class: Platformd\SpoutletBundle\EventListener\PageNotFoundExceptionListener
+        arguments:
+            - "@router"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+        scope: request

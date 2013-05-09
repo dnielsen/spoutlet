@@ -200,7 +200,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Contests');
 
         $em            = $this->getDoctrine()->getEntityManager();
-        $site          = $this->getCurrentSite();
+        $site          = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : $this->getCurrentSite();
         $imageContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site);
         $groupContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site);
         $voteResult    = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();

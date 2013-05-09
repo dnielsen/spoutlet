@@ -16,16 +16,43 @@ use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
+use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class GiveawayAdminController extends Controller
 {
     public function indexAction()
     {
-        $this->addGiveawayBreadcrumb();
-        $giveaways = $this->getGiveawayRepo()->findAllWithoutLocaleOrderedByNewest();
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_giveaway_list', array('site' => 'ja'));
+            return $this->redirect($url);
+        }
 
-        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig',
-            array('giveaways' => $giveaways));
+        $this->addGiveawayBreadcrumb();
+
+        return $this->render('GiveawayBundle:GiveawayAdmin:index.html.twig', array(
+            'sites' => MultitenancyManager::getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 'ja';
+        }
+
+        $this->addGiveawayBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+
+        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
+
+        return $this->render('GiveawayBundle:GiveawayAdmin:list.html.twig', array(
+            'giveaways' => $giveaways,
+            'site'     => $site,
+        ));
     }
 
     public function newAction(Request $request)
@@ -358,14 +385,25 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
+        $em     = $this->getDoctrine()->getEntityManager();
+        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('giveaway', 'entity', array(
                 'class' => 'GiveawayBundle:Giveaway',
                 'property' => 'name',
                 'empty_value' => 'All Giveaways',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('g')
+                'query_builder' => function(EntityRepository $er) use ($site) {
+                    $qb = $er->createQueryBuilder('g')
                         ->orderBy('g.name', 'ASC');
+
+                    if ($site) {
+                        $qb->leftJoin('g.sites', 's')
+                            ->andWhere('s = :site')
+                            ->setParameter('site', $site);
+                    }
+
+                    return $qb;
                 },
             ))
             ->getForm()
@@ -389,9 +427,9 @@ class GiveawayAdminController extends Controller
         }
 
         if ($giveaway == null) {
-            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest();
+            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         } else {
-            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest();
+            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         }
 
         $giveawayMetrics = array();
@@ -525,5 +563,18 @@ class GiveawayAdminController extends Controller
     private function getMachineCodeRepository()
     {
         return $this->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+                'route' => 'admin_giveaway_list',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
     }
 }

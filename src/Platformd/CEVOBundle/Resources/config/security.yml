@@ -12,6 +12,7 @@ services:
         - "@security.context"
         - "@security.authentication.manager"
         - "%base_host%"
+        - "@platformd.model.login_record_manager"
         - "%kernel.debug%"
         - "%allow_faked_auth%"
     calls:

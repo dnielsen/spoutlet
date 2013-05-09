@@ -184,4 +184,17 @@ class GlobalEventRepository extends EventRepository
 
         return $qb;
     }
+
+    public function findAllForSite($site)
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->select('gE', 's')
+            ->leftJoin('gE.sites', 's')
+            ->andWhere('s = :site')
+            ->setParameter('site', $site)
+            ->orderBy('gE.createdAt', 'DESC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

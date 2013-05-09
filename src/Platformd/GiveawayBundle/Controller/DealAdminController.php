@@ -123,14 +123,25 @@ class DealAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Deals');
 
+        $em     = $this->getDoctrine()->getEntityManager();
+        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('deal', 'entity', array(
                 'class' => 'GiveawayBundle:Deal',
                 'property' => 'name',
                 'empty_value' => 'All Deals',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('d')
+                'query_builder' => function(EntityRepository $er) use ($site) {
+                    $qb = $er->createQueryBuilder('d')
                         ->orderBy('d.name', 'ASC');
+
+                    if ($site) {
+                        $qb->leftJoin('d.sites', 's')
+                            ->andWhere('s = :site')
+                            ->setParameter('site', $site);
+                    }
+
+                    return $qb;
                 },
             ))
             ->getForm()
@@ -154,9 +165,9 @@ class DealAdminController extends Controller
         }
 
         if ($deal == null) {
-            $deals  = $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = $this->getDealManager()->findAllForSiteNewestFirst($site);
         } else {
-            $deals  = $deal ? array($deal) : $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = $deal ? array($deal) : $this->getDealManager()->findAllForSiteNewestFirst($site);
         }
 
         $dealMetrics = array();

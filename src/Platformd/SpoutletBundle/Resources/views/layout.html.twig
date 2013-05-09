@@ -244,5 +244,35 @@
 	            </div>
 	        </div>
 	    </div>
+
+        <!-- omniture -->
+        <script language="JavaScript" type="text/javascript" src="/omniture/s_code{% if app.debug %}_dev{% endif %}.js "></script>
+        <script language="JavaScript" type="text/javascript">
+            s_dell.pageName="";
+            s_dell.events="";
+            s_dell.prop29="3rd party sites";
+            s_dell.prop49="c=us&l=en&s=gen";
+            var s_code=s_dell.t();if(s_code)document.write(s_code);
+        </script>
+        <!-- end omniture -->
+
+        <!-- mediaplex -->
+        <script language="javascript" type="text/javascript">
+            <!--
+            var page_url = escape(document.URL);
+            var ref_url = escape(document.referrer);
+
+            var mpt = new Date();
+            var mpts = mpt.getTimezoneOffset() + mpt.getTime();
+
+            if (window.location.protocol == "https:"){
+                document.write("<iframe src=\"https:\/\/secure.img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
+            } else {
+                document.write("<iframe src=\"http:\/\/img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
+            }
+            // -->
+        </script>
+        <!-- end mediaplex -->
+
 	</body>
 </html>

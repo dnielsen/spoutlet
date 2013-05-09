@@ -32,6 +32,8 @@
                 {% else %}
                     {{ form_row(form.group) }}
                 {% endif %}
+                {{ form_row(form.hidden) }}
+
             </div>
             <div class="span6">
                 {{ form_row(form.sites) }}
@@ -58,11 +60,7 @@
     </fieldset>
     <fieldset>
             <legend>c) Rules</legend>
-            <div class="form_row">
-                {{ form_label(form.officialRules) }}
-                {{ form_errors(form.officialRules) }}
-                {{ form_widget(form.officialRules) }}
-            </div>
+            {{ form_row(form.officialRules) }}
     </fieldset>
     <fieldset>
         <legend>d) Restrictions</legend>
@@ -83,11 +81,7 @@
     </fieldset>
     <fieldset>
         <legend>e) Content</legend>
-            <div class="form_row">
-                {{ form_label(form.content) }}
-                {{ form_errors(form.content) }}
-                {{ form_widget(form.content) }}
-            </div>
+        {{ form_row(form.content) }}
     </fieldset>
 
 <div style="display: none;">
@@ -96,9 +90,9 @@
 </div>
 
 {{ form_rest(form) }}
-
-    <input type="submit" class="btn btn-primary" value="{{ "save" | trans }}" formnovalidate />
-
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{{ "save" | trans }}" formnovalidate />
+    </div>
 </form>
 <script type="text/javascript">
     $(function () {

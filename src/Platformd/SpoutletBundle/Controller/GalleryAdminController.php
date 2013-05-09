@@ -119,6 +119,11 @@ class GalleryAdminController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
 
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data['sites'] = array('ja');
+                    $form->setData($data);
+                }
+
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
 
@@ -146,7 +151,7 @@ class GalleryAdminController extends Controller
         );
 
         $session = $this->getRequest()->getSession();
-        $session->set('formValues', $formValues);
+        $session->set('formValuesGallery', $formValues);
     }
 
     public function deleteMediaAction($id, Request $request)
@@ -181,7 +186,7 @@ class GalleryAdminController extends Controller
         $galleryMediaRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GalleryMedia');
 
         $session = $this->getRequest()->getSession();
-        $formValues = $session->get('formValues');
+        $formValues = $session->get('formValuesGallery');
 
         $factory->addRow(array(
             'Title',
