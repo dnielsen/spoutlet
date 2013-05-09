@@ -31,6 +31,8 @@ import types
 import urllib
 import urlparse
 
+logging.basicConfig(filename='../logfile',level=logging.DEBUG)
+
 try:
   from urlparse import parse_qsl
 except ImportError:

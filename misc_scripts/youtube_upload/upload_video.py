@@ -31,7 +31,7 @@ RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError, httplib.NotConnected,
 
 # Always retry when an apiclient.errors.HttpError with one of these status
 # codes is raised.
-RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
+RETRIABLE_STATUS_CODES = [500, 502, 504]
 
 # CLIENT_SECRETS_FILE, name of a file containing the OAuth 2.0 information for
 # this application, including client_id and client_secret. You can acquire an
