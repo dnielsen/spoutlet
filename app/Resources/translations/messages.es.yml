@@ -703,3 +703,42 @@ contests:
     voting_begins: Período de Votación:
     no_longer_available: Este concurso ya no está disponible
 
+
+platformd.create_account_or_login: Crear una cuenta Alienware Arena  (Si no tienes una)
+
+platformd.giveaway.get_key:  Obten tu Código
+platformd.giveaway.featured_giveaways: Regalos Destacados de Alienware Arena
+platformd.giveaway.all_giveaways: Nuevos Regalos
+platformd.giveaway.previous_giveaways: Regalos Previos
+platformd.giveaway.latest_comments: Últimos Comentarios
+platformd.giveaway.in_process: Si te has registrado para un sistema tag para regalo de clave y su estado es "Pendiente", por favor, deja transcurrir al menos 2 semanas para su sistema tag sea revisados​​. Si no hay cambio despues de dos semanas, favor de mandar un correo electronico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.message: Por favor, sigue las siguientes instrucciones para activar tu clave. Si necesitas ayuda adicional, envía un correo electrónico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.show.availaible_keys: Códigos Disponibles %%count%%
+platformd.giveaway.queue.you_are_queued: Estás en la cola!
+platformd.giveaway.queue.problem: Hubo un problema al procesar tu solicitud de clave.
+platformd.giveaway.queue.reason: Razón
+platformd.giveaway.queue.reasons.none: Sin razón
+platformd.giveaway.queue.reasons.no_keys: Desafortunadamente, en este momento no hay clave disponible.
+platformd.giveaway.queue.reasons.already_assigned: Ya tienes una clave.
+platformd.giveaway.queue.reasons.invalid_country_or_age: No eres eligible (basado en tu edad y / o el país).
+platformd.giveaway.queue.reasons.invalid_site: Sitio desconosido.
+platformd.giveaway.queue.reasons.client_ip_null: IP del cliente que no se encuentra
+platformd.giveaway.queue.reasons.country_code_null: Páis desconosido.
+platformd.giveaway.queue.reasons.invalid_country: Páis desconosido.
+platformd.giveaway.queue.reasons.invalid_promotion: No se pudo encontrar la promoción.
+platformd.giveaway.queue.reasons.inactive_promotion: Esta promoción no está activa.
+platformd.giveaway.queue.reasons.key_fetch_disallowed: Busca clave no está permitido en esta promoción.
+platformd.key_request_processor_command.key_assigned_email_subject: Tu %promotion_title% clave
+platformd.key_request_processor_command.key_assigned_email_body: |
+    <p>Felicidades, has sido exitosamente asignado una clave para la
+    <a href=""%promotion_show_page%"">%promotion_title%</a>:
+    </p>
+    <p>
+    <span style=""font-weight:bold;"">%promotion_key%</span>
+    </p>
+    <p>
+    Para obtener instrucciones sobre cómo redimir tu clave, por favor visita la página
+    <a href=""%promotion_show_page%"">%promotion_title%</a>.
+    </p>
+    %group_section%
+    <p>Equipo Alienware Arena</p>

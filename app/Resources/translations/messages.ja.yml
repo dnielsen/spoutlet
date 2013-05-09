@@ -892,3 +892,40 @@ galleries:
     gallery_filter_option_featured: Featured
 
     gallery_see_all: See All
+
+
+platformd.giveaway.get_key:  キー入手
+platformd.giveaway.featured_giveaways: 注目のAlienware Arenaプレゼント
+platformd.giveaway.all_giveaways: 最新のプレゼント
+platformd.giveaway.previous_giveaways: 過去のプレゼント
+platformd.giveaway.latest_comments: 最新のコメント
+platformd.giveaway.in_process: もし、あなたのステータスが「保留」になっている場合、最低でも2週間はお待ち頂くことになります。2週間以上経過しても変化がなかった場合、<a href="mailto:%contact_email%">%contact_email%</a> にメールを送信してください。
+platformd.giveaway.assigned.message: あなたのキーをアクティブにするには、以下の手順に従ってください。また、さらなるサポートが必要な場合は、<a href="mailto:%contact_email%">%contact_email%</a> にメールを送信してください。
+platformd.giveaway.queue.you_are_queued: あなたは現在待機中です。
+platformd.giveaway.queue.problem: あなたのキー要求処理に問題が発生しました。
+platformd.giveaway.queue.reason: 理由
+platformd.giveaway.queue.reasons.none: 理由はありません。
+platformd.giveaway.queue.reasons.no_keys: 残念ながら、現在このキーはありません。
+platformd.giveaway.queue.reasons.ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
+platformd.giveaway.queue.reasons.already_assigned: あなたはすでにキーを所有しています。
+platformd.giveaway.queue.reasons.invalid_country_or_age: あなたは対象ではありません（年齢、もしくは国）。
+platformd.giveaway.queue.reasons.invalid_site: 不明なサイトです。
+platformd.giveaway.queue.reasons.client_ip_null: クライアントIPが見つかりません。
+platformd.giveaway.queue.reasons.country_code_null: 不明な国です。
+platformd.giveaway.queue.reasons.invalid_country: 不明な国です。
+platformd.giveaway.queue.reasons.invalid_promotion: プロモーションが見つかりませんでした。
+platformd.giveaway.queue.reasons.inactive_promotion: このプロモーションはアクティブではありません。
+platformd.giveaway.queue.reasons.key_fetch_disallowed: このプロモーションではキー取得が許可されていません。
+platformd.key_request_processor_command.key_assigned_email_subject: あなたの%promotion_title%キー
+platformd.key_request_processor_command.key_assigned_email_body: |
+    <p>
+    おめでとうございます。あなたは、<a href=""%promotion_show_page%"">%promotion_title%</a>キーを取得しました。:
+    </p>
+    <p>
+    <span style=""font-weight:bold;"">%promotion_key%</span>
+    </p>
+    <p>
+    キーを受け取るためには、 <a href=""%promotion_show_page%"">%promotion_title%</a> のページをご覧ください。
+    </p>
+    %group_section%
+    <p>Alienware Arenaチーム</p>
