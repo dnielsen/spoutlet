@@ -267,10 +267,10 @@ services:
         factory_method:  getRepository
         arguments:
             - 'SpoutletBundle:BackgroundAd'
-    
+
     platformd.model.login_record_manager:
         class: Platformd\SpoutletBundle\Model\LoginRecordManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@platformd.model.ip_lookup_util"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
