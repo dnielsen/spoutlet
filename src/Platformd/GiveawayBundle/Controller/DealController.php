@@ -255,15 +255,20 @@ class DealController extends Controller
         $state       = $stateRepo->findForUserIdAndDealId($userId, $deal->getId());
 
         if ($state) {
-            switch ($state->getCurrentState()) {
-                case KeyRequestState::STATE_IN_QUEUE:
-                case KeyRequestState::STATE_ASSIGNED:
 
+            $currentState = $state->getCurrentState();
+
+            if ($currentState == KeyRequestState::STATE_IN_QUEUE) {
+                return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
+            }
+
+            if ($currentState == KeyRequestState::STATE_ASSIGNED) {
+                $assignedKey = $this->getDealCodeRepo()->getUserAssignedCodeForDeal($currentUser, $deal);
+
+                if ($assignedKey) {
                     return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
-
-                default:
-
-                    # happy to continue
+                }
+                # we should let them fall through and get another key... at this stage they seem to have a key, but their keypool / key must have been deleted in the database... so let them get another one.
             }
         }
 

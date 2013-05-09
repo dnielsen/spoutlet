@@ -219,15 +219,21 @@ class GiveawayController extends Controller
         $state       = $stateRepo->findForUserIdAndGiveawayId($userId, $giveawayId);
 
         if ($state) {
-            switch ($state->getCurrentState()) {
-                case KeyRequestState::STATE_IN_QUEUE:
-                case KeyRequestState::STATE_ASSIGNED:
 
+            $currentState = $state->getCurrentState();
+
+            if ($currentState == KeyRequestState::STATE_IN_QUEUE) {
+                return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            }
+
+            if ($currentState == KeyRequestState::STATE_ASSIGNED) {
+                $giveaway    = $this->getRepository()->find($giveawayId);
+                $assignedKey = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
+
+                if ($assignedKey) {
                     return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
-
-                default:
-
-                    # happy to continue
+                }
+                # we should let them fall through and get another key... at this stage they seem to have a key, but their keypool / key must have been deleted in the database... so let them get another one.
             }
         }
 
