@@ -151,7 +151,7 @@ class GalleryAdminController extends Controller
         );
 
         $session = $this->getRequest()->getSession();
-        $session->set('formValues', $formValues);
+        $session->set('formValuesGallery', $formValues);
     }
 
     public function deleteMediaAction($id, Request $request)
@@ -186,7 +186,7 @@ class GalleryAdminController extends Controller
         $galleryMediaRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GalleryMedia');
 
         $session = $this->getRequest()->getSession();
-        $formValues = $session->get('formValues');
+        $formValues = $session->get('formValuesGallery');
 
         $factory->addRow(array(
             'Title',

@@ -48,13 +48,13 @@ class GroupAdminController extends Controller
     private function getFilterFormData()
     {
         $session = $this->getRequest()->getSession();
-        return $session->get('formValues', array());
+        return $session->get('formValuesGroups', array());
     }
 
     private function setFilterFormData(array $data)
     {
         $session = $this->getRequest()->getSession();
-        $session->set('formValues', $data);
+        $session->set('formValuesGroups', $data);
     }
 
     public function findAction(Request $request)
