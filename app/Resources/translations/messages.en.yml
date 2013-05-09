@@ -8,8 +8,6 @@ platformd:
     homepage:
         news_title: News
 
-    create_account_or_login: Create or log in to an Alienware Arena account.
-
     alienware: Alienware
 
     not_found:
@@ -355,58 +353,7 @@ platformd:
             match_lobby: Match Lobby
             gallery: Gallery
 
-
-    key_request_processor_command:
-        key_assigned_email_subject: Your %promotion_title% Key!
-        key_assigned_email_body: |
-                                    <p>
-                                        Congratulations, you've successfully been assigned a key for the <a href="%promotion_show_page%">%promotion_title%</a>:
-                                    </p>
-                                    <p><span style="font-weight:bold;">%promotion_key%</span></p>
-                                    <p>
-                                        For instructions on how to redeem your key, please visit the <a href="%promotion_show_page%">%promotion_title%</a> page.
-                                    </p>
-                                    %group_section%
-                                    <p>Alienware Arena Team</p>
-        key_assigned_email_body_group_section: In addition to receiving a key for %promotion_title%, you are now a member of <a href="%promotion_group_show_page%">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images.
-        key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
-        key_not_assigned_no_keys_left_email_body: |
-                                    <p>
-                                        Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. Please check back later as more codes may be added!
-                                    </p>
-                                    <p>Alienware Arena Team</p>
     giveaway:
-        giveaway: Giveaway
-        redeem:   Redeem
-        get_key:  GET KEY
-        not_eligible: Sorry, you are not eligible to participate in this giveaway.
-        no_keys_left: There are no keys available for this giveaway
-        max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
-        already_assigned: You were already assigned a key for this giveaway
-        view_giveaway_site: View Giveaway Site
-        in_process: |
-            If you have registered for a system tag key giveaway and your status is “Pending”,<br />
-            please allow at least 2 weeks for your system tag to be reviewed.<br />
-            If there has been no change after 2 weeks, please email
-        queue:
-            you_are_queued: You're in the Queue!
-            queue_explanation: Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.
-            rejected: Your attempt to get a key has been rejected.
-            problem: There was a problem processing your key request.
-            reason: Reason
-            reasons:
-                none: No reason
-                no_keys: Unfortunately, at this time there are no longer any keys available.
-                ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
-                already_assigned: You already have a key.
-                invalid_country_or_age: You are not eligible (based on your age and/or country).
-                invalid_site: Unknown site.
-                client_ip_null: Client IP not found.
-                country_code_null: Unknown country.
-                invalid_country: Unknown country.
-                invalid_promotion: Could not find promotion.
-                inactive_promotion: This promotion is not active.
-                key_fetch_disallowed: Key fetch is not allowed for this promotion.
         admin:
             title: Giveaway admin
             edit_giveaway: Edit Giveaway | %giveaway_title%
@@ -423,21 +370,8 @@ platformd:
             inactive: Active but with zero keys
             active:   Active
             blank_value: Choose status
-        show:
-            availaible_keys: Available Keys: %%count%%
         giveaways_listings:
             giveaways: Giveaways
-        assigned:
-            message: |
-                    Please follow the instructions below to activate your key. If you require any additional support, please email <a href="mailto:%contact_email%">%contact_email%</a>.
-            may_require_activation: Your key may require activation! Check the giveaway page for details.
-            key: Key
-            assigned_at: Assigned
-            view_giveaway: View Giveaway
-        featured_giveaways: Alienware Arena Featured Giveaways
-        all_giveaways: New Giveaways
-        previous_giveaways: Previous Giveaways
-        latest_comments: Latest Comments
     giveaway_pool:
         pool: Giveaway pool
         admin:
@@ -1129,3 +1063,63 @@ contests:
     contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.
 
 
+platformd.create_account_or_login: Create or log in to an Alienware Arena account.
+
+platformd.giveaway.giveaway: Giveaway
+platformd.giveaway.redeem:   Redeem
+platformd.giveaway.get_key:  GET KEY
+platformd.giveaway.not_eligible: Sorry, you are not eligible to participate in this giveaway.
+platformd.giveaway.no_keys_left: There are no keys available for this giveaway
+platformd.giveaway.max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
+platformd.giveaway.already_assigned: You were already assigned a key for this giveaway
+platformd.giveaway.view_giveaway_site: View Giveaway Site
+platformd.giveaway.featured_giveaways: Alienware Arena Featured Giveaways
+platformd.giveaway.all_giveaways: New Giveaways
+platformd.giveaway.previous_giveaways: Previous Giveaways
+platformd.giveaway.latest_comments: Latest Comments
+platformd.giveaway.in_process: |
+    If you have registered for a system tag key giveaway and your status is “Pending”,<br />
+    please allow at least 2 weeks for your system tag to be reviewed.<br />
+    If there has been no change after 2 weeks, please email <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.message: |
+        Please follow the instructions below to activate your key. If you require any additional support, please email <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.may_require_activation: Your key may require activation! Check the giveaway page for details.
+platformd.giveaway.assigned.key: Key
+platformd.giveaway.assigned.assigned_at: Assigned
+platformd.giveaway.assigned.view_giveaway: View Giveaway
+platformd.giveaway.show.availaible_keys: Available keys: %%count%%
+platformd.giveaway.queue.you_are_queued: You're in the queue!
+platformd.giveaway.queue.queue_explanation: Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.
+platformd.giveaway.queue.rejected: Your attempt to get a key has been rejected.
+platformd.giveaway.queue.problem: There was a problem processing your key request.
+platformd.giveaway.queue.reason: Reason
+platformd.giveaway.queue.reasons.none: No reason
+platformd.giveaway.queue.reasons.no_keys: Unfortunately, at this time there are no longer any keys available.
+platformd.giveaway.queue.reasons.ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
+platformd.giveaway.queue.reasons.already_assigned: You already have a key.
+platformd.giveaway.queue.reasons.invalid_country_or_age: You are not eligible (based on your age and/or country).
+platformd.giveaway.queue.reasons.invalid_site: Unknown site.
+platformd.giveaway.queue.reasons.client_ip_null: Client IP not found.
+platformd.giveaway.queue.reasons.country_code_null: Unknown country.
+platformd.giveaway.queue.reasons.invalid_country: Unknown country.
+platformd.giveaway.queue.reasons.invalid_promotion: Could not find promotion.
+platformd.giveaway.queue.reasons.inactive_promotion: This promotion is not active.
+platformd.giveaway.queue.reasons.key_fetch_disallowed: Key fetch is not allowed for this promotion.
+platformd.key_request_processor_command.key_assigned_email_subject: Your %promotion_title% Key!
+platformd.key_request_processor_command.key_assigned_email_body: |
+    <p>
+        Congratulations, you've successfully been assigned a key for the <a href="%promotion_show_page%">%promotion_title%</a>:
+    </p>
+    <p><span style="font-weight:bold;">%promotion_key%</span></p>
+    <p>
+        For instructions on how to redeem your key, please visit the <a href="%promotion_show_page%">%promotion_title%</a> page.
+    </p>
+    %group_section%
+    <p>Alienware Arena Team</p>
+platformd.key_request_processor_command.key_assigned_email_body_group_section: In addition to receiving a key for %promotion_title%, you are now a member of <a href="%promotion_group_show_page%">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images.
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
+    <p>
+        Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. Please check back later as more codes may be added!
+    </p>
+    <p>Alienware Arena Team</p>
