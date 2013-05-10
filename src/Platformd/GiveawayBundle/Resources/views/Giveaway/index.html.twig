@@ -6,7 +6,7 @@
 {% set defaultThumb = '/bundles/spoutlet/images/alienwarelogothumb-140x85.png' %}
 <div class="std_1col">
     <div id="giveaways-header" style="background:top left no-repeat;width:950px;height:120px;">
-
+        <img src="/bundles/giveaway/images/aw-arenakeygiveaways-950x120.jpg" />
     </div>
 </div>
 <div class="std_2col">
@@ -83,15 +83,21 @@
             </div>
 
             <div class="widget-content">
-                {% for giveaway in expired %}
-                    {% set thumb = giveaway.thumbnail ? media_path(giveaway.thumbnail) : defaultThumb %}
-                    <div class="deal-item">
-                        <a href="{{ giveaway | pd_link }}">
-                            <img src="{{ thumb }}" alt="{{ giveaway.name }}" />
-                        </a>
-                        <div><a class="deal-link" href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a></div>
+                <div class="page_container">
+                    <div class="content" style="height:240px;">
+                    {% for giveaway in expired %}
+                        {% set thumb = giveaway.thumbnail ? media_path(giveaway.thumbnail) : defaultThumb %}
+                        <div class="deal-item">
+                            <a href="{{ giveaway | pd_link }}">
+                                <img src="{{ thumb }}" alt="{{ giveaway.name }}" />
+                            </a>
+                            <div><a class="deal-link" href="{{ giveaway | pd_link }}">{{ giveaway.name }}</a></div>
+                        </div>
+                    {% endfor %}
                     </div>
-                {% endfor %}
+                    <div class="page_navigation" style="float: right; padding: 0 0 10px 0;"></div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -102,10 +108,12 @@
     {{ parent() }}
 
     <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/deals.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
     {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
         <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
     {% endif %}
@@ -114,6 +122,10 @@
            $('.deal-link').truncate({ width: 225 });
            $('.title a').truncate({ width: 240 });
            $('.when').timeago();
+           $('.page_container').pajinate({
+                items_per_page: 8,
+                show_first_last: false,
+            });
         });
     </script>
 {% endblock %}
