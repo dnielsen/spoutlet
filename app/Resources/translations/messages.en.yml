@@ -876,8 +876,8 @@ deal_comments: Deals Comments
 deal_comments_posted_on: Posted on
 deal_not_eligible: Sorry, you are not eligible to participate in this deal.
 choose_country: Choose your country
-deal_join_group: By claiming a code, you will automatically become a member of the <a href="%link%">%group%</a> so you can receive notifications about future offerings. You can leave this group at any time by visiting the group page and clicking "leave group."
-deal_join_group_success: You are now a member of <a href="%link%">%group%</a>.
+deal_join_group: By claiming a code, you will automatically become a member of the <a href="%link%" target="_blank">%group%</a> so you can receive notifications about future offerings. You can leave this group at any time by visiting the group page and clicking "leave group."
+deal_join_group_success: You are now a member of <a href="%link%" target="_blank">%group%</a>.
 
 featured_deals: Alienware Arena Featured Deals
 expired_deals: Expired Deals
