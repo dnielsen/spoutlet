@@ -1,0 +1,10 @@
+rsvp_show:
+    pattern: /{slug}/attending
+    defaults: { _controller: SpoutletBundle:Rsvp:show }
+    requirements: { _method: GET }
+
+rsvp_attend:
+    pattern: /{slug}
+    defaults: { _controller: SpoutletBundle:Rsvp:attend }
+    requirements: { _method: GET|POST }
+

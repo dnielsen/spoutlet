@@ -91,3 +91,11 @@ SpoutletBundle_admin_contest:
 SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
+
+SpoutletBundle_admin_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_rsvp.yml"
+    prefix:   /admin/rsvp
+
+SpoutletBundle_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/rsvp.yml"
+    prefix:   /rsvp

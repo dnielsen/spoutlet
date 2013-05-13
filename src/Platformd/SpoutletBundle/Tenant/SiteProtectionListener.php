@@ -53,6 +53,7 @@ class SiteProtectionListener
         '^/microsoft',
         '^/events',
         '^/group-events',
+        '^/rsvp',
     );
 
     static private $urlMap = array(

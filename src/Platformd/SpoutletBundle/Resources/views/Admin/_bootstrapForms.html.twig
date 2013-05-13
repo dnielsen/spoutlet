@@ -12,7 +12,7 @@
         {% if form.get('help') %}
         <p class="alert alert-info help">
             <i class="icon-info-sign"></i>
-            {{ form.get('help') | trans }}
+            {{ form.get('help') | trans | raw }}
         </p>
         {% endif %}
     </div>
@@ -57,10 +57,10 @@
     {% endif %}
     {% set attr = attr|merge({'class': 'control-label'}) %}
     <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-        {{ label|trans }}
         {% if required %}
             <span class="required">*</span>
         {% endif %}
+        {{ label|trans }}
     </label>
 {% endspaceless %}
 {% endblock %}

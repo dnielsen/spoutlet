@@ -212,3 +212,22 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@platformd.model.ip_lookup_util"
             - "@platformd.model.site_util"
+
+    platformd.form.type.rsvp_code_type:
+        class: Platformd\SpoutletBundle\Form\Type\RsvpCodeType
+        arguments:
+            - "@platformd.form.transformer.rsvp_code"
+        tags:
+            - { name: form.type, alias: rsvp_code }
+
+    platformd.form.transformer.rsvp_code:
+        class: Platformd\SpoutletBundle\Form\DataTransformer\RsvpCodeTransformer
+        arguments:
+            - "@doctrine"
+
+    platformd.validation.rsvp_attendee_validator:
+        class: Platformd\SpoutletBundle\Validator\RsvpAttendeeValidator
+        arguments:
+            - "@doctrine.orm.entity_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.validator.rsvp_attendee }

@@ -74,6 +74,11 @@ class Site
         $this->siteFeatures->setSite($this);
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     /**
      * Get id
      *

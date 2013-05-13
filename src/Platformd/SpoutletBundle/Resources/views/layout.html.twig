@@ -32,6 +32,7 @@
                 'ckeditor/skins/kama/editor.css'
                 'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
                 'bundles/spoutlet/css/qtip.css'
+                'bundles/spoutlet/css/rsvp.css'
 		        filter='cssrewrite'
 		        output='css/packed/layout.css'
 		    %}
@@ -156,7 +157,7 @@
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
+	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(%url%);"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
 	            <div class="background-takeover" id="custom_background_top">
 	                <div class="background-takeover" id="custom_background_bot">
 	                    <div id="header">
@@ -166,8 +167,9 @@
 	                        {% include 'SpoutletBundle::navigation.html.twig' %}
 	                    </div>
 	                    <div id="content-wrapper">
-                            <div id="content-background">
+                            <div id="{{ (block('content_background_override_class') ? block('content_background_override_class') : 'content-background') }}">
                                 <div id="content">
+
                                     {% block pre_content_nav %}{% endblock %}
 
                                     {#
@@ -224,6 +226,7 @@
                                     {% endif %}
 
                                     {% block content %}{% endblock %}
+
                                 </div>
                             </div>
                         </div>

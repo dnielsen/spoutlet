@@ -272,8 +272,8 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .nav-divider { background: url('/bundles/spoutlet/images/nav_divider.png'); }
 
 #content-wrapper { width: 970px; margin:0px auto;}
-#content-background { width: 970px; float: left; background-color: #000; margin-top: -5px;}
-#content {  width: 950px; float: left; background-color: #000; margin-left: 10px; padding-top:20px; }
+#content-background { width: 970px; float: left; background-color: #000; margin-top: -5px; }
+#content {  width: 950px; float: left; margin-left: 10px; padding-top:20px;  }
 .wide-950 { width: 950px; margin: 0 auto; }
 
 
@@ -912,4 +912,12 @@ hr.faded:before {
 .beta {
     color: #ff5711;
     padding-right: 2px;
+}
+
+.solid-background {
+    width: 960px;
+    float: left;
+    background-color: #000;
+    margin: -20px 0 0 -10px;
+    padding: 20px 0 0 10px;
 }

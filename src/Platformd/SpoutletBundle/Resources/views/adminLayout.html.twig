@@ -224,6 +224,15 @@
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <li><a href="{{ path('admin_upload_media') }}">Manage Media</a></li>
                             {% endif %}
+
+                            <li>
+                                <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_rsvp_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     {% endif %}
 
