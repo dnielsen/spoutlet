@@ -15,6 +15,35 @@ $fileLocations = array(
 );
 
 /**
+ * Array of queries to run and process the results of.
+ * Array key will be output i.e. 'Getting <array key> information...'
+ */
+$queries = array(
+    'recent video'  => 'SELECT `m`.`id`, `m`.`name`, `m`.`length`, `m`.`description`, `m`.`download_file`, `f`.`serverid`, `f`.`mime`, `c`.`name` AS `category`
+                        FROM `'.$videoDb.'`.`movies` `m`
+                        LEFT JOIN `'.$videoDb.'`.`files` `f` ON `m`.`download_file` = `f`.`fileid`
+                        LEFT JOIN `'.$videoDb.'`.`movie_category` `c` ON `c`.`id` = `m`.`categoryid`
+                        WHERE `m`.`download_file` <> 0
+                        AND `m`.`download_file` IS NOT NULL
+                        AND `f`.`deleted` = 0
+                        AND `m`.`disabled` = 0
+                        AND `m`.`status` = 1
+                        ORDER BY `m`.`added` DESC
+                        LIMIT 100',
+    'popular video' => 'SELECT `m`.`id`, `m`.`name`, `m`.`length`, `m`.`description`, `m`.`download_file`, `f`.`serverid`, `f`.`mime`, `c`.`name` AS `category`
+                        FROM `'.$videoDb.'`.`movies` `m`
+                        LEFT JOIN `'.$videoDb.'`.`files` `f` ON `m`.`download_file` = `f`.`fileid`
+                        LEFT JOIN `'.$videoDb.'`.`movie_category` `c` ON `c`.`id` = `m`.`categoryid`
+                        WHERE `m`.`download_file` <> 0
+                        AND `m`.`download_file` IS NOT NULL
+                        AND `f`.`deleted` = 0
+                        AND `m`.`disabled` = 0
+                        AND `m`.`status` = 1
+                        ORDER BY `m`.`views` DESC
+                        LIMIT 100',
+);
+
+/**
  * I used this on my local dev machine to allow a connection to PLDX - not required on production.
  */
 $sshUser    = '';

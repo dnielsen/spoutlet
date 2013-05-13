@@ -38,137 +38,68 @@ try {
     $dbh = new PDO($dsn, $user, $password);
     output(0, 'done.');
 
-    output(2, 'Getting recent video information...', false);
+    foreach ($queries as $output => $sql) {
 
-    $sql = 'SELECT `m`.`id`, `m`.`name`, `m`.`length`, `m`.`description`, `m`.`download_file`, `f`.`serverid`, `f`.`mime`, `c`.`name` AS `category`
-            FROM `'.$videoDb.'`.`movies` `m`
-            LEFT JOIN `'.$videoDb.'`.`files` `f` ON `m`.`download_file` = `f`.`fileid`
-            LEFT JOIN `'.$videoDb.'`.`movie_category` `c` ON `c`.`id` = `m`.`categoryid`
-            WHERE `m`.`download_file` <> 0
-            AND `m`.`download_file` IS NOT NULL
-            AND `f`.`deleted` = 0
-            AND `m`.`disabled` = 0
-            AND `m`.`status` = 1
-            ORDER BY `m`.`added` DESC
-            LIMIT 100';
+        output(2, 'Getting '.$output.' information...', false);
 
-    $result = $dbh->query($sql);
-    output(0, 'done.');
-    output(4, $result->rowCount().' videos to process.');
+        $result = $dbh->query($sql);
+        output(0, 'done.');
+        output(4, $result->rowCount().' videos to process.');
 
-    foreach ($result as $movie) {
+        foreach ($result as $movie) {
 
-        $id = $movie['id'];
+            $id = $movie['id'];
 
-        output(6, 'Processing movie id => '.$id.'...', false);
+            output(6, 'Processing movie id => '.$id.'...', false);
 
-        if (isset($processedVideos[$id])) {
-            output(0, 'already processed.');
-            continue;
-        }
-
-        output(0);
-
-        $name           = str_replace('\'', '\'\\\'\'', $movie['name']);
-        $description    = str_replace('\'', '\'\\\'\'', $movie['description']);
-        $downloadFile   = $movie['download_file'];
-        $serverId       = $movie['serverid'];
-        $mime           = $movie['mime'];
-        $category       = $movie['category'];
-
-        $filePath       = $fileLocations[$serverId].$downloadFile;
-
-        if (file_exists($filePath)) {
-
-            output(8, 'Uploading video to youtube...');
-
-            exec('python upload_video.py --file=\''.$filePath.'\' --mime="'.$mime.'" --title=\''.$name.'\' --description=\''.$description.'\' --category="20" --privacyStatus="public" 2>&1', $output);
-
-            $lastLine = end($output);
-
-            logMessage('Exit line from upload script - '.$lastLine);
-
-            if (false !== strpos($lastLine, 'was successfully uploaded')) {
-                preg_match("/video id: (.*?)\)/", $lastLine, $matches);
-                $youtubeId = $matches[1];
-
-                output(8, 'Uploaded to youtube with id => '.$youtubeId);
-
-                $csvRow     = $id.',"'.$youtubeId.'","'.$category.'"'."\n";
-                file_put_contents($processedVideosCsv, $csvRow, FILE_APPEND | LOCK_EX);
-                $processedVideos[$id] = $youtubeId;
-            } else {
-                output(8, 'Something went wrong with upload. File not added to list of processed videos.');
+            if (isset($processedVideos[$id])) {
+                output(0, 'already processed.');
+                continue;
             }
-        } else {
-            output(8, 'File does not exist at [ '.$filePath.' ]');
-        }
-    }
 
-    output(2, 'Getting popular video information...', false);
+            output(0);
 
-    $sql = 'SELECT `m`.`id`, `m`.`name`, `m`.`length`, `m`.`description`, `m`.`download_file`, `f`.`serverid`, `f`.`mime`, `c`.`name` AS `category`
-            FROM `'.$videoDb.'`.`movies` `m`
-            LEFT JOIN `'.$videoDb.'`.`files` `f` ON `m`.`download_file` = `f`.`fileid`
-            LEFT JOIN `'.$videoDb.'`.`movie_category` `c` ON `c`.`id` = `m`.`categoryid`
-            WHERE `m`.`download_file` <> 0
-            AND `m`.`download_file` IS NOT NULL
-            AND `f`.`deleted` = 0
-            AND `m`.`disabled` = 0
-            AND `m`.`status` = 1
-            ORDER BY `m`.`views` DESC
-            LIMIT 100';
+            $name           = str_replace('\'', '\'\\\'\'', $movie['name']);
+            $description    = str_replace('\'', '\'\\\'\'', $movie['description']);
+            $downloadFile   = $movie['download_file'];
+            $streamFile     = $movie['stream_file'];
+            $serverId       = $movie['serverid'];
+            $mime           = $movie['mime'];
+            $category       = $movie['category'];
 
-    $result = $dbh->query($sql);
-    output(0, 'done.');
-    output(4, $result->rowCount().' videos to process.');
+            $filePath       = $fileLocations[$serverId].$downloadFile;
+            $backupFilePath = $fileLocations[$serverId].$streamFile;
 
-    foreach ($result as $movie) {
+            $fileExists         = file_exists($filePath);
+            $backupFileExists   = file_exists($backupFilePath);
 
-        $id = $movie['id'];
+            if ($fileExists || $backupFileExists) {
 
-        output(6, 'Processing movie id => '.$id.'...', false);
+                output(8, 'Uploading video to youtube...');
 
-        if (isset($processedVideos[$id])) {
-            output(0, 'already processed.');
-            continue;
-        }
+                $file = $fileExists ? $filePath : $backupFilePath;
 
-        output(0);
+                exec('python upload_video.py --file=\''.$file.'\' --mime="'.$mime.'" --title=\''.$name.'\' --description=\''.$description.'\' --category="20" --privacyStatus="public" 2>&1', $output);
 
-        $name           = str_replace('\'', '\'\\\'\'', $movie['name']);
-        $description    = str_replace('\'', '\'\\\'\'', $movie['description']);
-        $downloadFile   = $movie['download_file'];
-        $serverId       = $movie['serverid'];
-        $mime           = $movie['mime'];
-        $category       = $movie['category'];
+                $lastLine = end($output);
 
-        $filePath       = $fileLocations[$serverId].$downloadFile;
+                logMessage('Exit line from upload script - '.$lastLine);
 
-        if (file_exists($filePath)) {
+                if (false !== strpos($lastLine, 'was successfully uploaded')) {
+                    preg_match("/video id: (.*?)\)/", $lastLine, $matches);
+                    $youtubeId = $matches[1];
 
-            output(8, 'Uploading video to youtube...');
+                    output(8, 'Uploaded to youtube with id => '.$youtubeId);
 
-            exec('python upload_video.py --file=\''.$filePath.'\' --mime="'.$mime.'" --title=\''.$name.'\' --description=\''.$description.'\' --category="20" --privacyStatus="public" 2>&1', $output);
-
-            $lastLine = end($output);
-
-            logMessage('Exit line from upload script - '.$lastLine);
-
-            if (false !== strpos($lastLine, 'was successfully uploaded')) {
-                preg_match("/video id: (.*?)\)/", $lastLine, $matches);
-                $youtubeId = $matches[1];
-
-                output(8, 'Uploaded to youtube with id => '.$youtubeId);
-
-                $csvRow     = $id.',"'.$youtubeId.'","'.$category.'"'."\n";
-                file_put_contents($processedVideosCsv, $csvRow, FILE_APPEND | LOCK_EX);
-                $processedVideos[$id] = $youtubeId;
+                    $csvRow     = $id.',"'.$youtubeId.'","'.$category.'"'."\n";
+                    file_put_contents($processedVideosCsv, $csvRow, FILE_APPEND | LOCK_EX);
+                    $processedVideos[$id] = $youtubeId;
+                } else {
+                    output(8, 'Something went wrong with upload. File not added to list of processed videos.');
+                }
             } else {
-                output(8, 'Something went wrong with upload. File not added to list of processed videos.');
+                output(8, 'File does not exist at [ '.$filePath.' ]');
             }
-        } else {
-            output(8, 'File does not exist at [ '.$filePath.' ]');
         }
     }
 
