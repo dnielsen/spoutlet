@@ -733,14 +733,14 @@ platformd.giveaway.queue.reasons.key_fetch_disallowed: Busca clave no está perm
 platformd.key_request_processor_command.key_assigned_email_subject: Tu %promotion_title% clave
 platformd.key_request_processor_command.key_assigned_email_body: |
     <p>Felicidades, has sido exitosamente asignado una clave para la
-    <a href=""%promotion_show_page%"">%promotion_title%</a>:
+    <a href="%promotion_show_page%">%promotion_title%</a>:
     </p>
     <p>
-    <span style=""font-weight:bold;"">%promotion_key%</span>
+    <span style="font-weight:bold;">%promotion_key%</span>
     </p>
     <p>
     Para obtener instrucciones sobre cómo redimir tu clave, por favor visita la página
-    <a href=""%promotion_show_page%"">%promotion_title%</a>.
+    <a href="%promotion_show_page%">%promotion_title%</a>.
     </p>
     %group_section%
     <p>Equipo Alienware Arena</p>

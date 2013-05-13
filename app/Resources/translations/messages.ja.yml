@@ -922,13 +922,13 @@ platformd.giveaway.queue.reasons.key_fetch_disallowed: このプロモーショ�
 platformd.key_request_processor_command.key_assigned_email_subject: あなたの%promotion_title%キー
 platformd.key_request_processor_command.key_assigned_email_body: |
     <p>
-    おめでとうございます。あなたは、<a href=""%promotion_show_page%"">%promotion_title%</a>キーを取得しました。:
+    おめでとうございます。あなたは、<a href="%promotion_show_page%">%promotion_title%</a>キーを取得しました。:
     </p>
     <p>
-    <span style=""font-weight:bold;"">%promotion_key%</span>
+    <span style="font-weight:bold;">%promotion_key%</span>
     </p>
     <p>
-    キーを受け取るためには、 <a href=""%promotion_show_page%"">%promotion_title%</a> のページをご覧ください。
+    キーを受け取るためには、 <a href="%promotion_show_page%">%promotion_title%</a> のページをご覧ください。
     </p>
     %group_section%
     <p>Alienware Arenaチーム</p>
