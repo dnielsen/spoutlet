@@ -81,7 +81,7 @@ Feature: Deal Pool
             And I am located in "UK"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-            And I should see "You're in the Queue"
+            And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
         Then I should see "UK_only_1"
@@ -91,7 +91,7 @@ Feature: Deal Pool
             And I am located in "US"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-            And I should see "You're in the Queue"
+            And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
         Then I should see "US_only_1"
@@ -101,7 +101,7 @@ Feature: Deal Pool
             And I am located in "JP"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-            And I should see "You're in the Queue"
+            And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
         Then I should see "You are not eligible (based on your age and/or country)"
