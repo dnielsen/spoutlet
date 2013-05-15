@@ -1,0 +1,50 @@
+#content .rsvp-content {
+    background: url('../images/register-bg.png') no-repeat top left;
+    padding: 8px 20px 0 20px;
+    min-height: 800px;
+    width: 600px;
+}
+
+#content .rsvp-content input {
+    height: 12px;
+    line-height: 12px;
+    background: none;
+    color: #000000;
+    background-color: #ffffff;
+}
+
+#content .rsvp-content .control-label {
+    padding: 0;
+}
+
+#content .rsvp-content .control-group {
+    margin-bottom: 10px;
+    margin-left: 175px;
+}
+
+#content .rsvp-content button {
+    height: 25px;
+    width: 87px;
+    padding: 3px 0 0 0;
+    color: #ffffff;
+    font-weight: bold;
+    min-width: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+#content .rsvp-content .form-actions {
+    padding: 0 0 0 235px;
+    margin: 0;
+}
+
+#content .rsvp-content h2 {
+    margin: 10px 0 25px 0;
+    font-size: 24px;
+    color: #e7e7e7;
+}
+
+#rsvp-background .xnotices {
+    width: 65%;
+    margin: 0;
+}

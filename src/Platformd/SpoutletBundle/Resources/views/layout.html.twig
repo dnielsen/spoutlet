@@ -32,6 +32,7 @@
                 'ckeditor/skins/kama/editor.css'
                 'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
                 'bundles/spoutlet/css/qtip.css'
+                'bundles/spoutlet/css/rsvp.css'
 		        filter='cssrewrite'
 		        output='css/packed/layout.css'
 		    %}
@@ -172,8 +173,9 @@
                     </div>
                     <div class="background-takeover" id="custom_background_bot">
                         <div id="content-wrapper">
-                            <div id="content-background">
+                            <div id="{{ (block('content_background_override_class') ? block('content_background_override_class') : 'content-background') }}">
                                 <div id="content">
+
                                     {% block pre_content_nav %}{% endblock %}
 
                                     {#
@@ -230,6 +232,7 @@
                                     {% endif %}
 
                                     {% block content %}{% endblock %}
+
                                 </div>
                             </div>
                         </div>

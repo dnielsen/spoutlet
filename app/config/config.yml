@@ -1,3 +1,4 @@
+
 imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
@@ -131,6 +132,7 @@ parameters:
     mock_data_directory: %kernel.root_dir%/../mock_data/
     mock_queue_util_full_filename: %mock_data_directory%queue_util_mock_data.txt
 
+    doctrine.orm.validator.unique.class: Knp\Validator\UniqueEntityValidator
     # a setting used in the test environment with CEVOAuthenticationListener
     allow_faked_auth:   false
 
@@ -495,9 +497,9 @@ exercise_html_purifier:
     default:
         Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
     editor_basic:
-        HTML.Allowed: a[href], p, strong, u, em, ul, ol, li, div, *[style]
+        HTML.Allowed: a[href], p, strong, u, em, ul, ol, li, div, *[style], br
     editor_admin:
-        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td, thead, pre, span, div, *[style]
+        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br
 
 liip_theme:
     themes: %liip_enabled_themes%

@@ -6,10 +6,10 @@
         {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
     {% endif %}
     <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-        {{ label|trans }}
         {% if required %}
             <span class="required">*</span>
         {% endif %}
+        {{ label|trans }}
     </label>
 {% endspaceless %}
 {% endblock %}

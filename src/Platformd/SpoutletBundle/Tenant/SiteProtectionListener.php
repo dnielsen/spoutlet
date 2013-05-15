@@ -55,6 +55,7 @@ class SiteProtectionListener
         '^/events',
         '^/group-events',
         '^/sweepstakes',
+        '^/rsvp',
     );
 
     static private $urlMap = array(

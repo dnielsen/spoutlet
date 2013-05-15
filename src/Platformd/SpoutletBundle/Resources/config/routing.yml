@@ -100,3 +100,10 @@ SpoutletBundle_admin_background_ads:
     resource: "@SpoutletBundle/Resources/config/routing/admin_background_ads.yml"
     prefix:   /admin/background-ads
 
+SpoutletBundle_admin_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_rsvp.yml"
+    prefix:   /admin/rsvp
+
+SpoutletBundle_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/rsvp.yml"
+    prefix:   /rsvp

@@ -128,6 +128,9 @@
 {% endif %}
 
 <script type="text/javascript">
+
+    var commentReplyRequestInProgress = false;
+
     $(function () {
 
         $('html').click(function() {
@@ -198,6 +201,9 @@
         });
 
         $('.comment-post-reply-link').click(function () {
+
+            if (commentReplyRequestInProgress) return;
+
             var id = $(this).attr('data-id');
             if ($('#reply-text-' + id).val() == "") {
                 return false;
@@ -210,6 +216,9 @@
                 'parent' : id,
                 'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
+
+            commentReplyRequestInProgress = true;
+
             $.ajax({
                 url: '{{ path('comments_new') }}',
                 type: 'post',
@@ -219,6 +228,7 @@
                     $('.thread').html(html);
                     $('.thread').unblock();
                     $('.comment-count').text(parseInt($('.comment-count').text())+1);
+                    commentReplyRequestInProgress = false;
                 }
             });
         });

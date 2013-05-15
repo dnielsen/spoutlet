@@ -1,0 +1,45 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% if rsvp.background %}
+    {% set customPageBackgroundImage = media_path(rsvp.background) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+{% block content_background_override_class %}{{ 'rsvp-background' }}{% endblock %}
+
+{% block content %}
+
+    <div class="rsvp-content">
+
+        <h2>{{ rsvp.name }}</h2>
+        <div class="rsvp-details">{{ rsvp.content|raw }}</div>
+
+        <form action="{{ path('rsvp_attend', {'slug': rsvp.slug}) }}" method="POST" class="form form-horizontal">
+
+            {{ form_errors(form) }}
+
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.lastName) }}
+            {{ form_row(form.phoneNumber) }}
+            {{ form_row(form.email) }}
+
+            {% if form.code is defined %}
+                {{ form_row(form.code) }}
+            {% endif %}
+
+            {{ form_rest(form) }}
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit" formnovalidate>{{ 'Send RSVP'|trans }}</button>
+            </div>
+        </form>
+    </div>
+
+    </div>
+
+{% endblock %}

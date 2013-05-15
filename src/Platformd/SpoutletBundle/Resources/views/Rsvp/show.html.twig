@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% if rsvp.background %}
+    {% set customPageBackgroundImage = media_path(rsvp.background) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+{% block content_background_override_class %}{{ 'rsvp-background' }}{% endblock %}
+
+{% block content %}
+
+    <div class="rsvp-content">
+
+        <h2>{{ rsvp.name }}</h2>
+        {{ rsvp.content|raw }}
+
+    </div>
+
+    </div>
+
+{% endblock %}

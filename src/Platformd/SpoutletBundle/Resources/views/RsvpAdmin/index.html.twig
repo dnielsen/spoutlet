@@ -1,0 +1,53 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>RSVPs</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>URL</th>
+            <th>Sites</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for rsvp in rsvps %}
+        <tr>
+            <td><a href="{{ path('admin_rsvp_edit', { 'id': rsvp.id }) }}">{{ rsvp.name }}</a></td>
+            <td><a href="{{ rsvp | pd_link }}">{{ rsvp | pd_link }}</a></td>
+            <td>
+                {% for site in rsvp.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
+            <td>
+                {% if rsvp.isPublished %}
+                    <span class="label label-success">Published</span>
+                {% else %}
+                    <span class="label label-warning">Unpublished</span>
+                {% endif %}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-mini" href="#"><i class="icon-th-list icon-white"></i> Actions</a>
+                    <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('admin_rsvp_edit', { 'id': rsvp.id }) }}"><i class="icon-pencil"></i> Edit</a></li>
+                        <li><a href="{{ path('admin_rsvp_export_csv', { 'id': rsvp.id }) }}"><i class="icon-file"></i> Export Attendees</a></li>
+                        <li><a href="{{ path('rsvp_attend', { 'slug': rsvp.slug }) }}"><i class="icon-hand-up"></i> Public Link</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_rsvp_new') }}">
+    Create a new entry
+</a>
+{% endblock %}
