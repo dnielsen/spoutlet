@@ -180,7 +180,7 @@ class GiveawayPoolAdminController extends Controller
             if ($keysFile->getSize() > GiveawayPool::POOL_SIZE_QUEUE_THRESHOLD) {
 
                 $s3         = $this->container->get('aws_s3');
-                $bucket     = $this->container->getParameter('s3_bucket_name');
+                $bucket     = $this->container->getParameter('s3_private_bucket_name');
 
                 $handle     = fopen($keysFile, 'r');
                 $filename   = trim(GiveawayPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
