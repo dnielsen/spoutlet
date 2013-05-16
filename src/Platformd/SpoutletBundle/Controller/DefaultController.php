@@ -52,7 +52,7 @@ class DefaultController extends Controller
             ->findMostRecentArticleForSite($this->getCurrentSite());
 
         $news = $this->getNewsRepo()
-            ->findMostRecentForSite($this->getCurrentSite(), 13)
+            ->findMostRecentForSite($this->getCurrentSite(), 4)
         ;
 
         return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(

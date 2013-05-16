@@ -37,13 +37,11 @@ class NewsRepository extends EntityRepository
             ->getQuery();
     }
 
-    /**
-     * @return array
-     */
     public function findAllForSite($site)
     {
         return $this->createBaseQueryBuilder($site)
             ->orderBy('n.postedAt', 'DESC')
+            ->orderBy('n.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
@@ -54,6 +52,7 @@ class NewsRepository extends EntityRepository
         return $this->createBaseQueryBuilder($site)
             ->andWhere('n.type = :article')
             ->orderBy('n.postedAt', 'DESC')
+            ->orderBy('n.id', 'DESC')
             ->setParameter('article', News::NEWS_TYPE_ARTICLE)
             ->getQuery()
             ->setMaxResults(1)

@@ -24,10 +24,32 @@ class ThreadRepository extends EntityRepository
 
     public function findCommentCountsForThreadIds($threadIds)
     {
+        if (empty($threadIds)) {
+            return array();
+        }
+
         $result = $this->createQueryBuilder('t')
             ->select('t.id, t.commentCount')
             ->andWhere('t.id IN (:ids)')
             ->setParameter('ids', $threadIds)
+            ->getQuery()
+            ->getResult();
+
+        $counts = array();
+
+        foreach ($result as $data) {
+            $counts[$data['id']] = $data['commentCount'];
+        }
+
+        return $counts;
+    }
+
+    public function findCommentCountsForAllThreadsLike($idLike)
+    {
+        $result = $this->createQueryBuilder('t')
+            ->select('t.id, t.commentCount')
+            ->andWhere('t.id LIKE :idLike')
+            ->setParameter('idLike', $idLike)
             ->getQuery()
             ->getResult();
 

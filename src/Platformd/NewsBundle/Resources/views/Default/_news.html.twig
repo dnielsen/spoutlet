@@ -7,10 +7,10 @@
 
         {% if item.type == 'article' %}
 
-            {% if item.image %}
+            {% if item.image and item.image.filename %}
             <div class="article-image">
                 <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
-                    <img src="{{ item.image.filename | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
+                    <img src="{{ media_path(item.image)  }}" alt="{{ item.title }}" />
                 </a>
             </div>
             {% endif %}
@@ -29,7 +29,7 @@
             </h6>
 
             <p class="article-blurb-text">
-                {{ item.blurb | nl2br }}
+                {{ item.blurb | raw | nl2br }}
             </p>
         </div>
 

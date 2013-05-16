@@ -13,9 +13,11 @@
                 <div id="featured-news-article" class="widget-item">
                     <a class="widget-link news-ellipse" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a>
                     <div class="article-thumbnail">
-                        <a href="{{ featuredArticle | pd_link }}"{{ featuredArticle is external ? ' target="_blank"' : '' }}>
-                            <img src="{{ media_path(featuredArticle.thumbnail) }}" alt="{{ featuredArticle.title }}" />
-                        </a>
+                        {% if featuredArticle.thumbnail %}
+                            <a href="{{ featuredArticle | pd_link }}" {{ featuredArticle | pd_link_target }}>
+                                <img src="{{ featuredArticle.thumbnail.filename | imagine_filter('featured_article_thumb') }}" alt="{{ featuredArticle.title }}" />
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -34,3 +36,7 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('.widget-link').truncate();
+</script>

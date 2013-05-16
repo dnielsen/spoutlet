@@ -725,7 +725,7 @@ platformd.news.admin.edit_title: Edit a news item
 platformd.news.admin.upload_image: Upload an image
 platformd.news.admin.image_dimensions: Used on news listings page (recommended size: 634x400)
 platformd.news.admin.article_thumbnail: Article Thumbnail
-platformd.news.admin.thumbnail_dimensions: Used in news widgets (recommended size: 300x100)
+platformd.news.admin.thumbnail_dimensions: Used in news widgets (recommended size: 275x92)
 platformd.news.announced_date: Announced %posted_date%
 platformd.news.published_date: Published %posted_date%
 platformd.news.comment_count: (%comment_count% comment)|(%comment_count% comments)

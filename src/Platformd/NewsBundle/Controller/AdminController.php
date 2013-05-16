@@ -51,8 +51,6 @@ class AdminController extends Controller
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
-        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
-
         return $this->render('NewsBundle:Admin:list.html.twig', array(
             'news'  => $pager,
             'site'  => $site,
