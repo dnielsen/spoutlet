@@ -890,6 +890,7 @@ galleries:
     gallery_see_all: See All
 
 
+platformd.giveaway.click_for_past_giveaways: <a href="%cevo_user_account_giveaway_page%">ここで</a>をクリックして、過去のプレゼントを確認します。
 platformd.giveaway.get_key:  キー入手
 platformd.giveaway.featured_giveaways: 注目のAlienware Arenaプレゼント
 platformd.giveaway.all_giveaways: 最新のプレゼント

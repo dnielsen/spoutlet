@@ -1064,7 +1064,7 @@ contests:
 
 
 platformd.create_account_or_login: Create or log in to an Alienware Arena account.
-
+platformd.giveaway.click_for_past_giveaways: Click <a href="%cevo_user_account_giveaway_page%">here</a> to view keys for past giveaways.
 platformd.giveaway.giveaway: Giveaway
 platformd.giveaway.redeem:   Redeem
 platformd.giveaway.get_key:  GET KEY
@@ -1087,7 +1087,7 @@ platformd.giveaway.assigned.may_require_activation: Your key may require activat
 platformd.giveaway.assigned.key: Key
 platformd.giveaway.assigned.assigned_at: Assigned
 platformd.giveaway.assigned.view_giveaway: View Giveaway
-platformd.giveaway.show.availaible_keys: Available keys: %%count%%
+platformd.giveaway.show.availaible_keys: Available Keys: %%count%%
 platformd.giveaway.queue.you_are_queued: You're in the queue!
 platformd.giveaway.queue.queue_explanation: Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.
 platformd.giveaway.queue.rejected: Your attempt to get a key has been rejected.

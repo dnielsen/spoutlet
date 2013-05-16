@@ -126,6 +126,11 @@ class KeyRequestState
      */
     protected $stateReason;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $userHasSeenState = false;
+
     public function getId()
     {
         return $this->id;
@@ -137,6 +142,14 @@ class KeyRequestState
 
     public function setGiveaway($value) {
         $this->giveaway = $value;
+    }
+
+    public function getUserHasSeenState() {
+        return $this->userHasSeenState;
+    }
+
+    public function setUserHasSeenState($value) {
+        $this->userHasSeenState = $value;
     }
 
     public function getDeal() {

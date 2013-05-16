@@ -704,6 +704,7 @@ contests:
 
 platformd.create_account_or_login: Crear una cuenta Alienware Arena  (Si no tienes una)
 
+platformd.giveaway.click_for_past_giveaways: Haz clic <a href="%cevo_user_account_giveaway_page%">aquí</a> para ver las claves de regalos anteriores.
 platformd.giveaway.get_key:  Obten tu Código
 platformd.giveaway.featured_giveaways: Regalos Destacados de Alienware Arena
 platformd.giveaway.all_giveaways: Nuevos Regalos

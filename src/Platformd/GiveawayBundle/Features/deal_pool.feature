@@ -76,6 +76,19 @@ Feature: Deal Pool
             And I select "Ireland" from "Eligible Countries"
             And I press "Save Pool"
 
+    Scenario: I should be told that there are no more keys if I join the queue and the keys run out before I get one - but I should only see the message once
+        Given I am authenticated as a user
+            And I am located in "UK"
+            And I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+            And the keys run out for the "Buy Diablo 3 and Get a Bonus Upgrade" deal
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "no longer any keys available"
+            And I go to "/deal/diablo-3-bonus"
+            And I should not see "no longer any keys available"
+
     Scenario: I am a user from the UK I should get a valid UK key
         Given I am authenticated as a user
             And I am located in "UK"

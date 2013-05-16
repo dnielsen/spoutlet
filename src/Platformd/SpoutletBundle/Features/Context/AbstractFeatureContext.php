@@ -33,6 +33,7 @@ use Platformd\EventBundle\Entity\GlobalEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Platformd\SpoutletBundle\Entity\BackgroundAd;
 use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Base Feature context.
@@ -1765,6 +1766,27 @@ class AbstractFeatureContext extends MinkContext
     public function iClickBackground()
     {
         $this->getSession()->getPage()->find('css', '.background-takeover')->click();
+    }
+
+    /**
+     * @Given /^the keys run out for the "([^"]*)" deal$/
+     */
+    public function theKeysRunOutForTheDeal($dealName)
+    {
+        $em   = $this->getEntityManager();
+        $deal = $em->getRepository('GiveawayBundle:Deal')->findOneByName($dealName);
+
+        if (!$deal) {
+            throw new \Exception('Could not find the deal in the database');
+        }
+
+        foreach ($deal->getPools() as $pool) {
+            $em->remove($pool);
+        }
+
+        $deal->getPools()->clear();
+        $em->persist($deal);
+        $em->flush();
     }
 
     /**

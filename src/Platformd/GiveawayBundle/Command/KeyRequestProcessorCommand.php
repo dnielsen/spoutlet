@@ -74,6 +74,7 @@ EOT
 
             $state->setCurrentState($rejectedDueToInvalidMessage ? KeyRequestState::STATE_REQUEST_PROBLEM : KeyRequestState::STATE_REJECTED);
             $state->setStateReason($reason);
+            $state->setUserHasSeenState(false);
 
             $this->em->persist($state);
             $this->em->flush();
@@ -164,6 +165,7 @@ EOT
                         $state->setUser($user);
                         $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
                         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                        $state->setUserHasSeenState(false);
                     }
 
                     if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
@@ -211,6 +213,7 @@ EOT
                         $state->setUser($user);
                         $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
                         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+                        $state->setUserHasSeenState(false);
                     }
 
                     if ($promotion->getStatus() != 'published' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
@@ -348,6 +351,7 @@ EOT
 
             $state->setCurrentState(KeyRequestState::STATE_ASSIGNED);
             $state->setStateReason(null);
+            $state->setUserHasSeenState(false);
             $this->em->persist($state);
 
             $this->output(5, 'New '.$state);

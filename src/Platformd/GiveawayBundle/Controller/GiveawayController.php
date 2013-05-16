@@ -68,13 +68,22 @@ class GiveawayController extends Controller
 
         $statesToNotifyUserOf = array(KeyRequestState::STATE_IN_QUEUE, KeyRequestState::STATE_REJECTED, KeyRequestState::STATE_REQUEST_PROBLEM);
 
-        if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf)) { # they have joined the queue, been rejected or something else
+        if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf) && !$state->getUserHasSeenState()) { # they have joined the queue, been rejected or something else
 
             $data = new giveaway_show_current_queue_state();
 
-            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'info' : 'error';
+            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'success' : 'error';
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
+
+            if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
+
+                $state->setUserHasSeenState(true);
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $em->persist($state);
+                $em->flush();
+            }
 
             $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
                 'data' => $data
@@ -265,6 +274,7 @@ class GiveawayController extends Controller
 
         $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
         $state->setStateReason(null);
+        $state->setUserHasSeenState(false);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($state);

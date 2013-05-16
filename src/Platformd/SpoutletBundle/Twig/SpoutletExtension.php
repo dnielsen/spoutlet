@@ -88,6 +88,7 @@ class SpoutletExtension extends Twig_Extension
     {
         return array(
             'cevo_account_link'              => new Twig_Function_Method($this, 'cevoAccountLink'),
+            'cevo_account_giveaway_link'     => new Twig_Function_Method($this, 'cevoAccountGiveawayPageLink'),
             'current_user_cevo_account_link' => new Twig_Function_Method($this, 'currentUserCevoAccountLink'),
             'change_link_domain'             => new Twig_Function_Method($this, 'changeLinkDomain'),
             'ends_with'                      => new Twig_Function_Method($this, 'endsWith'),
@@ -210,6 +211,25 @@ class SpoutletExtension extends Twig_Extension
         $user = $user instanceof User ? $user : $this->userManager->loadUserByUsername($user);
 
         return $this->cevoAccountLinkFromCevoUserId($user->getCevoUserId());
+    }
+
+    public function cevoAccountGiveawayPageLink($site = null) {
+        $site = $site ?: $this->currentSite;
+        $baseUrl = $this->cevoBaseUrlGivenSite($site);
+
+        return $baseUrl.'/account/my-giveaway-keys';
+    }
+
+    private function cevoBaseUrlGivenSite($site) {
+
+        $base   = 'http://www.alienwarearena.com';
+
+        switch ($site->getDefaultLocale()) {
+            case 'ja': return $base.'/japan';
+            case 'zh': return $base.'/china';
+            case 'es': return $base.'/latam';
+            default:   return $base;
+        }
     }
 
     private function cevoAccountLinkFromCevoUserId($cevoUserId) {

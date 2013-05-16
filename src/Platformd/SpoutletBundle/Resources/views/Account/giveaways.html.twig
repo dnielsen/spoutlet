@@ -15,6 +15,9 @@
                             {{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}
                         {% endif %}
                     </h2>
+                    {% if site.subDomain != "ja" %}
+                        {{ "platformd.giveaway.click_for_past_giveaways" | trans({'%cevo_user_account_giveaway_page%': cevo_account_giveaway_link() }) | raw }}
+                    {% endif %}
                 </div>
             </div>
             <div class="widget-content">
@@ -35,7 +38,7 @@
                                         {{ keyRequest.value | nl2br }}
                                     {% else %}
                                         <em>
-                                            {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
+                                             {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
                                         </em>
                                     {% endif %}
                                 </td>
