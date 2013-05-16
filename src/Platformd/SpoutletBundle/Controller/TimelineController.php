@@ -12,7 +12,7 @@ class TimelineController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Timeline')
-            ->findOneBy(array('site' => $this->getCurrentSite()));
+            ->findOneBy(array('site' => $this->getCurrentSite()->getId()));
 
         return $this->render('SpoutletBundle:Timeline:index.html.twig', array(
             'timeline' => $timeline

@@ -4,5 +4,25 @@
 
 {% block content %}
 <h2>{{ 'timeline.title' | trans }}</h2>
+<div id="alienware-timeline"></div>
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% if timeline %}
+    <script type="text/javascript" src="{{ asset('/bundles/spoutlet/js/timeline/storyjs-embed.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            createStoryJS({
+                type:       'timeline',
+                width:      '950',
+                height:     '600',
+                source:     '{{ timeline.googleDocUrl }}',
+                embed_id:   'alienware-timeline',
+                css: "{{ asset('bundles/spoutlet/css/timeline/timeline.css') }}",
+                js: "{{ asset('/bundles/spoutlet/js/timeline/timeline-min.js') }}"
+            });
+        });
+    </script>
+    {% endif %}
 {% endblock %}
