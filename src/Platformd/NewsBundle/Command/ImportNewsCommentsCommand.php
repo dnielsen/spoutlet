@@ -150,7 +150,7 @@ EOT
                     continue;
                 }
 
-                $user = $userManager->findUserBy(array('cevoUserId' => 55));
+                $user = $userManager->findUserBy(array('cevoUserId' => $cevoUserId));
 
                 if (!$user) {
                     $this->output(4, 'No user for CEVO user ID [ '.$cevoUserId.' ] - skipping.');
