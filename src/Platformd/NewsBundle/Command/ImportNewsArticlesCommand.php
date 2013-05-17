@@ -41,6 +41,8 @@ class ImportNewsArticlesCommand extends ContainerAwareCommand
     const NEWS_THUMBNAIL_PATH_2 = '/home/ubuntu/news_import/images/_thumbs/';
     const NEWS_IMAGE_PATH       = '/home/ubuntu/news_import/images/';
 
+    const CEVO_ID_TO_AWA_ID_MAP_FILE = '/home/ubuntu/news_import/id_map.csv';
+
     protected function configure()
     {
         $this
@@ -376,6 +378,9 @@ EOT
                         $em->flush();
                     }
 
+                    $csvRow = $id.','.$article->getId()."\n";
+                    file_put_contents(self::CEVO_ID_TO_AWA_ID_MAP_FILE, $csvRow, FILE_APPEND | LOCK_EX);
+
                     $this->output(0);
 
                 } else {
@@ -383,8 +388,6 @@ EOT
                     $this->output(0);
                     continue;
                 }
-
-                if ($id > 10) { exit; }
             }
         }
 
