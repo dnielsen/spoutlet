@@ -105,6 +105,14 @@ EOT
         }
     }
 
+    protected function stripBBCode($str) {
+        // strip urls with alt text
+        $str = preg_replace('/\[(\w+)=(.*?)\](.*?)\[\/\1\]/', '$3 ($2)', $str);
+        // two passes to stip nested tags, e.g. [b][i]Text[/i][/b]
+        $str = preg_replace('/\[(\w+)\](.*?)\[\/\1\]/', '$2', $str);
+        return preg_replace('/\[(\w+)\](.*?)\[\/\1\]/', '$2', $str);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container          = $this->getContainer();
@@ -140,7 +148,7 @@ EOT
                 $id             = $data[0];
                 $cevoArticleId  = $data[1];
                 $cevoUserId     = $data[2];
-                $body           = html_entity_decode(trim($data[3]), ENT_QUOTES);
+                $body           = $this->stripBBCode(html_entity_decode(trim($data[3]), ENT_QUOTES));
                 $postedAt       = DateTime::createFromFormat('U', $data[4]);
                 $deleted        = $data[5] !== 'active';
 
