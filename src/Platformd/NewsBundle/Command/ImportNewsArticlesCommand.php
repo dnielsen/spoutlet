@@ -41,8 +41,6 @@ class ImportNewsArticlesCommand extends ContainerAwareCommand
     const NEWS_THUMBNAIL_PATH_2 = '/home/ubuntu/news_import/images/_thumbs/';
     const NEWS_IMAGE_PATH       = '/home/ubuntu/news_import/images/';
 
-    const CEVO_ID_TO_AWA_ID_MAP_FILE = '/home/ubuntu/news_import/id_map.csv';
-
     protected function configure()
     {
         $this
@@ -259,11 +257,11 @@ EOT
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 
                 // Unused fields
-                $id             = $data[0];
                 $category       = $data[1];
                 $stamp          = $data[8];
 
                 // Used fields
+                $cevoArticleId  = $data[0];
                 $title          = html_entity_decode(trim($data[2]), ENT_QUOTES);
                 $slug           = trim($data[3]);
                 $body           = $data[4];
@@ -292,7 +290,7 @@ EOT
                 $articleSites = new ArrayCollection($sitesArr);
 
                 if (!$title) {
-                    $this->output(4, 'No title for article id [ '.$id.' ] - skipping.');
+                    $this->output(4, 'No title for article id [ '.$cevoArticleId.' ] - skipping.');
                     $this->output(0);
                     continue;
                 }
@@ -367,6 +365,7 @@ EOT
                     $article->setPublished($published);
                     $article->setBlurb($blurb);
                     $article->setType(News::NEWS_TYPE_ARTICLE);
+                    $article->setCevoArticleId($cevoArticleId);
 
                     $em->persist($article);
                     $em->flush();
@@ -377,9 +376,6 @@ EOT
                         $em->persist($article);
                         $em->flush();
                     }
-
-                    $csvRow = $id.','.$article->getId()."\n";
-                    file_put_contents(self::CEVO_ID_TO_AWA_ID_MAP_FILE, $csvRow, FILE_APPEND | LOCK_EX);
 
                     $this->output(0);
 

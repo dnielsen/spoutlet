@@ -147,6 +147,11 @@ class News implements LinkableInterface
      */
     private $thumbnail;
 
+    /**
+    * @ORM\Column(name="cevo_article_id", type="integer", nullable=true)
+     */
+    private $cevoArticleId;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -343,5 +348,15 @@ class News implements LinkableInterface
     public function getThumbnail()
     {
         return $this->thumbnail;
+    }
+
+    public function setCevoArticleId($value)
+    {
+        $this->cevoArticleId = $value;
+    }
+
+    public function getCevoArticleId()
+    {
+        return $this->cevoArticleId;
     }
 }
