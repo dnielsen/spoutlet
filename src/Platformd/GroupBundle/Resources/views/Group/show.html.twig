@@ -78,7 +78,13 @@
                         </tr>
                         <tr>
                             <td>Organizer</td>
-                            <td><a href="javascript:void(0);">{{ group.owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group.owner.username }}</a></td>
+                            <td>
+                                {% if group.owner.adminLevel == 'ROLE_SUPER_ADMIN' %}
+                                    <a href="javascript:void(0);">Staff</a>
+                                {% else %}
+                                    <a href="{{ cevo_account_link(group.owner.username) }}">{{ group.owner.username }}</a>
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <td>Members</td>

@@ -9,7 +9,6 @@ Feature: Global Events
                 | name                  | slug                 | site  | start    | end     | details                |
                 | Test global event     | test-global-event    | en    | +2 days  | +4 days | Some description       |
                 | Other global event    | other-global-event   | en    | +2 days  | +4 days | Some other description |
-            And there is a game called "Skyrim"
 
     Scenario: I can view an existing event
         Given I am on "/events"
@@ -24,7 +23,6 @@ Feature: Global Events
                 | Event Details     | Description       |
             And I fill in "03/01/2013" for "globalEvent_startsAt_date"
             And I fill in "03/01/2015" for "globalEvent_endsAt_date"
-            And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
             And I select the "Online Event" radio button
             And I press "Save"
