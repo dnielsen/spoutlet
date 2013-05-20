@@ -77,6 +77,23 @@ class NewsRepository extends EntityRepository
         ;
     }
 
+    public function findMostRecentForSiteExcept($site, $num, $exceptId)
+    {
+        $qb =  $this->createBaseQueryBuilder($site)
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC');
+
+        if ($exceptId) {
+            $qb->andWhere('n.id <> :exceptId')
+            ->setParameter('exceptId', $exceptId);
+        }
+
+        return $qb->getQuery()
+            ->setMaxResults($num)
+            ->execute()
+        ;
+    }
+
     /**
      * @param Game $game
      * @return \Platformd\NewsBundle\Entity\News[]

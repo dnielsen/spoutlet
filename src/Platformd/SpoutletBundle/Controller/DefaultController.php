@@ -51,8 +51,10 @@ class DefaultController extends Controller
         $featuredArticle = $this->getNewsRepo()
             ->findMostRecentArticleForSite($this->getCurrentSite());
 
+        $exceptId = $featuredArticle ? $featuredArticle->getId() : null;
+
         $news = $this->getNewsRepo()
-            ->findMostRecentForSite($this->getCurrentSite(), 4)
+            ->findMostRecentForSiteExcept($this->getCurrentSite(), 4, $exceptId)
         ;
 
         return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
