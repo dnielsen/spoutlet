@@ -2,6 +2,10 @@ default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
 
+health_check:
+    pattern:  /healthCheck
+    defaults: { _controller: SpoutletBundle:Default:healthCheck }
+
 privacy:
     pattern: /legal/privacy
     defaults: { _controller: SpoutletBundle:Default:privacy }

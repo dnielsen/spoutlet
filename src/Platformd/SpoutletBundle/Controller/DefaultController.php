@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -20,6 +21,14 @@ class DefaultController extends Controller
     public function indexAction()
     {
         return $this->render('SpoutletBundle:Default:index.html.twig');
+    }
+
+    public function healthCheckAction() {
+        $site      = $this->getCurrentSite();
+        $giveaways = $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
+        $ipAddress = $this->getRequest()->getClientIp(true);
+
+        return new Response('OK');
     }
 
     /**
