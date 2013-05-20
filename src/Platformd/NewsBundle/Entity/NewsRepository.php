@@ -23,7 +23,8 @@ class NewsRepository extends EntityRepository
     public function getFindNewsQuery()
     {
         return $this->createQueryBuilder('n')
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery();
     }
 
@@ -33,15 +34,16 @@ class NewsRepository extends EntityRepository
             ->leftJoin('n.sites', 's')
             ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
             ->setParameter('site', $site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery();
     }
 
     public function findAllForSite($site)
     {
         return $this->createBaseQueryBuilder($site)
-            ->orderBy('n.postedAt', 'DESC')
-            ->orderBy('n.id', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
@@ -51,8 +53,8 @@ class NewsRepository extends EntityRepository
     {
         return $this->createBaseQueryBuilder($site)
             ->andWhere('n.type = :article')
-            ->orderBy('n.postedAt', 'DESC')
-            ->orderBy('n.id', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->setParameter('article', News::NEWS_TYPE_ARTICLE)
             ->getQuery()
             ->setMaxResults(1)
@@ -67,7 +69,8 @@ class NewsRepository extends EntityRepository
     public function findMostRecentForSite($site, $num)
     {
         return $this->createBaseQueryBuilder($site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
             ->setMaxResults($num)
             ->execute()
@@ -83,7 +86,8 @@ class NewsRepository extends EntityRepository
         return $this->createBaseQueryBuilder($site)
             ->andWhere('n.game = :game')
             ->setParameter('game', $game)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
             ->execute()
         ;
