@@ -137,7 +137,7 @@ EOT
         $this->output(0);
 
         if (($handle = fopen(self::COMMENT_DATA_FILE, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 5000)) !== FALSE) {
+            while (($data = fgetcsv($handle)) !== FALSE) {
 
                 if (!isset($data[1])) {
                     continue;
