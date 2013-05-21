@@ -4,9 +4,7 @@ gallery_index:
 
 gallery_featured_media_feed:
     pattern: /featured-feed
-    defaults: { _controller: SpoutletBundle:Gallery:featuredMediaFeed, site: ~ }
-    requirements:
-        _method: POST
+    defaults: { _controller: SpoutletBundle:Gallery:featuredMediaFeed }
 
 gallery_index_data:
     pattern: /gallery-data

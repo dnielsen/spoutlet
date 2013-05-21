@@ -822,32 +822,11 @@ class GalleryController extends Controller
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
         $content  = $request->getContent();
-
-        $subdomain = $request->request->get('_site');
-
-        if (!$subdomain) {
-            $response->setContent(json_encode(array("error" => "Site not specified.")));
-            return $response;
-        }
-
-        $em         = $this->getEntityManager();
+        $em       = $this->getEntityManager();
 
         $siteRepo           = $em->getRepository('SpoutletBundle:Site');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
-
-        $site = null;
-
-        foreach ($siteRepo->findAll() as $dbSite) {
-            if ($dbSite->getSubDomain() == $subdomain) {
-                $site = $dbSite;
-                break;
-            }
-        }
-
-        if (!$site) {
-            $response->setContent(json_encode(array("error" => "Invalid site specified.")));
-            return $response;
-        }
+        $site               = $this->getCurrentSite();
 
         $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
