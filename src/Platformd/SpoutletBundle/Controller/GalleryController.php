@@ -42,7 +42,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -393,7 +393,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -638,7 +638,7 @@ class GalleryController extends Controller
         $vote->setUser($user);
         $vote->setGalleryMedia($media);
         $vote->setVoteType($voteType);
-        $vote->setIpAddress($request->getClientIp(true));
+        $vote->setIpAddress($this->getClientIp($request));
 
         $em = $this->getEntityManager();
 
@@ -692,7 +692,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 

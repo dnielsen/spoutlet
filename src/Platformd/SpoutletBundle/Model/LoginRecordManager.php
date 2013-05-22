@@ -27,7 +27,7 @@ class LoginRecordManager
     public function recordLogin(TokenInterface $token, Request $request)
     {
         $record         = new LoginRecord();
-        $ipAddress      = $request->getClientIp(true);
+        $ipAddress      = $this->ipUtil->getClientIp($request);
         $countryCode    = $this->ipUtil->getCountryCode($ipAddress);
         $country        = $this->em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
         $site = $this->siteUtil->getCurrentSite();

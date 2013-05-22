@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Util;
 use Platformd\SpoutletBundle\Location\Ip2Location;
+use Symfony\Component\HttpFoundation\Request;
 
 class IpLookupUtil
 {
@@ -68,5 +69,10 @@ class IpLookupUtil
         }
 
         return false;
+    }
+
+    public function getClientIp(Request $request)
+    {
+        return $request->getClientIp(true);
     }
 }

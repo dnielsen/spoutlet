@@ -118,7 +118,7 @@ class Controller extends BaseController
     }
 
     protected function getCurrentCountryCode() {
-        return $this->getIpLookupUtil()->getCountryCode($this->getRequest()->getClientIp(true));
+        return $this->getIpLookupUtil()->getCountryCode($this->getClientIp($this->getRequest()));
     }
 
     /**
@@ -326,5 +326,10 @@ class Controller extends BaseController
     protected function getIpLookupUtil()
     {
         return $this->container->get('platformd.model.ip_lookup_util');
+    }
+
+    protected function getClientIp(Request $request)
+    {
+        return $this->getIpLookupUtil()->getClientIp($request);
     }
 }

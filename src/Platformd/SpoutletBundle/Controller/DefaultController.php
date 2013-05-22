@@ -34,7 +34,7 @@ class DefaultController extends Controller
     public function healthCheckAction() {
         $site      = $this->getCurrentSite();
         $giveaways = $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
-        $ipAddress = $this->getRequest()->getClientIp(true);
+        $ipAddress = $this->getClientIp($this->getRequest());
 
         return new Response('OK');
     }

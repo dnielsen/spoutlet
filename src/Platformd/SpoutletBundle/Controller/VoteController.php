@@ -60,7 +60,7 @@ class VoteController extends Controller
                         $user,
                         $comment,
                         $voteType,
-                        $request->getClientIp(true)
+                        $this->getClientIp($request)
                     );
                 }
 

@@ -288,7 +288,7 @@ class DealController extends Controller
         $message->slug           = $deal->getSlug();
         $message->userId         = $currentUser->getId();
         $message->siteId         = $this->getCurrentSite()->getId();
-        $message->ipAddress      = $request->getClientIp(true);
+        $message->ipAddress      = $this->getClientIp($request);
 
         $result = $this->getQueueUtil()->addToQueue($message);
 

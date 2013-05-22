@@ -207,7 +207,10 @@ class FeatureContext extends AbstractFeatureContext
      */
     public function myMachineCodeEntryIsApproved()
     {
-        $ipAddress = $this->getSession()->getDriver()->getClient()->getRequest()->getClientIp(true);
+        $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
+        $request = $this->getSession()->getDriver()->getClient()->getRequest();
+
+        $ipAddress = $ipLookupUtil->getClientIp($request);
         $country = $this->getContainer()->get('platformd.model.ip_lookup_util')->getCountryCode($ipAddress);
 
         $this->getGiveawayManager()->approveMachineCode($this->currentMachineCode, $this->getCurrentSite(), $country);

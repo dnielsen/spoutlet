@@ -256,7 +256,7 @@ class GiveawayController extends Controller
         $message->slug           = $giveaway->getSlug();
         $message->userId         = $currentUser->getId();
         $message->siteId         = $this->getCurrentSite()->getId();
-        $message->ipAddress      = $request->getClientIp(true);
+        $message->ipAddress      = $this->getClientIp($request);
 
         $result = $this->getQueueUtil()->addToQueue($message);
 
@@ -300,7 +300,7 @@ class GiveawayController extends Controller
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
         $user = $this->getUser();
-        $clientIp = $request->getClientIp(true);
+        $clientIp = $this->getClientIp($request);
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));

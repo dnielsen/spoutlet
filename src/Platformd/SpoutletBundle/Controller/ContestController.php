@@ -149,7 +149,7 @@ class ContestController extends Controller
             $entry = new ContestEntry();
             $entry->setUser($user);
             $entry->setContest($contest);
-            $entry->setIpAddress($request->getClientIp(true));
+            $entry->setIpAddress($this->getClientIp($request));
 
             $em->persist($entry);
             $em->flush();
@@ -296,7 +296,7 @@ class ContestController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 

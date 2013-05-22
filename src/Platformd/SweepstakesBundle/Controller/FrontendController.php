@@ -140,7 +140,7 @@ class FrontendController extends Controller
         $entry = $this->getSweepstakesRepo()->createNewEntry(
             $sweepstakes,
             $this->getUser(),
-            $request->getClientIp(true)
+            $this->getClientIp($request)
         );
         $this->getDoctrine()->getEntityManager()->persist($entry);
         $this->getDoctrine()->getEntityManager()->flush();
