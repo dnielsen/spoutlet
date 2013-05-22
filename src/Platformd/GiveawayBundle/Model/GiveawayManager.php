@@ -112,13 +112,19 @@ class GiveawayManager
 
                 $giveaway   = $giveawayRepo->find($giveawayId);
                 $country    = $countryRepo->findOneByCode($countryCode);
-                $activePool = $giveaway->getActivePoolForCountry($country);
 
-                if (!$activePool) {
-                    return 0;
+                foreach($giveaway->getPools() as $pool) {
+
+                    if ($pool->isEnabledForCountry($country) && $pool->getIsActive()) {
+                        $keyCount = $keyRepo->getUnassignedForPool($pool);
+
+                        if ($keyCount && $keyCount > 0) {
+                            return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($pool), $keyCount, $pool->getLowerLimit(), $pool->getUpperLimit());
+                        }
+                    }
                 }
 
-                return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($activePool), $keyRepo->getUnassignedForPool($activePool), $activePool->getLowerLimit(), $activePool->getUpperLimit());
+                return 0;
             }));
 
         return $availableKeys ? (int) $availableKeys : 0;
