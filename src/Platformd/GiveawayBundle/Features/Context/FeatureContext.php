@@ -16,6 +16,8 @@ use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 
 use Platformd\SpoutletBundle\Features\Context\AbstractFeatureContext;
+use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
+use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
@@ -32,6 +34,69 @@ class FeatureContext extends AbstractFeatureContext
      * @var \Platformd\GiveawayBundle\Entity\MachineCodeEntry
      */
     protected $currentMachineCode;
+
+    /**
+     * @Given /^the current giveaway has the following pools:$/
+     */
+    public function theGiveawayHasTheFollowingPools(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+        $countryRepo = $em->getRepository('SpoutletBundle:Country');
+
+        foreach ($table->getHash() as $data) {
+            $pool = new GiveawayPool();
+
+            $pool->setGiveaway($this->currentGiveaway);
+
+            if (isset($data['description'])){
+                $pool->setDescription($data['description']);
+            }
+
+            if (isset($data['max_per_ip'])){
+                $pool->setMaxKeysPerIp($data['max_per_ip']);
+            }
+
+            if (isset($data['active'])){
+                $pool->setIsActive($data['active'] == 'yes');
+            }
+
+            if (isset($data['country'])){
+
+                $country = $countryRepo->findOneByCode($data['country']);
+                if ($country) {
+                    $ruleset = new CountryAgeRestrictionRuleset();
+                    $ruleset->setParentType(CountryAgeRestrictionRuleset::PARENT_TYPE_GIVEAWAY_POOL);
+                    $ruleset->setDefaultAllow(false);
+
+                    $em->persist($ruleset);
+                    $em->flush();
+
+                    $rule = new CountryAgeRestrictionRule();
+                    $rule->setCountry($country);
+                    $rule->setRuleType(CountryAgeRestrictionRule::RULE_TYPE_ALLOW);
+                    $rule->setRuleset($ruleset);
+
+                    $em->persist($rule);
+                    $em->flush();
+                }
+
+                $pool->setRuleset($ruleset);
+            }
+
+            $em->persist($pool);
+            $em->flush();
+
+            $keyCount = isset($data['key_count']) ? $data['key_count'] : 2;
+
+            for ($i=1; $i <= $keyCount; $i++) {
+                $key = new GiveawayKey($data['description'].'_'.$i);
+                $key->setPool($pool);
+                $em->persist($key);
+            }
+
+            $em->flush();
+        }
+    }
 
     /**
      * @Given /^the following giveaway:$/
@@ -91,7 +156,6 @@ class FeatureContext extends AbstractFeatureContext
         }
 
         $em->flush();
-
     }
 
     /**
@@ -209,4 +273,70 @@ class FeatureContext extends AbstractFeatureContext
         $context = $this->getContainer()->get('router')->getContext();
         $context->setHost($siteName.'.'.$context->getHost());
     }
+
+    /**
+     * @Given /^the keys run out for the "([^"]*)" deal$/
+     */
+    public function theKeysRunOutForTheDeal($dealName)
+    {
+        $em   = $this->getEntityManager();
+        $deal = $em->getRepository('GiveawayBundle:Deal')->findOneByName($dealName);
+
+        if (!$deal) {
+            throw new \Exception('Could not find the deal in the database');
+        }
+
+        foreach ($deal->getPools() as $pool) {
+            $em->remove($pool);
+        }
+
+        $deal->getPools()->clear();
+        $em->persist($deal);
+        $em->flush();
+    }
+
+    /**
+     * @Given /^the keys run out for the current giveaway$/
+     */
+    public function theKeysRunOutForTheCurrentGiveaway()
+    {
+        $em         = $this->getEntityManager();
+        $giveaway   = $this->currentGiveaway;
+
+        if (!$giveaway) {
+            throw new \Exception('Could not find the giveaway in the database');
+        }
+
+        foreach ($giveaway->getPools() as $pool) {
+            $em->remove($pool);
+        }
+
+        $giveaway->getPools()->clear();
+        $em->persist($giveaway);
+        $em->flush();
+    }
+
+    /**
+     * @Given /^The Key Queue Processor is run$/
+     */
+    public function theKeyQueueProcessorIsRun()
+    {
+        exec($this->getContainer()->getParameter('kernel.root_dir').'/console pd:keyRequestQueue:process --env=test');
+    }
+
+    /**
+     * @Given /^I set the current giveaway to "([^"]*)"$/
+     */
+    public function iSetTheCurrentGiveawayTo($giveawayName)
+    {
+        $em         = $this->getEntityManager();
+        $giveaway = $em->getRepository('GiveawayBundle:Giveaway')->findOneByName($giveawayName);
+
+        if (!$giveaway) {
+            throw new \Exception('Could not find the giveaway in the database');
+        }
+
+        $this->currentGiveaway = $giveaway;
+    }
+
 }

@@ -1767,33 +1767,4 @@ class AbstractFeatureContext extends MinkContext
     {
         $this->getSession()->getPage()->find('css', '.background-takeover')->click();
     }
-
-    /**
-     * @Given /^the keys run out for the "([^"]*)" deal$/
-     */
-    public function theKeysRunOutForTheDeal($dealName)
-    {
-        $em   = $this->getEntityManager();
-        $deal = $em->getRepository('GiveawayBundle:Deal')->findOneByName($dealName);
-
-        if (!$deal) {
-            throw new \Exception('Could not find the deal in the database');
-        }
-
-        foreach ($deal->getPools() as $pool) {
-            $em->remove($pool);
-        }
-
-        $deal->getPools()->clear();
-        $em->persist($deal);
-        $em->flush();
-    }
-
-    /**
-     * @Given /^The Key Queue Processor is run$/
-     */
-    public function theKeyQueueProcessorIsRun()
-    {
-        exec($this->getContainer()->getParameter('kernel.root_dir').'/console pd:keyRequestQueue:process --env=test');
-    }
 }
