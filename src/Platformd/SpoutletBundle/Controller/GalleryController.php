@@ -821,33 +821,85 @@ class GalleryController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $em                 = $this->getEntityManager();
-        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
-        $site               = $this->getCurrentSite();
-        $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
+        if ($request->getMethod() == 'POST') {
+            $content  = $request->getContent();
 
-        $featuredMedia = array();
+            $subdomain = $request->request->get('_site');
 
-        if ($media) {
-            $counter = 0;
-            $liip = $this->get('liip_imagine.templating.helper');
-            foreach($media as $mediaItem) {
-                $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
-                $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
-                $counter++;
+            if (!$subdomain) {
+                $response->setContent(json_encode(array("error" => "Site not specified.")));
+                return $response;
             }
+
+            $em                 = $this->getEntityManager();
+            $siteRepo           = $em->getRepository('SpoutletBundle:Site');
+            $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+
+            $site = null;
+
+            foreach ($siteRepo->findAll() as $dbSite) {
+                if ($dbSite->getSubDomain() == $subdomain) {
+                    $site = $dbSite;
+                    break;
+                }
+            }
+
+            if (!$site) {
+                $response->setContent(json_encode(array("error" => "Invalid site specified.")));
+                return $response;
+            }
+
+            $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+            $featuredMedia = array();
+
+            if ($media) {
+                $counter = 0;
+                $liip = $this->get('liip_imagine.templating.helper');
+                foreach($media as $mediaItem) {
+                    $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
+                    $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $counter++;
+                }
+            } else {
+                $featuredMedia = null;
+            }
+
+            $response->setContent(json_encode(array(
+                "success" => true,
+                "media"   => $featuredMedia
+            )));
+
+            return $response;
         } else {
-            $featuredMedia = null;
+            $em                 = $this->getEntityManager();
+            $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+            $site               = $this->getCurrentSite();
+            $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+            $featuredMedia = array();
+
+            if ($media) {
+                $counter = 0;
+                $liip = $this->get('liip_imagine.templating.helper');
+                foreach($media as $mediaItem) {
+                    $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
+                    $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $counter++;
+                }
+            } else {
+                $featuredMedia = null;
+            }
+
+            $response->setContent(json_encode(array(
+                "success" => true,
+                "media"   => $featuredMedia
+            )));
+
+            $response->setSharedMaxAge(30);
+
+            return $response;
         }
-
-        $response->setContent(json_encode(array(
-            "success" => true,
-            "media"   => $featuredMedia
-        )));
-
-        $response->setSharedMaxAge(30);
-
-        return $response;
     }
 
     private function getEntityManager()
