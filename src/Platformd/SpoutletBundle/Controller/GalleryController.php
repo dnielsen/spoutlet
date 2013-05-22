@@ -821,14 +821,10 @@ class GalleryController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $content  = $request->getContent();
-        $em       = $this->getEntityManager();
-
-        $siteRepo           = $em->getRepository('SpoutletBundle:Site');
+        $em                 = $this->getEntityManager();
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $site               = $this->getCurrentSite();
-
-        $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+        $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
         $featuredMedia = array();
 
@@ -848,6 +844,8 @@ class GalleryController extends Controller
             "success" => true,
             "media"   => $featuredMedia
         )));
+
+        $response->setSharedMaxAge(30);
 
         return $response;
     }
