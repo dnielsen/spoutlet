@@ -379,3 +379,7 @@ a.media-voting-button {
     vertical-align: top;
     width: 180px;
 }
+
+#media-wrapper {
+    width: 100%;
+}
