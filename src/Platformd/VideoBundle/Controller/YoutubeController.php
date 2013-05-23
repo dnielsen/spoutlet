@@ -37,7 +37,7 @@ class YoutubeController extends Controller
         // requirement is to show the most popular videos by category
         $videos = $manager->findPopularVideosByCategoryForCountry($category, $this->getCurrentCountry());
 
-        return $this->render('VideoBundle:Youtube:category.html.twig', array(
+        $response = $this->render('VideoBundle:Youtube:category.html.twig', array(
             'videos'    => $videos,
             'category'  => $category,
         ));
@@ -250,9 +250,13 @@ class YoutubeController extends Controller
             $videos = $this->getYoutubeManager()->findCurrentlyWatchedVideosByCategoryForCountry($category, $this->getCurrentCountry());
         }
 
-        return $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
+        $response = $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
             'videos' => $videos
         ));
+
+        $response->setSharedMaxAge(30);
+
+        return $response;
     }
 
     public function featureVideoAction(Request $request)
