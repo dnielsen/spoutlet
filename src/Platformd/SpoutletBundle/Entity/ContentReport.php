@@ -38,6 +38,7 @@ class ContentReport
         'Image' => 'content_reporting.report_type_image',
         'Video' => 'content_reporting.report_type_video',
         'Comment' => 'content_reporting.report_type_comment',
+        'YoutubeVideo' => 'content_reporting.report_type_youtubevideo',
         'Unknown' => 'content_reporting.report_type_unknown',
         'GroupEvent' => 'content_reporting.report_type_group_event',
     );
@@ -143,6 +144,11 @@ class ContentReport
      */
     protected $comment = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $youtubeVideo = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
@@ -284,6 +290,7 @@ class ContentReport
         $this->comment = $value;
     }
 
+
     public function getGroupEvent()
     {
         return $this->groupEvent;
@@ -292,6 +299,16 @@ class ContentReport
     public function setGroupEvent($value)
     {
         $this->groupEvent = $value;
+    }
+
+    public function getYoutubeVideo()
+    {
+        return $this->youtubeVideo;
+    }
+
+    public function setYoutubeVideo($value)
+    {
+        $this->youtubeVideo = $value;
     }
 
     public function getSite()

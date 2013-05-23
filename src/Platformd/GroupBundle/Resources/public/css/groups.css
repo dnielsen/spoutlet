@@ -447,3 +447,21 @@ button#join-group-button:hover {
      width:600px;
      height:350px;
 }
+
+#group-video-scroll-pagination {
+    float: right;
+    margin-bottom: 10px;
+}
+
+.group-video-item {
+    display: inline-table;
+    width: 185px;
+    height: 104px;
+    margin: 5px;
+}
+
+.group-video-video img {
+    width: 185px;
+    height: 104px;
+    border: 1px solid #aaa;
+}

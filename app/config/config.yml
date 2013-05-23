@@ -13,6 +13,7 @@ imports:
     - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@GameBundle/Resources/config/services.yml" }
     - { resource: "@HtmlWidgetBundle/Resources/config/services.yml" }
+    - { resource: "@VideoBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~

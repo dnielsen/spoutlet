@@ -70,6 +70,7 @@ a.btn:hover {
     background: #00596E;
     background: -moz-linear-gradient(#00596e,#0094B4);
     background: -webkit-linear-gradient(#00596e,#0094B4);
+    color: #fff;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
 }
 
@@ -212,7 +213,7 @@ a.disabled-button {
 
 /* width increased from bootstrap */
 label {
-    width: 170px;
+    width: 100%;
     margin-right: 5px;
 }
 /* due to the above change */
@@ -1314,7 +1315,6 @@ input[type="checkbox"][readonly] {
 .control-group.error input,
 .control-group.error select,
 .control-group.error textarea {
-  color: #ff0000;
   border-color: #ff0000;
 }
 

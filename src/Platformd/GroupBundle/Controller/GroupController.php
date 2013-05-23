@@ -905,7 +905,7 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
+        $groupVideos = $this->getYoutubeManager()->findVideosForGroup($group);
 
         // 3 images per page
         $itemsPerPage = 3;
@@ -1718,5 +1718,10 @@ Alienware Arena Team
     private function getReturnUrl(Request $request)
     {
         return  $request->query->get('return');
+    }
+
+    private function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

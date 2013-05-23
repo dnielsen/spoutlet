@@ -1,0 +1,64 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+<div class="std_1col">
+    <p>{{ 'youtube.form.intro' | trans }}</p>
+    <p>{{ 'youtube.form.file_restrictions_title' | trans }}</p>
+    <ol>
+        <li>{{ 'youtube.form.file_restrictions_1' | trans }}</li>
+        <li>{{ 'youtube.form.file_restrictions_2' | trans }}</li>
+        <li>{{ 'youtube.form.file_restrictions_3' | trans }}</li>
+    </ol>
+    <p>{{ 'youtube.form.outtro' | trans | format(path('terms_conditions'), '%s')  | raw }}</p>
+</div>
+
+<div class="std_2col">
+    {% if video.isAccessible == false %}
+        <div class="alert alert-info help"><i class="icon-info-sign"></i>
+            {{ 'youtube.account.video_not_accessible' | trans }}
+        </div>
+    {% endif %}
+
+    <div class="left">
+        <div class="youtube-form-wrapper">
+            <form id="youtube-form" action="{{ path('youtube_edit', {'slug' : video.slug}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                {% include 'VideoBundle:Youtube:_form.html.twig' %}
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" formnovalidate>{{ 'submit' | trans }}</button>
+                    <button type="button" id="delete" rel="{{ path('youtube_delete', {'slug' : video.slug}) }}" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'delete' | trans }}</button>
+                    <button type="button" id="cancel" rel="{{ referer }}" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'cancel' | trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="right">
+        <div class="video-thumb-wrapper">
+            <img id="youtube-thumb" src="{{ video.thumbnailSq }}" />
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change', function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('#delete').delegate('','click change', function() {
+                window.location = $(this).attr('rel');
+                return false;
+            });
+        });
+    </script>
+{% endblock %}

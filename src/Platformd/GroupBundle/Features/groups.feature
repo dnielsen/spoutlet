@@ -108,16 +108,18 @@ Feature: Groups Frontend
     #        And I click "Publish"
     #    Then I should see "1 of 1 images are published."
     #        And I should see "120x60.gif" on "/groups/1/images/"
-
-    Scenario: Add group video
-        Given I am on "/group-1"
-        And I add "video" for group "Group 1"
-        When I fill in the following:
-            | Video Name   | Test Video       |
-            | YouTube ID   | Y0h6WIjZluM      |
-            And I press "Post Video"
-        Then I should see "New video posted successfully."
-            And I should see "Test Video" on the "videos" page of "Group 1"
+    #
+    #Scenario: Add group video
+    #    Given I am on "/groups/group-1"
+    #    And I add "video" for group "Group 1"
+    #    When I fill in the following:
+    #        | Title           | Test Video       |
+    #        | YouTube Link    | Y0h6WIjZluM      |
+    #        | Description     | Description      |
+    #        And I check the "Group 1" option for "Groups"
+    #        And I press "Save"
+    #    Then I should see "Your video is uploaded."
+    #        And I should see "Test Video" on the "videos" page of "Group 1"
 
     Scenario: Add group discussion topic
         Given I am on "/group-1"

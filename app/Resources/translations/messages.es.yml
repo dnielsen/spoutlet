@@ -1,6 +1,7 @@
 date_format: M j, Y
 submit: Enviar
 cancel: Cancelar
+delete: Borrar
 
 recaptcha:
     visual_challenge: Get a visual challenge
@@ -482,6 +483,7 @@ content_reporting:
     report_type_group_video: Video de Grupo
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
+    report_type_youtubevideo: Vídeo
     report_type_unknown: Unknown
     report_success: El contenido ha sido retirado temporalmente y será revisado por nuestro personal. Si tienes información adicional para tu informe, por favor envíenos un correo electrónico a reports@alienwarearena.com con los detalles adicionales.
     reported_email_title: Tu Contenido ha Sido Marcado

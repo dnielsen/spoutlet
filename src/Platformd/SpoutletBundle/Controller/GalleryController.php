@@ -475,7 +475,15 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Media not found.');
         }
 
-        $form = $this->createForm(new GalleryMediaType($user), $media);
+        $galleries = array();
+        foreach ($media->getGalleries() as $gallery) {
+            $galleries[] = $gallery->getId();
+        }
+        $media->setGalleries($galleries);
+
+        $galleryRepo = $this->getGalleryRepository();
+
+        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
 
         if($request->getMethod() == 'POST')
         {
@@ -486,9 +494,17 @@ class GalleryController extends Controller
                 $em = $this->getEntityManager();
                 $media = $form->getData();
 
+                $galleries = array();
+
+                foreach ($media->getGalleries() as $galleryId) {
+                    $galleries[] = $galleryRepo->find($galleryId);
+                }
+
+                $media->setGalleries($galleries);
+
                 if(count($media->getGalleries()) == 0)
                 {
-                    $form = $this->createForm(new GalleryMediaType($user), $media);
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
                     $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
 
                     return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
@@ -808,7 +824,7 @@ class GalleryController extends Controller
         foreach ($galleries as $gallery) {
             $filterOptions[] = array(
                 'value' => $gallery->getId(),
-                'name'  => $gallery->getName(),
+                'name'  => $gallery->getName($site->getId()),
                 'slug'  => $gallery->getSlug()
             );
         }

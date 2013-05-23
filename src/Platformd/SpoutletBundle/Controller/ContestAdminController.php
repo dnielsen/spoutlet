@@ -30,6 +30,7 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
+
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site, Contest::getValidStatuses());

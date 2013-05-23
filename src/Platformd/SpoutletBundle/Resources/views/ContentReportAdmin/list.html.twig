@@ -116,6 +116,11 @@
                         <h1>Author</h1>
                         <div>{{ item[0].author.username }}</div>
 
+                    {% elseif item[0].getContentType == 'YoutubeVideo' %}
+                        <h1>YouTube Video (external link)</h1>
+                        <div>{{ item[0].title }}</div>
+                        <div><a href="http://www.youtube.com/watch?v={{ item[0].youtubeId }}" target='_blank'>Watch Video</a></div>
+
                     {% endif %}
 
                 </td>

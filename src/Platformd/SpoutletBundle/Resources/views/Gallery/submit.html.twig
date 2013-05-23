@@ -80,7 +80,7 @@
                             {% for gallery in galleries %}
                                 <label class="checkbox">
                                     <input class="gallery-checkbox" type="checkbox" id="gallery-{{ gallery.id }}" name="gallery-{{ gallery.id }}" value="{{ gallery.id }}" />
-                                    {{ gallery.name }}
+                                    {{ gallery.name(site.id) }}
                                 </label>
                             {% endfor %}
                         </div>

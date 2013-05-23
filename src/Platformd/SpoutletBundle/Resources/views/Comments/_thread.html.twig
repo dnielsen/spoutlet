@@ -1,7 +1,7 @@
 <div class="thread">
     <a id="comments"></a>
     {% if app.user %}
-        <h3>{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
+        <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
         <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
     {% else %}
         <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>

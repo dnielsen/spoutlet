@@ -659,4 +659,26 @@ class GroupManager
 
         return $permissions;
     }
+
+    public function find($id)
+    {
+        return $this->em->getRepository('GroupBundle:Group')->find($id);
+    }
+
+    public function findVideoByYoutubeId($group, $youtubeId)
+    {
+        return $this->em->getRepository('GroupBundle:GroupVideo')->findOneBy(array(
+            'group'             => $group->getId(),
+            'youTubeVideoId'    => $youtubeId,
+        ));
+    }
+
+    public function findVideoByYoutubeIdAndUser($group, $youtubeId, $user)
+    {
+        return $this->em->getRepository('GroupBundle:GroupVideo')->findOneBy(array(
+            'group'             => $group->getId(),
+            'youTubeVideoId'    => $youtubeId,
+            'author'            => $user->getId(),
+        ));
+    }
 }

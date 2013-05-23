@@ -37,8 +37,9 @@ class SpoutletExtension extends Twig_Extension
     private $contentReportRepo;
     private $backgroundAdRepo;
     private $localAuth;
+    private $siteRepo;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $backgroundAdRepo, $localAuth)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -51,6 +52,7 @@ class SpoutletExtension extends Twig_Extension
         $this->userManager         = $userManager;
         $this->contentReportRepo   = $contentReportRepo;
         $this->backgroundAdRepo    = $backgroundAdRepo;
+        $this->siteRepo            = $siteRepo;
         $this->localAuth           = $localAuth;
     }
 
@@ -83,6 +85,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
             'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
+            'site_name'          => new Twig_Filter_Method($this, 'getSiteNameFromId'),
             'pd_trans'           => new Twig_Filter_Method($this, 'themedTranslate'),
         );
     }
@@ -921,5 +924,11 @@ class SpoutletExtension extends Twig_Extension
 
     public function getAccountHomeUrl() {
         return $this->localAuth ? $this->router->generate('accounts_index') : 'http://alienwarearena.com/account/';
+    }
+
+    public function getSiteNameFromId($siteId)
+    {
+        $site = $this->siteRepo->find($siteId);
+        return $site ? $site->getName() : '';
     }
 }

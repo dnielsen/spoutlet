@@ -50,10 +50,12 @@ class AppKernel extends Kernel
             new Platformd\CEVOBundle\CEVOBundle(),
             new Platformd\SweepstakesBundle\SweepstakesBundle(),
             new Platformd\GameBundle\GameBundle(),
+
             new Platformd\TranslationBundle\TranslationBundle(),
             new Platformd\MediaBundle\MediaBundle(),
             new Platformd\EventBundle\EventBundle(),
             new Platformd\HtmlWidgetBundle\HtmlWidgetBundle(),
+            new Platformd\VideoBundle\VideoBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

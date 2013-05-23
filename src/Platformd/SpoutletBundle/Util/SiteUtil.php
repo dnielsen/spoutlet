@@ -10,7 +10,6 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-
 class SiteUtil extends Event
 {
     private $currentHost;
@@ -99,5 +98,10 @@ class SiteUtil extends Event
 
     public function getSiteFromCountry($country) {
         return $this->em->getRepository('SpoutletBundle:Region')->findOneByCountry($country);
+    }
+
+    public function getAllSites()
+    {
+        return $this->em->getRepository('SpoutletBundle:Site')->findAll();
     }
 }

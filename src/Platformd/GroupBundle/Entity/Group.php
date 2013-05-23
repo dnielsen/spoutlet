@@ -202,8 +202,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     private $newsArticles;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupVideo", mappedBy="group")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo", mappedBy="groups")
      */
     private $videos;
 
@@ -285,6 +284,7 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->userMembershipActions    = new ArrayCollection();
         $this->contentReports           = new ArrayCollection();
         $this->deals                    = new ArrayCollection();
+        $this->videos                   = new ArrayCollection();
     }
 
     public function __toString() {

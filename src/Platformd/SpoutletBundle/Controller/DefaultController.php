@@ -212,27 +212,10 @@ class DefaultController extends Controller
 
     public function videoFeedAction(Request $request)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$this->getVideoFeedUrl($this->getLocale()));
-        curl_setopt($ch, CURLOPT_FAILONERROR,1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $xml = simplexml_load_string(trim($response));
-
-        $videos = array();
-        foreach ($xml->latest->movie as $video) {
-            $videos[] = $video;
-        }
-
-        $host = $request->getHost();
+        $videos = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry(), 6);
 
         return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
             'videos' => $videos,
-            'host' => $host,
         ));
     }
 
@@ -284,5 +267,10 @@ class DefaultController extends Controller
         }
 
         return $this->render('SpoutletBundle:Default:groupsMap.html.twig', array('groups' => $groupsArray));
+    }
+
+    private function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

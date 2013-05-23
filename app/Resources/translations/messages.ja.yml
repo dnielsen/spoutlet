@@ -2,6 +2,7 @@ edit: 編集
 date_format: Y年m月d日
 submit: 出品
 cancel: キャンセル
+delete: 消去
 
 recaptcha:
     visual_challenge: Get a visual challenge
@@ -87,7 +88,7 @@ platformd:
             video: ビデオ
             news: ニュース
             microsoft: Microsoft
-            media: Media
+            media: メディア
 
         page_content:
             featured: 新着
@@ -348,6 +349,8 @@ platformd:
             game_ids: ゲームID
             tournaments: トーナメント
             sign_out: ログアウト
+            videos: マイビデオ
+            media: メディア
 
     giveaway:
         giveaway: プレゼント
@@ -761,6 +764,7 @@ content_reporting:
     report_type_group_video: Group Video
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
+    report_type_youtubevideo: ビデオ
     report_type_unknown: Unknown
     report_success: 内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでreports@alienwarearena.comまで送付してください。
     reported_email_title: あなたの投稿にフラグが設定されています

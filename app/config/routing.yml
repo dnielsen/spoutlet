@@ -52,6 +52,10 @@ liip_theme:
     resource: "@LiipThemeBundle/Resources/config/routing.xml"
     prefix: /theme
 
+VideoBundle:
+    resource: "@VideoBundle/Resources/config/routing.yml"
+    prefix: /
+
 PlatformDHtmlWidgetBundle:
     resource: "@HtmlWidgetBundle/Resources/config/routing.yml"
     prefix:   /
@@ -61,3 +65,5 @@ PlatformDHtmlWidgetBundle:
 PlatformDGroupBundle:
     resource: "@GroupBundle/Resources/config/routing.yml"
     prefix:   /
+
+

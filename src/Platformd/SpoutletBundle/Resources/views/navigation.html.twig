@@ -70,14 +70,14 @@
                 {% endif %}
 
                 {% if features.hasVideo and not features.hasWallpapers and not features.hasPhotos and not features.hasContests %}
-                    <li>{{ site_link('VIDEOS') }}</li>
+                    <li><a href="{{ path('youtube_index') }}">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>
                 {% elseif features.hasVideo or features.hasWallpapers or features.hasPhotos or features.hasContests %}
                     <li class="more">
                         <a class="blue">{{ 'platformd.layout.main_menu.media' | trans }}</a>
                         <ul>
                             {% if features.hasContests %} <li>{{ site_link('CONTESTS') }}</li>{% endif %}
                             {% if features.hasPhotos %} <li>{{ site_link('PHOTOS') }}</li>{% endif %}
-                            {% if features.hasVideo %}<li>{{ site_link('VIDEOS') }}</li>{% endif %}
+                            {% if features.hasVideo %}<li><a href="{{ path('youtube_index') }}">{{ 'platformd.layout.main_menu.video' | trans }}</a></li>{% endif %}
                             {% if features.hasWallpapers %}<li>{{ site_link('WALLPAPERS') }}</li>{% endif %}
                         </ul>
                     </li>

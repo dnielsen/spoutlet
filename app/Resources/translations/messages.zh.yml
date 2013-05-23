@@ -1,6 +1,7 @@
 
 edit: 编辑
 date_format: Y年m月d日
+delete: Delete
 
 recaptcha:
     visual_challenge: Get a visual challenge

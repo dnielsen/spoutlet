@@ -1,0 +1,39 @@
+youtube.alienware_video_network: Alienware Arena Video en Red
+youtube.videos: Vídeos
+youtube.categories: Categorías
+youtube.report: Reportar
+youtube.submit_video: Enviar un vídeo
+youtube.points: Puntos
+youtube.more_videos_by: Más Videos de
+youtube.featured_videos: Videos del momento
+youtube.popular: Popular
+youtube.recently_watched: Recientemente Visto
+youtube.feature_video: Destacar este video
+youtube.unfeature_video: Este video
+youtube.views: Visitas
+youtube.already_voted: Ya has votado.
+youtube.no_video_found: Ningún vídeo encontrado.
+youtube.form.intro: "Alienware Arena Video en Red acoge sólo las mejores películas del juego y, como tal, todas las propuestas deben cumplir con los siguientes criterios para ser publicado en el sitio web. Por favor, lee con cuidado y asegurate de que tu película satisface todos los requisitos."
+youtube.form.file_restrictions_title: "Restricciones de archivos:"
+youtube.form.file_restrictions_1: Sólo vídeos relacionados con videojuegos. Todo lo demás serán eliminados sin previo aviso.
+youtube.form.file_restrictions_2: Ningún material con derechos de autor.
+youtube.form.file_restrictions_3: El video debe ser subido a YouTube.
+youtube.form.outtro: Mediante la presentación de un video, estás de acuerdo con nuestra <a href="%s" target="_blank"> Términos de Servicio</a> conceda a nosotros y nuestros afiliados una licencia no exclusiva para publicar, redistribuir, promover o modificar el vídeo o cualquier información dentro de la presentación.
+youtube.form.youtube_link: "Enlace de YouTube:"
+youtube.form.youtube_link_help: Copia y pega el enlace de YouTube aquí.
+youtube.form.title: "Título:"
+youtube.form.description: "Descripción:"
+youtube.form.category: "Categoría:"
+youtube.form.tags: "Etiquetas:"
+youtube.form.select_category: "Selecciona Categoría"
+youtube.form.optional: "Opcional:"
+youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.invalid_youtube_link: Inválido enlace de YouTube.
+youtube.form.general_error: Debes proporcionar la información en los campos requeridos para enviar su video.
+youtube.navigation.video_main: Vídeo Principal
+youtube.flash.submit_success: Se ha cargado tu video.
+youtube.flash.edit_success: Tu vídeo se ha grabado.
+youtube.flash.delete_success: Tu vídeo ha sido eliminado.
+youtube.flash.delete_insufficient_permissions: No tienes permiso para realizar esta acción.
+youtube.account.my_videos: Mis Videos
+youtube.account.video_not_accessible: Nuestros datos indican que este vídeo es inaccesible en YouTube. Esto puede ser debido a que se ha establecido a "Privado" o se sido desactivado.

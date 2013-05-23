@@ -1,0 +1,67 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+
+
+<div class="span11">
+    <div class="control-group error">
+        <div class="controls">
+            {{ form_errors(form) }}
+            <div id="form-errors" class="help-inline" style="display:none;">
+                {{ 'youtube.form.invalid_youtube_link' | trans }}
+            </div>
+        </div>
+    </div>
+    {{ form_row(form.youtubeLink) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+
+    {{ form_row(form.galleries) }}
+
+    {% if form.groups is defined %}
+        {{ form_row(form.groups) }}
+    {% endif %}
+
+    {{ form_rest(form) }}
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $.support.cors = true;
+
+        function parseYoutubeId(url) {
+            var regex = /(\?v=|\&v=|\/\d\/|\/embed\/|\/v\/|\.be\/)([a-zA-Z0-9\-\_]+)/;
+            var regexyoutubeurl = url.match(regex);
+            if (regexyoutubeurl) {
+                return regexyoutubeurl[2];
+            }
+        }
+
+
+        $('#youtube_youtubeLink').bind('paste', function () {
+            var youtube_api = 'http://gdata.youtube.com/feeds/api/videos/[id]?alt=jsonc&v=2';
+            var element = this;
+            setTimeout(function () {
+                var text = $(element).val();
+                var id = parseYoutubeId(text);
+                youtube_api = youtube_api.replace('[id]', id);
+                $.ajax({
+                    url: youtube_api,
+                    dataType: 'json',
+                    success: function (response, status, request) {
+                        $('#form-errors').hide();
+                        $('#youtube_youtubeId').val(id);
+                        $('#youtube_title').val(response.data.title);
+                        $('#youtube_description').val(response.data.description);
+                        $('#youtube_duration').val(response.data.duration);
+                        $('#youtube-thumb').attr('src', response.data.thumbnail.sqDefault);
+                        $('#youtube-thumb').fadeIn();
+                    },
+                    error: function (request, status, error) {
+                        $('#form-errors').show();
+                    }
+                });
+            }, 10);
+        });
+    });
+</script>

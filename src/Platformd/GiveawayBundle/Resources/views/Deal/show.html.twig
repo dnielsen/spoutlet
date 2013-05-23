@@ -21,6 +21,10 @@
 
 {% block content %}
 
+{% if dealCode %}
+    {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
+{% endif %}
+
 <div id="deals-wrapper">
     {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
     {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
@@ -119,7 +123,6 @@
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
-                timezone: 0,
                 compact: false,
                 layout: $('#time-left').html()
             });

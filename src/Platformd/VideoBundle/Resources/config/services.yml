@@ -1,0 +1,12 @@
+imports:
+    - { resource: "validation.yml" }
+    - { resource: "forms.yml" }
+    - { resource: "repositories.yml" }
+
+services:
+    platformd.model.youtube_manager:
+        class: Platformd\VideoBundle\Model\YoutubeManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@security.acl.provider"
+            - "@pd.cevo.api.api_manager"
