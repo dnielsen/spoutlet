@@ -147,11 +147,11 @@ class YoutubeController extends Controller
         }
 
         $videos = $this->getYoutubeManager()->findVideosByUser($video->getAuthor(), 3, $video->getId());
-
+        $site = $this->getCurrentSite();
         // if use has only uploaded one video, we show featured videos instead
         $showFeaturedInstead = count($videos) == 0;
         if($showFeaturedInstead) {
-            $videos = $this->getYoutubeManager()->findFeaturedVideos(3);
+            $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 3);
         }
 
         $video->addView();
