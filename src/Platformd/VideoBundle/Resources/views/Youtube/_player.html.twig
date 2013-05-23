@@ -1,0 +1,46 @@
+<div style="position:relative;">
+    <div id="youtube-player"></div>
+    <div id="youtube-replay" class="vjs-default-skin">
+        <div class="vjs-big-play-button" onclick="replayVideo()" tabindex="0"><span></span></div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            playerVars: {
+                modestbranding: 1,
+                wmode: 'opaque'
+            },
+            height: '390',
+            width: '636',
+            videoId: '{{ youtubeId }}',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onStateChange
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        player.mute();
+        event.target.playVideo();
+    }
+
+    function onStateChange(event) {
+        if(event.data == 0) {
+            document.getElementById('youtube-replay').style.display = 'block';
+        }
+    }
+
+    function replayVideo() {
+        window.location.href = window.location.href;
+    }
+</script>

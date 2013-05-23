@@ -59,11 +59,26 @@
                 </li>
             {% endif %}
 
-            {% if features.hasPhotos %}
+            {% if features.hasPhotos and features.hasVideo %}
                 <li class="more">
-                    <a>{{ 'platformd.user.account.media' | pd_trans }}</a>
-                    <ul>
-                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.gallery' | pd_trans }}</a></li>
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
+                        <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+            {% elseif features.hasPhotos and not features.hasVideo %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+            {% elseif features.hasVideo and not features.hasPhotos %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
                     </ul>
                 </li>
             {% endif %}

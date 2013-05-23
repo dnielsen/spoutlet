@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Form\Type\ReportedContentType;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use Platformd\VideoBundle\Entity\YoutubeVideo;
 
 class ContentReportAdminController extends Controller
 {
@@ -41,6 +42,7 @@ class ContentReportAdminController extends Controller
             $groupDiscussionPosts   = $repo->getContentReportTypeArchived("GroupDiscussionPost", $site);
             $groupEvents            = $repo->getContentReportTypeArchived("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
+            $youtubeVideos          = $repo->getContentReportTypeArchived("YoutubeVideo", $site);
         } elseif ($mode == "deletedContent") {
             $comments               = $repo->getContentReportTypeDeletedContent("Comment", $site);
             $groupNews              = $repo->getContentReportTypeDeletedContent("GroupNews", $site);
@@ -52,6 +54,7 @@ class ContentReportAdminController extends Controller
             $groupDiscussionPosts   = $repo->getContentReportTypeDeletedContent("GroupDiscussionPost", $site);
             $groupEvents            = $repo->getContentReportTypeDeletedContent("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
+            $youtubeVideos          = $repo->getContentReportTypeDeletedContent("YoutubeVideo", $site);
         } elseif ($mode == "manage") {
             $comments               = $repo->getContentReportType("Comment", $site);
             $groupNews              = $repo->getContentReportType("GroupNews", $site);
@@ -63,9 +66,10 @@ class ContentReportAdminController extends Controller
             $groupDiscussionPosts   = $repo->getContentReportType("GroupDiscussionPost", $site);
             $groupEvents            = $repo->getContentReportType("GroupEvent", $site);
             $contests               = $em->getRepository('SpoutletBundle:Contest')->findContestsByGroups($groups);
+            $youtubeVideos          = $repo->getContentReportType("YoutubeVideo", $site);
         }
 
-        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts, $groupEvents);
+        $allReports = array_merge($comments, $groupNews, $groupVideos, $groupImages, $galleryMedia, $groups, $groupDiscussions, $groupDiscussionPosts, $groupEvents, $youtubeVideos);
 
         usort($allReports, function($a, $b) {
 
@@ -96,11 +100,6 @@ class ContentReportAdminController extends Controller
         ));
     }
 
-    public function siteListAction($mode, $site)
-    {
-
-    }
-
     public function hideComplaintAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
@@ -119,6 +118,7 @@ class ContentReportAdminController extends Controller
         $groupDiscussion        = $report->getGroupDiscussion();
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
         $groupEvent = $report->getGroupEvent();
+        $youtubeVideo        = $report->getYoutubeVideo();
 
         if ($groupVideo) {
             $groupVideo->setDeleted(false);
@@ -176,6 +176,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGroupEvent($groupEvent);
             $type = 'GroupEvent';
             $id = $groupEvent->getId();
+        } else if ($youtubeVideo) {
+            $youtubeVideo->setDeleted(false);
+            $youtubeVideo->setDeletedReason(null);
+            $repo->deleteAllContentReportsForYoutubeVideo($youtubeVideo);
+            $type = 'YoutubeVideo';
+            $id = $youtubeVideo->getId();
         } else {
             $this->setFlash('error', 'Unknown content type.');
             return $this->redirect($this->generateUrl('admin_content_reports'));
@@ -208,6 +214,7 @@ class ContentReportAdminController extends Controller
         $groupDiscussion        = $report->getGroupDiscussion();
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
         $groupEvent             = $report->getGroupEvent();
+        $youtubeVideo           = $report->getYoutubeVideo();
 
         if ($groupVideo) {
 
@@ -292,6 +299,12 @@ class ContentReportAdminController extends Controller
             $repo->deleteAllContentReportsForGroupDiscussionPost($groupDiscussionPost);
             $id = $groupDiscussionPost->getId();
             $type = "GroupDiscussionPost";
+        } else if ($youtubeVideo) {
+
+            $this->getYoutubeManager()->deleteVideo($youtubeVideo, YoutubeVideo::DELETED_REASON_BY_ADMIN, true);
+            $repo->deleteAllContentReportsForYoutubeVideo($youtubeVideo);
+            $id = $youtubeVideo->getId();
+            $type = "YoutubeVideo";
 
         } else if ($groupEvent) {
 
@@ -332,6 +345,7 @@ class ContentReportAdminController extends Controller
         $groupDiscussion        = $report->getGroupDiscussion();
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
         $groupEvent             = $report->getGroupEvent();
+        $youtubeVideo           = $report->getYoutubeVideo();
 
         if ($groupVideo) {
 
@@ -398,7 +412,6 @@ class ContentReportAdminController extends Controller
             $type = 'GroupDiscussionPost';
             $id = $groupDiscussionPost->getId();
             $reportedItem = $groupDiscussionPost;
-
         } else if ($groupEvent) {
 
             $groupEvent->setDeleted(false);
@@ -407,6 +420,14 @@ class ContentReportAdminController extends Controller
             $type = 'GroupEvent';
             $id = $groupEvent->getId();
             $reportedItem = $groupEvent;
+        } else if ($youtubeVideo) {
+
+            $youtubeVideo->setDeleted(false);
+            $youtubeVideo->setDeletedReason(null);
+            $em->persist($youtubeVideo);
+            $type = 'YoutubeVideo';
+            $id = $youtubeVideo->getId();
+            $reportedItem = $youtubeVideo;
 
         } else {
 
@@ -470,6 +491,14 @@ class ContentReportAdminController extends Controller
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getName();
                 $owner = $item->getUser();
+                $url = $item->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
+                break;
+
+            case 'YoutubeVideo':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getTitle();
+                $owner = $item->getAuthor();
+                $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
             default:
@@ -513,5 +542,10 @@ class ContentReportAdminController extends Controller
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
+    }
+
+    private function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

@@ -14,6 +14,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Our gallery entity
@@ -21,6 +22,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryRepository")
  * @ORM\Table(name="pd_gallery")
  * @UniqueEntity(fields={"name"}, message="This gallery name is already used.")
+ * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing gallery is already using this gallery name.")
+ * @Assert\Callback(methods={"validateSlug"})
  */
 class Gallery implements LinkableInterface
 {
@@ -105,10 +108,22 @@ class Gallery implements LinkableInterface
      */
     private $deletedReason;
 
+    /**
+     * @ORM\Column(name="sites_positions", type="array", nullable=true)
+     */
+    private $sitesPositions;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\GalleryTranslation", mappedBy="gallery", cascade={"all"})
+     */
+    private $translations;
+
     public function __construct()
     {
-        $this->sites        = new ArrayCollection();
-        $this->categories   = new ArrayCollection();
+        $this->sites            = new ArrayCollection();
+        $this->categories       = new ArrayCollection();
+        $this->sitesPositions   = array();
+        $this->translations     = new ArrayCollection();
     }
 
     /**
@@ -162,9 +177,19 @@ class Gallery implements LinkableInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName($siteId = null)
     {
-        return $this->name;
+        if (null === $siteId) {
+            return $this->name;
+        }
+
+        foreach ($this->getTranslations() as $translation) {
+            if ($translation->getSite()->getId() == $siteId) {
+                return $translation->getName() ?: $this->name;
+            }
+        }
+
+        return$this->name;
     }
 
     /**
@@ -318,6 +343,44 @@ class Gallery implements LinkableInterface
     public function isVisibleOnSite($site)
     {
         return $this->sites->contains($site);
+    }
+
+    public function getSitesPositions()
+    {
+        return $this->sitesPositions;
+    }
+
+    public function setSitesPositions($sitesPositions)
+    {
+        $this->sitesPositions = $sitesPositions;
+    }
+
+    public function validateSlug(ExecutionContext $executionContext)
+    {
+        if ($this->getSlug()) {
+            return;
+        }
+
+        $oldPath = $executionContext->getPropertyPath();
+        $executionContext->setPropertyPath($oldPath.'.slug');
+
+        $executionContext->addViolation(
+            'Automatic generation of the URL string failed. Please enter this manually.',
+            array(),
+            null
+        );
+
+        $executionContext->setPropertyPath($oldPath);
+    }
+
+    public function getTranslations()
+    {
+        return $this->translations ?: new ArrayCollection();
+    }
+
+    public function setTranslations($value)
+    {
+        $this->translations = $value;
     }
 }
 

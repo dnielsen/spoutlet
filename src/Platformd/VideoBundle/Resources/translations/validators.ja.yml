@@ -1,0 +1,9 @@
+youtube.errors.invalid_youtube_link: 誤った YouTubeリンクです
+youtube.errors.no_title: 詳細が必要です
+youtube.errors.no_category: 詳細が必要です
+youtube.errors.no_link: 詳細が必要です
+youtube.errors.geo_restriction: "このビデオは、あなたの国・地域ではご覧頂けません。"
+youtube.errors.no_description: 詳細が必要です
+youtube.errors.no_gallery: あなたのビデオのカテゴリやを選択してください。
+youtube.errors.unique_title_slug: そのタイトルはすでに使用されています。別のタイトルを入力してください。
+youtube.errors.no_gallery_groups_disabled: あなたのビデオのカテゴリやグループを選択してください。

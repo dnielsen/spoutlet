@@ -1,0 +1,210 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'youtube.videos' | trans ~ ' - ' ~ video.title %}
+
+{% set adminFeatureLinkText = video.featured ? 'youtube.unfeature_video' | trans : 'youtube.feature_video' | trans %}
+{% set isAdmin = app.user ? (app.user.getIsOrganizer or app.user.getIsSuperAdmin) : false %}
+{% set canEdit = isAdmin or (app.user == video.author) %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ video.title }}" />
+    <meta property="og:type" content="video" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="{{ video.thumbnailSq }}" />
+    <meta property="og:description" content="{{ video.description }}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="std_2col">
+    <div class="left">
+        {% include 'VideoBundle:Youtube:_player.html.twig' with { 'youtubeId' : video.youtubeId } %}
+        {% if features.hasComments %}
+            {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : video.getThreadId, 'object' : video } %}
+        {% endif %}
+    </div>
+    <div class="right">
+        <div class="video-add">
+            {% if app.user %}
+            <a href="javascript:void(0);" data-id="{{ video.id }}" class="vote-button{% if voted %} voted{% endif %}" {% if voted %}title="{{ 'youtube.already_voted' | trans }}"{% endif %} id="video-vote"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+            {% else %}
+            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+            {% endif %}
+            <a href="{{ path('youtube_submit') }}" class="btn submit-video">{{ 'youtube.submit_video' | trans }}</a>
+        </div>
+        <div class="video-social">
+            <div class="fb-like"
+                data-send="false"
+                data-width="300"
+                data-layout="button_count"
+                data-show-faces="false"
+                data-colorscheme="dark"
+                style="vertical-align:top;zoom:1;*display:inline">
+            </div>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-text="Check out the cool video - {{ video.title }}" data-url="{{ app.request.getUri }}" data-via="Alienware">Tweet</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+        <div class="widget-33" style="margin-top: 15px; height: auto;">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ video.title }}
+                </div>
+            </div>
+            <div class="widget-content">
+                <div class="video-author">
+                    <a class="author-avatar" href="{{ cevo_account_link(video.author.username) }}"><img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" /></a>
+                    <a class="author-name" href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a>
+                    <div class="video-date">{{ video.createdAt | date('date_format' | trans) }}</div>
+                    <div class="video-views">{{ video.views }} {{ 'youtube.views' | trans }}</div>
+                </div>
+                <div class="video-description">
+                    <p>{{ video.description | nl2br }}</p>
+                </div>
+                {% if video.galleries|length > 0 %}
+                    <div class="video-categories">
+                        <div class="video-category-heading">{{ 'youtube.categories' | trans }}: </div>
+                        <div class="video-category-categories">
+                            {% for gallery in video.galleries if site in gallery.sites %}
+                                <a href="{{ path('youtube_category', {'slug' : gallery.slug}) }}">{{ gallery.name(site.id) }}</a><br />
+                            {% endfor %}
+                        </div>
+                        <div class="clear" />
+                    </div>
+                {% endif %}
+                <div class="video-options">
+                    <a class="video-report-options-link" data-id="{{ video.id }}" href="javascript:void(0);">{{ 'youtube.report' | trans }}</a>
+                    {% if isAdmin %} | <a href="javascript:void(0);" id="feature-video" data-id="{{ video.id }}" data-featured="{{ video.featured }}">{{ adminFeatureLinkText }}</a>{% endif %}
+                    {% if canEdit %} | <a href="{{ path('youtube_edit', {'slug' : video.slug}) }}">{{ 'edit' | trans }}</a>{% endif %}
+                    <div class="video-report-options" id="video-report-options-{{ video.id }}">
+                        <ul>
+                            <li><a href="javascript:void(0);" class="video-report-link" data-id="{{ video.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="video-report-link" data-id="{{ video.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="video-report-link" data-id="{{ video.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="video-report-link" data-id="{{ video.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="more-videos">
+            {% if videos|length > 0 %}
+                {% if showFeaturedInstead %}
+                <h3>{{ 'youtube.featured_videos' | trans }}</h3>
+                {% else %}
+                <h3>{{ 'youtube.more_videos_by' | trans }} <a href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a></h3>
+                {% endif %}
+                {% for video in videos %}
+                    <div class="video-thumb-wrapper {% if loop.index > 1 %}more{% endif %}">
+                        <a href="{{ path('youtube_view', {'slug' : video.slug}) }}"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" /></a>
+                        <span class="video-duration">{{ video.formattedDuration }}</span>
+                    </div>
+                    <div class="more-videos-link">{{ video | pd_link_full(video.title) }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.min.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+
+            var voteRequestSent;
+
+            $(document).mouseup(function () {
+                $('.xnotices').fadeOut();
+            });
+
+            $('.more-videos-link a').truncate({width: 300});
+
+            $('#feature-video').click(function () {
+                var id = $(this).attr('data-id');
+                var featured = !$(this).attr('data-featured');
+                $.ajax({
+                    url: '{{ path('youtube_feature_video') }}',
+                    type: 'post',
+                    data: JSON.stringify({'id' : id, 'featured' : featured}),
+                    contentType: 'json',
+                    success: function(data) {
+                        if(data.success) {
+                            var text = data.featured ? '{{ 'youtube.unfeature_video' | trans }}' : '{{ 'youtube.feature_video' | trans }}';
+                            $('#feature-video').attr('data-featured', data.featured ? '1' : '');
+                            $('#feature-video').text(text);
+                        }
+                    }
+                });
+            });
+
+            $('#video-vote').click(function () {
+
+                if (voteRequestSent) {
+                    return false;
+                }
+
+                voteRequestSent = true;
+
+                $.ajax({
+                    url: '{{ path('youtube_vote')}}',
+                    type: 'post',
+                    data: JSON.stringify({
+                        'id' : $('#video-vote').attr('data-id'),
+                        'voteType' : 'up'
+                    }),
+                    contentType: 'json',
+                    success: function(data) {
+                        if(data.success) {
+                            $('#video-points').text(data.likes);
+                            $('#video-vote').addClass('voted');
+                        }
+
+                        voteRequestSent = false;
+                    }
+                });
+            });
+
+            $('.video-report-options-link').click(function (event) {
+                event.stopPropagation();
+                var id = $(this).attr('data-id');
+                $('#video-report-options-' + id).toggle('fast');
+            });
+
+            $('.video-report-link').click(function (event) {
+                {% if app.user %}
+                var contentId = $(this).attr('data-id');
+                $.ajax({
+                    url: '{{ path('content_reporting') }}',
+                    type: 'post',
+                    data: JSON.stringify({
+                        'ContentId' : contentId,
+                        'Reason' : $(this).attr('data-reason'),
+                        'ContentType' : "YoutubeVideo"
+                    }),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if(data.success) {
+                            alert(data.messageForUser);
+                        } else {
+                            alert(data.messageForUser);
+                        }
+                        $('.video-report-options').hide();
+                    }
+                })
+                {% else %}
+                document.location.href='http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}';
+                {% endif %}
+            });
+        });
+    </script>
+{% endblock %}

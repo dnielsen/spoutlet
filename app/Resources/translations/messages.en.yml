@@ -1,6 +1,7 @@
 edit: Edit
 submit: Submit
 cancel: Cancel
+delete: Delete
 date_format: M j, Y
 
 recaptcha:
@@ -366,7 +367,8 @@ platformd:
             match_client: Match Client
             match_lobby: Match Lobby
             gallery: Gallery
-
+            images: Images
+            videos: Videos
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
@@ -878,6 +880,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_group_event: Group Event
+    report_type_youtubevideo: Video
     report_type_unknown: Unknown
     report_success: The content will be reviewed by our staff within 72 hours. If you have additional information for your report, please email us at reports@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged

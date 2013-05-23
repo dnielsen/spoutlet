@@ -1,9 +1,9 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title gallery.name %}
+{% block title gallery.name(site.id) %}
 
 {% block content %}
-<h3>{{ gallery.name }}</h3>
+<h3>{{ gallery.name(site.id) }}</h3>
 <div class="std_2col">
     <div class="left">
         <div style="float: right;margin-right: 10px;" class="styled-select">

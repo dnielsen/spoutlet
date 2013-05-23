@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-
 class SiteUtil
 {
     private $em;
@@ -39,5 +38,10 @@ class SiteUtil
         if (!$this->currentSite) {
             die("Could not find current site (domain = '".$currentHost."').");
         }
+    }
+
+    public function getAllSites()
+    {
+        return $this->em->getRepository('SpoutletBundle:Site')->findAll();
     }
 }

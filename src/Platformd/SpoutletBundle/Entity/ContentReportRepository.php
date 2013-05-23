@@ -17,6 +17,7 @@ class ContentReportRepository extends EntityRepository
         'GalleryMedia',
         'GroupDiscussion',
         'GroupDiscussionPost',
+        'YoutubeVideo',
     );
 
     private static $typeToBundleMap = array(
@@ -29,6 +30,7 @@ class ContentReportRepository extends EntityRepository
         'GroupDiscussion'       => 'GroupBundle',
         'GroupDiscussionPost'   => 'GroupBundle',
         'GroupEvent'            => 'EventBundle',
+        'YoutubeVideo'          => 'VideoBundle',
     );
 
     public function getBundleFromType($type)
@@ -297,6 +299,24 @@ class ContentReportRepository extends EntityRepository
             LEFT JOIN report.groupDiscussionPost c
             WHERE report.deleted = false
             AND c = :content
+            ')
+            ->setParameter('content', $content)
+            ->execute();
+
+        foreach ($reports as $report) {
+            $report->setDeleted(true);
+            $em->persist($report);
+        }
+    }
+
+    public function deleteAllContentReportsForYoutubeVideo($content) {
+        $em = $this->getEntityManager();
+
+        $reports = $em->createQuery('
+            SELECT report, yt FROM SpoutletBundle:ContentReport report
+            LEFT JOIN report.youtubeVideo yt
+            WHERE report.deleted = false
+            AND yt = :content
             ')
             ->setParameter('content', $content)
             ->execute();

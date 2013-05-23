@@ -35,3 +35,7 @@ accounts_photos:
     pattern: /profile/photos/{filter}
     defaults: { _controller: SpoutletBundle:Account:photos, filter: 'all' }
 
+accounts_videos:
+    pattern: /profile/videos
+    defaults: { _controller: SpoutletBundle:Account:videos }
+

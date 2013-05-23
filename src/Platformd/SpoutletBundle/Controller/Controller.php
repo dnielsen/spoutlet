@@ -22,7 +22,8 @@ class Controller extends BaseController
     protected function getCurrentCountry()
     {
         $ipAddress = $this->getRequest()->getClientIp(true);
-        return $this->getIpLookupUtil()->get('countryShort', $ipAddress);
+        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
     }
 
     /**

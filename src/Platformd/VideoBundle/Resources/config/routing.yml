@@ -1,0 +1,7 @@
+VideoBundle_youtube:
+    resource: "@VideoBundle/Resources/config/routing/youtube.yml"
+    prefix:   /videos
+
+VideoBundle_youtube_admin:
+    resource: "@VideoBundle/Resources/config/routing/youtube_admin.yml"
+    prefix:   /admin/videos

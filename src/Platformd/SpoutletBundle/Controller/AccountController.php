@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
@@ -130,11 +131,6 @@ class AccountController extends Controller
 
     }
 
-    public function videosAction()
-    {
-        return $this->redirect('/video/edit');
-    }
-
     /**
      * Displays a list of giveaway keys that this user has earned
      *
@@ -238,6 +234,20 @@ class AccountController extends Controller
         ));
     }
 
+    public function videosAction(Request $request)
+    {
+        $page    = $request->query->get('page', 1);
+        $user    = $this->getUser();
+        $manager = $this->getYoutubeManager();
+        $pager   = $manager->findUserAccountVideos($user, 10, $page);
+        $videos  = $pager->getCurrentPageResults();
+
+        return $this->render('SpoutletBundle:Account:videos.html.twig', array(
+            'pager'  => $pager,
+            'videos' => $videos,
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -253,5 +263,10 @@ class AccountController extends Controller
         return $this->getDoctrine()
             ->getRepository('GiveawayBundle:GiveawayKey')
         ;
+    }
+
+    protected function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

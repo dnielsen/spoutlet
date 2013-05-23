@@ -41,7 +41,7 @@
 <div class="media-show-page">
     <div class="std_2col" style="padding:0 0 10px 0">
         <div class="left">
-            <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
+            <h1>{{ media.title }}</h1>
             <div style="padding: 3px 0 3px 0;float:left;">
                 {% if returnType == "contests" %}
                     <a href="{{ path('contest_index') }}">{{ 'contests.contests' | trans }}</a>
@@ -192,8 +192,8 @@
                     <div style="margin-top:10px; width:300px">
                         <div style="width:20%; float:left;">{{ 'galleries.index_page_title' | trans }}: </div>
                         <div style="width:80%; float:right;">
-                            {% for gallery in media.galleries %}
-                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
+                            {% for gallery in media.galleries if site in gallery.sites %}
+                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name(site.id) }}</a><br />
                             {% endfor %}
                         </div>
                         <div class="clear" />

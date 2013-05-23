@@ -86,6 +86,7 @@ services:
             - "@platformd.model.translator"
             - "@fos_user.user_manager"
             - "@platformd.repository.content_reporting"
+            - "@platformd.repository.site"
             - "%local_auth%"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
@@ -95,6 +96,12 @@ services:
         class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
         tags:
             - { name: form.type_extension, alias: field }
+
+    platformd.model.ip_lookup_util:
+        class: Platformd\SpoutletBundle\Util\IpLookupUtil
+        arguments:
+            - %ip2location_lookup_directory%
+            - %ip_lookup_override%
 
     platformd.listener.site_translation_listener:
         class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
@@ -268,3 +275,17 @@ services:
             - '@translator'
             - '@platformd.model.site_util'
             - '@session'
+
+    platformd.repository.gallery:
+        class:           Platformd\SpoutletBundle\Entity\GalleryRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Gallery'
+
+    platformd.repository.site:
+        class:           Platformd\SpoutletBundle\Entity\SiteRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Site'

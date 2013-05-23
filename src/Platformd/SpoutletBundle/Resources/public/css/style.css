@@ -86,14 +86,15 @@ a.aw-link { display: inline; background: url('/bundles/spoutlet/images/link-icon
 
 .hover-icon { margin: 6px 0 0 3px; }
 
-h1 { color:#ffffff; font-weight:normal; font-size:18.67px; margin:12px 0 7px 0; }
-h2 { color:#b3b3b3; font-weight:normal; font-size:24px; margin:20px 0 10px 0; }
-h3 { color:#b3b3b3; font-weight:normal; font-size:21px; margin:10px 0 0px 0; }
+h1 { color:#ffffff; font-weight:normal; font-size:24px; font-weight: bold;}
+h2 { color:#ffffff; font-weight:normal; font-size:21px; font-weight: bold;}
+h3 { color:#ffffff; font-weight:normal; font-size:18px; font-weight: bold;}
 
 h6 { color:#b3b3b3; font-weight:normal; font-size:9px; margin:0; padding:0; display: inline; }
 p { margin:10px 0; word-spacing:1px; }
 
-h2.contentTitle { position:relative; font-size: 26px; font-weight: bold;  margin:0; margin-bottom: 5px; }
+h2.content-title { margin: 0; color: #FFF; font-weight: bold;}
+
 
 img { border: none; }
 

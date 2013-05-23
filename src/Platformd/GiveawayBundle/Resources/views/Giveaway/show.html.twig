@@ -43,7 +43,7 @@
                 </div>
                 <div class="widget-content">
                     {%  if giveaway.showKeys %}
-                        <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
+                        <h3 class="key-count">{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
                     {%  endif %}
 
                     {% if giveaway.allowKeyFetch and available_keys > 0 %}

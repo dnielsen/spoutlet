@@ -100,7 +100,7 @@
                             <div style="width:20%; float:left;">Galleries: </div>
                             <div style="width:80%; float:right;">
                                 {% for gallery in galleryMediaItem.galleries %}
-                                    <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
+                                    <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name(site.id) }}</a><br />
                                 {% endfor %}
                             </div>
                             <div class="clear" />

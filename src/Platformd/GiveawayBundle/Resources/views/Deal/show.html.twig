@@ -36,7 +36,6 @@
 {% if dealCode %}
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
-
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
     <div class="xnotices">
@@ -188,7 +187,6 @@
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
-                timezone: 0,
                 compact: false,
                 layout: $('#time-left').html()
             });

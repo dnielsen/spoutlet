@@ -1325,7 +1325,7 @@ class AbstractFeatureContext extends MinkContext
                     break;
 
                 case 'video':
-                    $url = $this->getContainer()->get('router')->generate('group_add_video', array('id' => $group->getId()));
+                    $url = $this->getContainer()->get('router')->generate('youtube_submit', array('groupId' => $group->getId()));
                     $this->getSession()->visit($url);
                     break;
 
@@ -1714,4 +1714,45 @@ class AbstractFeatureContext extends MinkContext
             throw new \Exception(sprintf('Currently on the correct URL, but the HTTP Status Code was non-OK.  Expected code "200" actual code was "%d"', $slug, $currentUrl));
         }
     }
+
+    /**
+     * @Given /^I have the following galleries:$/
+     */
+    public function iHaveTheFollowingGalleries(TableNode $table)
+    {
+        $em = $this->getEntityManager();
+
+        $counter = 0;
+
+        foreach ($table->getHash() as $data) {
+            if ($gallery = $em->getRepository('SpoutletBundle:Gallery')->findOneBy(array('name' => $data['name']))) {
+                $em->remove($gallery);
+                $em->flush();
+            }
+
+            $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => 'en'));
+            $category = $em->getRepository('SpoutletBundle:GalleryCategory')->findOneBy(array('name' => 'video'));
+
+            $gallery = new Gallery();
+            $gallery->setName($data['name']);
+            $gallery->setSlug('default-gallery-slug-'.$counter);
+            $gallery->setSites(array($site));
+            $gallery->setDeleted(false);
+            $gallery->setCategories(array($category));
+
+            $sitesPositions = $gallery->getSitesPositions();
+
+            foreach ($gallery->getSites() as $site) {
+                $sitesPositions[$site->getId()] = 0;
+            }
+
+            $gallery->setSitesPositions($sitesPositions);
+
+            $em->persist($gallery);
+            $em->flush();
+
+            $counter++;
+        }
+    }
+
 }

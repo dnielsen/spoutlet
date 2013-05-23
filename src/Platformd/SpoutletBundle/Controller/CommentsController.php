@@ -428,6 +428,12 @@ class CommentsController extends Controller
             $tag = 'nukeforumreply';
         }
 
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+
+            $tab = 'nukeforumreply';
+
+        }
+
         if($tag) {
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
@@ -448,6 +454,10 @@ class CommentsController extends Controller
 
         if(strlen(stristr($threadId, 'group')) > 0) {
             $tag = 'replytothread';
+        }
+
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+            $tag = 'videocomment';
         }
 
         if($tag) {

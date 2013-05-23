@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="left">
-        <h1>{{ 'news_and_announcements' | pd_trans }}</h1>
+        <h1 class="content-title">{{ 'news_and_announcements' | trans }}</h1>
         <div>
             {% for newsItem in news %}
                 {% include 'NewsBundle:Default:_news.html.twig' with {

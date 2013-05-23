@@ -1,28 +1,16 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block content %}
-<h1>Galleries</h1>
+{% block title 'Gallery Regions' %}
 
-<table class="table table-striped table-bordered tablesorter">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for gallery in galleries %}
-        <tr>
-            <td><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">{{ gallery.name }}</a></td>
-            <td>
-                <a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">edit</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<h1>Gallery Regions</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_gallery_list'
+}%}
 
 <a class="btn btn-primary" href="{{ path('admin_gallery_new') }}">
-    Create a new entry
+    Create a new gallery
 </a>
 {% endblock %}

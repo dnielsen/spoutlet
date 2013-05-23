@@ -1,0 +1,9 @@
+youtube.errors.invalid_youtube_link: Inválido enlace de YouTube.
+youtube.errors.no_title: Necesario
+youtube.errors.no_category: Necesario
+youtube.errors.no_link: Necesario
+youtube.errors.geo_restriction: "Lo sentimos, pero este video no está permitido en tu país."
+youtube.errors.no_description: Necesario
+youtube.errors.no_gallery: El título que has facilitado ya está en uso. Debes ingresar un título diferente.
+youtube.errors.unique_title_slug: El título que has facilitado ya está en uso. Debes ingresar un título diferente.
+youtube.errors.no_gallery_groups_disabled: Debes seleccionar un categoría para tu video.

@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Util;
 use Platformd\SpoutletBundle\Location\Ip2Location;
 
+
 class IpLookupUtil
 {
     private $lookupFile;

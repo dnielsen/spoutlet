@@ -2,18 +2,19 @@
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddVideo') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditVideo') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteVideo') %}
+{% set addVideoUrl          = features.hasVideo ? path('youtube_submit') : path('group_add_video', { 'id': group.id }) %}
 
 <div>
     <div>
     {% if pages | length > 0 %}
         {% if canAdd %}
-            <a href='{{ path('group_add_video', { 'id': group.id }) }}'>{{ 'platformd.groups.videos.submit' | pd_trans }}</a>
+            <a href='{{ addVideoUrl }}'>{{ 'platformd.groups.videos.submit' | pd_trans }}</a>
         {% else %}
             {{ 'platformd.groups.videos.non_member_add' | pd_trans }}
         {% endif %}
     {% else %}
         {% if canAdd %}
-            {{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': (path('group_add_video', { 'id': group.id })) }) | raw }}
+            {{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': {{ addVideoUrl }} }) | raw }}
         {% else %}
             {{ 'platformd.groups.videos.non_member_no_videos' | pd_trans }}
         {% endif %}
@@ -27,7 +28,7 @@
                 </video>
             </div>
         </div>
-        <div class="scrollable" id="scrollable-videos" style="height: 140px; width: 450px; margin: 20px 0 0 87px;">
+        <div class="scrollable" id="scrollable-videos" style="height: 165px; width: 600px; margin: 20px 0 20px 15px;">
             <div class="items">
 
                 {% set isFirstItem = true %}
@@ -35,30 +36,25 @@
                     <div class="items-wrapper">
                         {% for videoList in page %}
                             {% for video in videoList %}
-                                <div class="group-image-item">
 
-                                    <div class="group-image-image">
-                                        <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" style="border: none;" class="youtube-link">
-                                            {% if isFirstItem %}
-                                                <img src="{{ video.youTubeThumb }}" alt="{{ video.title }}" style="border: 1px solid #4a4a4a" class="active-video" />
-                                                {% set isFirstItem = false %}
-                                            {% else %}
-                                                <img src="{{ video.youTubeThumb }}" alt="{{ video.title }}" style="border: 1px solid #4a4a4a" />
-                                            {% endif %}
-
-                                        </a>
-                                        <a href="javascript:void(0);" youtube-data="{{ video.youTubeVideoId }}" class="youtube-link" title="{{ video.title }}">
+                                <div class="group-video-item">
+                                    <div class="group-video-video">
+                                        <a href="javascript:void(0);" youtube-data="{{ video.youtubeId }}" style="border: none;" class="youtube-link"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" style="border: 1px solid #4a4a4a" /></a>
+                                    </div>
+                                    <div class="more-videos-link">
+                                        <a href="javascript:void(0);" youtube-data="{{ video.youtubeId }}" class="youtube-link" title="{{ video.title }}">
                                             {{ video.title }}
                                         </a>
-                                        <div class="group-image-actions">
+                                    </div>
+                                    <div class="group-image-actions">
                                         {% if canDelete %}
-                                            <a href="{{ path('group_delete_video', { 'id' : group.id, 'videoId' : video.id })}}" onclick="return confirm('Are you sure you want to delete this video?');">{{ 'platformd.groups.videos.delete' | pd_trans }}</a> |
+                                            <a href="{{ path('youtube_delete', {'slug' : video.slug}) }}" onclick="return confirm('Are you sure you want to delete this video?');">{{ 'platformd.groups.videos.delete' | pd_trans }}</a> |
                                         {% endif %}
                                         {% if canEdit %}
-                                            <a href="{{ path('group_edit_video', { 'id' : group.id, 'videoId' : video.id })}}">{{ 'platformd.groups.videos.edit' | pd_trans }}</a> |
+                                            <a href="{{ path('youtube_edit', { 'slug' : video.slug }) }}">{{ 'platformd.groups.videos.edit' | pd_trans }}</a> |
                                         {% endif %}
+
                                         <a href="javascript:void(0);" class="report-content" report-data="{{ video.id }}">{{ 'platformd.groups.videos.report' | pd_trans }}</a>
-                                    </div>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -67,9 +63,22 @@
                 {% endfor %}
             </div>
         </div>
-        <div id="scroll-actions" style="margin-top: -90px;">
-            <a class="prev browse video-scroll-prev" style="float: left;"></a>
-            <a class="next browse video-scroll-next" style="float: right;"></a>
+
+        <div id="group-video-scroll-pagination">
+            <nav class="spoutlet-pager">
+                <a href="javascript:void(0);" data-page=1 class="current">1</a>
+                {% if pages|length > 9 %}...{% endif %}
+                {% if pages|length > 1 %}
+                    {% if pages|length > 2 %}
+                        {% set pageLimit = (pages|length > 9 ? 8 : pages|length - 1) %}
+                        {% for pageNumber in 2..pageLimit %}
+                            <a href="javascript:void(0);" data-page={{ pageNumber }}>{{ pageNumber }}</a>
+                        {% endfor %}
+                        {% if pages|length > 9 %}...{% endif %}
+                    {% endif %}
+                    <a href="javascript:void(0);" data-page={{ pages|length }}>{{ pages|length }}</a>
+                {% endif %}
+            </nav>
         </div>
     {% endif %}
 </div>
@@ -79,6 +88,66 @@
 <script type="text/javascript">
 
     jQuery(document).ready(function() {
+
+        var scrollable = $("#scrollable-videos").scrollable();
+        var pageNumberForUpdating;
+
+        $('#group-video-scroll-pagination a').click(function() {
+            $('#group-video-scroll-pagination a.current').removeClass('current');
+
+            var page = parseInt($(this).attr('data-page'));
+            var numVariablePageButtons = {{ pages|length > 9 ? 7 : pages|length - 2 }};
+            var middleButton = Math.ceil(numVariablePageButtons / 2);
+
+            scrollable.data('scrollable').seekTo(page - 1);
+
+            updateButtons = page > 2 && page < ({{ pages|length }} - 1);
+
+            $('#group-video-scroll-pagination a').each(function(index) {
+
+                if (index == 0) {
+                    if (page == 1) $(this).addClass('current');
+                    return;
+                }
+
+                if (index == numVariablePageButtons + 1) {
+                    if (page == {{ pages|length }}) $(this).addClass('current');
+                    return;
+                }
+
+                if (index == 1) {
+                    offset  = (index) - middleButton;
+                    newPage = page + offset;
+
+                    if (newPage < 2) {
+                        pageNumberForUpdating = 2;
+                    } else if (newPage + numVariablePageButtons > {{ pages|length }}) {
+                        pageNumberForUpdating = {{ pages|length }} - numVariablePageButtons;
+                    } else {
+                        pageNumberForUpdating = newPage;
+                    }
+                }
+
+                if (updateButtons == false) {
+                    if (pageNumberForUpdating == page) {
+                        $(this).addClass('current');
+                    }
+                    pageNumberForUpdating++;
+                    return;
+                }
+
+                $(this).attr('data-page', pageNumberForUpdating);
+                $(this).text(pageNumberForUpdating);
+
+                if (pageNumberForUpdating == page) {
+                    $(this).addClass('current');
+                }
+
+                pageNumberForUpdating++;
+            });
+
+        });
+
         _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
         $('.youtube-link').click(function () {
            var youtubeId = $(this).attr('youtube-data');
