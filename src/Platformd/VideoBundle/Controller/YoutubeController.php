@@ -226,14 +226,18 @@ class YoutubeController extends Controller
         $results = $this->getYoutubeManager()->findVideosForTabAndCountry($tab, $site, $this->getCurrentCountry());
 
         if($tab == 'categories') {
-            return $this->render('VideoBundle:Youtube:_categoryList.html.twig', array(
+            $response = $this->render('VideoBundle:Youtube:_categoryList.html.twig', array(
                 'results' => $results
+            ));
+        } else {
+            $response = $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
+                'videos' => $results
             ));
         }
 
-        return $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
-            'videos' => $results
-        ));
+        $response->setSharedMaxAge(30);
+
+        return $response;
     }
 
     public function categoryTabsAction($cat, $tab, Request $request)
