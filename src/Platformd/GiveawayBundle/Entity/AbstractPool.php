@@ -15,10 +15,13 @@ use Platformd\SpoutletBundle\Entity\Country,
     Platformd\GiveawayBundle\Entity\GiveawayPool
 ;
 
+use Symfony\Component\Validator\ExecutionContext;
+
 /**
  * A mapped super class that all other pools inherit from
  *
  * @ORM\MappedSuperclass
+ * @Assert\Callback(methods={"validateFileExtension"})
  */
 abstract class AbstractPool
 {
@@ -282,5 +285,32 @@ abstract class AbstractPool
 
             return $allowed;
         }
+    }
+
+    public function validateFileExtension(ExecutionContext $executionContext)
+    {
+        // error if invalid or no category is specified
+
+        $upload = $this->getKeysfile();
+
+        if ($upload === null) {
+            return;
+        }
+
+        $originalFileName = $upload->getClientOriginalName();
+        $extension        = strtolower(substr(strrchr($originalFileName,'.'),1));
+
+        if ($extension == 'csv') {
+            return;
+        }
+
+        $propertyPath = $executionContext->getPropertyPath() . '.keysfile';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            "The file must be a CSV.",
+            array(),
+            "keysfile"
+        );
     }
 }
