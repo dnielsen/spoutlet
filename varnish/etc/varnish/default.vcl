@@ -40,7 +40,12 @@ sub vcl_recv {
     }
 
     if (req.esi_level > 0) {
-        if (!req.url ~ "^(/app_dev.php)?/esi/") { # varnish is being asked to process an esi that doesn't have /esi/ in the path
+
+        if (req.url ~ "/https://" && req.url ~ "esi") { # this if block is a fix for symfony outputing the esi src with https... when it does this varnish thinks it is a relative link
+            set req.url = regsub(req.url, "^[/]?.*/https://.*?/", "/");
+        }
+
+        if (!req.url ~ "^(/app_dev.php)?/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
             error 404 "Incorrect ESI path.";
         }
 
