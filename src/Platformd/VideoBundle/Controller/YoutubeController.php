@@ -334,7 +334,8 @@ class YoutubeController extends Controller
 
     private function formatVideoUrl($video)
     {
-        $url = sprintf('http://%s%s', $video->getSite()->getFullDomain(), $this->generateUrl('youtube_view', array('slug' => $video->getSlug())));
+        $site = $this->getCurrentSite()
+        $url = sprintf('http://%s%s', $site->getFullDomain(), $this->generateUrl('youtube_view', array('slug' => $video->getSlug())));
 
         return $url;
     }
