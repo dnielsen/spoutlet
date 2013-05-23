@@ -911,7 +911,7 @@ class SpoutletExtension extends Twig_Extension
         return $this->translator->trans($transKey, $variables, $domain, $locale);
     }
 
-    public function getLoginUrl($returnUrl) {
+    public function getLoginUrl($returnUrl = null) {
 
         $prefix     = $this->localAuth ? $this->router->generate('fos_user_security_login') : 'http://alienwarearena.com/account/login';
         $return     = $returnUrl ? '?return='.urlencode($returnUrl) : '';

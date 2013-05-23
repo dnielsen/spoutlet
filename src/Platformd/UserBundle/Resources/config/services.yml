@@ -62,7 +62,7 @@ services:
             - '@router'
             - '@templating'
             - '%platformd_user.mailer.parameters%'
-            - '@platformd.model.site_util'
+            - '@platformd.util.site_util'
 
     platformd_user.awa_video_login_redirect_listener:
         class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener

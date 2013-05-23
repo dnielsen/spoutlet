@@ -61,7 +61,7 @@ services:
         class: Platformd\SpoutletBundle\EventListener\PageNotFoundExceptionListener
         arguments:
             - "@router"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 

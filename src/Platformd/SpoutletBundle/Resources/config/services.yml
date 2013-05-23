@@ -309,7 +309,7 @@ services:
         class: Platformd\SpoutletBundle\Takeover\SiteTakeoverManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         scope: request
 
     platformd.repository.site:
@@ -328,5 +328,5 @@ services:
         class: Platformd\SpoutletBundle\Model\Translator
         arguments:
             - '@translator'
-            - '@platformd.model.site_util'
+            - '@platformd.util.site_util'
             - '@session'
