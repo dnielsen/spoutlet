@@ -54,8 +54,8 @@
             </div>
             <div class="widget-content">
                 <div class="video-author">
-                    <a class="author-avatar" href="{{ cevo_account_link(video.author.username) }}"><img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" /></a>
-                    <a class="author-name" href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a>
+                    <a class="author-avatar" href="{{ account_link(video.author.username) }}"><img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" /></a>
+                    <a class="author-name" href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a>
                     <div class="video-date">{{ video.createdAt | date('date_format' | trans) }}</div>
                     <div class="video-views">{{ video.views }} {{ 'youtube.views' | trans }}</div>
                 </div>
@@ -94,7 +94,7 @@
                 {% if showFeaturedInstead %}
                 <h3>{{ 'youtube.featured_videos' | trans }}</h3>
                 {% else %}
-                <h3>{{ 'youtube.more_videos_by' | trans }} <a href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a></h3>
+                <h3>{{ 'youtube.more_videos_by' | trans }} <a href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a></h3>
                 {% endif %}
                 {% for video in videos %}
                     <div class="video-thumb-wrapper {% if loop.index > 1 %}more{% endif %}">
