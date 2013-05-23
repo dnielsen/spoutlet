@@ -237,7 +237,7 @@ platformd:
             account_home: Inicio de Cuenta
             edit_account: Edit Account
             change_password: Contraseña
-            profile:      Perfíl
+            profile: Perfíl
             registered_events: Mis Eventos
             my_giveaways: Regalo
             my_videos: Videos
@@ -258,6 +258,9 @@ platformd:
             gallery: Imágen
             images: Imágen
             videos: Vídeos
+
+        register:
+            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
     event:
         form:
@@ -446,10 +449,6 @@ platformd:
                     Si crees que esto sea un error, por favor póngase en contacto con el organizador del evento.
 
                     Equipo Alienware Arena
-
-    user:
-        register:
-            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
 age_confirm:
     headline: Por favor, confirme su fecha de nacimiento.
