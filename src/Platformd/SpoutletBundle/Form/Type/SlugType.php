@@ -17,10 +17,12 @@ class SlugType extends TextType
     {
         $options['required'] = false;
 
+        $label = isset($options['label_override']) ? $options['label_override'] : 'URL string';
+
         if (isset($options['url_prefix'])) {
-            $options['label']    = 'URL string - '.$options['url_prefix'];
+            $options['label']    = $label.' - '.$options['url_prefix'];
         } else {
-            $options['label']    = 'URL string';
+            $options['label']    = $label;
         }
 
         return $options;

@@ -1,19 +1,19 @@
-<div id="event-rsvp-dialog" class="rsvp-wrapper" style="display: none; padding-top: 25px; height: 100px" title="{{ 'platformd.events.event_listings.rsvp.dialog_title' | trans }}">
+<div id="event-rsvp-dialog" class="rsvp-wrapper" style="display: none; padding-top: 25px; height: 100px" title="{{ 'platformd.events.event_listings.rsvp.dialog_title' | pd_trans }}">
     <div class="rsvp-dialog-content">
         <input type="hidden" id="event-id" />
         <input type="hidden" id="event-type" />
         <input type="hidden" id="event-rsvp-route" />
         <div style="margin-left:120px;">
             <div class="rsvp-selection-wrapper" style="margin-top:0;">
-                <input class="rsvp-option" type="radio" name="rsvp" value="1" checked> {{ 'platformd.events.event_listings.rsvp.attending' | trans }} <br />
-                <input class="rsvp-option" type="radio" name="rsvp" value="0"> {{ 'platformd.events.event_listings.rsvp.not_attending' | trans }} <br />
+                <input class="rsvp-option" type="radio" name="rsvp" value="1" checked> {{ 'platformd.events.event_listings.rsvp.attending' | pd_trans }} <br />
+                <input class="rsvp-option" type="radio" name="rsvp" value="0"> {{ 'platformd.events.event_listings.rsvp.not_attending' | pd_trans }} <br />
             </div>
         </div>
         <div style="text-align:center;">
             <div id="rsvp-response" style="display:none;"></div>
             <div class="rsvp-buttons" style="margin-top:20px;">
-                <button id="submit-rsvp" class="rsvp-button" style="margin-right:5px;">{{ 'submit' | trans }}</button>
-                <button id="close-dialog-rsvp" class="rsvp-button" style="margin-left:5px;">{{ 'cancel' | trans }}</button>
+                <button id="submit-rsvp" class="rsvp-button" style="margin-right:5px;">{{ 'submit' | pd_trans }}</button>
+                <button id="close-dialog-rsvp" class="rsvp-button" style="margin-left:5px;">{{ 'cancel' | pd_trans }}</button>
             </div>
         </div>
     </div>

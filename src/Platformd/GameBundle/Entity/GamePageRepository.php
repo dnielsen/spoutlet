@@ -5,6 +5,7 @@ namespace Platformd\GameBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GameBundle\Entity\GamePage;
+use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * GamePageRepository
@@ -149,8 +150,8 @@ class GamePageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('gp')
             ->leftJoin('gp.sites', 's');
 
-        if (is_string($site)) {
-            $qb->andWhere('s.name = :site')
+        if (!$site instanceof Site) {
+            $qb->andWhere('s.id = :site')
                 ->setParameter('site', $site);
 
             return $qb;

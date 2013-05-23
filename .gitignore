@@ -5,6 +5,7 @@
 /app/bootstrap*
 /app/cache/*
 /app/logs/*
+/app/config/config_*_local.yml
 /vendor/
 /app/config/parameters.ini
 /web/uploads/*
@@ -23,3 +24,6 @@ VERSION
 /misc_scripts/youtube_upload/config.php
 /misc_scripts/youtube_upload/processedVideos.csv
 /misc_scripts/youtube_upload/logfile
+/app/Resources/views/
+/app/Resources/translations/theme_*
+/app/config/config_server.yml

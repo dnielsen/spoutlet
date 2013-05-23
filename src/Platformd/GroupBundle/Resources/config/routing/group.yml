@@ -138,13 +138,9 @@ group_delete:
     pattern:  /{id}/delete/
     defaults: { _controller: "GroupBundle:Group:delete", site: ~ }
 
-group_show:
+group_show_prefixed:
     pattern:  /{slug}/
-    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
-
-group_slug_show:
-    pattern:  /{slug}/
-    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
+    defaults: { _controller: "GroupBundle:Group:showPrefixed", site: ~ }
 
 group_update:
     pattern:  /{id}/update/

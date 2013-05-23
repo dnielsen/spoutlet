@@ -4,9 +4,6 @@ _user_bundle_controller_import:
 PlatformDUserBundle:
     resource: "@UserBundle/Resources/config/routing/admin.yml"
     prefix:   /admin/users
-PlatformDUserBundle_registration:
-    resource: "@UserBundle/Resources/config/routing/registration.yml"
-    prefix:   /
 
 _user_bundle_api:
     resource: "@UserBundle/Resources/config/routing/api.yml"

@@ -1,0 +1,30 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Site Takeovers</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Sites</th>
+            <th>Starts At</th>
+            <th>Ends At</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for takeover in takeovers %}
+        <tr>
+            <td><a href="{{ path('admin_takeover_edit', { 'id': takeover.id }) }}">{{ takeover.title }}</a></td>
+            <td>{{ takeover.siteList }}</td>
+            <td> {{ takeover.startsAt | date('M j, Y - H:i') }}</td>
+            <td> {{ takeover.endsAt | date('M j, Y - H:i') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_takeover_new') }}">
+    Create a new site takeover
+</a>
+{% endblock %}

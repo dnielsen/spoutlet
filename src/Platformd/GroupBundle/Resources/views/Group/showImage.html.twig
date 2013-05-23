@@ -23,7 +23,7 @@
         </div>
         <div class="right">
             <div class="submit-media" style="display: inline; margin-left: 5px;float:right;margin-top: -20px;">
-                <a href="{{ path('gallery_submit') }}" class="btn btn-primary" id="gallery-show-submit-media">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+                <a href="{{ path('gallery_submit') }}" class="btn btn-primary" id="gallery-show-submit-media">{{ 'galleries.submit_photo_page_title' | pd_trans }}</a>
             </div>
 
         </div>
@@ -68,13 +68,17 @@
             <div class="widget-33" style="height:auto; margin-bottom: 10px;">
                 <div class="widget-header">
                     <div class="widget-title">
-                        {{ 'galleries.show_photo_details_label' | trans }}
+                        {{ 'galleries.show_photo_details_label' | pd_trans }}
                     </div>
                 </div>
                 <div class="widget-content">
                     <div class="photo-author">
-                        <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
-                        <div class="photo-author-link"><a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                        {% if get_avatar_url(media.author) != false %}
+                            <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
+                        {% else %}
+                            <div class="default-avatar"></div>
+                        {% endif %}
+                        <div class="photo-author-link"><a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                     </div>
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
@@ -129,7 +133,7 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/jquery.ad-gallery/jquery.ad-gallery.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

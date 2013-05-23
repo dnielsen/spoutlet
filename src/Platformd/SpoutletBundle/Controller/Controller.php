@@ -272,11 +272,7 @@ class Controller extends BaseController
      */
     protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
     {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-
-        return $this->container->get('translator')->trans($key, $params, $domain, $locale);
+        return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 
     /**
@@ -331,5 +327,20 @@ class Controller extends BaseController
     protected function getClientIp(Request $request)
     {
         return $this->getIpLookupUtil()->getClientIp($request);
+    }
+
+    protected function getGlobalEventService()
+    {
+        return $this->get('platformd_event.service.global_event');
+    }
+
+    protected function getGroupEventService()
+    {
+        return $this->get('platformd_event.service.group_event');
+    }
+
+    protected function getSiteManager()
+    {
+        return $this->get('platformd.model.site_manager');
     }
 }

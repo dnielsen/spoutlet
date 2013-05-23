@@ -12,7 +12,6 @@ use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;

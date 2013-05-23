@@ -5,11 +5,11 @@
 {% block content %}
 <h1>Find Groups</h1>
 <div style="width: 750px;">
-    <form action="{{ path('admin_group_filter') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('admin_group_find') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {% include 'GroupBundle:GroupAdmin:_findForm.html.twig' %}
         <div style="margin-left: 160px">
             <button type="submit" class="btn btn-primary" formnovalidate>Search</button>
-            <a href="{{ path('admin_group_filter_reset') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+            <a href="{{ path('admin_group_find') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
 

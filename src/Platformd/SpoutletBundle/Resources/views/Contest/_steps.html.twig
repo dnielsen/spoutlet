@@ -3,7 +3,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login' | trans }}
         {% else %}
-            <a href="{{ path('fos_user_security_login') }}?return={{ url('contest_show', {'slug': contest.slug}) | e }}">
+            <a href="{{ login_link(url('contest_show', {'slug': contest.slug})) }}">
                 {{ 'platformd.create_account_or_login' | trans }}
             </a>
         {% endif %}

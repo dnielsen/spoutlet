@@ -89,29 +89,46 @@ class AbstractFeatureContext extends MinkContext
             ->execute();
 
         $this->dbConnection
-            ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `supportEmailAddress`, `theme`) VALUES
-            ('Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'default'),
-            ('Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local', 'default'),
-            ('China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local', 'default'),
-            ('North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local', 'default'),
-            ('Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local', 'default'),
-            ('Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local', 'default'),
-            ('India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local', 'default'),
-            ('Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local', 'default'),
-            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local', 'default')")
+            ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `theme`) VALUES
+            ('Demo', 'en', 'demo.alienwarearena.local', 'default'),
+            ('Japan', 'ja', 'japan.alienwarearena.local', 'default'),
+            ('China', 'zh', 'china.alienwarearena.local', 'default'),
+            ('North America', 'en_US', 'na.alienwarearena.local', 'default'),
+            ('Europe', 'en_GB', 'eu.alienwarearena.local', 'default'),
+            ('Latin America', 'es', 'latam.alienwarearena.local', 'default'),
+            ('India', 'en_IN', 'in.alienwarearena.local', 'default'),
+            ('Singapore', 'en_SG', 'mysg.alienwarearena.local', 'default'),
+            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'default')")
             ->execute();
 
         $this->dbConnection
-            ->prepare("INSERT INTO `pd_site_features` (`id`,`site_id`,`has_video`,`has_steam_xfire_communities`,`has_sweepstakes`,`has_forums`,`has_arp`,`has_news`,`has_deals`,`has_games`,`has_games_nav_drop_down`,`has_messages`,`has_groups`,`has_wallpapers`,`has_microsoft`,`has_photos`,`has_contests`,`has_comments`, `has_giveaways`, `has_events`) VALUES
-            (1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1),
-            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1),
-            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0),
-            (4,4,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1),
-            (5,5,1,1,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1),
-            (6,6,1,1,0,1,1,0,0,1,1,1,0,1,1,1,1,1,0,1),
-            (7,7,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,1),
-            (8,8,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,1),
-            (9,9,1,1,0,1,1,0,0,1,1,1,0,1,1,0,0,0,0,1)")
+            ->prepare("INSERT INTO `pd_site_features` (`id`, `site_id`, `has_video`, `has_steam_xfire_communities`, `has_sweepstakes`,
+                `has_forums`, `has_arp`, `has_news`, `has_deals`, `has_games`, `has_games_nav_drop_down`, `has_messages`, `has_groups`,
+                `has_wallpapers`, `has_microsoft`, `has_photos`, `has_contests`, `has_comments`, `has_giveaways`, `has_events`, `has_html_widgets`,
+                `has_facebook`, `has_google_analytics`, `has_tournaments`, `has_match_client`, `has_profile`, `has_forward_on_404`, `has_index`,
+                `has_about`, `has_contact`) VALUES
+            (1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1),
+            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,1),
+            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,1,0,1,1,1),
+            (4,4,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (5,5,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (6,6,1,1,0,1,1,0,0,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (7,7,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
+            (8,8,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
+            (9,9,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0)")
+            ->execute();
+
+        $this->dbConnection
+            ->prepare('INSERT INTO `pd_site_config` (`id`, `site_id`, `supportEmailAddress`, `automatedEmailAddress`, `emailFromName`, `birthdateRequired`, `forward_base_url`, `forwarded_paths`) VALUES
+            (1,1,"demo@alienwarearena.local","demo@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
+            (2,2,"japan@alienwarearena.local","japan@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
+            (3,3,"china@alienwarearena.local","china@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
+            (4,4,"na@alienwarearena.local","na@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (5,5,"eu@alienwarearena.local","eu@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (6,6,"latam@alienwarearena.local","latam@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (7,7,"in@alienwarearena.local","in@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (8,8,"mysg@alienwarearena.local","mysg@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (9,9,"anz@alienwarearena.local","anz@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\')')
             ->execute();
 
         $this->dbConnection

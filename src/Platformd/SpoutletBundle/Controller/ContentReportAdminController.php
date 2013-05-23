@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Form\Type\ReportedContentType;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class ContentReportAdminController extends Controller
 {
@@ -19,7 +18,7 @@ class ContentReportAdminController extends Controller
         }
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = '2';
+            $site = 2;
         }
 
         $this->addReportedContentsBreadcrumb();
@@ -481,8 +480,6 @@ class ContentReportAdminController extends Controller
                 break;
         }
 
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
@@ -490,12 +487,12 @@ class ContentReportAdminController extends Controller
         if (!$removed) {
             $subject    = $this->trans('content_reporting.restored_email_title', array(), 'messages', $emailLocale);
             $message    = nl2br(sprintf($this->trans('content_reporting.restored_email', array(), 'messages', $emailLocale), $itemType, $name));
-            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Restored User Notification", $this->getCurrentSite()->getDefaultLocale());
         } else {
             $reason     = $report ? $this->trans('content_reporting.'.$report->getReason(), array(), 'messages', $emailLocale) : $this->trans('content_reporting.report_type_unknown', array(), 'messages', $emailLocale);
             $subject    = $this->trans('content_reporting.removed_email_title', array(), 'messages', $emailLocale);
             $message    = nl2br(sprintf($this->trans('content_reporting.removed_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
-            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Removed User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+            $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Reported Item Removed User Notification", $this->getCurrentSite()->getDefaultLocale());
         }
     }
 

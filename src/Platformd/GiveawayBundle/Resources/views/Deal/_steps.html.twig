@@ -4,7 +4,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login' | trans }}
         {% else %}
-            <a href="{{ path('fos_user_security_login') }}?return={{ url('deal_show', {'slug': slug}) | e }}">
+            <a href="{{ login_link(url('deal_show', {'slug': slug})) }}">
                 {{ 'platformd.create_account_or_login' | trans }}
             </a>
         {% endif %}

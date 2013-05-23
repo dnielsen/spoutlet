@@ -123,12 +123,4 @@ class GamePageController extends Controller
     {
         return $this->get('platformd.model.game_page_manager');
     }
-
-    /**
-     * @return GlobalEventService
-     */
-    private function getGlobalEventService()
-    {
-        return $this->get('platformd_event.service.global_event');
-    }
 }

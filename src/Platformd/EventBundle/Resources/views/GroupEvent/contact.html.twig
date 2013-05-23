@@ -14,18 +14,18 @@
             {% if event.bannerImage %}
                 <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%;"></div>
             {% else %}
-                <div id="event-banner" style="background:url('{{ asset('bundles/event/images/events_default_banner.jpg') }}') top left no-repeat; background-size: cover;"></div>
+                <div id="event-default-banner"></div>
             {% endif %}
         </div>
 
         <div class="std_1col" style="padding: 0;">
-            <div class="events-sub-nav-wrapper">
-               <div class="events-sub-nav">
+            <div class="sub-nav-wrapper events-sub-nav-wrapper">
+               <div class="sub-nav events-sub-nav">
                     <ul>
                         {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
-                            <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | trans }}</a></li>
+                            <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | pd_trans }}</a></li>
                             {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                                <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</a></li>
+                                <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a></li>
                             {% endif %}
                         {% endif %}
                         <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
@@ -39,16 +39,16 @@
                 <div class="widget-66">
                     <div class="widget-header" style="padding-bottom:10px;">
                         <div class="widget-title">
-                            <div id="event-contact-title">{{ 'platformd.events.event_contact.title' | trans }}</div>
+                            <div id="event-contact-title">{{ 'platformd.events.event_contact.title' | pd_trans }}</div>
                         </div>
                     </div>
                     <div class="widget-content">
                         <form id="event-contact-form" action="{{ path('group_event_contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
                             {{ form_widget(form) }}
                             <div class="form-actions" style="padding-left: 100px;">
-                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>{{ 'platformd.events.event_contact.preview' | trans }}</button>
-                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'platformd.events.event_contact.send' | trans }}</button>
-                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">{{ 'platformd.events.event_contact.cancel' | trans }}</button>
+                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>{{ 'platformd.events.event_contact.preview' | pd_trans }}</button>
+                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'platformd.events.event_contact.send' | pd_trans }}</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ path('groups') }}" style="margin-left: 10px;">{{ 'platformd.events.event_contact.cancel' | pd_trans }}</button>
                             </div>
                         </form>
                     </div>
@@ -60,7 +60,7 @@
 
                 <div class="widget-33" id="event-details-widget" style="height: auto;">
                     <div class="widget-header">
-                        <div class="widget-title">{{ event.attendeeCount }} {{ 'platformd.events.event_contact.attending' | trans }}</div>
+                        <div class="widget-title">{{ event.attendeeCount }} {{ 'platformd.events.event_contact.attending' | pd_trans }}</div>
                     </div>
                     <div class="widget-content">
 
@@ -68,7 +68,11 @@
                             <hr class="faded" />
                             <div class="event-attendee">
                                 <div class="event-hover-div"></div>
-                                <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
+                                {% if get_avatar_url(event.user) != false %}
+                                    <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
+                                {% else %}
+                                    <div class="default-avatar"></div>
+                                {% endif %}
                                 <a href="javascript:void(0);"><span class="username">{{ event.user.username }}</span></a>
                                 <span id="event-host-tag">Event Host</span>
                             </div>
@@ -77,7 +81,11 @@
                                     <hr class="faded" />
                                     <div class="event-attendee">
                                         <div class="event-hover-div"></div>
-                                        <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                        {% if get_avatar_url(attendee) != false %}
+                                            <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                        {% else %}
+                                            <div class="default-avatar"></div>
+                                        {% endif %}
                                         <a href="javascript:void(0);"><span class="username">{{ attendee.username }}</span></a>
                                     </div>
                                 {% endif %}
@@ -146,8 +154,6 @@
 {% endblock %}
 
 {% block stylesheets %}
-
-        {{ parent() }}
-         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
-
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
 {% endblock %}

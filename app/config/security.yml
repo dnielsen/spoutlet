@@ -35,6 +35,7 @@ security:
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
+        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
         # protects games and game pages
         - { path: ^/([\w]+\/)?admin/game, role: ROLE_ADMIN_GAME }

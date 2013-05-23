@@ -18,9 +18,9 @@ class UserRepository extends EntityRepository
 
 	/**
 	 * get users that signed for a specificed giveaway key
-	 * 
+	 *
 	 * @param $giveaway_pool = giveaway_key.pool
-	 * @param $site = 'en' 
+	 * @param $site = 'en'
 	 */
 	public function findAssignedToUser($giveaway_pool, $site)
 	{
@@ -35,11 +35,21 @@ class UserRepository extends EntityRepository
     	))
     	->getQuery()
     	->getResult();
-      
+
       return  $qb ;
 	}
-	
-	
+
+    public function findUserListByEmail($users)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.emailCanonical IN (:users)')
+            ->setParameter('users', $users)
+            ->getQuery()
+            ->execute();
+        ;
+    }
+
+
 	public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)
@@ -50,9 +60,53 @@ class UserRepository extends EntityRepository
         ;
     }
 
+    public function getTotalUsersForCountry($country)
+    {
+        return $this->createCountryQueryBuilder($country)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getTotalUsersForCountries($countries)
+    {
+        return $this->createCountriesQueryBuilder($countries)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
     public function getArenaOptInForSite($site)
     {
         $qb = $this->createSiteQueryBuilder($site);
+
+        return $this->addArenaOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getArenaOptInForCountry($country)
+    {
+        $qb = $this->createCountryQueryBuilder($country);
+
+        return $this->addArenaOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getArenaOptInForCountries($countries)
+    {
+        $qb = $this->createCountriesQueryBuilder($countries);
 
         return $this->addArenaOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -74,6 +128,30 @@ class UserRepository extends EntityRepository
         ;
     }
 
+    public function getDellOptInForCountry($country)
+    {
+        $qb = $this->createCountryQueryBuilder($country);
+
+        return $this->addDellOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getDellOptInForCountries($countries)
+    {
+        $qb = $this->createCountriesQueryBuilder($countries);
+
+        return $this->addDellOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
     /**
      * Returns the number of new users since the given DateTime
      *
@@ -83,7 +161,7 @@ class UserRepository extends EntityRepository
     public function countNewRegistrants(DateTime $since = null, $site)
     {
         $qb = $this->createSiteQueryBuilder($site);
-     
+
         return $this->addSinceQuery($qb, $since)
             ->select('COUNT(u.id)')
             ->getQuery()
@@ -91,7 +169,31 @@ class UserRepository extends EntityRepository
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
         ;
     }
-    
+
+    public function countNewRegistrantsForCountry($country, $from, $to)
+    {
+        $qb = $this->createCountryQueryBuilder($country);
+
+        return $this->addBetweenQuery($qb, $from, $to)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function countNewRegistrantsForCountries($countries, $from, $to)
+    {
+        $qb = $this->createCountriesQueryBuilder($countries);
+
+        return $this->addBetweenQuery($qb, $from, $to)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
     /**
     * @param \Doctrine\ORM\QueryBuilder $qb
     * @param $since
@@ -103,7 +205,20 @@ class UserRepository extends EntityRepository
             $qb->andWhere('u.created >= :since')
             ->setParameter('since', $since);
         }
-        return $qb;  
+        return $qb;
+    }
+
+    private function addBetweenQuery(QueryBuilder $qb, $from, $to)
+    {
+        if ($from != null) {
+            $qb->andWhere('u.created >= :from')
+            ->setParameter('from', $from);
+        }
+        if ($to != null) {
+            $qb->andWhere('u.created <= :to')
+            ->setParameter('to', $to);
+        }
+        return $qb;
     }
 
     /**
@@ -116,6 +231,21 @@ class UserRepository extends EntityRepository
             ->andWhere('u.locale = :locale')
             ->setParameter('locale', $site)
         ;
+    }
+
+    private function createCountryQueryBuilder($country)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.country = :country')
+            ->setParameter('country', $country)
+        ;
+    }
+
+    private function createCountriesQueryBuilder($countries)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->add('where', $qb->expr()->in('u.country', $countries));
+        return $qb;
     }
 
     /**

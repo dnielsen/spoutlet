@@ -7,21 +7,21 @@
 <div id="discussion-content-scroll" style="height: 550px;">
     {% if results | length > 0 %}
         {% if canAdd %}
-            <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+            {{ 'platformd.groups.discussions.submit' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}
         {% else %}
-            <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now. Want to add a topic? Become a member of our group.
+            {{ 'platformd.groups.discussions.non_member_add' | pd_trans }}
         {% endif %}
     {% else %}
         {% if canAdd %}
-            No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+            {{ 'platformd.groups.discussions.member_no_discussions' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}
         {% else %}
-            No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now. Want to add a topic? Become a member of our group.
+            {{ 'platformd.groups.discussions.non_member_no_discussions' | pd_trans }}
         {% endif %}
     {% endif %}
 
     {% if results | length > 0 %}
 
-        <div id="boardList" {% if canAdd %}style="height:518px;"{% else %}style="height:534px;"{% endif %}>
+        <div id="boardList" class="{% if canAdd %} can-add{% else %} cant-add{% endif %}">
             <table>
                 <tbody>
                 {% for discussion in results %}
@@ -31,8 +31,8 @@
                                 <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
                             </h3>
                         </td>
-                        <td class="replies png">{{ discussion.replyCount }} <br />Replies</td>
-                        <td class="views png">{{ discussion.viewCount }} <br />Views</td>
+                        <td class="replies png">{{ discussion.replyCount }} <br />{{ 'platformd.groups.discussions.replies' | pd_trans }}</td>
+                        <td class="views png">{{ discussion.viewCount }} <br />{{ 'platformd.groups.discussions.views' | pd_trans }}</td>
                         <td class="last">
                             <span class="last-update" title="{{ discussion.updatedAt | date ~ 'Z'}}"></span>
                             - <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id}) ~ '#comment_' ~ discussion.lastPostId }}">{{ discussion.lastUpdatedBy.username }}</a>
@@ -50,7 +50,8 @@
             {{ pagerfanta(pager, 'spoutlet', {
                 'previous_message': '',
                 'next_message': '',
-                'routeName': 'group_discussions'
+                'routeName': 'group_discussions',
+                'routeParams': { 'id': group.id }
             }) }}
         </div>
 

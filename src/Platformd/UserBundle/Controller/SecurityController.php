@@ -15,12 +15,12 @@ class SecurityController extends BaseController
 {
     public function loginAction()
     {
-        $this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+        //$this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
 
         /*
          * The real functionality of this method has been removed - login is at CEVO
          */
-        return $this->redirectToCevoLogin();
+        //return $this->redirectToCevoLogin();
 
         return parent::loginAction();
     }

@@ -1,20 +1,20 @@
 <div id="report-content-dialog-GroupDiscussionPost" style="display: none;" title="Report Discussion Post">
     {% if app.user is null %}
         <div style="height: 120px;">
-            {{ 'content_reporting.must_be_logged_in' | trans }}
+            {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
-        <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+        <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     {% elseif can_user_report() == false %}
         <div style="height: 120px;">
-            {{ 'content_reporting.once_per_hour' | trans }}
+            {{ 'content_reporting.once_per_hour' | pd_trans }}
         </div>
-        <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+        <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     {% else %}
         <input type="hidden" id="report-id-GroupDiscussionPost" />
         <input type="hidden" id="content-type-GroupDiscussionPost" value="GroupDiscussionPost" />
         <div style="height: 120px;">
             <div id="report-post-response" style="display:none;">
-            {{ 'content_reporting.report_success' | trans }}
+            {{ 'content_reporting.report_success' | pd_trans }}
             </div>
             <div id="report-post-options">
                 <input class="report-post-option" type="radio" name="post-reason" value="inappropriate_content"> Inappropriate content <br />
@@ -23,8 +23,8 @@
                 <input class="report-post-option" type="radio" name="post-reason" value="individual_harrassing_me"> Harassment
             </div>
         </div>
-        <button id="submit-report-GroupDiscussionPost">Submit</button>
-        <button id="close-dialog-GroupDiscussionPost" style="float: right;">Cancel</button>
+        <button class="btn btn-primary" id="submit-report-GroupDiscussionPost">Submit</button>
+        <button class="btn btn-primary" id="close-dialog-GroupDiscussionPost" style="float: right;">Cancel</button>
     {% endif %}
 </div>
 <script type="text/javascript">

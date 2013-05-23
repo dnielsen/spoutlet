@@ -2,13 +2,13 @@
 
 namespace Platformd\EventBundle\EventListener;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator,
-    Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 use Platformd\EventBundle\Event\EventEvent,
     Platformd\EventBundle\Entity\GroupEvent,
     Platformd\SpoutletBundle\Model\EmailManager,
-    Platformd\SpoutletBundle\Util\SiteUtil
+    Platformd\SpoutletBundle\Util\SiteUtil,
+    Platformd\SpoutletBundle\Model\Translator
 ;
 
 class GroupEventListener

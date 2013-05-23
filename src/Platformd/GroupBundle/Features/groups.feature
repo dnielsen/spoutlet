@@ -33,7 +33,7 @@ Feature: Groups Frontend
     Scenario: View group page
         Given I am on "/groups/"
         When I click "Group 1"
-        Then I should be on "/groups/group-1/"
+        Then I should be on "/group-1/"
             And I should see "Group 1"
 
     Scenario: Edit a group
@@ -83,7 +83,7 @@ Feature: Groups Frontend
         Then I should see "You have successfully rejected"
 
     Scenario: Add group news
-        Given I am on "/groups/group-1/"
+        Given I am on "/group-1/"
             And I add "news" for group "Group 1"
         When I fill in the following:
             | Title   | News Title       |
@@ -110,7 +110,7 @@ Feature: Groups Frontend
     #        And I should see "120x60.gif" on "/groups/1/images/"
 
     Scenario: Add group video
-        Given I am on "/groups/group-1"
+        Given I am on "/group-1"
         And I add "video" for group "Group 1"
         When I fill in the following:
             | Video Name   | Test Video       |
@@ -120,7 +120,7 @@ Feature: Groups Frontend
             And I should see "Test Video" on the "videos" page of "Group 1"
 
     Scenario: Add group discussion topic
-        Given I am on "/groups/group-1"
+        Given I am on "/group-1"
         And I add "discussion" for group "Group 1"
         When I fill in the following:
             | Discussion Name   | Test Discussion           |
@@ -130,7 +130,7 @@ Feature: Groups Frontend
             And I should see "Test Discussion" on the "discussions" page of "Group 1"
 
     Scenario: Add reply to group discussion
-        Given I am on "/groups/group-1"
+        Given I am on "/group-1"
         And I add "discussion" for group "Group 1"
         When I fill in the following:
             | Discussion Name   | Test Discussion           |
@@ -147,7 +147,7 @@ Feature: Groups Frontend
             | username   |
             | NotMe      |
             | StillNotMe |
-        When I go to "/groups/group-1"
+        When I go to "/group-1"
         Then the "Members" count should be 3
 
     Scenario: Comment count
@@ -155,5 +155,5 @@ Feature: Groups Frontend
             | username   | comment        |
             | NotMe      | first comment  |
             | StillNotMe | second comment |
-        When I go to "/groups/group-1"
+        When I go to "/group-1"
         Then the "Comments" count should be 2

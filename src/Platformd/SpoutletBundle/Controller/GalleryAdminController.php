@@ -8,7 +8,6 @@ use Platformd\SpoutletBundle\Entity\GalleryCategory;
 use Platformd\SpoutletBundle\Entity\GalleryCategoryRepository;
 use Platformd\SpoutletBundle\Form\Type\GalleryType;
 use Platformd\SpoutletBundle\Form\Type\ImageFindType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -127,7 +126,7 @@ class GalleryAdminController extends Controller
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
 
-                return $galleryMediaRepo->findImagesForMetrics($data['title'], $data['deleted'], $data['published'], $data['sites'], $startDate, $endDate);
+                return $galleryMediaRepo->findImagesForMetrics($data['title'], $data['deleted'], $data['published'], $sites, $startDate, $endDate);
             }
         }
 

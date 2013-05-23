@@ -61,6 +61,16 @@ services:
         class: Platformd\SpoutletBundle\EventListener\PageNotFoundExceptionListener
         arguments:
             - "@router"
+            - "@platformd.model.site_util"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    platformd.takeover.site_takeover_listener:
+        class: Platformd\SpoutletBundle\Takeover\SiteTakeoverListener
+        arguments:
+            - "@router"
+            - "@platformd.takeover.site_takeover_manager"
+            - %base_host%
         scope: request
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }

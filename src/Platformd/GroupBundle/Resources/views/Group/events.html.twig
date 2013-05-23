@@ -5,15 +5,15 @@
 
     {% if canAdd %}
         {% if groupEvents | length > 0 %}
-            <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>Submit Event</a>
+            <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>{{ 'platformd.groups.events.submit' | pd_trans }}</a>
         {% else %}
-            No group events yet. <a href="{{ path('group_event_new', {'groupSlug' : group.slug}) }}">Submit Event</a>
+            {{ 'platformd.groups.events.member_no_events' | pd_trans({ '%url%': (path('group_event_new', {'groupSlug' : group.slug})) }) | raw }}
         {% endif %}
     {% else %}
         {% if groupEvents | length > 0 %}
-            Want to add an event? Become a member of our group.
+            {{ 'platformd.groups.events.non_member_add' | pd_trans }}
         {% else %}
-            No group events yet. Want to add an event? Become a member of our group.
+            {{ 'platformd.groups.events.non_member_no_events' | pd_trans }}
         {% endif %}
     {% endif %}
 
@@ -26,20 +26,20 @@
 
             <div class="group-event-details">
                 <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
-                <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
-                <div class="group-event-location"><strong>Where:</strong>
+                <div class="group-event-time"><strong>{{ 'platformd.groups.events.time' | pd_trans }}: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                <div class="group-event-location"><strong>{{ 'platformd.groups.events.where' | pd_trans }}:</strong>
                     {% if event.online %}
-                        Online
+                        {{ 'platformd.groups.events.online' | pd_trans }}
                     {% else %}
                         {{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
                     {% endif %}
                 </div>
                 <div class="group-event-actions">
                     {% if canManageEvents == true %}
-                        <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
-                        <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
+                        <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
+                        <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}" onclick="return confirm('{{ 'platformd.groups.events.delete_confirmation' | pd_trans }}');">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
                     {% endif %}
-                    <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
+                    <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> {{ 'platformd.groups.events.report' | pd_trans }}</a>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
 
     {% if pastEvents|length > 0 %}
 
-        <div><a id="show-past-events-link" href="javascript:void(0);">View Past Events</a></div>
+        <div><a id="show-past-events-link" href="javascript:void(0);">{{ 'platformd.groups.events.view_past_events' | pd_trans }}</a></div>
 
         <div id="group-past-events" style="display: none;">
 
@@ -60,29 +60,29 @@
 
                     <div class="group-event-details">
                         <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
-                        <div class="group-event-time"><strong>Time: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
-                        <div class="group-event-location"><strong>Where:</strong>
+                        <div class="group-event-time"><strong>{{ 'platformd.groups.events.time' | pd_trans }}: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                        <div class="group-event-location"><strong>{{ 'platformd.groups.events.where' | pd_trans }}:</strong>
                             {% if event.online %}
-                                Online
+                                {{ 'platformd.groups.events.online' | pd_trans }}
                             {% else %}
                                 {{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
                             {% endif %}
                         </div>
                         <div class="group-event-actions">
                             {% if canManageEvents == true %}
-                                <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Edit</a> |
-                                <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">Delete</a> |
+                                <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
+                                <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
                             {% endif %}
-                            <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> Report</a>
+                            <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> {{ 'platformd.groups.events.report' | pd_trans }}</a>
                         </div>
                     </div>
                 </div>
             {% else %}
-                <p>No past events!</p>
+                <p>{{ 'platformd.groups.events.no_past_events' | pd_trans }}</p>
             {% endfor %}
 
             {% if pastEvents|length > 3 %}
-                <a href="javascript:void(0);" id="show-more-past-events">Show More Past Events</a>
+                <a href="javascript:void(0);" id="show-more-past-events">{{ 'platformd.groups.events.show_more_past' | pd_trans }}</a>
             {% endif %}
         </div>
     {% endif %}

@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="std_1col" style="padding: 0;">
-        <div class="events-sub-nav-wrapper">
-           <div class="events-sub-nav">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+           <div class="sub-nav events-sub-nav">
                 <ul>
                     <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
                 </ul>
@@ -73,5 +73,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+    {% include 'EventBundle::_css_assets.html.twig' %}
 {% endblock %}

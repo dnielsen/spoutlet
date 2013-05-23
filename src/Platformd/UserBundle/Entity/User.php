@@ -12,12 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
+use  Platformd\UserBundle\Validator\User as ValidateUser;
+
 /**
  * Platformd\UserBundle\Entity\User
  *
  * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
+ * @ValidateUser()
  */
 class User extends BaseUser
 {
@@ -58,7 +61,6 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="birthdate_not_blank")
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
@@ -301,6 +303,16 @@ class User extends BaseUser
       * @ORM\OrderBy({"dateTime" = "DESC"})
       */
     private $loginRecords;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $ipAddress;
+
+    /**
+     * @Recaptcha\True
+     */
+    public $recaptcha;
 
     public function __construct()
     {
@@ -776,6 +788,17 @@ class User extends BaseUser
         $this->monitor = $monitor;
     }
 
+    public function getIpAddress()
+    {
+
+        return $this->ipAddress;
+    }
+
+    public function setIpAddress($ipAddress)
+    {
+        $this->ipAddress = $ipAddress;
+    }
+
     public function getIsOrganizer()
     {
         return $this->hasRole('ROLE_ORGANIZER');
@@ -1065,5 +1088,9 @@ class User extends BaseUser
     public function getLoginRecords()
     {
         return $this->loginRecords;
+    }
+
+    public function eraseCredentials()
+    {
     }
 }

@@ -83,7 +83,7 @@ class GroupEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
+    public function findUpcomingEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
@@ -122,7 +122,7 @@ class GroupEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
+    public function findPastEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
@@ -179,7 +179,7 @@ class GroupEventRepository extends EventRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('s.defaultLocale IN (:siteList)');
+            $qb->andWhere('s IN (:siteList)');
             $qb->setParameter('siteList', $sites);
 
         }

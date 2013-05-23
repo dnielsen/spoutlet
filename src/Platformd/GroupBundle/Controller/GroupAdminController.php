@@ -12,7 +12,6 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Entity\DiscussionFindWrapper;
 use Platformd\GroupBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Form\Type\DiscussionFindType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\SpoutletBundle\Metric\MetricManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +20,7 @@ use Symfony\Component\Form\Form;
 use DateTime;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Platformd\GroupBundle\Entity\GroupFindWrapper;
 
 /**
  * Group admin controller.
@@ -61,7 +61,26 @@ class GroupAdminController extends Controller
     {
         $this->addFindGroupsBreadcrumb();
 
+        $data = new GroupFindWrapper();
+        $form = $this->createForm(new GroupFindType(), $data);
+
+        if ('POST' == $request->getMethod()) {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->setFilterFormData(array(
+                    'groupName' => $data->getGroupName(),
+                    'category' => $data->getCategory(),
+                    'deleted' => $data->getDeleted(),
+                    'sites' => $data->getSites(),
+                    'startDate' => $data->getStartDate(),
+                    'endDate' => $data->getEndDate(),
+                ));
+            }
+        }
+
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+
         $filters = $this->getFilterFormData();
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
@@ -73,7 +92,6 @@ class GroupAdminController extends Controller
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
         $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
-        $form = $this->createForm(new GroupFindType(), $filters);
 
         $idArray = array();
 
@@ -319,7 +337,7 @@ class GroupAdminController extends Controller
         $pager = $this->getDoctrine()->getRepository('GroupBundle:GroupDiscussion')->findDiscussionStats(array(
             'discussionName' => $data->getDiscussionName(),
             'deleted' => $data->getDeleted(),
-            'sites' => $data->getSites(),
+            'sites' => $data->getSites() ? $data->getSites()->toArray() : null,
             'from' => $data->getFrom(),
             'thru' => $data->getThru(),
             'page' => $page

@@ -8,6 +8,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\SiteFeatures;
+use Platformd\SpoutletBundle\Entity\SiteConfig;
 
 /**
  * Platformd\SpoutletBundle\Entity\Site
@@ -52,16 +53,14 @@ class Site
     private $fullDomain;
 
     /**
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotNull
-     */
-    private $supportEmailAddress;
-
-    /**
      * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\SiteFeatures", mappedBy="site", cascade={"persist"}, fetch="EAGER")
      */
     private $siteFeatures;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\SiteConfig", mappedBy="site", cascade={"persist"}, fetch="EAGER")
+     */
+    private $siteConfig;
 
     /**
      * @ORM\Column(type="string")
@@ -72,6 +71,9 @@ class Site
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
         $this->siteFeatures->setSite($this);
+
+        $this->siteConfig = new SiteConfig();
+        $this->siteConfig->setSite($this);
     }
 
     public function __toString() {
@@ -118,16 +120,6 @@ class Site
         return $this->defaultLocale;
     }
 
-    public function setSupportEmailAddress($supportEmailAddress)
-    {
-        $this->supportEmailAddress = $supportEmailAddress;
-    }
-
-    public function getSupportEmailAddress()
-    {
-        return $this->supportEmailAddress;
-    }
-
     public function getFullDomain()
     {
         return $this->fullDomain;
@@ -152,6 +144,17 @@ class Site
     public function setSiteFeatures($value)
     {
         $this->siteFeatures = $value;
+        return $this;
+    }
+
+    public function getSiteConfig()
+    {
+        return $this->siteConfig;
+    }
+
+    public function setSiteConfig($value)
+    {
+        $this->siteConfig = $value;
         return $this;
     }
 

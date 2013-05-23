@@ -9,8 +9,7 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
     Platformd\EventBundle\Entity\EventFindWrapper,
     Platformd\EventBundle\Form\Type\EventFindType,
-    Platformd\SpoutletBundle\Util\CsvResponseFactory,
-    Platformd\SpoutletBundle\Tenant\MultitenancyManager
+    Platformd\SpoutletBundle\Util\CsvResponseFactory
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -23,27 +22,27 @@ class GlobalEventAdminController extends Controller
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_events_list', array('site' => 'ja'));
+            $url = $this->generateUrl('admin_events_list', array('site' => 2));
             return $this->redirect($url);
         }
 
         $this->addEventsBreadcrumb();
 
         return $this->render('EventBundle:GlobalEvent\Admin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
     public function listAction($site)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = 'ja';
+            $site = 2;
         }
 
         $this->addEventsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($site);
+        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->find($site);
 
         $events = $this->getGlobalEventService()->findAllForSite($site);
 
@@ -189,32 +188,28 @@ class GlobalEventAdminController extends Controller
 
     public function publishEventAction($id)
     {
-        $translator = $this->get('translator');
-
         if (!$event = $this->getGlobalEventService()->find($id)) {
 
-            throw $this->createNotFoundException($translator->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
+            throw $this->createNotFoundException($this->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
         }
 
         $this->getGlobalEventService()->publishEvent($event);
 
-        $this->setFlash('success', $translator->trans('platformd.events.admin.published', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $this->trans('platformd.events.admin.published', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
 
     public function unpublishEventAction($id)
     {
-        $translator = $this->get('translator');
-
         if (!$event = $this->getGlobalEventService()->find($id)) {
 
-            throw $this->createNotFoundException($translator->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
+            throw $this->createNotFoundException($this->trans('platformd.events.admin.unkown', array('%event_id%' => $id)));
         }
 
         $this->getGlobalEventService()->unpublishEvent($event);
 
-        $this->setFlash('success', $translator->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
+        $this->setFlash('success', $this->trans('platformd.events.admin.unpublished', array('%event_title%' => $event->getName())));
 
         return $this->redirect($this->generateUrl('admin_events_index'));
     }
@@ -258,7 +253,7 @@ class GlobalEventAdminController extends Controller
             $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
                 'eventName' => $data->getEventName(),
                 'published' => $data->getPublished(),
-                'sites' => $data->getSites(),
+                'sites' => $data->getSites()->toArray(),
                 'from' => $data->getFrom(),
                 'thru' => $data->getThru(),
                 'page' => $page
@@ -267,7 +262,7 @@ class GlobalEventAdminController extends Controller
             $pager = $this->getGroupEventService()->findGroupEventStats(array(
                 'eventName' => $data->getEventName(),
                 'published' => $data->getPublished(),
-                'sites' => $data->getSites(),
+                'sites' => $data->getSites()->toArray(),
                 'from' => $data->getFrom(),
                 'thru' => $data->getThru(),
                 'page' => $page
@@ -420,29 +415,13 @@ class GlobalEventAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_events_list',
                 'routeParameters' => array('site' => $site)
             ));
         }
 
         return $this->getBreadcrumbs();
-    }
-
-    /**
-     * @return GlobalEventService
-     */
-    private function getGlobalEventService()
-    {
-        return $this->get('platformd_event.service.global_event');
-    }
-
-    /**
-     * @return GroupEventService
-     */
-    private function getGroupEventService()
-    {
-        return $this->get('platformd_event.service.group_event');
     }
 
     /**

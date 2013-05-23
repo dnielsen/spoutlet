@@ -1,6 +1,6 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.account_page.account.welcome_to_control" | trans }}{% endblock %}
+{% block title %}{{ "platformd.account_page.account.welcome_to_control" | pd_trans }}{% endblock %}
 
 
 {% block content %}
@@ -10,16 +10,16 @@
     </div>
     <div class="left">
         <div class="pad">
-            <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | trans({
+            <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | pd_trans({
                 "%username%" : app.user.username
             }) }}</h2>
 
             <p>
-                {{ 'platformd.account_page.account.hello_user' | trans({
+                {{ 'platformd.account_page.account.hello_user' | pd_trans({
                     '%firstname%': (app.user.firstName|default(app.user.username)),
                     '%username%': app.user.username
                 }) }}
-                <a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a>
+                <a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a>
             </p>
 
             {# little temporary message for japan only #}
@@ -30,11 +30,11 @@
             </p>
             {% endif %}
 
-            <p>{{ "platformd.account_page.account.ready_to_game" | trans }}</p>
+            <p>{{ "platformd.account_page.account.ready_to_game" | pd_trans }}</p>
 
-            <p>{{ "platformd.account_page.account.warning" | trans }}</p>
+            <p>{{ "platformd.account_page.account.warning" | pd_trans }}</p>
 
-            <p>{{ "platformd.account_page.account.under_construction" | trans }}</p>
+            <p>{{ "platformd.account_page.account.under_construction" | pd_trans }}</p>
         </div>
     </div>
 
@@ -46,5 +46,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}

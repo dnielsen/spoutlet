@@ -4,12 +4,14 @@ namespace Platformd\SpoutletBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\ORM\Mapping as ORM;
+use Vich\GeographicalBundle\Annotation as Vich;
 
 /**
  * Platformd\SpoutletBundle\Entity\Location
  *
  * @ORM\Table(name="pd_locations")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\LocationRepository")
+ * @Vich\Geographical(on="update")
  */
 class Location
 {
@@ -51,6 +53,22 @@ class Location
      * @ORM\Column(name="metro_area", type="string", length=255, nullable=true)
      */
     private $metro_area;
+
+    /**
+     * This gets value from Google Location service
+     *
+     * @var float
+     * @ORM\Column(type="decimal", scale=7, nullable=true)
+     */
+    protected $latitude;
+
+    /**
+     * This gets value from Google Location service
+     *
+     * @var float
+     * @ORM\Column(type="decimal", scale=7, nullable=true)
+     */
+    protected $longitude;
 
     /**
      * Get id
@@ -165,6 +183,7 @@ class Location
     /**
      * Gets a formatted address string for the location eg 201 San Antonio Circle, Mountain View, CA
      *
+     * @Vich\GeographicalQuery
      */
     public function getFormattedLocation()
     {
@@ -189,5 +208,25 @@ class Location
         }
 
         return $location;
+    }
+
+    public function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
+
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 }

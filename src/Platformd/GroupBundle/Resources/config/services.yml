@@ -1,3 +1,6 @@
+imports:
+    - { resource: "validation.yml" }
+
 services:
     platformd.model.group_manager:
         class: Platformd\GroupBundle\Model\GroupManager

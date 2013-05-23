@@ -1,0 +1,7 @@
+takeover:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:SiteTakeover:takeover }
+
+takeover_specified:
+    pattern: /{id}
+    defaults: { _controller: SpoutletBundle:SiteTakeover:takeoverSpecified }

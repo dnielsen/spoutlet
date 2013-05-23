@@ -3,6 +3,21 @@ submit: Submit
 cancel: Cancel
 date_format: M j, Y
 
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Continue to Alienware Arena
+
 platformd:
 
     homepage:
@@ -185,6 +200,7 @@ platformd:
             not_allowed_register: You are not allowed to rsvp to this event!
             now_attending: You are now attending this event.
             group_joined: To attend this event, you must join %groupName%. You are now a member of this group.
+            group_home: Group Home
         event_contact:
             title: Contact Attendees By Email
             preview: Preview
@@ -205,6 +221,7 @@ platformd:
             remove: Remove
             no_attendees: There are no attendees!
             remove_confirmation: Are you sure you want to remove "%username%" from this event?
+            joined: Joined
         # used only in the admin area
         admin:
             title: Event admin
@@ -313,6 +330,7 @@ platformd:
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+            please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
 
         login:
             title: Login to your account
@@ -613,6 +631,93 @@ platformd:
 
                     Alienware Arena Team
 
+    groups:
+        index:
+            my_groups: My Groups
+            create_group: Create Group
+            recommended_groups: Recommended Alienware Arena Groups
+            featured_groups: Featured Groups
+            members: Members
+            organizer: Organizer
+            report_group: Report this Group
+            topic_groups: Topic Groups
+            previous: Previous
+            see_more: See More
+            location_groups: Location Groups
+            welcome_new: Welcome New Groups
+            no_groups_found: No groups found. Check back soon!
+            most_popular: Most Popular Groups
+            staff: Staff
+        show:
+            waiting_on_approval: Waiting on Approval
+            founded: Founded
+            organizer: Organizer
+            staff: Staff
+            members: Members
+            upcoming_events: Upcoming Events
+            past_events: Past Events
+            comments: Comments
+            group_type: Group
+            new_members: New Members Acquired
+            invite: Invite Friends
+            report_group: Report this Group
+            location: LOCATION
+            news: News
+            events: Events
+            images: Images
+            videos: Videos
+            discussions: Discussions
+            about: About
+            must_be_member_comments: You must be a member of a private group before you can see or post comments.
+            public: Public
+            private: Private
+        news:
+            add: Add News
+            delete: Delete
+            edit: Edit
+            report: Report
+            no_articles: No news articles yet... please come back later!
+        images:
+            submit_images: Submit image(s)
+            non_member_add: Want to add an image? Become a member of our group.
+            member_no_images: There are no images. <a href='%addImageUrl%'>Submit image(s)</a>
+            non_member_no_images: There are no images. Want to add an image? Become a member of our group.
+            delete: Delete
+            edit: Edit
+            report: Report
+            previous: Previous
+            see_more: See More
+        videos:
+            submit: Submit Video
+            non_member_add: Want to add an video? Become a member of our group.
+            member_no_videos: There are no videos. <a href='%url%'>Submit Video</a>
+            non_member_no_videos: There are no videos. Want to add an video? Become a member of our group.
+            delete: delete
+            edit: edit
+            report: report
+        discussions:
+            submit: <a href='%url%'>Submit your topic</a> now.
+            non_member_add: Want to add a topic? Become a member of our group.
+            member_no_discussions: No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+            non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
+            replies: Replies
+            views: Views
+        events:
+            submit: Submit Event
+            member_no_events: No group events yet. <a href="%url%">Submit Event</a>
+            non_member_add: Want to add an event? Become a member of our group.
+            non_member_no_events: No group events yet. Want to add an event? Become a member of our group.
+            time: Time
+            where: Where
+            online: Online
+            edit: Edit
+            delete: Delete
+            report: Report
+            view_past_events: View Past Events
+            no_past_events: No past events!
+            show_more_past: Show More Past Events
+            delete_confirmation: Are you sure you want to delete this event?
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"
@@ -622,7 +727,6 @@ platformd:
 source_alienware: Alienware
 
 avatar_awaiting_approval: "Your avatar was uploaded successfully, but must be approved before it will be displayed"
-
 
 platformd.sweepstakes.enter: How to Participate
 agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
@@ -1061,7 +1165,6 @@ contests:
     no_longer_available: This contest is no longer available.
     entry_success: Your group is entered into the contest.
     contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.
-
 
 platformd.create_account_or_login: Create or log in to an Alienware Arena account.
 platformd.giveaway.click_for_past_giveaways: Click <a href="%cevo_user_account_giveaway_page%">here</a> to view keys for past giveaways.

@@ -12,10 +12,12 @@
     </div>
 </form>
 {% endblock %}
+
 {% block stylesheets %}
- {{ parent() }}
- <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">

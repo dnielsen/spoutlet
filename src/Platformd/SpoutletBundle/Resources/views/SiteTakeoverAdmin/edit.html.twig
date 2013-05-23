@@ -1,0 +1,37 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block flash %}
+    {% if app.session.hasFlash('success') %}
+        <div class="alert alert-success">
+            <i class="icon-ok"></i>
+            {{ app.session.getflash('success') | raw }}
+        </div>
+    {% endif %}
+
+    {% if app.session.hasFlash('error') %}
+        <div class="alert alert-error">
+            <i class="icon-ok"></i>
+            {{ app.session.getflash('error') | raw }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    <i class="icon-pencil"></i>
+    Edit Site Takeover
+</h1>
+
+<form action="{{ path('admin_takeover_update', { 'id': takeover.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'SpoutletBundle:SiteTakeoverAdmin:_form.html.twig' %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+    </div>
+</form>
+
+<a href="{{ path('admin_takeover_index') }}">
+    Back to Site Takeover Index
+</a>
+{% endblock %}

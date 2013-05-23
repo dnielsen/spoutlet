@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Form\HomepageBannerType;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 /**
 * Admin controller for homepage banners
 */
@@ -14,27 +13,29 @@ class HomepageBannerController extends Controller
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_homepage_banner_list', array('site' => 'ja'));
+            $url = $this->generateUrl('admin_homepage_banner_list', array('site' => 2));
             return $this->redirect($url);
         }
 
         $this->addBannersBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('SpoutletBundle:HomepageBanner:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
     public function listAction($site)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $site = 'ja';
+            $site = 2;
         }
 
         $this->addBannersBreadcrumb();
 
         $em = $this->getDoctrine()->getEntityManager();
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($site);
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $banners = $this->getBannerRepo()->findForSite($site);
 

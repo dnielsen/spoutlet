@@ -57,7 +57,7 @@
             <div class="profileName">
                 {# we should always have an author, but just in case... #}
                 {% if comment.author %}
-                    <a href="{{ cevo_account_link(comment.author.username) }}">{{ comment.author.username }}</a>
+                    <a href="{{ account_link(comment.author.username) }}">{{ comment.author.username }}</a>
                 {% endif %}
             </div>
         </div>

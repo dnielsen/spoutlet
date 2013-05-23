@@ -36,17 +36,22 @@
             </div>
         </div>
     </fieldset>
-    <fieldset>
-        <legend id="translations" style="cursor:pointer;">b) Translations (click here to view)</legend>
-        <div class="row-fluid first" id="translations-wrapper" style="display:none;">
-            <div class="span8">
-                {{ form_widget(form.translations) }}
+
+    {% if form.translations is not empty  %}
+        <fieldset>
+            <legend id="translations" style="cursor:pointer;">b) Translations (click here to view)</legend>
+            <div class="row-fluid first" id="translations-wrapper" style="display:none;">
+                <div class="span8">
+                    {{ form_widget(form.translations) }}
+                </div>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    {% endif %}
 </div>
 
-{{ form_rest(form) }}
+<div style="display:none;">
+    {{ form_rest(form) }}
+</div>
 
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
@@ -119,5 +124,9 @@
                 $('#location-info').fadeOut();
             }
         });
+
+        if ($('input[name="globalEvent[online]"]:checked').val() == 0) {
+            $('#location-info').show();
+        }
     });
 </script>

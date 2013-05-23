@@ -9,12 +9,12 @@
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
-    <meta property="og:title" content="{{ 'groups.opengraph.title' | trans }}" />
+    <meta property="og:title" content="{{ 'groups.opengraph.title' | pd_trans }}" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
     <meta property="og:image" content="{{ openGraphThumb }}" />
-    <meta property="og:description" content="{{ 'groups.opengraph.description' | trans }}" />
+    <meta property="og:description" content="{{ 'groups.opengraph.description' | pd_trans }}" />
 {% endblock %}
 
 {# either set the custom background image, or leave it to false #}
@@ -28,19 +28,18 @@
 
 {% block content %}
 
+<div id="group-show">
     <div class="std_1col" style="padding: 0;">
         <div id="group-avatar">
             {% if group.groupAvatar %}
                 <img src="{{ media_path(group.groupAvatar) }}" />
             {% else %}
-                <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+                <div id="groups-main-banner"></div>
             {% endif %}
         </div>
     </div>
     <div class="std_1col" style="padding: 0;">
-        <div class="groups-sub-nav-wrapper">
-            {% include 'GroupBundle:Group:_subNav.html.twig' %}
-        </div>
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
     </div>
     <div class="std_2col">
         <div class="right">
@@ -61,7 +60,7 @@
             {% if groupManager.isApplicant(app.user, group) %}
                 <p class="alert alert-info help">
                     <i class="icon-info-sign"></i>
-                    Waiting on Approval
+                    {{ 'platformd.groups.show.waiting_on_approval' | pd_trans }}
                 </p>
             {% endif %}
             <div class="widget-33" style="height: auto; margin-bottom: 10px;">
@@ -73,45 +72,46 @@
                 <div class="widget-content">
                     <table class="group-details-table">
                         <tr>
-                            <td>Founded</td>
+                            <td>{{ 'platformd.groups.show.founded' | pd_trans }}</td>
                             <td>{{ group.createdAt|date('M j, Y') }}</td>
                         </tr>
                         <tr>
-                            <td>Organizer</td>
+                            <td>{{ 'platformd.groups.show.organizer' | pd_trans }}</td>
                             <td>
                                 {% if group.owner.adminLevel == 'ROLE_SUPER_ADMIN' %}
-                                    <a href="javascript:void(0);">Staff</a>
+                                    <a href="javascript:void(0);">{{ 'platformd.groups.show.staff' | pd_trans }}</a>
                                 {% else %}
-                                    <a href="{{ cevo_account_link(group.owner.username) }}">{{ group.owner.username }}</a>
+                                    <a href="{{ account_link(group.owner.username) }}">{{ group.owner.username }}</a>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
-                            <td>Members</td>
+                            <td>{{ 'platformd.groups.show.members' | pd_trans }}</td>
                             <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ memberCount }}</a></td>
                         </tr>
 
-                        {% if features.hasEvents %}
-                            <tr>
-                                <td>Upcoming Events</td>
-                                <td>{{ upcomingEvents|length }}</td>
-                            </tr>
-                            <tr>
-                                <td>Past Events</td>
-                                <td>{{ pastEvents|length }}</td>
-                            </tr>
-                        {% endif %}
+                    {% if features.hasEvents %}
                         <tr>
-                            <td>Comments</td>
+                            <td>{{ 'platformd.groups.show.upcoming_events' | pd_trans }}</td>
+                            <td>{{ upcomingEvents|length }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'platformd.groups.show.past_events' | pd_trans }}</td>
+                            <td>{{ pastEvents|length }}</td>
+                        </tr>
+                    {% endif %}
+
+                        <tr>
+                            <td>{{ 'platformd.groups.show.comments' | pd_trans }}</td>
                             <td><span class="comment-count">{{ commentTotal }}</span></td>
                         </tr>
                         <tr>
-                            <td>Group</td>
-                            <td>{{ group.isPublic ? "Public" : "Private" }}</td>
+                            <td>{{ 'platformd.groups.show.group_type' | pd_trans }}</td>
+                            <td>{{ group.isPublic ? 'platformd.groups.show.public' | pd_trans : 'platformd.groups.show.private' | pd_trans }}</td>
                         </tr>
                         {% if isEntered %}
                         <tr>
-                            <td>New Members Acquired</td>
+                            <td>{{ 'platformd.groups.show.new_members' | pd_trans }}</td>
                             <td>{{ contestCount }}</td>
                         </tr>
                         {% endif %}
@@ -119,7 +119,7 @@
                     {% if isEntered %}
                         <div style="width:290px;">
                             <p class="alert alert-info help"><i class="icon-info-sign"></i>
-                                <em>{{ 'contests.group_part_of_contest' | trans }}<br /><br />
+                                <em>{{ 'contests.group_part_of_contest' | pd_trans }}<br /><br />
                                     <a href="{{ path('contest_show', { 'slug' : contest.slug }) }}" target="_blank">{{ contest.name }}</a>
                                 </em>
                             </p>
@@ -130,11 +130,13 @@
                         <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
                     </div>
 
-                    <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
-                    <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">Report this Group</a></div>
+                    {% if features.hasFacebook and config.facebookAppId %}
+                        <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
+                    {% endif %}
+                    <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">{{ 'platformd.groups.show.report_group' | pd_trans }}</a></div>
                     {% if group.location and group.category == 'location' %}
                     <div id="group-location-address" class="location-info">
-                        <div>LOCATION:</div>
+                        <div>{{ 'platformd.groups.show.location' | pd_trans }}:</div>
                         <div id="metro-area">
                             {{ group.location.metroArea }}
                         </div>
@@ -156,8 +158,7 @@
             </div>
 
             {% if group.location and group.category == 'location' %}
-                <input id="location-value" type="hidden" value="{{ group.location.getFormattedLocation }}" />
-                <div id="google-map-location"></div>
+                {{ vichgeo_map_for('location', group.location) }}
             {% endif %}
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         </div>
@@ -165,34 +166,23 @@
             <div class="widget-66" id="featured-content">
                 <div class="featured-content-header">
                     {% if isAllowedToViewGroupContent %}
-                        <a href="javascript:void(0);" id="group-news" class="active">News</a>
-                        {% if features.hasEvents %}
-                            <a href="javascript:void(0);" id="group-events">Events</a>
-                        {% endif %}
-                        <a href="javascript:void(0);" id="group-images">Images</a>
-                        <a href="javascript:void(0);" id="group-videos">Videos</a>
+                        <a href="javascript:void(0);" id="group-news" class="active">{{ 'platformd.groups.show.news' | pd_trans }}</a>
+                        {% if features.hasEvents %}<a href="javascript:void(0);" id="group-events">{{ 'platformd.groups.show.events' | pd_trans }}</a>{% endif %}
+                        <a href="javascript:void(0);" id="group-images">{{ 'platformd.groups.show.images' | pd_trans }}</a>
+                        <a href="javascript:void(0);" id="group-videos">{{ 'platformd.groups.show.videos' | pd_trans }}</a>
                         {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
-                            <a href="javascript:void(0);" id="group-discussions">Discussions</a>
+                            <a href="javascript:void(0);" id="group-discussions">{{ 'platformd.groups.show.discussions' | pd_trans }}</a>
                         {% endif %}
-                        <a href="javascript:void(0);" id="group-about">About</a>
+                        <a href="javascript:void(0);" id="group-about">{{ 'platformd.groups.show.about' | pd_trans }}</a>
                     {% elseif isAllowedToViewGroup %}
-                        <a href="javascript:void(0);" id="group-about" class="active">About</a>
+                        <a href="javascript:void(0);" id="group-about" class="active">{{ 'platformd.groups.show.about' | pd_trans }}</a>
                     {% endif %}
                     <div style="clear: left;"></div>
                 </div>
-                <div class="widget-content" id="group-widget-content" style="min-height: 560px;background: #191919;overflow: hidden;">
+                <div class="widget-content" id="group-widget-content">
                     {% if isAllowedToViewGroupContent %}
-                        <div id="content-group-news" class="featured-content-category active" style="height: 550px;background: #191919;"></div>
-                        <div id="content-group-images" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                        <div id="content-group-videos" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                        {% if features.hasEvents %}
-                            <div id="content-group-events" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                        {% endif %}
-                        <div id="content-group-discussions" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                        <div id="content-group-about" class="featured-content-category" style="height: 550px;background: #191919;"></div>
-                    {% elseif isAllowedToViewGroup %}
-                        <div id="content-group-about" class="featured-content-category active" style="height: 550px;background: #191919;">
-                            {% include 'GroupBundle:Group:about.html.twig' %}
+                        <div id="group-content" class="featured-content-category active">
+                            {% if not isAllowedToViewGroupContent %}{% include 'GroupBundle:Group:about.html.twig' %}{% endif %}
                         </div>
                     {% endif %}
                 </div>
@@ -204,67 +194,60 @@
                     </div>
                 {% else %}
                     <div id="group-comments">
-                        <p>You must be a member of a private group before you can see or post comments.</p>
+                        <p>{{ 'platformd.groups.show.must_be_member_comments' | pd_trans }}</p>
                     </div>
                 {% endif %}
             {% endif %}
         </div>
         {% include 'GroupBundle:Group:_reportGroupPopup.html.twig' %}
     </div>
+</div>
 
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/jquery.mCustomScrollbar.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/discussions.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
+
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.expander.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.awa.pagerUi.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
 
     {% if group.location and group.category == 'location' %}
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&sensor=true"></script>
-        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.groupsmaps.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $('#google-map-location').groupsmap({
-                    address : $('#location-value').val()
-                });
-            });
-        </script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
     {% endif %}
     <script type="text/javascript">
         $(function () {
 
-            $('#group-invite').click(function () {
-                FB.ui({
-                    method: 'send',
-                    name: "You are invited to the {{ group.name | e('js') }}!",
-                    link: '{{ path('group_show', { 'slug': group.slug })  | absolute_url }}',
-                    description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.",
-                    image: '{{ openGraphThumb }}'
+            $.blockUI.defaults.overlayCSS = {};
+
+            {% if features.hasFacebook and config.facebookAppId %}
+                $('#group-invite').click(function () {
+                    FB.ui({
+                        method: 'send',
+                        name: "You are invited to the {{ group.name | e('js') }}!",
+                        link: '{{ path('group_show', { 'slug': group.slug })  | absolute_url }}',
+                        description: "{{ 'groups.opengraph.description' | pd_trans }}",
+                        image: '{{ openGraphThumb }}'
+                    });
                 });
-            });
+            {% endif %}
 
             var hash = window.location.hash.replace('#','');
 
             var tab = 'group-' + hash;
 
             var loadVideoContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
                     $("#scrollable-videos").scrollable();
@@ -274,14 +257,14 @@
             }
 
             var loadNewsContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
                 content.load('{{ path('group_news', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $('#group-widget-content').unblock();
                 });
             }
 
             var loadImageContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $("#scrollable-images").scrollable();
@@ -291,7 +274,7 @@
             }
 
             var loadDiscussionContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_discussions', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $('#group-widget-content').unblock();
@@ -299,17 +282,17 @@
             }
 
             var loadAboutContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_about', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    $('.featured-content-category#content-group-news').mCustomScrollbar();
+                    $('.featured-content-category#group-content').mCustomScrollbar();
                     $('#group-widget-content').unblock();
                 });
             }
 
             {% if features.hasEvents %}
             var loadEventContent = function(id) {
-                var content = $('.featured-content-category#content-group-news');
+                var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_events', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $('#event-content-scroll').mCustomScrollbar();
@@ -331,7 +314,7 @@
             }
 
             var killVideoContent = function() {
-                $('#content-group-news').html('');
+                $('#group-content').html('');
             }
 
             $(".featured-content-header a").click(function() {
@@ -353,10 +336,10 @@
 
                 $('.featured-content-header a.active').removeClass('active');
                 $(this).addClass('active');
-                $('.featured-content-category#content-group-news').fadeOut('fast', function () {
+                $('.featured-content-category#group-content').fadeOut('fast', function () {
                     $('.report-wrapper').remove();
 
-                    var content = $('.featured-content-category#content-group-news');
+                    var content = $('.featured-content-category#group-content');
 
                     switch(id) {
                         case 'group-videos':
@@ -385,7 +368,6 @@
                     content.fadeIn();
                 });
             });
-            $('#content-group-about').mCustomScrollbar();
             loadContent(tab);
         });
     </script>

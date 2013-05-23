@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Site Takeover Regions' %}
+
+{% block content %}
+<h1>Site Takeover Regions</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_takeover_list'
+}%}
+
+<a class="btn btn-primary" href="{{ path('admin_takeover_new') }}">
+    Create a new site takeover
+</a>
+{% endblock %}

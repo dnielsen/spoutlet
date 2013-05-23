@@ -20,7 +20,7 @@ class YouTubeValidator extends ConstraintValidator
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 15);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Expect:'));
 
         $result = json_decode(curl_exec($curl), true);
