@@ -1,28 +1,39 @@
-backend awa1  { .host = "ec2-54-224-27-105.compute-1.amazonaws.com";  .port = "http"; }
-backend awa2  { .host = "ec2-204-236-207-80.compute-1.amazonaws.com"; .port = "http"; }
-backend awa3  { .host = "ec2-107-22-71-108.compute-1.amazonaws.com";  .port = "http"; }
-backend awa4  { .host = "ec2-75-101-223-7.compute-1.amazonaws.com";   .port = "http"; }
-backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; }
-backend awa6  { .host = "ec2-54-242-181-100.compute-1.amazonaws.com"; .port = "http"; }
-backend awa7  { .host = "ec2-50-16-75-123.compute-1.amazonaws.com";   .port = "http"; }
-backend awa8  { .host = "ec2-50-16-37-33.compute-1.amazonaws.com";    .port = "http"; }
-backend awa9  { .host = "ec2-50-16-66-61.compute-1.amazonaws.com";    .port = "http"; }
+probe healthcheck {
+    .request = 
+        "GET /healthCheck HTTP/1.1"
+        "Host: demo.alienwarearena.com"
+        "Connection: close";
+}
 
-director awa round-robin {
-    { .backend = awa1; }
-    { .backend = awa2; }
-    { .backend = awa3; }
-    { .backend = awa4; }
-    { .backend = awa5; }
-    { .backend = awa6; }
-    { .backend = awa7; }
-    { .backend = awa8; }
-    { .backend = awa9; }
+backend awa1  { .host = "ec2-54-224-27-105.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awa2  { .host = "ec2-204-236-207-80.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
+backend awa3  { .host = "ec2-107-22-71-108.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awa4  { .host = "ec2-75-101-223-7.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awa6  { .host = "ec2-54-242-181-100.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
+backend awa7  { .host = "ec2-50-16-75-123.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awa8  { .host = "ec2-50-16-37-33.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
+backend awa9  { .host = "ec2-50-16-66-61.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
+
+director awa random {
+    { .backend = awa1; .weight = 1; }
+    { .backend = awa2; .weight = 2; }
+    { .backend = awa3; .weight = 2; }
+    { .backend = awa4; .weight = 2; }
+    { .backend = awa5; .weight = 2; }
+    { .backend = awa6; .weight = 2; }
+    { .backend = awa7; .weight = 2; }
+    { .backend = awa8; .weight = 2; }
+    { .backend = awa9; .weight = 2; }
 }
 
 sub vcl_recv {
 
     set req.backend = awa;
+
+    if (req.url ~ "^/healthCheck$") {
+        error 403 "Access Denied.";
+    }
 
     if (req.esi_level == 0 && req.url ~ "^(/app_dev.php)?/esi/") { # an external client is requesting an esi
         error 403 "Access Denied.";
@@ -38,15 +49,19 @@ sub vcl_recv {
         }
     }
 
+    if (!req.backend.healthy) {
+        unset req.http.Cookie;
+    }
+
     if (req.request == "PURGE") {
         error 405 "Not Allowed.";
     }
 
     set req.http.Surrogate-Capability = "abc=ESI/1.0";
 
-    set req.grace = 1h;
+    set req.grace = 6h;
 
-    if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|swf|css|js|htm|html)$") {
+    if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
         unset req.http.cookie;
     }
 
@@ -90,6 +105,10 @@ sub vcl_recv {
         }
     }
 
+    if (req.url ~ "^/video/ajax/apjxml$") {
+        remove req.http.Cookie;
+    }
+
     if (req.http.Cookie) {
         return (pass);
     }
@@ -103,10 +122,17 @@ sub vcl_fetch {
         set beresp.do_esi = true;
     }
 
-    if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|swf|css|js)$") {
-        unset beresp.http.set-cookie;
+    if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age=900";
+        unset beresp.http.expires;
+        unset beresp.http.set-cookie;
+    }
+
+    if (req.url ~ "^/video/ajax/apjxml$") {
+        unset beresp.http.set-cookie;
+        set beresp.ttl = 1m;
+        set beresp.http.cache-control = "max-age=60";
         unset beresp.http.expires;
     }
 
@@ -114,7 +140,7 @@ sub vcl_fetch {
         set beresp.do_gzip = true;
     }
 
-    set beresp.grace = 1h;
+    set beresp.grace = 6h;
 
     if (req.http.host ~ "^.*staging.alienwarearena.com") {
         if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]"){
