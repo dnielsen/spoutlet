@@ -25,6 +25,7 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
+ * @UniqueEntity(fields={"slug"}, message="This group url is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
  * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
