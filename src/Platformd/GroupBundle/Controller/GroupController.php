@@ -779,12 +779,15 @@ Alienware Arena Team
 
             $galleryMedia   = $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia')->findOneByImage($groupImage->getImage()->getId());
 
+            $permalink = $this->get('platformd.model.comment_manager')->checkThread($groupImage);
+
             return $this->render('GroupBundle:Group:showImage.html.twig', array(
                 'media'             => $groupImage,
                 'group'             => $group,
                 'otherMediaPages'   => $otherMediaPages,
                 'galleryMediaItem'  => $galleryMedia,
-                'groupManager' => $this->getGroupManager(),
+                'groupManager'      => $this->getGroupManager(),
+                'permalink'         => $permalink,
             ));
         }
 
@@ -1436,20 +1439,22 @@ Alienware Arena Team
         }
 
         $permissions = $this->getGroupManager()->getPermissions($this->getUser(), $group, $this->getCurrentSite());
+        $permalink   = $this->get('platformd.model.comment_manager')->checkThread($group);
 
         return $this->render('GroupBundle:Group:show.html.twig', array(
-            'commentTotal'  => $commentTotal,
-            'group'         => $group,
-            'groupNews'     => $groupNews,
-            'groupVideos'   => $groupVideos,
-            'isEntered'     => $isEntered,
-            'contestCount'  => $contestMemberCount,
-            'contest'       => $contest,
-            'upcomingEvents'    => $upcomingEvents,
-            'pastEvents'        => $pastEvents,
-            'memberCount'   => $memberCount[0]['membershipCount'],
-            'groupManager'  => $this->getGroupManager(),
-            'permissions' => $permissions,
+            'commentTotal'   => $commentTotal,
+            'group'          => $group,
+            'groupNews'      => $groupNews,
+            'groupVideos'    => $groupVideos,
+            'isEntered'      => $isEntered,
+            'contestCount'   => $contestMemberCount,
+            'contest'        => $contest,
+            'upcomingEvents' => $upcomingEvents,
+            'pastEvents'     => $pastEvents,
+            'memberCount'    => $memberCount[0]['membershipCount'],
+            'groupManager'   => $this->getGroupManager(),
+            'permissions'    => $permissions,
+            'permalink'      => $permalink,
         ));
     }
 

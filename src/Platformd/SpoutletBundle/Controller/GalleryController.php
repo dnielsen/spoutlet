@@ -454,12 +454,15 @@ class GalleryController extends Controller
             $crumb = null;
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($media);
+
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'             => $media,
             'otherMediaPages'   => $otherMediaPages,
             'likes'             => $likes,
             'crumb'             => $crumb,
             'returnType'        => $returnType,
+            'permalink'         => $permalink,
         ));
     }
 

@@ -144,7 +144,7 @@
             </div><!-- giveaway-info -->
 
             {% if features.hasComments %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : sweepstakes.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             {% endif %}
 
         </div><!-- left -->

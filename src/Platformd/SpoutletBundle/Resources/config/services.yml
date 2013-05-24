@@ -104,7 +104,7 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
-    platformd.entity.repository.comment_thread:
+    platformd.repository.comment_thread:
         class: Platformd\SpoutletBundle\Entity\ThreadRepository
         factory_service: doctrine.orm.default_entity_manager
         factory_method: getRepository
@@ -319,13 +319,6 @@ services:
             - "@platformd.util.site_util"
         scope: request
 
-    platformd.repository.site:
-        class:           Platformd\SpoutletBundle\Entity\SiteRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method:  getRepository
-        arguments:
-            - 'SpoutletBundle:Site'
-
     platformd.model.site_manager:
         class: Platformd\SpoutletBundle\Tenant\SiteManager
         arguments:
@@ -345,9 +338,10 @@ services:
         arguments:
             - 'SpoutletBundle:Gallery'
 
-    platformd.repository.site:
-        class:           Platformd\SpoutletBundle\Entity\SiteRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method:  getRepository
+    platformd.model.comment_manager:
+        class: Platformd\SpoutletBundle\Model\CommentManager
         arguments:
-            - 'SpoutletBundle:Site'
+            - "@platformd.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@doctrine.orm.entity_manager"
+

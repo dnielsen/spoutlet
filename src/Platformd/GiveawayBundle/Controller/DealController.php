@@ -190,18 +190,7 @@ class DealController extends Controller
         }
 
         $threadId         = $deal->getThreadId();
-        $thread           = $this->getCommentThreadRepo()->find($threadId);
-        $correctPermalink = $this->getLinkableManager()->link($deal).'#comments';
-
-        if (!$thread) {
-            $thread = new Thread();
-            $thread->setId($threadId);
-            $thread->setPermalink($correctPermalink);
-
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($thread);
-            $em->flush();
-        }
+        $correctPermalink = $this->get('platformd.model.comment_manager')->checkThread($deal);
 
         $mediaPathResolver = $this->getMediaPathResolver();
         $openGraph         = $deal->getOpenGraphOverride();
@@ -367,7 +356,7 @@ class DealController extends Controller
     }
 
     protected function getCommentThreadRepo() {
-        return $this->get('platformd.entity.repository.comment_thread');
+        return $this->get('platformd.repository.comment_thread');
     }
 
     protected function getLinkableManager() {

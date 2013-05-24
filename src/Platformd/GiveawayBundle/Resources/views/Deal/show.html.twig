@@ -21,10 +21,6 @@
 
 {% block content %}
 
-{% if dealCode %}
-    {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
-{% endif %}
-
 <div id="deals-wrapper">
     {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
     {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
@@ -86,16 +82,16 @@
             </div>
             {% endif %}
         </div>
-    </div>
 
-    {% if features.hasComments %}
-        <div class="std_2col">
-            <div class="left">
-                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.deal_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.deal_comment_permalink } %}
+        {% if features.hasComments %}
+            <div class="std_2col">
+                <div class="left">
+                    {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.deal_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.deal_comment_permalink } %}
+                </div>
             </div>
-            <div class="right"></div>
-    {% endif %}
+        {% endif %}
 
+    </div>
 {% endblock %}
 
 {% block stylesheets %}

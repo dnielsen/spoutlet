@@ -30,6 +30,22 @@ microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
 
+banner:
+    pattern: /banner
+    defaults: { _controller: SpoutletBundle:Default:banner }
+
+hot_stories:
+    pattern: /hot-stories
+    defaults: { _controller: SpoutletBundle:Default:hotStories }
+
+featured_content:
+    pattern: /featured-content
+    defaults: { _controller: SpoutletBundle:Default:featuredContent }
+
+video_feed:
+    pattern: /video-feed
+    defaults: { _controller: SpoutletBundle:Default:videoFeed }
+
 content_reporting:
     pattern:  /report
     defaults: { _controller: "SpoutletBundle:ContentReporting:reportContent" }

@@ -45,8 +45,9 @@ class GiveawayManager
     private $mediaExposer;
     private $filesystem;
     private $countryRepo;
+    private $commentManager;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager)
     {
         $this->emailManager    = $emailManager;
         $this->em              = $em;
@@ -65,6 +66,7 @@ class GiveawayManager
         $this->mediaExposer    = $mediaExposer;
         $this->filesystem      = $filesystem;
         $this->countryRepo     = $countryRepo;
+        $this->commentManager  = $commentManager;
     }
 
     public function getAnonGiveawayIndexData() {
@@ -138,26 +140,6 @@ class GiveawayManager
             return null;
         }
 
-        $threadId         = $giveaway->getThreadId();
-        $thread           = $this->threadRepo->find($threadId);
-        $correctPermalink = $this->linkableManager->link($giveaway).'#comments';
-
-        if (!$thread) {
-            $thread = new Thread();
-            $thread->setId($threadId);
-            $thread->setPermalink($correctPermalink);
-
-            $this->em->persist($thread);
-            $this->em->flush();
-        } else {
-
-            if ($thread->getPermalink() != $correctPermalink) {
-                $thread->setPermalink($correctPermalink);
-                $this->em->persist($thread);
-                $this->em->flush();
-            }
-        }
-
         $data                                      = new giveaway_show_data();
         $data->giveaway_name                       = $giveaway->getName();
         $data->giveaway_content                    = $giveaway->getContent();
@@ -167,7 +149,7 @@ class GiveawayManager
         $data->giveaway_id                         = $giveaway->getId();
 
         $data->giveaway_comment_thread_id          = $giveaway->getThreadId();
-        $data->giveaway_comment_permalink          = $thread->getPermalink();
+        $data->giveaway_comment_permalink          = $this->commentManager->checkThread($giveaway);
 
         $data->giveaway_background_image_path      = $giveaway->getBackgroundImagePath() ? $this->mediaExposer->getPath($giveaway, array('type' => 'background')) : null;
         $data->giveaway_background_link            = $giveaway->getBackgroundLink();

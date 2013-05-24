@@ -14,11 +14,12 @@ services:
             - "@pd_giveaway.util.key_counter_util"
             - "@pd_giveaway.entity.repository.giveaway_key"
             - "@doctrine.orm.entity_manager"
-            - "@platformd.entity.repository.comment_thread"
+            - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@media_exposer"
             - @event_filesystem
             - "@platformd.repository.country"
+            - "@platformd.model.comment_manager"
 
     platformd.model.deal_manager:
         class: Platformd\GiveawayBundle\Model\DealManager
@@ -29,7 +30,7 @@ services:
             - "@pd_giveaway.entity.repository.deal"
             - "@platformd.util.site_util"
             - "@pd_giveaway.entity.repository.deal_code"
-            - "@platformd.entity.repository.comment_thread"
+            - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@platformd.media_path_resolver"
             - "@fos_comment.manager.comment"
