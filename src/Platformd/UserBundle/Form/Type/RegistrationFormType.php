@@ -7,7 +7,7 @@ use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Platformd\SpoutletBundle\Model\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Collection;
 
 class RegistrationFormType extends BaseType
@@ -37,7 +37,7 @@ class RegistrationFormType extends BaseType
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array(), Session $session, Translator $translator)
+    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator)
     {
         parent::__construct($class);
 

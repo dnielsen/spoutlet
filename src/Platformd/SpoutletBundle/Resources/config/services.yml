@@ -282,10 +282,3 @@ services:
         factory_method:  getRepository
         arguments:
             - 'SpoutletBundle:Gallery'
-
-    platformd.repository.site:
-        class:           Platformd\SpoutletBundle\Entity\SiteRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method:  getRepository
-        arguments:
-            - 'SpoutletBundle:Site'

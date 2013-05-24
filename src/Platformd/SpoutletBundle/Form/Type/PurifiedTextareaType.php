@@ -26,9 +26,7 @@ class PurifiedTextareaType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $user = $this->security->getToken()->getUser();
-
-        if ($user->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             $builder->appendClientTransformer($this->adminPurifierTransformer);
         } else {
             $builder->appendClientTransformer($this->basicPurifierTransformer);

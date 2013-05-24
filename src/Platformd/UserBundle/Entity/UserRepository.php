@@ -49,7 +49,6 @@ class UserRepository extends EntityRepository
         ;
     }
 
-
 	public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)

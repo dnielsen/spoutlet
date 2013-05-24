@@ -87,11 +87,11 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb()->addChild('Update');
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
+
         $form = $this->createForm(new EditUserFormType(), $user, array(
             'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
             'local_auth' => $this->container->getParameter('local_auth'),
@@ -103,7 +103,7 @@ class AdminController extends Controller
 
             $request
                 ->getSession()
-                ->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                ->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
                     '%username%' => $user->getUsername()
                 ), 'FOSUserBundle'));
 
@@ -119,7 +119,6 @@ class AdminController extends Controller
     public function deleteAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
 
@@ -133,7 +132,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
+            ->setFlash('success', $this->trans('fos_user_admin_delete_success', array(
                 '%username' => $user->getUsername()
             ), 'FOSUserBundle'));
 
@@ -143,7 +142,6 @@ class AdminController extends Controller
     public function resetPasswordAction(Request $request, $id)
     {
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
 
@@ -157,7 +155,7 @@ class AdminController extends Controller
 
         $request
             ->getSession()
-            ->setFlash('success', $translator->trans('fos_user_admin_resetted_password_success', array(
+            ->setFlash('success', $this->trans('fos_user_admin_resetted_password_success', array(
                 '%email%' => $user->getEmail()
             ), 'FOSUserBundle'))
         ;
@@ -170,7 +168,6 @@ class AdminController extends Controller
         $manager = $this->get('fos_user.user_manager');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
-
             throw $this->createNotFoundException();
         }
 

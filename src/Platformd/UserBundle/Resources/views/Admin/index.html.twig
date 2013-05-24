@@ -52,6 +52,7 @@
                         {% if auth_type == 'local' %}<a href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}">{{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a>{% endif %}
                         <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a> |
                         <a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}" data-confirm="Delete this user?">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a> |
+
                         {% if user.avatar and not user.isAvatarApproved %}
                             <a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}">{{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a> |
                         {% endif %}
