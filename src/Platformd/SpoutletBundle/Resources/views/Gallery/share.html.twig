@@ -2,7 +2,7 @@
 
 {% block title 'galleries.submit_photo_share' | trans %}
 
-{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+{% set openGraphThumb = media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
