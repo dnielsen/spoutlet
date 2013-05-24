@@ -170,26 +170,28 @@
                         }) }}
                     </div>
                 </div>
+                {% if canAdd %}
                 <div id="discussion-reply-form">
-                <form id="reply-form" action="{{ replyFormAction }}" method="post" {{ form_enctype(replyForm) }} class="form-horizontal">
+                    <form id="reply-form" action="{{ replyFormAction }}" method="post" {{ form_enctype(replyForm) }} class="form-horizontal">
 
-                    {% form_theme replyForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
-                    {% form_theme replyForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+                        {% form_theme replyForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+                        {% form_theme replyForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-                    {{ form_errors(replyForm) }}
+                        {{ form_errors(replyForm) }}
 
-                    <div class="span8" style="margin-left: 145px;width:496px;">
-                        <p class="error" style="color:#ff0000;display:none;">Please provide content for your reply.</p>
-                        {{ form_widget(replyForm.content) }}
-                        <div class="reply-form-actions">
-                            <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>
+                        <div class="span8" style="margin-left: 145px;width:496px;">
+                            <p class="error" style="color:#ff0000;display:none;">Please provide content for your reply.</p>
+                            {{ form_widget(replyForm.content) }}
+                            <div class="reply-form-actions">
+                                <button type="submit" class="btn btn-primary" formnovalidate>Post to Discussion</button>
+                            </div>
                         </div>
-                    </div>
 
-                    {{ form_rest(replyForm) }}
+                        {{ form_rest(replyForm) }}
 
-                </form>
-            </div>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

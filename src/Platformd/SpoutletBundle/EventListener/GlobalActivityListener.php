@@ -123,10 +123,11 @@ class GlobalActivityListener
             /** @var GroupDiscussion $groupDiscussion */
             $groupDiscussion = $event->getGroupDiscussion();
 
-            $user = $event->getUser();
+            $userId = $event->getUser() instanceof User ? $event->getUser()->getId() : -1;
+
             $activity = new GlobalActivity(Activity::SUBJECT_USER, Activity::VERB_VIEWED, Activity::OBJECT_DISCUSSION);
             $activity
-                ->setSubjectId($user->getId())
+                ->setSubjectId($userId)
                 ->setObjectId($groupDiscussion->getId())
                 ->setIPAddress(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null);
             ;

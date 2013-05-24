@@ -1,7 +1,11 @@
 <div class="sub-nav-wrapper groups-sub-nav-wrapper">
     <div class="sub-nav groups-sub-nav">
         <ul>
-            <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
+            {% if discussion is defined %}
+                <li><a href="{{ path('group_show', {'slug' : group.slug}) ~ '#discussions' }}">Discussions</a></li>
+            {% else %}
+                <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
+            {% endif %}
             {% if 'EditGroup' in permissions %}
                 <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Group Settings</a></li>
             {% endif %}

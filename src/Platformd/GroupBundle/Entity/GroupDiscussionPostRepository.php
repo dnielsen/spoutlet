@@ -28,6 +28,22 @@ class GroupDiscussionPostRepository extends EntityRepository
         return $pager;
     }
 
+    public function getDiscussionPostsMostRecentLast($discussion, $maxPerPage = 10, $currentPage = 1)
+    {
+        $qb = $this->createQueryBuilder('gdp')
+            ->where('gdp.groupDiscussion = :discussionId')
+            ->andWhere('gdp.deleted = false')
+            ->setParameter('discussionId', $discussion->getId())
+            ->orderBy('gdp.created', 'ASC')
+        ;
+
+        $adapter = new DoctrineORMAdapter($qb);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($maxPerPage)->setCurrentPage($currentPage);
+
+        return $pager;
+    }
+
     public function getDiscussionPosts($discussion)
     {
         $qb = $this->createQueryBuilder('gdp')

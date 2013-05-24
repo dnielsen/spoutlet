@@ -14,7 +14,7 @@ class GroupDiscussionEvent extends Event
 
     public function __construct(
         GroupDiscussion $groupDiscussion,
-        User $user = null
+        $user = null
     )
     {
         $this->groupDiscussion  = $groupDiscussion;

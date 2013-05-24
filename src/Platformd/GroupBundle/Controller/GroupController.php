@@ -36,7 +36,6 @@ class GroupController extends Controller
     }
 
     private function ensureAllowed($group, $action, $forceUserLogin = true) {
-
         if ($forceUserLogin) {
             $this->basicSecurityCheck(array('ROLE_USER'));
         }
@@ -1205,7 +1204,7 @@ Alienware Arena Team
     public function viewDiscussionAction($id, $discussionId, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewDiscussion');
+        $this->ensureAllowed($group, 'ViewDiscussion', false);
 
         $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
 
@@ -1219,7 +1218,7 @@ Alienware Arena Team
 
         $page = $request->query->get('page', 1);
 
-        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 10, $page);
+        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentLast($groupDiscussion, 10, $page);
         $groupDiscussionPosts = $pager->getCurrentPageResults();
 
 

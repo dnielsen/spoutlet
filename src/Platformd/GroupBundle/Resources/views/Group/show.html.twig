@@ -252,14 +252,14 @@
                 content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
                     $("#scrollable-videos").scrollable();
                     $('.youtube-link').truncate();
-                    $('#group-widget-content').unblock();
+                    $('#featured-content').unblock();
                 });
             }
 
             var loadNewsContent = function(id) {
                 var content = $('.featured-content-category#group-content');
                 content.load('{{ path('group_news', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    $('#group-widget-content').unblock();
+                    $('#featured-content').unblock();
                 });
             }
 
@@ -269,7 +269,7 @@
                 content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $("#scrollable-images").scrollable();
                     $('.group-image-title').truncate();
-                    $('#group-widget-content').unblock();
+                    $('#featured-content').unblock();
                 });
             }
 
@@ -277,7 +277,7 @@
                 var content = $('.featured-content-category#group-content');
 
                 content.load('{{ path('group_discussions', { 'id' : group.id }) }}', function(response, status, xhr) {
-                    $('#group-widget-content').unblock();
+                    $('#featured-content').unblock();
                 });
             }
 
@@ -296,7 +296,7 @@
 
                 content.load('{{ path('group_events', { 'id' : group.id }) }}', function(response, status, xhr) {
                     $('#event-content-scroll').mCustomScrollbar();
-                    $('#group-widget-content').unblock();
+                    $('#featured-content').unblock();
                 });
             }
             {% endif %}
@@ -318,7 +318,7 @@
             }
 
             $(".featured-content-header a").click(function() {
-                $('#group-widget-content').block({
+                $('#featured-content').block({
                     message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
                     css: {
                         border: 'none',

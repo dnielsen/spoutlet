@@ -64,7 +64,7 @@ class GroupManager
     static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup');
     static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
     static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
-    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent', 'ViewDiscussion');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
     static private $applicantIsAllowedTo         = array('ViewGroup');
 
@@ -282,11 +282,12 @@ class GroupManager
      * @param \Symfony\Component\HttpFoundation\Session $session
      * @param \Platformd\UserBundle\Entity\User $user
      */
-    public function viewGroupDiscussion(GroupDiscussion $groupDiscussion, Session $session, User $user)
+    public function viewGroupDiscussion(GroupDiscussion $groupDiscussion, Session $session, $user)
     {
         $groupDiscussionToken = 'groupDiscussion' . $groupDiscussion->getId();
 
         if (!$session->has($groupDiscussionToken)) {
+
             $session->set($groupDiscussionToken, true);
             $groupDiscussion->incViewCount(1);
             $this->saveGroupDiscussion($groupDiscussion);
