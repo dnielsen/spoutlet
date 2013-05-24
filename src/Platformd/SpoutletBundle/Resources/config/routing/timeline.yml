@@ -1,0 +1,3 @@
+timeline_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:Timeline:index }

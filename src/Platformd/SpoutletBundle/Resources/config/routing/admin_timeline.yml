@@ -1,0 +1,15 @@
+admin_timeline_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:TimelineAdmin:index }
+
+admin_timeline_new:
+    pattern: /new
+    defaults: { _controller: SpoutletBundle:TimelineAdmin:new }
+
+admin_timeline_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: SpoutletBundle:TimelineAdmin:edit }
+
+admin_timeline_delete:
+    pattern: /delete/{id}
+    defaults: { _controller: SpoutletBundle:TimelineAdmin:delete }
