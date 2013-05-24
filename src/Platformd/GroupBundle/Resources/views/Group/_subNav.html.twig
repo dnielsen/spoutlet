@@ -2,7 +2,7 @@
     <div class="sub-nav groups-sub-nav">
         <ul>
             {% if discussion is defined %}
-                <li><a href="{{ path('group_show', {'slug' : group.slug}) ~ '#discussions' }}">Discussions</a></li>
+                <li><a href="{{ path('group_show', {'slug' : group.slug}) ~ '#discussions' }}">Back to Discussions</a></li>
             {% else %}
                 <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
             {% endif %}

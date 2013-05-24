@@ -49,7 +49,7 @@
 
 #topicBreadcrumb { background:transparent url(/bundles/spoutlet/images/discussions/section-bg.png) no-repeat scroll right top; height:42px; }
 #topicBreadcrumb h3 { color:#FFFFFF; font-size:16px; font-weight:bold; margin:0; padding:12px 0 5px 55px; }
-#topicView h1 { font-size:26px; font-weight:normal; color:#00789e; padding-left:15px; }
+#topicView h1 { font-size:26px; font-weight:normal; color:#00789e; }
 
 #topicComments { width:640px; float:left;}
 
