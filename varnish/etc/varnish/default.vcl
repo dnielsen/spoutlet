@@ -114,6 +114,14 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/videos/category-tab/") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos/tab/") {
+        remove req.http.Cookie;
+    }
+
     if (req.http.Cookie) {
         return (pass);
     }
@@ -139,6 +147,14 @@ sub vcl_fetch {
         set beresp.ttl = 1m;
         set beresp.http.cache-control = "max-age=60";
         unset beresp.http.expires;
+    }
+
+    if (req.url ~ "^/videos/category-tab/") {
+        unset beresp.http.set-cookie;
+    }
+
+    if (req.url ~ "^/videos/tab/") {
+        unset beresp.http.set-cookie;
     }
 
     if (beresp.http.content-type ~ "text") {
