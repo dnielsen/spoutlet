@@ -1,4 +1,4 @@
-input[type="text"] {
+input[type="text"], input[type="email"] {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -10,7 +10,8 @@ input[type="text"] {
     color: #AAAAAA;
 }
 
-.styled-select select {
+.styled-select select,
+.time-selection select {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -69,6 +70,7 @@ a.btn:hover {
     background: #00596E;
     background: -moz-linear-gradient(#00596e,#0094B4);
     background: -webkit-linear-gradient(#00596e,#0094B4);
+    color: #fff;
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#00596e',endColorstr='#0094B4')";
 }
 
@@ -211,7 +213,7 @@ a.disabled-button {
 
 /* width increased from bootstrap */
 label {
-    width: 170px;
+    width: 100%;
     margin-right: 5px;
 }
 /* due to the above change */
@@ -954,7 +956,7 @@ textarea {
 label {
   display: block;
   margin-bottom: 5px;
-  color: #AAA;
+  color: #FFF;
 }
 
 input,
@@ -968,11 +970,19 @@ select,
   margin-bottom: 9px;
   font-size: 13px;
   line-height: 18px;
-  color: #AAA;
   background-color: #ffffff;
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
+}
+
+input,
+textarea {
+  color: #AAA;
+}
+
+select {
+  color: #555;
 }
 
 .uneditable-textarea {
@@ -1305,7 +1315,6 @@ input[type="checkbox"][readonly] {
 .control-group.error input,
 .control-group.error select,
 .control-group.error textarea {
-  color: #ff0000;
   border-color: #ff0000;
 }
 
@@ -1357,7 +1366,6 @@ input[type="checkbox"][readonly] {
 input:focus:required:invalid,
 textarea:focus:required:invalid,
 select:focus:required:invalid {
-  color: #ff0000;
   border-color: #ee5f5b;
 }
 
@@ -1691,6 +1699,10 @@ table {
   line-height: 18px;
   text-align: left;
   vertical-align: top;
+}
+
+.admin-container .table th,
+.admin-container .table td {
   border-top: 1px solid #dddddd;
 }
 
@@ -1785,7 +1797,7 @@ table {
 
 .table tbody tr:hover td,
 .table tbody tr:hover th {
-  background-color: #f5f5f5;
+  /*background-color: #f5f5f5;*/
 }
 
 table .span1 {

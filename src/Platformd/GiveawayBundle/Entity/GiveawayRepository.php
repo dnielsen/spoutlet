@@ -78,11 +78,18 @@ class GiveawayRepository extends AbstractEventRepository
      *
      * @return \Platformd\GiveawayBundle\Entity\Giveway[]
      */
-    public function findAllOrderedByNewest()
+    public function findAllOrderedByNewest($site=null)
     {
-        return $this->createQueryBuilder('g')
-            ->orderBy('g.created', 'DESC')
-            ->getQuery()
+        $qb = $this->createQueryBuilder('g')
+            ->orderBy('g.created', 'DESC');
+
+        if ($site) {
+            $qb->leftJoin('g.sites', 's')
+                ->andWhere('s = :site')
+                ->setParameter('site', $site);
+        }
+
+        return $qb->getQuery()
             ->execute()
         ;
     }

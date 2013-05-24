@@ -3,24 +3,24 @@
 {% block content %}
 
 <div class="std_1col" style="padding: 0;">
-    <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" alt="Alienware Arena Groups" style="width: 950px; height: 120px; border: none;" />
+    <div id="groups-main-banner"></div>
 </div>
 <div class="std_1col">
-    <div class="groups-sub-nav-wrapper">
-    <div class="groups-sub-nav">
-        <ul>
-            <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-            <li><a href="{{ path('group_new') }}">Create Group</a></li>
-        </ul>
+    <div class="sub-nav-wrapper">
+        <div class="sub-nav groups-sub-nav">
+            <ul>
+                <li><a href="{{ path('accounts_groups') }}">{{ 'platformd.groups.index.my_groups' | pd_trans }}</a></li>
+                <li><a href="{{ path('group_new') }}">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></li>
+            </ul>
+        </div>
     </div>
-</div>
 </div>
 <div class="std_2col">
     <div class="left">
-        <h3 style="margin: 0; color: #fff;font-weight: bold">Recommended Alienware Arena Groups</h3>
+        <h3 id="groups-index-title">{{ 'platformd.groups.index.recommended_groups' | pd_trans }}</h3>
         {% if featuredGroups|length > 0 %}
-        <div>
-            <h4 class="groups-category-header">Featured Groups</h4>
+        <div class="group-collection">
+            <h4 class="groups-category-header">{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h4>
                 <div id="featured-groups">
                     {% for group in featuredGroups %}
                         <div class="group-list-item">
@@ -28,17 +28,17 @@
                                 {% if group[0].thumbNail %}
                                 <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% else %}
-                                <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                <div class="default-group-thumbnail"></div>
                                 {% endif %}
                             </a>
                             <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
                                 {{ group[0].name }}
                             </a>
                             <div class="details">
-                                <div class="item-detail">Members: {{ group['memberCount'] }}</div>
-                                <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
+                                <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                                <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
                                 <div class="report-group-caption">
-                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
+                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
                                 </div>
                             </div>
                         </div>
@@ -46,8 +46,8 @@
                 </div>
             </div>
         {% endif %}
-        <div>
-            <h4 class="groups-category-header">Topic Groups</h4>
+        <div class="group-collection">
+            <h4 class="groups-category-header">{{ 'platformd.groups.index.topic_groups' | pd_trans }}</h4>
             <div class="scrollable" id="scrollable-topic-groups">
                 <div class="items">
                     {% for page in topicGroups %}
@@ -59,17 +59,17 @@
                                         {% if group[0].thumbNail %}
                                         <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
-                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                        <div class="default-group-thumbnail"></div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
                                         {{ group[0].name }}
                                     </a>
                                     <div class="details">
-                                        <div class="item-detail">Members: {{ group['memberCount'] }}</div>
-                                        <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
+                                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
                                         <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -80,12 +80,12 @@
                 </div>
             </div>
             <div id="scroll-actions" style="margin-top: 0px;">
-                <a id="topic-prev" class="prev browse" style="float: left;">Previous</a>
-                <a id="topic-next" class="next browse" style="float: right;">See More</a>
+                <a id="topic-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
+                <a id="topic-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
             </div>
         </div>
-        <div style="margin-top: 20px;">
-            <h4 class="groups-category-header">Location Groups</h4>
+        <div class="group-collection" style="margin-top: 20px;">
+            <h4 class="groups-category-header">{{ 'platformd.groups.index.location_groups' | pd_trans }}</h4>
             <div class="scrollable" id="scrollable-location-groups">
                 <div class="items">
                     {% for page in locationGroups %}
@@ -97,17 +97,17 @@
                                         {% if group[0].thumbNail %}
                                         <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
-                                        <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                        <div class="default-group-thumbnail"></div>
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
                                         {{ group[0].name }}
                                     </a>
                                     <div class="details">
-                                        <div class="item-detail">Members: {{ group['memberCount'] }}</div>
-                                        <div class="item-detail">Organizer: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}</div>
+                                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
                                         <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">Report this Group</a>
+                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -119,17 +119,17 @@
 
             </div>
             <div id="scroll-actions" style="margin-top: 10px;">
-                <a id="location-prev" class="prev browse" style="float: left;">Previous</a>
-                <a id="location-next" class="next browse" style="float: right;">See More</a>
+                <a id="location-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
+                <a id="location-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
             </div>
         </div>
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-        <div class="widget-33" style="margin-top: 15px;background-color: #191919;height: 230px">
+        <div class="widget-33" id="new-groups-widget">
             <div class="widget-header">
                 <div class="widget-title">
-                    Welcome New Groups
+                    {{ 'platformd.groups.index.welcome_new' | pd_trans }}
                 </div>
             </div>
             <div class="widget-content">
@@ -138,14 +138,14 @@
                     <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a>
                 </div>
                 {% else %}
-                    <p>No groups found. Check back soon!</p>
+                    <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
                 {% endfor %}
             </div>
         </div>
-        <div class="widget-33" style="margin-top: 15px;background-color: #191919;height: 230px">
+        <div class="widget-33" id="popular-groups-widget">
             <div class="widget-header">
                 <div class="widget-title">
-                    Most Popular Groups
+                    {{ 'platformd.groups.index.most_popular' | pd_trans }}
                 </div>
             </div>
             <div class="widget-content">
@@ -154,7 +154,7 @@
                     <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a>
                 </div>
                 {% else %}
-                    <p>No groups found. Check back soon!</p>
+                    <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -165,8 +165,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('/bundles/group/css/groups.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('/bundles/spoutlet/css/forms.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

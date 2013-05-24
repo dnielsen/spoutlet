@@ -12,14 +12,28 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
     private $container;
     private $manager;
 
-    private function createSite($id, $name, $locale, $domain, $supportEmailAddress) {
+    private function createSite($id, $name, $locale, $domain, $supportEmailAddress, $emailFromName, $forwardBaseUrl) {
 
         $site = new Site();
+
+        $forwardedPaths = array(
+          '^/$',
+          '^/arp',
+          '^/forums',
+          '^/contact',
+          '^/about',
+        );
 
         $site->setName($name);
         $site->setDefaultLocale($locale);
         $site->setFullDomain($domain);
-        $site->setSupportEmailAddress($supportEmailAddress);
+        $site->getSiteConfig()
+          ->setSupportEmailAddress($supportEmailAddress)
+          ->setAutomatedEmailAddress($supportEmailAddress)
+          ->setEmailFromName($emailFromName)
+          ->setForwardBaseUrl($forwardBaseUrl)
+          ->setForwardedPaths($forwardedPaths)
+        ;
 
         $this->manager->persist($site);
 
@@ -40,15 +54,15 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
 
         $this->resetAutoIncrementId();
 
-        $demo  = $this->createSite(1, 'Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local');
-        $japan = $this->createSite(2, 'Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local');
-        $china = $this->createSite(3, 'China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local');
-        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local');
-        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local');
-        $latam = $this->createSite(6, 'Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local');
-        $in    = $this->createSite(7, 'India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local');
-        $mysg  = $this->createSite(8, 'Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local');
-        $anz   = $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local');
+        $demo  = $this->createSite(1, 'Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $japan = $this->createSite(2, 'Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $china = $this->createSite(3, 'China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $latam = $this->createSite(6, 'Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $in    = $this->createSite(7, 'India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $mysg  = $this->createSite(8, 'Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $anz   = $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
 
         $demo->getSiteFeatures()
           ->setHasArp()
@@ -57,7 +71,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -67,6 +81,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404(false)
+          ->setHasIndex()
+          ->setHasAbout()
+          ->setHasContact()
         ;
 
         $japan->getSiteFeatures()
@@ -86,6 +111,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers(false)
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient(false)
+          ->setHasProfile()
+          ->setHasForwardOn404(false)
+          ->setHasIndex()
+          ->setHasAbout()
+          ->setHasContact()
         ;
 
         $china->getSiteFeatures()
@@ -105,6 +141,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient(false)
+          ->setHasProfile()
+          ->setHasForwardOn404(false)
+          ->setHasIndex()
+          ->setHasAbout()
+          ->setHasContact()
         ;
 
         $na->getSiteFeatures()
@@ -114,7 +161,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -124,6 +171,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $eu->getSiteFeatures()
@@ -133,7 +191,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals()
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups()
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -143,6 +201,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $latam->getSiteFeatures()
@@ -152,7 +221,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -162,6 +231,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $in->getSiteFeatures()
@@ -171,7 +251,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -181,6 +261,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $mysg->getSiteFeatures()
@@ -190,7 +281,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -200,6 +291,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $anz->getSiteFeatures()
@@ -209,7 +311,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasDeals(false)
           ->setHasForums()
           ->setHasGames()
-          ->setHasGamesNavDropDown()
+          ->setHasGamesNavDropDown(false)
           ->setHasGroups(false)
           ->setHasMessages()
           ->setHasMicrosoft()
@@ -219,6 +321,17 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasSweepstakes(false)
           ->setHasVideo()
           ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404()
+          ->setHasIndex(false)
+          ->setHasAbout(false)
+          ->setHasContact(false)
         ;
 
         $this->manager->flush();

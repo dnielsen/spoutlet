@@ -2,54 +2,62 @@
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddImage') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditImage') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteImage') %}
+{% set addImageUrl          = features.hasPhotos ? path('gallery_submit') : path('group_add_image', { 'id': group.id }) %}
 
-{% if canAdd %}
-    {% if features.hasPhotos %}
-        <div><a href='{{ path('gallery_submit') }}'>Add Image</a></div>
-    {% else %}
-        <div><a href='{{ path('group_add_image', {'id' : group.id }) }}'>Add Image</a></div>
-    {% endif %}
-{% endif %}
-{% if pages | length > 0 %}
-    <div class="scrollable" id="scrollable-images" style="height: 550px; width: 600px;background: #191919;">
-        <div class="items">
-            {% for page in pages %}
-            <div class="items-wrapper">
-            {% for imageList in page %}
-                {% for image in imageList %}
-                    <div class="group-image-item">
-                        <div class="group-image-image">
-                            <a href="{{ path('group_image_show', { id: image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
-                                <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
-                            </a>
+<div id="group-images">
+
+    <div>
+        {% if pages | length > 0 %}
+            {% if canAdd %}
+                <a href='{{ addImageUrl }}'>{{ 'platformd.groups.images.submit_images' | pd_trans }}</a>
+            {% else %}
+                {{ 'platformd.groups.images.non_member_add' | pd_trans }}
+            {% endif %}
+        {% else %}
+            {% if canAdd %}
+                {{ 'platformd.groups.images.member_no_images' | pd_trans({'%addImageUrl%': addImageUrl}) | raw }}
+            {% else %}
+                {{ 'platformd.groups.images.non_member_no_images' | pd_trans }}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    {% if pages | length > 0 %}
+        <div class="scrollable" id="scrollable-images">
+            <div class="items">
+                {% for page in pages %}
+                <div class="items-wrapper">
+                {% for imageList in page %}
+                    {% for image in imageList %}
+                        <div class="group-image-item">
+                            <div class="group-image-image">
+                                <a href="{{ path('group_image_show', { id: image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
+                                    <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
+                                </a>
+                            </div>
+                            <div class="group-image-title">
+                                {{ image.title }}
+                            </div>
+                            <div class="group-image-actions">
+                                {% if canDelete %}
+                                    <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image?');">{{ 'platformd.groups.images.delete' | pd_trans }}</a> |
+                                {% endif %}
+                                {% if canEdit %}
+                                    <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">{{ 'platformd.groups.images.edit' | pd_trans }}</a> |
+                                {% endif %}
+                                <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">{{ 'platformd.groups.images.report' | pd_trans }}</a>
+                            </div>
                         </div>
-                        <div class="group-image-title">
-                            {{ image.title }}
-                        </div>
-                        <div class="group-image-actions">
-                            {% if canDelete %}
-                                <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image image?');">Delete</a> |
-                            {% endif %}
-                            {% if canEdit %}
-                                <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">Edit</a> |
-                            {% endif %}
-                            <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">Report</a>
-                        </div>
-                    </div>
+                    {% endfor %}
                 {% endfor %}
+                </div>
             {% endfor %}
             </div>
-        {% endfor %}
         </div>
-    </div>
-    <div id="scroll-actions" style="margin-top: 10px;">
-        <a class="prev browse" style="float: left;">Previous</a>
-        <a class="next browse" style="float: right;">See More</a>
-    </div>
-
-{% else %}
-<div style="height: 500px; width: 600px;">
-    <p>No images yet... please come back later!</p>
+        <div id="scroll-actions" style="margin-top: 10px;">
+            <a class="prev browse" style="float: left;">{{ 'platformd.groups.images.previous' | pd_trans }}</a>
+            <a class="next browse" style="float: right;">{{ 'platformd.groups.images.see_more' | pd_trans }}</a>
+        </div>
+    {% endif %}
+    {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 </div>
-{% endif %}
-{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

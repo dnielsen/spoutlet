@@ -27,15 +27,16 @@
                 'bundles/spoutlet/css/default.css'
                 'bundles/spoutlet/css/legal.css'
                 'bundles/spoutlet/css/new.css'
-                'bundles/comment/css/comments.css'
                 'bundles/spoutlet/css/comments.css'
                 'ckeditor/skins/kama/editor.css'
                 'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
-                filter='cssrewrite'
-                output='css/packed/layout.css'
-            %}
-            <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
-            {% endstylesheets %}
+                'bundles/spoutlet/css/qtip.css'
+                'bundles/spoutlet/css/rsvp.css'
+		        filter='cssrewrite'
+		        output='css/packed/layout_default.css'
+		    %}
+		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+		    {% endstylesheets %}
         {% endblock %}
 
         {% block javascripts %}
@@ -57,18 +58,20 @@
                 'bundles/spoutlet/js/google-dfp.js'
                 'bundles/spoutlet/js/jquery.countdown.min.js'
                 'bundles/spoutlet/js/jquery.ddslick.min.js'
-                'bundles/spoutlet/alt_js/*'
-                'bundles/comment/js/comments.js'
+                'bundles/spoutlet/js/jstz.min.js'
+		        'bundles/spoutlet/alt_js/*'
+		        'bundles/comment/js/comments.js'
                 'bundles/spoutlet/js/jquery.timeago.min.js'
                 'ckeditor/ckeditor.js'
                 'ckeditor/config.js'
                 'ckeditor/lang/en.js'
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
                 'bundles/spoutlet/js/jquery.blockUI.js'
-                output='js/packed/layout.js'
-            %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-            {% endjavascripts %}
+		        output='js/packed/layout_default.js'
+		    %}
+		    <script type="text/javascript" src="{{ asset_url }}"></script>
+
+		    {% endjavascripts %}
         {% endblock %}
 
         {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
@@ -94,7 +97,7 @@
                 $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
                 $('a[href*="alienwarearena"]').attr('target','');
 
-		        $("ul.sf-menu").supersubs({
+		        $("ul.sf-list").supersubs({
 		            minWidth:   12,
 		            maxWidth:   27,
 		            extraWidth: 1
@@ -108,13 +111,10 @@
                 });
                 $('#nav-wrapper').width(width);
 
-                $("ul.sf-menu-account").supersubs({
-                    minWidth:   12,
-                    maxWidth:   27,
-                    extraWidth: 1
-                }).superfish({
-                    delay:      150
-                });
+                // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
+                $.blockUI.defaults.overlayCSS = {};
+
+                $.fn.qtip.defaults.style.classes = 'qtip-dark qtip-shadow qtip-rounded';
 		    });
 		</script>
 		<script type="text/javascript">
@@ -135,22 +135,26 @@
 				});
 			});
 		</script>
-        {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
-        {% include 'SpoutletBundle::_analytics.html.twig' %}
+
+        {% if features.hasGoogleAnalytics and config.googleAnalyticsAccount %}
+            {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
+            {% include 'SpoutletBundle::_analytics.html.twig' %}
+        {% endif %}
+
 	</head>
 	<body class="site-{{ app.session.locale }}">
-        {% if facebook_app_id %}
+        {% if features.hasFacebook and config.facebookAppId %}
         <div id="fb-root"></div>
         <script src="http://connect.facebook.net/en_US/all.js"></script>
         <script>
           // assume we are already logged in
-          FB.init({appId: '{{ facebook_app_id }}', xfbml: true, cookie: true});
+          FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});
         </script>
         {% endif %}
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(\'%url%\');"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
+	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(%url%);"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
 	            <div class="background-takeover" id="custom_background_top">
 	                <div class="background-takeover" id="custom_background_bot">
 	                    <div id="header">
@@ -160,8 +164,9 @@
 	                        {% include 'SpoutletBundle::navigation.html.twig' %}
 	                    </div>
 	                    <div id="content-wrapper">
-                            <div id="content-background">
+                            <div id="{{ (block('content_background_override_class') ? block('content_background_override_class') : 'content-background') }}">
                                 <div id="content">
+
                                     {% block pre_content_nav %}{% endblock %}
 
                                     {#
@@ -182,6 +187,8 @@
                                         {% set sessionFlashType = 'error' %}
                                     {% elseif (app.session.hasFlash('success')) %}
                                         {% set sessionFlashType = 'success' %}
+                                    {% elseif (app.session.hasFlash('info')) %}
+                                        {% set sessionFlashType = 'info' %}
                                     {% else %}
                                         {% set sessionFlashType = block('flash_type') %}
                                     {% endif %}
@@ -218,6 +225,7 @@
                                     {% endif %}
 
                                     {% block content %}{% endblock %}
+
                                 </div>
                             </div>
                         </div>
@@ -232,5 +240,35 @@
 	            </div>
 	        </div>
 	    </div>
+
+        <!-- omniture -->
+        <script language="JavaScript" type="text/javascript" src="/omniture/s_code{% if app.debug %}_dev{% endif %}.js "></script>
+        <script language="JavaScript" type="text/javascript">
+            s_dell.pageName="";
+            s_dell.events="";
+            s_dell.prop29="3rd party sites";
+            s_dell.prop49="c=us&l=en&s=gen";
+            var s_code=s_dell.t();if(s_code)document.write(s_code);
+        </script>
+        <!-- end omniture -->
+
+        <!-- mediaplex -->
+        <script language="javascript" type="text/javascript">
+            <!--
+            var page_url = escape(document.URL);
+            var ref_url = escape(document.referrer);
+
+            var mpt = new Date();
+            var mpts = mpt.getTimezoneOffset() + mpt.getTime();
+
+            if (window.location.protocol == "https:"){
+                document.write("<iframe src=\"https:\/\/secure.img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
+            } else {
+                document.write("<iframe src=\"http:\/\/img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
+            }
+            // -->
+        </script>
+        <!-- end mediaplex -->
+
 	</body>
 </html>

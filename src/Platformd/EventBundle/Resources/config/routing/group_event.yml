@@ -1,0 +1,24 @@
+group_event_rsvp:
+    pattern: /group-events/ajax/rsvp
+    defaults: { _controller:"EventBundle:GroupEvent:rsvpAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+group_event_disable:
+    pattern: /group-events/ajax/disable
+    defaults: { _controller:"EventBundle:GroupEvent:disableAjax", site: ~ }
+    requirements:
+        _format: json
+        _method: POST
+
+group_event_cancel:
+    pattern: /group-events/{eventId}/cancel
+    defaults: { _controller:"EventBundle:GroupEvent:cancel", site: ~ }
+
+group_event_activate:
+    pattern: /group-events/{eventId}/activate
+    defaults: { _controller:"EventBundle:GroupEvent:activate", site: ~ }
+
+# More group event routes are defined in GroupBundle\Resources\config\routing\group_no_prefix.yml
+# This is so that they can work easily with group URLs now that they don't have the prefix /groups

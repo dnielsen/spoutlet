@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'HTML Widgets' %}
+
+{% block content %}
+<h1>HTML Widget Site Choice</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_html_widget_list'
+}%}
+
+<a class="btn btn-primary" href="{{ path('admin_html_widget_new') }}">
+    Create a new HTML Widget
+</a>
+{% endblock %}

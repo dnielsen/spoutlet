@@ -1,14 +1,14 @@
 [symfony]
     git=http://github.com/symfony/symfony.git
-    version=v2.0.13
+    version=v2.0.23
 
 [twig]
     git=http://github.com/fabpot/Twig.git
-    version=v1.8.0
+    version=v1.10.3
 
 [monolog]
     git=http://github.com/Seldaek/monolog.git
-    version=1.0.2
+    version=1.2.1
 
 [doctrine-common]
     git=http://github.com/doctrine/common.git
@@ -16,22 +16,23 @@
 
 [doctrine-dbal]
     git=http://github.com/doctrine/dbal.git
-    version=2.1.6
+    version=2.1.7
 
 [doctrine]
     git=http://github.com/doctrine/doctrine2.git
-    version=2.1.6
+    version=2.1.7
 
 [swiftmailer]
     git=http://github.com/swiftmailer/swiftmailer.git
-    version=v4.1.7
+    version=v4.2.2
 
 [assetic]
     git=http://github.com/kriswallsmith/assetic.git
-    version=v1.0.3
+    version=v1.0.4
 
 [twig-extensions]
     git=http://github.com/fabpot/Twig-extensions.git
+    version=v1.0.0
 
 [metadata]
     git=http://github.com/schmittjoh/metadata.git
@@ -40,7 +41,7 @@
 [SensioFrameworkExtraBundle]
     git=http://github.com/sensio/SensioFrameworkExtraBundle.git
     target=/bundles/Sensio/Bundle/FrameworkExtraBundle
-    version=origin/2.0
+    version=v2.0.23
 
 [JMSSecurityExtraBundle]
     git=http://github.com/schmittjoh/JMSSecurityExtraBundle.git
@@ -50,12 +51,12 @@
 [SensioDistributionBundle]
     git=http://github.com/sensio/SensioDistributionBundle.git
     target=/bundles/Sensio/Bundle/DistributionBundle
-    version=origin/2.0
+    version=v2.0.23
 
 [SensioGeneratorBundle]
     git=http://github.com/sensio/SensioGeneratorBundle.git
     target=/bundles/Sensio/Bundle/GeneratorBundle
-    version=origin/2.0
+    version=v2.0.23
 
 [AsseticBundle]
     git=http://github.com/symfony/AsseticBundle.git
@@ -65,6 +66,7 @@
 [FOSUserBundle]
     git=git://github.com/FriendsOfSymfony/FOSUserBundle.git
     target=/bundles/FOS/UserBundle
+    version=origin/1.2.x
 
 [doctrine-fixtures]
     git=http://github.com/doctrine/data-fixtures.git
@@ -86,6 +88,7 @@
 [EWZRecaptchaBundle]
     git=git://github.com/excelwebzone/EWZRecaptchaBundle.git
     target=/bundles/EWZ/Bundle/RecaptchaBundle
+    version=origin/2.0
 
 [DoctrineExtensions]
     git=git://github.com/l3pp4rd/DoctrineExtensions.git
@@ -180,6 +183,11 @@
     git=http://github.com/ezyang/htmlpurifier.git
     target=htmlpurifier
     version=344e0640b6610883a0aa6766cc6750d26d091c76
+
+[VichGeographicalBundle]
+   git=git://github.com/dustin10/VichGeographicalBundle.git
+   target=/bundles/Vich/GeographicalBundle
+   version=fc68b2c52e3b925fb31e51ee87fefe325491d266
 
 [LiipThemeBundle]
     git=http://github.com/liip/LiipThemeBundle.git

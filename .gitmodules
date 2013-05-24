@@ -1,3 +1,6 @@
-[submodule "app/Resources/themes/custom_theme"]
-	path = app/Resources/themes/custom_theme
-	url = git@github.com:playitcool/custom_theme.git
+[submodule "app/Resources/themes/marketingcamp"]
+	path = app/Resources/themes/marketingcamp
+	url = git@github.com:playitcool/pd_theme_marketingcamp.git
+[submodule "app/Resources/themes/alienwarearena"]
+	path = app/Resources/themes/alienwarearena
+	url = git@github.com:playitcool/pd_theme_alienwarearena.git

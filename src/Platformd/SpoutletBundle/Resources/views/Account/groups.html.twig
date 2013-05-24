@@ -1,61 +1,70 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.user.account.my_groups" | trans }}{% endblock %}
+{% block title %}{{ "platformd.user.account.my_groups" | pd_trans }}{% endblock %}
 
 {% block content %}
 
 <div class="control_panel">
-
-    <div class="widget-header">
-        <div class="widget-title">
-            <h2>My Groups</h2>
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2>My Groups</h2>
+            </div>
         </div>
-    </div>
-    <div class="widget-content">
-        <div class="text">
-            <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
-            <tbody><tr>
-                <th style="width:25%;">Group</th>
-                <th style="width:25%;">Organizer</th>
-                <th style="width:25%;">Type</th>
-                <th style="width:25%">Members</th>
-            </tr>
-            {% for group in groups %}
-                <tr class="eventListGroup_lan">
-                    <td>
-                        <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
-                    </td>
-                    <td>
-                        {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}
-                    </td>
-                    <td>
-                        {% if group[0].isPublic %}
-                            <span class="label label-success">Public</span>
-                        {% else %}
-                            <span class="label label-warning">Private</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{ group['memberCount'] }}
-                    </td>
+        <div class="widget-content">
+            <div class="text">
+                <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
+                <tbody><tr>
+                    <th style="width:25%;">Group</th>
+                    <th style="width:25%;">Organizer</th>
+                    <th style="width:25%;">Type</th>
+                    <th style="width:25%">Members</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4">
-                        <em>There are no groups!</em>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                {% for group in groups %}
+                    <tr class="eventListGroup_lan">
+                        <td>
+                            {% if action != null %}
+                                {% if action == "group_event" %}
+                                    <a href="{{ path('group_event_new', { 'groupSlug': group[0].slug }) }}">{{ group[0].name }}</a>
+                                {% else %}
+                                    <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}
+                        </td>
+                        <td>
+                            {% if group[0].isPublic %}
+                                <span class="label label-success">Public</span>
+                            {% else %}
+                                <span class="label label-warning">Private</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ group['memberCount'] }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <em>You are not in any groups. <a href="{{ path('groups') }}">Click here</a> to join a group or <a href="{{ path('group_new') }}">create your first group</a>.</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
         </div>
-    </div>
-    <div class="widget-footer">
-        &nbsp;
+        <div class="widget-footer">
+            &nbsp;
+        </div>
     </div>
 </div>
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}

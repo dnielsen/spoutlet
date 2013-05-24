@@ -2,6 +2,10 @@ default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
 
+health_check:
+    pattern:  /healthCheck
+    defaults: { _controller: SpoutletBundle:Default:healthCheck }
+
 privacy:
     pattern: /legal/privacy
     defaults: { _controller: SpoutletBundle:Default:privacy }
@@ -39,10 +43,6 @@ arp:
 
 _spoutlet_admin:
     resource: routing/admin.yml
-
-_spoutlet_events:
-    resource: routing/events.yml
-    prefix:   /events
 
 _spoutlet_account:
     resource: routing/account.yml
@@ -95,6 +95,14 @@ SpoutletBundle_admin_contest:
 SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
+
+SpoutletBundle_admin_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_rsvp.yml"
+    prefix:   /admin/rsvp
+
+SpoutletBundle_rsvp:
+    resource: "@SpoutletBundle/Resources/config/routing/rsvp.yml"
+    prefix:   /rsvp
 
 SpoutletBundle_takeover:
     resource: "@SpoutletBundle/Resources/config/routing/takeover.yml"

@@ -419,7 +419,7 @@ class GalleryController extends Controller
         }
 
         $voteRepo       = $this->getVoteRepository();
-        $likes        = $voteRepo->findUpVotes($id);
+        $likes        = $voteRepo->findUpVotesCount($id);
 
         $views = $media->getViews();
 
@@ -475,7 +475,15 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Media not found.');
         }
 
-        $form = $this->createForm(new GalleryMediaType($user), $media);
+        $galleries = array();
+        foreach ($media->getGalleries() as $gallery) {
+            $galleries[] = $gallery->getId();
+        }
+        $media->setGalleries($galleries);
+
+        $galleryRepo = $this->getGalleryRepository();
+
+        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
 
         if($request->getMethod() == 'POST')
         {
@@ -486,9 +494,17 @@ class GalleryController extends Controller
                 $em = $this->getEntityManager();
                 $media = $form->getData();
 
+                $galleries = array();
+
+                foreach ($media->getGalleries() as $galleryId) {
+                    $galleries[] = $galleryRepo->find($galleryId);
+                }
+
+                $media->setGalleries($galleries);
+
                 if(count($media->getGalleries()) == 0)
                 {
-                    $form = $this->createForm(new GalleryMediaType($user), $media);
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
                     $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
 
                     return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
@@ -617,15 +633,17 @@ class GalleryController extends Controller
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
         $country            = $countryRepo->findOneByCode($user->getCountry());
 
-        if ($contest && !$contest->isFinished() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
-            return $response;
-        }
+        if ($contest && !$contest->isFinished()) {
 
+            if (!$contest->getRuleset()->doesUserPassRules($user, $country)) {
+                $response->setContent(json_encode(array("success" => false, "messageForUser" => "You are not eligible to vote on this contest")));
+                return $response;
+            }
 
-        if ($contest && !$contestRepo->canUserVoteBasedOnSite($user, $contest)) {
-            $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
-            return $response;
+            if (!$contest->getSites()->contains($this->getCurrentSite())) {
+                $response->setContent(json_encode(array("success" => false, "messageForUser" => "This contest is not enabled for your region.")));
+                return $response;
+            }
         }
 
         if (!$voteRepo->canVoteOnMedia($media, $user)) {
@@ -643,7 +661,7 @@ class GalleryController extends Controller
         $em->persist($vote);
         $em->flush();
 
-        $likes = $this->getVoteRepository()->findUpVotes($media);
+        $likes = $this->getVoteRepository()->findUpVotesCount($media);
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => 'Vote successful', "likes" => $likes)));
         return $response;
@@ -806,7 +824,7 @@ class GalleryController extends Controller
         foreach ($galleries as $gallery) {
             $filterOptions[] = array(
                 'value' => $gallery->getId(),
-                'name'  => $gallery->getName(),
+                'name'  => $gallery->getName($site->getId()),
                 'slug'  => $gallery->getSlug()
             );
         }
@@ -819,54 +837,85 @@ class GalleryController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $content  = $request->getContent();
+        if ($request->getMethod() == 'POST') {
+            $content  = $request->getContent();
 
-        $subdomain = $request->request->get('_site');
+            $subdomain = $request->request->get('_site');
 
-        if (!$subdomain) {
-            $response->setContent(json_encode(array("error" => "Site not specified.")));
-            return $response;
-        }
-
-        $em         = $this->getEntityManager();
-
-        $siteRepo           = $em->getRepository('SpoutletBundle:Site');
-        $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
-
-        foreach ($siteRepo->findAll() as $dbSite) {
-            if ($dbSite->getSubDomain() == $subdomain) {
-                $site = $dbSite;
-                break;
+            if (!$subdomain) {
+                $response->setContent(json_encode(array("error" => "Site not specified.")));
+                return $response;
             }
-        }
 
-        if (!$site) {
-            $response->setContent(json_encode(array("error" => "Invalid site specified.")));
-            return $response;
-        }
+            $em                 = $this->getEntityManager();
+            $siteRepo           = $em->getRepository('SpoutletBundle:Site');
+            $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
-        $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+            $site = null;
 
-        $featuredMedia = array();
-
-        if ($media) {
-            $counter = 0;
-            $liip = $this->get('liip_imagine.templating.helper');
-            foreach($media as $mediaItem) {
-                $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
-                $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
-                $counter++;
+            foreach ($siteRepo->findAll() as $dbSite) {
+                if ($dbSite->getSubDomain() == $subdomain) {
+                    $site = $dbSite;
+                    break;
+                }
             }
+
+            if (!$site) {
+                $response->setContent(json_encode(array("error" => "Invalid site specified.")));
+                return $response;
+            }
+
+            $media  = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+            $featuredMedia = array();
+
+            if ($media) {
+                $counter = 0;
+                $liip = $this->get('liip_imagine.templating.helper');
+                foreach($media as $mediaItem) {
+                    $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
+                    $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $counter++;
+                }
+            } else {
+                $featuredMedia = null;
+            }
+
+            $response->setContent(json_encode(array(
+                "success" => true,
+                "media"   => $featuredMedia
+            )));
+
+            return $response;
         } else {
-            $featuredMedia = null;
+            $em                 = $this->getEntityManager();
+            $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
+            $site               = $this->getCurrentSite();
+            $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
+
+            $featuredMedia = array();
+
+            if ($media) {
+                $counter = 0;
+                $liip = $this->get('liip_imagine.templating.helper');
+                foreach($media as $mediaItem) {
+                    $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
+                    $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $counter++;
+                }
+            } else {
+                $featuredMedia = null;
+            }
+
+            $response->setContent(json_encode(array(
+                "success" => true,
+                "media"   => $featuredMedia
+            )));
+
+            $response->setSharedMaxAge(30);
+
+            return $response;
         }
-
-        $response->setContent(json_encode(array(
-            "success" => true,
-            "media"   => $featuredMedia
-        )));
-
-        return $response;
     }
 
     private function getEntityManager()

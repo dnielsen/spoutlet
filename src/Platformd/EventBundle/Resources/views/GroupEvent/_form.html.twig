@@ -1,0 +1,197 @@
+{% form_theme form 'EventBundle::form_theme.html.twig' %}
+
+{% set isOnline = event is defined ? event.online : true %}
+
+{{ form_errors(form) }}
+
+<div>
+    <div class="row-fluid first">
+        <div class="span11">
+
+            {{ form_row(form.name) }}
+
+            {% if form.registrationOption is defined %}{{ form_row(form.registrationOption) }}{% endif %}
+            {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
+            {{ form_row(form.content) }}
+            {{ form_row(form.online) }}
+
+            <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
+                {{ form_row(form.location) }}
+                {{ form_row(form.address1) }}
+                {{ form_row(form.address2) }}
+            </div>
+
+            <div class="start-date">{{ form_row(form.startsAt) }}</div>
+            <div class="end-date">{{ form_row(form.endsAt) }}</div>
+
+            <div class="styled-select event-timezone">
+                {{ form_row(form.timezone) }}
+            </div>
+
+            {% if form.sites is defined %}{{ form_row(form.sites) }}{% endif %}
+            {{ form_row(form.private) }}
+        </div>
+    </div>
+
+    <div class="hideable-field">
+        <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
+        <div id="advanced-options" style="display:none; margin:20px 0 0 0;">
+            {% if form.slug is defined %}{{ form_row(form.slug) }}{% endif %}
+            {{ form_row(form.bannerImage) }}
+        </div>
+    </div>
+
+    {% if form.translations is defined and form.translations is not null and form.translations is not empty %}
+        <a href="javascript:void(0);" id="translations" style="cursor:pointer;">Add Translations</a>
+        <div class="row-fluid first" id="translations-wrapper" style="display:none; margin:20px 0 0 0;">
+            <div class="span11">
+                {{ form_widget(form.translations) }}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div style="display:none;">
+    {{ form_rest(form) }}
+</div>
+
+{# @TODO put that in a form_theme if possible - could not find that #}
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('.event-date-picker').datepicker({
+            minDate: 0,
+            dateFormat: 'mm/dd/yy'
+        });
+
+        $('#group-event-form').submit(function() {
+
+            var errors = 0;
+            var errorString = '<div class="help-inline time-error">Please select a valid time for your event</div>';
+
+            if (!$('.start-date .hour-selection select').val() || !$('.start-date .minute-selection select').val()) {
+                $('.start-date .control-group').addClass('error');
+                if ($('.start-date .time-error').length < 1) {
+                    $('.start-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.start-date .control-group').removeClass('error');
+                $('.start-date .time-error').remove();
+            }
+
+            if (!$('.end-date .hour-selection select').val() || !$('.end-date .minute-selection select').val()) {
+                $('.end-date .control-group').addClass('error');
+                if ($('.end-date .time-error').length < 1) {
+                    $('.end-date .time-selection').append(errorString);
+                }
+                errors++;
+            } else {
+                $('.end-date .control-group').removeClass('error');
+                $('.end-date .time-error').remove();
+            }
+
+            if (errors > 0) {
+                $('html, body').animate({
+                    scrollTop: $(".start-date").offset().top - 100
+                }, 100);
+                return false;
+            }
+        });
+
+        if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
+            var displayDiv = '<div class="hideable-field" style="display: none;" />';
+            var exernalUrlDiv = '<div id="external-url" />';
+        } else {
+            var displayDiv = '<div class="hideable-field" />';
+            var exernalUrlDiv = '<div id="external-url" style="display: none;" />';
+        }
+
+        $('.control-group').filter(function(index) {
+            return !(
+                $(this).has('select#existing_event_select').length ||
+                $(this).has('input#groupEvent_name').length ||
+                $(this).has('input#groupEvent_game').length ||
+                $(this).has('input#groupEvent_location').length ||
+                $(this).has('input#groupEvent_online_1').length ||
+                $(this).has('input#groupEvent_address1').length ||
+                $(this).has('input#groupEvent_address2').length ||
+                $(this).has('input#groupEvent_startsAt_date').length ||
+                $(this).has('input#groupEvent_endsAt_date').length ||
+                $(this).has('input#groupEvent_timezone').length ||
+                $(this).has('input#groupEvent_registrationOption_REGISTRATION_3RDPARTY').length ||
+                $(this).has('input#groupEvent_externalUrl').length ||
+                $(this).has('#groupEvent_translations').length ||
+                $(this).has('div[id^="groupEvent_translations_"]').length ||
+                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length ||
+                $(this).has('input[id^="groupEvent_sites_"]').length);
+        }).wrap(displayDiv);
+
+        $('.file-upload').wrap(displayDiv);
+
+        {% if form.externalUrl is defined %}
+            $('.control-group').has('input#groupEvent_externalUrl').wrap(exernalUrlDiv);
+        {% endif %}
+
+
+        $('#groupEvent_registrationOption_REGISTRATION_3RDPARTY').click(function() {
+            $('.hideable-field').slideUp();
+            $('.hideable-field:hidden').hide();
+            $('#external-url').show();
+        });
+
+        $('#groupEvent_registrationOption_REGISTRATION_ENABLED').click(function() {
+            $('.hideable-field').slideDown();
+            $('.hideable-field:hidden').show();
+            $('#external-url').hide();
+        });
+
+        $('#groupEvent_registrationOption_REGISTRATION_DISABLED').click(function() {
+            $('.hideable-field').slideDown();
+            $('.hideable-field:hidden').show();
+            $('#external-url').hide();
+        });
+
+        {% if form.translations is defined %}
+            var $i = 0;
+            $('#groupEvent_translations > .control-group > label').each(function (){
+                switch ($i) {
+                    case 0:
+                        $(this).text('Japanese');
+                        break;
+                    case 1:
+                        $(this).text('Chinese');
+                        break;
+                    case 2:
+                        $(this).text("Spanish");
+                        break;
+                }
+                $i++;
+            });
+        {% endif %}
+
+        $("input[name='groupEvent[online]']").change(function () {
+            var val = $(this).val();
+            if(val == 0) {
+                $('#location-info').slideDown();
+            } else {
+                $('#location-info').slideUp();
+            }
+        });
+
+        if ($('input[name="groupEvent[online]"]:checked').val() == 0) {
+            $('#location-info').show();
+        }
+
+        {% if form.translations is defined %}
+            $('#translations').click(function () {
+                $('#translations-wrapper').toggle();
+            });
+        {% endif %}
+
+        $('#toggle-advanced').click(function () {
+            $('#advanced-options').slideToggle();
+        });
+
+    });
+</script>

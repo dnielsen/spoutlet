@@ -391,4 +391,9 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     {
         return 3;
     }
+
+    public function getClass()
+    {
+        return get_class($this);
+    }
 }

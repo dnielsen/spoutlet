@@ -1,0 +1,121 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <div class="std_1col" style="padding: 0;">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+           <div class="sub-nav events-sub-nav">
+                <ul>
+                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                        {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                            <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | trans }}</a></li>
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | trans }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                    <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h1>Edit Event: {{ event.name }}</h1>
+
+    <form id="group-event-form" action="{{ path('group_event_edit', {'groupSlug': group.slug, 'eventId': event.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+        {% include 'EventBundle:GroupEvent:_form.html.twig' %}
+
+        <div class="form-actions" style="float: left;">
+            <button type="submit" class="btn btn-primary" formnovalidate>Update</button>
+
+            {% if event.endsAtUtc|date('Y-m-d H:i:s') >= "now"|date('Y-m-d H:i:s') %}
+                {% if event.active == true %}
+                    <button type="submit" class="cancel-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_cancel', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Cancel Event</button>
+                {% else %}
+                    <button type="submit" class="activate-event btn btn-primary" event-name="{{ event.name }}" data-path="{{ path('group_event_activate', { 'eventId' : event.id }) }}" style="margin-left: 10px;">Activate Event</button>
+                {% endif %}
+            {% endif %}
+
+            <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Group Events</button>
+        </div>
+    </form>
+
+    <div id="cancel-event-dialog" title="Cancel Event" style="display:none;">
+        <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="cancel-text">Are you sure you want to cancel '{0}'?</span></p>
+    </div>
+
+    <div id="activate-event-dialog" title="Activate Event" style="display:none;">
+        <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="activate-text">Are you sure you want to activate '{0}'?</span></p>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            jQuery('input.datetime-picker').datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                showSecond: true
+            });
+
+            $('.cancel-event').click(function (e) {
+                e.preventDefault();
+                var eventname = $(this).attr('event-name');
+                var path = $(this).attr('data-path');
+                var text = $('#cancel-text').text().replace('{0}', eventname);
+
+                $('#cancel-text').text(text);
+                $('#cancel-event-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 200,
+                    width: 320,
+                    buttons: {
+                        "Yes": function() {
+                            $(this).dialog("close");
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+
+            $('.activate-event').click(function (e) {
+                e.preventDefault();
+                var eventname = $(this).attr('event-name');
+                var path = $(this).attr('data-path');
+                var text = $('#activate-text').text().replace('{0}', eventname);
+
+                $('#activate-text').text(text);
+                $('#activate-event-dialog').dialog({
+                    modal: true,
+                    resizable: false,
+                    movable: false,
+                    height: 200,
+                    width: 320,
+                    buttons: {
+                        "Yes": function() {
+                            $(this).dialog("close");
+                            document.location = path;
+                        },
+                        "No": function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}

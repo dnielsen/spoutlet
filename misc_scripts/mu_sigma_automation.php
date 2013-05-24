@@ -1,6 +1,6 @@
 <?php
 
-include '/home/ubuntu/scripts/mu-sigma_automation/config.php'
+include '/home/ubuntu/scripts/mu-sigma_automation/config.php';
 
 $ftpInfo        = array($ftpServer, $ftpUser, $ftpPassword);
 
@@ -194,11 +194,7 @@ function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient)
         $rowData = array();
 
         foreach ($headers as $heading => $field) {
-            if ($field) {
-                $rowData[] = $row[$field];
-            } else {
-                $rowData[] = $weekString;
-            }
+            $rowData[] = $field ? $row[$field] : $weekString;
         }
 
         $csvData[] = $rowData;
@@ -219,7 +215,7 @@ function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient)
     exec('gpg -ea --batch --always-trust -r "'.$recipient.'" '.$filename.'.gz');
 
     if (file_exists($filename.'.gz.asc')) {
-        unlink($filename.'.gz');
+        exec('shred -uv '.$filename.'.gz');
     }
 
     return $output;
@@ -239,7 +235,7 @@ function gzipFile($file)
         gzclose($handle);
 
         // Remove original file
-        unlink($file);
+        exec('shred -uv '.$file);
     }
 
     return $output;

@@ -1,0 +1,86 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% set canRemove = (app.user == event.user) or (app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
+
+{% block title 'Attendees - ' ~ event.name %}
+
+{% block content %}
+
+    <div class="std_1col" style="padding:0;">
+        {% if event.bannerImage %}
+            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%; margin: -10px 0 0 0;"></div>
+        {% else %}
+            <div id="event-default-banner"></div>
+        {% endif %}
+    </div>
+
+    <div class="std_1col" style="padding: 0;">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+           <div class="sub-nav events-sub-nav">
+                <ul>
+                    <li><a href="{{ event | pd_link }}">{{ 'platformd.events.event_attendees.back_to_event' | pd_trans }}</a></li>
+                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | pd_trans }}</a></li>
+                        {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                    <li><a href="{{ path(event.group.getLinkableRouteName, event.group.getLinkableRouteParameters) }}">Group Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="std_2col" style="margin-top: 10px;">
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header">
+                    <div class="widget-title">Attendees</div>
+                </div>
+                <div class="widget-content">
+                    <table style="width: 100%;">
+                        <thead style="text-align:left;">
+                            <tr>
+                                {% if canRemove %}<th style="width: 125px; padding:5px 0;">{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
+                                <th style="padding:5px 0;">{{ 'platformd.events.event_attendees.username' | pd_trans }}</th>
+                                <th style="width: 200px; padding:5px 0;">{{ 'platformd.events.event_attendees.joined' | pd_trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendee in attendees %}
+                                <tr>
+                                    {% if canRemove %}
+                                        <td style="padding:5px 0;">
+                                            <a href="{{ path('group_event_remove_attendee', { 'groupSlug': event.group.slug, 'eventSlug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                        </td>
+                                    {% endif %}
+                                    <td style="padding:5px 0;">
+                                        <a href="{{ account_link(attendee.username) }}">{{ attendee.username }}</a>
+                                    </td>
+                                    <td style="padding:5px 0;">{{ attendee.rsvpAt | date('date_format' | pd_trans) }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan={% if canRemove %}"3"{% else %}"2"{% endif %}>
+                                        <em>{{ 'platformd.events.event_attendees.no_attendees' | pd_trans }}</em>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="widget-footer">&nbsp;</div>
+            </div>
+        </div>
+        <div class="right">
+            <div>
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}

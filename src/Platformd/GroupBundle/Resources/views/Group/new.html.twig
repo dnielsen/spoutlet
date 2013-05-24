@@ -3,7 +3,6 @@
 {% block content %}
 
 <h1>Create Group</h1>
-<span>* required fields</span>
 <form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'GroupBundle:Group:_form.html.twig' %}
 
@@ -13,10 +12,12 @@
     </div>
 </form>
 {% endblock %}
+
 {% block stylesheets %}
- {{ parent() }}
- <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
@@ -26,7 +27,7 @@
                 return false;
             });
 
-            $('#platformd_spoutletbundle_grouptype_category').change(function () {
+            $('#platformd_groupbundle_grouptype_category').change(function () {
                 var groupType = $(this).val();
                 if(groupType == 'topic') {
                     $('#group-location-controls').fadeOut();
@@ -35,7 +36,7 @@
                 }
             });
 
-            var groupType = $('#platformd_spoutletbundle_grouptype_category').val();
+            var groupType = $('#platformd_groupbundle_grouptype_category').val();
             if(groupType == 'topic') {
                 $('#group-location-controls').fadeOut();
             }

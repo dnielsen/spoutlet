@@ -46,9 +46,9 @@
                     <div class="form-msg-error" id="contest_error" style="display:none;margin-left:0;width:auto;"></div>
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         {% if isEligible %}
-                            {% if (contest.submissionEndUtc | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                            {% if (contest.submissionEndTz | date('Y-m-d H:i:s')) > (nowInTz | date('Y-m-d H:i:s')) %}
                                 {% if isEntered == false %}
-                                    {% if (contest.submissionStartUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s')) and (contest.submissionEndUtc | date('Y-m-d H:i:s')) > ('now' | date('Y-m-d H:i:s')) %}
+                                    {% if (contest.submissionStartTz | date('Y-m-d H:i:s')) < (nowInTz | date('Y-m-d H:i:s')) and (contest.submissionEndTz | date('Y-m-d H:i:s')) > (nowInTz | date('Y-m-d H:i:s')) %}
                                         <div style="padding-top: 10px;">
                                             <form id="contest-entry-form" method="post" action="{{ path('contest_enter', {slug: contest.slug}) }}">
                                                 <input type="checkbox" id="contest-agree" name="contest-agree" /><span style="margin-left: 5px;">{{ agreeText | raw }}</span>
@@ -57,7 +57,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                    {% elseif (contest.submissionStartUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s')) %}
+                                    {% elseif (contest.submissionStartTz | date('Y-m-d H:i:s')) < (nowInTz | date('Y-m-d H:i:s')) %}
                                         <div style="padding: 10px 0px;">
                                             <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
                                                 {{ 'contests.submit_page_submission_ended' | trans }}

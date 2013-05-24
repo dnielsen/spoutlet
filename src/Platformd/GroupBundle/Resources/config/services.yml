@@ -1,3 +1,6 @@
+imports:
+    - { resource: "validation.yml" }
+
 services:
     platformd.model.group_manager:
         class: Platformd\GroupBundle\Model\GroupManager
@@ -5,6 +8,16 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@session"
             - "@knp_media.util.media_util"
+            - "@platformd.model.site_util"
+            - "@pd.cevo.api.api_manager"
             - "@security.context"
             - "@event_dispatcher"
+            - "@platformd_event.service.group_event"
+
+    platformd.repository.group:
+        class: Platformd\GroupBundle\Entity\GroupRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'GroupBundle:Group'
 

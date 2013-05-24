@@ -328,3 +328,28 @@ table.uploadedFiles td {
     bottom: 15px;
     width: 950px;
 }
+
+.event-owner-actions {
+    margin-bottom: 0;
+}
+
+#accountHeader li.more ul {
+    padding: 3px;
+    position: absolute;
+    background: #393939;
+    width: 50px;
+}
+
+#accountHeader li.more > a {
+    background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat;
+    padding-right: 15px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.profileAvatar_big .defaultAvatar {
+    width: 184px;
+    height: 184px;
+    background:url('/images/profile-default.png') top left no-repeat;
+    border: none;
+}

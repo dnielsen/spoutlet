@@ -55,7 +55,7 @@ class CsvResponseFactory
         $h = tmpfile();
 
         $filename = tempnam('/tmp', 'csv_response');
-        $h = fopen($filename, 'w');
+        $h = fopen($filename, 'w'); // TODO use in memory wrapper instead: fopen('php://memory', 'w')
 
         $bytes = 0;
         foreach ($this->rows as $row) {

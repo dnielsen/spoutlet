@@ -17,18 +17,24 @@ class RegistrationController extends BaseRegistrationController
         if ($process) {
             $user = $form->getData();
 
+            $authUser = false;
             if ($confirmationEnabled) {
                 $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
                 $route = 'fos_user_registration_check_email';
             } else {
-                $this->authenticateUser($user);
+                $authUser = true;
                 $route = 'fos_user_registration_confirmed';
             }
 
             $this->setFlash('fos_user_success', 'registration.flash.user_created');
             $url = $this->container->get('router')->generate($route);
+            $response = new RedirectResponse($url);
 
-            return new RedirectResponse($url);
+            if ($authUser) {
+                $this->authenticateUser($user, $response);
+            }
+
+            return $response;
         }
 
         return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.'.$this->getEngine(), array(

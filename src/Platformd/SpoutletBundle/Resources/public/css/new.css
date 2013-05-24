@@ -91,8 +91,11 @@ ul.normal-margin, ol.normal-margin {
 }
 
 /* comments */
-.profileAvatar img {
+.profileAvatar img,
+.profileAvatar .default-avatar {
     width: 84px;
+    height: 84px;
+    display: inline-block;
 }
 
 #commentsView h3 {
@@ -230,7 +233,7 @@ div.microsoft {
 }
 
 span.required {
-    color: #B01717;
+    color: #ff2f2f;
 }
 
 .giveawayForm label {

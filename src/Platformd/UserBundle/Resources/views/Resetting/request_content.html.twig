@@ -3,7 +3,7 @@
 <p>
     {{ 'platformd.user.request_reset.help_message' | trans }}
 </p>
-    
+
 <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
     <div>
         {% if invalid_username is defined %}
@@ -13,7 +13,7 @@
         <input type="text" id="username" name="username" />
     </div>
     <div>
-        <input type="submit" value="{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}" />
+        <input class="btn btn-primary" type="submit" value="{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}" />
     </div>
 </form>
 

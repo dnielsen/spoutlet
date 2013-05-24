@@ -1,0 +1,170 @@
+<table style="width:100%;">
+    <thead>
+        <tr>
+            <th>{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
+            <th style="width:8px;"></th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if events|length == 0 %}
+        <tr>
+            <td style="text-align:center; padding:20px 0;" colspan="6">
+                {# basically a hack, in one case I need another message, that has an HTML anchor tag in it #}
+                {% if no_events_pre_message is defined %}
+                    <p>
+                        {{ no_events_pre_message | raw }}
+                    </p>
+                {% endif %}
+                <strong>{{ no_events_message | pd_trans | raw }}</strong>
+            </td>
+        </tr>
+        {% else %}
+        {% for event in events %}
+        <tr class="eventListGroup_online">
+            <td style="vertical-align:top">
+                {{ event.startsAt | date_translate }}
+            </td>
+            {# todo - refactor this next line somewhere else #}
+            <td style="vertical-align:top">
+                {% set attending  = false %}
+                {% if is_granted('ROLE_USER') %}
+                    {% set attending = event.isUserAttending(app.user) %}
+                {% endif %}
+                {% if attending %}
+                <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" />
+                {% endif %}
+            </td>
+            <td style="vertical-align:top" class="event-link">
+
+                {% if event.group is defined %}
+                    {{ event | pd_link_full(event.name) }}
+                {% else %}
+                    {{ event | pd_link_full(event.name, ['global-event-link']) }}
+                {% endif %}
+
+            </td>
+            <td style="vertical-align:top" class="event-organizer">
+                {% if event.hostedBy is defined %}
+                    {{ event.hostedBy }}
+                {% else %}
+                    {% if event.group is defined %}
+                        <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
+                    {% else %}
+                        {{ 'na'|pd_trans }}
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td style="vertical-align:top">
+                {% if event.online %}
+                    {{ 'platformd.events.event_listings.online' | pd_trans }}
+                {% else %}
+                    {% if event.fullAddress is not null %}
+                        <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}" data-address="{{ event.fullAddress | url_encode }}">
+                            {{ event.location ? event.location : ('platformd.events.event_listings.show_map'|trans) }}
+                        </a>
+                    {% else %}
+                        {{ 'na'|pd_trans }}
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </tbody>
+</table>
+    <script type="text/javascript">
+        $(function () {
+
+            $('.event-link a').truncate({
+                width: 420
+            });
+
+            $('.qtip-view-map').truncate({
+                width: 170
+            });
+
+            $('.event-organizer a').truncate({
+                width: 170
+            });
+
+
+            $('.qtip-view-map').each(function(i, v) {
+
+                var lat = $(this).attr('data-lat');
+                var lng = $(this).attr('data-lng');
+                var addr = $(this).attr('data-address');
+                var directionsLink = 'http://maps.google.com/maps?daddr=' + addr;
+
+                $(this).qtip({
+                    content: {
+                        text: 'Loading map...',
+                        title: {
+                            button: $('<img/>', {
+                               'src': '{{ asset('bundles/spoutlet/images/x.png') }}',
+                               'class': 'qtip-close',
+                               'style': 'background:none;border-style:none;margin-top:-5px'
+                            })
+                        }
+                    },
+                    style: {
+                        width: 500,
+                    },
+                    position: {
+                        my: 'top center',
+                        at: 'bottom center',
+                        viewport: $(window),
+                        adjust: { method: 'shift' }
+                    },
+                    show: 'click',
+                    hide: 'unfocus',
+                    events: {
+                        render: function (event, api) {
+                            var tooltip = $(this);
+                            //var closeBtn = $('<span class="ui-icon ui-icon-close">×</span>').appendTo(api.elements.content);
+                            var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+
+                            var mapLink = $('<div style="padding-top: 5px;font-size:12px;font-weight:normal;"><a href="' + directionsLink + '" target="_blank">{{ 'platformd.events.event_show.directions' | trans }}</a></div>').appendTo(api.elements.content);
+
+                            tooltip.show();
+
+                            // options
+                            var myOptions = {
+                                zoom: 12,
+                                mapTypeControl: true,
+                                mapTypeControlOptions: {
+                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                                },
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+
+                            // Create map object as api attribute for later use
+                            api.map = new google.maps.Map(container[0], myOptions);
+                            var map = api.map;
+                            markersArray = [];
+
+                            // set center
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            tooltip.hide();
+                        },
+                        show: function (event, api) {
+                            var map = api.map;
+
+                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                            map.setCenter(centerLatLong);
+
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                position: centerLatLong,
+                                animation: google.maps.Animation.DROP,
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>

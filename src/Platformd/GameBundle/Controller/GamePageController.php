@@ -87,11 +87,15 @@ class GamePageController extends Controller
             || $gamePage->getyoutubeIdTrailer1() != ''
             || $gamePage->getyoutubeIdTrailer1() != '';
 
-        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos;
+        $events = $this->getGlobalEventService()->findEventsForGamePage($site, $gamePage->getGame());
+
+        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos || count($events) > 0;
 
         $hasFeatures = $gamePage->getKeyFeature1() != ''
             || $gamePage->getKeyFeature2() != ''
             || $gamePage->getKeyFeature3() != '';
+
+
 
         return array(
             'gamePage' => $gamePage,
@@ -101,6 +105,7 @@ class GamePageController extends Controller
             'hasVideos' => $hasVideos,
             'hasFeedItems' => $hasFeedItems,
             'hasFeatures' => $hasFeatures,
+            'events' => $events,
         );
     }
 

@@ -2,26 +2,6 @@ admin_index:
     pattern: /admin
     defaults: { _controller: SpoutletBundle:Admin:index }
 
-admin_events_index:
-    pattern: /admin/events
-    defaults: { _controller: SpoutletBundle:Admin:events }
-
-admin_events_new:
-    pattern: /admin/events/new
-    defaults: { _controller: SpoutletBundle:Admin:newEvent }
-
-admin_events_edit:
-    pattern: /admin/events/edit/{id}
-    defaults: { _controller: SpoutletBundle:Admin:editEvent }
-
-admin_event_approve:
-    pattern: /admin/events/approve/{id}
-    defaults: { _controller: SpoutletBundle:Admin:approveEvent }
-
-admin_event_unpublish:
-    pattern: /admin/events/unpublish/{id}
-    defaults: { _controller: SpoutletBundle:Admin:unpublishEvent }
-
 admin_user_approve_avatar:
     pattern: /admin/user/{id}/avatar/approve
     defaults: { _controller: UserBundle:Admin:approveAvatar }
@@ -59,6 +39,10 @@ admin_homepage_banner_list:
 admin_locale_to_sites_migration:
     pattern: /admin/migrate-locales-to-sites
     defaults: { _controller: SpoutletBundle:SiteMigration:migrate }
+
+admin_upload_media:
+    pattern: /admin/manage-media
+    defaults: { _controller: SpoutletBundle:Admin:manageMedia }
 
 admin_mass_unsubscribe:
     pattern: /admin/mass-unsubscribe

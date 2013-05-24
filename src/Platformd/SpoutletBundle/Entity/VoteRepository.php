@@ -16,7 +16,7 @@ class VoteRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findUpVotes($media)
+    public function findUpVotesCount($media, $contest=null)
     {
         $qb = $this->createQueryBuilder('v')
             ->andWhere('v.galleryMedia = :media')
@@ -24,6 +24,11 @@ class VoteRepository extends EntityRepository
             ->select('COUNT(v)')
             ->setParameter('media', $media)
             ->setParameter('voteType', 'up');
+
+        if ($contest) {
+            $qb->andWhere('v.votedAt < :contestEnd')
+                ->setParameter('contestEnd', $contest->getVotingEndUtc());
+        }
 
         $result = $qb->getQuery()->execute();
 
@@ -64,6 +69,7 @@ class VoteRepository extends EntityRepository
             ->leftJoin('ce.contest', 'c')
             ->andWhere('gm.contestEntry IS NOT NULL')
             ->andWhere('v.voteType = :up')
+            ->andWhere('v.votedAt < c.votingEndUtc')
             ->setParameter('up', 'up')
             ->groupBy('c.id')
             ->getQuery()
@@ -79,26 +85,55 @@ class VoteRepository extends EntityRepository
             ->leftJoin('ce.contest', 'c')
             ->andWhere('c = :contest')
             ->andWhere('v.voteType = :up')
+            ->andWhere('v.votedAt < :voteEnd')
             ->setParameter('contest', $contest)
+            ->setParameter('voteEnd', $contest->getVotingEndUtc())
             ->setParameter('up', 'up')
             ->groupBy('gm.id')
             ->getQuery()
             ->execute();
 
-        $downvotes = $this->createQueryBuilder('v')
-            ->select('gm.id', 'COUNT(v.id) AS vote_count')
-            ->leftJoin('v.galleryMedia', 'gm')
-            ->leftJoin('gm.contestEntry', 'ce')
-            ->leftJoin('ce.contest', 'c')
-            ->andWhere('c = :contest')
-            ->andWhere('v.voteType = :down')
-            ->setParameter('contest', $contest)
-            ->setParameter('down', 'down')
-            ->groupBy('gm.id')
-            ->getQuery()
-            ->execute();
-
-        return array('up' => $upvotes, 'down' => $downvotes);
+        return $upvotes;
     }
 
+    public function findUpVotesInArray($idArray)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->leftJoin('v.galleryMedia', 'gm')
+            ->andWhere('v.voteType = :voteType')
+            ->andWhere('gm.id IN (:ids)')
+            ->select('gm.id', 'COUNT(v) likeCount')
+            ->setParameter('voteType', 'up')
+            ->setParameter('ids', $idArray)
+            ->groupBy('gm.id');
+
+        $result = $qb->getQuery()->execute();
+
+        $return = array();
+
+        foreach ($result as $mediaVotes) {
+            $return[$mediaVotes['id']] = $mediaVotes['likeCount'];
+        }
+
+        return $return;
+    }
+
+    public function findUpVotes($media, $contest=null)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->andWhere('v.galleryMedia = :media')
+            ->andWhere('v.voteType = :voteType')
+            ->select('v')
+            ->setParameter('media', $media)
+            ->setParameter('voteType', 'up');
+
+        if ($contest) {
+            $qb->andWhere('v.votedAt < :contestEnd')
+                ->setParameter('contestEnd', $contest->getVotingEndUtc());
+        }
+
+        $result = $qb->getQuery()->execute();
+
+        return $result;
+    }
 }

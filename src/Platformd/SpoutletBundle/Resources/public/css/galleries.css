@@ -33,9 +33,11 @@
     padding: 3px 0 0 0;
 }
 
-.photo-author img {
+.photo-author img,
+.photo-author .default-avatar {
     width: 84px;
     height: 84px;
+    display: inline-block;
 }
 
 .photo-date {
@@ -157,10 +159,11 @@ a.media-voting-button {
 
 .up {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
-    background-position: 0 29px;
+    background-position: 0 0;
 }
 
-.up:hover {
+.up:hover,
+.already-voted {
     background: url('/bundles/spoutlet/images/vote_sprite.png');
     background-position: 0 29px;
 }
@@ -375,4 +378,8 @@ a.media-voting-button {
     display: inline-table;
     vertical-align: top;
     width: 180px;
+}
+
+#media-wrapper {
+    width: 100%;
 }

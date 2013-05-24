@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Entity\ContestRepository;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +19,10 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('SpoutletBundle:ContestAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -29,7 +30,8 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->getCurrentSite();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site, Contest::getValidStatuses());
         $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site, Contest::getValidStatuses());
@@ -148,21 +150,15 @@ class ContestAdminController extends Controller
 
         $voteData = $voteRepo->getVotesForContest($contest);
         $likes = array();
-        $dislikes = array();
 
-        foreach ($voteData['up'] as $upVotes) {
+        foreach ($voteData as $upVotes) {
             $likes[$upVotes['id']] = $upVotes['vote_count'];
-        }
-
-        foreach ($voteData['down'] as $downVotes) {
-            $dislikes[$downVotes['id']] = $downVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:chooseWinner.html.twig', array(
             'entries'   => $entries,
             'contest'   => $contest,
             'likes'     => $likes,
-            'dislikes'  => $dislikes,
         ));
     }
 
@@ -206,7 +202,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Contests');
 
         $em            = $this->getDoctrine()->getEntityManager();
-        $site          = $this->getCurrentSite();
+        $site          = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : $this->getCurrentSite();
         $imageContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site);
         $groupContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site);
         $voteResult    = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();
@@ -286,9 +282,9 @@ class ContestAdminController extends Controller
 
     private function renderImageMetrics($contest, $contestEntryRepo, $contestRepo, $slug)
     {
-        $likes              = array();
-        $upVotes            = array();
-        $downVotes          = array();
+        $likes      = array();
+        $imageLikes = array();
+        $em         = $this->getDoctrine()->getEntityManager();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -296,32 +292,23 @@ class ContestAdminController extends Controller
 
         $entries = $contestEntryRepo->findAllNotDeletedForContest($contest);
 
+        $contestLikes = $em->getRepository('SpoutletBundle:Vote')->getVotesForContest($contest);
+
         foreach ($entries as $entry) {
             foreach ($entry->getMedias() as $media) {
                 $likes[$media->getId()] = $this->getEntryLikeCount($media);
-
-                $votes =  $media->getVotes();
-
-                if ($votes->count()) {
-                    $upCount = $votes
-                        ->filter(function($x) {
-                            return
-                            $x->getVoteType() == "up"; })
-                        ->count();
-
-                    $upVotes[$media->getId()] = $upCount;
-                } else {
-                    $upVotes[$media->getId()] = 0;
-                }
             }
+        }
+        foreach ($contestLikes as $upVotes) {
+            $imageLikes[$upVotes['id']] = $upVotes['vote_count'];
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:entries.html.twig', array(
-            'contest'   => $contest,
-            'entries'   => $entries,
-            'slug'      => $slug,
-            'likes'     => $likes,
-            'upVotes'   => $upVotes,
+            'contest'       => $contest,
+            'entries'       => $entries,
+            'slug'          => $slug,
+            'imageLikes'    => $imageLikes,
+            'likes'         => $likes,
         ));
     }
 
@@ -429,7 +416,10 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find media item.');
         }
 
-        $votes      = $voteRepo->findVotes($galleryMedia);
+        $contestEntry   = $galleryMedia->getContestEntry() ?: null;
+        $contest        = $contestEntry ? $contestEntry->getContest() : null;
+
+        $votes      = $voteRepo->findUpVotes($galleryMedia, $contest);
         $factory    = new CsvResponseFactory();
 
         $factory->addRow(array(

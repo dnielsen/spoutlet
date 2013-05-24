@@ -181,9 +181,41 @@ class MetricManager
      * in the system. The key to the array is the site key, and each array
      * contains several fields (see below).
      */
-    public function createMembershipByCountryReport($countries, $regions, $countryDates, $regionDates)
+    public function createMembershipByCountryReport(DateTime $since = null, $site = null)
     {
-        $data       = array();
+        $data = array();
+
+        $sites = $site ? array($site->getDefaultLocale() => $site->getName()) : $this->sites;
+
+        foreach ($sites as $key => $name) {
+
+            $totalUsers = $this->userRepo->getTotalUsersForSite($key);
+
+            $arenaOptIn = $this->userRepo->getArenaOptInForSite($key);
+            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
+
+            $dellOptIn = $this->userRepo->getDellOptInForSite($key);
+            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+
+            $newUsers = $this->userRepo->countNewRegistrants($since, $key);
+
+            $data[$key] = array(
+                'siteName'             => $name,
+                'count'                => $totalUsers,
+                'arenaOptIn'           => $arenaOptIn,
+                'arenaOptInPercentage' => $arenaPercentage,
+                'dellOptIn'            => $dellOptIn,
+                'dellOptInPercentage'  => $dellPercentage,
+                'newUsers'             => $newUsers
+            );
+        }
+
+        return $data;
+    }
+
+    public function createMembershipByCountryAndRegionReport($countries, $regions, $countryDates, $regionDates)
+    {
+        $data = array();
 
         foreach ($countries as $country) {
             $countryCode = $country->getCode();
@@ -491,7 +523,7 @@ class MetricManager
     /**
      * Generate Group Metrics
      *
-     * @param \Platformd\SpoutletBundle\Entity\Group $group
+     * @param \Platformd\GroupBundle\Entity\Group $group
      * @param \DateTime $date
      */
     private function generateGroupDiscussionMetricsFromDate(GroupDiscussion $groupDiscussion, DateTime $date)

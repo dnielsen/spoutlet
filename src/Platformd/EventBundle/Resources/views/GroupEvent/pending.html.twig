@@ -1,0 +1,106 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}
+
+{% block content %}
+
+<div id="group-events-pending">
+
+    <div class="std_1col" style="padding: 0;">
+        <div id="group-avatar">
+            {% if group.groupAvatar %}
+                <img src="{{ media_path(group.groupAvatar) }}" />
+            {% else %}
+                <div id="groups-main-banner"></div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="std_1col" style="padding: 0;">
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
+    </div>
+
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">Events</div>
+        </div>
+        <div class="widget-content">
+            <div class="text">
+                <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="table tablesorter">
+                    <thead>
+                        <tr>
+                            <th>Event Title</th>
+                            <th>Event Dates</th>
+                            <th>Submitted By</th>
+                            <th>Submitted On</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in pendingApprovals %}
+                        <tr class="eventListGroup_lan">
+                            <td>
+                                <a href="{{ event | pd_link }}" target="_blank">{{ event.name }}</a>
+                            </td>
+                            <td>
+                                {{ event.startsAt | date_translate }} - {{ event.endsAt | date_translate }}
+                            </td>
+                            <td>
+                                {{ event.user.username }}
+                            </td>
+                            <td>
+                                {{ event.createdAt | date_translate }}
+                            </td>
+                            <td>
+                                <a href="javascript:void(0);" class="approve-event" event-name="{{ event.name }}" data-path="{{ path('group_event_approve', { 'groupSlug': event.group.slug, 'eventId' : event.id }) }}">Approve</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">
+                                <em>There are no events!</em>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="widget-footer">&nbsp;</div>
+    </div>
+    <div id="approve-event-dialog" title="Approve Event" style="display:none; ">
+        <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span><span id="approve-text">Are you sure you want to approve '{0}' to display on your group?</span></p>
+    </div>
+
+    <script type="text/javascript">
+        $('.approve-event').click(function () {
+            var eventname = $(this).attr('event-name');
+            var path = $(this).attr('data-path');
+            var text = $('#approve-text').text().replace('{0}', eventname);
+
+            $('#approve-text').text(text);
+            $('#approve-event-dialog').dialog({
+                modal: true,
+                resizable: false,
+                movable: false,
+                height: 200,
+                width: 320,
+                buttons: {
+                    "Yes": function() {
+                        $(this).dialog("close");
+                        document.location = path;
+                    },
+                    "No": function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        });
+    </script>
+
+</div>
+
+{% endblock %}
+

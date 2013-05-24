@@ -34,7 +34,8 @@ $loader->registerNamespaces(array(
     'Liip'                          => __DIR__.'/../vendor/bundles',
     'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
     'Cybernox'                      => __DIR__.'/../vendor/bundles',
-    'Exercise'                      => __DIR__ . '/../vendor/bundles',
+    'Exercise'                      => __DIR__. '/../vendor/bundles',
+    'Vich'                          => __DIR__.'/../vendor/bundles'
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
@@ -61,10 +62,7 @@ AnnotationRegistry::registerLoader(function($class) use ($loader) {
 });
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 
-// Swiftmailer needs a special autoloader to allow
-// the lazy loading of the init file (which is expensive)
-require_once __DIR__.'/../vendor/swiftmailer/lib/classes/Swift.php';
-Swift::registerAutoload(__DIR__.'/../vendor/swiftmailer/lib/swift_init.php');
+require __DIR__.'/../vendor/swiftmailer/lib/swift_required.php';
 
 // uncomment to see stack traces in PHPUnit
 // xdebug_enable();

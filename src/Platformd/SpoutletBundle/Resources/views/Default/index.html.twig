@@ -26,6 +26,11 @@
 </div>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
@@ -36,10 +41,16 @@
             $('.ellipse').truncate({
                 width: '160'
             });
-            $('.news-ellipse').truncate();
+            $('.news-ellipse').truncate({
+                width: '250'
+            });
+            $('.more-videos-link a').truncate({
+                width: 280
+            });
             $('.ellipse').qtip();
 
-            $('.widget-content').mCustomScrollbar();
+            $('#news-content').mCustomScrollbar();
+
             $(".featured-content-header a").click(function() {
                     var id = $(this).attr("id");
                     $(".featured-content-header a.active").removeClass("active");
@@ -48,8 +59,8 @@
                     $(".featured-content-category#featured-content-"+id).addClass('active');
                     // show the widget footer
                     $(".widget-footer #featured-footer-"+id).show();
-                    $('.widget-content').resize();
-                    $('.widget-content').mCustomScrollbar('update');
+                    $('#featured-content').resize();
+                    $('#featured-content').mCustomScrollbar('update');
             });
         });
     </script>

@@ -1,20 +1,20 @@
 <div id="report-content-dialog-Group" style="display: none;" title="Report Group">
     {% if app.user is null %}
         <div style="height: 120px;">
-            {{ 'content_reporting.must_be_logged_in' | trans }}
+            {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
-        <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+        <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     {% elseif can_user_report() == false %}
         <div style="height: 120px;">
-            {{ 'content_reporting.once_per_hour' | trans }}
+            {{ 'content_reporting.once_per_hour' | pd_trans }}
         </div>
-        <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | trans }}</button>
+        <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     {% else %}
         <input type="hidden" id="report-id-Group" />
         <input type="hidden" id="content-type-Group" value="Group" />
         <div style="height: 120px;">
             <div id="report-group-response" style="display:none;">
-            {{ 'content_reporting.report_success' | trans }}
+            {{ 'content_reporting.report_success' | pd_trans }}
             </div>
             <div id="report-group-options">
                 <input class="report-group-option" type="radio" name="group-reason" value="inappropriate_content"> Inappropriate content <br />
@@ -23,8 +23,8 @@
                 <input class="report-group-option" type="radio" name="group-reason" value="individual_harrassing_me"> Harassment
             </div>
         </div>
-        <button id="submit-report-Group">Submit</button>
-        <button id="close-dialog-Group" style="float: right;">Cancel</button>
+        <button class="btn btn-primary" id="submit-report-Group">Submit</button>
+        <button class="btn btn-primary" id="close-dialog-Group" style="float: right;">Cancel</button>
     {% endif %}
 </div>
 <script type="text/javascript">

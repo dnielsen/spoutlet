@@ -1,0 +1,103 @@
+<div id="event-rsvp-dialog" class="rsvp-wrapper" style="display: none; padding-top: 25px; height: 100px" title="{{ 'platformd.events.event_listings.rsvp.dialog_title' | pd_trans }}">
+    <div class="rsvp-dialog-content">
+        <input type="hidden" id="event-id" />
+        <input type="hidden" id="event-type" />
+        <input type="hidden" id="event-rsvp-route" />
+        <div style="margin-left:120px;">
+            <div class="rsvp-selection-wrapper" style="margin-top:0;">
+                <input class="rsvp-option" type="radio" name="rsvp" value="1" checked> {{ 'platformd.events.event_listings.rsvp.attending' | pd_trans }} <br />
+                <input class="rsvp-option" type="radio" name="rsvp" value="0"> {{ 'platformd.events.event_listings.rsvp.not_attending' | pd_trans }} <br />
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <div id="rsvp-response" style="display:none;"></div>
+            <div class="rsvp-buttons" style="margin-top:20px;">
+                <button id="submit-rsvp" class="rsvp-button" style="margin-right:5px;">{{ 'submit' | pd_trans }}</button>
+                <button id="close-dialog-rsvp" class="rsvp-button" style="margin-left:5px;">{{ 'cancel' | pd_trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        var rsvpDialog = $('#event-rsvp-dialog').dialog({
+            autoOpen: false,
+            modal: true,
+            height: 200,
+            width: 350,
+            draggable: false,
+            resizable: false,
+            dialogClass: 'event-rsvp-dialog-wrapper',
+            close: function (e, ui) {
+
+            }
+        });
+
+        $('.change-rsvp-link').click(function () {
+            var eventId = $(this).attr('data-id');
+            var type = $(this).attr('data-contenttype');
+            var route = $(this).attr('data-route');
+            $('#event-id').val(eventId);
+            $('#event-type').val(type);
+            $('#event-rsvp-route').val(route);
+            $('.rsvp-selection-wrapper').show();
+            $('.rsvp-buttons').show();
+            $('#rsvp-response').hide();
+
+            rsvpDialog.dialog('open');
+        });
+
+        $('#submit-rsvp').click(function () {
+            $('.rsvp-selection-wrapper').fadeOut();
+            $('.rsvp-buttons').fadeOut();
+            $('#event-rsvp-dialog').block({
+                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                css: {
+                    border: 'none',
+                    background: 'transparent'
+                }
+
+            });
+
+            rsvp = $('input:radio[name=rsvp]:checked').val();
+
+            $.ajax({
+                url: $('#event-rsvp-route').val(),
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : $('#event-id').val(),
+                    'rsvp' : rsvp
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    $('#event-rsvp-dialog').unblock();
+
+                    if (data.success) {
+                        rsvpDialog.dialog('close');
+                        if (rsvp == 0) {
+                            $('.event-list #event-'+$('#event-type').val()+'-'+$('#event-id').val()).fadeOut();
+                            $('#event-show-page #event-attending-message').hide();
+                            $('#event-show-page #event-rsvp-link').hide();
+                            $('#event-show-page #event-registration-button').fadeIn();
+                            $('#event-show-page #event-attendee-count-'+$('#event-id').val()).text(parseInt(data.attendeeCount));
+                        } else {
+                            $('#event-show-page #event-registration-button').hide();
+                            $('#event-show-page #event-attending-message').fadeIn();
+                            $('#event-show-page #event-attendee-count-'+$('#event-id').val()).text(parseInt(data.attendeeCount));
+                        }
+                    } else {
+                        $('.rsvp-response').text(data.errorMessage);
+                    }
+                }
+            })
+
+        });
+
+        $('#close-dialog-rsvp').click(function () {
+            rsvpDialog.dialog('close');
+        });
+
+    });
+</script>

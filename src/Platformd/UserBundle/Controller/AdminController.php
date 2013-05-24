@@ -27,8 +27,18 @@ class AdminController extends Controller
         $this->addUserBreadcrumb();
         $manager = $this->get('fos_user.user_manager');
 
-        $search = $this->getFilter();
-        $query = $manager->getFindUserQuery($search);
+        $localAuth = $this->container->getParameter('local_auth');
+
+        if (!$localAuth) {
+
+            $search = $this->getRequest()->get('search');
+            $query  = $search ? $manager->getFindUserQuery('email', $this->getRequest()->get('search', '')) : $manager->getFindUserQuery();
+
+        } else {
+
+            $search = $this->getFilter();
+            $query  = $manager->getFindUserQuery($search);
+        }
 
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
@@ -43,7 +53,6 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb()->addChild('Details');
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
@@ -58,13 +67,15 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb()->addChild('Edit');
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        $form = $this->createForm(new EditUserFormType(), $user, array('allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')));
+        $form = $this->createForm(new EditUserFormType(), $user, array(
+            'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
+            'local_auth' => $this->container->getParameter('local_auth'),
+        ));
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
@@ -76,12 +87,14 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb()->addChild('Update');
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
-        $form = $this->createForm(new EditUserFormType(), $user, array('allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')));
+        $form = $this->createForm(new EditUserFormType(), $user, array(
+            'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
+            'local_auth' => $this->container->getParameter('local_auth'),
+        ));
 
         $form->bindRequest($request);
         if ($form->isValid()) {
@@ -89,7 +102,7 @@ class AdminController extends Controller
 
             $request
                 ->getSession()
-                ->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                ->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
                     '%username%' => $user->getUsername()
                 ), 'FOSUserBundle'));
 
@@ -105,7 +118,6 @@ class AdminController extends Controller
     public function deleteAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
 
@@ -119,7 +131,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
+            ->setFlash('success', $this->trans('fos_user_admin_delete_success', array(
                 '%username' => $user->getUsername()
             ), 'FOSUserBundle'));
 
@@ -164,6 +176,26 @@ class AdminController extends Controller
         $manager->updateUser($user);
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+    }
+
+    public function loginsAction($id)
+    {
+        $this->addUserBreadcrumb()->addChild('User Logins');
+
+        $manager = $this->get('fos_user.user_manager');
+
+        if (!$user = $manager->findUserBy(array('id' => $id))) {
+
+            throw $this->createNotFoundException();
+        }
+
+        $allLogins = $user->getLoginRecords()->toArray();
+        $logins = array_slice($allLogins, 0, 100);
+
+        return $this->render('UserBundle:Admin:logins.html.twig', array(
+            'user'      => $user,
+            'logins'    => $logins,
+        ));
     }
 
     /**

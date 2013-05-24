@@ -357,7 +357,7 @@ class GalleryMediaRepository extends EntityRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('(s.defaultLocale IN (:siteList))');
+            $qb->andWhere('(s IN (:siteList))');
             $qb->setParameter('siteList', $sites);
 
         }

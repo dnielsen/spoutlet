@@ -1,3 +1,11 @@
+imports:
+    - { resource: "validation.yml" }
+
+parameters:
+    platformd_user.mailer.parameters:
+        confirmation.template: %fos_user.registration.confirmation.template%
+        resetting.template: %fos_user.resetting.email.template%
+
 services:
     # Forms
     platformd_user.registration.form.type:
@@ -6,7 +14,7 @@ services:
             - %fos_user.model.user.class%
             - %platformd.news_source%
             - @session
-            - @translator
+            - @platformd.model.translator
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
@@ -49,7 +57,12 @@ services:
     # our custom mailer
     platformd_user.mailer:
         class: Platformd\UserBundle\Mailer\Mailer
-        parent: fos_user.mailer.default
+        arguments:
+            - '@platformd.model.email_manager'
+            - '@router'
+            - '@templating'
+            - '%platformd_user.mailer.parameters%'
+            - '@platformd.model.site_util'
 
     platformd_user.awa_video_login_redirect_listener:
         class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener

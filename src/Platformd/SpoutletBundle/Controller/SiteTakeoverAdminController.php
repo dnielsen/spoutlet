@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\SiteTakeover;
 use Platformd\SpoutletBundle\Form\Type\SiteTakeoverType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
@@ -21,8 +20,10 @@ class SiteTakeoverAdminController extends Controller
     {
         $this->addTakeoverBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('SpoutletBundle:SiteTakeoverAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -32,7 +33,7 @@ class SiteTakeoverAdminController extends Controller
         $this->addSiteBreadcrumbs($site);
 
         $em         = $this->getDoctrine()->getEntityManager();
-        $site       = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site       = $em->getRepository('SpoutletBundle:Site')->find($site);
         $takeovers  = $em->getRepository('SpoutletBundle:SiteTakeover')->findAllForSiteSoonestFirst($site);
 
         return $this->render('SpoutletBundle:SiteTakeoverAdmin:list.html.twig', array(
@@ -124,7 +125,7 @@ class SiteTakeoverAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_takeover_list',
                 'routeParameters' => array('site' => $site)
             ));

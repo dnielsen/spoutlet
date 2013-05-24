@@ -1,0 +1,25 @@
+admin_html_widget_index:
+    pattern:  /
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:index" }
+
+admin_html_widget_list:
+    pattern:  /list/{site}
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:list" }
+
+admin_html_widget_new:
+    pattern:  /new/{slug}
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:new", slug: null }
+
+admin_html_widget_create:
+    pattern:  /create
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:new" }
+    requirements: { _method: post }
+
+admin_html_widget_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:edit" }
+
+admin_html_widget_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidgetAdmin:edit" }
+    requirements: { _method: post }

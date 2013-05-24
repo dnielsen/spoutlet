@@ -1,0 +1,9 @@
+youtube.errors.invalid_youtube_link: Invalid YouTube link.
+youtube.errors.no_title: Required
+youtube.errors.no_category: Required
+youtube.errors.no_link: Required
+youtube.errors.geo_restriction: "Sorry, but the video you are trying to link is restricted in your country."
+youtube.errors.no_description: Required
+youtube.errors.no_gallery: You must select a group or category for your video.
+youtube.errors.unique_title_slug: The title you tried to enter is in use.
+youtube.errors.no_gallery_groups_disabled: You must select a category for your video.

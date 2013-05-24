@@ -36,7 +36,6 @@
 {% if dealCode %}
     {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
 {% endif %}
-
 <div id="deals-wrapper">
     {% if userAlreadyRedeemed %}
     <div class="xnotices">
@@ -135,21 +134,21 @@
                     </div>
                 </div>
             </div>
-            {% if (deal.mediaGalleryMedias | length) > 0 %}
-            <div id="deal-screenshots">
-                {% for media in deal.mediaGalleryMedias %}
-                    {% set url = media_path(media) %}
-
-                    <img src="{{ url }}" data-url="{{ url }}" {% if loop.first %}class="first"{% endif %} />
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% if deal.legalVerbiage %}
-            <div id="legal-verbiage">
-                {{ deal.legalVerbiage }}
-            </div>
-            {% endif %}
         </div>
+        {% if (deal.mediaGalleryMedias | length) > 0 %}
+        <div id="deal-screenshots">
+            {% for media in deal.mediaGalleryMedias %}
+                {% set url = media_path(media) %}
+
+                <img src="{{ url }}" data-url="{{ url }}" {% if loop.first %}class="first"{% endif %} />
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if deal.legalVerbiage %}
+        <div id="legal-verbiage">
+            {{ deal.legalVerbiage }}
+        </div>
+        {% endif %}
     </div>
 
     {% if features.hasComments %}
@@ -188,7 +187,6 @@
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
-                timezone: 0,
                 compact: false,
                 layout: $('#time-left').html()
             });

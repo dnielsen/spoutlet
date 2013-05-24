@@ -1,0 +1,15 @@
+youtube_admin_metrics:
+    pattern: /metrics
+    defaults: { _controller: VideoBundle:YoutubeAdmin:metrics }
+
+youtube_admin_export_metrics:
+    pattern: /metrics/export
+    defaults: { _controller: VideoBundle:YoutubeAdmin:exportMetrics }
+
+youtube_admin_export_comments:
+    pattern: /metrics/comments/export/{videoId}
+    defaults: { _controller: VideoBundle:YoutubeAdmin:exportVideoComments }
+
+youtube_admin_clear_metrics:
+    pattern: /metrics/clear
+    defaults: { _controller: VideoBundle:YoutubeAdmin:clearMetrics}

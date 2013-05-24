@@ -5,7 +5,6 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\SpoutletBundle\Entity\Comment;
 use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Platformd\SpoutletBundle\Entity\Event;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Form\Type\CommentType;
@@ -308,7 +307,7 @@ class CommentsController extends Controller
 
         $params   = json_decode($content, true);
 
-        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset'])) {
+        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset']) || !isset($params['sort'])) {
             $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
             return $response;
         }
@@ -316,6 +315,7 @@ class CommentsController extends Controller
         $threadId    = $params['threadId'];
         $increment   = $params['increment'];
         $offset      = $params['offset'];
+        $sort        = $params['sort'];
 
         $em         = $this->getDoctrine()->getEntityManager();
         $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
@@ -325,7 +325,7 @@ class CommentsController extends Controller
             return $response;
         }
 
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotesWithOffset($threadId, $offset, $increment);
+        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByWithOffset($threadId, $sort, $offset, $increment);
 
         if (!$comments) {
             $response->setContent(json_encode(array("message" => "no_more_comments")));
@@ -401,9 +401,7 @@ class CommentsController extends Controller
             $url = $this->container->get('platformd.link.linkable_manager')->link($obj);
         } else {
             // todo - refactor everything to be a LinkableInterface
-            if ($obj instanceof Event) {
-                $route = 'events_detail';
-            } elseif ($obj instanceof Giveaway) {
+            if ($obj instanceof Giveaway) {
                 $route = 'giveaway_show';
             } elseif ($obj instanceof Sweepstakes) {
                 $route = 'sweepstakes_show';
@@ -430,6 +428,12 @@ class CommentsController extends Controller
             $tag = 'nukeforumreply';
         }
 
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+
+            $tab = 'nukeforumreply';
+
+        }
+
         if($tag) {
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
@@ -450,6 +454,10 @@ class CommentsController extends Controller
 
         if(strlen(stristr($threadId, 'group')) > 0) {
             $tag = 'replytothread';
+        }
+
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+            $tag = 'videocomment';
         }
 
         if($tag) {

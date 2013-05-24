@@ -1,42 +1,96 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.events.event_listings.your_registered_events" | trans }}{% endblock %}
+{% block title %}{{ "platformd.events.event_listings.my_events" | pd_trans }}{% endblock %}
 
 {% block content %}
 <div class="std_2col control_panel">
     <div class="left">
         <div class="pad">
             <div class="std_1col">
-                <div class="widget-100">
+
+                <div class="widget-100" style="margin-bottom:20px;">
                     <div class="widget-header">
                         <div class="widget-title">
-                            {{ "platformd.events.event_listings.your_registered_events" | trans }}
+                            {{ "platformd.events.event_listings.my_registered_events" | pd_trans }}
                         </div>
                     </div>
                     <div class="widget-content">
-                        {% set no_events_messages %}{% trans %}platformd.account_page.events.no_registered_events{% endtrans %}{% endset %}
-                        {% set no_events_pre_message = 'platformd.account_page.events.join_event_message' | trans({
-                            '%events_url%': path('events_index')
-                        }) %}
-                        {% include 'SpoutletBundle:Events:eventList.html.twig' with {
-                            'events': app.user.events,
-                            'no_events_message': no_events_messages,
-                            'no_events_pre_message': no_events_pre_message
+                        {% set no_events_message = 'platformd.account_page.events.no_registered_events' | pd_trans({'%url%': path('global_events_index')}) %}
+                        {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                            'events': events,
+                            'pastEvents' : pastEvents,
+                            'no_events_message': no_events_message,
+                            'extendedStatus': false,
                         } %}
                     </div>
-
                     <div class="widget-footer">
-                        &nbsp;
+                        {% if pastEvents|length > 0 %}
+                            <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastEvents.0.contentType }}">{{ 'platformd.account_page.events.show_past_events' | pd_trans }}</a>
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
                     </div>
-                </div><br />
+                </div>
+
+                {% if features.hasGroups %}
+                    <div class="widget-100" style="margin-bottom:20px;">
+                        <div class="widget-header">
+                            <div class="widget-title">
+                                {{ "platformd.events.event_listings.my_owned_events" | pd_trans }}
+                            </div>
+                        </div>
+                        <div class="widget-content">
+                            {% set no_events_message = 'platformd.account_page.events.no_created_events' | pd_trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | pd_trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) %}
+                            {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
+                                'events': ownedEvents,
+                                'pastEvents' : pastOwnedEvents,
+                                'no_events_message': no_events_message,
+                                'extendedStatus': true,
+                            } %}
+                        </div>
+                        <div class="widget-footer">
+                            {% if pastOwnedEvents|length > 0 %}
+                                <a href="javascript:void(0);" class="event-show-past-link" data-contentType="{{ pastOwnedEvents.0.contentType }}">{{ 'platformd.account_page.events.show_past_events' | pd_trans }}</a>
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
             </div>
         </div>
     </div>
 
     <div class="clear"></div>
 </div>
+
+{% include 'EventBundle::_rsvpDialog.html.twig' %}
+
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+
+    <script type="text/javascript">
+    $(function () {
+
+        $('.event-show-past-link').click(function () {
+            var text = $(this).text() == "{{ 'platformd.account_page.events.show_past_events' | pd_trans }}" ? "{{ 'platformd.account_page.events.hide_past_events' | pd_trans }}" : "{{ 'platformd.account_page.events.show_past_events' | pd_trans }}";
+            $(this).text(text);
+            $('.past-' + $(this).attr('data-contentType')).fadeToggle();
+        });
+
+        $('.event-owner-actions').change(function () {
+            document.location.href = $(this).children('option:selected').attr('data-route');
+        });
+
+        $('table.tablesorter').tablesorter();
+    });
+</script>
 {% endblock %}

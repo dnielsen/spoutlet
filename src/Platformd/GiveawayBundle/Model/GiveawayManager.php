@@ -270,7 +270,7 @@ class GiveawayManager
             '%userFirstName%'           => $user->getFirstname(),
             '%userLastName%'            => $user->getLastname(),
             '%accountUrl%'              => $accountUrl,
-            '%supportEmailAddress%'     => $appliedSite->getSupportEmailAddress(),
+            '%supportEmailAddress%'     => $appliedSite->getSiteConfig()->getSupportEmailAddress(),
         ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
@@ -324,7 +324,7 @@ class GiveawayManager
             '%userLastName%'            => $user->getLastname(),
             '%giveawayUrl%'             => $giveawayUrl,
             '%systemTag%'               => $machineCodeEntry->getMachineCode(),
-            '%supportEmailAddress%'     => $appliedSite->getSupportEmailAddress(),
+            '%supportEmailAddress%'     => $appliedSite->getSiteConfig()->getSupportEmailAddress(),
         ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_deny', array(

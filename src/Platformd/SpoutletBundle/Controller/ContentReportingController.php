@@ -68,7 +68,6 @@ class ContentReportingController extends Controller
         }
 
         $typeBundle         = $contentReportRepo->getBundleFromType($type);
-
         $fullClassName      = 'Platformd\\'.$typeBundle.'\\Entity\\'.$type;
         $fullInterfaceName  = 'Platformd\\SpoutletBundle\\Model\\ReportableContentInterface';
 
@@ -77,6 +76,8 @@ class ContentReportingController extends Controller
         }
 
         $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('%s:%s', $typeBundle, $type))->find($id);
+
+
 
         if (!$content) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => "Could not find the content that you are reporting (perhaps it has been removed already).")));
@@ -165,6 +166,12 @@ class ContentReportingController extends Controller
                 $url = $this->generateUrl($item->getLinkableRouteName(), $item->getLinkableRouteParameters(), true);
                 break;
 
+            case 'GroupEvent':
+                $itemTypeKey = ContentReport::getTypeTranslationKey($type);
+                $name = $item->getName();
+                $owner = $item->getUser();
+                break;
+
             case 'GroupDiscussionPost':
                 $itemTypeKey = ContentReport::getTypeTranslationKey($type);
                 $name = $item->getContent();
@@ -187,8 +194,6 @@ class ContentReportingController extends Controller
                 break;
         }
 
-        $fromEmail          = $this->container->getParameter('sender_email_address');
-        $fromName           = $this->container->getParameter('sender_email_name');
         $emailTo            = $owner->getEmail();
         $emailLocale        = $owner->getLocale() ? : 'en';
         $itemType           = $this->trans($itemTypeKey, array(), 'messages', $emailLocale);
@@ -197,7 +202,7 @@ class ContentReportingController extends Controller
         $message            = nl2br(sprintf($this->trans('content_reporting.reported_email', array(), 'messages', $emailLocale), $itemType, $name, $reason, $url, $url));
 
 
-        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale(), $fromName, $fromEmail);
+        $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale());
     }
 
     private function getEmailManager()

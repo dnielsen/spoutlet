@@ -1,0 +1,230 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% set reportContentType    = event.contentType %}
+
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ event.name }}" />
+    <meta property="og:type" content="activity" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:image" content="http://alienwarearena.com/images/profile-default.png" />
+    <meta property="og:description" content="{{ event.content | striptags }}" />
+{% endblock %}
+
+{% block title event.name %}
+
+{% block content %}
+
+<div id="event-show-page">
+
+   <div class="std_1col" style="padding:0;">
+        {% if event.bannerImage %}
+            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%; margin: -10px 0 0 0;"></div>
+        {% else %}
+            <div id="event-default-banner"></div>
+        {% endif %}
+    </div>
+
+    <div class="std_1col" style="padding: 0;">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+            <div class="sub-nav events-sub-nav">
+                <ul>
+                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | pd_trans }}</a></li>
+                        {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                            <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a></li>
+                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                    <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.group_home' | pd_trans }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {% if not event.approved %}
+        <div class="std_1col">
+            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                Your event is pending approval by the group organizer.  Once the group organizer approves your event, it will be displayed on the groups page.
+            </p>
+        </div>
+    {% endif %}
+
+    <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+        <div class="left">
+            <div class="widget-66">
+                <div class="widget-header" style="padding-bottom:10px;">
+                    <div class="widget-title">
+                        <div id="event-heading-title">{{ event.name }}</div>
+                    </div>
+                </div>
+                <div class="widget-content">
+                    <div id="event-heading-date">{{ event.startsAt|date_translate ~ ' - ' ~ event.endsAt|date_translate }}</div>
+                    <div id="event-heading-time">{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                    <div id="event-content">{{ event.content | raw }}</div>
+                </div>
+            </div>
+
+            {% if features.hasComments %}
+                <div class="event-comments">
+                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.threadId, 'object' : event } %}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="right">
+
+            <div class="widget-33" id="event-details-widget" style="height: auto;">
+                <div class="widget-header">
+                    <div class="widget-title">{{ 'platformd.events.event_show.event_details' | pd_trans }}</div>
+                </div>
+                <div class="widget-content" style="padding-left: 10px;">
+
+                    <div id="media-social" style="margin:10px 0;">
+                        <div class="fb-like"
+                            data-send="false"
+                            data-width="300"
+                            data-layout="button_count"
+                            data-show-faces="false"
+                            data-colorscheme="dark"
+                            style="vertical-align:top;zoom:1;*display:inline">
+                        </div>
+                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
+                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware" data-text="Check out this exciting event!" data-url="{{ app.request.getUri }}">Tweet</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    </div>
+
+                    <div id="event-organizer"><strong>{{ 'platformd.events.event_show.organizer' | pd_trans }}: </strong><a href="{{ account_link(event.user.username) }}">{{ event.user.username }}</a></div>
+
+                    {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                        <div id="event-attendee-attendees"><strong>{{ 'platformd.events.event_show.attending' | pd_trans }}: </strong><a href="{{ path('group_event_attendees', { 'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
+                        <div id="event-registration">
+                            {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
+                                <div id="event-registration-closed">{{ 'platformd.events.event_show.registration_closed' | pd_trans }}</div>
+                            {% else %}
+                                {% if app.user is not null %}
+                                    {% if canJoin %}
+                                        {% if isMember %}
+                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        {% else %}
+                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        {% endif %}
+
+                                        <div id="registration-response" style="display:none;"></div>
+
+                                        <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
+
+                                        <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
+
+                                    {% else %}
+                                        {% if isApplicant %}
+                                            <div style="padding: 10px 0px;">
+                                                <p class="alert alert-info help" style="margin:0; text-align:left;"><i class="icon-info-sign"></i>
+                                                    A request has been sent to the group organizer to accept you into the private group. Once approved, you will also be registered for the event.
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %}
+                                    <div id="event-registration-button">
+                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div id="event-report-link"><a href="javascript:void(0);" class="report-content" report-data="{{ event.id }}">{{ 'content_reporting.report' | pd_trans }}</a></div>
+
+                    {% if event.registrationOption != "REGISTRATION_ENABLED" %}
+                        <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                            Please contact the organizer for information on how to register for this event.
+                        </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="widget-33" id="event-location-widget" style="height: auto; margin-top:15px;">
+                <div class="widget-header">
+                    <div class="widget-title">{{ 'platformd.events.event_show.location' | pd_trans }}</div>
+                </div>
+                <div class="widget-content">
+                    {% if event.online %}
+                        <div id="event-location-online">{{ 'platformd.events.event_show.online_event' | pd_trans }}</div>
+                    {% else %}
+                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        <div id="event-location-name">{{ event.location }}</div>
+                        <div id="event-location-address1">{{ event.address1 }}</div>
+                        <div id="event-location-address2">{{ event.address2 }}</div>
+                        <div id="event-directions-link"><a href="http://maps.google.com/maps?saddr={{ event.fullAddress | url_encode }}" target="_blank">{{ 'platformd.events.event_show.directions' | pd_trans }}</a></div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% include 'EventBundle::_rsvpDialog.html.twig' %}
+{% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#register-link').click(function () {
+            $('#register-link').block({
+                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
+                css: {
+                    border: 'none',
+                    background: 'transparent'
+                }
+
+            });
+
+            $.ajax({
+                url: $(this).attr('data-route'),
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : {{ event.id }},
+                    'rsvp' : 1
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    $('#register-link').unblock();
+
+                    if (data.success) {
+                        $('#event-registration-button').hide();
+                        $('#event-attending-message').fadeIn();
+                        $('#event-rsvp-link').fadeIn();
+                        $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
+                    } else {
+                        $('#registration-response').text(data.errorMessage);
+                        $('.event-registration-button').fadeIn();
+                    }
+                    $('#registration-response').fadeIn();
+                }
+            })
+
+        });
+    });
+
+</script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}

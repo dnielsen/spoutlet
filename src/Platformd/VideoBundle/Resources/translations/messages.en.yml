@@ -1,0 +1,38 @@
+youtube.alienware_video_network: Alienware Arena Video Network
+youtube.videos: Videos
+youtube.categories: Categories
+youtube.report: Report
+youtube.submit_video: Submit a Video
+youtube.points: Point(s)
+youtube.more_videos_by: More Videos by
+youtube.featured_videos: Featured Videos
+youtube.popular: Popular
+youtube.recently_watched: Recently Watched
+youtube.feature_video: Feature this video
+youtube.unfeature_video: Unfeature this video
+youtube.views: Views
+youtube.already_voted: You voted already
+youtube.no_video_found: No video found.
+youtube.form.intro: "Alienware Arena's AlienNetwork hosts only the best gaming movies and as such all submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your movie fullfills all the requirements."
+youtube.form.file_restrictions_title: "File Restrictions:"
+youtube.form.file_restrictions_1: Only gaming related videos. Everything else will get deleted without notice.
+youtube.form.file_restrictions_2: No copyright material.
+youtube.form.file_restrictions_3: Video must be uploaded on YouTube
+youtube.form.outtro: By submitting a video, you agree to our <a href="%s" target="_blank">Terms of Service</a> and grant us and our affiliates a non-exclusive license to publish, redistribute, promote or modify the video or any information within the submission.
+youtube.form.youtube_link: "YouTube Link:"
+youtube.form.youtube_link_help: Copy and paste the YouTube link here.
+youtube.form.title: "Title:"
+youtube.form.description: "Description:"
+youtube.form.category: "Category:"
+youtube.form.tags: "Tags:"
+youtube.form.select_category: "Select Category"
+youtube.form.optional: "Groups:"
+youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.invalid_youtube_link: Invalid YouTube link.
+youtube.form.general_error: You must provide information in the required fields to submit your video.
+youtube.navigation.video_main: Video Main
+youtube.flash.submit_success: Your video is uploaded.
+youtube.flash.edit_success: Your video has been saved.
+youtube.flash.delete_success: Your video has been deleted.
+youtube.flash.delete_insufficient_permissions: You do not have permission to perform this action.
+youtube.account.my_videos: My Videos

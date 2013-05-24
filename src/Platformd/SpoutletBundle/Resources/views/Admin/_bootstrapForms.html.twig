@@ -12,7 +12,7 @@
         {% if form.get('help') %}
         <p class="alert alert-info help">
             <i class="icon-info-sign"></i>
-            {{ form.get('help') | trans }}
+            {{ form.get('help') | trans | raw }}
         </p>
         {% endif %}
     </div>
@@ -38,7 +38,8 @@
 {% block form_errors %}
 {% spaceless %}
 {% if errors|length > 0 %}
-<div class="alert alert-error" style="display: inline-block;">
+<div class="help-inline">
+{#<div class="alert alert-error" style="display: inline-block;">#}
     {% for error in errors %}
     {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
     <br/>
@@ -55,7 +56,12 @@
         {% set attr = attr|merge({'class': 'required'}) %}
     {% endif %}
     {% set attr = attr|merge({'class': 'control-label'}) %}
-    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ label|trans }}</label>
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+        {% if required %}
+            <span class="required">*</span>
+        {% endif %}
+        {{ label|trans }}
+    </label>
 {% endspaceless %}
 {% endblock %}
 
@@ -72,13 +78,26 @@
 {# the first part is overriden to give us checkboxes that look schweet in bootstrap#}
 {% block choice_widget %}
 {% spaceless %}
-    {% if expanded %}
+    {% if expanded and multiple %}
         {% for child in form %}
             <label class="checkbox">
                 {{ form_widget(child) }}
                 {{ child.get('label') | trans }}
             </label>
         {% endfor %}
+    {% elseif expanded and not multiple %}
+        <table style="display:inline-table;position:relative;top:5px;">
+            <tr>
+            {% for child in form %}
+                <td style="vertical-align:top;">
+                    <label class="radio">
+                        {{ form_widget(child) }}
+                        {{ child.get('label') | trans }}
+                    </label>
+                </td>
+            {% endfor %}
+            </tr>
+        </table>
     {% else %}
         {# this side is untouched #}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>

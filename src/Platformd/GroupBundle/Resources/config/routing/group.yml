@@ -22,6 +22,10 @@ group_edit:
     pattern:  /{id}/edit/
     defaults: { _controller: "GroupBundle:Group:edit", site: ~ }
 
+group_events:
+    pattern: /{id}/events/
+    defaults: { _controller: "GroupBundle:Group:events", site: ~ }
+
 group_news:
     pattern: /{id}/news/
     defaults: { _controller: "GroupBundle:Group:news", site: ~ }
@@ -122,6 +126,10 @@ group_join:
     pattern:  /{id}/join/
     defaults: { _controller: "GroupBundle:Group:join", site: ~ }
 
+group_apply_with_event:
+    pattern:  /{id}/apply-event/{eventId}
+    defaults: { _controller: "GroupBundle:Group:applyToGroupWithEvent", site: ~ }
+
 group_apply:
     pattern:  /{id}/apply/
     defaults: { _controller: "GroupBundle:Group:applyToGroup", site: ~ }
@@ -130,13 +138,9 @@ group_delete:
     pattern:  /{id}/delete/
     defaults: { _controller: "GroupBundle:Group:delete", site: ~ }
 
-group_show:
+group_show_prefixed:
     pattern:  /{slug}/
-    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
-
-group_slug_show:
-    pattern:  /{slug}/
-    defaults: { _controller: "GroupBundle:Group:show", site: ~ }
+    defaults: { _controller: "GroupBundle:Group:showPrefixed", site: ~ }
 
 group_update:
     pattern:  /{id}/update/

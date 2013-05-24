@@ -18,6 +18,9 @@ use Platformd\SpoutletBundle\Entity\Site;
 class ContentReport
 {
 
+    const DELETED_BY_REPORT         = 'REPORTED_PENDING_INVESTIGATION';
+    const DELETED_BY_REPORT_ADMIN   = 'REPORTED_AND_REMOVED_BY_ADMIN';
+
     static private $validReasons = array(
         'inappropriate_content',
         'spam',
@@ -35,7 +38,9 @@ class ContentReport
         'Image' => 'content_reporting.report_type_image',
         'Video' => 'content_reporting.report_type_video',
         'Comment' => 'content_reporting.report_type_comment',
+        'YoutubeVideo' => 'content_reporting.report_type_youtubevideo',
         'Unknown' => 'content_reporting.report_type_unknown',
+        'GroupEvent' => 'content_reporting.report_type_group_event',
     );
 
     /**
@@ -139,6 +144,18 @@ class ContentReport
      */
     protected $comment = null;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $youtubeVideo = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+
+    protected $groupEvent = null;
 
     /**
      * Get id
@@ -271,6 +288,27 @@ class ContentReport
     public function setComment($value)
     {
         $this->comment = $value;
+    }
+
+
+    public function getGroupEvent()
+    {
+        return $this->groupEvent;
+    }
+
+    public function setGroupEvent($value)
+    {
+        $this->groupEvent = $value;
+    }
+
+    public function getYoutubeVideo()
+    {
+        return $this->youtubeVideo;
+    }
+
+    public function setYoutubeVideo($value)
+    {
+        $this->youtubeVideo = $value;
     }
 
     public function getSite()

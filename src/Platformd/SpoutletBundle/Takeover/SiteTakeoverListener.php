@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Platformd\SpoutletBundle\Takeover\SiteTakeoverManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class SiteTakeoverListener
 {
@@ -30,21 +31,42 @@ class SiteTakeoverListener
             return;
         }
 
-        $referer            = $event->getRequest()->headers->get('referer');
-        $route              = $event->getRequest()->get('_route');
+        $request = $event->getRequest();
+
+        $referer            = $request->headers->get('referer');
+        $cookies            = $request->cookies;
+        $route              = $request->get('_route');
+        $pathParts          = explode('/', $request->getPathInfo());
+
+        $hasCookie          = $cookies->has('pd_site_takeover_viewed');
         $isRouteTakeover    = ($route == 'takeover' || $route == 'takeover_specified');
+        $isExternalReferer  = $this->isRefererExternal($referer);
+        $isAdminRoute       = $pathParts[1] == 'admin';
 
-        if (!$isRouteTakeover && (null === $referer || $this->isRefererExternal($referer))) {
-            if ($this->manager->currentTakeoverExists()) {
+        if (!$isExternalReferer || ($isExternalReferer && $hasCookie) || $isRouteTakeover || $isAdminRoute) {
+            return;
+        }
 
-                $session = $event->getRequest()->getSession();
-                $session->set(self::TARGET_PATH_KEY, $this->router->generate($route));
+        $currentTakeover = $this->manager->currentTakeoverExists();
 
-                $takeoverUrl    = $this->router->generate('takeover');
-                $response       = new RedirectResponse($takeoverUrl);
+        if ($currentTakeover) {
 
-                $event->setResponse($response);
-            }
+            $session = $request->getSession();
+            $session->set(self::TARGET_PATH_KEY, $request->getRequestUri());
+
+            $takeoverUrl    = $this->router->generate('takeover');
+            $response       = new RedirectResponse($takeoverUrl);
+
+            $cookieName     = 'pd_site_takeover_viewed';
+            $cookieValue    = '1';
+            $cookieExpiry   = new \DateTime('+1 day');
+            $cookiePath     = '/';
+            $cookieHost     = $this->baseHost;
+
+            $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+            $response->headers->setCookie($cookie);
+
+            $event->setResponse($response);
         }
 
         return;

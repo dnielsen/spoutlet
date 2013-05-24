@@ -41,7 +41,7 @@
 <div class="media-show-page">
     <div class="std_2col" style="padding:0 0 10px 0">
         <div class="left">
-            <h3 style="padding-bottom: 10px;">{{ media.title }}</h3>
+            <h1>{{ media.title }}</h1>
             <div style="padding: 3px 0 3px 0;float:left;">
                 {% if returnType == "contests" %}
                     <a href="{{ path('contest_index') }}">{{ 'contests.contests' | trans }}</a>
@@ -68,7 +68,7 @@
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
-            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
+            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.contestEntry.contest.isFinished == false and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
                 <div style="width:100%;padding:5px 0;margin-bottom:10px;text-align:center;">
                         <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
                             {{ 'contests.ongoing_contest_alert' | trans }}
@@ -135,8 +135,12 @@
                 </div>
                 <div class="widget-content">
                     <div class="photo-author">
-                        <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
-                        <div class="photo-author-link"><a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                        {% if get_avatar_url(media.author) != false %}
+                            <img src="{{ asset(get_avatar_url(media.author)) }}" alt="{{ media.author.username }}" />
+                        {% else %}
+                            <div class="default-avatar"></div>
+                        {% endif %}
+                        <div class="photo-author-link"><a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                     </div>
 
                     {% if isVotable %}
@@ -144,14 +148,14 @@
                         <div id="media-likes-wrapper">
 
                             {% if app.user is not null %}
-                                {% if media.hasUserVoted(app.user) == false and media.canUserVote(app.user) == true and isVotable %}
+                                {% if media.canUserVote(app.user) == true and isVotable %}
                                     <div class="photo-like">
-                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up quick-vote-link" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.quick_vote_caption' | trans }}"></a>
+                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up {% if media.hasUserVoted(app.user) == false %}quick-vote-link {% else %}already-voted{% endif %}" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.vote_caption' | trans }}"></a>
                                     </div>
                                 {% endif %}
                             {% else %}
                                 <div class="photo-like">
-                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="http://alienwarearena.com/account/login?return={{ app.request.uri ~ '?vote=' ~ media.id | url_encode }}"></a>
+                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="{{ login_link(app.request.uri ~ '?vote=' ~ media.id) }}"></a>
                                 </div>
                             {% endif %}
 
@@ -188,8 +192,8 @@
                     <div style="margin-top:10px; width:300px">
                         <div style="width:20%; float:left;">{{ 'galleries.index_page_title' | trans }}: </div>
                         <div style="width:80%; float:right;">
-                            {% for gallery in media.galleries %}
-                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name }}</a><br />
+                            {% for gallery in media.galleries if site in gallery.sites %}
+                                <a href="{{ path('gallery_gallery_show', { 'slug' : gallery.slug }) }}">{{ gallery.name(site.id) }}</a><br />
                             {% endfor %}
                         </div>
                         <div class="clear" />

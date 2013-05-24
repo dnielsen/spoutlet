@@ -32,7 +32,7 @@ Feature: Deal Pool
             And I select "published" from "Status"
             And I press "Create"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/ie_only_sample_keys.csv" to "Keysfile"
@@ -41,7 +41,7 @@ Feature: Deal Pool
             And I select "Ireland" from "Eligible Countries"
             And I press "Save Pool"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/not_valid_sample_keys.csv" to "Keysfile"
@@ -49,7 +49,7 @@ Feature: Deal Pool
             And I select "United States" from "Eligible Countries"
             And I press "Save Pool"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/not_valid_sample_keys.csv" to "Keysfile"
@@ -57,7 +57,7 @@ Feature: Deal Pool
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/uk_only_sample_keys.csv" to "Keysfile"
@@ -65,7 +65,7 @@ Feature: Deal Pool
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/us_only_sample_keys.csv" to "Keysfile"
@@ -73,7 +73,7 @@ Feature: Deal Pool
             And I select "United States" from "Eligible Countries"
             And I press "Save Pool"
 
-            And I go to "/admin/deal/list/en"
+            And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
             And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/uk_only_sample_keys_2.csv" to "Keysfile"

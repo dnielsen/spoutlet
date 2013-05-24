@@ -7,7 +7,6 @@ use Platformd\GiveawayBundle\Form\Type\DealType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
@@ -24,8 +23,10 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('GiveawayBundle:DealAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -39,7 +40,7 @@ class DealAdminController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
@@ -120,14 +121,25 @@ class DealAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Deals');
 
+        $em     = $this->getDoctrine()->getEntityManager();
+        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('deal', 'entity', array(
                 'class' => 'GiveawayBundle:Deal',
                 'property' => 'name',
                 'empty_value' => 'All Deals',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('d')
+                'query_builder' => function(EntityRepository $er) use ($site) {
+                    $qb = $er->createQueryBuilder('d')
                         ->orderBy('d.name', 'ASC');
+
+                    if ($site) {
+                        $qb->leftJoin('d.sites', 's')
+                            ->andWhere('s = :site')
+                            ->setParameter('site', $site);
+                    }
+
+                    return $qb;
                 },
             ))
             ->getForm()
@@ -151,9 +163,9 @@ class DealAdminController extends Controller
         }
 
         if ($deal == null) {
-            $deals  = $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = $site ? $this->getDealManager()->findAllForSiteNewestFirst($site) : $this->getDealManager()->findAllOrderedByNewest();
         } else {
-            $deals  = $deal ? array($deal) : $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = array($deal);
         }
 
         $dealMetrics = array();
@@ -230,7 +242,7 @@ class DealAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_deal_site',
                 'routeParameters' => array('site' => $site)
             ));

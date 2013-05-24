@@ -49,6 +49,7 @@ class CreateNewsFormType extends AbstractType
             ->add('image', new MediaType(), array(
                 'image_label'   => 'platformd.admin.news.upload_image',
                 'image_help'    => 'platformd.admin.news.image_dimensions',
+                'with_remove_checkbox' => true
             ))
         ;
     }

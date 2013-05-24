@@ -23,9 +23,9 @@ Feature: Groups Frontend
         When I click on "Create Group"
             And I fill in the following:
                 | Group Name                | New test group     |
-                | Information about Group   | Some information   |
+                | Group Description         | Some information   |
             And I select "Topic" from "Group Category"
-            And I check "Is this a public group?"
+            And I select the "Public Group" radio button
             And I press "Create"
         Then I should see "The group was created!"
             And I should see "New test group" on "/groups/"
@@ -33,7 +33,7 @@ Feature: Groups Frontend
     Scenario: View group page
         Given I am on "/groups/"
         When I click "Group 1"
-        Then I should be on "/groups/group-1/"
+        Then I should be on "/group-1/"
             And I should see "Group 1"
 
     Scenario: Edit a group
@@ -42,7 +42,7 @@ Feature: Groups Frontend
             And I click on "Group Settings"
             And I fill in the following:
                 | Group Name                | New test group updated     |
-                | Information about Group   | Some updated information   |
+                | Group Description         | Some updated information   |
             And I press "Save"
         Then I should see "The group was saved!"
             And I should see "New test group updated" on "/groups/"
@@ -83,11 +83,11 @@ Feature: Groups Frontend
         Then I should see "You have successfully rejected"
 
     Scenario: Add group news
-        Given I am on "/groups/group-1/"
+        Given I am on "/group-1/"
             And I add "news" for group "Group 1"
         When I fill in the following:
             | Title   | News Title       |
-            | Article | Areticle content |
+            | Article | Article content |
             And I press "Post News"
         Then I should see "New article posted successfully."
             And I should see "News Title" on the "news" page of "Group 1"
@@ -108,19 +108,21 @@ Feature: Groups Frontend
     #        And I click "Publish"
     #    Then I should see "1 of 1 images are published."
     #        And I should see "120x60.gif" on "/groups/1/images/"
-
-    Scenario: Add group video
-        Given I am on "/groups/group-1"
-        And I add "video" for group "Group 1"
-        When I fill in the following:
-            | Video Name   | Test Video       |
-            | YouTube ID   | Y0h6WIjZluM      |
-            And I press "Post Video"
-        Then I should see "New video posted successfully."
-            And I should see "Test Video" on the "videos" page of "Group 1"
+    #
+    #Scenario: Add group video
+    #    Given I am on "/groups/group-1"
+    #    And I add "video" for group "Group 1"
+    #    When I fill in the following:
+    #        | Title           | Test Video       |
+    #        | YouTube Link    | Y0h6WIjZluM      |
+    #        | Description     | Description      |
+    #        And I check the "Group 1" option for "Groups"
+    #        And I press "Save"
+    #    Then I should see "Your video is uploaded."
+    #        And I should see "Test Video" on the "videos" page of "Group 1"
 
     Scenario: Add group discussion topic
-        Given I am on "/groups/group-1"
+        Given I am on "/group-1"
         And I add "discussion" for group "Group 1"
         When I fill in the following:
             | Discussion Name   | Test Discussion           |
@@ -130,7 +132,7 @@ Feature: Groups Frontend
             And I should see "Test Discussion" on the "discussions" page of "Group 1"
 
     Scenario: Add reply to group discussion
-        Given I am on "/groups/group-1"
+        Given I am on "/group-1"
         And I add "discussion" for group "Group 1"
         When I fill in the following:
             | Discussion Name   | Test Discussion           |
@@ -147,7 +149,7 @@ Feature: Groups Frontend
             | username   |
             | NotMe      |
             | StillNotMe |
-        When I go to "/groups/group-1"
+        When I go to "/group-1"
         Then the "Members" count should be 3
 
     Scenario: Comment count
@@ -155,5 +157,5 @@ Feature: Groups Frontend
             | username   | comment        |
             | NotMe      | first comment  |
             | StillNotMe | second comment |
-        When I go to "/groups/group-1"
+        When I go to "/group-1"
         Then the "Comments" count should be 2

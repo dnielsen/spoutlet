@@ -14,6 +14,8 @@ parameters:
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: true
 
+    test_acl_database: %acl_database_name%_test
+
 framework:
     test: ~
     session:
@@ -37,4 +39,4 @@ doctrine:
             default:
                 dbname:   %database_name%_test
             acl:
-                dbname:   %acl_database_name%_test
+                dbname:   %test_acl_database%

@@ -16,11 +16,37 @@ class AdminController extends Controller
 {
     public function indexAction()
     {
-        $this->addSweepstakesBreadcrumb();
-        $sweepstakess = $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('admin_sweepstakes_list', array('site' => 2));
+            return $this->redirect($url);
+        }
 
-    	return $this->render('SweepstakesBundle:Admin:index.html.twig',
-            array('sweepstakess' => $sweepstakess));
+        $this->addSweepstakesBreadcrumb();
+
+        return $this->render('SweepstakesBundle:Admin:index.html.twig', array(
+            'sites' => $this->getSiteManager()->getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 2;
+        }
+
+        $this->addSweepstakesBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
+
+        $sweepstakess = $this->getSweepstakesRepo()->findAllForSite($site);
+
+        return $this->render('SweepstakesBundle:Admin:list.html.twig', array(
+            'sweepstakess'  => $sweepstakess,
+            'site'          => $site,
+        ));
     }
 
     public function newAction(Request $request)
@@ -111,7 +137,11 @@ class AdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
-        $sweepstakes = $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+        $em = $this->getDoctrine()->getEntityManager();
+        $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
+        $sweepstakes = $site ? $this->getSweepstakesRepo()->findAllForSite($site) : $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+
         $this->addMetricsBreadcrumbs();
 
         return array(
@@ -276,5 +306,18 @@ class AdminController extends Controller
             ->getEntityManager()
             ->getRepository('SweepstakesBundle:Entry')
         ;
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
+                'route' => 'admin_sweepstakes_list',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
     }
 }

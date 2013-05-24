@@ -1,0 +1,32 @@
+{% extends 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% block generic_label %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-lbl'}) %}
+    {% if required %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' required'}) %}
+    {% endif %}
+    {% set attr = attr|merge({'class': 'control-label'}) %}
+    <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
+        {% if required %}
+            <span class="required">*</span>
+        {% endif %}
+        {{ label|pd_trans }}
+    </label>
+{% endspaceless %}
+{% endblock %}
+
+{% block date_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' event-date-picker'}) %}
+    {{ block('field_widget') }}
+{% endspaceless %}
+{% endblock %}
+
+{% block time_widget %}
+{% spaceless %}
+    <div class="time-selection">
+        at <span class="hour-selection">{{ form_widget(form.hour) }}</span> : <span class="minute-selection">{{ form_widget(form.minute) }}</span>
+    </div>
+{% endspaceless %}
+{% endblock time_widget %}

@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 
 class ContestType extends AbstractType
 {
@@ -63,7 +62,7 @@ class ContestType extends AbstractType
                     'class' => 'datetime-picker'
                 )
             ))
-            ->add('timezone', 'timezone')
+            ->add('timezone', 'gmtTimezone')
             ->add('banner', new MediaType(), array(
                 'image_label' => 'Banner Image',
                 'image_help'  => 'Recommended size: 950px x 160px with 40px on bottom of banner for submenu overlay.',

@@ -2,26 +2,36 @@
 
 namespace Platformd\GroupBundle\Model;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\GroupBundle\GroupEvents;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\GroupBundle\Entity\GroupNews;
 use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\GroupBundle\Entity\GroupImage;
 use Platformd\GroupBundle\Entity\GroupDiscussion;
 use Platformd\GroupBundle\Entity\GroupDiscussionPost;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupDiscussionEvent;
 use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
-use Platformd\GroupBundle\GroupEvents;
-use Platformd\SpoutletBundle\Entity\Location;
-use Doctrine\ORM\EntityManager;
-use Platformd\GameBundle\Entity\GamePageLocale;
-use Symfony\Component\HttpFoundation\Session;
-use Knp\MediaBundle\Util\MediaUtil;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\EventBundle\Entity\GroupEvent as GroupEventEntity;
 use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\CEVOBundle\Api\ApiManager;
+use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\User;
+use Platformd\EventBundle\Service\GroupEventService;
+use Platformd\SpoutletBundle\Entity\Site;
+
+use Doctrine\ORM\EntityManager;
+use Knp\MediaBundle\Util\MediaUtil;
+
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Manager for Group:
@@ -38,29 +48,58 @@ class GroupManager
 
     private $mediaUtil;
 
+    private $siteUtil;
+
+    private $CEVOApiManager;
+
     private $securityContext;
 
     private $eventDispatcher;
 
+    private $groupEventService;
+
     private $isMemberCache;
     private $isApplicantCache;
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications');
-    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'LeaveGroup');
-    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
+    static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
     static private $applicantIsAllowedTo         = array('ViewGroup');
 
-    public function __construct(EntityManager $em, Session $session, MediaUtil $mediaUtil, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        EntityManager $em,
+        Session $session,
+        MediaUtil $mediaUtil,
+        SiteUtil $siteUtil,
+        ApiManager $CEVOApiManager,
+        SecurityContextInterface $securityContext,
+        EventDispatcherInterface $eventDispatcher,
+        GroupEventService $groupEventService
+    )
     {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
+        $this->siteUtil = $siteUtil;
+        $this->CEVOApiManager = $CEVOApiManager;
         $this->securityContext = $securityContext;
         $this->eventDispatcher = $eventDispatcher;
+        $this->groupEventService = $groupEventService;
         $this->isMemberCache = array();
         $this->isApplicantCache = array();
+    }
+
+    /**
+     * Find one by
+     *
+     * @param $criteria
+     * @return object
+     */
+    public function getGroupBy($criteria)
+    {
+        return $this->getRepository()->findOneBy($criteria);
     }
 
     /**
@@ -86,6 +125,20 @@ class GroupManager
             $group->setMembers($members);
         }
 
+        if ($group->getId()) {
+            $groupEvents = $this->groupEventService->findAllForGroup($group);
+
+            foreach ($groupEvents as $event) {
+                foreach ($event->getSites() as $site) {
+                    if (!$group->getSites()->contains($site)) {
+                        $event->getSites()->removeElement($site);
+                    }
+                }
+
+                $this->em->persist($event);
+            }
+        }
+
         $this->em->persist($group);
 
         $this->handleMediaFields($group);
@@ -95,6 +148,85 @@ class GroupManager
         if ($flush) {
             $this->em->flush();
         }
+    }
+
+    /**
+     * Automatically makes a user join a group
+     *
+     * @param \Platformd\GroupBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     */
+    public function autoJoinGroup(Group $group, User $user)
+    {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
+            return;
+        }
+
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        // TODO This should probably be refactored to use the global activity table
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+        $group->getMembers()->add($user);
+        $group->getUserMembershipActions()->add($joinAction);
+
+        $event = new GroupEvent($group, $user);
+        $this->eventDispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+        $this->saveGroup($group);
+
+        if ($group->getIsPublic()) {
+            try {
+                $this->CEVOApiManager->GiveUserXp('joingroup');
+            } catch (ApiException $e) {
+                // We do nothing
+            }
+        }
+    }
+
+    /**
+     * Automatically makes a user apply to a group
+     *
+     * @param \Platformd\GroupBundle\Entity\Group $group
+     * @param \Platformd\UserBundle\Entity\User $user
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws \Exception
+     */
+    public function autoApplyToGroup(Group $group, User $user, GroupEventEntity $event=null)
+    {
+        if ($this->isMember($user, $group) || $group->isOwner($user)) {
+            return;
+        }
+
+        /** @var $applicationRepo \Platformd\GroupBundle\Entity\GroupApplicationRepository */
+        $applicationRepo = $this->em->getRepository('GroupBundle:GroupApplication');
+
+        if ($application = $applicationRepo->getOneForGroupAndUser($group, $user)) {
+            throw new \Exception('You have already applied to this group!');
+        }
+
+        if (!$this->isAllowedTo($user, $group, $this->getCurrentSite(), 'ApplyToGroup')) {
+            throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
+        }
+
+        $application = new GroupApplication();
+
+        $application->setGroup($group);
+        $application->setApplicant($user);
+        $application->setSite($this->getCurrentSite());
+        $application->setReason('This is an automated application because user has registered for an event belonging to this group.');
+
+        if ($event) {
+            $application->setEvent($event);
+        }
+
+        $this->em->persist($application);
+        $this->em->flush();
     }
 
     public function saveGroupNews(GroupNews $groupNews, $flush = true)
@@ -333,13 +465,15 @@ class GroupManager
 
         $results = json_decode(curl_exec($curl), true);
 
-        foreach($results as $result)
-        {
-            if(isset($result))
+        if ($results) {
+            foreach($results as $result)
             {
-                if(array_key_exists('likes', $result))
+                if(isset($result))
                 {
-                    $total += $result['likes'];
+                    if(array_key_exists('likes', $result))
+                    {
+                        $total += $result['likes'];
+                    }
                 }
             }
         }
@@ -352,6 +486,26 @@ class GroupManager
     public function findGroupsForFacebookLikesLastUpdatedAt($minutes)
     {
         return $this->getRepository()->findGroupsForFacebookLikesLastUpdatedAt($minutes);
+    }
+
+    public function getAllGroupsForUser(User $user)
+    {
+        return $this->getRepository()->getAllGroupsForUser($user);
+    }
+
+    public function getAllGroupsForSite(Site $site)
+    {
+        return $this->getRepository()->findAllGroupsRelevantForSite($site);
+    }
+
+    public function getAllLocationGroupsForSite(Site $site)
+    {
+        return $this->getRepository()->findAllLocationGroupsRelevantForSite($site);
+    }
+
+    private function getCurrentSite()
+    {
+        return $this->siteUtil->getCurrentSite();
     }
 
     public function getMembershipCountByGroup($group)
@@ -374,53 +528,12 @@ class GroupManager
 
     public function isAllowedTo($user, $group, $site, $action) {
 
-        if ($group->getDeleted() && $action != "EditGroup") {
-            return false;
-        }
-
-        if (!$group->isVisibleOnSite($site)) {
-            return false;
-        }
-
-        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
-
-            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
-            $isOwner        = $group->isOwner($user);
-            $isMember       = $this->isMember($user, $group);
-            $isApplicant    = $this->isApplicant($user, $group);
-
-            if ($isSuperAdmin && in_array($action, self::$superAdminIsAllowedTo)) {
-
-                return true;
-            }
-
-            if ($isOwner) {
-                return in_array($action, self::$ownerIsAllowedTo);
-            }
-
-            if ($isMember) {
-                return in_array($action, self::$memberIsAllowedTo);
-            }
-
-            if ($isApplicant) {
-                return in_array($action, self::$applicantIsAllowedTo);
-            }
-        }
-
-        if ($group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPublicIsAllowedTo);
-        }
-
-        if (!$group->getIsPublic()) {
-            return in_array($action, self::$nonMemberPrivateIsAllowedTo);
-        }
-
-        return false;
+        return in_array($action, $this->getPermissions($user, $group, $site));
     }
 
     public function isMember($user, Group $group)
     {
-        if (!$user) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -439,7 +552,7 @@ class GroupManager
 
     public function isApplicant($user, Group $group)
     {
-        if(!$user) {
+        if(!$user instanceof User) {
             return false;
         }
 
@@ -464,5 +577,108 @@ class GroupManager
     public function getMembersJoinedCountByGroup($group, $fromDate=null, $thruDate=null)
     {
         return $this->em->getRepository('GroupBundle:GroupMembershipAction')->getMembersJoinedCountByGroup($group, $fromDate, $thruDate);
+    }
+
+    public function getPermissions($user, $group, $site)
+    {
+        $membershipRequiredActions = array(
+            'LeaveGroup',
+        );
+
+        $nonMembershipRequiredActions = array(
+            'JoinGroup',
+            'ApplyToGroup',
+        );
+
+        if ($group->getDeleted() && $action != "EditGroup") {
+            return array();
+        }
+
+        if (!$group->isVisibleOnSite($site)) {
+            return array();
+        }
+
+        $permissions = array();
+
+        if ($user && $user instanceof User && $user->hasRole('ROLE_USER')) {
+
+            $isSuperAdmin   = $user->hasRole('ROLE_SUPER_ADMIN');
+            $isOwner        = $group->isOwner($user);
+            $isMember       = $this->isMember($user, $group);
+            $isApplicant    = $this->isApplicant($user, $group);
+
+            if ($isSuperAdmin) {
+                $permissions = self::$superAdminIsAllowedTo;
+            } elseif ($isOwner) {
+                $permissions = self::$ownerIsAllowedTo;
+            } elseif ($isMember) {
+                $permissions = self::$memberIsAllowedTo;
+            } elseif ($isApplicant) {
+                $permissions = self::$applicantIsAllowedTo;
+            }
+
+            if (count($permissions) > 0) {
+
+                $permissionsMap = array_flip($permissions);
+
+                if (!$this->isMember($user, $group)) {
+                    foreach ($membershipRequiredActions as $action) {
+                        if(in_array($action, $permissions)) {
+                            unset($permissions[$permissionsMap[$action]]);
+                        }
+                    }
+                }
+
+                if ($this->isMember($user, $group)) {
+                    foreach ($nonMembershipRequiredActions as $action) {
+                        if(in_array($action, $permissions)) {
+                            unset($permissions[$permissionsMap[$action]]);
+                        }
+                    }
+                }
+
+                if ($group->getIsPublic()) {
+                    if(in_array('ApplyToGroup', $permissions)) {
+                        unset($permissions[$permissionsMap['ApplyToGroup']]);
+                    }
+                } else {
+                    if(in_array('JoinGroup', $permissions)) {
+                        unset($permissions[$permissionsMap['JoinGroup']]);
+                    }
+                }
+
+                return $permissions;
+            }
+        }
+
+        if ($group->getIsPublic()) {
+            $permissions = self::$nonMemberPublicIsAllowedTo;
+        } else {
+            $permissions = self::$nonMemberPrivateIsAllowedTo;
+        }
+
+        return $permissions;
+    }
+
+    public function find($id)
+    {
+        return $this->em->getRepository('GroupBundle:Group')->find($id);
+    }
+
+    public function findVideoByYoutubeId($group, $youtubeId)
+    {
+        return $this->em->getRepository('GroupBundle:GroupVideo')->findOneBy(array(
+            'group'             => $group->getId(),
+            'youTubeVideoId'    => $youtubeId,
+        ));
+    }
+
+    public function findVideoByYoutubeIdAndUser($group, $youtubeId, $user)
+    {
+        return $this->em->getRepository('GroupBundle:GroupVideo')->findOneBy(array(
+            'group'             => $group->getId(),
+            'youTubeVideoId'    => $youtubeId,
+            'author'            => $user->getId(),
+        ));
     }
 }

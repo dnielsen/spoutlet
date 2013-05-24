@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GameBundle\Entity\Game;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\OpenGraphOverrideType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\GameBundle\Entity\GamePage;

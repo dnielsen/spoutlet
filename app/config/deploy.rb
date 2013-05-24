@@ -9,14 +9,17 @@ default_run_options[:pty] = true
 
 # awa servers
 set :app1, "ec2-54-224-27-105.compute-1.amazonaws.com"
-set :app2, "ec2-50-16-66-61.compute-1.amazonaws.com"
-set :app3, "ec2-204-236-207-80.compute-1.amazonaws.com"
-set :app4, "ec2-107-22-71-108.compute-1.amazonaws.com"
-set :app5, "ec2-75-101-223-7.compute-1.amazonaws.com"
-set :app6, "ec2-174-129-62-95.compute-1.amazonaws.com"
-set :app7, "ec2-54-242-181-100.compute-1.amazonaws.com"
-set :app8, "ec2-50-16-75-123.compute-1.amazonaws.com"
-set :app9, "ec2-50-16-37-33.compute-1.amazonaws.com"
+set :app2, "ec2-204-236-207-80.compute-1.amazonaws.com"
+set :app3, "ec2-107-22-71-108.compute-1.amazonaws.com"
+set :app4, "ec2-75-101-223-7.compute-1.amazonaws.com"
+set :app5, "ec2-174-129-62-95.compute-1.amazonaws.com"
+set :app6, "ec2-54-242-181-100.compute-1.amazonaws.com"
+set :app7, "ec2-50-16-75-123.compute-1.amazonaws.com"
+set :app8, "ec2-50-16-37-33.compute-1.amazonaws.com"
+set :app9, "ec2-50-16-66-61.compute-1.amazonaws.com"
+
+# campsite servers
+set :camp1, "ec2-54-235-26-82.compute-1.amazonaws.com"
 
 set :repository,  "file:///Users/weaverryan/Sites/clients/spoutlet"
 
@@ -26,8 +29,9 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. staging)
 set :branch,      "master"
 
-role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9                         # Your HTTP server, Apache/etc
-role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9                        # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9, camp1    # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9, camp1    # This may be the same as your `Web` server
+
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 
 set  :keep_releases,  3
@@ -41,7 +45,7 @@ set  :dump_assetic_assets, true
 set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video", web_path + "/media"]
 
 # share our database configuration
-set :shared_files,      ["app/config/parameters.ini"]
+set :shared_files,      ["app/config/parameters.ini", "app/config/config_server.yml"]
 
 # After finalizing update - update translations
 after "deploy:finalize_update" do
@@ -53,7 +57,8 @@ after "deploy:create_symlink" do
   run "sudo chown -R `whoami`:`whoami` #{deploy_to}/releases/"
 end
 
-before "symfony:assetic:dump" do
+before "symfony:assets:install" do
+  run "cd #{latest_release} && #{php_bin} #{symfony_console} themes:update"
   run "cd #{latest_release} && #{php_bin} #{symfony_console} themes:install web --symlink"
 end
 

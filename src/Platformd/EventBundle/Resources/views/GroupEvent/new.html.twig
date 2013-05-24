@@ -1,0 +1,77 @@
+    {% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <div class="std_1col" style="padding: 0;">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+           <div class="sub-nav events-sub-nav">
+                <ul>
+                    <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">Group Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h1>Create Event {% if importedGroupEvent %} from: {{ importedGroupEvent.name }} {% endif %}</h1>
+
+    {% if existingEvents is defined and existingEvents|length > 0 %}
+        <form action="{{ path('group_event_new', {'groupSlug': group.slug }) }}" method="post" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Import From Past Event (Optional): </label>
+                <div class="controls">
+                    <div class="styled-select" style="display:inline-table;">
+                        <select id="existing_event_select" name="existing_event_select" style="width: 300px;">
+                            {% for existingEvent in existingEvents %}
+                                <option value="{{ existingEvent.id }}">{{ existingEvent.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" formnovalidate>Import</button>
+                </div>
+
+            </div>
+        </form>
+    {% endif %}
+
+    {% set post_route = (importedGroupEvent) ? path('group_event_new_import', {'groupSlug': group.slug, 'eventId': importedGroupEvent.id }) : path('group_event_new', {'groupSlug': group.slug }) %}
+    <form id="group-event-form" action="{{ post_route }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'EventBundle:GroupEvent:_form.html.twig' %}
+
+        <div class="form-actions" style="float: left;">
+            <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+            <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Cancel</button>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            if (document.referrer != window.location.href ) {
+                $('.hour-selection select').val(null);
+                $('.minute-selection select').val(null);
+            }
+
+            var timezone = jstz.determine();
+            if (timezone) {
+                $('#groupEvent_timezone').val(timezone.name());
+            }
+
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('input.datetime-picker').datetimepicker({
+                dateFormat: 'yy-mm-dd',
+                showSecond: true
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}

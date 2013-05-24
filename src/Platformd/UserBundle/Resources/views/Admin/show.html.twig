@@ -60,6 +60,10 @@
             <th>{{ 'Created'|trans }}</th>
             <td>{{ user.created|date }}</td>
         </tr>
+        <tr>
+            <th>{{ 'IP Address at creation'|trans }}</th>
+            <td>{{ user.ipAddress }}</td>
+        </tr>
     </table>
 
 {% endblock %}

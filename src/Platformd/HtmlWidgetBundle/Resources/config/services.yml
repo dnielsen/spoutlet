@@ -1,0 +1,13 @@
+services:
+    platformd.model.html_widget_manager:
+        class: Platformd\HtmlWidgetBundle\Model\HtmlWidgetManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+
+    platformd.validation.html_widget_slug_validator:
+        class: Platformd\HtmlWidgetBundle\Validator\HtmlWidgetSlugValidator
+        arguments:
+            - "@platformd.model.html_widget_manager"
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.validator.html_widget.slug }
+

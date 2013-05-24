@@ -33,7 +33,6 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *      "event"     = "Platformd\SpoutletBundle\Entity\Event",
  *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
@@ -102,6 +101,11 @@ abstract class AbstractEvent implements LinkableInterface
      * @ORM\Column(name="published", type="boolean")
      */
     protected $published = false;
+
+    /**
+     * @ORM\Column(name="hidden", type="boolean", nullable="true")
+     */
+    protected $hidden = false;
 
     /**
      * @var text $content
@@ -574,6 +578,16 @@ abstract class AbstractEvent implements LinkableInterface
     public function getPublished()
     {
         return $this->published;
+    }
+
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    public function getHidden()
+    {
+        return $this->hidden;
     }
 
     public function getGeneralImage()

@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 class DiscussionFindType extends AbstractType
 {
@@ -23,11 +22,11 @@ class DiscussionFindType extends AbstractType
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'choice', array(
-                'label' => 'Region:',
-                'expanded' => 'true',
-                'multiple' => 'true',
-                'choices' => MultitenancyManager::getSiteChoices(),
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
             ))
             ->add('from', 'date', array(
                 'label' => 'Start Date:',

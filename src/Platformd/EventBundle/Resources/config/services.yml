@@ -1,0 +1,39 @@
+imports:
+    - { resource: "forms.yml" }
+    - { resource: "map.yml" }
+    - { resource: "repositories.yml" }
+    - { resource: "validation.yml" }
+
+services:
+    platformd_event.service.event:
+        class: Platformd\EventBundle\Service\EventService
+        arguments:
+            - @platformd_event.repository.event
+            - @knp_media.util.media_util
+            - @event_dispatcher
+            - @security.acl.provider
+            - @platformd.model.email_manager
+            - @router
+            - @platformd.model.translator
+
+    platformd_event.service.group_event:
+        class: Platformd\EventBundle\Service\GroupEventService
+        arguments:
+            - @platformd_event.repository.group_event
+            - @knp_media.util.media_util
+            - @event_dispatcher
+            - @security.acl.provider
+            - @platformd.model.email_manager
+            - @router
+            - @platformd.model.translator
+
+    platformd_event.service.global_event:
+        class: Platformd\EventBundle\Service\GlobalEventService
+        arguments:
+            - @platformd_event.repository.global_event
+            - @knp_media.util.media_util
+            - @event_dispatcher
+            - @security.acl.provider
+            - @platformd.model.email_manager
+            - @router
+            - @platformd.model.translator

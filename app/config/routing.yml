@@ -10,12 +10,12 @@ fos_user_profile:
     resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
     prefix: /account/profile
 
-PlatformDGroupBundle:
-    resource: "@GroupBundle/Resources/config/routing.yml"
-    prefix:   /
-
 PlatformDSpoutletBundle:
     resource: "@SpoutletBundle/Resources/config/routing.yml"
+    prefix:   /
+
+PlatformDEventBundle:
+    resource: "@EventBundle/Resources/config/routing/event.yml"
     prefix:   /
 
 PlatformDGiveawayBundle:
@@ -51,3 +51,19 @@ GameBundle:
 liip_theme:
     resource: "@LiipThemeBundle/Resources/config/routing.xml"
     prefix: /theme
+
+VideoBundle:
+    resource: "@VideoBundle/Resources/config/routing.yml"
+    prefix: /
+
+PlatformDHtmlWidgetBundle:
+    resource: "@HtmlWidgetBundle/Resources/config/routing.yml"
+    prefix:   /
+
+# This MUST remain last in this list, as it needs to have lowest priority in order to prevent groups pages
+# from conflicting with other routes. This facilitates the removal of the /groups prefix on groups urls
+PlatformDGroupBundle:
+    resource: "@GroupBundle/Resources/config/routing.yml"
+    prefix:   /
+
+

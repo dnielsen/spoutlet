@@ -14,6 +14,7 @@ use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Platformd\GroupBundle\Validator\GroupSlugCollision;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
@@ -24,7 +25,10 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
+ * @UniqueEntity(fields={"slug"}, message="This group url is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ * @GroupSlugCollision()
+ * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface
 {
@@ -35,8 +39,8 @@ class Group implements LinkableInterface, ReportableContentInterface
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     static private $validCategories = array(
-        'location',
         'topic',
+        'location',
     );
 
     static private $validDeletedReasons = array(
@@ -117,7 +121,7 @@ class Group implements LinkableInterface, ReportableContentInterface
      * @Assert\NotNull
      * @ORM\Column(name="isPublic", type="boolean")
      */
-    private $isPublic;
+    private $isPublic = true;
 
     /**
      * @var \Platformd\MediaBundle\Entity\Media
@@ -186,7 +190,7 @@ class Group implements LinkableInterface, ReportableContentInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupApplication", mappedBy="group")
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupApplication", mappedBy="group", cascade={"persist"})
      */
     private $applications;
 
@@ -198,8 +202,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     private $newsArticles;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupVideo", mappedBy="group")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo", mappedBy="groups")
      */
     private $videos;
 
@@ -273,6 +276,7 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->applications             = new ArrayCollection();
         $this->userMembershipActions    = new ArrayCollection();
         $this->contentReports           = new ArrayCollection();
+        $this->videos                   = new ArrayCollection();
     }
 
     /**
@@ -861,6 +865,11 @@ class Group implements LinkableInterface, ReportableContentInterface
     {
         $this->facebookLikes = $facebookLikes;
         $this->facebookLikesUpdatedAt = new \DateTime;
+    }
+
+    public function getClass()
+    {
+        return get_class($this);
     }
 
     public function getLeftMemberCount()

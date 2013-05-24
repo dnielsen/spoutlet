@@ -2,7 +2,6 @@
 
 namespace Platformd\UserBundle\Entity;
 
-use Platformd\SpoutletBundle\Entity\Event;
 use FOS\UserBundle\Entity\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -13,12 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 
+use  Platformd\UserBundle\Validator\User as ValidateUser;
+
 /**
  * Platformd\UserBundle\Entity\User
  *
  * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
+ * @ValidateUser()
  */
 class User extends BaseUser
 {
@@ -59,7 +61,6 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="birthdate_not_blank")
      * @Assert\Date(groups={"Registration"})
      */
     protected $birthdate;
@@ -141,13 +142,6 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $cevoAvatarUrl;
-
-    /**
-     * @var Platformd\SpoutletBundle\Entity\Event $events
-     *
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Event", inversedBy="users")
-     */
-    private $events;
 
     /**
      * @var String $type
@@ -278,10 +272,7 @@ class User extends BaseUser
     protected $updated;
 
     /**
-     * @Assert\File(
-        maxSize="6000000",
-        mimeTypes={"image/png", "image/jpeg", "image/jpg"},
-        groups={"Profile"})
+     * @Assert\File(maxSize="6000000", mimeTypes={"image/png", "image/jpeg", "image/jpg"}, groups={"Profile"})
      */
     public $file;
 
@@ -301,15 +292,27 @@ class User extends BaseUser
     private $cevoUserId;
 
      /**
-    * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
-    * @ORM\JoinColumn(onDelete="SET NULL")
-    */
+      * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
+      * @ORM\JoinColumn(onDelete="SET NULL")
+      */
     private $groupMembershipActions;
+
+    /**
+      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\LoginRecord", mappedBy="user", cascade={"persist"})
+      * @ORM\JoinColumn(onDelete="SET NULL")
+      * @ORM\OrderBy({"dateTime" = "DESC"})
+      */
+    private $loginRecords;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $ipAddress;
+
+    /**
+     * @Recaptcha\True
+     */
+    public $recaptcha;
 
     public function __construct()
     {
@@ -317,6 +320,7 @@ class User extends BaseUser
         $this->events = new ArrayCollection();
         $this->giveawayKeys = new ArrayCollection();
         $this->groupMembershipActions = new ArrayCollection();
+        $this->loginRecords = new ArrayCollection();
     }
 
     /**
@@ -368,42 +372,6 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set events
-     *
-     * @param Doctrine\Common\Collections\Collection $events
-     */
-    public function setEvents(Collection $events)
-    {
-        $this->events = $events;
-    }
-
-    /**
-     * Get events
-     *
-     * @return Doctrine\Common\Collections\Collection
-     */
-    public function getEvents()
-    {
-        return $this->events;
-    }
-
-    /**
-     * @param Platformd\SpoutletBundle\Entity\Event $event
-     */
-    public function addEvent(Event $event)
-    {
-        $this->events->add($event);
-    }
-
-    /**
-     * @param Platformd\SpoutletBundle\Entity\Event $event
-     */
-    public function removeEvent(Event $event)
-    {
-        $this->events->removeElement($event);
     }
 
     /**
@@ -868,8 +836,12 @@ class User extends BaseUser
             $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
             $this->switchRole('ROLE_PARTNER', true);
-        } else {
+        } elseif ($role == 'ROLE_JAPAN_ADMIN') {
+            $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
+            $this->switchRole('ROLE_JAPAN_ADMIN', true);
+        } else {
+            $this->setIsOrganizer(false);
             $this->setIsSuperAdmin(false);
         }
     }
@@ -901,6 +873,8 @@ class User extends BaseUser
             return 'Dell Partner';
         } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
             return 'Full Admin';
+        } elseif ($this->hasRole('ROLE_JAPAN_ADMIN')) {
+            return 'Japan Regional Admin';
         } else {
             return 'no admin';
         }
@@ -1082,6 +1056,34 @@ class User extends BaseUser
     public function setGroupMembershipActions($value)
     {
         $this->groupMembershipActions = $value;
+    }
+
+    public function getAccountLink($locale)
+    {
+        switch ($locale) {
+            case 'ja':
+                $subdomain = '/japan';
+                break;
+
+            case 'zh':
+                $subdomain = '/china';
+                break;
+
+            case 'es':
+                $subdomain = '/latam';
+                break;
+
+            default:
+                $subdomain = '';
+                break;
+        }
+
+        return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $this->cevoUserId);
+    }
+
+    public function getLoginRecords()
+    {
+        return $this->loginRecords;
     }
 
     public function eraseCredentials()

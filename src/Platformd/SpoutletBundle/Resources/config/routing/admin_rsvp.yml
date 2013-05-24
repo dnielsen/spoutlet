@@ -1,0 +1,21 @@
+admin_rsvp_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:RsvpAdmin:index }
+    requirements: { _method: GET }
+
+admin_rsvp_new:
+    pattern: /new
+    defaults: { _controller: SpoutletBundle:RsvpAdmin:new }
+    requirements: { _method: GET|POST }
+
+
+admin_rsvp_edit:
+    pattern: /{id}/edit
+    defaults: { _controller: SpoutletBundle:RsvpAdmin:edit }
+    requirements: { _method: GET|POST }
+
+admin_rsvp_export_csv:
+    pattern: /{id}/export.csv
+    defaults: { _controller: SpoutletBundle:RsvpAdmin:exportToCsv, _format: csv }
+    requirements: { _method: GET }
+

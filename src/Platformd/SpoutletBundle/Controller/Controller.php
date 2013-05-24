@@ -19,12 +19,27 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.site_util')->getCurrentSite();
     }
 
+    protected function getCurrentCountry()
+    {
+        $ipAddress = $this->getRequest()->getClientIp(true);
+        $code = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($code);
+    }
+
     /**
      * @return string
      */
     protected function getLocale()
     {
         return $this->container->get('session')->getLocale();
+    }
+
+    /**
+     * @return \Symfony\Component\Security\Core\SecurityContextInterface
+     */
+    protected function getSecurity()
+    {
+        return $this->get('security.context');
     }
 
     /**
@@ -161,11 +176,7 @@ class Controller extends BaseController
      */
     protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
     {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-
-        return $this->container->get('translator')->trans($key, $params, $domain, $locale);
+        return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 
     /**
@@ -210,5 +221,25 @@ class Controller extends BaseController
     protected function getMediaUtil()
     {
         return $this->container->get('knp_media.util.media_util');
+    }
+
+    protected function getIpLookupUtil()
+    {
+        return $this->container->get('platformd.model.ip_lookup_util');
+    }
+
+    protected function getGlobalEventService()
+    {
+        return $this->get('platformd_event.service.global_event');
+    }
+
+    protected function getGroupEventService()
+    {
+        return $this->get('platformd_event.service.group_event');
+    }
+
+    protected function getSiteManager()
+    {
+        return $this->get('platformd.model.site_manager');
     }
 }

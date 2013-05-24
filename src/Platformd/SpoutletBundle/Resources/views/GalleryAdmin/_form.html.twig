@@ -4,14 +4,76 @@
 {{ form_errors(form) }}
 
 <div class="row-fluid">
+    <legend>Gallery information</legend>
+
     <div class="span6">
         <fieldset>
-            <legend>Gallery information</legend>
             {{ form_row(form.name) }}
+            {{ form_row(form.slug) }}
             {{ form_row(form.categories) }}
-            {{ form_row(form.sites) }}
+
+            <div class="sites">
+                {{ form_row(form.sites) }}
+            </div>
+
+            {{ form_row(form.deleted) }}
+
+            <div class="control-group" style="display: none;">
+                <legend>Translations</legend>
+                <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                    You can override the gallery name on a per-site basis here. Leave blank for default value.
+                </p>
+
+                <div class="row-fluid first" id="translations-wrapper">
+                    <div id="translations-fields-list" data-prototype="{{ form_row(form.translations.vars.prototype) | e }}">
+                        {% for translation in form.translations %}
+                            {{ form_row(translation, { 'label': translation.vars.value.site.name }) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
         </fieldset>
     </div>
+
 </div>
 
-{{ form_rest(form) }}
+<div style="display:none;">
+    {{ form_rest(form) }}
+</div>
+
+<script type="text/javascript">
+
+    var translationCount = '{{ form.translations | length }}';
+
+    $(function() {
+
+        if (translationCount > 0) {
+            $('#translations-fields-list').closest('.control-group').show();
+        }
+
+        $('.sites').delegate('input[type=checkbox]', 'change', function(event) {
+            var translationList = $('#translations-fields-list');
+            var newWidget = translationList.data('prototype');
+            var newWidget = $(newWidget.replace(/\$\$name\$\$/g, translationCount));
+
+            if (event.target.checked) {
+
+                if (translationCount == 0) $('#translations-fields-list').closest('.control-group').slideDown();
+                translationCount++;
+
+                translationList.append(newWidget);
+                newWidget.find('.translationSiteId').val($(event.target).val());
+                newWidget.closest('.control-group').find('> label').text($(event.target).parent().text());
+            }
+            else {
+                var el = $('.translationSiteId[value="' + $(event.target).val() + '"]')
+                el.closest('.control-group').remove();
+
+                translationCount--;
+                if (translationCount == 0) $('#translations-fields-list').closest('.control-group').slideUp();
+            }
+        });
+    });
+
+</script>

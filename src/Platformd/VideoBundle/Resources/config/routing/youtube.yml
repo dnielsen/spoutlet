@@ -1,0 +1,57 @@
+youtube_index:
+    pattern: /
+    defaults: { _controller: VideoBundle:Youtube:index }
+
+youtube_category:
+    pattern: /category/{slug}
+    defaults: { _controller: VideoBundle:Youtube:category }
+
+youtube_submit:
+    pattern: /submit/{groupId}
+    defaults: { _controller: VideoBundle:Youtube:submit, groupId: null }
+
+youtube_edit:
+    pattern: /edit/{slug}
+    defaults: { _controller: VideoBundle:Youtube:edit, slug: null }
+
+youtube_delete:
+    pattern: /delete/{slug}
+    defaults: { _controller: VideoBundle:Youtube:delete, slug: null }
+
+youtube_view:
+    pattern: /view/{slug}
+    defaults: { _controller: VideoBundle:Youtube:view }
+
+youtube_tabs:
+    pattern: /tab/{tab}
+    defaults: { _controller: VideoBundle:Youtube:tabs, tab: null }
+
+youtube_tabs_category:
+    pattern: /category-tab/{cat}/{tab}
+    defaults: { _controller: VideoBundle:Youtube:categoryTabs, cat: null, tab: null }
+
+youtube_feature_video:
+    pattern: /feature
+    defaults: { _controller: VideoBundle:Youtube:featureVideo }
+    requirements:
+        _format: json
+        _method: POST
+
+youtube_vote:
+    pattern:  /vote
+    defaults: { _controller: "VideoBundle:Youtube:vote" }
+    requirements:
+        _format: json
+        _method: POST
+    defaults: { _controller: VideoBundle:Youtube:tabs, tab: null}
+
+youtube_vote:
+    pattern:  /vote
+    defaults: { _controller: "VideoBundle:Youtube:vote" }
+    requirements:
+        _format: json
+        _method: POST
+
+youtube_feed:
+    pattern: /feed
+    defaults: { _controller: "VideoBundle:Youtube:feed" }

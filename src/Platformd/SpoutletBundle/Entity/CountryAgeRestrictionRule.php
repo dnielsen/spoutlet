@@ -219,12 +219,12 @@ class CountryAgeRestrictionRule
         if ($country instanceof Country) {
             $thisCountry = $this->getCountry();
         } else {
-            $thisCountry = $this->getCountry()->getCode();
+            $thisCountry = $this->getCountry() ? $this->getCountry()->getCode() : null;
         }
 
-        if ($country == $thisCountry || !$country){
+        if ($country == $thisCountry || !$country || !$thisCountry){
 
-            if (!$age || (($age > $this->getMinAge() || !$this->getMinAge()) && ($age < $this->getMaxAge() || !$this->getMaxAge()))) {
+            if (!$age || (($age >= $this->getMinAge() || !$this->getMinAge()) && ($age <= $this->getMaxAge() || !$this->getMaxAge()))) {
 
                 return $this->getRuleType() == "allow";
             }

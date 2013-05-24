@@ -1,4 +1,23 @@
 edit: Edit
+submit: Submit
+cancel: Cancel
+delete: Delete
+date_format: M j, Y
+
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Continue to Alienware Arena
 
 recaptcha:
     visual_challenge: Get a visual challenge
@@ -26,8 +45,8 @@ platformd:
     alienware: Alienware
 
     not_found:
-        title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        title: Page Not Found
+        body: We're sorry, but this page does not exist.
 
     flash:
         error_title: Error!
@@ -84,12 +103,12 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            events: Events
+            events: Events <span class="beta">BETA</span>
             video: Videos
             news: News
             articles: Articles
             announcements: Announcements
-            media: Media
+            media: More
             arp: ARP
             forums: Forums
             sweeps: SWEEPS
@@ -132,37 +151,98 @@ platformd:
 
     events:
         event_listings:
-            your_registered_events: My Events
-            current_events: Current Events
+            events: Events
+            header: "Alienware Arena Events"
+            create: Create Event
+            show_map: Show Map
+            organizer: Organizer
+            attendees: Attendees
+            actions: Actions
+            status: Status
+            my_events: My Events
+            my_owned_events: My Listed Events
+            my_registered_events: Events I'm Registered In
+            my_past_events: My Past Events
+            rsvp:
+                dialog_title: Event RSVP
+                change_rsvp: Change RSVP
+                attending: I'm going
+                not_attending: No thanks
+                submit: Submit
+                cancel: Cancel
+            current_events: Upcoming Events
             current_and_upcoming_events: Current and Upcoming Events
             more_current_events: More Current Events
             start_date: Start Date
             end_date: End Date
+            date: Date
             details: Details
             event: Event
-            games: Games
-            hosted_by: Hosted by
+            games: Game(s)
+            hosted_by: Organizer/Group
             location: Location
             upcoming_events: Upcoming Events
             there_are_no_upcoming_events_at_this_moment: "There are no upcoming events at this moment."
             past_events: Past Events
             more_past_Events: More Past Events
+            view_past_events: View Past Events
             online: Online
             no_past_events: There are no past events at this moment.
             no_current_events: There are no current events at this moment.
             no_active_giveaways: There are no active giveaways at this moment.
+            create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
+            legend_registered: Means you are registered to attend this event.
+            legend_sponsored: Alienware Arena Sponsored Event
+            legend_group: Group Event
         event_show:
             register_event: Register for event
             unregister_event: Unregister for event
             register:       Register
+            event_details: Event Details
+            organizer: Organizer
+            attending: Attending
+            registration_closed: Registration is no longer open for this event.
+            im_attending: Yes, I'm attending!
+            event_details: Event Details
+            location: Location
+            online_event: This is an online event.
+            directions: Directions
+            contact_attendees: Contact Attendees
+            manage_attendees: Manage Attendees
+            edit_event: Edit Event
+            not_allowed_register: You are not allowed to rsvp to this event!
+            now_attending: You are now attending this event.
+            group_joined: To attend this event, you must join %groupName%. You are now a member of this group.
+            group_home: Group Home
+        event_contact:
+            title: Contact Attendees By Email
+            preview: Preview
+            send: Send
+            cancel: Cancel
+            attending: Attending
+            error: There was an error previewing your email!
+            confirmation: Email sent to %attendeeCount% attendee(s).
+            form:
+                recipients: Recipients
+                message: Message
+                recipient_help: Leave blank to send to all attendees or click on users to the right to choose specific recipients.
+        event_attendees:
+            back_to_event: Back to Event
+            attendees: Attendees
+            action: Action
+            username: Username
+            remove: Remove
+            no_attendees: There are no attendees!
+            remove_confirmation: Are you sure you want to remove "%username%" from this event?
+            joined: Joined
         # used only in the admin area
         admin:
             title: Event admin
             edit_event: Edit Event | %event_title%
             create: Create New Event
-            approve: Approve
+            publish: Publish
             unpublish: Unpublish
-            approved: Event "%event_title%" has been approved and is now published.
+            published: Event "%event_title%" has been published.
             unpublished: Event "%event_title%" has been unpublished.
             saved: Event has been saved.
             unknown: Unknown event \#%event_id% !
@@ -173,8 +253,19 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: You have not registered to any event yet.
+            no_registered_events: No events registered. Check out <a href="%url%">upcoming events</a>.
+            no_created_events: No events created.
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
+            show_past_events: Show Past Events
+            hide_past_events: Hide Past Events
+            edit_event: Edit Event
+            registration_open: Registration Open
+            registration_closed: Registration Closed
+            cancelled: Cancelled
+            event_listing: Event Listing
+            active: Active
+            pending_approval: Pending Approval by Group Organizer
+            choose_one: Choose one:
         account:
             welcome_to_control: Welcome to your Control Panel
             hello_user: "Hello %firstname%! You are logged in with the username %username%."
@@ -274,12 +365,11 @@ platformd:
             edit_account: Edit Account
             change_password: Change Pass
             profile:      Profile
-            # checked up until here
             registered_events: Registered Events
-            my_giveaways: My Giveaways
-            my_videos: My Videos
-            my_events: My Events
-            my_groups: My Groups
+            my_giveaways: Giveaways
+            my_videos: Videos
+            my_events: Events
+            my_groups: Groups
             help: Help
             game_ids: Game IDs
             tournaments: Tournaments
@@ -287,7 +377,14 @@ platformd:
             media_upload: Upload
             my_media: My Media
             sign_out: Sign Out
-
+            deals: Deals
+            messages: Messages
+            gameids: Game IDs
+            match_client: Match Client
+            match_lobby: Match Lobby
+            gallery: Gallery
+            images: Images
+            videos: Videos
     giveaway:
         giveaway: Giveaway
         redeem:   Redeem
@@ -367,6 +464,281 @@ platformd:
                 mmo:        MMO
         facebook_fanpage: Facebook Fan Page
 
+    event:
+        form:
+            name: "Title"
+            banner_image: "Event Banner"
+            url: "URL"
+            description: "Event Details"
+            game: "Game"
+            event_type: "Location"
+            location: "Location Name"
+            address1: "Street"
+            address2: "City, State, Zip"
+            starts_at: "Start Date & Time"
+            ends_at: "End Date & Time"
+            hosted_by: "Hosted By"
+            timezone: "Timezone"
+            display_timezone: "Display Timezone"
+            external_url: "External Url"
+            event_options: "Event Options"
+            sites: "Regions"
+            private_public: "Is this a public or private event?"
+            published: "Do you want your event published?"
+
+            choice:
+                private_event: "Private Event"
+                public_event: "Public Event"
+                online_event: "Online Event"
+                physical_event: "In-Person"
+                published: "Published"
+                unpublished: "Unpublished"
+
+            help:
+                address1: "Example: 1021 Washington Drive"
+                address2: "Example: San Francisco, CA, United States. Note that the map will not be displayed correctly if the address is invalid."
+                banner_image: "Recommended size: 950x120. File formats accepted: JPEG and PNG."
+                external_url: "(Optional) If filled in, this URL will override the destination of any links that would normally point to the Event page."
+
+        registration:
+            enabled: "Manage event registration on this site."
+            disabled: "List my event only. Event registration is managed elsewhere."
+            3rdparty: "Link event listing to 3rd party website."
+
+        email:
+            global_event_contact:
+                title: Message from the event organizer about %eventName%
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Alienware Arena Team
+
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+            attendees_contact:
+                title: Message from the event organizer about %eventName%
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+            approved:
+                title: Your Event Has Been Approved
+                message: |
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Alienware Arena.
+
+                    We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
+
+                    Note: You are receiving this email because you submitted an event for approval.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+            cancel:
+                title: %eventName% has been canceled
+                message: |
+                    This is an automated email to inform you that %eventName% has been cancelled.
+
+                    Alienware Arena Team
+            activate:
+                title: %eventName% is active again
+                message: |
+                    This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Alienware Arena Team
+
+            group_announcement:
+                title: You’re Invited to %eventName%
+                message: |
+                    %groupName% added a new event – <a href="%url%">%eventName%</a>
+
+                    <strong><u>When</u></strong>
+
+                    %startDate%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
+
+                    Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+            require_approval:
+                title:  Request to Approve My Event for %groupName%
+                message: |
+                    Hi %groupOwnerName%,
+
+                    Please approve my upcoming event - <a href="%eventUrl%">%eventName%</a> to be listed on the "%groupName%" page.
+
+                    <strong><u>When</u></strong>
+
+                    %dateRange%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to approve the event.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+
+            group_join_application_from_event:
+                title: Group Member Approval Request
+                message: |
+                    %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to review their request.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
+
+                    Sent from Alienware Arena on behalf of %userName%.
+
+            group_application_accepted_event_registered:
+                title: You’re approved to be in %groupName%!
+                message: |
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit the group's page to join the conversation and share information with your fellow group members.
+
+                    You are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Alienware Arena on behalf of %groupOwnerName%.
+
+            event_reminder:
+                title: Upcoming Event Reminder for %eventName%
+                message: |
+                    Hi %username%,
+
+                    Your event is almost here!
+
+                    <a href="%eventUrl%">%eventName%</a>
+                    %dateString% - %timeString% %timezone%
+
+                    %location%
+
+                    Have questions about the event?
+                    Contact the event organizer, <a href="%organizerUrl%">%organizerName%</a>.
+
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+                    Sent from Alienware Arena on behalf of %organizerName%.
+
+            attendee_removed:
+                title: You are no longer attending %eventName%
+                message: |
+                    Hello %username%
+
+                    This email confirms that you no longer attending <a href="%url%">%eventName%</a>.
+
+                    If you believe this to be an error, please send contact the event organizer.
+
+                    Alienware Arena Team
+
+    groups:
+        index:
+            my_groups: My Groups
+            create_group: Create Group
+            recommended_groups: Recommended Alienware Arena Groups
+            featured_groups: Featured Groups
+            members: Members
+            organizer: Organizer
+            report_group: Report this Group
+            topic_groups: Topic Groups
+            previous: Previous
+            see_more: See More
+            location_groups: Location Groups
+            welcome_new: Welcome New Groups
+            no_groups_found: No groups found. Check back soon!
+            most_popular: Most Popular Groups
+            staff: Staff
+        show:
+            waiting_on_approval: Waiting on Approval
+            founded: Founded
+            organizer: Organizer
+            staff: Staff
+            members: Members
+            upcoming_events: Upcoming Events
+            past_events: Past Events
+            comments: Comments
+            group_type: Group
+            new_members: New Members Acquired
+            invite: Invite Friends
+            report_group: Report this Group
+            location: LOCATION
+            news: News
+            events: Events
+            images: Images
+            videos: Videos
+            discussions: Discussions
+            about: About
+            must_be_member_comments: You must be a member of a private group before you can see or post comments.
+            public: Public
+            private: Private
+        news:
+            add: Add News
+            delete: Delete
+            edit: Edit
+            report: Report
+            no_articles: No news articles yet... please come back later!
+        images:
+            submit_images: Submit image(s)
+            non_member_add: Want to add an image? Become a member of our group.
+            member_no_images: There are no images. <a href='%addImageUrl%'>Submit image(s)</a>
+            non_member_no_images: There are no images. Want to add an image? Become a member of our group.
+            delete: Delete
+            edit: Edit
+            report: Report
+            previous: Previous
+            see_more: See More
+        videos:
+            submit: Submit Video
+            non_member_add: Want to add an video? Become a member of our group.
+            member_no_videos: There are no videos. <a href='%url%'>Submit Video</a>
+            non_member_no_videos: There are no videos. Want to add an video? Become a member of our group.
+            delete: delete
+            edit: edit
+            report: report
+        discussions:
+            submit: <a href='%url%'>Submit your topic</a> now.
+            non_member_add: Want to add a topic? Become a member of our group.
+            member_no_discussions: No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+            non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
+            replies: Replies
+            views: Views
+        events:
+            submit: Submit Event
+            member_no_events: No group events yet. <a href="%url%">Submit Event</a>
+            non_member_add: Want to add an event? Become a member of our group.
+            non_member_no_events: No group events yet. Want to add an event? Become a member of our group.
+            time: Time
+            where: Where
+            online: Online
+            edit: Edit
+            delete: Delete
+            report: Report
+            view_past_events: View Past Events
+            no_past_events: No past events!
+            show_more_past: Show More Past Events
+            delete_confirmation: Are you sure you want to delete this event?
+
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"
@@ -398,7 +770,6 @@ na: N/A
 instructions: Instructions
 sweepstakes_datetime_format: %year%-%month%-%day% %time%
 sweepstakes_date_format: %month%/%day%/%year%
-date_format: %month% %day% %year%
 eligibility: Eligibility
 sweeps_not_open: This sweepstakes is not currently open
 
@@ -497,6 +868,7 @@ age_confirm:
     message: The content is intended for mature audiences. Please confirm your age below
     content_for_mature_audiences: Content Intended for Mature Audiences
     too_young_message: Sorry, we are unable to provide you with access at this time
+    date_format: %month% %day% %year%
 confirm: Confirm
 
 forms:
@@ -524,6 +896,7 @@ content_reporting:
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
     report_type_group_event: Group Event
+    report_type_youtubevideo: Video
     report_type_unknown: Unknown
     report_success: The content will be reviewed by our staff within 72 hours. If you have additional information for your report, please email us at reports@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
@@ -585,7 +958,7 @@ games_trailers:
         free-to-play: Free to Play
         mmo:   MMO
 games_and_trailers: Games and Trailers
-games: Games
+games: Game Pages
 game_feed: Game Feed
 videos: Videos
 uploaded_desktop: Uploaded Desktop
@@ -633,11 +1006,6 @@ choose_country: Choose your country
 featured_deals: Alienware Arena Featured Deals
 expired_deals: Expired Deals
 
-platformd.user.account.deals: My Deals
-platformd.user.account.messages: Messages
-platformd.user.account.gameids: Game IDs
-platformd.user.account.match_client: Match Client
-platformd.user.account.match_lobby: Match Lobby
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
 platformd.deal.assigned.assigned_at: Assigned
@@ -653,11 +1021,7 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 deny_codes: Deny Codes
-platformd.user.account.messages: Messages
-platformd.user.account.match_client: Match Client
-platformd.user.account.match_lobby: Match Lobby
 
-platformd.user.account.gallery: My Gallery
 platformd.account_page.photos.submit: Submit Images
 
 groups.opengraph.description: Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
@@ -759,7 +1123,8 @@ galleries:
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.
     login_to_vote_linked: Please <a href="%login_url%">log in</a> to vote.
     login_to_vote: Log In to Vote!
-    quick_vote_caption: Like it?
+    quick_vote_caption: "+1"
+    vote_caption: Like it?
     voting_closed_caption: Voting Closed
     already_voted_caption: Voted
     by: by:
@@ -819,5 +1184,4 @@ contests:
     voting_begins: Voting begins
     no_longer_available: This contest is no longer available.
     entry_success: Your group is entered into the contest.
-
-
+    contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.

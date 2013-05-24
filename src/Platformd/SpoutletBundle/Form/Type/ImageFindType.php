@@ -3,7 +3,6 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -37,11 +36,11 @@ class ImageFindType extends AbstractType
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'choice', array(
-                'label' => 'Sites:',
-                'expanded' => 'true',
-                'multiple' => 'true',
-                'choices' => MultitenancyManager::getSiteChoices(),
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Upload Start Date:',

@@ -12,13 +12,15 @@ use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Vote;
+use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
+use DateTime;
+use DateTimezone;
 
 class ContestController extends Controller
 {
@@ -99,7 +101,7 @@ class ContestController extends Controller
         $isUnlimited        = $contest->getMaxEntries() == 0;
 
         $agreeText = $this->trans('contests.show_page_agree_text');
-        $canVote = $contest->getVotingStartUtc() < new \DateTime('now');
+        $canVote = $contest->getVotingStartTz() < new DateTime('now', new DateTimeZone($contest->getTimezone()));
 
         return $this->render('SpoutletBundle:Contest:show.html.twig', array(
             'contest'       => $contest,
@@ -111,6 +113,7 @@ class ContestController extends Controller
             'entryCount'    => $mediaCount,
             'entriesLeft'   => $entriesLeft,
             'isUnlimited'   => $isUnlimited,
+            'nowInTz'       => new DateTime('now', new DateTimeZone($contest->getTimezone())),
         ));
     }
 

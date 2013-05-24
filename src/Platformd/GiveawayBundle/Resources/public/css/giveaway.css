@@ -8,3 +8,10 @@
 #giveaway-getkey ol { margin: 0; padding: 0;}
 #giveaway-getkey ol li { list-style-position: inside; background: url('../images/giveaway-list-item-bg.png') 6px 49% no-repeat #252525; border-radius: 5px 5px 5px 5px; margin: 3px; padding: 8px 5px 8px 14px; font-weight: bold; }
 #giveaway-getkey ol li span.item { vertical-align: middle; display: inline-block; font-size: 12px; font-weight: normal; width: 88%; padding-left: 7px; }
+
+.key-count {
+    color: #b3b3b3;
+    font-weight: normal;
+    font-size: 21px;
+    margin: 10px 0 0px 0;
+}

@@ -3,6 +3,10 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\UserBundle\Entity\User;
+use Platformd\EventBundle\Service\GroupEventService;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
 {
@@ -21,35 +25,46 @@ class AccountController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $locale = $this->getLocale();
+        $localAuth = $this->container->getParameter('local_auth');
 
-        switch ($locale) {
-            case 'ja':
-                $subdomain = '/japan';
-                break;
+        if (!$localAuth) {
 
-            case 'zh':
-                $subdomain = '/china';
-                break;
+            $locale = $this->getLocale();
 
-            case 'es':
-                $subdomain = '/latam';
-                break;
+            switch ($locale) {
+                case 'ja':
+                    $subdomain = '/japan';
+                    break;
 
-            default:
-                $subdomain = '';
-                break;
-        }
+                case 'zh':
+                    $subdomain = '/china';
+                    break;
 
-        if ($user) {
-            $cevoUserId = $user->getCevoUserId();
+                case 'es':
+                    $subdomain = '/latam';
+                    break;
 
-            if ($cevoUserId && $cevoUserId > 0) {
-                return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                default:
+                    $subdomain = '';
+                    break;
             }
+
+            if ($user) {
+                $cevoUserId = $user->getCevoUserId();
+
+                if ($cevoUserId && $cevoUserId > 0) {
+                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                }
+            }
+
+            return $this->redirect('http://www.alienwarearena.com/account/profile');
+        } else {
+            return $this->render('UserBundle:Profile:show.html.twig', array(
+                'user' => $user,
+            ));
         }
 
-        return $this->redirect('http://www.alienwarearena.com/account/profile');
+
 	}
 
 
@@ -75,12 +90,45 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        return $this->render('SpoutletBundle:Account:events.html.twig');
+        /** @var $groupEventService GroupEventService */
+        $groupEventService = $this->get('platformd_event.service.group_event');
+        $globalEventService = $this->get('platformd_event.service.global_event');
+
+        $upcomingGroupEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGroupEvents       = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGroupEvents        = $groupEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGroupEvents   = $groupEventService->findPastEventsForUser($this->getUser(), true);
+
+        $upcomingGlobalEvents   = $globalEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGlobalEvents      = $globalEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGlobalEvents       = $globalEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGlobalEvents  = $globalEventService->findPastEventsForUser($this->getUser(), true);
+
+        $upcomingEvents     = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $ownedEvents        = array_merge($ownedGroupEvents, $ownedGlobalEvents);
+        $pastEvents         = array_merge($pastGroupEvents, $pastGlobalEvents);
+        $pastOwnedEvents    = array_merge($pastOwnedGroupEvents, $pastOwnedGlobalEvents);
+
+        uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($ownedEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
+        uasort($pastOwnedEvents, array($this, 'eventCompare'));
+
+        return $this->render('SpoutletBundle:Account:events.html.twig', array(
+            'events'            => $upcomingEvents,
+            'ownedEvents'       => $ownedEvents,
+            'pastEvents'        => $pastEvents,
+            'pastOwnedEvents'   => $pastOwnedEvents,
+        ));
     }
 
-    public function videosAction()
-    {
-        return $this->redirect('/video/edit');
+    private function eventCompare($a, $b) {
+
+        if ($a->getStartsAt() == $b->getStartsAt()) {
+            return 0;
+        }
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+
     }
 
     /**
@@ -122,7 +170,7 @@ class AccountController extends Controller
         ));
     }
 
-    public function groupsAction()
+    public function groupsAction(Request $request)
     {
         $this->checkSecurity();
 
@@ -130,8 +178,15 @@ class AccountController extends Controller
 
         $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
 
+        $action = null;
+
+        if ($then = $request->query->get('then')) {
+            $action = $then;
+        }
+
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
             'groups' => $groups,
+            'action' => $action,
         ));
     }
 
@@ -179,6 +234,20 @@ class AccountController extends Controller
         ));
     }
 
+    public function videosAction(Request $request)
+    {
+        $page    = $request->query->get('page', 1);
+        $user    = $this->getUser();
+        $manager = $this->getYoutubeManager();
+        $pager   = $manager->findUserAccountVideos($user, 10, $page);
+        $videos  = $pager->getCurrentPageResults();
+
+        return $this->render('SpoutletBundle:Account:videos.html.twig', array(
+            'pager'  => $pager,
+            'videos' => $videos,
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -194,5 +263,10 @@ class AccountController extends Controller
         return $this->getDoctrine()
             ->getRepository('GiveawayBundle:GiveawayKey')
         ;
+    }
+
+    protected function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

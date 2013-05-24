@@ -1,0 +1,44 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+{% block content %}
+
+<h1>Upload and Manage Media</h1>
+
+<div class="row-fluid first">
+    <div class="span6">
+        {{ form_errors(form) }}
+        <form action="{{ path('admin_upload_media') }}" method="post" {{ form_enctype(form) }} class="form">
+            {{ form_row(form.fileObject) }}
+            <input type="submit" class="btn btn-primary" value="Save Media" formnovalidate="">
+            {{ form_rest(form) }}
+        </form>
+    </div>
+</div>
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <th>Uploaded By</th>
+        <th>Created At</th>
+        <th>Url</th>
+    </thead>
+        {% for media in medias %}
+            <tr>
+                <td>{{ media.owner.username }}</td>
+                <td>{{ media.createdAt | date }}</td>
+                <td><a href="{{ media_path(media) }}" target="_blank">{{ media_path(media) }}</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">
+                    <p class="alert alert-info help"><i class="icon-info-sign"></i>No media found</p>
+                </td>
+            </tr>
+        {% endfor %}
+</table>
+
+ {% if pager.haveToPaginate %}
+    {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+    {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_upload_media'}) }}
+{% endif %}
+
+{% endblock %}

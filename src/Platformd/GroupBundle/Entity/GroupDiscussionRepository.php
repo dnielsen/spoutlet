@@ -67,7 +67,7 @@ class GroupDiscussionRepository extends EntityRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('(s.defaultLocale IN (:siteList) OR g.allLocales = true)');
+            $qb->andWhere('(s IN (:siteList) OR g.allLocales = true)');
             $qb->setParameter('siteList', $sites);
 
         }

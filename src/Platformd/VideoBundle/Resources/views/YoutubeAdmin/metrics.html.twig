@@ -1,0 +1,66 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Video Metrics' %}
+
+{% block content %}
+    <h1>Video Metrics</h1>
+    <form action="{{ path('youtube_admin_metrics') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'VideoBundle:YoutubeAdmin:_metricsForm.html.twig' %}
+        <div style="margin-left: 160px">
+            <button type="submit" class="btn btn-primary" formnovalidate>Submit</button>
+            <a href="{{ path('youtube_admin_clear_metrics') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+        </div>
+    </form>
+    <div>
+        <p>Search results: {{ pager.nbresults }} <span style="margin-left: 20px;"><a href="{{ path('youtube_admin_export_metrics') }}">Export</a></span></p>
+
+        {% if pager.haveToPaginate %}
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'youtube_admin_metrics'}) }}
+        {% endif %}
+
+        <table class="table table-striped table-bordered tablesorter">
+            <thead>
+                <tr>
+                    <th>Video Title</th>
+                    <th>Link</th>
+                    <th>Username</th>
+                    <th>Country</th>
+                    <th>Region</th>
+                    <th>Upload Date</th>
+                    <th>Points</th>
+                    <th>Views</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result['video'].title }}</td>
+                        <td><a href="{{ result['video'] | pd_link }}">{{ result['video'] | pd_link }}</a></td>
+                        <td>{{ result['video'].author.username }}</td>
+                        <td>{{ result['video'].author.country }}</td>
+                        <td>{{ result['video'].site.name }}</td>
+                        <td>{{ result['video'].createdAt | date('m/d/Y') }}</td>
+                        <td>{{ result['voteCount'] }}</td>
+                        <td>{{ result['video'].views }}</td>
+                        <td><a href="{{ path('youtube_admin_export_comments', {'videoId' : result['video'].id}) }}">{{ result['commentCount'] }}</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10">
+                            No videos found.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pager.haveToPaginate %}
+            {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+            {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'youtube_admin_metrics'}) }}
+        {% endif %}
+    </div>
+{% endblock %}

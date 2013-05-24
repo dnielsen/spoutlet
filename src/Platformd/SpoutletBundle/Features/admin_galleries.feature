@@ -21,14 +21,16 @@ Feature: Gallery Admin
             And there is a gallery called "Demo Gal 2" in "en"
             And there is a gallery called "NA Gallery" in "en_US"
         When I click on "Gallery Management"
-        Then I should see 3 data rows
+            And I click on "Demo"
+        Then I should see 2 data rows
             And I should see "Demo Test Gallery"
             And I should see "Demo Gal 2"
-            And I should see "NA Gallery"
+            And I should not see "NA Gallery"
 
     Scenario: Edit existing gallery
         Given there is a gallery called "Demo Test Gallery" in "en"
         When I click on "Gallery Management"
+            And I click on "Demo"
             And I click on "Demo Test Gallery"
             And I fill in the following:
                 | Gallery name  | Demo Test Gallery Updated! |

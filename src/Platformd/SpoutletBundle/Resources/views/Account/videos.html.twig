@@ -1,0 +1,79 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.user.account.gallery" | trans }}{% endblock %}
+
+{% block content %}
+
+<div class="std_2col">
+
+    <div class="left">
+        <h2>{{ "youtube.account.my_videos" | trans }}</h2>
+    </div>
+    <div class="right">
+        <a class="btn btn-primary" href="{{ path('youtube_submit') }}" style="margin: 10px 15px 0 0;float:right;">{{ "youtube.submit_video" | trans }}</a>
+    </div>
+</div>
+
+<div class="account-videos" style="width:100%;float:left;padding-bottom:20px;">
+    <div style="width: 100%;float:left;">
+        {% for video in videos %}
+            <div class="account-tiled">
+                <div class="video-thumb-wrapper">
+                    <a href="{{ path('youtube_view', {'slug' : video.slug}) }}">
+                        {% if video.isAccessible %}
+                            <img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" />
+                        {% else %}
+                            <img src="/bundles/spoutlet/images/alienwarelogothumb-185x104.png" alt="{{ video.title }}" />
+                        {% endif %}
+                        <div class="thumbnail-caption" style="display:none;">
+                            <a href="{{ path('youtube_edit', {'slug' : video.slug}) }}">{{ 'edit' | trans }}</a>
+                        </div>
+                    </a>
+                    <span class="video-duration">{{ video.formattedDuration }}</span>
+                </div>
+                <div class="more-videos-link">{{ video | pd_link_full(video.title) }}</div>
+                <div class="account-video-date">
+                    {{ video.createdAt | date('date_format' | trans) }}
+                </div>
+                <div class="video-details">
+                    <span class="views">{{ video.views}} {{ 'youtube.views' | trans }}</span>
+                    <span class="points">{{ video.votes | length }} {{ 'youtube.points' | trans }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagerfanta" id="pager" style="float:right;">
+        {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+        {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+        {{ pagerfanta(pager, 'spoutlet', {
+            'previous_message': '',
+            'next_message': '',
+            'routeName': 'accounts_videos'
+        }) }}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('.more-videos-link a').truncate({width: 300});
+            $('.video-thumb-wrapper').hover(function() {
+                $(this).find('div.thumbnail-caption').stop(false,true).fadeIn(200);
+            },
+            function() {
+                $(this).find('div.thumbnail-caption').stop(false,true).fadeOut(200);
+            });
+        });
+    </script>
+{% endblock %}

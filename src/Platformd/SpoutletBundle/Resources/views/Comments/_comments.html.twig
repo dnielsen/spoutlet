@@ -1,6 +1,3 @@
-{% set subDomain = site.subDomain %}
-{% set isJapanOrChina = (subDomain == "japan" or subDomain == "china") %}
-
 {% set isAdmin = app.user ? (app.user.getIsOrganizer or app.user.getIsSuperAdmin) : false %}
 
 {% if comments | length > 0 %}
@@ -10,12 +7,16 @@
             <div id="post-id-{{ comment.id }}">
                 <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
                     <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
-                    <div class="comment-author" style="z-index:1000;">
-                       <a href="{{ cevo_account_link(comment.author.username) }}"><img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" /></a>
+                    <div class="comment-author">
+                        <a href="{{ account_link(comment.author.username) }}">
+                            {% if get_avatar_url(comment.author) != false %}
+                                <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+                            {% else %}
+                                <div class="default-avatar"></div>
+                            {% endif %}
+                        </a>
 
-                        {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ comment.author.cevoUserId %}
-
-                        <div class="author-link"><a href="{{ cevoAccountUrl }}">{{ comment.author.username }}</a></div>
+                        <div class="author-link"><a href="{{ account_link(comment.author.username) }}">{{ comment.author.username }}</a></div>
                         <!--  Placeholders for ARP/Level when we handle this ourselves
                             <div class="author-level">Level 7</div>
                             <div class="level-img"><div>5477 ARP</div></div>
@@ -41,7 +42,7 @@
                                 <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
                             </div>
                             <div style="display:inline-table; margin-left: 10px;">
-                                <span id="comment-points-{{ comment.id }}">{{ 'platformd.comment.points' | trans }} {{ (upVotes - downVotes) | number_format(0, '.', ',') }}</span>
+                                <span id="comment-points-{{ comment.id }}">{{ 'platformd.comment.points' | pd_trans }} {{ (upVotes - downVotes) | number_format(0, '.', ',') }}</span>
                             </div>
                         </div>
 
@@ -50,16 +51,16 @@
                         <div class="options" data-id="{{ comment.id }}" style="right:0;">
                             <div class="choices" id="choices-{{ comment.id }}">
                                 <ul>
-                                    <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | trans }}</a></li>
-                                    {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | trans }}</a></li>{% endif %}
-                                    {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">{{ 'platformd.comment.delete' | trans }}</a></li>{% endif %}
-                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'content_reporting.report' | trans }}</a></li>
+                                    <li><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | pd_trans }}</a></li>
+                                    {% if isAdmin or app.user == comment.author %}<li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>{% endif %}
+                                    {% if isAdmin or app.user == comment.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>{% endif %}
+                                    <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'content_reporting.report' | pd_trans }}</a></li>
                                     <div class="report-options" id="report-options-{{ comment.id }}">
                                         <ul>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
-                                            <li><a href="javascript:void(0);" class="report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
                                         </ul>
                                     </div>
                                 </ul>
@@ -72,7 +73,7 @@
                 <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
                     <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
                     <div class="comment-replies" id="comment-replies-{{ comment.id }}">
-                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | trans }}</a>
+                        <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | pd_trans }}</a>
                     </div>
 
                     {% set replyCounter = 0 %}
@@ -80,12 +81,15 @@
                         {% if reply.deleted == false %}
                             {% set replyCounter = replyCounter + 1 %}
                             <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
-                                <a href="{{ cevo_account_link(reply.author.username) }}"><img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" /></a>
+                                <a href="{{ account_link(reply.author.username) }}">
+                                    {% if get_avatar_url(comment.author) != false %}
+                                        <img src="{{ asset(get_avatar_url(reply.author)) }}" alt="{{ reply.author.username }}" />
+                                    {% else %}
+                                        <div class="default-avatar"></div>
+                                    {% endif %}
+                                </a>
                                 <div class="reply-body">
-
-                                    {% set cevoAccountUrl = 'http://www.alienwarearena.com/' ~ (isJapanOrChina ? subDomain ~ '/' : '') ~ 'member/' ~ reply.author.cevoUserId %}
-
-                                    <a href="{{ cevoAccountUrl }}">{{ reply.author.username }}</a>
+                                    <a href="{{ account_link(comment.author.username) }}">{{ reply.author.username }}</a>
                                     <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
                                 </div>
                                 <div class="comment-footer">
@@ -93,15 +97,15 @@
                                     <div class="options more-replies" data-id="{{ reply.id }}">
                                        <div class="choices" id="choices-{{ reply.id }}">
                                             <ul>
-                                                {% if isAdmin or app.user == reply.author %}<li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | trans }}</a></li>{% endif %}
-                                                {% if isAdmin or app.user == reply.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">{{ 'platformd.comment.delete' | trans }}</a></li>{% endif %}
-                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | trans }}</a></li>
+                                                {% if isAdmin or app.user == reply.author %}<li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>{% endif %}
+                                                {% if isAdmin or app.user == reply.author %}<li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>{% endif %}
+                                                <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | pd_trans }}</a></li>
                                                 <div class="report-options" id="report-options-{{ reply.id }}">
                                                     <ul>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | trans }}</a></li>
-                                                        <li><a href="javascript:void(0);" class="report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
                                                     </ul>
                                                 </div>
                                             </ul>
@@ -115,7 +119,7 @@
                 </div>
                 {% if replyCounter   > 3 %}
                     <div class="more-comments" id="more-comments-{{ comment.id }}">
-                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">{{ 'platformd.comment.more_replies' | trans }}</a>
+                        <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">{{ 'platformd.comment.more_replies' | pd_trans }}</a>
                     </div>
                 {% endif %}
             </div>
@@ -128,6 +132,9 @@
 {% endif %}
 
 <script type="text/javascript">
+
+    var commentReplyRequestInProgress = false;
+
     $(function () {
 
         $('html').click(function() {
@@ -153,7 +160,7 @@
 
             {% else %}
 
-                document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+                document.location.href='{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}';
 
             {% endif %}
 
@@ -198,6 +205,9 @@
         });
 
         $('.comment-post-reply-link').click(function () {
+
+            if (commentReplyRequestInProgress) return;
+
             var id = $(this).attr('data-id');
             if ($('#reply-text-' + id).val() == "") {
                 return false;
@@ -210,6 +220,9 @@
                 'parent' : id,
                 'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
+
+            commentReplyRequestInProgress = true;
+
             $.ajax({
                 url: '{{ path('comments_new') }}',
                 type: 'post',
@@ -219,11 +232,12 @@
                     $('.thread').html(html);
                     $('.thread').unblock();
                     $('.comment-count').text(parseInt($('.comment-count').text())+1);
+                    commentReplyRequestInProgress = false;
                 }
             });
         });
 
-        $('.report-link').click(function (event) {
+        $('.comment-report-link').click(function (event) {
             {% if app.user %}
             $('.thread').block({message: null});
             var contentId = $(this).attr('data-id');
@@ -248,7 +262,7 @@
                 }
             })
             {% else %}
-            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+            document.location.href='{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}';
             {% endif %}
         });
 
@@ -257,9 +271,9 @@
             if(element.find('.comment-edit-textarea').length == 0) {
                 element.text('');
                 element.append("<textarea class='comment-edit-textarea' id='comment-edit-" +  id + "' required='required' />");
-                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>{{ 'platformd.comment.submit' | trans }}</button>");
+                element.append("<button class='comment-edit-btn' type='submit' id='comment-edit-save-" + id + "'>{{ 'platformd.comment.submit' | pd_trans }}</button>");
 
-                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>{{ 'platformd.comment.cancel' | trans }}</button>");
+                element.append("<button class='comment-edit-btn' style='margin-left: 10px;' type='cancel' id='comment-edit-cancel-" + id + "'>{{ 'platformd.comment.cancel' | pd_trans }}</button>");
 
                 $('#comment-edit-cancel-' + id).click(function () {
                    toggleEdit(element, id, text);
@@ -311,7 +325,7 @@
 
             $('.choices').hide();
 
-            var answer = confirm("{{ 'platformd.comment.delete_confirm' | trans }}")
+            var answer = confirm("{{ 'platformd.comment.delete_confirm' | pd_trans }}")
             if (!answer){
                 return false;
             }
@@ -351,7 +365,7 @@
                         reloadComments();
                     } else {
                         if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
-                            document.location.href='http://alienwarearena.com/account/login?return={{ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }}';
+                            document.location.href='{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}';
                         } else {
                             alert(data.messageForUser);
                         }

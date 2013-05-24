@@ -1,0 +1,33 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>RSVP Information</legend>
+        <div class="span5">
+
+            {{ form_row(form.name) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.background) }}
+            {{ form_row(form.successMessage) }}
+
+        </div>
+
+        <div class="span5">
+            {{ form_row(form.sites) }}
+            {{ form_row(form.codeRequired) }}
+            {{ form_row(form.codes) }}
+        </div>
+
+        <legend>RSVP Content</legend>
+        <div class="span11">
+            {{ form_row(form.content) }}
+            {{ form_row(form.published) }}
+        </div>
+
+    </fieldset>
+</div>
+
+{{ form_rest(form) }}

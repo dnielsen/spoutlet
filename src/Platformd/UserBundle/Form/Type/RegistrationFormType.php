@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use EWZ\Bundle\RecaptchaBundle\Validator\Constraints\True;
+use Platformd\SpoutletBundle\Model\Translator;
 use Symfony\Component\Validator\Constraints\Collection;
 
 class RegistrationFormType extends BaseType
@@ -127,11 +127,8 @@ class RegistrationFormType extends BaseType
 
     public function getDefaultOptions(array $options)
     {
-        $recaptchaConstraint = new True();
-
         return array(
             'data_class' => 'Platformd\UserBundle\Entity\User',
-            'validation_constraint' => $recaptchaConstraint,
         );
     }
 

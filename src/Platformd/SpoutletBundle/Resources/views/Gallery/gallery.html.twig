@@ -1,9 +1,9 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title gallery.name %}
+{% block title gallery.name(site.id) %}
 
 {% block content %}
-<h3>{{ gallery.name }}</h3>
+<h3>{{ gallery.name(site.id) }}</h3>
 <div class="std_2col">
     <div class="left">
         <div style="float: right;margin-right: 10px;" class="styled-select">
@@ -23,31 +23,21 @@
                                 <a href="{{ path('gallery_media_show', { id: media[0].id }) }}">
                                     <img class="media-thumb" title="{{ media[0].title }}" src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                                     {% if app.user is not null %}
-                                        {% if media.hasUserVoted(app.user) == false %}
-                                            {% if isVotable %}
-                                                <div class="thumbnail-vote-caption">
-                                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
-                                                </div>
-                                            {% else %}
-                                                <div class="thumbnail-vote-caption">
-                                                    <a href="javascript:void(0);">{{ 'galleries.voting_closed_caption' | trans }}</a>
-                                                </div>
-                                            {% endif %}
-                                        {% else %}
+                                        {% if media.hasUserVoted(app.user) == false and isVotable %}
                                             <div class="thumbnail-vote-caption">
-                                                <a href="javascript:void(0);">{{ 'galleries.already_voted_caption' | trans }}</a>
+                                                <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                             </div>
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                                            <a href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
                             </div>
                             <div style="width:135px;">
                                 <a class="media-title" href="{{ path('gallery_media_show', { id: media[0].id }) }}">{{ media[0].title }}</a>
-                                <div>{{ 'galleries.by' | trans }} <a href="{{ cevo_account_link(media[0].author.username) }}">{{ media[0].author.username }}</a></div>
+                                <div>{{ 'galleries.by' | trans }} <a href="{{ account_link(media[0].author.username) }}">{{ media[0].author.username }}</a></div>
                             </div>
 
                             <input type="hidden" value="{{ media[0].createdAt | date('m-d-Y') }}" class="media-date" />
@@ -63,31 +53,21 @@
                                 <a href="{{ path('gallery_media_show', { id: media.id }) }}">
                                     <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                                     {% if app.user is not null %}
-                                        {% if media.hasUserVoted(app.user) == false %}
-                                            {% if isVotable %}
-                                                <div class="thumbnail-vote-caption">
-                                                    <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
-                                                </div>
-                                            {% else %}
-                                                <div class="thumbnail-vote-caption">
-                                                    <a href="javascript:void(0);">{{ 'galleries.voting_closed_caption' | trans }}</a>
-                                                </div>
-                                            {% endif %}
-                                        {% else %}
+                                        {% if media.hasUserVoted(app.user) == false and isVotable %}
                                             <div class="thumbnail-vote-caption">
-                                                <a href="javascript:void(0);">{{ 'galleries.already_voted_caption' | trans }}</a>
+                                                <a href="javascript:void(0);" class="quick-vote-link" media-data="{{ media.id }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                             </div>
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                                            <a href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
                             </div>
                             <div style="width:135px;">
                                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                                <div>{{ 'galleries.by' | trans }} <a href="{{ cevo_account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                                <div>{{ 'galleries.by' | trans }} <a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
                             </div>
                             <input type="hidden" value="{{ media.createdAt | date('m-d-Y') }}" class="media-date" />
                             <input type="hidden" value="{{ media.views }}" class="media-popular" />
