@@ -115,10 +115,12 @@ class YoutubeVideoRepository extends EntityRepository
     public function findFeaturedVideos($site, $limit = 9)
     {
         return $this->createQueryBuilder('yt')
+            ->leftJoin('yt.galleries', 'g')
+            ->leftJoin('g.sites', 's')
             ->where('yt.featured = 1')
             ->andWhere('yt.deleted <> 1')
             ->andWhere('yt.isAccessible = 1')
-            ->andWhere('yt.site = :site')
+            ->andWhere('s = :site')
             ->setParameter('site', $site)
             ->orderBy('yt.featuredAt', 'DESC')
             ->setMaxResults($limit)

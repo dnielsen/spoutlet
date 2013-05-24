@@ -147,11 +147,11 @@ class YoutubeController extends Controller
         }
 
         $videos = $this->getYoutubeManager()->findVideosByUser($video->getAuthor(), 3, $video->getId());
-
+        $site = $this->getCurrentSite();
         // if use has only uploaded one video, we show featured videos instead
         $showFeaturedInstead = count($videos) == 0;
         if($showFeaturedInstead) {
-            $videos = $this->getYoutubeManager()->findFeaturedVideos(3);
+            $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 3);
         }
 
         $video->addView();
@@ -226,14 +226,18 @@ class YoutubeController extends Controller
         $results = $this->getYoutubeManager()->findVideosForTabAndCountry($tab, $site, $this->getCurrentCountry());
 
         if($tab == 'categories') {
-            return $this->render('VideoBundle:Youtube:_categoryList.html.twig', array(
+            $response = $this->render('VideoBundle:Youtube:_categoryList.html.twig', array(
                 'results' => $results
+            ));
+        } else {
+            $response = $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
+                'videos' => $results
             ));
         }
 
-        return $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
-            'videos' => $results
-        ));
+        $response->setSharedMaxAge(30);
+
+        return $response;
     }
 
     public function categoryTabsAction($cat, $tab, Request $request)
@@ -250,9 +254,13 @@ class YoutubeController extends Controller
             $videos = $this->getYoutubeManager()->findCurrentlyWatchedVideosByCategoryForCountry($category, $this->getCurrentCountry());
         }
 
-        return $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
+        $response = $this->render('VideoBundle:Youtube:_tiledList.html.twig', array(
             'videos' => $videos
         ));
+
+        $response->setSharedMaxAge(30)
+;
+        return $response;
     }
 
     public function featureVideoAction(Request $request)
@@ -326,7 +334,8 @@ class YoutubeController extends Controller
 
     private function formatVideoUrl($video)
     {
-        $url = sprintf('http://%s%s', $video->getSite()->getFullDomain(), $this->generateUrl('youtube_view', array('slug' => $video->getSlug())));
+        $site = $this->getCurrentSite();
+        $url = sprintf('http://%s%s', $site->getFullDomain(), $this->generateUrl('youtube_view', array('slug' => $video->getSlug())));
 
         return $url;
     }

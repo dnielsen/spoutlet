@@ -30,7 +30,7 @@
             {% if app.user %}
             <a href="javascript:void(0);" data-id="{{ video.id }}" class="vote-button{% if voted %} voted{% endif %}" {% if voted %}title="{{ 'youtube.already_voted' | trans }}"{% endif %} id="video-vote"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
             {% else %}
-            <a href="http://alienwarearena.com/account/login?return={{ app.request.uri }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+            <a href="{{ login_link(app.request.uri) }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
             {% endif %}
             <a href="{{ path('youtube_submit') }}" class="btn submit-video">{{ 'youtube.submit_video' | trans }}</a>
         </div>
@@ -54,8 +54,14 @@
             </div>
             <div class="widget-content">
                 <div class="video-author">
-                    <a class="author-avatar" href="{{ cevo_account_link(video.author.username) }}"><img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" /></a>
-                    <a class="author-name" href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a>
+                    <a class="author-avatar" href="{{ account_link(video.author.username) }}">
+                        {% if get_avatar_url(video.author) != false %}
+                            <img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" />
+                        {% else %}
+                            <div class="default-avatar"></div>
+                        {% endif %}
+                    </a>
+                    <a class="author-name" href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a>
                     <div class="video-date">{{ video.createdAt | date('date_format' | trans) }}</div>
                     <div class="video-views">{{ video.views }} {{ 'youtube.views' | trans }}</div>
                 </div>
@@ -94,7 +100,7 @@
                 {% if showFeaturedInstead %}
                 <h3>{{ 'youtube.featured_videos' | trans }}</h3>
                 {% else %}
-                <h3>{{ 'youtube.more_videos_by' | trans }} <a href="{{ cevo_account_link(video.author.username) }}">{{ video.author.username }}</a></h3>
+                <h3>{{ 'youtube.more_videos_by' | trans }} <a href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a></h3>
                 {% endif %}
                 {% for video in videos %}
                     <div class="video-thumb-wrapper {% if loop.index > 1 %}more{% endif %}">
@@ -127,7 +133,7 @@
                 $('.xnotices').fadeOut();
             });
 
-            $('.more-videos-link a').truncate({width: 300});
+            $('.more-videos-link a').truncate({width: 280});
 
             $('#feature-video').click(function () {
                 var id = $(this).attr('data-id');
@@ -202,7 +208,7 @@
                     }
                 })
                 {% else %}
-                document.location.href='http://alienwarearena.com/account/login?return={{ app.request.uri | url_encode }}';
+                document.location.href='{{ login_link(app.request.uri) }}';
                 {% endif %}
             });
         });

@@ -14,7 +14,7 @@
         {% endif %}
     {% else %}
         {% if canAdd %}
-            {{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': {{ addVideoUrl }} }) | raw }}
+            {{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': addVideoUrl }) | raw }}
         {% else %}
             {{ 'platformd.groups.videos.non_member_no_videos' | pd_trans }}
         {% endif %}
