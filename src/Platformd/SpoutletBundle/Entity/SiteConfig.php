@@ -37,34 +37,29 @@ class SiteConfig
     private $googleAnalyticsAccount;
 
     /**
-     *
      * @ORM\Column(type="string")
      * @Assert\NotNull
      */
     private $supportEmailAddress;
 
     /**
-     *
      * @ORM\Column(type="string")
      * @Assert\NotNull
      */
     private $automatedEmailAddress;
 
     /**
-     *
      * @ORM\Column(type="string")
      * @Assert\NotNull
      */
     private $emailFromName;
 
     /**
-     *
      * @ORM\Column(type="boolean")
      */
     private $birthdateRequired = true;
 
     /**
-     *
      * @ORM\Column(name="forward_base_url", type="string", nullable=true)
      */
     private $forwardBaseUrl;
@@ -79,11 +74,6 @@ class SiteConfig
         $this->forwardedPaths = array();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;

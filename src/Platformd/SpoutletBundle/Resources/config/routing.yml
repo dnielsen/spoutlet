@@ -147,3 +147,11 @@ SpoutletBundle_admin_timeline:
 SpoutletBundle_timeline:
     resource: "@SpoutletBundle/Resources/config/routing/timeline.yml"
     prefix:   /timeline
+
+TagBundle_admin:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_tags.yml"
+    prefix: /admin/tags
+
+TagBundle_frontend:
+    resource: "@SpoutletBundle/Resources/config/routing/tags.yml"
+    prefix: /tags

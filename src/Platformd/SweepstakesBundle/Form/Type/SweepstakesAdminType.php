@@ -13,6 +13,15 @@ use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 
 class SweepstakesAdminType extends EventType
 {
+    private $sweepstakes;
+    private $tagManager;
+
+    public function __construct($sweepstakes, $tagManager)
+    {
+        $this->sweepstakes  = $sweepstakes;
+        $this->tagManager   = $tagManager;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('name', 'textarea')
@@ -64,8 +73,14 @@ class SweepstakesAdminType extends EventType
         $builder->add('group', 'hidden', array(
             'property_path' => false,
         ));
-    }
 
+        $builder->add('tags', 'text', array(
+            'label' => 'Tags',
+            'help' => "Enter keywords to help people discover the sweepstakes.",
+            'property_path' => false,
+            'data' => $this->sweepstakes ? $this->tagManager->getConcatenatedTagNames($this->sweepstakes) : null,
+        ));
+    }
 
     public function getName()
     {

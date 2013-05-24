@@ -23,7 +23,17 @@
         {{ form_widget(form.body) }}
     </div>
 
+    {{ form_row(form.tags) }}
+
     {{ form_rest(form) }}
 
     <input type="submit" class="btn btn-primary" value="{{ "platformd.admin.news.save_news" | trans }}" formnovalidate />
 </form>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#news_tags').watermark('Separate tags with commas');
+        $('#news_tags').tagsInput();
+    });
+</script>

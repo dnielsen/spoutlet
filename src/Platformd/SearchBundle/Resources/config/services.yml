@@ -1,0 +1,15 @@
+services:
+    platformd.model.search_manager:
+        class: Platformd\SearchBundle\Model\SearchManager
+        arguments:
+            - %cloudsearch_domain_name%
+            - %cloudsearch_domain_id%
+            - %allow_search_indexing%
+            - %search_dev_mode%
+            - %search_dev_user%
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.tags.model.tag_manager"
+            - "@platformd.model.translator"
+            - "@aws_s3"
+            - %s3_private_bucket_name%
+            - "@platformd.util.queue_util"

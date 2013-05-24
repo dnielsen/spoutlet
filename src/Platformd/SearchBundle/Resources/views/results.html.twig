@@ -1,0 +1,81 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.search.results.title' | pd_trans %}
+
+{% block content %}
+
+    <div class="std_2col">
+        <div class="right">
+            <div>
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+        </div>
+
+        <div class="left">
+
+            <div id="search-results-form">
+                {% render url('search_form', {'category': data.currentCategory, 'watermark': 'platformd.search.form.default.all' }) %}
+            </div>
+
+            {% if data.facets|length > 0 %}
+                <div class="search-category-list">
+                    <ul>
+                        {% if data.currentCategory is not null %}
+                            <a href="{{ path('search_results', { 'criteria': data.criteria }) }}"><li>{{ 'platformd.search.categories.all' | pd_trans }} ({{ data.resultCount }})</li></a>
+                        {% else %}
+                            <li>{{ 'platformd.search.categories.all' | pd_trans }} ({{ data.resultCount }})</li>
+                        {% endif %}
+                        {% for category, resultCount in data.facets if data.facets|length > 0 %}
+                            {% if category != data.currentCategory %}
+                                <li><a href="{{ path('search_results', { 'category': category, 'criteria': data.criteria }) }}">{{ ('platformd.search.categories.' ~ category) | pd_trans }} ({{ resultCount }})</a></li>
+                            {% else %}
+                                <li>{{ ('platformd.search.categories.' ~ category) | pd_trans }} ({{ resultCount }})</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div id="search-results-list">
+                {% for result in data.results %}
+                    <div class="search-result-wrapper">
+                        {% include ['SearchBundle::_' ~ result.category ~ '_result.html.twig', 'SearchBundle::_result.html.twig'] with { 'result': result } %}
+                    </div>
+                {% else %}
+                    <div class="search-result-wrapper no-results">
+                        {% include 'SearchBundle::_no_results.html.twig' with { 'term': data.criteria, 'resultCount': data.resultCount, 'category': data.currentCategory } %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if data.pager is not null %}
+                <div class="pagerfanta" id="pager" style="float:right;">
+                    {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
+                    {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
+                    {{ pagerfanta(data.pager, 'spoutlet', {
+                        'previous_message': '',
+                        'next_message': '',
+                        'routeName': 'search_results',
+                        'routeParams': data.pagerParams
+                    }) }}
+                </div>
+            {% endif %}
+
+        </div>
+
+        <script type="text/javascript">
+            $(function() {
+                $('.search-result-description').truncate({
+                    multiline: true
+                });
+
+                $('#search-results-form').first('input').val('{{ data.criteria }}');
+            });
+        </script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'SearchBundle::_css_assets.html.twig' %}
+{% endblock %}

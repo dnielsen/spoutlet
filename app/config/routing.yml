@@ -30,6 +30,10 @@ PlatformdTranslationBundle:
     resource: "@TranslationBundle/Resources/config/routing.yml"
     prefix:   /
 
+PlatformDSearchBundle:
+    resource: "@SearchBundle/Resources/config/routing.yml"
+    prefix:   /
+
 # user bundle stuff
 _user_bundle_generic_import:
     resource: "@UserBundle/Resources/config/routing.yml"

@@ -14,7 +14,14 @@
     </div>
 {% endif %}
 
+{% if features.hasSearch %}
+    <div class="std_1col">
+        {% render url('search_form', {'category': 'event', 'watermark': 'platformd.search.form.default.all'}) %}
+    </div>
+{% endif %}
+
 <div class="std_1col">
+
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">

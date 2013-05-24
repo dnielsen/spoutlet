@@ -25,9 +25,12 @@ youtube.form.title: "タイトル:"
 youtube.form.description: "詳細:"
 youtube.form.category: "カテゴリー:"
 youtube.form.tags: "タグ："
+youtube.form.tags_help: キーワードを入力
 youtube.form.select_category: "カテゴリー"
 youtube.form.optional: "オプション："
 youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.select_group_or_category: あなたのビデオのカテゴリやを選択してください。
+youtube.form.select_category: あなたのビデオのカテゴリやを選択してください。
 youtube.form.invalid_youtube_link: 誤った YouTubeリンクです
 youtube.form.general_error: 情報を記入欄に入力してください。
 youtube.navigation.video_main: ビデオ

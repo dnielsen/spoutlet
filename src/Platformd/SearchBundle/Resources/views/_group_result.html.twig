@@ -1,0 +1,18 @@
+{# This is an example of a type-specific result section - simply create a file called "_{facet type}_result.html.twig"  and it will override the default. #}
+<div class="search-result-link"><a href="{{ result.url }}">{{ result.title }}</a></div>
+
+<div class="search-result-category">{{ ('platformd.search.categories.' ~ result.category) | pd_trans }}</div>
+{% if result.date %}<div class="search-result-date">{{ result.date | date_translate }}</div>{% endif %}
+
+{% if result.blurb and result.blurb != '' %}
+    <div class="search-result-description">{{ result.blurb }}</div>
+{% endif %}
+
+{% if result.extra_data is not null %}
+    <div class="search-result-extra">
+    {% for key, value in result.extra_data %}
+        <div class="search-result-extra-info">{{ ('platformd.search.results.extra_data.' ~ key) | pd_trans({ '%value%': value }) }}</div>
+        {% if not loop.last %} | {% endif %}
+    {% endfor %}
+    </div>
+{% endif %}

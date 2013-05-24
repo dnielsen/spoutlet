@@ -33,4 +33,17 @@ class SiteRepository extends EntityRepository
 
         return $backupResult;
     }
+
+    public function findAllWithIdNotIn($ids)
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        if (count($ids) > 0) {
+            $qb->andWhere('s.id NOT IN (:ids)')
+                ->setParameter('ids', $ids);
+        }
+
+        return $qb->getQuery()
+            ->execute();
+    }
 }

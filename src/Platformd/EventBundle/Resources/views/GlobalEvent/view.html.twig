@@ -43,6 +43,10 @@
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
+            {% if features.hasSearch %}
+                <div style="margin-bottom: 10px;">{% render url('search_form', {'category': 'event', 'watermark': 'platformd.search.form.default.all'}) %}</div>
+            {% endif %}
+
             <div class="widget-66">
                 <div class="widget-header" style="padding-bottom:10px;">
                     <div class="widget-title">

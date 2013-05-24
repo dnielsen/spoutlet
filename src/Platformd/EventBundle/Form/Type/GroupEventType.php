@@ -11,12 +11,14 @@ use Platformd\EventBundle\Form\EventSubscriber\AdminGroupEventSubscriber as Even
 class GroupEventType extends EventType
 {
     protected $eventSubscriber;
+    private $tagManager;
 
-    public function __construct(SecurityContextInterface $security, $eventSubscriber)
+    public function __construct(SecurityContextInterface $security, $eventSubscriber, $tagManager)
     {
         parent::__construct($security);
 
-        $this->eventSubscriber = $eventSubscriber;
+        $this->eventSubscriber  = $eventSubscriber;
+        $this->tagManager       = $tagManager;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -34,6 +36,15 @@ class GroupEventType extends EventType
         ->add('timezone', 'gmtTimezone', array(
             'label' => 'platformd.event.form.timezone',
             'full' => true,
+        ))
+        ;
+
+        $builder->add('tags', 'text', array(
+            'label' => 'platformd.event.form.tags',
+            'help' => 'platformd.event.form.tags_help',
+            'property_path' => false,
+            'data' => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
+            'required' => false,
         ))
         ;
 

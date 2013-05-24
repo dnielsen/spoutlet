@@ -13,11 +13,15 @@ class GalleryMediaType extends AbstractType
     private $user;
     private $currentSite;
     private $galleryRepo;
+    private $galleryMedia;
+    private $tagManager;
 
-    public function __construct($user, $currentSite, $galleryRepo) {
+    public function __construct($user, $currentSite, $galleryRepo, $galleryMedia, $tagManager) {
         $this->user         = $user;
         $this->currentSite  = $currentSite;
         $this->galleryRepo  = $galleryRepo;
+        $this->galleryMedia = $galleryMedia;
+        $this->tagManager   = $tagManager;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -50,6 +54,14 @@ class GalleryMediaType extends AbstractType
                 'required'  => false,
             ));
         }
+
+        $builder->add('tags', 'text', array(
+            'label' => 'tags.forms.tags',
+            'help' => "tags.forms.enter_keywords_help",
+            'property_path' => false,
+            'data' => $this->galleryMedia ? $this->tagManager->getConcatenatedTagNames($this->galleryMedia) : null,
+            'required' => false,
+        ));
     }
 
     public function getName()

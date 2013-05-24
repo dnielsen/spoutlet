@@ -27,15 +27,23 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/tags.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
            $('#delete-media').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
+            });
+
+            $('#platformd_spoutletbundle_gallery_media_tags').watermark('Separate tags with commas');
+            $('#platformd_spoutletbundle_gallery_media_tags').tagsInput({
+                placeholderColor: '#aaaaaa'
             });
         });
     </script>

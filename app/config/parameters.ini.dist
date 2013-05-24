@@ -35,6 +35,13 @@
     s3_bucket_name          = platformd-testing
     s3_private_bucket_name  = platformd-private-testing
 
+    cloudsearch_domain_name = alienwarearena
+    cloudsearch_domain_id   = biglongidfromawsconsole
+
+    ; Used for differentiating between dev mode indexes between devs
+    search_dev_user         = your_identifier_here
+    allow_search_indexing   = false
+
     ; this is for the "alienware" staging
     facebook_app_id         = 468808186479620
 

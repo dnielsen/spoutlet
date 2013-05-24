@@ -285,6 +285,8 @@ platformd:
             sites: "Regions"
             private_public: "Is this a public or private event?"
             published: "Do you want your event published?"
+            tags: Tags
+            tags_help: Enter keywords to help people discover the event.
 
             choice:
                 private_event: "Private Event"

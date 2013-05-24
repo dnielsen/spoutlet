@@ -8,13 +8,20 @@
         <div class="controls">
             {{ form_errors(form) }}
             <div id="form-errors" class="help-inline" style="display:none;">
-                {{ 'youtube.form.invalid_youtube_link' | trans }}
+                {{ 'youtube.form.invalid_youtube_link' | pd_trans }}
             </div>
         </div>
     </div>
     {{ form_row(form.youtubeLink) }}
     {{ form_row(form.title) }}
     {{ form_row(form.description) }}
+    {{ form_row(form.tags) }}
+
+    <p class="alert alert-info help" id="video-select-group-category"><i class="icon-info-sign"></i>
+        {% if features.hasGroups and form.groups is defined %}{{ 'youtube.form.select_group_or_category' | pd_trans }}
+        {% else %}{{ 'youtube.form.select_category' | pd_trans }}
+        {% endif %}
+    </p>
 
     {{ form_row(form.galleries) }}
 
@@ -24,7 +31,8 @@
 
     {{ form_rest(form) }}
 </div>
-
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
 <script type="text/javascript">
     $(function () {
         $.support.cors = true;
@@ -62,6 +70,12 @@
                     }
                 });
             }, 10);
+        });
+
+        $('#youtube_tags').watermark('Separate tags with commas');
+        $('#youtube_tags').tagsInput({
+            placeholderColor: '#aaaaaa',
+            defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"
         });
     });
 </script>
