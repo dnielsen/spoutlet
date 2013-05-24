@@ -24,7 +24,7 @@ class TimelineAdminController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Timeline')
-            ->findAll();
+            ->findBy(array('site' => $this->getCurrentSite()->getId()));
 
         return $this->render('SpoutletBundle:TimelineAdmin:index.html.twig', array(
             'timelines' => $timelines,

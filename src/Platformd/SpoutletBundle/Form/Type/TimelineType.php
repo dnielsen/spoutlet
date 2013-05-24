@@ -19,7 +19,7 @@ class TimelineType extends AbstractType
         $builder
             ->add('googleDocUrl', 'text', array(
                 'label' => 'Data Source URL:',
-                'help' => 'Currently, only Google Docs is supported as a datasource',
+                'help' => 'Currently, only Google Docs is supported as a datasource. Be sure your doc is published and made public before trying to use it.',
                 'required' => true,
             ))
             ->add('name', 'text', array(
