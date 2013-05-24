@@ -16,8 +16,7 @@ recaptcha:
     incorrect_try_again: Incorrect. Try again.
     image_alt_text: reCAPTCHA challenge image
 
-site_takeover:
-    continue: Continue to Alienware Arena
+site_takeover.continue: Continue to Alienware Arena
 
 platformd:
 
