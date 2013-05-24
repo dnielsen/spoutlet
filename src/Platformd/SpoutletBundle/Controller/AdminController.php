@@ -9,10 +9,6 @@ use Platformd\MediaBundle\Entity\Media,
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
-/**
- * Admin controller for events
- */
 class AdminController extends Controller
 {
     public function indexAction()

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Platformd\SpoutletBundle\Model\Translator;
 use Symfony\Component\Validator\Constraints\Collection;
 
 class RegistrationFormType extends BaseType

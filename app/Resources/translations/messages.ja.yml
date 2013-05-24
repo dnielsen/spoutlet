@@ -19,22 +19,6 @@ recaptcha:
 
 site_takeover.continue: Alienware Arenaを続行する
 
-recaptcha:
-    visual_challenge: Get a visual challenge
-    audio_challenge: Get an audio challenge
-    refresh_btn: Get a new challenge
-    instructions_visual: Type the two words:
-    instructions_context: Type the words in the boxes:
-    instructions_audio: Type what you hear:
-    help_btn: Help
-    play_again: Play sound again
-    cant_hear_this: Download sound as MP3
-    incorrect_try_again: Incorrect. Try again.
-    image_alt_text: reCAPTCHA challenge image
-
-site_takeover:
-    continue: Continue to Alienware Arena
-
 platformd:
 
     homepage:

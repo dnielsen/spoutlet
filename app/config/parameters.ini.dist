@@ -25,6 +25,10 @@
     recaptcha.public_key    =
     recaptcha.private_key   =
 
+    china_host_prefix = china
+    base_host         = site.com
+    host_suffix       =
+
     base_host               = site.com
     host_suffix             =
 
