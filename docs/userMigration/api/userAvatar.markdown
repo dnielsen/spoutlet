@@ -32,7 +32,8 @@ Each user will be primarily identified by their UUID (specifically UUID Version 
 - f10ab486-9e65-4b81-9da6-27e6fc485260
 
 More information on UUIDs can be found [here](http://en.wikipedia.org/wiki/Universally_unique_identifier).
-
+## Where do I find the user's UUID?
+We will provide you with a CSV file which will contain two columns.  One column will contain the user's CEVO user id and the other will contain the user's UUID.  Once this is imported into your database, you will have everything you need to lookup avatars for existing users.  For new users (i.e. users that sign up post User Migration) you can get their UUID as is explained in the User API documentation.
 ## Size profiles
 Different size profiles can be added where needed but for this document we will assume that the agreed upon sizes are:
 - 32x32
