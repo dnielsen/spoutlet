@@ -47,4 +47,20 @@ POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a963
   }
 }
 ```
+Which, if successful, will return:
+```
+{
+  "metaData": {
+    "status":       200,
+    "generatedAt":  "2013-05-15T13:59:59Z"
+  },
+  "data": {
+    "href":      "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "uuid":      "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "username":  "Flash Gordon",
+    "email":     "flashgordon@example.com",
+    "banned":    true
+  }
+}
+```
 To unban a user, just follow the process to ban a user but change `"action": "ban"` to `"action": "unban"`.
