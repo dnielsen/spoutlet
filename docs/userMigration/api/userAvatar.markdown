@@ -14,13 +14,13 @@ All avatars will be located inside:
 ```
 /images/avatars/
 ```
-A particular user’s avatars can be found using their UUID (which will be accessible via the user API):
+A particular user’s avatars can be found using their UUID:
 ```
-/images/avatars/*{user_uuid}*/
+/images/avatars/{user_uuid}/
 ```
 The pre-generated avatars will be found in:
 ```
-/images/avatars/*{user_uuid}*/by_size/
+/images/avatars/{user_uuid}/by_size/
 ```
 The avatar filenames will follow this convention:
 ```
@@ -31,7 +31,7 @@ Each user will be primarily identified by their UUID (specifically UUID Version 
 - 2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 - f10ab486-9e65-4b81-9da6-27e6fc485260
 
-More information on UUIDs can be found (here)[http://en.wikipedia.org/wiki/Universally_unique_identifier].
+More information on UUIDs can be found [here](http://en.wikipedia.org/wiki/Universally_unique_identifier).
 
 ## Size profiles
 Different size profiles can be added where needed but for this document we will assume that the agreed upon sizes are:
@@ -55,32 +55,18 @@ Some examples:
 /images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png
 /images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png
 ```
-## Samples
-A number of samples have been uploaded:
+## Live samples
+A number of live samples have been uploaded:
 ### HTTP - User1 (UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
-- http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png
-- http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png
-- http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png
-- http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png
-- http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png
+- 32x32 - [HTTP](http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png)
+- 48x48 - [HTTP](http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png)
+- 64x64 - [HTTP](http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png)
+- 128x128 - [HTTP](http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png)
+- 256x256 - [HTTP](http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png)
 
-### HTTPS - User1 (UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png
-
-### HTTP - User2 (UUID = *f10ab486-9e65-4b81-9da6-27e6fc485260*):
-- http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png
-- http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png
-- http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png
-- http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png
-- http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png
-
-### HTTPS - User2 (UUID = *f10ab486-9e65-4b81-9da6-27e6fc485260*):
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png
-- https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png
+### User2 (UUID = *f10ab486-9e65-4b81-9da6-27e6fc485260*):
+- 32x32 - [HTTP](http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png)
+- 48x48 - [HTTP](http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png)
+- 64x64 - [HTTP](http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png)
+- 128x128 - [HTTP](http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png)
+- 256x256 - [HTTP](http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png) | [HTTPS](https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png)
