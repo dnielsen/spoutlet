@@ -737,9 +737,10 @@ platformd.giveaway.assigned.message: Por favor, sigue las siguientes instruccion
 platformd.giveaway.show.availaible_keys: Códigos Disponibles %%count%%
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.queue_explanation: |
-    Tu tiempo de espera aproximado es de menos de 5 minutos. Recibirás un correo electrónico con tu clave, una vez que ha sido asignado. Si no 
-    recibes un mensaje en una hora, favor de envíar un correo electrónico el equipo de apoyo <a href="mailto:%contact_email%">%contact_email%</a>.  Mientras tanto, por favor echa un vistazo a otros de nuestros eventos para ver los próximos <a href="%events_index_page_link%">eventos</a> in situ y en linea en tu área.
+    "Tu tiempo de espera aproximado es de menos de 5 minutos. Recibirás un correo electrónico con tu clave, una vez que ha sido asignado. Si no
+        recibes un mensaje en una hora, favor de envíar un correo electrónico el equipo de apoyo <a href=\"mailto:%contact_email%\">%contact_email%</a>.  Mientras tanto, por favor echa un vistazo a otros de nuestros eventos para ver los próximos <a href=\"%events_index_page_link%\">eventos</a> in situ y en linea en tu área."
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
+platformd.giveaway.queue.rejected: Lo sentimos, pero la clave no se pudo asignar a ti.
 platformd.giveaway.queue.problem: Hubo un problema al procesar tu solicitud de clave.
 platformd.giveaway.queue.reason: Razón
 platformd.giveaway.queue.reasons.none: Sin razón
@@ -755,22 +756,22 @@ platformd.giveaway.queue.reasons.inactive_promotion: Esta promoción no está ac
 platformd.giveaway.queue.reasons.key_fetch_disallowed: Busca clave no está permitido en esta promoción.
 platformd.key_request_processor_command.key_assigned_email_subject: Tu %promotion_title% clave
 platformd.key_request_processor_command.key_assigned_email_body: |
-    <p>Felicidades, has sido exitosamente asignado una clave para la
-    <a href="%promotion_show_page%">%promotion_title%</a>:
-    </p>
-    <p>
-    <span style="font-weight:bold;">%promotion_key%</span>
-    </p>
-    <p>
-    Para obtener instrucciones sobre cómo redimir tu clave, por favor visita la página
-    <a href="%promotion_show_page%">%promotion_title%</a>.
-    </p>
-    %group_section%
-    <p>Equipo Alienware Arena</p>
+    "<p>Felicidades, has sido exitosamente asignado una clave para la
+        <a href=\"%promotion_show_page%\">%promotion_title%</a>:
+        </p>
+        <p>
+        <span style=\"font-weight:bold;\">%promotion_key%</span>
+        </p>
+        <p>
+        Para obtener instrucciones sobre cómo redimir tu clave, por favor visita la página
+        <a href=\"%promotion_show_page%\">%promotion_title%</a>.
+        </p>
+        %group_section%
+        <p>Equipo Alienware Arena</p>"
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: Actualización de %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
-    <p>
-        Lo sentimos, se nos acabaron los códigos para <a href="%promotion_show_page%">%promotion_title%</a>. 
-        Por favor, visítanos más tarde ya que se pueden añadir más códigos!
-    </p>
-    <p>Equipo Alienware Arena</p>
+    "<p>
+            Lo sentimos, se nos acabaron los códigos para <a href=\"%promotion_show_page%\">%promotion_title%</a>.
+            Por favor, visítanos más tarde ya que se pueden añadir más códigos!
+        </p>
+        <p>Equipo Alienware Arena</p>"
