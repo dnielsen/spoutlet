@@ -7,7 +7,7 @@ https://api.alienwarearena.com/v1/
 ```
 ## General Response Information
 All responses try to follow the these rules:
-- All responses HTTP content type will be *"application/json"*.
+- HTTP content type will be *"application/json"*.
 - All successful responses will come with two parts (`metaData` and `data`).
 - The `metaData` section of the response will include any out of band information and typically can be ignored on successful requests.  If the request was unsuccessful, `metaData` will contain information about the cause of the failure as well as troubleshooting suggestions.
 - If the request is successful, the `data` section of the response will include all available information for the requested resource.
