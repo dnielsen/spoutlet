@@ -52,33 +52,33 @@ Some examples:
 A number of samples have been uploaded:
 ### HTTP - User1 (UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
-http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png
-http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png
-http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png
-http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png
-http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png
+[http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png]
+[http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png]
+[http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png]
+[http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png]
+[http://media.alienwarearena.com/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png]
 ```
 ### HTTPS - User1 (UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png 
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png 
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png 
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/48x48.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/64x64.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/128x128.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/256x256.png]
 ```
 ### HTTP - User2 (UUID = *f10ab486-9e65-4b81-9da6-27e6fc485260*):
 ```
-http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png
-http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png
-http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png
-http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png
-http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png
+[http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png]
+[http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png]
+[http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png]
+[http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png]
+[http://media.alienwarearena.com/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png]
 ```
 ### HTTPS - User2 (UUID = *f10ab486-9e65-4b81-9da6-27e6fc485260*):
 ```
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png
-https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/32x32.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/48x48.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/64x64.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/128x128.png]
+[https://d2ssnvre2e87xh.cloudfront.net/images/avatars/f10ab486-9e65-4b81-9da6-27e6fc485260/by_size/256x256.png]
 ```
