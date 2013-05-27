@@ -16,15 +16,15 @@ All avatars will be located inside:
 ```
 A particular user’s avatars can be found using their user’s UUID (which will be accessible via the user API).  So for the user with the UUID of *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*, you would find all the different avatars in:
 ```
-> /images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/
+/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/
 ```
 The pre-generated avatars will be found in:
 ```
-> /images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/
+/images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/
 ```
 The avatar filenames will follow this convention:
 ```
-> {size_profile}.{file_extension}
+{size_profile}.{file_extension}
 ```
 ## Size profiles
 Different size profiles can be added where needed but for this document we will assume that the agreed upon sizes are:
@@ -33,6 +33,7 @@ Different size profiles can be added where needed but for this document we will 
 - 64x64
 - 128x128
 - 256x256
+
 ## File extensions
 All avatars will be saved as PNGs.
 ## Other rules
