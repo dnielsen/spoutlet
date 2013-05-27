@@ -42,9 +42,7 @@ To ban a user (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
 POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 {
-  {
-    "action": "ban"
-  }
+  "action": "ban"
 }
 ```
 Which, if successful, will return:
