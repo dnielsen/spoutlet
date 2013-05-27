@@ -15,6 +15,7 @@ All responses try to follow the these rules:
 - All successful requests will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case a HTTP status code of 304 (Not Modified) status code will be returned.
 - All datetimes will be UTC and ISO 8601.
 - All valid resources will have an `href` value indicating their absolute URL.
+
 ## Retrieving a User's Data
 To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
