@@ -39,6 +39,7 @@ All avatars will be saved as PNGs.
 ## Other rules
 - Also note that the entire URL will always be lowercase.
 - Underscores will be used between words where required.
+
 Some examples:
 ```
 /images/avatars/2b6abec7-c0a7-4f9d-ac1f-f038660a9635/by_size/32x32.png
