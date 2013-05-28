@@ -9,7 +9,7 @@ https://api.alienwarearena.com/v1/
 API calls will only be allowed from IP addresses that require access.
 ## API Request Information
 API requests should follow these rules:
-- All `GET` requests should include an `etag` if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
+- All `GET` requests should include an `etag` HTTP header if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
 - All requests must be digitally signed with your `SecretKey` using the following rules:
  - The entire URL must be lower case.
 
