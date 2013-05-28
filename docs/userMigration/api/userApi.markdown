@@ -10,9 +10,37 @@ API calls will only be allowed from IP addresses that require access.
 ## API Request Information
 API requests should follow these rules:
 - All `GET` requests should include an `etag` HTTP header if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
-- All requests must be digitally signed with your `SecretKey` using the following rules:
- - The entire URL must be lower case.
+- All requests must be made with the full `URL` being lowercase.
+- Each individual request parameter must have it's value `URL encoded`.
+- All requests must have their optional parameters in alphabetical order and directly after the resource identifier.
+- All requests must include `AccessKey` as the final query parameter before the `URL` is digitally signed.
+- Finally the entire `URL` must be digitally signed using your `SecretKey` using `HMAC-SHA1`.  This signature must be the final query parameter and must have the name `sig`.
 
+Here is a generic example of a fully valid API call:
+```
+GET https://api.alienwarearena.com/v1/{resource}?{optional_parameters&}accesskey={secret_key}&sig={signature}
+```
+### Step by Step
+First we have to figure out the resource we want to query:
+```
+https://api.alienwarearena.com/v1/users
+```
+Then we add on any optional parameters we need to (ensuring that they are alphabetical order, and lowercase):
+```
+https://api.alienwarearena.com/v1/users?createdsince=2013-01-01&limit=50&offset=100
+```
+Then we add the `AccessKey` (assuming `AccessKey` = *"c014080d-5109-41a4-b985-66954f1ef7c9"*):
+```
+https://api.alienwarearena.com/v1/users?createdsince=2013-01-01&limit=50&offset=100&accesskey=c014080d-5109-41a4-b985-66954f1ef7c9
+```
+We then feed that full `URL` as input into HMAC-SHA1 along with the `SecretKey` (assuming `SecretKey` = *"66644588-6573-44f7-9c06-827de2628bbb"*), which produces the following output:
+```
+fd7667cae5938ba39ce165838448f7da1abc40c9
+```
+Then we added this to the final `URL` as the `sig` parameters:
+```
+GET https://api.alienwarearena.com/v1/users?createdsince=2013-01-01&limit=50&offset=100&accesskey=c014080d-5109-41a4-b985-66954f1ef7c9&sig=fd7667cae5938ba39ce165838448f7da1abc40c9
+```
 ## API Response Information
 API responses follow these rules:
 - All response will contain a `metaData` section that will include any out of band information.
