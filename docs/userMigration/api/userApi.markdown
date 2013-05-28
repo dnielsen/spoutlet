@@ -203,6 +203,7 @@ Which, if successful, will return:
     "href":         "https://api.alienwarearena.com/v1/sessions/d06d80fc-5324-4e22-8863-5dac707fc5e4",
     "uuid":         "d06d80fc-5324-4e22-8863-5dac707fc5e4",
     "created":      "2013-06-08T12:19:02Z",
+    "expires":      "2013-06-08T18:19:02Z",
     "user": {
       "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
       "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
@@ -215,4 +216,5 @@ Which, if successful, will return:
   }
 }
 ```
+Every time you query for a `SessionKey` that exists, it will extend the life of the `SessionKey` until the `data.expires` value.  However no `SessionKey` can survive past 24 hours after its original creation.  If you query for a `SessionKey` and it exists, you should update the user's cookie's `Expires` value appropriately.
 If the session key doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
