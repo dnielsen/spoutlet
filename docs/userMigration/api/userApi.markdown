@@ -12,7 +12,6 @@ API requests should follow these rules:
 - All `GET` requests should include an *etag* if it is known.  It is worth storing the last known *etag* in your user table so that it can be used for follow up requests.
 - All requests must be digitally signed with your `SecretKey` using the following rules:
  - The entire URL must be lower case.
- - The URL must have the query parameter ``
 
 ## API Response Information
 API responses follow these rules:
@@ -34,37 +33,47 @@ To retrieve a list of user:
 ```
 GET https://api.alienwarearena.com/v1/users
 ```
-Which, if succesful, will return:
+Which, if successful, will return:
 ```
 {
   "metaData": {
     "status":       200,
     "generatedAt":  "2013-05-15T13:59:59Z",
-    "offset":       50,
-    "limit":        25,
-    "first":        { "href": "https://api.alienwarearena.com/v1/users?offset=0" },
-    "previous":     null,
-    "next":         { "href": "https://api.alienwarearena.com/v1/users?offset=25" },
-    "last":         { "href": "https://api.alienwarearena.com/v1/users?" }
+    "offset":       0,
+    "limit":        50,
   },
   "items": {
     "item": {
-      "href":      "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-      "uuid":      "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-      "username":  "Flash Gordon",
-      "email":     "flashgordon@example.com",
-      "banned":    false
+      "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+      "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+      "username":     "Flash Gordon",
+      "email":        "flashgordon@example.com",
+      "created":      "2013-01-01T10:05:05Z",
+      "lastUpdated":  "2013-01-01T10:05:05Z",
+      "banned":       false
     },
     "item": {
-      "href":      "https://api.alienwarearena.com/v1/users/f10ab486-9e65-4b81-9da6-27e6fc485260",
-      "uuid":      "f10ab486-9e65-4b81-9da6-27e6fc485260",
-      "username":  "Ming The Merciless",
-      "email":     "ming@example.com",
-      "banned":    true
+      "href":         "https://api.alienwarearena.com/v1/users/f10ab486-9e65-4b81-9da6-27e6fc485260",
+      "uuid":         "f10ab486-9e65-4b81-9da6-27e6fc485260",
+      "username":     "Ming The Merciless",
+      "email":        "ming@example.com",
+      "created":      "2012-03-03T10:03:03Z",
+      "lastUpdated":  "2013-05-02T17:23:41Z",
+      "banned":       true
     }
   }
 }
 ```
+A few notes about retrieving multiple users:
+- There are a number of optional parameters you can send as a query string:
+ - `limit` - specifies the maximum number of items you want to retrieve.
+ - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
+- For all optional parameters:
+ - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
+ - If you provide a valid value, the `metaData.{parameterName}` will match your value.
+- Users are always ordered by their account creation date (oldest first) and then by their UUID (ascending).  This means that will careful use of `limit` and `offset` you can keep track of new users.
+
+So for example, if there are 
 ## Retrieving a User's Data
 To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
@@ -78,11 +87,13 @@ Which, if successful, will return:
     "generatedAt":  "2013-05-15T13:59:59Z"
   },
   "data": {
-    "href":      "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "uuid":      "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "username":  "Flash Gordon",
-    "email":     "flashgordon@example.com",
-    "banned":    false
+    "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "username":     "Flash Gordon",
+    "email":        "flashgordon@example.com",
+    "created":      "2013-01-01T10:05:05Z",
+    "lastUpdated":  "2013-01-01T10:05:05Z",
+    "banned":       false
   }
 }
 ```
@@ -102,11 +113,13 @@ Which, if successful, will return:
     "generatedAt":  "2013-05-15T13:59:59Z"
   },
   "data": {
-    "href":      "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "uuid":      "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "username":  "Flash Gordon",
-    "email":     "flashgordon@example.com",
-    "banned":    true
+    "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "username":     "Flash Gordon",
+    "email":        "flashgordon@example.com",
+    "created":      "2013-01-01T10:05:05Z",
+    "lastUpdated":  "2013-01-01T10:05:05Z",
+    "banned":       true
   }
 }
 ```
