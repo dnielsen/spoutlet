@@ -67,7 +67,7 @@ Which, if successful, will return:
 ```
 A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
- - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally, any users created at exactly *00:00:00* will be included in that date's result set.
+ - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *"00:00:00"*.  Additionally, any users created at exactly *"00:00:00"* will be included in that date's result set.
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
 - For all optional parameters:
@@ -87,7 +87,21 @@ For even more power and control you can include all optional parameters:
 GET https://api.alienwarearena.com/v1/users?createdsince=2013-01-01&limit=50&offset=50
 ```
 Obviously the results from these two `createdSince` requests needs to be parsed to ensure that you don't re-add users you have already seen.  It is also important to continue the requests until the number of `items` is less than `metaData.limit`, or until you receive a response that has no `item` values in `items`.
-## Retrieving a User's Data
+
+If you make a request that returns no users, the response will look like this:
+```
+{
+  "metaData": {
+    "status":       200,
+    "generatedAt":  "2013-05-15T13:59:59Z",
+    "createdSince"  "2001-01-01T00:00:00Z",
+    "limit":        50,
+    "offset":       0
+  },
+  "items": { }
+}
+```
+## Retrieving an Individual User's Data
 To retrieve a user's data (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
 ```
 GET https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
@@ -123,7 +137,8 @@ Which, if successful, will return:
 {
   "metaData": {
     "status":       200,
-    "generatedAt":  "2013-05-15T13:59:59Z"
+    "generatedAt":  "2013-05-15T13:59:59Z",
+    "action":       "ban"
   },
   "data": {
     "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
