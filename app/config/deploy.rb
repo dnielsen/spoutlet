@@ -8,7 +8,7 @@ ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
 # awa servers
-set :app1, "ec2-54-224-27-105.compute-1.amazonaws.com"
+set :app1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 set :app2, "ec2-204-236-207-80.compute-1.amazonaws.com"
 set :app3, "ec2-107-22-71-108.compute-1.amazonaws.com"
 set :app4, "ec2-75-101-223-7.compute-1.amazonaws.com"
