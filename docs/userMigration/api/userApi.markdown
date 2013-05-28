@@ -9,7 +9,7 @@ https://api.alienwarearena.com/v1/
 API calls will only be allowed from IP addresses that require access.
 ## API Request Information
 API requests should follow these rules:
-- All `GET` requests should include an *etag* if it is known.  It is worth storing the last known *etag* in your user table so that it can be used for follow up requests.
+- All `GET` requests should include an `etag` if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
 - All requests must be digitally signed with your `SecretKey` using the following rules:
  - The entire URL must be lower case.
 
@@ -20,7 +20,7 @@ API responses follow these rules:
 - All datetimes will be in UTC and ISO 8601 format.
 - All valid resources will have an `href` value indicating their absolute URL.
 - If a `GET` request was **successful**:
- - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case an HTTP status code of 304 (Not Modified) will be returned instead.
+ - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an `etag` that the server deems to be fresh and in that case an HTTP status code of 304 (Not Modified) will be returned instead.
  - For a *single resource*, then the response will contain `metaData` and `data` sections.
  - For a *resource collection*, then the response will contain `metaData` and `items` sections.
  - The `data` section of the response will include all available information for the requested resource.
