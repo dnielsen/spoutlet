@@ -5,6 +5,15 @@ All calls to this RESTful API must be made via HTTPS, must include the `/v1/` ro
 ```
 https://api.alienwarearena.com/v1/
 ```
+## Restrictions on using the API
+API calls will only be allowed from IP addresses that require access.
+## API Request Information
+API requests should follow these rules:
+- All `GET` requests should include an *etag* if it is known.  It is worth storing the last known *etag* in your user table so that it can be used for follow up requests.
+- All requests must be digitally signed with your `SecretKey` using the following rules:
+ - The entire URL must be lower case.
+ - The URL must have the query parameter ``
+
 ## API Response Information
 API responses follow these rules:
 - All response will contain a `metaData` section will include any out of band information.  It can typically can be ignored on successful requests.
@@ -12,12 +21,50 @@ API responses follow these rules:
 - All datetimes will be UTC and ISO 8601.
 - All valid resources will have an `href` value indicating their absolute URL.
 - If the request was **successful**:
- - It will contain two sections (`metaData` and `data`).
- - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case a HTTP status code of 304 (Not Modified) status code will be returned.
+ - It the request was directed at a *single resource* the response will contain `metaData` and `data` sections.
+ - If the request was directed at a *source collection* the response will contain `metaData` and `items` sections.
+ - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case an HTTP status code of 304 (Not Modified) status code will be returned.
  - The `data` section of the response will include all available information for the requested resource.
+ - The `items` section of the response will include a list of all the resources contained in the resource collection.
 - If the request was **not successful**:
  - It will only contain one section (`metaData`).  The `metaData` section will contain information about the cause of the failure as well as troubleshooting suggestions.
 
+## Retrieving a List of Users
+To retrieve a list of user:
+```
+GET https://api.alienwarearena.com/v1/users
+```
+Which, if succesful, will return:
+```
+{
+  "metaData": {
+    "status":       200,
+    "generatedAt":  "2013-05-15T13:59:59Z",
+    "offset":       50,
+    "limit":        25,
+    "first":        { "href": "https://api.alienwarearena.com/v1/users?offset=0" },
+    "previous":     null,
+    "next":         { "href": "https://api.alienwarearena.com/v1/users?offset=25" },
+    "last":         { "href": "https://api.alienwarearena.com/v1/users?" }
+  },
+  "items": {
+    "item": {
+      "href":      "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+      "uuid":      "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+      "username":  "Flash Gordon",
+      "email":     "flashgordon@example.com",
+      "banned":    false
+    },
+    "item": {
+      "href":      "https://api.alienwarearena.com/v1/users/f10ab486-9e65-4b81-9da6-27e6fc485260",
+      "uuid":      "f10ab486-9e65-4b81-9da6-27e6fc485260",
+      "username":  "Ming The Merciless",
+      "email":     "ming@example.com",
+      "banned":    true
+    }
+  }
+}
+```
 ## Retrieving a User's Data
 To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
