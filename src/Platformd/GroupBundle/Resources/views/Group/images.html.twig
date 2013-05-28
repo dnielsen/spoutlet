@@ -1,4 +1,4 @@
-{% set reportContentType    = 'GroupImage' %}
+{% set reportContentType    = features.hasPhotos ? 'GalleryMedia' : 'GroupImage'  %}
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddImage') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditImage') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteImage') %}

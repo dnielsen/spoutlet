@@ -209,29 +209,19 @@ class GalleryController extends Controller
                 $allErrors[] = $errors;
             }
 
-            $em->persist($media);
-
+            $groupArray = array();
             if (count($groups) > 0) {
                 foreach ($groups as $group) {
-
                     $group = $groupRepo->find($group);
                     if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
-                        $groupImage = new GroupImage();
-                        $groupImage->setGroup($group);
-                        $groupImage->setTitle($title);
-                        $groupImage->setImage($media->getImage());
-                        $groupImage->setAuthor($user);
-
-                        $em->persist($groupImage);
-                        try {
-                            $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto', $media->getAuthor()->getCevoUserId());
-                        } catch(ApiException $e) {
-
-                        }
+                        array_push($groupArray, $group);
                     }
                 }
             }
 
+            $media->setGroups($groupArray);
+
+            $em->persist($media);
             $em->flush();
         }
 
@@ -318,24 +308,19 @@ class GalleryController extends Controller
 
         $media->setGalleries($galleries);
 
-        $em->persist($media);
-
+        $groupArray = array();
         if (count($groups) > 0) {
             foreach ($groups as $group) {
-
-                $group      = $groupRepo->find($group);
+                $group = $groupRepo->find($group);
                 if ($group && $this->getGroupManager()->isAllowedTo($user, $group, $site, 'AddImage')) {
-                    $groupImage = new GroupImage();
-                    $groupImage->setGroup($group);
-                    $groupImage->setTitle($title);
-                    $groupImage->setImage($media->getImage());
-                    $groupImage->setAuthor($user);
-
-                    $em->persist($groupImage);
+                    array_push($groupArray, $group);
                 }
             }
         }
 
+        $media->setGroups($groupArray);
+
+        $em->persist($media);
         $em->flush();
 
         $response->setContent(json_encode(array("success" => true, 'message' => 'Photo published successfully')));
@@ -360,10 +345,17 @@ class GalleryController extends Controller
             $errors[] ='description';
         }
 
-        if(count($galleries) == 0 && count($groups) == 0)
-        {
-            $errors[] = 'galleries';
+        if($this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
+            if(count($galleries) == 0 && count($groups) == 0) {
+                $errors[] = 'galleriesgroups';
+            }
+        } else {
+            if(count($galleries) == 0) {
+                $errors[] = 'galleries';
+            }
         }
+
+
 
         return $errors;
     }
@@ -481,9 +473,16 @@ class GalleryController extends Controller
         }
         $media->setGalleries($galleries);
 
-        $galleryRepo = $this->getGalleryRepository();
+        $groups = array();
+        foreach ($media->getGroups() as $group) {
+            $groups[] = $group->getId();
+        }
+        $media->setGroups($groups);
 
-        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
+        $galleryRepo = $this->getGalleryRepository();
+        $groupRepo   = $this->getGroupRepository();
+
+        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo), $media);
 
         if($request->getMethod() == 'POST')
         {
@@ -504,7 +503,25 @@ class GalleryController extends Controller
 
                 if(count($media->getGalleries()) == 0)
                 {
-                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo), $media);
+                    $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
+
+                    return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
+                        'media' => $media,
+                        'form'  => $form->createView(),
+                    ));
+                }
+
+                $groups = array();
+
+                foreach ($media->getGroups() as $groupId) {
+                    $groups[] = $groupRepo->find($groupId);
+                }
+
+                $media->setGroups($groups);
+
+                if(count($media->getGroups()) == 0) {
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo), $media);
                     $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
 
                     return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(

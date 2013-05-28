@@ -736,8 +736,9 @@ Alienware Arena Team
     {
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
+        $site = $this->getCurrentSite();
 
-        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
@@ -887,7 +888,9 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'DeleteImage');
 
-        $image = $this->getGroupImageRepository()->find($imageId);
+        $em                 = $this->getEntityManager();
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $image              = $galleryMediaRepo->find($imageId);
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
@@ -896,7 +899,8 @@ Alienware Arena Team
 
         $image->setDeleted(true);
 
-        $this->getGroupManager()->saveGroupImage($image);
+        $em->persist($image);
+        $em->flush();
 
         $this->setFlash('success', 'Image was deleted successfully!');
 
@@ -1671,6 +1675,11 @@ Alienware Arena Team
 
     private function getEntityManager() {
         return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGalleryMediaRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia');
     }
 
     private function getGroupImageRepository()

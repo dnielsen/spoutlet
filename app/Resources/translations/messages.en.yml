@@ -1102,6 +1102,7 @@ galleries:
     publish_photo_multiple_message: %s of %s images are published.
     publish_photo_multiple_message_more: Some of your images were not published. Click on the images below to complete the highlighted fields.
     publish_photo_multiple_message_gallery_or_group_required: You must select at least one gallery or group to place your image in.
+    publish_photo_multiple_message_gallery_required: You must select at least one gallery to place your image in.
     no_images_found: No images found...
     already_voted: You have liked this image.
     ineligible_due_to_contest: You are unable to vote at present as this image is part of a contest which you are ineligible to vote on.

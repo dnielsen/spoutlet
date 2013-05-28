@@ -13,11 +13,13 @@ class GalleryMediaType extends AbstractType
     private $user;
     private $currentSite;
     private $galleryRepo;
+    private $groupRepo;
 
-    public function __construct($user, $currentSite, $galleryRepo) {
+    public function __construct($user, $currentSite, $galleryRepo, $groupRepo) {
         $this->user         = $user;
         $this->currentSite  = $currentSite;
         $this->galleryRepo  = $galleryRepo;
+        $this->groupRepo    = $groupRepo;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -43,6 +45,16 @@ class GalleryMediaType extends AbstractType
             'choices'       => $this->getCategoryChoices(),
         ));
 
+        if ($this->currentSite->getSiteFeatures()->getHasGroups()) {
+            $builder->add('groups', 'choice', array(
+                'label'         => 'Groups',
+                'required'      => true,
+                'expanded'      => true,
+                'multiple'      => true,
+                'choices'       => $this->getGroupChoices(),
+            ));
+        }
+
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
             $builder->add('featured', 'checkbox', array(
                 'label'     => 'Featured',
@@ -66,6 +78,19 @@ class GalleryMediaType extends AbstractType
 
         foreach ($results as $gallery) {
             $choices[$gallery->getId()] = $gallery->getName($site->getId());
+        }
+
+        return $choices;
+    }
+
+    private function getGroupChoices()
+    {
+        $choices = array();
+
+        $results = $this->groupRepo->getAllGroupsForUserAndSite($this->user, $this->currentSite);
+
+        foreach ($results as $group) {
+            $choices[$group[0]->getId()] = $group[0]->getName();
         }
 
         return $choices;

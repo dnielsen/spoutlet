@@ -15,6 +15,7 @@ use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\GroupBundle\Validator\GroupSlugCollision;
+use Platformd\SpoutletBundle\Entity\GalleryMedia;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
@@ -207,8 +208,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupImage", mappedBy="group")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia", mappedBy="groups")
      */
     private $images;
 

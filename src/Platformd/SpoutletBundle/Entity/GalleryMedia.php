@@ -136,6 +136,12 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     private $galleries;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="images")
+     * @ORM\JoinTable(name="pd_gallery_media_groups")
+     */
+    private $groups;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\ContentReport", mappedBy="galleryMedia")
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -167,6 +173,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     {
         $this->galleries = new ArrayCollection();
         $this->votes = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     /**
@@ -335,6 +342,16 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function setContentReports($contentReports)
     {
         $this->contentReports = $contentReports;
+    }
+
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    public function setGroups($value)
+    {
+        $this->groups = $value;
     }
 
     public function getVotes()

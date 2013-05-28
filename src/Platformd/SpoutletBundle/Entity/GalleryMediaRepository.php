@@ -348,6 +348,19 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
+    public function findImagesForGroup($group)
+    {
+        return $this->createQueryBuilder('gm')
+            ->leftJoin('gm.groups', 'g')
+            ->where('g IN (:group)')
+            ->andWhere('gm.published = 1')
+            ->andWhere('gm.deleted <> 1')
+            ->orderBy('gm.createdAt', 'DESC')
+            ->setParameter('group', $group)
+            ->getQuery()
+            ->execute();
+    }
+
     public function findImagesForMetrics($title, $deleted, $status, $sites, $startDate="", $endDate="")
     {
         $qb = $this->createQueryBuilder('gm')

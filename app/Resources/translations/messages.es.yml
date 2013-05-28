@@ -669,6 +669,7 @@ galleries:
     publish_photo_multiple_message: %s de %s imágenes publicadas.
     publish_photo_multiple_message_more: Algunas de tus imágenes no fueron publicadas. Selecciona las imágenes de abajo para completar los campos resaltados.
     publish_photo_multiple_message_gallery_or_group_required: Debes seleccionar al menos una galería o grupo para colocar tu imágen.
+    publish_photo_multiple_message_gallery_required: You must select at least one gallery to place your image in.
     no_images_found: No encontramos imágenes
     already_voted: Ya has votado por esta imágen.
     ineligible_due_to_contest: No puedes votar en este momento, ya que esta imagen es parte de un concurso en cual no eres elegible para votar.
