@@ -39,9 +39,9 @@ Which, if successful, will return:
   "metaData": {
     "status":       200,
     "generatedAt":  "2013-05-15T13:59:59Z",
-    "offset":       0,
+    "createdSince"  "2001-01-01T00:00:00Z",
     "limit":        50,
-    "createdSince"  "2001-01-01T00:00:00Z"
+    "offset":       0
   },
   "items": {
     "item": {
@@ -67,21 +67,24 @@ Which, if successful, will return:
 ```
 A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
+ - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally, any users created at exactly *00:00:00* will be included in that date's result set.
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
- - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally, any users created at exactly *00:00:00* will be included in that date's result set.
 - For all optional parameters:
+ - **IMPORTANT:** To reduce the complexity of `URL` signing and to enable a broader caching strategy the following two rules are mandatory:
+  - The order of optional parameters must be alphabetical.
+  - The entire `URL` should be lowercase.  For example, when specifying `createdSince`, ensure it appears in the `URL` as *"?createdsince=..."* and **not** *"?createdSince=..."*.
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
-- Users are always ordered by their account creation date (oldest first) and then by their `UUID` (ascending).  This means that will careful use of `limit`, `offset` and `createdSince` you can keep track of new users.
+- Users are always ordered by their account creation date (oldest first) and then by their `UUID` (ascending).  This means that with careful use of `createdSince`, `limit`, `offset` you can keep track of new users.
 
 So for example, if the last user you received was created on "2013-01-01T10:05:05Z" you could send the following query to identify new users:
 ```
-GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01
+GET https://api.alienwarearena.com/v1/users?createdsince=2013-01-01
 ```
 For even more power and control you can include all optional parameters:
 ```
-GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01&offset=50&limit=50
+GET https://api.alienwarearena.com/v1/users?createdsince=2013-01-01&limit=50&offset=50
 ```
 Obviously the results from these two `createdSince` requests needs to be parsed to ensure that you don't re-add users you have already seen.  It is also important to continue the requests until the number of `items` is less than `metaData.limit`, or until you receive a response that has no `item` values in `items`.
 ## Retrieving a User's Data
