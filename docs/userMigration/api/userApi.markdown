@@ -69,7 +69,7 @@ A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
- - `createdSince` - specifies the date and time you want to use to filter out users that where created before this value. *Note*: you can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally a user who is created on *00:00:00* will be included in that days result set.
+ - `createdSince` - specifies the date and time you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally a user who is created on *00:00:00* will be included in that days result set.
 - For all optional parameters:
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
@@ -83,6 +83,7 @@ For even more power and control you can include all optional parameters:
 ```
 GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01&offset=50&limit=50
 ```
+Obviously the results from these two `createdSince` requests needs to be parsed to ensure that you don't re-add users you have already seen.  It is also important to continue the requests until the number of `items` is less than `metaData.limit`, or until you receive a response that has no `item` values in `items`.
 ## Retrieving a User's Data
 To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
