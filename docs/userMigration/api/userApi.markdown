@@ -15,14 +15,14 @@ API requests should follow these rules:
 
 ## API Response Information
 API responses follow these rules:
-- All response will contain a `metaData` section will include any out of band information.  It can typically can be ignored on successful requests.
+- All response will contain a `metaData` section that will include any out of band information.
 - HTTP content type will be *"application/json"*.
-- All datetimes will be UTC and ISO 8601.
+- All datetimes will be in UTC and ISO 8601 format.
 - All valid resources will have an `href` value indicating their absolute URL.
-- If the request was **successful**:
- - It the request was directed at a *single resource* the response will contain `metaData` and `data` sections.
- - If the request was directed at a *source collection* the response will contain `metaData` and `items` sections.
- - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case an HTTP status code of 304 (Not Modified) status code will be returned.
+- If a `GET` request was **successful**:
+ - It will return both an HTTP status code of 200 (OK) and have a `"status": 200` in the `metaData` section.  The only exception to this is when your request contains an *etag* that the server deems to be fresh and in that case an HTTP status code of 304 (Not Modified) will be returned instead.
+ - For a *single resource*, then the response will contain `metaData` and `data` sections.
+ - For a *resource collection*, then the response will contain `metaData` and `items` sections.
  - The `data` section of the response will include all available information for the requested resource.
  - The `items` section of the response will include a list of all the resources contained in the resource collection.
 - If the request was **not successful**:
