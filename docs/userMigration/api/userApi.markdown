@@ -26,7 +26,7 @@ API responses follow these rules:
  - The `data` section of the response will include all available information for the requested resource.
  - The `items` section of the response will include a list of all the resources contained in the resource collection.
 - If the request was **not successful**:
- - It will only contain one section (`metaData`).  The `metaData` section will contain information about the cause of the failure as well as troubleshooting suggestions.
+ - It will only contain one section `metaData`.  The `metaData` section will contain information about the cause of the failure as well as troubleshooting suggestions.
 
 ## Retrieving a List of Users
 To retrieve a list of user:
@@ -41,6 +41,7 @@ Which, if successful, will return:
     "generatedAt":  "2013-05-15T13:59:59Z",
     "offset":       0,
     "limit":        50,
+    "createdSince"  "2001-01-01T00:00:00Z"
   },
   "items": {
     "item": {
@@ -68,12 +69,20 @@ A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
+ - `createdSince` - specifies the date and time you want to use to filter out users that where created before this value. *Note*: you can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally a user who is created on *00:00:00* will be included in that days result set.
 - For all optional parameters:
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
-- Users are always ordered by their account creation date (oldest first) and then by their UUID (ascending).  This means that will careful use of `limit` and `offset` you can keep track of new users.
+- Users are always ordered by their account creation date (oldest first) and then by their UUID (ascending).  This means that will careful use of `limit`, `offset` and `createdSince` you can keep track of new users.
 
-So for example, if there are 
+So for example, if the last user you received was created on "2013-01-01T10:05:05Z" you could send the following query to identify new users:
+```
+GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01
+```
+For even more power and control you can include all optional parameters:
+```
+GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01&offset=50&limit=50
+```
 ## Retrieving a User's Data
 To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
