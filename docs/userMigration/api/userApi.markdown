@@ -73,7 +73,7 @@ A few notes about retrieving multiple users:
 - For all optional parameters:
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
-- Users are always ordered by their account creation date (oldest first) and then by their UUID (ascending).  This means that will careful use of `limit`, `offset` and `createdSince` you can keep track of new users.
+- Users are always ordered by their account creation date (oldest first) and then by their `UUID` (ascending).  This means that will careful use of `limit`, `offset` and `createdSince` you can keep track of new users.
 
 So for example, if the last user you received was created on "2013-01-01T10:05:05Z" you could send the following query to identify new users:
 ```
@@ -85,7 +85,7 @@ GET https://api.alienwarearena.com/v1/users?createdSince=2013-01-01&offset=50&li
 ```
 Obviously the results from these two `createdSince` requests needs to be parsed to ensure that you don't re-add users you have already seen.  It is also important to continue the requests until the number of `items` is less than `metaData.limit`, or until you receive a response that has no `item` values in `items`.
 ## Retrieving a User's Data
-To retrieve a user's data (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
+To retrieve a user's data (with `UUID` = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
 GET https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 ```
@@ -108,7 +108,7 @@ Which, if successful, will return:
 }
 ```
 ## Ban or Unban a User
-To ban a user (with UUID = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
+To ban a user (with `UUID` = *2b6abec7-c0a7-4f9d-ac1f-f038660a9635*):
 ```
 POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 {
