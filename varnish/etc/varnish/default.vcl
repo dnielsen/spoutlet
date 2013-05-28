@@ -5,7 +5,7 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awa1  { .host = "ec2-54-224-27-105.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awa1  { .host = "ec2-75-101-139-101.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awa2  { .host = "ec2-204-236-207-80.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
 backend awa3  { .host = "ec2-107-22-71-108.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awa4  { .host = "ec2-75-101-223-7.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
