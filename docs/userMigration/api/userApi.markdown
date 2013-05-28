@@ -69,7 +69,7 @@ A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
- - `createdSince` - specifies the date and time you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally a user who is created on *00:00:00* will be included in that days result set.
+ - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *00:00:00*.  Additionally, any users created at exactly *00:00:00* will be included in that date's result set.
 - For all optional parameters:
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
