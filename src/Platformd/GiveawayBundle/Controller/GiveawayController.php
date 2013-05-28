@@ -171,6 +171,7 @@ class GiveawayController extends Controller
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
         $comments  = $this->getCommentRepository()->findCommentsForGiveaways();
         $keyRepo   = $this->getKeyRepository();
+        $site      = $this->getCurrentSite();
 
         foreach ($giveaways as $giveaway) {
             if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
@@ -185,6 +186,7 @@ class GiveawayController extends Controller
             'featured'  => $featured,
             'expired'   => $expired,
             'comments'  => $comments,
+            'headerImage' => $this->getHeaderImage($site),
         ));
 
         $response->setSharedMaxAge(30);
@@ -391,6 +393,23 @@ class GiveawayController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:GiveawayKey');
+    }
+
+    private function getHeaderImage($site)
+    {
+        $defaultLocale = $site->getDefaultLocale();
+        switch ($defaultLocale) {
+            case 'ja':
+                return sprintf('aw-arenakeygiveaways-950x120.%s.jpg', $defaultLocale);
+                break;
+
+            case 'es':
+                return sprintf('aw-arenakeygiveaways-950x120.%s.jpg', $defaultLocale);
+
+            default:
+                return sprintf('aw-arenakeygiveaways-950x120.en.jpg', $defaultLocale);
+                break;
+        }
     }
 
     /**
