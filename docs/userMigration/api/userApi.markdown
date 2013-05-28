@@ -158,34 +158,6 @@ Which, if successful, will return:
 }
 ```
 If the user doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
-## Ban or Unban a User
-To ban a user (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
-```
-POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
-{
-  "action": "ban"
-}
-```
-Which, if successful, will return:
-```
-{
-  "metaData": {
-    "status":       200,
-    "generatedAt":  "2013-05-15T13:59:59Z",
-    "action":       "ban"
-  },
-  "data": {
-    "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
-    "username":     "Flash Gordon",
-    "email":        "flashgordon@example.com",
-    "created":      "2013-01-01T10:05:05Z",
-    "lastUpdated":  "2013-01-01T10:05:05Z",
-    "banned":       true
-  }
-}
-```
-To unban a user, just follow the process to ban a user but change `"action": "ban"` to `"action": "unban"`.
 ## Session Key Lookup
 When someone arrives at the CEVO site, check for a cookie with the name of `awa_session_key`.  If set, this will be a `UUID` that will allow you to lookup if it is a valid `SessionKey` or not, and if so, who does it belong to.
 To lookup a `SessionKey` (with `UUID` = *"d06d80fc-5324-4e22-8863-5dac707fc5e4"*):
@@ -217,4 +189,33 @@ Which, if successful, will return:
 }
 ```
 Every time you query for a `SessionKey` that exists, it will extend the life of the `SessionKey` until the `data.expires` value.  However no `SessionKey` can survive past 24 hours after its original creation.  If you query for a `SessionKey` and it exists, you should update the user's cookie's `Expires` value appropriately.
+
 If the session key doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
+## Ban or Unban a User
+To ban a user (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
+```
+POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
+{
+  "action": "ban"
+}
+```
+Which, if successful, will return:
+```
+{
+  "metaData": {
+    "status":       200,
+    "generatedAt":  "2013-05-15T13:59:59Z",
+    "action":       "ban"
+  },
+  "data": {
+    "href":         "https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "uuid":         "2b6abec7-c0a7-4f9d-ac1f-f038660a9635",
+    "username":     "Flash Gordon",
+    "email":        "flashgordon@example.com",
+    "created":      "2013-01-01T10:05:05Z",
+    "lastUpdated":  "2013-01-01T10:05:05Z",
+    "banned":       true
+  }
+}
+```
+To unban a user, just follow the process to ban a user but change `"action": "ban"` to `"action": "unban"`.
