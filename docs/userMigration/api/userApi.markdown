@@ -159,7 +159,8 @@ Which, if successful, will return:
 ```
 If the user doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
 ## Session Key Lookup
-When someone arrives at the CEVO site, check for a cookie with the name of `awa_session_key`.  If set, this will be a `UUID` that will allow you to lookup if it is a valid `SessionKey` or not, and if so, who does it belong to.
+When someone arrives at the CEVO site, check for the `awa_session_key` cookie.  If set, this will be a `UUID` that will allow you to lookup if it is a valid `SessionKey` or not, and if so, who does it belong to.
+
 To lookup a `SessionKey` (with `UUID` = *"d06d80fc-5324-4e22-8863-5dac707fc5e4"*):
 ```
 GET https://api.alienwarearena.com/v1/sessions/d06d80fc-5324-4e22-8863-5dac707fc5e4
