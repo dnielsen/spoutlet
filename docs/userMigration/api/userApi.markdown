@@ -70,10 +70,10 @@ A few notes about retrieving multiple users:
  - `createdSince` - specifies the date you want to use to filter out users that where created before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *"00:00:00"*.  Additionally, any users created at exactly *"00:00:00"* will be included in that date's result set.
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
+- **IMPORTANT:** To reduce the complexity of `URL` signing and to enable a broader caching strategy the following two rules are mandatory:
+ - The order of optional parameters must be alphabetical.
+ - The entire `URL` should be lowercase.  For example, when specifying `createdSince`, ensure it appears in the `URL` as `?createdsince=...` and **not** `?createdSince=...`.
 - For all optional parameters:
- - **IMPORTANT:** To reduce the complexity of `URL` signing and to enable a broader caching strategy the following two rules are mandatory:
-  - The order of optional parameters must be alphabetical.
-  - The entire `URL` should be lowercase.  For example, when specifying `createdSince`, ensure it appears in the `URL` as `?createdsince=...` and **not** `?createdSince=...`.
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.
  - If you provide a valid value, the `metaData.{parameterName}` will match your value.
 - Users are always ordered by their account creation date (oldest first) and then by their `UUID` (ascending).  This means that with careful use of `createdSince`, `limit`, `offset` you can keep track of new users.
