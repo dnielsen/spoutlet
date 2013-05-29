@@ -271,5 +271,6 @@ Which, if successful, will return:
   }
 }
 ```
+
 To unban a user, just follow the process to ban a user but change `"action": "ban"` to `"action": "unban"`.
 
