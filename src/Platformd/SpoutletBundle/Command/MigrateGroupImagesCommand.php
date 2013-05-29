@@ -63,11 +63,8 @@ EOT
                 $em->persist($media);
                 $em->flush();
 
-                $contentReports = $this->getMediaContentReports($groupImage->getContentReports(), $media);
-                $media->setContentReports($contentReports);
+                $this->migrateContentReports($groupImage->getContentReports(), $media, $em);
 
-                $em->persist($media);
-                $em->flush();
             } catch (\PDOException $e) {
                 $output->writeLn(sprintf('Could not process all group images. Last group image processed was ID = %s, title = %s', $groupImage->getId(), $groupImage->getTitle()));
                 $output->writeLn($e->getMessage());
@@ -78,10 +75,8 @@ EOT
         $output->writeLn('Migration complete.');
     }
 
-    private function getMediaContentReports($reports, $media)
+    private function migrateContentReports($reports, $media, $em)
     {
-        $contentReports = array();
-
         foreach ($reports as $report) {
             $contentReport = new ContentReport();
             $contentReport->setReason($report->getReason());
@@ -90,9 +85,9 @@ EOT
             $contentReport->setSite($report->getSite());
             $contentReport->setDeleted($report->getDeleted());
             $contentReport->setGalleryMedia($media);
-            array_push($contentReports, $contentReport);
-        }
 
-        return $contentReports;
+            $em->persist($contentReport);
+            $em->flush();
+        }
     }
 }
