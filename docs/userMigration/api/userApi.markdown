@@ -1,14 +1,23 @@
 # Introduction
+
 This API is designed to allow CEVO and other 3rd parties to retrieve information about users (post user migration).  The User API will provide readonly access to user specific data as well as allowing users to be *banned / un-banned*.
+
 ## API Type, Hostname, Protocol and API Version
+
 All calls to this RESTful API must be made via HTTPS, must include the `/v1/` root path and must be directed to the following host:
+
 ```
 https://api.alienwarearena.com/v1/
 ```
+
 ## Restrictions on using the API
+
 API calls will only be allowed from IP addresses that require access.
+
 ## API Request Information
+
 API requests should follow these rules:
+
 - All `GET` requests should include an `etag` HTTP header if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
 - All requests must be made with the full `URL` being lowercase.
 - Each individual request parameter must have it's value `URL encoded`.
@@ -17,32 +26,47 @@ API requests should follow these rules:
 - Finally the entire `URL` must be digitally signed using your `SecretKey` using `HMAC-SHA1`.  This signature must be the final query parameter and must have the name `sig`.
 
 Here is a generic example of a fully valid API call:
+
 ```
 GET https://api.alienwarearena.com/v1/{resource}?{optional_parameters&}accesskey={secret_key}&sig={signature}
 ```
+
 ### Step by Step
+
 First we have to figure out the resource we want to query:
+
 ```
 https://api.alienwarearena.com/v1/users
 ```
+
 Then we add on any optional parameters we need to (ensuring that they are alphabetical order, and lowercase):
+
 ```
 https://api.alienwarearena.com/v1/users?since=2013-01-01&limit=50&offset=100
 ```
+
 Then we add the `AccessKey` (assuming `AccessKey` = *"c014080d-5109-41a4-b985-66954f1ef7c9"*):
+
 ```
 https://api.alienwarearena.com/v1/users?since=2013-01-01&limit=50&offset=100&accesskey=c014080d-5109-41a4-b985-66954f1ef7c9
 ```
+
 We then feed that full `URL` as input into [hash_hmac](http://php.net/manual/en/function.hash-hmac.php)(using "sha1" for $algo) along with the `SecretKey` (assuming `SecretKey` = *"66644588-6573-44f7-9c06-827de2628bbb"*), which produces the following output:
+
 ```
 fd7667cae5938ba39ce165838448f7da1abc40c9
 ```
+
 Then we added this to the final `URL` as the `sig` parameters:
+
 ```
 GET https://api.alienwarearena.com/v1/users?since=2013-01-01&limit=50&offset=100&accesskey=c014080d-5109-41a4-b985-66954f1ef7c9&sig=fd7667cae5938ba39ce165838448f7da1abc40c9
 ```
+
 ## API Response Information
+
 API responses follow these rules:
+
 - All response will contain a `metaData` section that will include any out of band information.
 - HTTP content type will be *"application/json"*.
 - All datetimes will be in `UTC` and `ISO 8601` format.
@@ -57,11 +81,15 @@ API responses follow these rules:
  - It will only contain one section `metaData`.  The `metaData` section will contain information about the cause of the failure as well as troubleshooting suggestions.
 
 ## Retrieving a List of Users
+
 To retrieve a list of user:
+
 ```
 GET https://api.alienwarearena.com/v1/users
 ```
+
 Which, if successful, will return:
+
 ```
 {
   "metaData": {
@@ -95,8 +123,11 @@ Which, if successful, will return:
     }
   }
 }
+
 ```
+
 A few notes about retrieving multiple users:
+
 - There are a number of optional parameters you can send as a query string:
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
@@ -111,16 +142,21 @@ A few notes about retrieving multiple users:
 - Users are always ordered by the active `orderBy` mode (ascending) and then by their `UUID` (ascending).  This means that with careful use of `since`, `limit`, `offset` and `sortBy` you can keep track of new users as well as recently modified users.
 
 So for example, if the last user you received was created on *"2013-01-01T10:05:05Z"* you could send the following query to identify new users:
+
 ```
 GET https://api.alienwarearena.com/v1/users?orderby=created&since=2013-01-01
 ```
+
 For even more power and control you can include all optional parameters:
+
 ```
 GET https://api.alienwarearena.com/v1/users?limit=50&offset=50&orderby=created&since=2013-01-01
 ```
+
 Obviously the results from these two example above need to be parsed to ensure that you don't re-add users you have already added.  It is also important to continue the requests until the number of `items` is less than `metaData.limit`, or until you receive a response that has no `item` values in `items`.
 
 If you make a request that returns no users, the response will look like this:
+
 ```
 {
   "metaData": {
@@ -134,12 +170,16 @@ If you make a request that returns no users, the response will look like this:
   "items": { }
 }
 ```
+
 ## Retrieving an Individual User's Data
 To retrieve a user's data (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
+
 ```
 GET https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 ```
+
 Which, if successful, will return:
+
 ```
 {
   "metaData": {
@@ -157,15 +197,21 @@ Which, if successful, will return:
   }
 }
 ```
+
 If the user doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
+
 ## Session Key Lookup
+
 When someone arrives at the CEVO site, check for the `awa_session_key` cookie.  If set, this will be a `UUID` that will allow you to lookup if it is a valid `SessionKey` or not, and if so, who does it belong to.
 
 To lookup a `SessionKey` (with `UUID` = *"d06d80fc-5324-4e22-8863-5dac707fc5e4"*):
+
 ```
 GET https://api.alienwarearena.com/v1/sessions/d06d80fc-5324-4e22-8863-5dac707fc5e4
 ```
+
 Which, if successful, will return:
+
 ```
 {
   "metaData": {
@@ -189,18 +235,24 @@ Which, if successful, will return:
   }
 }
 ```
+
 Every time you query for a `SessionKey` that exists, it will extend the life of the `SessionKey` until the `data.expires` value.  However no `SessionKey` can survive past 24 hours after its original creation.  If you query for a `SessionKey` and it exists, you should update the user's cookie's `Expires` value appropriately.
 
 If the session key doesn't exist an HTTP status code of `404 (Not Found)` will be returned.
+
 ## Ban or Unban a User
+
 To ban a user (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
+
 ```
 POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 {
   "action": "ban"
 }
 ```
+
 Which, if successful, will return:
+
 ```
 {
   "metaData": {
@@ -220,3 +272,4 @@ Which, if successful, will return:
 }
 ```
 To unban a user, just follow the process to ban a user but change `"action": "ban"` to `"action": "unban"`.
+
