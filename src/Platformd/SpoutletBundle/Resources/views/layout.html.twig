@@ -185,7 +185,7 @@
 
                                     {% if app.session.hasFlash('error') or app.session.hasFlash('fos_user_error')  %}
                                         {% set sessionFlashType = 'error' %}
-                                    {% elseif (app.session.hasFlash('success')) or app.session.hasFlash('fos_user_success') ) %}
+                                    {% elseif (app.session.hasFlash('success') or app.session.hasFlash('fos_user_success')) %}
                                         {% set sessionFlashType = 'success' %}
                                     {% elseif (app.session.hasFlash('info')) %}
                                         {% set sessionFlashType = 'info' %}
