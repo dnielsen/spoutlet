@@ -90,7 +90,7 @@ GET https://api.alienwarearena.com/v1/users
 
 Which, if successful, will return:
 
-```
+```json
 {
   "metaData": {
     "status":       200,
@@ -157,7 +157,7 @@ Obviously the results from these two example above need to be parsed to ensure t
 
 If you make a request that returns no users, the response will look like this:
 
-```
+```json
 {
   "metaData": {
     "status":       200,
@@ -180,7 +180,7 @@ GET https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
 
 Which, if successful, will return:
 
-```
+```json
 {
   "metaData": {
     "status":       200,
@@ -212,7 +212,7 @@ GET https://api.alienwarearena.com/v1/sessions/d06d80fc-5324-4e22-8863-5dac707fc
 
 Which, if successful, will return:
 
-```
+```json
 {
   "metaData": {
     "status":       200,
@@ -246,6 +246,11 @@ To ban a user (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
 
 ```
 POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a9635
+```
+
+With the following content:
+
+```json
 {
   "action": "ban"
 }
@@ -253,7 +258,7 @@ POST https://api.alienwarearena.com/v1/users/2b6abec7-c0a7-4f9d-ac1f-f038660a963
 
 Which, if successful, will return:
 
-```
+```json
 {
   "metaData": {
     "status":       200,
