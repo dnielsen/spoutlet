@@ -20,7 +20,7 @@ API requests should follow these rules:
 
 - All `GET` requests should include an `etag` HTTP header if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
 - All requests must be made with the full `URL` being lowercase.
-- Each individual request parameter must have it's value `URL encoded`.
+- Each individual request parameter must have its value `URL encoded`.
 - All requests must have their optional parameters in alphabetical order and directly after the resource identifier.
 - All requests must include `AccessKey` as the final query parameter before the `URL` is digitally signed.
 - Finally the entire `URL` must be digitally signed using your `SecretKey` using `HMAC-SHA1`.  This signature must be the final query parameter and must have the name `sig`.
