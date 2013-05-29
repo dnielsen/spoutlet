@@ -51,7 +51,7 @@ Then we add the `AccessKey` (assuming `AccessKey` = *"c014080d-5109-41a4-b985-66
 https://api.alienwarearena.com/v1/users?since=2013-01-01&limit=50&offset=100&accesskey=c014080d-5109-41a4-b985-66954f1ef7c9
 ```
 
-We then feed that full `URL` as input into [hash_hmac](http://php.net/manual/en/function.hash-hmac.php)(using "sha1" for $algo) along with the `SecretKey` (assuming `SecretKey` = *"66644588-6573-44f7-9c06-827de2628bbb"*), which produces the following output:
+We then feed that full `URL` as input into [hash_hmac](http://php.net/manual/en/function.hash-hmac.php) (using "sha1" for $algo) along with the `SecretKey` (assuming `SecretKey` = *"66644588-6573-44f7-9c06-827de2628bbb"*), which produces the following output:
 
 ```
 fd7667cae5938ba39ce165838448f7da1abc40c9
@@ -98,7 +98,7 @@ Which, if successful, will return:
     "limit":        50,
     "offset":       0,
     "orderBy":      "created",
-    "since"         "2001-01-01T00:00:00Z",
+    "since"         "2001-01-01T00:00:00Z"
   },
   "items": {
     "item": {
@@ -216,7 +216,7 @@ Which, if successful, will return:
 {
   "metaData": {
     "status":       200,
-    "generatedAt":  "2013-05-15T13:59:59Z",
+    "generatedAt":  "2013-05-15T13:59:59Z"
   },
   "data": {
     "href":         "https://api.alienwarearena.com/v1/sessions/d06d80fc-5324-4e22-8863-5dac707fc5e4",
