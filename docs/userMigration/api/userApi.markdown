@@ -171,6 +171,15 @@ If you make a request that returns no users, the response will look like this:
 }
 ```
 
+## User UUIDs
+
+Each user will be primarily identified by their UUID (specifically UUID Version 4).  A UUID is a 16-octet (128-bit) number. In its canonical form, a UUID is represented by 32 hexadecimal digits, displayed in five groups separated by hyphens, in the form 8-4-4-4-12 for a total of 36 characters (32 alphanumeric characters and four hyphens). For example, here are some valid UUIDs:
+
+- 2b6abec7-c0a7-4f9d-ac1f-f038660a9635
+- f10ab486-9e65-4b81-9da6-27e6fc485260
+
+More information on UUIDs can be found [here](http://en.wikipedia.org/wiki/Universally_unique_identifier).
+
 ## Retrieving an Individual User's Data
 To retrieve a user's data (with `UUID` = *"2b6abec7-c0a7-4f9d-ac1f-f038660a9635"*):
 
