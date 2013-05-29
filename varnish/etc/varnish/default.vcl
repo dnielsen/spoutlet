@@ -114,6 +114,14 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/galleries/featured-feed") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
+        remove req.http.Cookie;
+    }
+
     if (req.url ~ "^/videos/category-tab/") {
         remove req.http.Cookie;
     }
@@ -147,6 +155,14 @@ sub vcl_fetch {
         set beresp.ttl = 1m;
         set beresp.http.cache-control = "max-age=60";
         unset beresp.http.expires;
+    }
+
+    if (req.url ~ "^/galleries/featured-feed") {
+        unset beresp.http.set-cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
+        unset beresp.http.set-cookie;
     }
 
     if (req.url ~ "^/videos/category-tab/") {
