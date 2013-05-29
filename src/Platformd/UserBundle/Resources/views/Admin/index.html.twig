@@ -49,14 +49,25 @@
                         {{ user.AdminLevelString }}
                     </td>
                     <td>
-                        {% if auth_type == 'local' %}<a href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}">{{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a>{% endif %}
-                        <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a> |
-                        <a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}" data-confirm="Delete this user?">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a> |
+                        <div class="btn-group">
+                            <a class="btn btn-primary btn-mini" href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}"><i class="icon-th-list icon-white"></i> {{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a>
+                            <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
 
-                        {% if user.avatar and not user.isAvatarApproved %}
-                            <a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}">{{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a> |
-                        {% endif %}
-                        {% if user.loginRecords|length > 0 %}<a href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}">Logins</a>{% endif %}
+                                {% if auth_type == 'local' %}
+                                    <li><a href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}"><i class="icon-repeat"></i> {{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a></li>
+                                {% endif %}
+
+                                <li><a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}"><i class="icon-pencil"></i> {{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a></li>
+
+                                {% if user.avatar and not user.isAvatarApproved %}
+                                    <li><a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}"><i class="icon-camera"></i> {{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a></li>
+                                {% endif %}
+
+                                {% if user.loginRecords|length > 0 %}<li><a href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}"><i class="icon-list"></i> Logins</a></li>{% endif %}
+
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

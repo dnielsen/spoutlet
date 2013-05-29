@@ -67,8 +67,6 @@ class MetricManager
 
     private $regionRepo;
 
-    private $regionRepo;
-
     /**
      * An array of all available site keys and their names
      *
