@@ -4,12 +4,24 @@ include '/home/ubuntu/scripts/mu-sigma_automation/config.php';
 
 $ftpInfo        = array($ftpServer, $ftpUser, $ftpPassword);
 
-$sinceDate      = new DateTime('yesterday 23:59:59');
+$week           = isset($argv[1]) ? str_pad($argv[1], 2, '0', STR_PAD_LEFT) : date('W');
+$weekDate       = date("Y-m-d H:i:s", strtotime("2013-W".$week."-1 23:59:59"));
+$weekDate       = new DateTime($weekDate);
+
+$toDate         = clone $weekDate;
+$toDate         = $toDate->modify('-1 day');
+
+$sinceDate      = clone $toDate;
 $sinceDate      = $sinceDate->modify('-1 year');
+
+$toDate         = $toDate->format('Y-m-d H:i:s');
 $sinceDate      = $sinceDate->format("Y-m-d H:i:s");
 
-$filenameDate   = new DateTime('now');
+$filenameDate   = clone $weekDate;
+$filenameDate   = $filenameDate->setTime(15,0,0);
 $filenameDate   = $filenameDate->format('YmdHis');
+
+$csvYear        = $weekDate->format('o');
 
 $filesForUpload = array();
 
@@ -38,7 +50,7 @@ try {
                     LEFT JOIN `'.$awaDb.'`.`giveaway_key` ON `fos_user`.`id` = `giveaway_key`.`user`
                     LEFT JOIN `'.$awaDb.'`.`giveaway_pool` ON `giveaway_key`.`pool` = `giveaway_pool`.`id`
                     LEFT JOIN `'.$awaDb.'`.`event` ON `giveaway_pool`.`giveaway_id` = `event`.`id`
-                    WHERE `giveaway_key`.`assigned_at` >= "'.$sinceDate.'"';
+                    WHERE `giveaway_key`.`assigned_at` >= "'.$sinceDate.'" AND `giveaway_key`.`assigned_at` <= "'.$toDate.'"';
 
     $data       = $dbh->query($sql);
 
@@ -54,7 +66,7 @@ try {
         'Week' => null,
     );
 
-    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient);
+    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
     $filesForUpload[] = $filename.'.gz.asc';
 
 // Deals
@@ -68,7 +80,7 @@ try {
                     LEFT JOIN `'.$awaDb.'`.`deal_code` ON `fos_user`.`id` = `deal_code`.`user`
                     LEFT JOIN `'.$awaDb.'`.`deal_pool` ON `deal_code`.`pool` = `deal_pool`.`id`
                     LEFT JOIN `'.$awaDb.'`.`pd_deal` ON `deal_pool`.`deal_id` = `pd_deal`.`id`
-                    WHERE `deal_code`.`assigned_at` >= "'.$sinceDate.'"';
+                    WHERE `deal_code`.`assigned_at` >= "'.$sinceDate.'" AND `deal_code`.`assigned_at` <= "'.$toDate.'"';
 
     $data = $dbh->query($sql);
 
@@ -84,7 +96,7 @@ try {
         'Week' => null,
     );
 
-    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient);
+    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
     $filesForUpload[] = $filename.'.gz.asc';
 
 } catch (PDOException $e) {
@@ -112,7 +124,7 @@ try {
     $sql        = 'SELECT `movies`.`id`,  `movies`.`name`, `movies`.`views`, REPLACE(`movie_comments`.`comment`, CHAR(10), "") as `comment`, `movie_comments`.`authorid`, `movie_comments`.`posted`
                     FROM `'.$videoDb.'`.`movie_comments`
                     INNER JOIN `'.$videoDb.'`.`movies` ON `movies`.`id` = `movie_comments`.`movieid`
-                    WHERE `movies`.`added` >= "'.$sinceDate.'" AND `movies`.`status` = 1
+                    WHERE `movie_comments`.`posted` >= "'.$sinceDate.'" AND `movie_comments`.`posted` <= "'.$toDate.'" AND `movies`.`status` = 1
                     ORDER BY `movies`.`id`';
 
     $data       = $dbh->query($sql);
@@ -127,7 +139,7 @@ try {
         'Week' => null,
     );
 
-    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient);
+    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
     $filesForUpload[] = $filename.'.gz.asc';
 
 // Video Summary
@@ -142,7 +154,7 @@ try {
                     FROM `'.$videoDb.'`.`movies`
                     INNER JOIN `'.$videoDb.'`.`movie_category` ON `movie_category`.`id` = `movies`.`categoryid`
                     INNER JOIN `'.$videoDb.'`.`files` ON `files`.`movieid` = `movies`.`id`
-                    WHERE  `movies`.`added` > "'.$sinceDate.'" AND `movies`.`status` = 1 AND `files`.`ip` IS NOT NULL
+                    WHERE  `movies`.`added` > "'.$sinceDate.'" AND `movies`.`added` <= "'.$toDate.'" AND `movies`.`status` = 1 AND `files`.`ip` IS NOT NULL
                     ORDER BY `movies`.`added`';
 
     $data       = $dbh->query($sql);
@@ -160,7 +172,7 @@ try {
         'Week' => null,
     );
 
-    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient);
+    $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
     $filesForUpload[] = $filename.'.gz.asc';
 
 } catch (PDOException $e) {
@@ -176,13 +188,13 @@ try {
 
     echo $output;
 
-function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient)
+function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week)
 {
     $output = " - Generating ".$filename."...\n";
 
     $csvData        = array();
     $headings       = array();
-    $weekString     = 'CY'.date('o').'W'.date('W');
+    $weekString     = 'CY'.$csvYear.'W'.$week;
 
     foreach ($headers as $heading => $field) {
        $headings[] = $heading;

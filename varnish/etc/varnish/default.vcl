@@ -5,10 +5,10 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awa1  { .host = "ec2-54-224-27-105.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awa2  { .host = "ec2-204-236-207-80.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awa3  { .host = "ec2-107-22-71-108.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awa4  { .host = "ec2-75-101-223-7.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awa1  { .host = "ec2-75-101-139-101.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awa2  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awa3  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awa4  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
 backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awa6  { .host = "ec2-54-242-181-100.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
 backend awa7  { .host = "ec2-50-16-75-123.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
@@ -114,6 +114,14 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/galleries/featured-feed") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
+        remove req.http.Cookie;
+    }
+
     if (req.url ~ "^/videos/category-tab/") {
         remove req.http.Cookie;
     }
@@ -147,6 +155,14 @@ sub vcl_fetch {
         set beresp.ttl = 1m;
         set beresp.http.cache-control = "max-age=60";
         unset beresp.http.expires;
+    }
+
+    if (req.url ~ "^/galleries/featured-feed") {
+        unset beresp.http.set-cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
+        unset beresp.http.set-cookie;
     }
 
     if (req.url ~ "^/videos/category-tab/") {

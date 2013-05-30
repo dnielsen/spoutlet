@@ -20,6 +20,8 @@ use
 class CheckVideoRestrictionsCommand extends ContainerAwareCommand
 {
     private $stdOutput;
+    
+    const DELAY_BETWEEN_CHECKS_MILLISECONDS = 500;
 
     protected function configure()
     {
@@ -84,6 +86,8 @@ EOT
         $this->output(0);
 
         foreach ($videos as $video) {
+        
+            usleep(self::DELAY_BETWEEN_CHECKS_MILLISECONDS);
 
             $this->output(4, 'Updating YouTube ID [ '.$video->getYoutubeId().' ]');
 

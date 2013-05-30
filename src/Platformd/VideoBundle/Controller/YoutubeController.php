@@ -309,10 +309,13 @@ class YoutubeController extends Controller
 
         $site = $this->getCurrentSite();
 
-        $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 6);
+        $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 10);
         $results = $this->formatVideosForFeed($videos);
 
         $response->setContent(json_encode(array('success' => true, 'results' => $results)));
+        $response->setSharedMaxAge(30);
+
+
         return $response;
     }
 
