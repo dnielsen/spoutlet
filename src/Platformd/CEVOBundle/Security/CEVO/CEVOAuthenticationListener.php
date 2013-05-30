@@ -161,7 +161,9 @@ class CEVOAuthenticationListener implements ListenerInterface
                 throw new AuthenticationException('Expected token, got back '.gettype($returnValue));
             }
 
-            $this->loginRecordManager->recordLogin($returnValue, $request);
+            $user = $returnValue->getUser();
+
+            $this->loginRecordManager->recordLogin($user, $request);
 
             return true;
         } catch (AuthenticationException $e) {

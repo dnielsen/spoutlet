@@ -7,12 +7,12 @@
 
     <a
         href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}"
-        class="btn btn-large btn-primary">
+        class="btn btn-primary">
         {{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}
     </a>
     <a
         href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}"
-        class="btn btn-large btn-primary">
+        class="btn btn-primary">
         {{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}
     </a>
 
@@ -21,47 +21,47 @@
 
     <table class="table table-bordered">
         <tr>
-            <th>{{ 'Username'|trans }}</th>
+            <th>Username</th>
             <td>{{ user.username }}</td>
         </tr>
         <tr>
-            <th>{{ 'Firstname'|trans }}</th>
+            <th>Firstname</th>
             <td>{{ user.firstname }}</td>
         </tr>
         <tr>
-            <th>{{ 'Lastname'|trans }}</th>
+            <th>Lastname</th>
             <td>{{ user.lastname }}</td>
         </tr>
         <tr>
-            <th>{{ 'email'|trans }}</th>
+            <th>Email</th>
             <td>{{ user.email }}</td>
         </tr>
         <tr>
-            <th>{{ 'Date of birth'|trans }}</th>
+            <th>DOB</th>
             <td>{{ user.birthdate|date }}</td>
         </tr>
         <tr>
-            <th>{{ 'Country'|trans }}</th>
-            <td>{{ user.country }}</td>
-        </tr>
-        <tr>
-            <th>{{ 'State'|trans }}</th>
+            <th>State</th>
             <td>{{ user.state }}</td>
         </tr>
         <tr>
-            <th>{{ 'Phone'|trans }}</th>
+            <th>Country</th>
+            <td>{{ user.country }}</td>
+        </tr>
+        <tr>
+            <th>Phone</th>
             <td>{{ user.phoneNumber }}</td>
         </tr>
         <tr>
-            <th>{{ 'Last seen'|trans }}</th>
+            <th>Last Seen</th>
             <td>{{ user.lastLogin|date }}</td>
         </tr>
         <tr>
-            <th>{{ 'Created'|trans }}</th>
+            <th>Created</th>
             <td>{{ user.created|date }}</td>
         </tr>
         <tr>
-            <th>{{ 'IP Address at creation'|trans }}</th>
+            <th>IP Address at creation</th>
             <td>{{ user.ipAddress }}</td>
         </tr>
     </table>

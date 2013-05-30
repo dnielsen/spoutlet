@@ -24,7 +24,7 @@ class LoginRecordManager
         $this->siteUtil = $siteUtil;
     }
 
-    public function recordLogin(TokenInterface $token, Request $request)
+    public function recordLogin($user, Request $request)
     {
         $record         = new LoginRecord();
         $ipAddress      = $request->getClientIp(true);
@@ -32,7 +32,7 @@ class LoginRecordManager
         $country        = $this->em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
         $site = $this->siteUtil->getCurrentSite();
 
-        $record->setUser($token->getUser());
+        $record->setUser($user);
         $record->setIpAddress($ipAddress);
         $record->setCountry($country);
         $record->setSite($site);

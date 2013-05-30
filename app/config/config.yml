@@ -117,7 +117,7 @@ fos_user:
             type: platformd_user_registration
             handler: platformd_user.registration.form.handler
         confirmation:
-            enabled: false
+            enabled: true
     profile:
         form:
             type: platformd_user_profile

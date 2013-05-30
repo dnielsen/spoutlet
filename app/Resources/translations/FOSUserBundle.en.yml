@@ -114,17 +114,22 @@ resetting.email: |
 # Password resetted by admin
 resetted.email: |
     Alienware Arena - Password Reset
-    <pre>
-    Your password has been reset on our website. Here is your new login information four your Alienware Arena account. Please login and change your password to something you will remember.
+    <h3>Hello %username%!</h3>
 
-    Username: %username%
-    Password: %plainPassword%
+    <p>
+        Your password has been reset on our website. To reset your password - please visit:
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
 
-    ** NOTE: Our Support Staff will never ask for your password.
+    <p>
+        ** NOTE: Our Support Staff will never ask for your password.
+    </p>
 
-    Thanks,
-    Alienware Arena Web Team.
-    </pre>
+    <p>
+        Thanks,<br />
+        Alienware Arena Web Team.
+    </p>
+
 
 # Global strings
 layout.logout: Logout

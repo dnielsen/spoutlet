@@ -27,9 +27,13 @@ class Mailer implements MailerInterface
 
     public function sendResettedPasswordMessage(UserInterface $user)
     {
+        $url = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
+
         $rendered = $this->templating->render(
-            'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig',
-            array('user' => $user)
+            'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig', array(
+                'user' => $user,
+                'confirmationUrl' => $url
+            )
         );
 
         $this->sendEmailMessage(
