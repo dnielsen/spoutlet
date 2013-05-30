@@ -922,11 +922,11 @@ platformd.giveaway.assigned.message: あなたのキーをアクティブにす�
 platformd.giveaway.show.availaible_keys: キー残数: %%count%%
 platformd.giveaway.queue.you_are_queued: 現在対応中です。
 platformd.giveaway.queue.queue_explanation: |
-    "<p>あなたの待ち時間はおおよそ5分程度です。コードがすでに割り当てられている場合は、メールで通知されます。</p>
+    <p>あなたの待ち時間はおおよそ5分程度です。コードがすでに割り当てられている場合は、メールで通知されます。</p>
 
-        <p>もし、1時間以内にメールが届かない場合、<a href=\"mailto:%contact_email%\">%contact_email%</a> にご連絡をお願いします。</p>
+        <p>もし、1時間以内にメールが届かない場合、<a href="mailto:%contact_email%">%contact_email%</a> にご連絡をお願いします。</p>
 
-        <p>また、<a href=\"%events_index_page_link%\">イベント</a> では、お住まいの地域でのオンラインイベントや、オフラインイベントをご覧いただけます。</p>"
+        <p>また、<a href="%events_index_page_link%">イベント</a> では、お住まいの地域でのオンラインイベントや、オフラインイベントをご覧いただけます。</p>
 platformd.giveaway.queue.rejected: 申し訳ありません。キーをあなたに割り当てることができませんでした。
 platformd.giveaway.queue.problem: あなたのキー要求処理に問題が発生しました。
 platformd.giveaway.queue.reason: 理由
@@ -944,21 +944,21 @@ platformd.giveaway.queue.reasons.inactive_promotion: このプロモーション
 platformd.giveaway.queue.reasons.key_fetch_disallowed: このプロモーションではキー取得が許可されていません。
 platformd.key_request_processor_command.key_assigned_email_subject: あなたの%promotion_title%キー
 platformd.key_request_processor_command.key_assigned_email_body: |
-    "<p>
-        おめでとうございます。あなたは、<a href=\"%promotion_show_page%\">%promotion_title%</a>キーを取得しました。:
+    <p>
+        おめでとうございます。あなたは、<a href="%promotion_show_page%">%promotion_title%</a>キーを取得しました。:
         </p>
         <p>
-        <span style=\"font-weight:bold;\">%promotion_key%</span>
+        <span style="font-weight:bold;">%promotion_key%</span>
         </p>
         <p>
-        キーを受け取るためには、 <a href=\"%promotion_show_page%\">%promotion_title%</a> のページをご覧ください。
+        キーを受け取るためには、 <a href="%promotion_show_page%">%promotion_title%</a> のページをご覧ください。
         </p>
         %group_section%
-        <p>Alienware Arenaチーム</p>"
+        <p>Alienware Arenaチーム</p>
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title%　アップデート
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
-    "<p>
-            申し訳ありません、<a href=\"%promotion_show_page%\">%promotion_title%</a>のコード配布は終了しております。
+    <p>
+            申し訳ありません、<a href="%promotion_show_page%">%promotion_title%</a>のコード配布は終了しております。
             新たなコードが追加される可能性がありますので、後ほどご確認ください。
         </p>
-        <p>Alienware Arenaチーム</p>"
+        <p>Alienware Arenaチーム</p>

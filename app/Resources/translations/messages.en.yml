@@ -1184,11 +1184,11 @@ platformd.giveaway.all_giveaways: Latest
 platformd.giveaway.previous_giveaways: Previous
 platformd.giveaway.latest_comments: Latest Comments
 platformd.giveaway.in_process: |
-    "If you have registered for a system tag key giveaway and your status is “Pending”,<br />
+    If you have registered for a system tag key giveaway and your status is “Pending”,<br />
         please allow at least 2 weeks for your system tag to be reviewed.<br />
-        If there has been no change after 2 weeks, please email <a href=\"mailto:%contact_email%\">%contact_email%</a>."
+        If there has been no change after 2 weeks, please email <a href="mailto:%contact_email%">%contact_email%</a>.
 platformd.giveaway.assigned.message: |
-        "Please follow the instructions below to activate your key. If you require any additional support, please email <a href=\"mailto:%contact_email%\">%contact_email%</a>."
+        Please follow the instructions below to activate your key. If you require any additional support, please email <a href="mailto:%contact_email%">%contact_email%</a>.
 platformd.giveaway.assigned.may_require_activation: Your key may require activation! Check the giveaway page for details.
 platformd.giveaway.assigned.key: Key
 platformd.giveaway.assigned.assigned_at: Assigned
@@ -1213,19 +1213,19 @@ platformd.giveaway.queue.reasons.inactive_promotion: This promotion is not activ
 platformd.giveaway.queue.reasons.key_fetch_disallowed: Key fetch is not allowed for this promotion.
 platformd.key_request_processor_command.key_assigned_email_subject: Your %promotion_title% Key!
 platformd.key_request_processor_command.key_assigned_email_body: |
-    "<p>
-            Congratulations, you've successfully been assigned a key for the <a href=\"%promotion_show_page%\">%promotion_title%</a>:
+    <p>
+            Congratulations, you've successfully been assigned a key for the <a href="%promotion_show_page%">%promotion_title%</a>:
         </p>
-        <p><span style=\"font-weight:bold;\">%promotion_key%</span></p>
+        <p><span style="font-weight:bold;">%promotion_key%</span></p>
         <p>
-            For instructions on how to redeem your key, please visit the <a href=\"%promotion_show_page%\">%promotion_title%</a> page.
+            For instructions on how to redeem your key, please visit the <a href="%promotion_show_page%">%promotion_title%</a> page.
         </p>
         %group_section%
-        <p>Alienware Arena Team</p>"
+        <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_assigned_email_body_group_section: "In addition to receiving a key for %promotion_title%, you are now a member of <a href=\"%promotion_group_show_page%\">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images."
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
-    "<p>
-            Sorry, we ran out of codes for the <a href=\"%promotion_show_page%\">%promotion_title%</a>. Please check back later as more codes may be added!
+    <p>
+            Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. Please check back later as more codes may be added!
         </p>
-        <p>Alienware Arena Team</p>"
+        <p>Alienware Arena Team</p>
