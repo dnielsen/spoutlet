@@ -49,7 +49,6 @@ class UserRepository extends EntityRepository
         ;
     }
 
-
 	public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)
@@ -191,6 +190,20 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+    }
+
+    public function countOtherExpiredUsersByIpAddress($ipAddress, $username)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->andWhere('u.ipAddress = :ipAddress')
+            ->andWhere('u.username != :username')
+            ->andWhere('u.expiresAt > :now')
+            ->setParameter('ipAddress', $ipAddress)
+            ->setParameter('username', $username)
+            ->setParameter('now', new \DateTime)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 

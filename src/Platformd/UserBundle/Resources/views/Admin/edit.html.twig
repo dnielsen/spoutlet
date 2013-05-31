@@ -20,4 +20,10 @@
         {{ form_rest(form) }}
         <input type="submit" value="{{ 'save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
     </form>
+
+    <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form">
+        {{ form_rest(suspendForm) }}
+
+        <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+    </form>
 {% endblock %}

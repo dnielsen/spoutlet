@@ -1095,8 +1095,22 @@ class User extends BaseUser
         return $this->ipAddress === $ipAddress;
     }
 
-    public function getExpiresAt()
+    public function getExpiredUntil()
     {
         return $this->expiresAt;
+    }
+
+    public function setExpiredUntil(\DateTime $dateTime = null)
+    {
+        $this->expiresAt = $dateTime;
+    }
+
+    public function isExpired()
+    {
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() > time()) {
+            return true;
+        }
+
+        return false;
     }
 }

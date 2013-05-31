@@ -9,6 +9,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\UserBundle\Form\Type\SuspendUserType;
 
 /**
  * Admin controller for users
@@ -97,7 +98,8 @@ class AdminController extends Controller
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
         ));
     }
 

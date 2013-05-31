@@ -37,11 +37,11 @@ class UserManager extends BaseUserManager
             throw new UsernameNotFoundException(sprintf('No user with name or email "%s" was found.', $username));
         }
 
-        if ($user->hasSameIpAddress($this->getClientIpAddress()) && !$user->isAccountNonExpired()) {
+        if ($this->isExpired($user)) {
             throw new CredentialsExpiredException(
                 sprintf(
                     'This account has been suspended until %s. If you believe this to be an error, please email contact@alienwarearena.com.',
-                    $user->getExpiresAt()->format('Y-m-s')
+                    $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-s') : 'infinity'
                 )
             );
         }
@@ -175,6 +175,20 @@ class UserManager extends BaseUserManager
         }
 
         return $this->container->get('request')->getClientIp(true);
+    }
+
+    private function isExpired(User $user)
+    {
+        if ($user->isExpired()) {
+            return true;
+        }
+
+        return 0 < $this->countOtherExpiredUsersByIpAddress($this->getClientIpAddress(), $user->getUsername());
+    }
+
+    private function countOtherExpiredUsersByIpAddress($ipAddress, $username)
+    {
+        return $this->repository->countOtherExpiredUsersByIpAddress($ipAddress, $this->canonicalizeUsername($username));
     }
 }
 
