@@ -12,7 +12,7 @@ class UserAvatarType extends AbstractType
     {
         $builder
             ->add('media', new MediaType, array(
-                'with_remove_checkbox' => true,
+                'with_remove_checkbox' => false,
             ))
         ;
     }

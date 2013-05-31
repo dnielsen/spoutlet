@@ -11,12 +11,6 @@ class AccountSettingsType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('currentPassword', 'password', array(
-                'required' => false,
-            ))
-            ->add('newPassword', 'repeated', array(
-                'required' => false,
-            ))
             ->add('userAvatars', 'collection', array(
                 'type'         => new UserAvatarType,
                 'allow_add'    => true,
@@ -30,6 +24,7 @@ class AccountSettingsType extends AbstractType
     {
         return array_merge($options, array(
             'data_class' => 'Platformd\UserBundle\Entity\User',
+            'validation_groups' => array('Default', 'Avatar')
         ));
     }
 

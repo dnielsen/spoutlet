@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection,
 use Symfony\Component\Validator\Constraints as Assert;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
+use FOS\UserBundle\Validator\Password;
 
 use  Platformd\UserBundle\Validator\User as ValidateUser;
 
@@ -24,10 +25,6 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
  */
 class User extends BaseUser
 {
-    public $currentPassword;
-
-    public $newPassword;
-
     /**
      * @var integer $id
      *
@@ -36,7 +33,6 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
 
     /**
      * @var String $firstname
