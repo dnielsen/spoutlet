@@ -61,7 +61,7 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
-    public function getFindUserQuery($search = null, $sort_by = self::DEFAULT_SORTING_FIELD)
+    public function getFindUserQuery($search = null, $type='text', $sort_by = self::DEFAULT_SORTING_FIELD)
     {
         $qb = $this
             ->repository
@@ -70,9 +70,13 @@ class UserManager extends BaseUserManager
         ;
 
         if ($search) {
+
+            $where = $type == 'ip' ? 'u.ipAddress = :search' : 'u.username like :search OR u.email LIKE :search';
+            $search = $type == 'ip' ? $search : '%'.$search.'%';
+
             $qb
-                ->andWhere('u.username like :search OR u.email LIKE :search')
-                ->setParameter('search', "%${search}%")
+                ->andWhere($where)
+                ->setParameter('search', $search)
             ;
         }
 
