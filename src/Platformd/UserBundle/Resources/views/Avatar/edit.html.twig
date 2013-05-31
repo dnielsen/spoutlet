@@ -1,0 +1,68 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block content %}
+
+<h2>{{ 'platformd.user.account_settings'|trans({}, 'FOSUserBundle') }}</h2>
+
+<form action="{{ path('user_avatar_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form">
+    <input type="hidden" name="_method" value="PUT" />
+    {{ form_errors(form) }}
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.avatars'|trans({}, 'FOSUserBundle') }}</legend>
+        <div class="block_allAvatars">
+                {{ form_widget(form.userAvatars) }}
+                {{ form_errors(form.userAvatars) }}
+            <div style="clear:both"></div>
+        </div>
+        <br />
+        <a class="button" href="#" id="user-avatar-add">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_row(form.currentPassword) }}
+        {{ form_row(form.plainPassword) }}
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_row(form.subscribedGamingNews) }}
+    </fieldset>
+    {{ form_rest(form) }}
+
+    <div>
+        <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function($) {
+        $('#user-avatar-add').click(function(event) {
+            event.preventDefault();
+            var div = $('#account_settings_userAvatars');
+            var prototype = div.data('prototype');
+            var row = $(prototype.replace(/\$\$name\$\$/g, div.children().length));
+
+            div.append(row);
+        });
+    });
+</script>
+
+{% endblock content %}
+
+{% block file_label %}
+{% endblock %}
+
+{% block user_avatar_row %}
+    <div class="avatar-block">
+    {{ form_row(form.media) }}
+    {% if form.all.value and not form.all.value.isSelected %}
+        <a class="button" href="{{ path('user_avatar_toggle_selection', {'id': form.all.value.id}) }}">{{ 'platformd.user.account_settings.Select avatar'|trans({}, 'FOSUserBundle') }}</a>
+    {% endif %}
+    {% if form.all.value and not form.all.value.isApproved %}
+        <br />
+        {{ 'platformd.user.account_settings.waiting for approval'|trans({}, 'FOSUserBundle') }}
+    {% endif %}
+    </div>
+{% endblock %}
+

@@ -1,0 +1,88 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title %}{{ "platformd.users.avatar_listings.title" | trans }}{% endblock %}
+
+{% block content %}
+    <h1>Avatars</h1>
+    <form action="{{ path('Platformd_UserBundle_admin_avatar_disapprove_batch') }}" method="post">
+        <table class="table remaining-avatars">
+            <thead>
+                <tr>
+                    <th>
+                        <label for="disapprove-all">Disapprove all</label>
+                        <input type="checkbox" id="disapprove-all" />
+                    </th>
+                    <th>
+                        <label for="approve-all">Approve all</label>
+                        <input type="checkbox" id="approve-all" />
+                    </th>
+                    <th>Avatar</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for avatar in avatars %}
+                <tr>
+                    <td width="10"><input type="checkbox" class="disapprove" name="disapproved[]" value="{{ avatar.id }}" /></td>
+                    <td width="10"><input type="checkbox" class="approve" name="approved[]" value="{{ avatar.id }}" /></td>
+                    <td><img src="{{ asset(media_path(avatar.media)) }}" /></td>
+                    <td>
+                        <a href=" {{ path("admin_user_approve_avatar", {"id": avatar.id, 'return_url': path('Platformd_UserBundle_admin_avatar_list_remaining') }) }}">
+                            {{ (avatar.approved ? "fos_user_admin_disapprove_avatar" : "fos_user_admin_approve_avatar") | trans({}, "FOSUserBundle") }}
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">{{ 'There is no non-approved avatar.'|trans }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan=3>
+                        <input type="submit" value="{{ 'Approve/disapprove selection'|trans }}" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    {% if avatars.haveToPaginate %}
+        {{ pagerfanta(avatars, 'twitter_bootstrap') }}
+    {% endif %}
+
+<script type="text/javascript" charset="utf-8">
+
+    jQuery(document).ready(function($) {
+        $('#disapprove-all').change(function(event) {
+            $('#approve-all').get(0).checked = false;
+            $('.approve').each(function(i, checkbox) {
+                checkbox.checked = false;
+            });
+
+            $('.disapprove').each(function(i, checkbox) {
+                checkbox.checked = event.target.checked;
+            });
+        });
+        $('#approve-all').change(function(event) {
+            $('#disapprove-all').get(0).checked = false;
+            $('.disapprove').each(function(i, checkbox) {
+                checkbox.checked = false;
+            });
+
+            $('.approve').each(function(i, checkbox) {
+                checkbox.checked = event.target.checked;
+            });
+        });
+
+        $(document.body).delegate('.approve', 'change', function(event) {
+            $(event.target).parents('td').prev().find('input[type="checkbox"]').get(0).checked = false;
+        });
+
+        $(document.body).delegate('.disapprove', 'change', function(event) {
+            $(event.target).parents('td').next().find('input[type="checkbox"]').get(0).checked = false;
+        });
+    });
+</script>
+
+{% endblock %}

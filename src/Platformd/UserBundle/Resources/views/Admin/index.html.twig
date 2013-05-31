@@ -38,6 +38,14 @@
                     <td>
                         <a href="{{ path('Platformd_UserBundle_admin_show', {'id': user.id}) }}">{{ user.username }}</a>
                     </td>
+                    <td>
+                        {% for avatar in user.userAvatars %}
+                            <a href="{{ asset(media_path(avatar.media)) }}" title="See avatar in real size"><img src="{{ asset(media_path(avatar.media)) }}" alt="{{ user.username }}" width="100" /></a>
+                            <a href=" {{ path("admin_user_approve_avatar", {"id": avatar.id }) }}">
+                                {{ (avatar.approved ? "fos_user_admin_disapprove_avatar" : "fos_user_admin_approve_avatar") | trans({}, "FOSUserBundle" ) }}
+                            </a>
+                        {% endfor %}
+                    </td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
                     <td>{{ user.email }}</td>
@@ -63,10 +71,6 @@
                                 {% endif %}
 
                                 <li><a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}"><i class="icon-pencil"></i> {{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a></li>
-
-                                {% if user.avatar and not user.isAvatarApproved %}
-                                    <li><a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}"><i class="icon-camera"></i> {{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a></li>
-                                {% endif %}
 
                                 {% if user.loginRecords|length > 0 %}<li><a href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}"><i class="icon-list"></i> Logins</a></li>{% endif %}
 

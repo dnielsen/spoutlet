@@ -61,3 +61,8 @@ news_title: Title
 news_body: Body
 news_locale: Site
 news_published: Published?
+
+account_settings_currentPassword: "Current password"
+account_settings_plainPassword_first: "New password"
+account_settings_plainPassword_second: "Confirm new password"
+account_settings_subscribedGamingNews: "Yes, I would like to receive notifications from Alienware Arena about upcoming promotions and specific offers."

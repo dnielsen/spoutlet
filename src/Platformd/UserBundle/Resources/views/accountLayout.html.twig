@@ -16,7 +16,7 @@
             #}
 
             {% if auth_type == 'local' %}
-                <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | pd_trans }}</a></li>
+                <li><a href="{{ path('user_avatar_edit') }}">{{ "platformd.user.account.account_settings" | pd_trans }}</a></li>
                 {% if features.hasProfile %}
                     <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li>
                 {% endif %}

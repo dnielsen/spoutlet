@@ -57,11 +57,6 @@
 </div>
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
