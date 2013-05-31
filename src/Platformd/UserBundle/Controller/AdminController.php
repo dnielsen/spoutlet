@@ -150,7 +150,7 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 
-    public function approveAvatarAction($id)
+    public function approveAvatarAction(Request $request, $id)
     {
         if (!$avatar = $this->getAvatarRepository()->find($id)) {
             throw $this->createNotFoundException();
@@ -159,7 +159,7 @@ class AdminController extends Controller
         $avatar->toggleApproval();
         $this->get('doctrine')->getEntityManager()->flush();
 
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+        return $this->redirect($request->get('return_url') ?: $this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 
     public function loginsAction($id)

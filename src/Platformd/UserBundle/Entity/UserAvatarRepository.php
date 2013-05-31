@@ -15,6 +15,38 @@ class UserAvatarRepository extends EntityRepository
         ));
     }
 
+    public function findAllQB()
+    {
+        return $this->createQueryBuilder('avatar')
+            ->addSelect('m')
+            ->leftJoin('avatar.media', 'm')
+        ;
+    }
+
+    public function setApprovals(array $approvedIds, array $disapprovedIds)
+    {
+        $self = $this;
+        $this->_em->transactional(function($em) use($self, $approvedIds, $disapprovedIds) {
+            $self->batchSetApprove($approvedIds, true);
+            $self->batchSetApprove($disapprovedIds, 0); // 0 = false
+        });
+    }
+
+    private function batchSetApprove(array $ids, $isApproved)
+    {
+        if (empty($ids)) {
+            return;
+        }
+        return $this->createQueryBuilder('avatar')
+            ->update('Platformd\UserBundle\Entity\UserAvatar', 'avatar')
+            ->set('avatar.isApproved', $isApproved)
+            ->where('avatar.id IN( :ids )')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
     public function unSelectAll(User $user)
     {
         $this->createQueryBuilder('avatar')
@@ -36,4 +68,5 @@ class UserAvatarRepository extends EntityRepository
         });
     }
 }
+
 

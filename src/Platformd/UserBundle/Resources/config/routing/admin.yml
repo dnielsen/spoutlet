@@ -41,3 +41,15 @@ Platformd_UserBundle_admin_rest_password:
     defaults: { _controller: UserBundle:Admin:resetPassword }
     requirements:
         _method: GET
+
+Platformd_UserBundle_admin_avatar_list_remaining:
+    pattern: /avatars/remaining
+    defaults: { _controller: UserBundle:Admin\Avatar:listRemaining }
+    requirements:
+        _method: GET
+
+Platformd_UserBundle_admin_avatar_disapprove_batch:
+    pattern: /avatars/approve/batch
+    defaults: { _controller: UserBundle:Admin\Avatar:batchSetApprove }
+    requirements:
+        _method: POST
