@@ -23,6 +23,8 @@ security:
             pattern: ^/
             cevo-auth: true
             anonymous:    true
+            form_login:
+                check_path: /login_check
             logout:
                 path:     /logout
                 target:   default_index

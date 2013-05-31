@@ -32,7 +32,7 @@ class UserAvatarRepository extends EntityRepository
         });
     }
 
-    private function batchSetApprove(array $ids, $isApproved)
+    public function batchSetApprove(array $ids, $isApproved)
     {
         if (empty($ids)) {
             return;
