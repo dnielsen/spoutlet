@@ -11,9 +11,12 @@
     {{ form_errors(form) }}
     <fieldset>
         <legend>{{ 'platformd.user.account_settings.avatars'|trans({}, 'FOSUserBundle') }}</legend>
-        {{ form_widget(form.userAvatars) }}
-        {{ form_errors(form.userAvatars) }}
-        <div style="clear:both"></div>
+        <div class="block_allAvatars">
+                {{ form_widget(form.userAvatars) }}
+                {{ form_errors(form.userAvatars) }}
+            <div style="clear:both"></div>
+        </div>
+        <br />
         <a class="button" href="#" id="user-avatar-add">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
     </fieldset>
     <fieldset>
@@ -44,18 +47,20 @@
         });
     });
 </script>
+
 {% endblock content %}
 
 {% block file_label %}
 {% endblock %}
 
 {% block user_avatar_row %}
-    <div class="avatar-block" style="float: left; width: 300px; height: 300px; margin: 10px; padding-left: 50px; text-align: left; border: 1px solid grey;">
+    <div class="avatar-block">
     {{ form_row(form.media) }}
     {% if form.all.value and not form.all.value.isSelected %}
-        <a href="{{ path('user_avatar_toggle_selection', {'id': form.all.value.id}) }}">{{ 'platformd.user.account_settings.Select avatar'|trans({}, 'FOSUserBundle') }}</a>
+        <a class="button" href="{{ path('user_avatar_toggle_selection', {'id': form.all.value.id}) }}">{{ 'platformd.user.account_settings.Select avatar'|trans({}, 'FOSUserBundle') }}</a>
     {% endif %}
     {% if form.all.value and not form.all.value.isApproved %}
+        <br />
         {{ 'platformd.user.account_settings.waiting for approval'|trans({}, 'FOSUserBundle') }}
     {% endif %}
     </div>
