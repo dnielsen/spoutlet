@@ -133,6 +133,7 @@ class AdminController extends Controller
     public function resetPasswordAction(Request $request, $id)
     {
         $manager = $this->get('fos_user.user_manager');
+        $mailer  = $this->get('fos_user.mailer');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
 
@@ -140,10 +141,9 @@ class AdminController extends Controller
         }
 
         $user->generateConfirmationToken();
-        $this->get('session')->set(static::SESSION_EMAIL, $this->getObfuscatedEmail($user));
-        $this->get('fos_user.mailer')->sendResettingEmailMessage($user);
+        $mailer->sendResettedPasswordMessage($user);
         $user->setPasswordRequestedAt(new \DateTime());
-        $this->get('fos_user.user_manager')->updateUser($user);
+        $manager->updateUser($user);
 
         $request
             ->getSession()
