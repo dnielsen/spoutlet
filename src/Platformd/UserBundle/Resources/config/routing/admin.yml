@@ -2,12 +2,6 @@ Platformd_UserBundle_admin_index:
     pattern: /
     defaults: { _controller: UserBundle:Admin:index }
 
-Platformd_UserBundle_admin_filter:
-    pattern: /filter
-    requirements:
-        _method: POST
-    defaults: { _controller: UserBundle:Admin:filter }
-
 Platformd_UserBundle_admin_show:
     pattern: /{id}
     requirements:

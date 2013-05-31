@@ -15,12 +15,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminController extends Controller
 {
-    public function filterAction()
-    {
-        $this->get('session')->set('admin-member-search', $this->getRequest()->request->get('search'));
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
-    }
-
     public function indexAction(Request $request)
     {
         $this->addUserBreadcrumb();
@@ -199,10 +193,5 @@ class AdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
-    }
-
-    private function getFilter()
-    {
-        return $this->get('session')->get('admin-member-search');
     }
 }
