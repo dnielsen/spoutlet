@@ -1089,4 +1089,14 @@ class User extends BaseUser
     public function eraseCredentials()
     {
     }
+
+    public function hasSameIpAddress($ipAddress)
+    {
+        return $this->ipAddress === $ipAddress;
+    }
+
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
 }
