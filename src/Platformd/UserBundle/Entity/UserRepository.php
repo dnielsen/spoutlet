@@ -190,6 +190,7 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
     }
 
     public function countOtherExpiredUsersByIpAddress($ipAddress, $username)
