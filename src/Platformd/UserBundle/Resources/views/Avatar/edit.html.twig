@@ -46,12 +46,11 @@
 </script>
 {% endblock content %}
 
-
 {% block file_label %}
 {% endblock %}
 
 {% block user_avatar_row %}
-    <div class="avatar-block" style="display:inline-block; height: 300px; text-align: center">
+    <div class="avatar-block" style="float: left; width: 300px; height: 300px; margin: 10px; padding-left: 50px; text-align: left; border: 1px solid grey;">
     {{ form_row(form.media) }}
     {% if form.all.value and not form.all.value.isSelected %}
         <a href="{{ path('user_avatar_toggle_selection', {'id': form.all.value.id}) }}">{{ 'platformd.user.account_settings.Select avatar'|trans({}, 'FOSUserBundle') }}</a>
@@ -61,3 +60,4 @@
     {% endif %}
     </div>
 {% endblock %}
+
