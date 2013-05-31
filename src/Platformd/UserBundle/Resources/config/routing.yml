@@ -28,4 +28,4 @@ fos_user_change_password:
 
 user_avatar:
     resource: "@FOSUserBundle/Resources/config/routing/avatar.yml"
-    prefix: /avatar
+    prefix: /

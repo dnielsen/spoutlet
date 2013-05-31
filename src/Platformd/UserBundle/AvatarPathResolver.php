@@ -3,21 +3,19 @@
 namespace Platformd\UserBundle;
 
 use Platformd\SpoutletBundle\PathResolver;
-use Platformd\UserBundle\Entity\User;
+use Platformd\UserBundle\Entity\UserAvatar;
 
 /**
-* 
+*
 */
 class AvatarPathResolver extends PathResolver
 {
-
   /**
    * {@inheritDoc}
    */
-  public function getPath($user, array $options)
+  public function getPath($avatar, array $options)
   {
-
-    return parent::getPath($user->getAvatar(), $options);
+    return parent::getPath($avatar->getMedia(), $options);
   }
 
   /**
@@ -25,8 +23,8 @@ class AvatarPathResolver extends PathResolver
    */
   public function supports($media, array $options)
   {
-   
-    return $media instanceof User;
+
+    return $media instanceof UserAvatar;
   }
 
 }

@@ -152,15 +152,12 @@ class AdminController extends Controller
 
     public function approveAvatarAction($id)
     {
-        $manager = $this->get('fos_user.user_manager');
-
-        if (!$user = $manager->findUserBy(array('id' => $id))) {
-
+        if (!$avatar = $this->getAvatarRepository()->find($id)) {
             throw $this->createNotFoundException();
         }
 
-        $user->approveAvatar();
-        $manager->updateUser($user);
+        $avatar->toggleApproval();
+        $this->get('doctrine')->getEntityManager()->flush();
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
@@ -195,5 +192,10 @@ class AdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    public function getAvatarRepository()
+    {
+        return $this->get('doctrine')->getRepository('Platformd\UserBundle\Entity\UserAvatar');
     }
 }

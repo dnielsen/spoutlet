@@ -1,0 +1,39 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block user_avatar_row %}
+    {{ form_row(form) }}
+    {% if form.all.value and not form.all.value.isSelected %}
+        <a href="{{ path('user_avatar_toggle_selection', {'id': form.all.value.id}) }}">Select</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ 'platformd.user.account_settings' | trans }}</h2>
+
+<form action="{{ path('user_avatar_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form">
+    <input type="hidden" name="_method" value="PUT" />
+    {{ form_widget(form) }}
+
+    <a href="#" id="user-avatar-add">Add an avatar</a>
+
+    <div>
+        <input type="submit" class="button" value="{{ 'change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+</form>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function($) {
+        $('#user-avatar-add').click(function(event) {
+            event.preventDefault();
+            var div = $('#account_settings_userAvatars');
+            var prototype = div.data('prototype');
+            var row = $(prototype.replace(/\$\$name\$\$/g, div.children().length));
+
+            div.append(row);
+        });
+    });
+</script>
+{% endblock content %}

@@ -50,6 +50,7 @@ fos_user_admin_edit_success: User "%username%" has been successfully updated !
 fos_user_admin_delete_success: User "%username%" has been successfully deleted !
 fos_user_admin_approve_avatar: Approve avatar
 fos_user_admin_resetted_password_success: "The user's password has been reset and has been sent to %email%."
+fos_user_admin_disapprove_avatar: Disapprove avatar
 
 # Security
 security.login.username: "Username:"

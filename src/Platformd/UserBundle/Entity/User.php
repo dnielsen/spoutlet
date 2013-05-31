@@ -24,6 +24,10 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
  */
 class User extends BaseUser
 {
+    public $currentPassword;
+
+    public $newPassword;
+
     /**
      * @var integer $id
      *
@@ -130,11 +134,11 @@ class User extends BaseUser
     protected $termsAccepted;
 
     /**
-     * @var String $avatar
+     * @var ArrayCollection $userAvatars
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\UserAvatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
      */
-    protected $avatar;
+    protected $userAvatars;
 
     /**
      * @var string
@@ -235,13 +239,6 @@ class User extends BaseUser
     protected $monitor;
 
     /**
-     * @var Boolean $avatarApproved
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $avatar_approved = false;
-
-    /**
      * @var string The locale in which this user registered
      * @ORM\Column(type="string", length=2, nullable=true)
      */
@@ -270,11 +267,6 @@ class User extends BaseUser
      * @Gedmo\Timestampable(on="update")
      */
     protected $updated;
-
-    /**
-     * @Assert\File(maxSize="6000000", mimeTypes={"image/png", "image/jpeg", "image/jpg"}, groups={"Profile"})
-     */
-    public $file;
 
     /**
      * Little flag so we know if the avatar was changed on this request
@@ -321,6 +313,7 @@ class User extends BaseUser
         $this->giveawayKeys = new ArrayCollection();
         $this->groupMembershipActions = new ArrayCollection();
         $this->loginRecords = new ArrayCollection();
+        $this->userAvatars = new ArrayCollection();
     }
 
     /**
@@ -346,12 +339,12 @@ class User extends BaseUser
 
     public function getAbsolutePath()
     {
-        if (!$this->avatar) {
+        if (!$this->getApprovedAvatar()) {
 
             return null;
         }
 
-        return $this->getUploadRootDir().'/'.$this->avatar;
+        return $this->getUploadRootDir().'/'.$this->getApprovedAvatar();
     }
 
     /**
@@ -605,9 +598,27 @@ class User extends BaseUser
         $this->termsAccepted = $accepted;
     }
 
-    public function getAvatar()
+    public function getUserAvatars()
     {
-        return $this->avatar;
+        return $this->userAvatars;
+    }
+
+    public function setUserAvatars($userAvatars)
+    {
+        foreach ($userAvatars as $userAvatar) {
+            $this->addUserAvatar($userAvatar);
+        }
+    }
+
+    public function addUserAvatar(UserAvatar $userAvatar)
+    {
+        $userAvatar->setUser($this);
+        $this->userAvatars->add($userAvatar);
+    }
+
+    public function removeUserAvatar(UserAvatar $userAvatar)
+    {
+        $this->userAvatars->remove($userAvatar);
     }
 
     /**
@@ -620,24 +631,14 @@ class User extends BaseUser
      */
     public function getApprovedAvatar()
     {
-        if (!$this->isAvatarApproved()) {
-            return false;
-        }
-
-        return $this->getAvatar();
-    }
-
-    public function setAvatar($avatar)
-    {
-        $this->avatar = $avatar;
-
-        // set a flag so we can give the user a message
-        $this->avatarChanged = true;
+        return $this->getUserAvatars()->filter(function($avatar) {
+            return $avatar->isApproved();
+        })->first();
     }
 
     public function getWebPath()
     {
-        return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
+        return null === $this->getApprovedAvatar() ? null : $this->getUploadDir().'/'.$this->getApprovedAvatar();
     }
 
     public function getType()
