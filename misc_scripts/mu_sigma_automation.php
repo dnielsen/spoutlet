@@ -44,7 +44,7 @@ try {
 
 // Giveaways
 
-    $output .= "\nProcessing Giveaway Data\n";
+    /*$output .= "\nProcessing Giveaway Data\n";
 
     $filename   = 'alienwarearena_giveaway_data_'.$filenameDate.'.csv';
 
@@ -70,11 +70,11 @@ try {
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 // Deals
 
-    $output .= "\nProcessing Deal Data\n";
+    /*$output .= "\nProcessing Deal Data\n";
 
     $filename = 'alienwarearena_deals_data_'.$filenameDate.'.csv';
 
@@ -100,7 +100,7 @@ try {
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 // Video Comments
 
@@ -132,7 +132,7 @@ try {
 
 // Video Summary
 
-    $output .= "\nProcessing Video Summary Data\n";
+    /*$output .= "\nProcessing Video Summary Data\n";
 
     $filename   = 'alienwarearena_video_summary_data_'.$filenameDate.'.csv';
 
@@ -167,7 +167,7 @@ try {
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 } catch (PDOException $e) {
     $output .= 'Connection failed: ' . $e->getMessage();
@@ -214,7 +214,7 @@ function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $cs
 
     fclose($handle);
 
-    /*$output .= gzipFile($filename);
+    $output .= gzipFile($filename);
 
     $output .= " - Encrypting ".$filename.".gz...\n";
 
@@ -222,7 +222,7 @@ function generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $cs
 
     if (file_exists($filename.'.gz.asc')) {
         exec('shred -uv '.$filename.'.gz');
-    }*/
+    }
 
     return $output;
 }
