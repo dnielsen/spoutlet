@@ -12,7 +12,7 @@ class SuspendUserType extends AbstractType
         $builder
             ->add('expiredUntil', 'datetime', array(
                 'required' => false,
-               'label' => 'Expires until',
+                'label' => 'Suspend Until',
                 'widget' => 'single_text',
                 'attr'   => array(
                     'class' => 'datetime-picker',

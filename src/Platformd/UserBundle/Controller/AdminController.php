@@ -65,7 +65,8 @@ class AdminController extends Controller
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
         ));
     }
 

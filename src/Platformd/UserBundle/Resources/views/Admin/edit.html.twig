@@ -1,4 +1,5 @@
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+{% form_theme suspendForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block title %}{{ "fos_user_admin_user_edit_title" | trans({ "%username%" : user.username }, "FOSUserBundle") }}{% endblock %}
@@ -6,7 +7,7 @@
 {% block content %}
     <h1>Edit User</h1>
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form">
+    <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
         <input type="hidden" name="_method" value="PUT" />
 
         {{ form_errors(form) }}
@@ -18,12 +19,15 @@
         {{ form_row(form.admin_level) }}
 
         {{ form_rest(form) }}
-        <input type="submit" value="{{ 'save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+        <div class="form-actions">
+            <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+        </div>
     </form>
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form">
-        {{ form_rest(suspendForm) }}
-
-        <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+    <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form-horizontal">
+        {{ form_row(suspendForm.expiredUntil) }}
+        <div class="form-actions">
+            <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+        </div>
     </form>
 {% endblock %}
