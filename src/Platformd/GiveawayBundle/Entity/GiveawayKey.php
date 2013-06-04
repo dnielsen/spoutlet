@@ -44,12 +44,13 @@ class GiveawayKey extends AbstractCode
         return $this->pool;
     }
 
-    public function assign(User $user, $ipAddress, $site)
+    public function assign(User $user, $ipAddress, $site, $country)
     {
         $this->user = $user;
         $this->assignedAt = new \DateTime();
         $this->ipAddress = $ipAddress;
         $this->setAssignedSite($site);
+        $this->setCountry($country);
     }
 
     public function setUser(User $user)

@@ -48,6 +48,11 @@ abstract class AbstractCode
      */
     protected $ipAddress;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country")
+     */
+    protected $country;
+
     abstract public function setPool(AbstractPool $pool);
     abstract public function getPool();
     abstract public function setUser(User $user);
@@ -91,12 +96,13 @@ abstract class AbstractCode
         return str_repeat('*', $length - 4).substr($this->value,-4,4);
     }
 
-    public function assign(User $user, $ipAddress, $site)
+    public function assign(User $user, $ipAddress, $site, $country)
     {
         $this->setUser($user);
         $this->assignedAt = new \DateTime();
         $this->ipAddress = $ipAddress;
         $this->setAssignedSite($site);
+        $this->setCountry($country);
     }
 
     public function getIpAddress()
@@ -122,5 +128,15 @@ abstract class AbstractCode
     public function setAssignedSite($assignedSite)
     {
         $this->assignedSite = $assignedSite;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    public function setCountry($value)
+    {
+        $this->country = $value;
     }
 }

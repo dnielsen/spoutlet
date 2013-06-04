@@ -52,4 +52,23 @@ class RegionRepository extends EntityRepository
         return $qb->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getRegionsForCountries()
+    {
+        $result = $this->createQueryBuilder('r')
+            ->select('r, c')
+            ->leftJoin('r.countries', 'c')
+            ->getQuery()
+            ->getResult();
+
+        $regions = array();
+
+        foreach ($result as $region) {
+            foreach ($region->getCountries() as $country) {
+                $regions[$country->getCode()][] = $region->getName();
+            }
+        }
+
+        return $regions;
+    }
 }
