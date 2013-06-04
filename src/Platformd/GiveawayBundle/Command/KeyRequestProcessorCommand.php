@@ -320,7 +320,7 @@ EOT
                 }
 
                 $this->output(4, $key);
-                $key->assign($user, $clientIp, $site->getDefaultLocale());
+                $key->assign($user, $clientIp, $site->getDefaultLocale(), $country);
 
                 break;
             }

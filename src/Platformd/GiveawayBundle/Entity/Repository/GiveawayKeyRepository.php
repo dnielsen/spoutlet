@@ -70,7 +70,8 @@ class GiveawayKeyRepository extends AbstractCodeRepository
     public function getAssignedForGiveawayByDate(Giveaway $giveaway, $from, $to)
     {
         $qb  = $this->createForGiveawayQueryBuilder($giveaway)
-            ->select('k.id', 'k.ipAddress');
+            ->select('k.id', 'k.ipAddress', 'c.code AS countryCode')
+            ->leftJoin('k.country', 'c');
 
         $this->addAssignedQueryBuilder($qb);
 

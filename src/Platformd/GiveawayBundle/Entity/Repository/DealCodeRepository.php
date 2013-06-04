@@ -45,7 +45,8 @@ class DealCodeRepository extends AbstractCodeRepository
     public function getAssignedForDealByDate(Deal $deal, $from, $to)
     {
         $qb  = $this->createForDealQueryBuilder($deal)
-            ->select('k.id', 'k.ipAddress');
+            ->select('k.id', 'k.ipAddress', 'c.code AS countryCode')
+            ->leftJoin('k.country', 'c');;
 
         $this->addAssignedQueryBuilder($qb);
 

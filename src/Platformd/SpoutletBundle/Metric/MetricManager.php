@@ -161,15 +161,16 @@ class MetricManager
             'sites' => array(),
         );
 
-        $assignedKeys = $this->giveawayKeyRepository->getAssignedForGiveawayByDate($giveaway, $from, $to);
+        $assignedKeys        = $this->giveawayKeyRepository->getAssignedForGiveawayByDate($giveaway, $from, $to);
+        $regionsForCountries = $this->regionRepository->getRegionsForCountries();
 
         foreach ($assignedKeys as $key) {
-            $country = $this->ipLookupUtil->getCountryCode($key['ipAddress']);
-            $regions = $this->regionRepository->findRegionNamesForCountry($country);
+            $country = $key['countryCode'];
+            $regions = isset($regionsForCountries[$country]) ? $regionsForCountries[$country] : null;
 
             if ($regions) {
                 foreach ($regions as $region) {
-                    $data['sites'][$region['name']] = array_key_exists($region['name'], $data['sites']) ? $data['sites'][$region['name']] + 1 : 1;
+                    $data['sites'][$region] = array_key_exists($region, $data['sites']) ? $data['sites'][$region] + 1 : 1;
                 }
             }
         }
@@ -209,15 +210,16 @@ class MetricManager
             'sites' => array(),
         );
 
-        $assignedCodes = $this->dealCodeRepository->getAssignedForDealByDate($deal, $from, $to);
+        $assignedCodes       = $this->dealCodeRepository->getAssignedForDealByDate($deal, $from, $to);
+        $regionsForCountries = $this->regionRepository->getRegionsForCountries();
 
         foreach ($assignedCodes as $key) {
-            $country = $this->ipLookupUtil->getCountryCode($key['ipAddress']);
-            $regions = $this->regionRepository->findRegionNamesForCountry($country);
+            $country = $key['countryCode'];
+            $regions = isset($regionsForCountries[$country]) ? $regionsForCountries[$country] : null;
 
             if ($regions) {
                 foreach ($regions as $region) {
-                    $data['sites'][$region['name']] = array_key_exists($region['name'], $data['sites']) ? $data['sites'][$region['name']] + 1 : 1;
+                    $data['sites'][$region] = array_key_exists($region, $data['sites']) ? $data['sites'][$region] + 1 : 1;
                 }
             }
         }
