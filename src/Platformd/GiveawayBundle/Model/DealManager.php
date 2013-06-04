@@ -91,7 +91,7 @@ class DealManager
                 'deal_thumbnail'    => $deal->getThumbnailLarge() ? $this->mediaPathResolver->getPath($deal->getThumbnailLarge(), array()) : null,
                 'deal_name'         => $deal->getName(),
                 'deal_url'          => $this->linkableManager->link($deal),
-                'author'            => $comment->getAuthor->getUsername(),
+                'author'            => $comment->getAuthor()->getUsername(),
                 'created_at'        => $comment->getCreatedAtInTimezoneTranslationArray(),
             );
         }
