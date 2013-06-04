@@ -33,8 +33,6 @@ class RegionRepository extends EntityRepository
         if ($country instanceof Country) {
             $qb->where('c = :country')
                 ->setParameter('country', $country);
-        } elseif ($country instanceof Ip2LocationRecord) {
-            die(print_r($country));exit;
         } else {
              $qb->where('c.code = :country')
                 ->setParameter('country', $country);
