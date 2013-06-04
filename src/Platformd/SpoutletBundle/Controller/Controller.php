@@ -26,6 +26,14 @@ class Controller extends BaseController
         return $this->container->get('platformd.util.site_util')->getCurrentSiteCached();
     }
 
+    protected function getVarnishUtil() {
+        return $this->container->get('platformd.util.varnish_util');
+    }
+
+    protected function varnishCache($response, $sharedMaxAge, $maxAge = 0) {
+        $this->getVarnishUtil()->cacheResponse($response, $sharedMaxAge, $maxAge);
+    }
+
     protected function getCurrentSiteId() {
         return $this->getCurrentSiteCached()->getId();
     }
@@ -54,50 +62,6 @@ class Controller extends BaseController
 
     protected function getTemplating() {
         return $this->container->get('templating');
-    }
-
-    public function getOrGenResponse($params) {
-
-        $params['withMetaData'] = true;
-
-        $data = $this->getCache()->getOrGen($params);
-
-        # do no replace this isset with array_key_exists as we want to fail EVEN if cachedContent exists but is null
-        if ($data === null || !is_array($data) || !isset($data['cachedContent'])) {
-            return $this->render('SpoutletBundle::error.html.twig',
-                array(
-                    'title' => 'platformd.not_found.title',
-                    'body'  => 'platformd.not_found.body'));
-        }
-
-        return $this->generateCachedResponse($data);
-    }
-
-    public function genResponse($html) {
-        $data = array('generatedDateTime' => new \DateTime(),
-            'cachedContentMd5' => md5($html),
-            'cachedContent' => $html);
-
-        return $this->generateCachedResponse($data);
-    }
-
-    public function generateCachedResponse($data) {
-
-        $request  = $this->getRequest();
-        $response = new Response();
-
-        $response->setEtag($data['cachedContentMd5']);
-        $response->setLastModified($data['generatedDateTime']);
-        #$response->setPrivate(); # this should NEVER be changed to public... EVER for any reason... non-public stuff uses this function
-        $response->setSharedMaxAge(30);
-
-        if ($response->isNotModified($request)) {
-            return $response;
-        }
-
-        $response->setContent($data['cachedContent']);
-
-        return $response;
     }
 
     public function generateErrorPage($title = 'platformd.not_found.title', $body = 'platformd.not_found.body') {

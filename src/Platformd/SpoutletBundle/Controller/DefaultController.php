@@ -11,7 +11,7 @@ class DefaultController extends Controller
     public function _mainUserStripAction() {
         $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
 
-        $response->setSharedMaxAge(120);
+        $this->varnishCache($response, 120);
 
         return $response;
     }

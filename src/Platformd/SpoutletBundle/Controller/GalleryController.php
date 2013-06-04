@@ -915,7 +915,7 @@ class GalleryController extends Controller
                 "media"   => $featuredMedia
             )));
 
-            $response->setSharedMaxAge(30);
+            $this->varnishCache(30);
 
             return $response;
         }

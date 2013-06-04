@@ -66,7 +66,7 @@ class DealController extends Controller
                 'data' => $data
             ));
 
-            $response->setSharedMaxAge(60);
+            $this->varnishCache($response, 60);
 
             return $response;
         }
@@ -94,7 +94,7 @@ class DealController extends Controller
                 'data' => $data
             ));
 
-            $response->setSharedMaxAge(1);
+            $this->varnishCache($response, 1);
 
             return $response;
         }
@@ -102,7 +102,7 @@ class DealController extends Controller
         # at this stage, there are no notifications for the user
 
         $response = new Response();
-        $response->setSharedMaxAge(1);
+        $this->varnishCache($response, 1);
 
         return $response;
     }
@@ -152,7 +152,7 @@ class DealController extends Controller
             'data' => $data
         ));
 
-        $response->setSharedMaxAge(30);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -171,8 +171,7 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:index.html.twig', array('data' => $data));
 
-        $response->setSharedMaxAge(30);
-        $response->setMaxAge(30);
+        $this->varnishCache($response, 30, 30);
 
         return $response;
     }
@@ -230,7 +229,7 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
 
-        $response->setSharedMaxAge(30);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
