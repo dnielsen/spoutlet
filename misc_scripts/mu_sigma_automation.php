@@ -39,9 +39,12 @@ $output .= "---------------------------------------------\n";
 try {
     $dbh            = new PDO($dsn, $user, $password);
 
+    $sql = 'SET NAMES utf8';
+    $result = $dbh->prepare($sql)->execute();
+
 // Giveaways
 
-    $output .= "\nProcessing Giveaway Data\n";
+    /*$output .= "\nProcessing Giveaway Data\n";
 
     $filename   = 'alienwarearena_giveaway_data_'.$filenameDate.'.csv';
 
@@ -55,23 +58,23 @@ try {
     $data       = $dbh->query($sql);
 
     $headers    = array(
-        'Key Assigned On' => 'assigned_at',
-        'Username' => 'username',
-        'User ID' => 'user_id',
-        'First Name' => 'firstname',
-        'Last Name' => 'lastname',
-        'Email' => 'email',
-        'Country' => 'country',
+        'Key Assigned On'   => 'assigned_at',
+        'Username'          => 'username',
+        'User ID'           => 'user_id',
+        'First Name'        => 'firstname',
+        'Last Name'         => 'lastname',
+        'Email'             => 'email',
+        'Country'           => 'country',
         'Key Giveaway Name' => 'name',
-        'Week' => null,
+        'Week'              => null,
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 // Deals
 
-    $output .= "\nProcessing Deal Data\n";
+    /*$output .= "\nProcessing Deal Data\n";
 
     $filename = 'alienwarearena_deals_data_'.$filenameDate.'.csv';
 
@@ -86,34 +89,18 @@ try {
 
      $headers = array(
         'Key Assigned On' => 'assigned_at',
-        'Username' => 'username',
-        'User ID' => 'user_id',
-        'First Name' => 'firstname',
-        'Last Name' => 'lastname',
-        'Email' => 'email',
-        'Country' => 'country',
-        'Deal Name' => 'name',
-        'Week' => null,
+        'Username'        => 'username',
+        'User ID'         => 'user_id',
+        'First Name'      => 'firstname',
+        'Last Name'       => 'lastname',
+        'Email'           => 'email',
+        'Country'         => 'country',
+        'Deal Name'       => 'name',
+        'Week'            => null,
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
-
-} catch (PDOException $e) {
-    $output .= 'Connection failed: ' . $e->getMessage();
-}
-
-
-
-$dbh = null;
-
-$output .= "\nCreating SSH Tunnel to PLDX Server...\n" ;
-
-// create ssh tunnel to pldx db server for establishing MySQL connection
-shell_exec('ssh root@173.193.20.145 -f -L 33337:localhost:3306 sleep 30 >> logfile');
-
-try {
-    $dbh            = new PDO($dsnPldx, $userPldx, $passwordPldx);
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 // Video Comments
 
@@ -121,22 +108,23 @@ try {
 
     $filename   = 'alienwarearena_video_comments_data_'.$filenameDate.'.csv';
 
-    $sql        = 'SELECT `movies`.`id`,  `movies`.`name`, `movies`.`views`, REPLACE(`movie_comments`.`comment`, CHAR(10), "") as `comment`, `movie_comments`.`authorid`, `movie_comments`.`posted`
-                    FROM `'.$videoDb.'`.`movie_comments`
-                    INNER JOIN `'.$videoDb.'`.`movies` ON `movies`.`id` = `movie_comments`.`movieid`
-                    WHERE `movie_comments`.`posted` >= "'.$sinceDate.'" AND `movie_comments`.`posted` <= "'.$toDate.'" AND `movies`.`status` = 1
-                    ORDER BY `movies`.`id`';
+    $sql        = 'SELECT `v`.`id`, `v`.`title`, `v`.`views`, REPLACE(`c`.`body`, CHAR(10), "") as `comment`, `c`.`author_id`, `c`.`created_at`
+                    FROM `'.$awaDb.'`.`commenting_comment` `c`
+                    INNER JOIN `'.$awaDb.'`.`commenting_thread` `t` ON `c`.`thread_id` = `t`.`id`
+                    INNER JOIN `'.$awaDb.'`.`pd_videos_youtube` `v` ON `t`.`id` = CONCAT("youtube-", CAST(`v`.`id` AS CHAR))
+                    WHERE `c`.`created_at` >= "'.$sinceDate.'" AND `c`.`created_at` <= "'.$toDate.'" AND `v`.`deleted` = 0
+                    ORDER BY `v`.`id`';
 
     $data       = $dbh->query($sql);
 
     $headers    = array(
-        'Video ID' => 'id',
-        'Video Name' => 'name',
-        'Views' => 'views',
-        'Comment' => 'comment',
-        'User ID' => 'authorid',
-        'Commented At' => 'posted',
-        'Week' => null,
+        'Video ID'     => 'id',
+        'Video Name'   => 'title',
+        'Views'        => 'views',
+        'Comment'      => 'comment',
+        'User ID'      => 'author_id',
+        'Commented At' => 'created_at',
+        'Week'         => null,
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
@@ -144,36 +132,42 @@ try {
 
 // Video Summary
 
-    $output .= "\nProcessing Video Summary Data\n";
+    /*$output .= "\nProcessing Video Summary Data\n";
 
     $filename   = 'alienwarearena_video_summary_data_'.$filenameDate.'.csv';
 
-    $sql        = 'SELECT DISTINCT `movies`.`id` as movie_id, `movies`.`name` AS title,  `movie_category`.`name` AS category, `movies`.`views` AS total_views,  `movies`.`added` AS date_uploaded, `movies`.`submitterid`,
-                    (SELECT COUNT(*) FROM `movie_comments` where `movie_comments`.`movieid` = movie_id) as total_comments,
-                    (SELECT AVG(`rating`) FROM `movie_ratings` WHERE `movieid` = movie_id) as rating, `files`.`ip`
-                    FROM `'.$videoDb.'`.`movies`
-                    INNER JOIN `'.$videoDb.'`.`movie_category` ON `movie_category`.`id` = `movies`.`categoryid`
-                    INNER JOIN `'.$videoDb.'`.`files` ON `files`.`movieid` = `movies`.`id`
-                    WHERE  `movies`.`added` > "'.$sinceDate.'" AND `movies`.`added` <= "'.$toDate.'" AND `movies`.`status` = 1 AND `files`.`ip` IS NOT NULL
-                    ORDER BY `movies`.`added`';
+    $sql        = 'SELECT DISTINCT `v`.`id` AS movie_id, `v`.`title`, `g`.`name` AS category, `v`.`views` AS total_views, `v`.`created_at`,
+                    `v`.`author_id`,
+                    (SELECT COUNT(*) FROM `'.$awaDb.'`.`commenting_comment` `c`
+                        INNER JOIN `'.$awaDb.'`.`commenting_thread` `t` ON `t`.`id` = `c`.`thread_id`
+                        WHERE `t`.`id` = CONCAT("youtube-", CAST(movie_id AS CHAR))) as total_comments,
+                    COALESCE((SELECT SUM(IF(`v1`.`vote_type` = "up", 1, -1)) AS rating FROM `'.$awaDb.'`.`pd_youtube_votes` v1
+                        WHERE `v1`.`video_id` = movie_id), 0) AS rating,
+                    "" AS ip
+                    FROM `'.$awaDb.'`.`pd_videos_youtube` `v`
+                    INNER JOIN `'.$awaDb.'`.`pd_videos_youtube_galleries` `g2` ON `g2`.`youtubevideo_id` = `v`.`id`
+                    INNER JOIN `'.$awaDb.'`.`pd_gallery` `g` ON `g`.`id` = `g2`.`gallery_id`
+                    WHERE `v`.`created_at` >= "'.$sinceDate.'" AND `v`.`created_at` <= "'.$toDate.'" AND `v`.`deleted` = 0
+                    ORDER BY `v`.`created_at`';
+
 
     $data       = $dbh->query($sql);
 
     $headers    = array(
-        'Video ID' => 'movie_id',
-        'Video Name' => 'title',
-        'Category' => 'category',
-        'Views' => 'total_views',
-        'Date Uploaded' => 'date_uploaded',
-        'User ID' => 'submitterid',
+        'Video ID'           => 'movie_id',
+        'Video Name'         => 'title',
+        'Category'           => 'category',
+        'Views'              => 'total_views',
+        'Date Uploaded'      => 'created_at',
+        'User ID'            => 'author_id',
         'Number of Comments' => 'total_comments',
-        'Rating' => 'rating',
-        'IP Address' => 'ip',
-        'Week' => null,
+        'Rating'             => 'rating',
+        'IP Address'         => 'ip',
+        'Week'               => null,
     );
 
     $output .= generateEncryptedGzippedCsv($headers, $data, $filename, $recipient, $csvYear, $week);
-    $filesForUpload[] = $filename.'.gz.asc';
+    $filesForUpload[] = $filename.'.gz.asc';*/
 
 } catch (PDOException $e) {
     $output .= 'Connection failed: ' . $e->getMessage();

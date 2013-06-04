@@ -30,7 +30,6 @@ class SiteProtectionListener
      *
      * @var array
      */
-
     static private $disallowedPatterns = array(
         '^/arp',
         '^/forums',

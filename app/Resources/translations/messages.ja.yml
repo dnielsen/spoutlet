@@ -909,6 +909,9 @@ galleries:
 
     gallery_see_all: See All
 
+timeline.title: The History of Alienware
+timeline.not_found: No timeline found.
+
 platformd.create_account_or_login: ALIENWARE ARENAアカウントを作成しログインします。
 
 platformd.giveaway.click_for_past_giveaways: <a href="%cevo_user_account_giveaway_page%">ここで</a>をクリックして、過去のプレゼントを確認します。

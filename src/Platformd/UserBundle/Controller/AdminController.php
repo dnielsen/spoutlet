@@ -15,30 +15,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminController extends Controller
 {
-    public function filterAction()
-    {
-        $this->get('session')->set('admin-member-search', $this->getRequest()->request->get('search'));
-
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
-    }
-
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $this->addUserBreadcrumb();
         $manager = $this->get('fos_user.user_manager');
 
-        $localAuth = $this->container->getParameter('local_auth');
+        $search = $request->get('search');
+        $type   = $request->get('type');
 
-        if (!$localAuth) {
-
-            $search = $this->getRequest()->get('search');
-            $query  = $search ? $manager->getFindUserQuery('email', $this->getRequest()->get('search', '')) : $manager->getFindUserQuery();
-
-        } else {
-
-            $search = $this->getFilter();
-            $query  = $manager->getFindUserQuery($search);
-        }
+        $query  = $manager->getFindUserQuery($search, $type);
 
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
@@ -210,10 +195,5 @@ class AdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
-    }
-
-    private function getFilter()
-    {
-        return $this->get('session')->get('admin-member-search');
     }
 }

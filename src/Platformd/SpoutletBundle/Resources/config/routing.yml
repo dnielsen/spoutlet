@@ -135,3 +135,11 @@ SpoutletBundle_takeover:
 SpoutletBundle_admin_takeover:
     resource: "@SpoutletBundle/Resources/config/routing/admin_takeover.yml"
     prefix:   /admin/takeover
+
+SpoutletBundle_admin_timeline:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_timeline.yml"
+    prefix:   /admin/timeline
+
+SpoutletBundle_timeline:
+    resource: "@SpoutletBundle/Resources/config/routing/timeline.yml"
+    prefix:   /timeline

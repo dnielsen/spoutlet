@@ -1169,6 +1169,9 @@ contests:
     entry_success: Your group is entered into the contest.
     contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.
 
+timeline.title: The History of Alienware
+timeline.not_found: No timeline found.
+
 platformd.create_account_or_login: Create or log in to an Alienware Arena account.
 platformd.giveaway.click_for_past_giveaways: Click <a href="%cevo_user_account_giveaway_page%">here</a> to view keys for past giveaways.
 platformd.giveaway.giveaway: Giveaway
