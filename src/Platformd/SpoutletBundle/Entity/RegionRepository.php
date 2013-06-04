@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Platformd\SpoutletBundle\Entity\Country;
 use Platformd\SpoutletBundle\Entity\Site;
+use Platformd\SpoutletBundle\Location\Ip2LocationRecord;
 
 class RegionRepository extends EntityRepository
 {
@@ -32,6 +33,8 @@ class RegionRepository extends EntityRepository
         if ($country instanceof Country) {
             $qb->where('c = :country')
                 ->setParameter('country', $country);
+        } elseif ($country instanceof Ip2LocationRecord) {
+            var_dump($country);exit;
         } else {
              $qb->where('c.code = :country')
                 ->setParameter('country', $country);
