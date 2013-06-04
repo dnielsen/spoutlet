@@ -25,7 +25,7 @@
                                     <ul class="dealDetails">
                                         <li class="dealTitle"><a class="movie_ellipsis" title="" href="{{ comment.deal_url }}">{{ comment.deal_name }}</a></li>
                                         <li class="dealCommentAuthor">{{ 'by' | trans }} {{ comment.author }}</li>
-                                        <li class="dealCommentAt">{{ 'deal_comments_posted_on' | trans}} {{ 'platformd.comment.date_format' | trans(comment.created_at) }}</li>
+                                        <li class="dealCommentAt">{{ 'deal_comments_posted_on' | trans}} {{ comment.created_at | date_translate }}</li>
                                     </ul>
                                 </div>
                             </div>

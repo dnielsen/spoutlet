@@ -92,7 +92,7 @@ class DealManager
                 'deal_name'         => $deal->getName(),
                 'deal_url'          => $this->linkableManager->link($deal),
                 'author'            => $comment->getAuthor()->getUsername(),
-                'created_at'        => $comment->getCreatedAtInTimezoneTranslationArray(),
+                'created_at'        => $comment->getCreatedAt(),
             );
         }
 
