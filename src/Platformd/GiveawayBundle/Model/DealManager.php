@@ -15,7 +15,7 @@ use Platformd\SpoutletBundle\Entity\ThreadRepository;
 use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\SpoutletBundle\Link\LinkableManager;
 use Platformd\MediaBundle\Exposer\MediaPathResolver;
-use Platformd\CommentBundle\Model\CommentManager;
+use Platformd\SpoutletBundle\Model\CommentManager;
 
 class DealManager
 {
