@@ -1204,7 +1204,7 @@ platformd.giveaway.queue.problem: There was a problem processing your key reques
 platformd.giveaway.queue.reason: Reason
 platformd.giveaway.queue.reasons.none: No reason
 platformd.giveaway.queue.reasons.no_keys: Unfortunately, at this time there are no longer any keys available.
-platformd.giveaway.queue.reasons.ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
+platformd.giveaway.queue.reasons.ip_reached_max: Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed.
 platformd.giveaway.queue.reasons.already_assigned: You already have a key.
 platformd.giveaway.queue.reasons.invalid_country_or_age: You are not eligible (based on your age and/or country).
 platformd.giveaway.queue.reasons.invalid_site: Unknown site.
@@ -1229,6 +1229,8 @@ platformd.key_request_processor_command.key_assigned_email_body_group_section: "
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>
-            Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. Please check back later as more codes may be added!
+            Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. %extra_info%
         </p>
         <p>Alienware Arena Team</p>
+platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
+platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!

@@ -935,7 +935,7 @@ platformd.giveaway.queue.problem: あなたのキー要求処理に問題が発�
 platformd.giveaway.queue.reason: 理由
 platformd.giveaway.queue.reasons.none: 理由はありません。
 platformd.giveaway.queue.reasons.no_keys: 残念ながら、現在このキーはありません。
-platformd.giveaway.queue.reasons.ip_reached_max: Your IP address is not allowed to redeem any more keys from this promotion.
+platformd.giveaway.queue.reasons.ip_reached_max: 申し訳ございません。キーは、あなたのIPアドレスに配布できる最大数に達しています。
 platformd.giveaway.queue.reasons.already_assigned: あなたはすでにキーを所有しています。
 platformd.giveaway.queue.reasons.invalid_country_or_age: あなたは対象ではありません（年齢、もしくは国）。
 platformd.giveaway.queue.reasons.invalid_site: 不明なサイトです。

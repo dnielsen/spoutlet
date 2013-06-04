@@ -747,6 +747,7 @@ platformd.giveaway.queue.problem: Hubo un problema al procesar tu solicitud de c
 platformd.giveaway.queue.reason: Razón
 platformd.giveaway.queue.reasons.none: Sin razón
 platformd.giveaway.queue.reasons.no_keys: Desafortunadamente, en este momento no hay clave disponible.
+platformd.giveaway.queue.reasons.ip_reached_max: Lo sentimos, la clave no puede ser asignado a ti, como tu dirección de IP ya ha cobrado el número máximo de claves permitidas.
 platformd.giveaway.queue.reasons.already_assigned: Ya tienes una clave.
 platformd.giveaway.queue.reasons.invalid_country_or_age: No eres eligible (basado en tu edad y / o el país).
 platformd.giveaway.queue.reasons.invalid_site: Sitio desconosido.
