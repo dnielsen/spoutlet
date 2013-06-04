@@ -43,7 +43,7 @@ class CommentManager
 
     public function findMostRecentCommentsByThreadPrefixWithObjects($threadPrefix, $count = 5)
     {
-        $repo = $this->threadRepo;
+        $repo = $this->em->getRepository('SpoutletBundle:Comment');
         $comments = $repo->findMostRecentCommentsByThreadPrefix($threadPrefix, $count);
 
         $arr = array();
