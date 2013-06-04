@@ -105,4 +105,4 @@ Feature: Giveaway Pool
             And I click "GET KEY"
             And The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-        Then I should see "Your IP address is not allowed to redeem any more keys from this promotion."
+        Then I should see "Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed."
