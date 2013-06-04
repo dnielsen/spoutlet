@@ -33,7 +33,7 @@ services:
             - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@platformd.media_path_resolver"
-            - "@fos_comment.manager.comment"
+            - "@platformd.model.comment_manager"
 
     pd_giveaway.util.key_counter_util:
         class: Platformd\GiveawayBundle\Util\KeyCounterUtil

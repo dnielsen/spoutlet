@@ -116,5 +116,18 @@ class CommentRepository extends EntityRepository
 
         return $result;
     }
+
+    public function findMostRecentCommentsByThreadPrefix($prefix, $count = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.thread', 't')
+            ->andWhere('t.id LIKE :prefix')
+            ->setParameter('prefix', $prefix.'%')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }
 
