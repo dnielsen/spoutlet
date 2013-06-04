@@ -154,5 +154,5 @@ Feature: Deal Pool
             And I click "deal-redeem-link"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "Your IP address is not allowed to redeem any more keys from this promotion."
+        Then I should see "Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed."
 
