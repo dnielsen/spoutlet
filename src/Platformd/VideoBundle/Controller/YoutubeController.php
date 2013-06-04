@@ -235,7 +235,7 @@ class YoutubeController extends Controller
             ));
         }
 
-        $this->varnishCache(30);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -258,7 +258,7 @@ class YoutubeController extends Controller
             'videos' => $videos
         ));
 
-        $this->varnishCache(30)
+        $this->varnishCache($response, 30)
 ;
         return $response;
     }
@@ -313,7 +313,7 @@ class YoutubeController extends Controller
         $results = $this->formatVideosForFeed($videos);
 
         $response->setContent(json_encode(array('success' => true, 'results' => $results)));
-        $this->varnishCache(30);
+        $this->varnishCache($response, 30);
 
         return $response;
     }

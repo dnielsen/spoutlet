@@ -915,7 +915,7 @@ class GalleryController extends Controller
                 "media"   => $featuredMedia
             )));
 
-            $this->varnishCache(30);
+            $this->varnishCache($response, 30);
 
             return $response;
         }
