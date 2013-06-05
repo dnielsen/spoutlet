@@ -476,10 +476,6 @@ class GiveawayAdminController extends Controller
         $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
 
-        if($giveaway->getThumbnail()->getFileObject() == null) {
-            $giveaway->setThumbnail(null);
-        }
-
         if ($giveawayForm['removeBannerImage'] && $removeBannerImage = $giveawayForm['removeBannerImage']->getData()) {
             $giveaway->setBannerImage(null);
         }
