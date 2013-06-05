@@ -30,7 +30,7 @@ class Region
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country")
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country", inversedBy="regions")
      * @ORM\JoinTable(name="region_country")
      */
     private $countries;

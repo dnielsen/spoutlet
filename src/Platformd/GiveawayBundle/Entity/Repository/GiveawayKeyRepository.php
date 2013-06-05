@@ -67,11 +67,16 @@ class GiveawayKeyRepository extends AbstractCodeRepository
         return $result[0];
     }
 
-    public function getAssignedForGiveawayByDate(Giveaway $giveaway, $from, $to)
+    public function getRegionCountsByDate($from, $to)
     {
-        $qb  = $this->createForGiveawayQueryBuilder($giveaway)
-            ->select('k.id', 'k.ipAddress', 'c.code AS countryCode')
-            ->leftJoin('k.country', 'c');
+        $qb  = $this->createQueryBuilder('k')
+            ->select('COUNT(k.id) AS keyCount', 'g.id AS giveawayId', 'g.name AS giveawayName', 'r.name AS regionName')
+            ->leftJoin('k.pool','p')
+            ->leftJoin('p.giveaway','g')
+            ->leftJoin('k.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->addGroupBy('r.name')
+            ->addGroupBy('g.name');
 
         $this->addAssignedQueryBuilder($qb);
 
@@ -87,35 +92,6 @@ class GiveawayKeyRepository extends AbstractCodeRepository
 
         return $qb->getQuery()
             ->getResult();
-    }
-
-    public function getAssignedForGiveawayAndSite(Giveaway $giveaway, $site, $from, $to)
-    {
-        $qb  = $this->createForGiveawayQueryBuilder($giveaway);
-        $this->addAssignedQueryBuilder($qb);
-
-        $qb->select('COUNT(k.id)')
-            ->andWhere('k.assignedSite = :site')
-            ->setParameter('site', $site)
-        ;
-
-        if ($from) {
-            $qb->andWhere('k.assignedAt >= :from')
-                ->setParameter('from', $from)
-            ;
-        }
-
-        if ($to) {
-            $to->setTime(23,59,59);
-            $qb->andWhere('k.assignedAt <= :to')
-                ->setParameter('to', $to)
-            ;
-        }
-
-        return (int) $qb
-            ->getQuery()
-            ->getSingleScalarResult()
-            ;
     }
 
     public function doesUserHaveKeyForGiveaway(User $user, Giveaway $giveaway)

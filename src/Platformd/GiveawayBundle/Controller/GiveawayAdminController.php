@@ -433,8 +433,14 @@ class GiveawayAdminController extends Controller
 
         $giveawayMetrics = array();
 
+        $giveawayData = $metricManager->getGiveawayRegionData($from, $to);
+
         foreach($giveaways as $giveaway) {
-            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
+            $giveawayMetrics[$giveaway->getId()] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
+        }
+
+        foreach ($giveawayData as $giveawayId => $data) {
+            $giveawayMetrics[$giveawayId]['sites'] = $data;
         }
 
         return array(

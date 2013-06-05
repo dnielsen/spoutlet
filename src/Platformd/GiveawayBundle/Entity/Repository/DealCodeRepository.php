@@ -42,11 +42,16 @@ class DealCodeRepository extends AbstractCodeRepository
             ;
     }
 
-    public function getAssignedForDealByDate(Deal $deal, $from, $to)
+    public function getRegionCountsByDate($from, $to)
     {
-        $qb  = $this->createForDealQueryBuilder($deal)
-            ->select('k.id', 'k.ipAddress', 'c.code AS countryCode')
-            ->leftJoin('k.country', 'c');;
+        $qb  = $this->createQueryBuilder('k')
+            ->select('COUNT(k.id) AS keyCount', 'd.id AS dealId', 'd.name AS dealName', 'r.name AS regionName')
+            ->leftJoin('k.pool','p')
+            ->leftJoin('p.deal','d')
+            ->leftJoin('k.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->addGroupBy('r.name')
+            ->addGroupBy('d.name');
 
         $this->addAssignedQueryBuilder($qb);
 

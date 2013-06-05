@@ -172,9 +172,15 @@ class DealAdminController extends Controller
         }
 
         $dealMetrics = array();
-        /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
+
+        $dealData = $metricManager->getDealRegionData($from, $to);
+
         foreach($deals as $deal) {
-            $dealMetrics[] = $metricManager->createDealReport($deal, $from, $to);
+            $dealMetrics[$deal->getId()] = $metricManager->createDealReport($deal, $from, $to);
+        }
+
+        foreach ($dealData as $dealId => $data) {
+            $dealMetrics[$dealId]['sites'] = $data;
         }
 
         return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(

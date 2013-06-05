@@ -161,18 +161,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        $assignedKeys        = $this->giveawayKeyRepository->getAssignedForGiveawayByDate($giveaway, $from, $to);
-        $regionsForCountries = $this->regionRepository->getRegionsForCountries();
+        return $data;
+    }
 
-        foreach ($assignedKeys as $key) {
-            $country = $key['countryCode'];
-            $regions = isset($regionsForCountries[$country]) ? $regionsForCountries[$country] : null;
+    public function getGiveawayRegionData($from, $to)
+    {
+        $regionCounts = $this->giveawayKeyRepository->getRegionCountsByDate($from, $to);
 
-            if ($regions) {
-                foreach ($regions as $region) {
-                    $data['sites'][$region] = array_key_exists($region, $data['sites']) ? $data['sites'][$region] + 1 : 1;
-                }
-            }
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['giveawayId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;
@@ -210,18 +209,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        $assignedCodes       = $this->dealCodeRepository->getAssignedForDealByDate($deal, $from, $to);
-        $regionsForCountries = $this->regionRepository->getRegionsForCountries();
+        return $data;
+    }
 
-        foreach ($assignedCodes as $key) {
-            $country = $key['countryCode'];
-            $regions = isset($regionsForCountries[$country]) ? $regionsForCountries[$country] : null;
+    public function getDealRegionData($from, $to)
+    {
+        $regionCounts = $this->dealCodeRepository->getRegionCountsByDate($from, $to);
 
-            if ($regions) {
-                foreach ($regions as $region) {
-                    $data['sites'][$region] = array_key_exists($region, $data['sites']) ? $data['sites'][$region] + 1 : 1;
-                }
-            }
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['dealId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;
