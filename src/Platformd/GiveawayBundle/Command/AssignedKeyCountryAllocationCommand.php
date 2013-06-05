@@ -70,44 +70,83 @@ EOT
         $this->output(0, 'PlatformD Assigned Key Country Processor');
         $this->output(0);
 
-        $this->output(0, 'Getting all assigned keys...', false);
+        $countries = $countryRepo->findAll();
+        $countryArr = array();
+
+        foreach ($countries as $country) {
+            $countryArr[$country->getCode()] = $country;
+        }
+
+        $this->output(2, 'Getting all assigned deal codes...', false);
 
         $assignedDealCodes    = $dealCodeRepo->getAllAssignedKeysWithoutCountry();
-        $assignedGiveawayKeys = $giveawayKeyRepo->getAllAssignedKeysWithoutCountry();
 
         $this->tick();
 
-        $this->output(2, 'Assigning countries to deal codes...');
+        $this->output(4, 'Assigning countries to deal codes...');
+
+        $counter = 0;
 
         foreach ($assignedDealCodes as $code) {
             $countryCode = $ipLookupUtil->getCountryCode($code->getIpAddress());
 
             if ($countryCode) {
-                $country = $countryRepo->findOneByCode($countryCode);
+                $country = $countryArr[$countryCode];
 
                 if ($country) {
                     $code->setCountry($country);
                     $em->persist($country);
-                    $em->flush();
+
+                    $counter ++;
+
+                    if ($counter <= 100) {
+                        $em->flush();
+                        $counter = 0;
+                    }
                 }
             }
         }
 
-        $this->output(2, 'Assigning countries to giveaway keys...');
+        $this->output(2, 'Getting all assigned giveaway keys...', false);
+
+        $assignedGiveawayKeys = $giveawayKeyRepo->getAllAssignedKeysWithoutCountry();
+
+        $this->tick();
+
+        $this->output(4, 'Assigning countries to giveaway keys...');
 
         foreach ($assignedGiveawayKeys as $code) {
+
+            $this->output(6, 'Processing code "'.$code->getId().'" with ip "'.$code->getIpAddress().'"');
             $countryCode = $ipLookupUtil->getCountryCode($code->getIpAddress());
 
             if ($countryCode) {
-                $country = $countryRepo->findOneByCode($countryCode);
+                $this->output(6, 'Found country code ['.$countryCode.']');
+
+                $countryCode = $countryCode == '-' ? 'US' : $countryCode;
+
+                $country = $countryArr[$countryCode];
 
                 if ($country) {
+                    $this->output(6, 'Found country id ['.$country->getId().']');
                     $code->setCountry($country);
+                    $this->output(8, 'Persisting code');
                     $em->persist($country);
-                    $em->flush();
+
+                    $counter ++;
+
+                    if ($counter >= 3000) {
+                        $this->output(8, 'Flushing db...', false);
+                        $em->flush();
+                        $this->tick();
+                        $counter = 0;
+                    }
                 }
             }
         }
+
+        $this->output(2, 'Flushing db...');
+        $em->flush();
 
         $this->output();
         $this->output(2, 'No more assigned keys.');
