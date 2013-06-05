@@ -236,8 +236,10 @@ class GiveawayManager
 
         $locale = $site->getDefaultLocale();
 
+        $country = $this->countryRepo->findOneByCode($country);
+
         // attach the key, then attach it to the machine code
-        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale);
+        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale, $country);
         $machineCode->attachToKey($key);
 
         $this->sendNotificationEmail($machineCode, $site);
