@@ -257,7 +257,9 @@ abstract class AbstractPool
             $rules      = $this->getRuleset();
             $regions    = $this->getRegions();
 
-            if (count($regions) < 1 && count($rules->getRules()) < 1) {
+            $allRules = $rules ? $rules->getRules() : array();
+
+            if (count($regions) < 1 && count($allRules) < 1) {
                 return true;
             }
 
