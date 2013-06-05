@@ -1,11 +1,15 @@
 <div class="thread">
     <a id="comments"></a>
-    {% if app.user %}
+
+    <div data-logged-in="true">
         <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
         <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
-    {% else %}
+    </div>
+
+    <div data-logged-in="false">
         <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
-    {% endif %}
+    </div>
+
     <div class="comment-sorting">
         <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
         <select name="comment-sort-method" id="comment-sort-method">
@@ -14,11 +18,11 @@
             <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
         </select>
     </div>
-    {% if app.user %}
+    <div data-logged-in="true">
         <div class="comment-form-submit" style="text-align: right;">
             <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
         </div>
-    {% endif %}
+    </div>
     <div class="comments">
         {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
     </div>
@@ -36,6 +40,14 @@
     var ajaxRequestSent;
 
     $(function () {
+
+        if (user_is_logged_in) {
+            $('[data-logged-in="true"]').show();
+            $('[data-logged-in="false"]').hide();
+        } else {
+            $('[data-logged-in="true"]').hide();
+            $('[data-logged-in="false"]').show();
+        }
 
         loadPostsOnce();
 
