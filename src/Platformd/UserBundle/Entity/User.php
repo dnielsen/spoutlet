@@ -291,7 +291,14 @@ class User extends BaseUser
      */
     private $cevoUserId;
 
-     /**
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="members")
+     * @ORM\JoinTable(name="pd_groups_members")
+     */
+    private $pdGroups;
+
+    /**
       * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
       * @ORM\JoinColumn(onDelete="SET NULL")
       */
@@ -317,10 +324,11 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->events = new ArrayCollection();
-        $this->giveawayKeys = new ArrayCollection();
-        $this->groupMembershipActions = new ArrayCollection();
-        $this->loginRecords = new ArrayCollection();
+        $this->events                   = new ArrayCollection();
+        $this->giveawayKeys             = new ArrayCollection();
+        $this->groupMembershipActions   = new ArrayCollection();
+        $this->loginRecords             = new ArrayCollection();
+        $this->groups                   = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1050,6 +1058,16 @@ class User extends BaseUser
     public function setCevoAvatarUrl($cevoAvatarUrl)
     {
         $this->cevoAvatarUrl = $cevoAvatarUrl;
+    }
+
+    public function getPdGroups()
+    {
+        return $this->pdGroups;
+    }
+
+    public function setPdGroups($pdGroups)
+    {
+        $this->pdGroups = $pdGroups;
     }
 
     public function getGroupMembershipActions()

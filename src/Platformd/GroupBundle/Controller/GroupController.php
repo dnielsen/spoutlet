@@ -351,7 +351,8 @@ Alienware Arena Team
         $leaveAction->setUser($user);
         $leaveAction->setAction(GroupMembershipAction::ACTION_LEFT);
 
-        $group->getMembers()->removeElement($user);
+        $user->getPdGroups()->removeElement($group);
+        //$group->getMembers()->removeElement($user);
         $group->getUserMembershipActions()->add($leaveAction);
 
         // TODO Add a service layer for managing groups and dispatching such events
@@ -360,6 +361,7 @@ Alienware Arena Team
         $event = new GroupEvent($group, $user);
         $dispatcher->dispatch(GroupEvents::GROUP_LEAVE, $event);
 
+        $this->getUserManager()->updateUser($user);
         $this->getGroupManager()->saveGroup($group);
 
         $this->setFlash('success', 'You have successfully left this group!');
@@ -392,7 +394,7 @@ Alienware Arena Team
         $joinAction->setUser($user);
         $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-        $group->getMembers()->add($user);
+        $user->getPdGroups()->add($group);
         $group->getUserMembershipActions()->add($joinAction);
 
         // TODO Add a service layer for managing groups and dispatching such events
@@ -401,6 +403,7 @@ Alienware Arena Team
         $event = new GroupEvent($group, $user);
         $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
+        $this->getUserManager()->updateUser($user);
         $this->getGroupManager()->saveGroup($group);
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
