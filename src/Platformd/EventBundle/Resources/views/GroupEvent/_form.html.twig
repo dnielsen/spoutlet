@@ -10,7 +10,11 @@
 
             {{ form_row(form.name) }}
 
-            {% if form.registrationOption is defined %}{{ form_row(form.registrationOption) }}{% endif %}
+            {% if form.registrationOption is defined %}
+                <div class="styled-select">
+                    {{ form_row(form.registrationOption) }}
+                </div>
+            {% endif %}
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
             {{ form_row(form.content) }}
             {{ form_row(form.online) }}
@@ -54,7 +58,11 @@
 <div style="display:none;">
     {{ form_rest(form) }}
 </div>
-
+<style type="text/css">
+#groupEvent_registrationOption {
+    width: 380px;
+}
+</style>
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
     $(document).ready(function() {
@@ -99,7 +107,7 @@
             }
         });
 
-        if ($('#groupEvent_registrationOption_REGISTRATION_3RDPARTY:checked').length) {
+        if ($('#groupEvent_registrationOption').val() == 'REGISTRATION_3RDPARTY') {
             var displayDiv = '<div class="hideable-field" style="display: none;" />';
             var exernalUrlDiv = '<div id="external-url" />';
         } else {
@@ -119,7 +127,7 @@
                 $(this).has('input#groupEvent_startsAt_date').length ||
                 $(this).has('input#groupEvent_endsAt_date').length ||
                 $(this).has('input#groupEvent_timezone').length ||
-                $(this).has('input#groupEvent_registrationOption_REGISTRATION_3RDPARTY').length ||
+                $(this).has('select#groupEvent_registrationOption').length ||
                 $(this).has('input#groupEvent_externalUrl').length ||
                 $(this).has('#groupEvent_translations').length ||
                 $(this).has('div[id^="groupEvent_translations_"]').length ||
@@ -133,23 +141,26 @@
             $('.control-group').has('input#groupEvent_externalUrl').wrap(exernalUrlDiv);
         {% endif %}
 
+        $('#groupEvent_registrationOption').change(function () {
+            var val = $(this).val();
 
-        $('#groupEvent_registrationOption_REGISTRATION_3RDPARTY').click(function() {
-            $('.hideable-field').slideUp();
-            $('.hideable-field:hidden').hide();
-            $('#external-url').show();
-        });
-
-        $('#groupEvent_registrationOption_REGISTRATION_ENABLED').click(function() {
-            $('.hideable-field').slideDown();
-            $('.hideable-field:hidden').show();
-            $('#external-url').hide();
-        });
-
-        $('#groupEvent_registrationOption_REGISTRATION_DISABLED').click(function() {
-            $('.hideable-field').slideDown();
-            $('.hideable-field:hidden').show();
-            $('#external-url').hide();
+            switch (val) {
+                case 'REGISTRATION_3RDPARTY':
+                    $('.hideable-field').slideUp();
+                    $('.hideable-field:hidden').hide();
+                    $('#external-url').show();
+                    break;
+                case 'REGISTRATION_ENABLED':
+                    $('.hideable-field').slideDown();
+                    $('.hideable-field:hidden').show();
+                    $('#external-url').hide();
+                    break;
+                case 'REGISTRATION_DISABLED':
+                    $('.hideable-field').slideDown();
+                    $('.hideable-field:hidden').show();
+                    $('#external-url').hide();
+                    break;
+            }
         });
 
         {% if form.translations is defined %}
