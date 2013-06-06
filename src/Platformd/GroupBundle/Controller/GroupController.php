@@ -36,7 +36,6 @@ class GroupController extends Controller
     }
 
     private function ensureAllowed($group, $action, $forceUserLogin = true) {
-
         if ($forceUserLogin) {
             $this->basicSecurityCheck(array('ROLE_USER'));
         }
@@ -165,9 +164,10 @@ Alienware Arena Team
         $joinAction->setUser($user);
         $joinAction->setAction(GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
 
-        $group->getMembers()->add($user);
+        $user->getPdGroups()->add($group);
         $group->getUserMembershipActions()->add($joinAction);
 
+        $this->getUserManager()->updateUser($user);
         $groupManager->saveGroup($group);
 
         if (!$event) {
@@ -735,8 +735,9 @@ Alienware Arena Team
     {
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
+        $site = $this->getCurrentSite();
 
-        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
@@ -889,7 +890,9 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'DeleteImage');
 
-        $image = $this->getGroupImageRepository()->find($imageId);
+        $em                 = $this->getEntityManager();
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $image              = $galleryMediaRepo->find($imageId);
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
@@ -898,7 +901,8 @@ Alienware Arena Team
 
         $image->setDeleted(true);
 
-        $this->getGroupManager()->saveGroupImage($image);
+        $em->persist($image);
+        $em->flush();
 
         $this->setFlash('success', 'Image was deleted successfully!');
 
@@ -1207,7 +1211,7 @@ Alienware Arena Team
     public function viewDiscussionAction($id, $discussionId, Request $request)
     {
         $group = $this->getGroup($id);
-        $this->ensureAllowed($group, 'ViewDiscussion');
+        $this->ensureAllowed($group, 'ViewDiscussion', false);
 
         $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
 
@@ -1221,7 +1225,7 @@ Alienware Arena Team
 
         $page = $request->query->get('page', 1);
 
-        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentFirst($groupDiscussion, 10, $page);
+        $pager = $this->getGroupDiscussionPostRepository()->getDiscussionPostsMostRecentLast($groupDiscussion, 10, $page);
         $groupDiscussionPosts = $pager->getCurrentPageResults();
 
 
@@ -1675,6 +1679,11 @@ Alienware Arena Team
 
     private function getEntityManager() {
         return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGalleryMediaRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia');
     }
 
     private function getGroupImageRepository()
