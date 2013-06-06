@@ -21,7 +21,7 @@
                         <img src="{{ winner.image.filename | imagine_filter('gallery_image_square') }}" alt="{{ winner.title }}" />
                     </a>
                     <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}:
-                        <a href="{{ cevo_account_link(winner.author.username) }}">{{ winner.author.username }}</a>
+                        <a href="{{ account_link(winner.author.username) }}">{{ winner.author.username }}</a>
                     </p>
                     {% elseif contest.category == 'group' %}
                     <a href="{{ path('group_show', {slug : winner.slug}) }}">
@@ -31,7 +31,7 @@
                         <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ winner.name }}" title="{{ winner.name }}" />
                         {% endif %}
                     </a>
-                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ cevo_account_link(winner.owner.username) }}">{{ winner.owner.username }}</a></p>
+                    <p>{{ loop.index | add_ordinal_suffix }} {{ 'contests.place' | trans }}: <a href="{{ account_link(winner.owner.username) }}">{{ winner.owner.username }}</a></p>
                     {% endif %}
                 </div>
 

@@ -8,15 +8,81 @@ use Platformd\SpoutletBundle\Util\HttpUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Our custom base controller
  */
 class Controller extends BaseController
 {
+    protected $cache;
 
     protected function getCurrentSite() {
-        return $this->container->get('platformd.model.site_util')->getCurrentSite();
+        return $this->container->get('platformd.util.site_util')->getCurrentSite();
+    }
+
+    protected function getCurrentSiteCached() {
+        return $this->container->get('platformd.util.site_util')->getCurrentSiteCached();
+    }
+
+    protected function getVarnishUtil() {
+        return $this->container->get('platformd.util.varnish_util');
+    }
+
+    protected function varnishCache($response, $sharedMaxAge, $maxAge = 0) {
+        $this->getVarnishUtil()->cacheResponse($response, $sharedMaxAge, $maxAge);
+    }
+
+    protected function getCurrentSiteId() {
+        return $this->getCurrentSiteCached()->getId();
+    }
+
+    protected function getCurrentUser() {
+        $token = $this->container->get('security.context')->getToken();
+        $user  = $token === null ? null : $token->getUser();
+
+        if ($user === 'anon.') {
+            return null;
+        }
+
+        return $user;
+    }
+
+    protected function getCache() {
+
+        if ($this->cache) {
+            return $this->cache;
+        }
+
+        $this->cache = $this->container->get('platformd.util.cache_util');
+
+        return $this->cache;
+    }
+
+    protected function getTemplating() {
+        return $this->container->get('templating');
+    }
+
+    public function generateErrorPage($title = 'platformd.not_found.title', $body = 'platformd.not_found.body') {
+        return $this->render('SpoutletBundle::error.html.twig',
+            array(
+                'title' => $title,
+                'body'  => $body));
+    }
+
+    protected function getSiteFromLocale($locale) {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+    }
+
+    // See comment in config_dev.yml re. ip_lookup_override parameter when using this function in a dev environment.
+    protected function getCurrentCountry() {
+        $countryCode = $this->getCurrentCountryCode();
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+    }
+
+    protected function getCurrentCountryCode() {
+        return $this->getIpLookupUtil()->getCountryCode($this->getClientIp($this->getRequest()));
     }
 
     /**
@@ -70,14 +136,15 @@ class Controller extends BaseController
         return $this->container->get('session')->setFlash($key, $message);
     }
 
-    /**
-     * @return \Platformd\UserBundle\Entity\User
-     */
+    protected function getQueueUtil()
+    {
+        return $this->container->get('platformd.util.queue_util');
+    }
+
+    # this function getUser is only here because it exists in many files... we should no longer use this one and should instead use getCurrentUser()
     protected function getUser()
     {
-        return $this->container->get('security.context')
-            ->getToken()
-            ->getUser();
+        return $this->getCurrentUser();
     }
 
     /**
@@ -169,11 +236,7 @@ class Controller extends BaseController
      */
     protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
     {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-
-        return $this->container->get('translator')->trans($key, $params, $domain, $locale);
+        return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 
     /**
@@ -218,5 +281,30 @@ class Controller extends BaseController
     protected function getMediaUtil()
     {
         return $this->container->get('knp_media.util.media_util');
+    }
+
+    protected function getIpLookupUtil()
+    {
+        return $this->container->get('platformd.model.ip_lookup_util');
+    }
+
+    protected function getClientIp(Request $request)
+    {
+        return $this->getIpLookupUtil()->getClientIp($request);
+    }
+
+    protected function getGlobalEventService()
+    {
+        return $this->get('platformd_event.service.global_event');
+    }
+
+    protected function getGroupEventService()
+    {
+        return $this->get('platformd_event.service.group_event');
+    }
+
+    protected function getSiteManager()
+    {
+        return $this->get('platformd.model.site_manager');
     }
 }

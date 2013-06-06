@@ -91,5 +91,43 @@ class CommentRepository extends EntityRepository
 
         return $result;
     }
+
+    public function findCommentsForGiveaways($limit=8)
+    {
+        return $this->findCommentsForSiteFeature($limit, 'giveaways');
+    }
+
+    public function findCommentsForDeals($limit=8)
+    {
+        return $this->findCommentsForSiteFeature($limit, 'deal');
+    }
+
+    private function findCommentsForSiteFeature($limit, $featureName)
+    {
+        $result = $this->createQueryBuilder('c')
+            ->leftJoin('c.thread', 't')
+            ->orderBy('c.createdAt', 'DESC')
+            ->where('t.permalink like :featureName')
+            ->andWhere('c.deleted <> true')
+            ->setParameter('featureName', '%' . $featureName . '%')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+
+        return $result;
+    }
+
+    public function findMostRecentCommentsByThreadPrefix($prefix, $count = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.thread', 't')
+            ->andWhere('t.id LIKE :prefix')
+            ->setParameter('prefix', $prefix.'%')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($count)
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }
 

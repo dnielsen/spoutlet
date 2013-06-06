@@ -9,71 +9,86 @@
 {% block pre_content_nav %}
 <div class="std_1col">
     <div id="accountHeader">
-        <ul class="links sf-menu-account">
-            <li><a href="http://alienwarearena.com/account/">{{ "platformd.user.account.account_home" | trans }}</a></li>
+        <ul class="links sf-menu-account sf-list">
+            <li><a href="{{ account_home_link() }}">{{ "platformd.user.account.account_home" | pd_trans }}</a></li>
             {# Commenting out for now, until we figure out how this work with CEVO
-                <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | trans }}</a></li>
+                <li><a href="{{ path('fos_user_profile_edit') }}">{{ "platformd.user.account.edit_account" | pd_trans }}</a></li>
             #}
-            <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
-            <li>{{ profile_link | raw }}</li>
+
+            {% if auth_type == 'local' %}
+                <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | pd_trans }}</a></li>
+                {% if features.hasProfile %}
+                    <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>
+                <li>{{ profile_link | raw }}</li>
+            {% endif %}
 
             {% if features.hasMessages %}
-                <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | trans }}</a></li>
+                <li><a href="http://alienwarearena.com/account/inbox/">{{ 'platformd.user.account.messages' | pd_trans }}</a></li>
             {% endif %}
 
             {% if features.hasEvents %}
-                <li><a href="{{ path('accounts_events') }}">{% if event_link != false %}{% endif %}{{ 'platformd.user.account.my_events' | trans }}</a></li>
+                <li><a href="{{ path('accounts_events') }}">{{ 'platformd.user.account.my_events' | pd_trans }}</a></li>
             {% endif %}
 
             {{ giveaway_link | raw }}
 
             {% if features.hasDeals %}
-                <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | trans }}</a></li>
+                <li><a href="{{ path('accounts_deals') }}">{{ "platformd.user.account.deals" | pd_trans }}</a></li>
             {% endif %}
 
             {% if features.hasGroups %}
-                <li><a href="{{ path('accounts_groups') }}">{{ 'platformd.user.account.my_groups' | trans }}</a></li>
+                <li><a href="{{ path('accounts_groups') }}">{{ 'platformd.user.account.my_groups' | pd_trans }}</a></li>
             {% endif %}
 
-            <li class="more">
-                <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.tournaments' | trans }}</a>
-                <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                    {% if game_id_link %}<li>{{ game_id_link | raw }}</li>{% endif %}
-
-                    {% if app.session.locale != 'zh' and app.session.locale != 'ja' %}
-                        <li><a href="http://alienwarearena.com/account/client/">{{ 'platformd.user.account.match_client' | trans }}</a></li>
-                        <li><a id="match-lobby-link" href="http://alienwarearena.com/external/match-lobby/">{{ 'platformd.user.account.match_lobby' | trans }}</a></li>
-                    {% endif %}
-
-                    {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
-                </ul>
-            </li>
-
-            {% if features.hasPhotos %}
+            {% if features.hasTournaments and (game_id_link or event_link or features.hasMatchClient) %}
                 <li class="more">
-                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | trans }}</a>
-                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.gallery' | trans }}</a></li>
+                    <a>{{ 'platformd.user.account.tournaments' | pd_trans }}</a>
+                    <ul>
+                        {% if game_id_link %}<li>{{ game_id_link | raw }}</li>{% endif %}
+
+                        {% if features.hasMatchClient %}
+                            <li><a href="http://alienwarearena.com/account/client/">{{ 'platformd.user.account.match_client' | pd_trans }}</a></li>
+                            <li><a id="match-lobby-link" href="http://alienwarearena.com/external/match-lobby/">{{ 'platformd.user.account.match_lobby' | pd_trans }}</a></li>
+                        {% endif %}
+
+                        {% if event_link %}<li>{{ event_link | raw }}</li>{% endif %}
                     </ul>
                 </li>
             {% endif %}
 
-            <li><a href="{{ path('_fos_user_security_logout') }}">{{ "platformd.user.account.sign_out" | trans }}</a></li>
+            {% if features.hasPhotos and features.hasVideo %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
+                        <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+            {% elseif features.hasPhotos and not features.hasVideo %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+            {% elseif features.hasVideo and not features.hasPhotos %}
+                <li class="more">
+                    <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                        <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+
+            <li><a href="{{ path('_fos_user_security_logout') }}">{{ "platformd.user.account.sign_out" | pd_trans }}</a></li>
         </ul>
     </div>
 </div>
 {% endblock %}
-
-{% block javascripts %}
+{% block stylesheets %}
     {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-
-            $('#match-lobby-link').click(function (event) {
-                event.preventDefault();
-                window.open( "http://alienwarearena.com/external/match-lobby/", "myWindow", "status = 1, height = 660, width = 1000, resizable = 0" )
-            });
-
-        });
-    </script>
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}

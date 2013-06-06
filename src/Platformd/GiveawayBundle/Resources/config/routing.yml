@@ -6,6 +6,22 @@ _admin_giveaway_metrics:
     resource: "routing/metrics.yml"
     prefix:   /admin/metrics/giveaways
 
+_giveaway_flash_message:
+    pattern: /esi/USER_SPECIFIC/giveawayFlashMessage/{giveawayId}
+    defaults: { _controller: GiveawayBundle:Giveaway:_giveawayFlashMessage }
+
+_giveaway_show_actions:
+    pattern: /esi/USER_SPECIFIC/giveawayShowMainActions/{giveawayId}
+    defaults: { _controller: GiveawayBundle:Giveaway:_giveawayShowActions }
+
+_deal_flash_message:
+    pattern: /esi/USER_SPECIFIC/dealFlashMessage/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealFlashMessage }
+
+_deal_show_actions:
+    pattern: /esi/USER_SPECIFIC/dealShowMainActions/{dealId}
+    defaults: { _controller: GiveawayBundle:Deal:_dealShowActions }
+
 giveaway_index: 
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
@@ -17,8 +33,8 @@ giveaway_show:
         keyId: \d+
 
 giveaway_get_key:
-    pattern: /giveaways/{slug}/key
-    defaults: { _controller: GiveawayBundle:Giveaway:key }
+    pattern: /giveaways/{giveawayId}/{slug}/key/{joinGroup}
+    defaults: { _controller: GiveawayBundle:Giveaway:key, joinGroup: true }
 
 giveaway_submit_machine_code:
     pattern: /giveaways/{slug}/machineCode

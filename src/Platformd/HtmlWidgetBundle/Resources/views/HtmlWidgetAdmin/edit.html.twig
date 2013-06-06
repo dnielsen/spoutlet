@@ -1,0 +1,24 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Edit HTML Widget' %}
+
+{% block content %}
+    <h1>
+        <i class="icon-pencil"></i>
+        Edit HTML Widget
+    </h1>
+
+    <form action="{{ path('admin_html_widget_update', { 'id': widget.id, 'site': site }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'HtmlWidgetBundle:HtmlWidgetAdmin:_form.html.twig' with {
+            'form': form
+        } %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
+        </div>
+    </form>
+
+    <a href="{{ path('admin_html_widget_index') }}">
+        Back to the list
+    </a>
+{% endblock %}

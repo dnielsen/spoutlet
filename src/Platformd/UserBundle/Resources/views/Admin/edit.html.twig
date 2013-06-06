@@ -6,9 +6,11 @@
 {% block content %}
     <h1>Edit User</h1>
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id}) }}" class="form">
+    <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form">
+        <input type="hidden" name="_method" value="PUT" />
+
         {{ form_errors(form) }}
-        
+
         {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
         {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}

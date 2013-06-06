@@ -3,7 +3,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login_sweepstakes' | trans }}
         {% else %}
-            <a href="{{ path('fos_user_security_login') }}?return={{ url('sweepstakes_show', {'slug': sweepstakes.slug}) | e }}">
+            <a href="{{ login_link(url('sweepstakes_show', {'slug': sweepstakes.slug})) }}">
                 {{ 'platformd.create_account_or_login_sweepstakes' | trans }}
             </a>
         {% endif %}

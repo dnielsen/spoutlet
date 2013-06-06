@@ -32,7 +32,6 @@ class CsvResponseFactory
         $data = $this->generateCsv();
 
         $response = new Response($data);
-        $response->headers->set('Cache-Control', 'public');
         $response->headers->set('Content-Type', 'text/csv');
         $response->headers->set('Content-Disposition', "attachment; filename*=UTF-8''" . urlencode($filename));
         $response->headers->set('Content-Length', strlen($data));
@@ -55,7 +54,7 @@ class CsvResponseFactory
         $h = tmpfile();
 
         $filename = tempnam('/tmp', 'csv_response');
-        $h = fopen($filename, 'w');
+        $h = fopen($filename, 'w'); // TODO use in memory wrapper instead: fopen('php://memory', 'w')
 
         $bytes = 0;
         foreach ($this->rows as $row) {

@@ -8,11 +8,11 @@ use Platformd\SpoutletBundle\Entity\GalleryCategory;
 use Platformd\SpoutletBundle\Entity\GalleryCategoryRepository;
 use Platformd\SpoutletBundle\Form\Type\GalleryType;
 use Platformd\SpoutletBundle\Form\Type\ImageFindType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
+use Platformd\SpoutletBundle\Entity\GalleryTranslation;
 
 /**
  * Gallery admin controller.
@@ -23,12 +23,32 @@ class GalleryAdminController extends Controller
     public function indexAction()
     {
         $this->addGalleriesBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
 
-        $galleries = $em->getRepository('SpoutletBundle:Gallery')->findAllAlphabetically();
+        $siteManager = $this->getSiteManager();
 
         return $this->render('SpoutletBundle:GalleryAdmin:index.html.twig', array(
-            'galleries' => $galleries
+            'sites' => $siteManager->getSiteChoices(),
+        ));
+    }
+
+    public function listAction($site)
+    {
+        $this->addGalleriesBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
+
+        $this->checkGalleryPositions($site, 'image');
+        $this->checkGalleryPositions($site, 'video');
+
+        $imageGalleries = $em->getRepository('SpoutletBundle:Gallery')->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'image');
+        $videoGalleries = $em->getRepository('SpoutletBundle:Gallery')->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'video');
+
+        return $this->render('SpoutletBundle:GalleryAdmin:list.html.twig', array(
+            'imageGalleries'    => $imageGalleries,
+            'videoGalleries'    => $videoGalleries,
+            'site'              => $site->getId(),
         ));
     }
 
@@ -36,10 +56,26 @@ class GalleryAdminController extends Controller
     {
         $this->addGalleriesBreadcrumb()->addChild('New Gallery');
 
+        $em = $this->getDoctrine()->getEntityManager();
+
         $gallery  = new Gallery();
         $form    = $this->createForm(new GalleryType(), $gallery);
 
         if ($this->processForm($form, $request)) {
+
+            $sitesPositions = $gallery->getSitesPositions();
+
+            foreach ($gallery->getSites() as $site) {
+                $sitesPositions[$site->getId()] = 0;
+            }
+
+            $gallery->setSitesPositions($sitesPositions);
+
+            $em->persist($gallery);
+            $em->flush();
+
+            $this->moveAllGalleriesDown($gallery);
+
             $this->setFlash('success', 'The gallery was created!');
 
             return $this->redirect($this->generateUrl('admin_gallery_index'));
@@ -62,9 +98,27 @@ class GalleryAdminController extends Controller
             throw $this->createNotFoundException('Unable to find gallery.');
         }
 
+        $sitesPositions = $gallery->getSitesPositions();
+
+        $sites = $gallery->getSites();
+        if (!$sites) {
+            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($gallery->getLocale());
+            $gallery->getSites()->add($site);
+            $sitesPositions[$site->getId()] = 0;
+        }
+
+        $translationSites = array();
+
+        foreach ($gallery->getTranslations() as $translation) {
+            $site = $translation->getSite();
+            $translationSites[] = $site;
+            $translation->setSiteId($site->getId());
+        }
+
         $editForm   = $this->createForm(new GalleryType(), $gallery);
 
         if ($this->processForm($editForm, $request)) {
+
             $this->setFlash('success', 'The gallery was saved!');
 
             return $this->redirect($this->generateUrl('admin_gallery_index'));
@@ -119,10 +173,15 @@ class GalleryAdminController extends Controller
             if ($form->isValid()) {
                 $data = $form->getData();
 
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data['sites'] = array('ja');
+                    $form->setData($data);
+                }
+
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
 
-                return $galleryMediaRepo->findImagesForMetrics($data['title'], $data['deleted'], $data['published'], $data['sites'], $startDate, $endDate);
+                return $galleryMediaRepo->findImagesForMetrics($data['title'], $data['deleted'], $data['published'], $sites, $startDate, $endDate);
             }
         }
 
@@ -146,7 +205,7 @@ class GalleryAdminController extends Controller
         );
 
         $session = $this->getRequest()->getSession();
-        $session->set('formValues', $formValues);
+        $session->set('formValuesGallery', $formValues);
     }
 
     public function deleteMediaAction($id, Request $request)
@@ -181,7 +240,7 @@ class GalleryAdminController extends Controller
         $galleryMediaRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GalleryMedia');
 
         $session = $this->getRequest()->getSession();
-        $formValues = $session->get('formValues');
+        $formValues = $session->get('formValuesGallery');
 
         $factory->addRow(array(
             'Title',
@@ -293,6 +352,59 @@ class GalleryAdminController extends Controller
 
                 $gallery = $form->getData();
 
+                $sitesList      = array();
+                $sitesPositions = $gallery->getSitesPositions();
+
+                foreach ($gallery->getSites() as $site) {
+                    $sitesList[] = $site->getId();
+
+                    if (array_key_exists($site->getId(), $sitesPositions)) {
+                        continue;
+                    }
+
+                    $sitesPositions[$site->getId()] = 0;
+                    $this->moveGalleriesDown($gallery, $site);
+                }
+
+                foreach ($sitesPositions as $siteId => $position) {
+                    if (!in_array($siteId, $sitesList)) {
+                        unset($sitesPositions[$siteId]);
+                    }
+                }
+
+                $gallery->setSitesPositions($sitesPositions);
+
+                $translationSites = array();
+
+                foreach ($gallery->getTranslations() as $translation) {
+
+                    if (!in_array($translation->getSiteId(), $sitesList)) {
+                        $gallery->getTranslations()->removeElement($translation);
+                        $em->remove($translation);
+                    }
+
+                    $site = $this->getSiteRepository()->find($translation->getSiteId());
+
+                    $translation->setGallery($gallery);
+
+                    if (!$translation->getSite()) {
+                        $translation->setSite($site);
+                    }
+
+                    $translationSites[] = $site;
+                }
+
+                foreach ($gallery->getSites() as $site) {
+                    if (!in_array($site, $translationSites)) {
+                        $translation = new GalleryTranslation();
+                        $translation->setGallery($gallery);
+                        $translation->setSite($site);
+                        $translation->setSiteId($site->getId());
+
+                        $gallery->getTranslations()->add($translation);
+                    }
+                }
+
                 if (!$gallery->getOwner()) {
                     $gallery->setOwner($this->getUser());
                 }
@@ -387,5 +499,217 @@ class GalleryAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
+                'route' => 'admin_gallery_list',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
+
+        return $this->getBreadcrumbs();
+    }
+
+    public function moveAction($id, $site, $direction)
+    {
+        $em             = $this->getDoctrine()->getEntityManager();
+        $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
+        $site           = $em->getRepository('SpoutletBundle:Site')->find($site);
+
+        $gallery        = $galleryRepo->find($id);
+        $referer        = $this->getRequest()->headers->get('referer');
+
+        if ($referer) {
+            $returnUrl = $referer;
+        } else {
+            $returnUrl = $this->generateUrl('admin_gallery_index');
+        }
+
+        if (!$gallery) {
+
+            throw $this->createNotFoundException();
+        }
+
+        $positions = $gallery->getSitesPositions();
+
+        switch ($direction) {
+            case 'up':
+                if ($positions[$site->getId()] < 1) {
+                    $this->setFlash('error', 'This item cannot move any higher!');
+                    return $this->redirect($returnUrl);
+                }
+                $positions[$site->getId()]--;
+                break;
+
+            case 'down':
+                $positions[$site->getId()]++;
+                break;
+
+            default:
+
+                break;
+        }
+
+        $gallery->setSitesPositions($positions);
+
+        $this->repositionGalleries($gallery, $site, $direction);
+
+        $em->persist($gallery);
+        $em->flush();
+
+        $this->setFlash('success', 'Item moved!');
+        return $this->redirect($returnUrl);
+    }
+
+    private function moveGalleriesDown($gallery, $site)
+    {
+        $em             = $this->getDoctrine()->getEntityManager();
+        $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
+
+        foreach ($gallery->getCategories() as $category) {
+            $allGalleriesForSite    = $galleryRepo->findAllGalleriesByCategoryForSite($site, $category->getName());
+
+            foreach ($allGalleriesForSite as $otherGallery) {
+
+                if ($otherGallery->getId() == $gallery->getId()) {
+                    continue;
+                }
+
+                $otherGalleryPositions = $otherGallery->getSitesPositions();
+
+                if (isset($otherGalleryPositions[$site->getId()])) {
+                    $otherGalleryPositions[$site->getId()]++;
+                    $otherGallery->setSitesPositions($otherGalleryPositions);
+
+                    $em->persist($otherGallery);
+                }
+            }
+
+            $em->flush();
+        }
+    }
+
+    private function moveAllGalleriesDown($gallery)
+    {
+        $em             = $this->getDoctrine()->getEntityManager();
+        $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
+
+        foreach ($gallery->getSites() as $site) {
+            foreach ($gallery->getCategories() as $category) {
+                $allGalleriesForSite    = $galleryRepo->findAllGalleriesByCategoryForSite($site, $category->getName());
+
+                foreach ($allGalleriesForSite as $otherGallery) {
+
+                    if ($otherGallery->getId() == $gallery->getId()) {
+                        continue;
+                    }
+
+                    $otherGalleryPositions = $otherGallery->getSitesPositions();
+
+                    if (isset($otherGalleryPositions[$site->getId()])) {
+                        $otherGalleryPositions[$site->getId()]++;
+                        $otherGallery->setSitesPositions($otherGalleryPositions);
+
+                        $em->persist($otherGallery);
+                    }
+                }
+            }
+        }
+
+        $em->flush();
+    }
+
+    private function repositionGalleries($gallery, $site, $direction)
+    {
+        $em                     = $this->getDoctrine()->getEntityManager();
+        $galleryRepo            = $em->getRepository('SpoutletBundle:Gallery');
+
+        foreach ($gallery->getCategories() as $category) {
+            $allGalleriesForSite    = $galleryRepo->findAllGalleriesByCategoryForSite($site, $category->getName());
+
+            $positions = $gallery->getSitesPositions();
+
+            foreach ($allGalleriesForSite as $otherGallery) {
+
+                if ($otherGallery->getId() == $gallery->getId()) {
+                    continue;
+                }
+
+                $otherGalleryPositions = $otherGallery->getSitesPositions();
+
+                if ($otherGalleryPositions[$site->getId()] == $positions[$site->getId()]) {
+
+                    switch ($direction) {
+                        case 'up':
+                            $otherGalleryPositions[$site->getId()]++;
+                            break;
+
+                        default:
+                            $otherGalleryPositions[$site->getId()]--;
+                            break;
+                    }
+
+                    $otherGallery->setSitesPositions($otherGalleryPositions);
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($otherGallery);
+                    $em->flush();
+
+                    break;
+                }
+            }
+        }
+    }
+
+    private function checkGalleryPositions($site, $category) {
+        $em             = $this->getDoctrine()->getEntityManager();
+        $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
+        $galleries      = $galleryRepo->findAllGalleriesByCategoryForSite($site, $category);
+
+        $missingPositionArr = array();
+        $positionedArr      = array();
+
+        foreach ($galleries as $gallery) {
+
+            if (!$positions = $gallery->getSitesPositions()) {
+                $missingPositionArr[] = $gallery;
+            } else {
+                if (!array_key_exists($positions[$site->getId()], $positionedArr)) {
+                    $positionedArr[$positions[$site->getId()]] = $gallery;
+                } else {
+                    $missingPositionArr[] = $gallery;
+                }
+            }
+        }
+
+        foreach ($missingPositionArr as $gallery) {
+            $positionedArr[] = $gallery;
+        }
+
+        ksort($positionedArr);
+        $newPositions = array_values($positionedArr);
+
+        foreach ($newPositions as $position => $gallery) {
+            $positions = $gallery->getSitesPositions();
+            $positions[$site->getId()] = $position;
+            $gallery->setSitesPositions($positions);
+
+            $em->persist($gallery);
+        }
+
+        $em->flush();
+    }
+
+    private function getSiteRepository()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site');
+    }
+
+    private function getGalleryRepository()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Gallery');
     }
 }

@@ -1,0 +1,11 @@
+HtmlWidgetBundle_admin_widgets:
+    resource: "routing/admin_widgets.yml"
+    prefix:   /admin/html-widget
+
+html_widget_show:
+    pattern:  /widget/{slug}
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidget:show" }
+
+html_widget_page:
+    pattern:  /page/{slug}
+    defaults: { _controller: "HtmlWidgetBundle:HtmlWidget:page" }

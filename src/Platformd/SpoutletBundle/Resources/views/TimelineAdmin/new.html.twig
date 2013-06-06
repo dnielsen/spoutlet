@@ -1,0 +1,13 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>New Timeline</h1>
+
+<form action="{{ path('admin_timeline_new') }}" method="post" {{ form_enctype(form) }} class="form form-horizontal">
+    {% include 'SpoutletBundle:TimelineAdmin:_form.html.twig' %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+    </div>
+</form>
+
+{% endblock %}

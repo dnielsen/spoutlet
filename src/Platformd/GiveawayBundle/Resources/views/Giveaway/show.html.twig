@@ -6,32 +6,26 @@
     <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
 {% endblock %}
 
-{% block title giveaway.name %}
+{% block title data.giveaway_name %}
 
-{# only use the flash if we have an assigned key #}
-{% block flash_type %}{{ assignedKey ? 'success' : false }}{% endblock %}
+{% if data.giveaway_background_image_path is not null %}
+    {% set bgImage = data.giveaway_background_image_path %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
 
-{# only really need to populate this if we have an assigned key #}
-{% block flash %}
-    {% if assignedKey %}
-        <p>
-            {{ 'platformd.giveaway.assigned.message' | trans }}
-            <br/><br/>
-            {{ 'platformd.giveaway.assigned.may_require_activation' | trans }}
-        </p>
+{% block page_background_image bgImage %}
 
-        <p class="notice-data">
-            {# assignedKey.value #}
-            {{ 'platformd.giveaway.assigned.key' | trans }}: {{ assignedKey.value }}
-        </p>
-    {% endif %}
-{% endblock %}
+{% block page_background_link data.giveaway_background_link %}
 
 {% block content %}
+
+    {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
+
     <div class="std_1col">
 
-        {% if giveaway.bannerImage %}
-            <div id="eventHeader" style="background:url('{{ asset(media_path(giveaway)) }}') no-repeat;"></div>
+        {% if data.giveaway_banner_image %}
+            <div id="eventHeader" style="background:url('{{ data.giveaway_banner_image }}') no-repeat;"></div>
         {% endif %}
     </div><!-- std_1col -->
 
@@ -42,45 +36,15 @@
                     <div class="widget-title">{{ 'platformd.giveaway.redeem' | trans }}</div>
                 </div>
                 <div class="widget-content">
-                    {%  if giveaway.showKeys %}
-                        <h3>{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : available_keys }) }}</h3>
+                    {%  if data.giveaway_show_keys %}
+                        <h3 class="key-count">{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : data.giveaway_available_keys }) }}</h3>
                     {%  endif %}
-
-                    {% if giveaway.allowKeyFetch and available_keys > 0 %}
-                        <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
-                            <a href="{{ path('giveaway_get_key', { "slug" : giveaway.slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
-                        </div>
-                    {% endif %}
-
-                    {% if giveaway.allowMachineCodeSubmit %}
-                        <div style="margin-bottom: 10px;">
-                            {% if is_granted('ROLE_USER') %}
-                                {% if can_user_apply_to_giveaway(giveaway) %}
-                                    <form action="{{ path('giveaway_submit_machine_code', {'slug': giveaway.slug}) }}" method="POST" class="machine-code-form">
-                                        <div class="form-error">{{ 'no_machine_code_submitted' | trans }}</div>
-                                        <label for="machine_code_input">{{ 'machine_code' | trans }}</label>
-                                        <input type="text" name="machine_code" id="machine_code_input" class="txt" />
-
-                                        <input type="submit" class="button" value="{{ 'submit_machine_code' | trans }}">
-                                    </form>
-                                {% else %}
-                                    {{ 'platformd.sweepstakes.entered.message' | trans }}
-                                {% endif %}
-                        {% endif %}
-                        </div>
-                    {% endif %}
-
-                    <ol>
-                        {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': giveaway} %}
-                        {% if  (redemptionSteps is not empty)  %}
-                        {% for redemptionStep in redemptionSteps %}
-                        <li>
-                            <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
-                        </li>
-                        {% endfor %}
-                        {% endif %}
-                    </ol>
+                    {% render url('_giveaway_show_actions', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
                 </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
             </div>
 
         </div><!-- right -->
@@ -88,20 +52,19 @@
         <div class="left">
             <div id="giveaway-info" class="widget-66">
                 <div class="widget-header">
-                    <div class="widget-title controlled-spacing">{{ giveaway.name }}</div>
+                    <div class="widget-title controlled-spacing">{{ data.giveaway_name }}</div>
                 </div><!-- widget-header -->
 
                 <div class="widget-content" id="giveaway-details">
-                    {{ giveaway.content | raw }}
+                    {{ data.giveaway_content | raw }}
 
                 </div><!-- giveaway-details -->
 
-
             </div><!-- giveaway-info -->
 
-                {% if features.hasComments %}
-                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : giveaway.slug, 'object' : giveaway } %}
-                {% endif %}
+            {% if features.hasComments %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.giveaway_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.giveaway_comment_permalink } %}
+            {% endif %}
 
         </div><!-- left -->
 
@@ -109,6 +72,7 @@
 
         </div><!-- clear -->
     </div><!-- std_2col -->
+
 {% endblock %}
 
 {% block javascripts %}

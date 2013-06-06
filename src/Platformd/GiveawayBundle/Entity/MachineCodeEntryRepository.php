@@ -90,6 +90,17 @@ class MachineCodeEntryRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
+    public function activeOrPendingExistsForUserIdAndGiveawayId($userId, $giveawayId) {
+
+        $result = $this->getEntityManager()->createQuery('SELECT count(entry.id) FROM GiveawayBundle:MachineCodeEntry entry LEFT JOIN entry.giveaway giveaway LEFT JOIN entry.user user WHERE entry.status IN (:statusValues) AND user.id = :userId AND giveaway.id = :giveawayId')
+            ->setParameter('statusValues', array(MachineCodeEntry::STATUS_APPROVED, MachineCodeEntry::STATUS_PENDING))
+            ->setParameter('userId', (int) $userId)
+            ->setParameter('giveawayId', (int) $giveawayId)
+            ->getSingleScalarResult();
+
+        return (bool) $result;
+    }
+
     public function findAllActiveOrPendingForUserAndGiveaway(User $user, Giveaway $giveaway)
     {
         $qb = $this->createQueryBuilder('mce');
@@ -113,7 +124,7 @@ class MachineCodeEntryRepository extends EntityRepository
             ->setParameter('status', MachineCodeEntry::STATUS_PENDING)
             ->getQuery()
             ->execute()
-        ;
+            ;
     }
 
     public function findApprovedAndDeniedForGiveaway(Giveaway $giveaway)
@@ -128,7 +139,7 @@ class MachineCodeEntryRepository extends EntityRepository
             ->orderBy('mce.created')
             ->getQuery()
             ->execute()
-        ;
+            ;
     }
 
     /**
@@ -140,7 +151,7 @@ class MachineCodeEntryRepository extends EntityRepository
     {
         return $qb->andWhere('mce.user = :user')
             ->setParameter('user', $user)
-        ;
+            ;
     }
 
     /**
@@ -152,6 +163,6 @@ class MachineCodeEntryRepository extends EntityRepository
     {
         return $qb->andWhere('mce.giveaway = :giveaway')
             ->setParameter('giveaway', $giveaway)
-        ;
+            ;
     }
 }

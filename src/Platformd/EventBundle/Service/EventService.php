@@ -17,7 +17,8 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\GroupEventRsvpAction,
     Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
-    Platformd\SpoutletBundle\Model\EmailManager
+    Platformd\SpoutletBundle\Model\EmailManager,
+    Platformd\SpoutletBundle\Model\Translator
 ;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
@@ -26,8 +27,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
-    Symfony\Component\Routing\RouterInterface,
-    Symfony\Bundle\FrameworkBundle\Translation\Translator
+    Symfony\Component\Routing\RouterInterface
 ;
 
 use Knp\MediaBundle\Util\MediaUtil;
@@ -379,7 +379,7 @@ class EventService
         $this->repository->saveEmail($email);
     }
 
-    public function sendReminderEmail(Event $event)
+    public function sendReminderEmail(Event $event, $site)
     {
         if ($event instanceof GroupEvent) {
             $email = new GroupEventEmail();
@@ -400,16 +400,18 @@ class EventService
 
         $sendCount = 0;
 
+        $eventSite = $event->getSites()->first();
+
         foreach ($email->getRecipients() as $recipient) {
             $emailTo = $recipient->getEmail();
 
             $locale = $recipient->getLocale() ?: 'en';
 
-            $subject = $this->translator->trans('platformd.event.email.event_reminder.title', array(
+            $subject = $this->translator->themeTrans('platformd.event.email.event_reminder.title', $eventSite->getTheme(), array(
                 '%eventName%' => $event->getName(),
-            ), 'messages', $locale);
+            ), $locale);
 
-            $message = nl2br($this->translator->trans('platformd.event.email.event_reminder.message', array(
+            $message = nl2br($this->translator->themeTrans('platformd.event.email.event_reminder.message', $eventSite->getTheme(), array(
                 '%eventName%'       => $event->getName(),
                 '%dateString%'      => $event->getDateRangeString(),
                 '%timeString%'      => $event->getStartsAt()->format('g:i A'),
@@ -418,9 +420,12 @@ class EventService
                 '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
                 '%organizerUrl%'    => $event->getUser()->getAccountLink($locale),
                 '%organizerName%'   => $event->getUser()->getUsername(),
-            ), 'messages', $locale));
+            ), $locale));
 
-            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType);
+            $fromName = $site->getSiteFeatures()->getEmailFromName() ?: null;
+            $fromEmail = $site->getSiteFeatures()->getAutomatedEmailAddress() ?: null;
+
+            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType, $fromName, $fromEmail);
             $sendCount++;
         }
 
@@ -479,11 +484,25 @@ class EventService
 
     public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
     {
-        return $this->repository->findUpcomingEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
+        return $this->repository->findUpcomingEventsForSitePaged($site, $maxPerPage, $currentPage, $pager, $published);
     }
 
     public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager = null, $published = true)
     {
-        return $this->repository->findPastEventsForSite($site, $maxPerPage, $currentPage, $pager, $published);
+        return $this->repository->findPastEventsForSitePaged($site, $maxPerPage, $currentPage, $pager, $published);
+    }
+
+    public function findUpcomingEventsForSiteLimited(Site $site, $limit=6, $published = true)
+    {
+        return $this->repository->findUpcomingEventsForSiteLimited($site, $limit, $published);
+    }
+
+    public function eventCompare($a, $b) {
+
+        if ($a->getStartsAt() == $b->getStartsAt()) {
+            return 0;
+        }
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+
     }
 }

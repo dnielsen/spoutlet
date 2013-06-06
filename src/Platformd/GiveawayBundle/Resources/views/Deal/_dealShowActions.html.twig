@@ -1,0 +1,40 @@
+<div id="deal-actions">
+    {% if data.deal_user_already_redeemed %}
+        <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans({'%account_link%': path('accounts_deals')}) | raw }}</p>
+    {% elseif data.deal_has_expired %}
+        <p id="deal-show-expired">{{ 'deal_show_expired' | trans }}</p>
+    {% elseif not data.deal_has_keys %}
+        <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
+    {% elseif is_granted('ROLE_USER') %}
+        {% if data.deal_show_claim_button %}
+            <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : data.deal_slug }) }}">
+            {% if data.deal_claim_code_button %}
+                <img src="{{ data.deal_claim_code_button }}" />
+            {% else %}
+                {{ "CLAIM CODE NOW" }}
+            {% endif %}
+            </a>
+        {% endif %}
+        {% if features.hasGroups %}
+            {% if data.deal_group_slug and not data.user_is_member_of_deal_group %}
+                <p>
+                    {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': data.deal_group_slug}), '%group%': data.deal_group_name}) | raw }}
+                </p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</div>
+<div id="deal-instructions">
+    <ul>
+        {% include 'GiveawayBundle:Deal:_steps.html.twig' with {'slug': data.deal_slug} %}
+        {% if (data.deal_redemption_steps is not empty)  %}
+        {% for redemptionStep in data.deal_redemption_steps %}
+        <li>
+            <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
+            <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
+        </li>
+        {% endfor %}
+        {% endif %}
+    </ul>
+</div>
+

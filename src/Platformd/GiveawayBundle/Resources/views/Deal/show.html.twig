@@ -1,67 +1,28 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title deal.name ~ ' '~ ('deal' | trans) %}
+{% block page_background_image "default" %}
 
 {% block open_graph %}
-    {% if deal.openGraphOverride and deal.openGraphOverride.thumbnail and deal.openGraphOverride.thumbnail.filename %}
-        {% set openGraphImage = deal.openGraphOverride.thumbnail %}
-    {% elseif deal.thumbnailLarge %}
-        {% set openGraphImage = deal.thumbnailLarge %}
-    {% endif %}
-    {% if deal.openGraphOverride and deal.openGraphOverride.description %}
-        {% set openGraphDescription = deal.openGraphOverride.description | striptags %}
-    {% elseif deal.description %}
-        {% set openGraphDescription = deal.description | striptags | trim %}
-    {% endif %}
-    {% if openGraphDescription is defined and openGraphDescription|length > 140 %}
-        {% set openGraphDescription = openGraphDescription | slice(0, 139) ~ '…' %}
-    {% endif %}
-
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
-    <meta property="og:title" content="{{ deal.name }}" />
+    <meta property="og:title" content="{{ data.deal_name }}" />
     <meta property="og:type" content="product" />
     <meta property="og:url" content="{{ app.request.getUri }}" />
     <meta property="og:site_name" content="Alienware Arena" />
-    {% if openGraphImage is defined -%}
-        <meta property="og:image" content="{{ openGraphImage | media_path }}" />
+    {% if data.opengraph_override_thumbnail is not null -%}
+        <meta property="og:image" content="{{ data.opengraph_override_thumbnail }}" />
     {% endif -%}
-    {% if openGraphDescription is defined -%}
-        <meta property="og:description" content="{{ openGraphDescription }}" />
+    {% if data.opengraph_override_description is not null -%}
+        <meta property="og:description" content="{{ data.opengraph_override_description }}" />
     {% endif %}
 
 {% endblock %}
 
+{% block title data.deal_name ~ ' '~ ('deal' | trans) %}
+
 {% block content %}
 
-{% if dealCode %}
-    {% set dealCode = dealCode | replace({"'":"", ",":""}) %}
-{% endif %}
-
 <div id="deals-wrapper">
-    {% if userAlreadyRedeemed %}
-    <div class="xnotices">
-        <div class="successNotice notice">
-            <div class="pad">
-                <div class="pad2">
-                    <div class="pad3">
-                        <div class="pad4">
-                            <h3>{{ 'platformd.flash.success_title' | trans }}</h3>
-                            <p>{{ 'deal_redeem_success_code' | trans}}</p>
-                            <p>
-                                {%- if dealCodeIsUrl -%}
-                                    <a href='{{ dealCode | raw }}' target='_blank'>{{ dealCode | wrap | raw }}</a>
-                                {%- else -%}
-                                    {{ dealCode | replace({"'":"", ",":""}) }}
-                                {%- endif -%}
-                            </p>
-                            <p>{{ 'deal_redeem_success' | trans }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
     {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-details-wrapper">
@@ -71,17 +32,17 @@
                     <div class="widget-66">
                         <div class="widget-header">
                             <div class="widget-title">
-                                {{ deal.name }}
+                                {{ data.deal_name }}
                             </div>
                         </div>
                         <div class="widget-content">
                             <div id="deal-description">
-                                {% if deal.description %}
-                                    {{ deal.description | raw }}
+                                {% if data.deal_description %}
+                                    {{ data.deal_description | raw }}
                                 {% endif %}
-                                {% if deal.websiteUrl %}
+                                {% if data.deal_website_url %}
                                 <div id="deal-websiteurl">
-                                    <a href="{{ deal.websiteUrl }}" {% if deal.visitWebsiteButton %} style="background: url('{{ media_path(deal.visitWebsiteButton)}}') no-repeat; display: block; width: 224px; height: 43px; margin: 0px auto;" {% endif %} target="_blank"></a>
+                                    <a href="{{ data.deal_website_url }}" {% if data.deal_visit_website_button %} style="background: url('{{ data.deal_visit_website_button }}') no-repeat; display: block; width: 224px; height: 43px; margin: 0px auto;" {% endif %} target="_blank"></a>
                                 </div>
                                 {% endif %}
                             </div>
@@ -97,37 +58,7 @@
                             </div>
                         </div>
                         <div class="widget-content">
-                            <div id="deal-actions">
-                                {% if userAlreadyRedeemed %}
-                                    <p id="deal-redeem-success">{{ 'deal_redeem_success_bottom' | trans({'%account_link%': path('accounts_deals')}) | raw }}</p>
-                                {% elseif deal.hasExpired %}
-                                    <p id="deal-show-expired">{{ 'deal_show_expired' | trans }}</p>
-                                {% elseif not hasKeys %}
-                                    <p id="deal-show-nokeys">{{ 'deal_redeem_no_keys_left' | trans }}</p>
-                                {% elseif is_granted('ROLE_USER') %}
-                                    <a id="deal-redeem-link" href="{{ path('deal_redeem', { "slug" : deal.slug }) }}">
-                                        {% if deal.claimCodeButton %}
-                                            <img src="{{ media_path(deal.claimCodeButton) }}" />
-                                        {% else %}
-                                            {{ "CLAIM CODE NOW" }}
-                                        {% endif %}
-                                    </a>
-                                {% endif %}
-                            </div>
-                            <div id="deal-instructions">
-                                <ul>
-                                    {% include 'GiveawayBundle:Deal:_steps.html.twig' with {'deal': deal} %}
-                                    {% if  (redemptionSteps is not empty)  %}
-                                    {% for redemptionStep in redemptionSteps %}
-                                    <li>
-                                        <span class="step-number">{{ 'deal_instructions_step' | trans}} {{ loop.index + 1 }}:</span>
-                                        <span class="item controlled-spacing">{{ redemptionStep | raw }}</span>
-                                    </li>
-                                    {% endfor %}
-                                    {% endif %}
-                                </ul>
-                            </div>
-
+                            {% render url('_deal_show_actions', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
                         </div>
                     </div>
                     <div id="deals-recommend">
@@ -135,32 +66,32 @@
                     </div>
                 </div>
             </div>
-        </div>
-        {% if (deal.mediaGalleryMedias | length) > 0 %}
-        <div id="deal-screenshots">
-            {% for media in deal.mediaGalleryMedias %}
-                {% set url = media_path(media) %}
+            </div>
+            {% if (data.deal_media_gallery_media | length) > 0 %}
+            <div id="deal-screenshots">
+                {% for media in data.deal_media_gallery_media %}
+                    {% set url = media %}
 
-                <img src="{{ url }}" data-url="{{ url }}" {% if loop.first %}class="first"{% endif %} />
-            {% endfor %}
+                    <img src="{{ url }}" data-url="{{ url }}" {% if loop.first %}class="first"{% endif %} />
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if data.deal_legal_verbiage %}
+            <div id="legal-verbiage">
+                {{ data.deal_legal_verbiage }}
+            </div>
+            {% endif %}
         </div>
+
+        {% if features.hasComments %}
+            <div class="std_2col">
+                <div class="left">
+                    {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.deal_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.deal_comment_permalink } %}
+                </div>
+            </div>
         {% endif %}
-        {% if deal.legalVerbiage %}
-        <div id="legal-verbiage">
-            {{ deal.legalVerbiage }}
-        </div>
-        {% endif %}
+
     </div>
-
-    {% if features.hasComments %}
-        <div class="std_2col">
-            <div class="left">
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : deal.getThreadId, 'object' : deal } %}
-            </div>
-            <div class="right">
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -169,13 +100,13 @@
     <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/deals.css') }}" />
     <link rel="stylesheet" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
 
-    {% if deal.bottomColor %}
+    {% if data.deal_bottom_color %}
     <style type="text/css">
-        #deal-details-wrapper { background-image: linear-gradient(bottom, {{ deal.bottomColor }} 8%, #000000 58%);}
-        #deal-details-wrapper { background-image: -o-linear-gradient(bottom, {{ deal.bottomColor }} 8%, #000000 58%);}
-        #deal-details-wrapper { background-image: -moz-linear-gradient(bottom, {{ deal.bottomColor }} 8%, #000000 58%); }
-        #deal-details-wrapper { background-image: -webkit-linear-gradient(bottom, {{ deal.bottomColor }} 8%, #000000 58%); }
-        #deal-details-wrapper { background-image: -ms-linear-gradient(bottom, {{ deal.bottomColor }} 8%, #000000 58%); }
+        #deal-details-wrapper { background-image: linear-gradient(bottom, {{ data.deal_bottom_color }} 8%, #000000 58%);}
+        #deal-details-wrapper { background-image: -o-linear-gradient(bottom, {{ data.deal_bottom_color }} 8%, #000000 58%);}
+        #deal-details-wrapper { background-image: -moz-linear-gradient(bottom, {{ data.deal_bottom_color }} 8%, #000000 58%); }
+        #deal-details-wrapper { background-image: -webkit-linear-gradient(bottom, {{ data.deal_bottom_color }} 8%, #000000 58%); }
+        #deal-details-wrapper { background-image: -ms-linear-gradient(bottom, {{ data.deal_bottom_color }} 8%, #000000 58%); }
     </style>
 
     {% endif %}
@@ -188,12 +119,17 @@
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
-                timezone: 0,
                 compact: false,
                 layout: $('#time-left').html()
             });
 
             $('.deals-timeleft').fadeIn();
+
+            $('#join-group').change(function () {
+                var join = $(this).is(':checked') ? '/1' : '/0';
+                var url  = '{{ path('deal_redeem', { "slug" : data.deal_slug }) }}' + join;
+                $('#deal-redeem-link').attr('href', url);
+            });
         });
     </script>
 

@@ -27,6 +27,7 @@ Feature: Machine Code Giveaway Admin
     Scenario: I can approve key giveaway requests
         Given I am on "/admin"
         When I follow "Giveaways"
+            And I follow "Demo"
             And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com"
             And I press "Approve Tags"
@@ -36,6 +37,7 @@ Feature: Machine Code Giveaway Admin
     Scenario: I will eventually run out of keys
         Given I am on "/admin"
         When I follow "Giveaways"
+            And I follow "Demo"
             And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com, china@zh.com"
             And I press "Approve Tags"
@@ -46,6 +48,7 @@ Feature: Machine Code Giveaway Admin
     Scenario: Hey! That's not a real user
         Given I am on "/admin"
         When I follow "Giveaways"
+            And I follow "Demo"
             And I follow "Approve System Tags"
             And I fill in "Emails" with "foo@foo.com"
             And I press "Approve Tags"

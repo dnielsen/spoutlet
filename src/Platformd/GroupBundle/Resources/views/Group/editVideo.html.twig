@@ -16,7 +16,7 @@
         {% if group.groupAvatar %}
             <img src="{{ media_path(group.groupAvatar) }}" />
         {% else %}
-            <img src="{{ asset('bundles/spoutlet/images/groups/groups_main_banner.jpg') }}" />
+            <div id="groups-main-banner"></div>
         {% endif %}
     </div>
 </div>
@@ -67,8 +67,7 @@
 {% endblock %}
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -1,6 +1,22 @@
 date_format: M j, Y
 submit: Enviar
 cancel: Cancelar
+delete: Borrar
+
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Continuar a Alienware Arena
 
 platformd:
 
@@ -45,6 +61,21 @@ platformd:
             microsoft: Microsoft
             photos: Galería de Fotos
             contests: Concursos
+
+        page_content:
+            featured: Featured
+            giveaways: Giveaways
+            all: All
+            see_more: See More
+            photo_gallery: Image Gallery
+            view_all: View All
+            competitions: Competencias
+            hot_stories: Hot Stories
+            videos: Videos
+            view_more: View More
+            views: Views
+            rating: Rating
+            all_news: All
 
         bottom_menu:
             contact_us: Contáctenos
@@ -118,6 +149,7 @@ platformd:
             not_allowed_register: No se te permite a RSVP para el evento!
             now_attending: Ahora estás asistiendo este evento.
             group_joined: Para asistir a este evento, debes únete a %groupName%. Ahora eres un miembro de este grupo.
+            group_home: Group Home
         event_contact:
             title: Contactar los asistentes por correo electrónico
             help: Dejar en blanco para enviar a todos los asistentes o haga clic en los usuarios al derecho para elegir destinatarios específicos.
@@ -139,6 +171,7 @@ platformd:
             remove: Eliminar
             no_attendees: No hay asistentes!
             remove_confirmation: ¿Está seguro que desea quitar "%username%" de este evento?
+            joined: Joined
         # used only in the admin area
         admin:
             title: Event admin
@@ -157,7 +190,7 @@ platformd:
 
     account_page:
         events:
-            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">upcoming events</a>.
+            no_registered_events: No hay eventos registrados. Echa un vistazo a <a href="%url%">próximos eventos</a>.
             no_created_events: No hay eventos creados
             join_event_message: To join an event, please click the "Register" link on the respective event micro-site. See <a href="%events_url%">current events</a>
             show_past_events: Ver eventos pasados
@@ -170,6 +203,13 @@ platformd:
             active: Activo
             pending_approval: Pendiente de aprobación por el organizador de grupo
             choose_one: Elegir una acción:
+        account:
+            welcome_to_control: Panel de control
+            hello_user: Hola %firstname%! Registrado como: %username%.
+            ready_to_game: ""
+            warning: Advertencia: Nunca des tu contraseña a nadie!
+            under_construction: "Nota: Alienware Arena se encuentra en construcción, por lo tanto regrese más tarde si una característica no está habilitada todavía."
+            change_your_password: Contraseña
 
     comment:
         add_your_comment: Añada tu comentario
@@ -192,6 +232,36 @@ platformd:
         cancel: Cancelar
         no_more_posts: No hay ningún tema más para mostrar.
         date_format: %month%/%day%/%year%
+
+    user:
+        account:
+            account_home: Inicio de Cuenta
+            edit_account: Edit Account
+            change_password: Contraseña
+            profile: Perfíl
+            registered_events: Mis Eventos
+            my_giveaways: Regalo
+            my_videos: Videos
+            my_events: Mis Eventos
+            my_groups: Grupos
+            help: Help
+            game_ids: IDs de Juego
+            tournaments: Torneos
+            media: Medios
+            media_upload: Upload
+            my_media: My Media
+            sign_out: Cerrar sesión
+            deals: Deals
+            messages: Mensajes
+            gameids: IDs de Juego
+            match_client: Match Client
+            match_lobby: Match Lobby
+            gallery: Imágen
+            images: Imágen
+            videos: Vídeos
+
+        register:
+            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
     event:
         form:
@@ -413,6 +483,7 @@ content_reporting:
     report_type_group_video: Video de Grupo
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
+    report_type_youtubevideo: Vídeo
     report_type_unknown: Unknown
     report_success: El contenido ha sido retirado temporalmente y será revisado por nuestro personal. Si tienes información adicional para tu informe, por favor envíenos un correo electrónico a reports@alienwarearena.com con los detalles adicionales.
     reported_email_title: Tu Contenido ha Sido Marcado
@@ -493,8 +564,6 @@ deal_show_expired: This deal has expired.
 featured_deals: Featured Deals
 expired_deals: Expired Deals
 
-platformd.user.account.deals: My Deals
-
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
 platformd.deal.assigned.assigned_at: Assigned
@@ -510,7 +579,6 @@ platformd.deal_pool.admin.save_deal_pool: Save Pool
 platformd.deal_pool.pool: Pool
 platformd.deal_pool.admin.saved: Your pool was saved successfully.
 
-platformd.user.account.photos: Mis Imágenes
 platformd.account_page.photos.my_photos: Mis Imágenes
 platformd.account_page.photos.submit: Enviar Imágenes
 
@@ -655,3 +723,58 @@ contests:
     voting_begins: Período de Votación:
     no_longer_available: Este concurso ya no está disponible
 
+timeline.title: The History of Alienware
+timeline.not_found: No timeline found.
+
+platformd.create_account_or_login: Crear una cuenta Alienware Arena  (Si no tienes una)
+
+platformd.giveaway.click_for_past_giveaways: Haz clic <a href="%cevo_user_account_giveaway_page%">aquí</a> para ver las claves de regalos anteriores.
+platformd.giveaway.get_key:  Obten tu Código
+platformd.giveaway.featured_giveaways: Regalos Destacados de Alienware Arena
+platformd.giveaway.all_giveaways: Nuevos Regalos
+platformd.giveaway.previous_giveaways: Regalos Previos
+platformd.giveaway.latest_comments: Últimos Comentarios
+platformd.giveaway.in_process: Si te has registrado para un sistema tag para regalo de clave y su estado es "Pendiente", por favor, deja transcurrir al menos 2 semanas para su sistema tag sea revisados​​. Si no hay cambio despues de dos semanas, favor de mandar un correo electronico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.message: Por favor, sigue las siguientes instrucciones para activar tu clave. Si necesitas ayuda adicional, envía un correo electrónico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.show.availaible_keys: Códigos Disponibles %%count%%
+platformd.giveaway.queue.you_are_queued: Estás en la cola!
+platformd.giveaway.queue.queue_explanation: |
+    Tu tiempo de espera aproximado es de menos de 5 minutos. Recibirás un correo electrónico con tu clave, una vez que ha sido asignado. Si no
+        recibes un mensaje en una hora, favor de envíar un correo electrónico el equipo de apoyo <a href="mailto:%contact_email%">%contact_email%</a>.  Mientras tanto, por favor echa un vistazo a otros de nuestros eventos para ver los próximos <a href="%events_index_page_link%">eventos</a> in situ y en linea en tu área.
+platformd.giveaway.queue.you_are_queued: Estás en la cola!
+platformd.giveaway.queue.rejected: Lo sentimos, pero la clave no se pudo asignar a ti.
+platformd.giveaway.queue.problem: Hubo un problema al procesar tu solicitud de clave.
+platformd.giveaway.queue.reason: Razón
+platformd.giveaway.queue.reasons.none: Sin razón
+platformd.giveaway.queue.reasons.no_keys: Desafortunadamente, en este momento no hay clave disponible.
+platformd.giveaway.queue.reasons.ip_reached_max: Lo sentimos, la clave no puede ser asignado a ti, como tu dirección de IP ya ha cobrado el número máximo de claves permitidas.
+platformd.giveaway.queue.reasons.already_assigned: Ya tienes una clave.
+platformd.giveaway.queue.reasons.invalid_country_or_age: No eres eligible (basado en tu edad y / o el país).
+platformd.giveaway.queue.reasons.invalid_site: Sitio desconosido.
+platformd.giveaway.queue.reasons.client_ip_null: IP del cliente que no se encuentra
+platformd.giveaway.queue.reasons.country_code_null: Páis desconosido.
+platformd.giveaway.queue.reasons.invalid_country: Páis desconosido.
+platformd.giveaway.queue.reasons.invalid_promotion: No se pudo encontrar la promoción.
+platformd.giveaway.queue.reasons.inactive_promotion: Esta promoción no está activa.
+platformd.giveaway.queue.reasons.key_fetch_disallowed: Busca clave no está permitido en esta promoción.
+platformd.key_request_processor_command.key_assigned_email_subject: Tu %promotion_title% clave
+platformd.key_request_processor_command.key_assigned_email_body: |
+    <p>Felicidades, has sido exitosamente asignado una clave para la
+        <a href="%promotion_show_page%">%promotion_title%</a>:
+        </p>
+        <p>
+        <span style="font-weight:bold;">%promotion_key%</span>
+        </p>
+        <p>
+        Para obtener instrucciones sobre cómo redimir tu clave, por favor visita la página
+        <a href="%promotion_show_page%">%promotion_title%</a>.
+        </p>
+        %group_section%
+        <p>Equipo Alienware Arena</p>
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: Actualización de %promotion_title%
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
+    <p>
+            Lo sentimos, se nos acabaron los códigos para <a href="%promotion_show_page%">%promotion_title%</a>.
+            Por favor, visítanos más tarde ya que se pueden añadir más códigos!
+        </p>
+        <p>Equipo Alienware Arena</p>

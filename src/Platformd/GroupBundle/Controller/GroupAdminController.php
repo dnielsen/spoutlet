@@ -12,7 +12,6 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Entity\DiscussionFindWrapper;
 use Platformd\GroupBundle\Form\Type\GroupFindType;
 use Platformd\SpoutletBundle\Form\Type\DiscussionFindType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\SpoutletBundle\Metric\MetricManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +20,7 @@ use Symfony\Component\Form\Form;
 use DateTime;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Platformd\GroupBundle\Entity\GroupFindWrapper;
 
 /**
  * Group admin controller.
@@ -48,27 +48,50 @@ class GroupAdminController extends Controller
     private function getFilterFormData()
     {
         $session = $this->getRequest()->getSession();
-        return $session->get('formValues', array());
+        return $session->get('formValuesGroups', array());
     }
 
     private function setFilterFormData(array $data)
     {
         $session = $this->getRequest()->getSession();
-        $session->set('formValues', $data);
+        $session->set('formValuesGroups', $data);
     }
 
     public function findAction(Request $request)
     {
         $this->addFindGroupsBreadcrumb();
 
+        $data = new GroupFindWrapper();
+        $form = $this->createForm(new GroupFindType(), $data);
+
+        if ('POST' == $request->getMethod()) {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $this->setFilterFormData(array(
+                    'groupName' => $data->getGroupName(),
+                    'category' => $data->getCategory(),
+                    'deleted' => $data->getDeleted(),
+                    'sites' => $data->getSites(),
+                    'startDate' => $data->getStartDate(),
+                    'endDate' => $data->getEndDate(),
+                ));
+            }
+        }
+
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+
         $filters = $this->getFilterFormData();
+
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $filters['sites'] = array('ja');
+        }
+
         $qb = $groupRepo->findGroupStatsQB($filters);
 
         $pager = new Pagerfanta(new DoctrineORMAdapter($qb, true));
         $pager->setMaxPerPage(10);
         $pager->setCurrentPage((int)$this->get('request')->query->get('page', 1));
-        $form = $this->createForm(new GroupFindType(), $filters);
 
         $idArray = array();
 
@@ -282,10 +305,25 @@ class GroupAdminController extends Controller
         $data = new DiscussionFindWrapper();
         $form = $this->createForm(new DiscussionFindType(), $data);
 
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $data->setSites(array('ja'));
+            $form->setData($data);
+        }
+
         if ('POST' == $request->getMethod()) {
             $form->bindRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
+
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data->setSites(array('ja'));
+                    $form->setData($data);
+                }
+
+                if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+                    $data->setSites(array('ja'));
+                }
+
                 $this->setDiscussionsFilterFormData(array(
                     'discussionName' => $data->getDiscussionName(),
                     'deleted' => $data->getDeleted(),
@@ -299,7 +337,7 @@ class GroupAdminController extends Controller
         $pager = $this->getDoctrine()->getRepository('GroupBundle:GroupDiscussion')->findDiscussionStats(array(
             'discussionName' => $data->getDiscussionName(),
             'deleted' => $data->getDeleted(),
-            'sites' => $data->getSites(),
+            'sites' => $data->getSites() ? $data->getSites()->toArray() : null,
             'from' => $data->getFrom(),
             'thru' => $data->getThru(),
             'page' => $page
@@ -540,6 +578,29 @@ class GroupAdminController extends Controller
         }
 
         return $factory->createResponse('Group_Discussion_Detailed'. $groupDiscussion->getId() .'.csv');
+    }
+
+    public function groupAutoCompleteAction(Request $request)
+    {
+
+        $term = $request->get('term');
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        $results = array();
+
+        if($term) {
+            $results = $this
+                ->getDoctrine()
+                ->getEntityManager()
+                ->getRepository('GroupBundle:Group')
+                ->getAutoCompleteResultsByGroupName($term);
+        }
+
+        $response->setContent(json_encode($results));
+
+        return $response;
     }
 
     private function getGroupVideoCount($group, $fromDate, $thruDate)

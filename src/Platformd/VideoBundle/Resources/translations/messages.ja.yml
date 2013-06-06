@@ -1,0 +1,39 @@
+youtube.alienware_video_network: ビデオ
+youtube.videos: ビデオ
+youtube.categories: カテゴリー
+youtube.report: レポート
+youtube.submit_video: ムービーを出品
+youtube.points: ポイント
+youtube.more_videos_by: による他のビデオ
+youtube.featured_videos: 注目のビデオ
+youtube.popular: 人気
+youtube.recently_watched: 最近見られた
+youtube.feature_video: このビデオを注目する
+youtube.unfeature_video: このビデオを注目しない
+youtube.views: ビュー
+youtube.already_voted: あなたはすでに投票しています。
+youtube.no_video_found: ビデオはみつかりませんでした。
+youtube.form.intro: "エイリアンウェア　アリーナのエーリアンネットワークは最高のゲーム映像を提供し以下の基準を満たしたもののみウェブサイトで公開できます。説明を理解されたうえで映像が基準に合致するか判断してください。"
+youtube.form.file_restrictions_title: "ファイル制限:"
+youtube.form.file_restrictions_1: ゲームに関連する映像以外は予告なしで削除されます。
+youtube.form.file_restrictions_2: 著作権を侵害する映像不可。
+youtube.form.file_restrictions_3: ビデオはYouTubeにアップロードしてください。
+youtube.form.outtro: ムービーを提供していただく場合、私共の<a href="%s" target="_blank">利用規約</a>をご理解いただき関係者に対して出版、再利用、販促、複製等に関して了承いただけますようお願いします。
+youtube.form.youtube_link: "YouTubeリンク："
+youtube.form.youtube_link_help: You Tube リンクをここに貼り付けてください。
+youtube.form.title: "タイトル:"
+youtube.form.description: "詳細:"
+youtube.form.category: "カテゴリー:"
+youtube.form.tags: "タグ："
+youtube.form.select_category: "カテゴリー"
+youtube.form.optional: "オプション："
+youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.invalid_youtube_link: 誤った YouTubeリンクです
+youtube.form.general_error: 情報を記入欄に入力してください。
+youtube.navigation.video_main: ビデオ
+youtube.flash.submit_success: あなたのビデオはアップロードされました。
+youtube.flash.edit_success: あなたのビデオは保存されました。
+youtube.flash.delete_success: あなたのビデオは消去されました。
+youtube.flash.delete_insufficient_permissions: このアクションを実行する権限がありません。
+youtube.account.my_videos: マイビデオ
+youtube.account.video_not_accessible: このビデオは、YouTubeからアクセスができません。プライベートに設定されているか、埋め込みが無効になっています。

@@ -1,3 +1,11 @@
+imports:
+    - { resource: "validation.yml" }
+
+parameters:
+    platformd_user.mailer.parameters:
+        confirmation.template: %fos_user.registration.confirmation.template%
+        resetting.template: %fos_user.resetting.email.template%
+
 services:
     # Forms
     platformd_user.registration.form.type:
@@ -6,16 +14,29 @@ services:
             - %fos_user.model.user.class%
             - %platformd.news_source%
             - @session
+            - @platformd.model.translator
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
-            - { name: form.type, alias: platformd_user_registration } 
+            - { name: form.type, alias: platformd_user_registration }
     platformd_user.profile.form.type:
         class: Platformd\UserBundle\Form\Type\ProfileFormType
         arguments:
             - %fos_user.model.user.class%
         tags:
-            - { name: form.type, alias: platformd_user_profile } 
+            - { name: form.type, alias: platformd_user_profile }
+
+    platformd_user.registration.form.handler:
+        class: Platformd\UserBundle\Form\Handler\RegistrationFormHandler
+        arguments:
+            - @fos_user.registration.form
+            - @request
+            - @platformd_user.manager
+            - @platformd_user.mailer
+            - @doctrine.orm.entity_manager
+            - @service_container
+        scope: request
+
     # User
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager
@@ -36,7 +57,12 @@ services:
     # our custom mailer
     platformd_user.mailer:
         class: Platformd\UserBundle\Mailer\Mailer
-        parent: fos_user.mailer.default
+        arguments:
+            - '@platformd.model.email_manager'
+            - '@router'
+            - '@templating'
+            - '%platformd_user.mailer.parameters%'
+            - '@platformd.util.site_util'
 
     platformd_user.awa_video_login_redirect_listener:
         class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener

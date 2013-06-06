@@ -1,0 +1,53 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'HTML Widgets' %}
+
+{% block content %}
+    <h1>HTML Widgets</h1>
+
+    <table class="table table-striped table-bordered tablesorter">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Sites</th>
+                <th>Notes</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for widget in widgets %}
+            <tr>
+                <td>{{ widget.name }}</td>
+                <td><a href="{{ path('html_widget_page', { 'slug': widget.slug }) }}">{{ widget.slug }}</a></td>
+                <td>
+                    {% for site in widget.sites %}
+                        {{ site.name -}}
+                        {{- loop.last ? '' : ',' }}
+                    {% endfor %}
+                </td>
+                <td>{{ widget.notes }}</td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-primary btn-mini" href="#"><i class="icon-th-list icon-white"></i> Actions</a>
+                        <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('admin_html_widget_edit', { 'id': widget.id }) }}"><i class="icon-pencil"></i> Edit</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">
+                    <em>There are no HTML widgets!</em>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('admin_html_widget_new') }}">
+        Create a new HTML widget
+    </a>
+{% endblock %}

@@ -2,7 +2,7 @@
     Reusable bit in the admin where you need the user to select a region
 
     Required variables are:
-        * sites: from MultitenancyManager::getSiteChoices()
+        * sites: from SiteManager->getSiteChoices()
         * route: the name of the route used in the link
 #}
 
@@ -10,11 +10,11 @@
     <div class="well span4" style="padding: 8px 0;">
         <ul class="nav nav-list">
             <li class="nav-header">
-                Choose a Region
+                Choose a Site
             </li>
-            {% for site, name in sites %}
+            {% for id, site in sites %}
             <li>
-                <a href="{{ path(route, {'site': site }) }}">{{ name }}</a>
+                <a href="{{ path(route, {'site': id }) }}">{{ site.name }}</a>
             </li>
             {% endfor %}
         </ul>

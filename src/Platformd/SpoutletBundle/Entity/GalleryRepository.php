@@ -46,14 +46,55 @@ class GalleryRepository extends EntityRepository
         return $result;
     }
 
-    public function findAllGalleriesForSite($site)
+    public function findAllGalleriesByCategoryForSiteSortedByPosition($site, $category='image', $includeDeleted=false)
     {
-        return $this->createQueryBuilder('g')
-            ->leftJoin('g.sites', 's')
-            ->where('g.deleted = false')
+        $qb = $this->createQueryBuilder('ga')
+            ->leftJoin('ga.categories', 'cat')
+            ->leftJoin('ga.sites', 's')
+            ->where('cat.name = :category')
             ->andWhere('s = :site')
-            ->setParameter('site', $site)
-            ->getQuery()
+            ->orderBy('ga.name', 'ASC')
+            ->setParameter('category', $category)
+            ->setParameter('site', $site);
+
+        if (!$includeDeleted) {
+            $qb->andWhere('ga.deleted = false');
+        }
+
+        $results = $qb->getQuery()
+            ->execute();
+
+        $positions = array();
+        $galleriesList = array();
+        $galleries = array();
+
+        foreach($results as $gallery) {
+            $sitesPositions = $gallery->getSitesPositions();
+            $positions[$gallery->getId()] = $sitesPositions[$site->getId()];
+            $galleriesList[$gallery->getId()] = $gallery;
+        }
+
+        asort($positions);
+
+        foreach($positions as $galleryId => $value) {
+            $galleries[] = $galleriesList[$galleryId];
+        }
+
+        return $galleries;
+    }
+
+    public function findAllGalleriesForSite($site, $includeDeleted = false)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->andWhere('s = :site')
+            ->setParameter('site', $site);
+
+        if (!$includeDeleted) {
+            $qb->andWhere('g.deleted = false');
+        }
+
+        return $qb->getQuery()
             ->execute();
     }
 

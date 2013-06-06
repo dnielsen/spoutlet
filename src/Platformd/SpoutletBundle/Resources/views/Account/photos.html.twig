@@ -57,17 +57,8 @@
 </div>
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/lightbox.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/account.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/lightbox.js"></script>
     <script src="{{ asset('bundles/spoutlet/js/jquery.pajinate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {

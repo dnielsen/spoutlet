@@ -14,6 +14,10 @@ admin_gallery_new:
     pattern: /new
     defaults: { _controller: "SpoutletBundle:GalleryAdmin:new" }
 
+admin_gallery_move:
+    pattern: /move/{id}/{site}/{direction}
+    defaults: { _controller: SpoutletBundle:GalleryAdmin:move }
+
 admin_gallery_index:
     pattern: /
     defaults: { _controller: "SpoutletBundle:GalleryAdmin:index" }
@@ -31,3 +35,7 @@ admin_gallery_update:
     pattern:  /{slug}/update
     defaults: { _controller: "SpoutletBundle:GalleryAdmin:edit" }
     requirements: { _method: post }
+
+admin_gallery_list:
+    pattern: /{site}
+    defaults: { _controller: "SpoutletBundle:GalleryAdmin:list" }

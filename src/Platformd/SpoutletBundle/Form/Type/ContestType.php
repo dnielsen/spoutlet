@@ -7,7 +7,6 @@ use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 
 class ContestType extends AbstractType
 {

@@ -8,22 +8,27 @@
 
     <div class="left">
         <div id="rotator">
-            {% render "SpoutletBundle:Default:banner" %}
+            {% render url('banner') %}
         </div>
     </div>
 </div>
 <div id="row-2" class="std_2col">
     <div class="right">
         {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
-        {% render 'SpoutletBundle:Default:hotStories' %}
+        {% render url('hot_stories') %}
     </div>
     <div class="left">
-        {% render 'SpoutletBundle:Default:featuredContent' %}
+        {% render url('featured_content') %}
         {% if app.session.locale == 'zh' or app.session.locale == 'ja' %}
-            {% render 'SpoutletBundle:Default:videoFeed' %}
+            {% render url('video_feed') %}
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -38,6 +43,9 @@
             });
             $('.news-ellipse').truncate({
                 width: '250'
+            });
+            $('.more-videos-link a').truncate({
+                width: 280
             });
             $('.ellipse').qtip();
 

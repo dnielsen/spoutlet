@@ -1,0 +1,7 @@
+services:
+    platformd.validation.group_slug_collision_validator:
+        class: Platformd\GroupBundle\Validator\GroupSlugCollisionValidator
+        arguments:
+            - "@router"
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.validator.group.slug_collision }

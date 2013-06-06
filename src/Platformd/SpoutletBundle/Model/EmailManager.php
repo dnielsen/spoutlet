@@ -63,12 +63,14 @@ class EmailManager
             $emailType = "Not Specified";
         }
 
+        $currentSite = $this->container->get('platformd.util.site_util')->getCurrentSite();
+
         if (!$fromName) {
-            $fromName = $this->container->getParameter('sender_email_name');
+            $fromName = $currentSite ? $currentSite->getSiteConfig()->getEmailFromName() : $this->container->getParameter('sender_email_name');
         }
 
         if (!$fromEmail) {
-            $fromEmail = $this->container->getParameter('sender_email_address');
+            $fromEmail = $currentSite ? $currentSite->getSiteConfig()->getAutomatedEmailAddress() : $this->container->getParameter('sender_email_address');
         }
 
         if ($this->container->getParameter('email_destination_override') === true) {

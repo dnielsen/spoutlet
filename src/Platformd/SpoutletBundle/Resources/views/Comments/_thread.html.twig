@@ -1,24 +1,28 @@
 <div class="thread">
     <a id="comments"></a>
-    {% if app.user %}
-        <h3>{{ 'platformd.comment.add_your_comment' | trans }}</h3>
+
+    <div data-logged-in="true">
+        <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
         <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
-    {% else %}
-        <p>{{ 'platformd.comment.login_to_comment' | trans({ '%login_url%' : "http://alienwarearena.com/account/login?return=" ~ ("http://" ~ app.request.headers.get('Host') ~ permalink) | url_encode }) | raw }}</p>
-    {% endif %}
+    </div>
+
+    <div data-logged-in="false">
+        <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
+    </div>
+
     <div class="comment-sorting">
-        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | trans }}</label>
+        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
         <select name="comment-sort-method" id="comment-sort-method">
-            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | trans }}</option>
-            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | trans }}</option>
-            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | trans }}</option>
+            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
+            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
+            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
         </select>
     </div>
-    {% if app.user %}
+    <div data-logged-in="true">
         <div class="comment-form-submit" style="text-align: right;">
-            <button id="new-comment-submit" type="submit">{{ 'platformd.comment.add_comment' | trans }}</button>
+            <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
         </div>
-    {% endif %}
+    </div>
     <div class="comments">
         {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
     </div>
@@ -31,7 +35,21 @@
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
 
 <script type="text/javascript">
+
+    var commentRequestInProgress = false;
+    var ajaxRequestSent;
+
     $(function () {
+
+        if (user_is_logged_in) {
+            $('[data-logged-in="true"]').show();
+            $('[data-logged-in="false"]').hide();
+        } else {
+            $('[data-logged-in="true"]').hide();
+            $('[data-logged-in="false"]').show();
+        }
+
+        loadPostsOnce();
 
         $('.comment-sorting select').change(function() {
             $('.thread').block({message: null});
@@ -54,6 +72,8 @@
 
         $('#new-comment-submit').click(function () {
 
+            if (commentRequestInProgress) return;
+
             if ($('#new-comment-body').val() == "") {
                 return false;
             }
@@ -66,6 +86,9 @@
                 'parent' : 0,
                 'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
             };
+
+            commentRequestInProgress = true;
+
             $.ajax({
                 url: '{{ path('comments_new') }}',
                 type: 'post',
@@ -76,29 +99,31 @@
                     $('.thread').unblock();
                     $('#new-comment-body').val('');
                     $('.comment-count').text(parseInt($('.comment-count').text())+1);
+                    commentRequestInProgress = false;
                 }
             });
         });
     });
 
-    var ajaxRequestSent;
-
     $(window).scroll(function() {
 
         if($(window).scrollTop() >= $(document).height() - $(window).height()) {
-
-            if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
-                return false;
-            }
-
-            if (ajaxRequestSent) {
-                return false; // don't make another request, let the current one complete, or
-                // ajax.abort(); // stop the current request, let it run again
-            }
-
-            ajaxRequestSent = loadMorePosts();
+            loadPostsOnce();
         }
     });
+
+    function loadPostsOnce() {
+        if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
+            return false;
+        }
+
+        if (ajaxRequestSent) {
+            return false; // don't make another request, let the current one complete, or
+            // ajax.abort(); // stop the current request, let it run again
+        }
+
+        ajaxRequestSent = loadMorePosts();
+    }
 
     function loadMorePosts()
     {
@@ -118,7 +143,7 @@
             success: function(data)
             {
                 if(data.message == "no_more_comments") {
-                    $('#more-comments-loader').html('{{ "platformd.comment.no_more_posts" | trans }}');
+                    $('#more-comments-loader').html('{{ "platformd.comment.no_more_posts" | pd_trans }}');
                     $('.comment-wrapper:last').addClass('no-more-comments');
                 } else if(data.message == "error") {
                     $('#more-comments-loader').html('An error has occurred during loading.');

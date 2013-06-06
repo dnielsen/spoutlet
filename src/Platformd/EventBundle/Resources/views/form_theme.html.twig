@@ -8,10 +8,10 @@
     {% endif %}
     {% set attr = attr|merge({'class': 'control-label'}) %}
     <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>
-        {{ label|trans }}
         {% if required %}
             <span class="required">*</span>
         {% endif %}
+        {{ label|pd_trans }}
     </label>
 {% endspaceless %}
 {% endblock %}

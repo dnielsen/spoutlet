@@ -4,7 +4,7 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
+use Platformd\SpoutletBundle\Form\Type\GalleryTranslationType;
 
 class GalleryType extends AbstractType
 {
@@ -14,6 +14,7 @@ class GalleryType extends AbstractType
             ->add('name', null, array(
                 'label' => 'Gallery name',
             ))
+            ->add('slug', new SlugType(), array('url_prefix' => '/galleries/{slug}'))
             ->add('categories', 'entity', array(
                 'class' => 'SpoutletBundle:GalleryCategory',
                 'multiple' => true,
@@ -33,7 +34,15 @@ class GalleryType extends AbstractType
                     0 => 'Published',
                     1 => 'Unpublished',
                 ),
-        ));
+            ))
+            ->add('translations', 'collection', array(
+                'type' => new GalleryTranslationType,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+            ))
+        ;
     }
 
     public function getName()

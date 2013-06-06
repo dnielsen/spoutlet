@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
@@ -24,35 +25,46 @@ class AccountController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $locale = $this->getLocale();
+        $localAuth = $this->container->getParameter('local_auth');
 
-        switch ($locale) {
-            case 'ja':
-                $subdomain = '/japan';
-                break;
+        if (!$localAuth) {
 
-            case 'zh':
-                $subdomain = '/china';
-                break;
+            $locale = $this->getLocale();
 
-            case 'es':
-                $subdomain = '/latam';
-                break;
+            switch ($locale) {
+                case 'ja':
+                    $subdomain = '/japan';
+                    break;
 
-            default:
-                $subdomain = '';
-                break;
-        }
+                case 'zh':
+                    $subdomain = '/china';
+                    break;
 
-        if ($user) {
-            $cevoUserId = $user->getCevoUserId();
+                case 'es':
+                    $subdomain = '/latam';
+                    break;
 
-            if ($cevoUserId && $cevoUserId > 0) {
-                return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                default:
+                    $subdomain = '';
+                    break;
             }
+
+            if ($user) {
+                $cevoUserId = $user->getCevoUserId();
+
+                if ($cevoUserId && $cevoUserId > 0) {
+                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                }
+            }
+
+            return $this->redirect('http://www.alienwarearena.com/account/profile');
+        } else {
+            return $this->render('UserBundle:Profile:show.html.twig', array(
+                'user' => $user,
+            ));
         }
 
-        return $this->redirect('http://www.alienwarearena.com/account/profile');
+
 	}
 
 
@@ -117,11 +129,6 @@ class AccountController extends Controller
         }
         return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
 
-    }
-
-    public function videosAction()
-    {
-        return $this->redirect('/video/edit');
     }
 
     /**
@@ -227,6 +234,20 @@ class AccountController extends Controller
         ));
     }
 
+    public function videosAction(Request $request)
+    {
+        $page    = $request->query->get('page', 1);
+        $user    = $this->getUser();
+        $manager = $this->getYoutubeManager();
+        $pager   = $manager->findUserAccountVideos($user, 10, $page);
+        $videos  = $pager->getCurrentPageResults();
+
+        return $this->render('SpoutletBundle:Account:videos.html.twig', array(
+            'pager'  => $pager,
+            'videos' => $videos,
+        ));
+    }
+
     protected function checkSecurity()
     {
         if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -242,5 +263,10 @@ class AccountController extends Controller
         return $this->getDoctrine()
             ->getRepository('GiveawayBundle:GiveawayKey')
         ;
+    }
+
+    protected function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

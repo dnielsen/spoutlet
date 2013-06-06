@@ -110,4 +110,9 @@ class GroupEventService extends EventService
     {
         return $this->repository->getAllEventsUserIsAttending($user);
     }
+
+    public function findAllForGroup($group)
+    {
+        return $this->repository->findAllForGroup($group);
+    }
 }

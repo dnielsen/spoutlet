@@ -51,8 +51,10 @@ EOT
             $output->writeLn('Building group event emails...');
 
             foreach ($groupEvents as $groupEvent) {
+                $site = $groupEvent->getSites()->first();
+
                 $output->write('  - Sending email for <comment>'.$groupEvent->getName().'</comment>...');
-                $groupEventService->sendReminderEmail($groupEvent);
+                $groupEventService->sendReminderEmail($groupEvent, $site);
                 $output->write('<info>✔</info>', true);
             }
         } else {
@@ -65,8 +67,10 @@ EOT
             $output->writeLn('Building global event emails...');
 
             foreach ($globalEvents as $globalEvent) {
+                $site = $globalEvent->getSites()->first();
+
                 $output->write('  - Sending email for <comment>'.$globalEvent->getName().'</comment>...');
-                $groupEventService->sendReminderEmail($globalEvent);
+                $groupEventService->sendReminderEmail($globalEvent, $site);
                 $output->write('<info>✔</info>', true);
             }
         } else {

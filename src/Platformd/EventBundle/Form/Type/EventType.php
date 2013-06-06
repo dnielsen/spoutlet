@@ -87,6 +87,15 @@ class EventType extends AbstractType
                 'date_format' => 'MM/dd/yyyy',
                 'error_bubbling' => false,
             ))
+            ->add('registrationOption', 'choice', array(
+                'choices' => array(
+                    Event::REGISTRATION_ENABLED => 'platformd.event.registration.enabled',
+                    Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled',
+                    Event::REGISTRATION_3RD_PARTY => 'platformd.event.registration.3rdparty'
+                ),
+                'expanded' => true,
+                'label' => 'platformd.event.form.event_options'
+            ))
         ;
     }
 

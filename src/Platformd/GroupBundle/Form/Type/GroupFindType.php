@@ -3,7 +3,6 @@
 namespace Platformd\GroupBundle\Form\Type;
 
 use Platformd\GroupBundle\Entity\Group;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
@@ -36,11 +35,11 @@ class GroupFindType extends AbstractType
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'choice', array(
-                'label' => 'Region:',
-                'expanded' => 'true',
-                'multiple' => 'true',
-                'choices' => MultitenancyManager::getSiteChoices(),
+            ->add('sites', 'entity', array(
+                'class'    => 'SpoutletBundle:Site',
+                'multiple' => true,
+                'expanded' => true,
+                'property' => 'name',
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Start Date:',

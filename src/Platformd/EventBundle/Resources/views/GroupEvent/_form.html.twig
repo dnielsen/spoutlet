@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    {% if form.translations is defined %}
+    {% if form.translations is defined and form.translations is not null and form.translations is not empty %}
         <a href="javascript:void(0);" id="translations" style="cursor:pointer;">Add Translations</a>
         <div class="row-fluid first" id="translations-wrapper" style="display:none; margin:20px 0 0 0;">
             <div class="span11">
@@ -51,7 +51,9 @@
     {% endif %}
 </div>
 
-{{ form_rest(form) }}
+<div style="display:none;">
+    {{ form_rest(form) }}
+</div>
 
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
@@ -121,7 +123,8 @@
                 $(this).has('input#groupEvent_externalUrl').length ||
                 $(this).has('#groupEvent_translations').length ||
                 $(this).has('div[id^="groupEvent_translations_"]').length ||
-                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length);
+                $(this).has('input[id^="groupEvent_translations_"][id$="_name"]').length ||
+                $(this).has('input[id^="groupEvent_sites_"]').length);
         }).wrap(displayDiv);
 
         $('.file-upload').wrap(displayDiv);

@@ -70,6 +70,17 @@ class AwaVideoSessionIdCookieListener
             return;
         }
 
+        $cookies         = $event->getRequest()->cookies->all();
+        $pdSessionCookie = isset($cookies[AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME]) ? $cookies[AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME] : null;
+
+        if ($cookieVal == '' && $pdSessionCookie == null) {
+            return;
+        }
+
+        if ($cookieVal == $pdSessionCookie) {
+            return;
+        }
+
         $cookie = new Cookie(
             AwaVideoLoginRedirectListener::SESSION_ID_COOKIE_NAME,
             $cookieVal,

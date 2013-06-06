@@ -14,6 +14,7 @@ use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Platformd\GroupBundle\Validator\GroupSlugCollision;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
@@ -24,7 +25,9 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @ORM\Table(name="pd_groups")
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
+ * @UniqueEntity(fields={"slug"}, message="This group url is already used.")
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface
@@ -199,8 +202,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     private $newsArticles;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupVideo", mappedBy="group")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\ManyToMany(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo", mappedBy="groups")
      */
     private $videos;
 
@@ -267,6 +269,13 @@ class Group implements LinkableInterface, ReportableContentInterface
      */
     protected $facebookLikes = 0;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\Deal", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $deals;
+
     public function __construct()
     {
         $this->sites                    = new ArrayCollection();
@@ -274,6 +283,12 @@ class Group implements LinkableInterface, ReportableContentInterface
         $this->applications             = new ArrayCollection();
         $this->userMembershipActions    = new ArrayCollection();
         $this->contentReports           = new ArrayCollection();
+        $this->deals                    = new ArrayCollection();
+        $this->videos                   = new ArrayCollection();
+    }
+
+    public function __toString() {
+        return 'Group => { Id = '.$this->id.', Name = "'.$this->name.'" }';
     }
 
     /**
@@ -902,6 +917,17 @@ class Group implements LinkableInterface, ReportableContentInterface
 
             return $regions;
         }
+    }
+
+
+    public function setDeals($value)
+    {
+        $this->deals = $value;
+    }
+
+    public function getDeals()
+    {
+        return $this->deals;
     }
 
     public function isOwner($user)

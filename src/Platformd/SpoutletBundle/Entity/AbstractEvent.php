@@ -17,6 +17,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
 use Platformd\GameBundle\Entity\Game as Game;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\GroupBundle\Entity\Group;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -33,7 +34,6 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\DiscriminatorMap({
- *      "giveaway"  = "Platformd\GiveawayBundle\Entity\Giveaway",
  *      "sweepstakes"  = "Platformd\SweepstakesBundle\Entity\Sweepstakes"
  * })
  *
@@ -57,6 +57,7 @@ abstract class AbstractEvent implements LinkableInterface
 
     const PREFIX_PATH_BANNER = 'banner/';
     const PREFIX_PATH_GENERAL = 'general/';
+    const PREFIX_PATH_BACKGROUND = 'background/';
 
     /**
      * @var integer $id
@@ -103,6 +104,11 @@ abstract class AbstractEvent implements LinkableInterface
     protected $published = false;
 
     /**
+     * @ORM\Column(name="hidden", type="boolean", nullable="true")
+     */
+    protected $hidden = false;
+
+    /**
      * @var text $content
      *
      * @ORM\Column(name="content", type="text", nullable=true)
@@ -133,7 +139,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @Assert\File(
      *   maxSize="6000000",
-     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
      * )
      */
     protected $bannerImageFile;
@@ -176,7 +182,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @Assert\File(
      *   maxSize="6000000",
-     *   mimeTypes={"image/png", "image/jpeg", "image/jpg"}
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
      * )
      */
     protected $generalImageFile;
@@ -226,6 +232,12 @@ abstract class AbstractEvent implements LinkableInterface
      *
      */
     protected $testOnly = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $group = null;
 
     public function __construct()
     {
@@ -575,6 +587,16 @@ abstract class AbstractEvent implements LinkableInterface
         return $this->published;
     }
 
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
     public function getGeneralImage()
     {
         return $this->generalImage;
@@ -712,5 +734,15 @@ abstract class AbstractEvent implements LinkableInterface
             'slug' => $this->getSlug(),
             '_locale' => $this->getLocale()
         );
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
     }
 }

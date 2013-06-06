@@ -11,36 +11,150 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Platformd\SpoutletBundle\Model\EmailManager;
+use Platformd\GiveawayBundle\Util\KeyCounterUtil;
 use Platformd\SpoutletBundle\Entity\Site;
+use Gaufrette\Filesystem;
+use Platformd\SpoutletBundle\Util\CacheUtil;
+use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository;
+use Platformd\SpoutletBundle\Entity\CountryRepository;
+use Platformd\GiveawayBundle\Entity\GiveawayRepository;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_data;
+use Platformd\GiveawayBundle\ViewModel\giveaway_index_data;
+use Doctrine\ORM\EntityManager;
+use Platformd\SpoutletBundle\Entity\ThreadRepository;
+use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\SpoutletBundle\Link\LinkableManager;
+use MediaExposer\Exposer;
 
-/**
- * Service class for dealing with the giveaway system
- */
 class GiveawayManager
 {
     private $em;
-
-    private $router;
-
-    /**
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
-    private $translator;
-
-    private $fromAddress;
-
-    private $fromName;
-
     private $emailManager;
+    private $fromAddress;
+    private $fromName;
+    private $router;
+    private $translator;
+    private $cacheUtil;
+    private $giveawayRepo;
+    private $siteUtil;
+    private $keyCounterUtil;
+    private $giveawayKeyRepo;
+    private $threadRepo;
+    private $linkableManager;
+    private $mediaExposer;
+    private $filesystem;
+    private $countryRepo;
+    private $commentManager;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager)
     {
-        $this->em = $em;
-        $this->translator = $translator;
-        $this->router = $router;
-        $this->emailManager = $emailManager;
-        $this->fromAddress = $fromAddress;
-        $this->fromName = $fromName;
+        $this->emailManager    = $emailManager;
+        $this->em              = $em;
+        $this->fromAddress     = $fromAddress;
+        $this->fromName        = $fromName;
+        $this->router          = $router;
+        $this->translator      = $translator;
+        $this->cacheUtil       = $cacheUtil;
+        $this->giveawayRepo    = $giveawayRepo;
+        $this->siteUtil        = $siteUtil;
+        $this->keyCounterUtil  = $keyCounterUtil;
+        $this->giveawayKeyRepo = $giveawayKeyRepo;
+        $this->em              = $em;
+        $this->threadRepo      = $threadRepo;
+        $this->linkableManager = $linkableManager;
+        $this->mediaExposer    = $mediaExposer;
+        $this->filesystem      = $filesystem;
+        $this->countryRepo     = $countryRepo;
+        $this->commentManager  = $commentManager;
+    }
+
+    public function getAnonGiveawayIndexData() {
+
+        $giveawaysArr   = array();
+        $siteId         = $this->siteUtil->getCurrentSiteCached()->getId();
+        $giveaways      = $this->giveawayRepo->findActives($siteId);
+
+        foreach ($giveaways as $giveaway) {
+            $giveawaysArr[] = array(
+                'slug'  => $giveaway->getSlug(),
+                'name'  => $giveaway->getName(),
+            );
+        }
+
+        $data            = new giveaway_index_data();
+        $data->giveaways = $giveawaysArr;
+
+        return $data;
+    }
+
+    public function getAvailableKeysForGiveaway($giveawayId, $countryCode) {
+
+        if (!$giveawayId || !$countryCode) {
+            return 0;
+        }
+
+        $giveawayId = (int) $giveawayId;
+
+        if ($giveawayId < 1 || strlen($countryCode) < 2) {
+            return 0;
+        }
+
+        $keyCounterUtil = $this->keyCounterUtil;
+        $keyRepo        = $this->giveawayKeyRepo;
+        $countryRepo    = $this->countryRepo;
+        $giveawayRepo   = $this->giveawayRepo;
+
+        $availableKeys = $this->cacheUtil->getOrGen(array(
+
+            'key'                  => 'GIVEAWAY::AVAILABLE_KEY_COUNT::GIVEAWAY_ID='.$giveawayId.'::COUNTRY_CODE='.$countryCode,
+            'hashKey'              => false,
+            'cacheDurationSeconds' => 30,
+            'genFunction'          => function () use (&$keyCounterUtil, &$giveawayId, &$countryCode, &$keyRepo, &$countryRepo, &$giveawayRepo) {
+
+                $giveaway   = $giveawayRepo->find($giveawayId);
+                $country    = $countryRepo->findOneByCode($countryCode);
+
+                foreach($giveaway->getPools() as $pool) {
+
+                    if ($pool->isEnabledForCountry($country) && $pool->getIsActive()) {
+                        $keyCount = $keyRepo->getUnassignedForPool($pool);
+
+                        if ($keyCount && $keyCount > 0) {
+                            return $keyCounterUtil->getTrueDisplayCount($keyRepo->getTotalForPool($pool), $keyCount, $pool->getLowerLimit(), $pool->getUpperLimit());
+                        }
+                    }
+                }
+
+                return 0;
+            }));
+
+        return $availableKeys ? (int) $availableKeys : 0;
+    }
+
+    public function getAnonGiveawayShowData($slug) {
+
+        $giveaway = $this->giveawayRepo->findOneBySlugAndSiteId($slug, $this->siteUtil->getCurrentSiteCached()->getId());
+
+        if (!$giveaway) {
+            return null;
+        }
+
+        $data                                      = new giveaway_show_data();
+        $data->giveaway_name                       = $giveaway->getName();
+        $data->giveaway_content                    = $giveaway->getContent();
+        $data->giveaway_banner_image               = $giveaway->getBannerImage() ? $this->mediaExposer->getPath($giveaway, array('type' => 'banner')) : null;
+        $data->giveaway_redemption_steps           = $giveaway->getCleanedRedemptionInstructionsArray();
+        $data->giveaway_allow_machine_code_submit  = $giveaway->allowMachineCodeSubmit();
+        $data->giveaway_id                         = $giveaway->getId();
+
+        $data->giveaway_comment_thread_id          = $giveaway->getThreadId();
+        $data->giveaway_comment_permalink          = $this->commentManager->checkThread($giveaway);
+
+        $data->giveaway_background_image_path      = $giveaway->getBackgroundImagePath() ? $this->mediaExposer->getPath($giveaway, array('type' => 'background')) : null;
+        $data->giveaway_background_link            = $giveaway->getBackgroundLink();
+
+        return $data;
     }
 
     /**
@@ -106,14 +220,14 @@ class GiveawayManager
      *
      * @param \Platformd\GiveawayBundle\Entity\MachineCodeEntry $machineCode
      */
-    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site)
+    public function approveMachineCode(MachineCodeEntry $machineCode, Site $site, $country)
     {
         // see if it's already assigned to a key
         if ($machineCode->getKey()) {
             return;
         }
 
-        $pool = $machineCode->getGiveaway()->getActivePool();
+        $pool = $machineCode->getGiveaway()->getActivePoolForCountry($country);
 
         $key = $this->getGiveawayKeyRepository()->getUnassignedKey($pool);
         if (!$key) {
@@ -122,8 +236,10 @@ class GiveawayManager
 
         $locale = $site->getDefaultLocale();
 
+        $country = $this->countryRepo->findOneByCode($country);
+
         // attach the key, then attach it to the machine code
-        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale);
+        $key->assign($machineCode->getUser(), $machineCode->getIpAddress(), $locale, $country);
         $machineCode->attachToKey($key);
 
         $this->sendNotificationEmail($machineCode, $site);
@@ -270,7 +386,7 @@ class GiveawayManager
             '%userFirstName%'           => $user->getFirstname(),
             '%userLastName%'            => $user->getLastname(),
             '%accountUrl%'              => $accountUrl,
-            '%supportEmailAddress%'     => $appliedSite->getSupportEmailAddress(),
+            '%supportEmailAddress%'     => $appliedSite->getSiteConfig()->getSupportEmailAddress(),
         ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_approve', array(
@@ -324,7 +440,7 @@ class GiveawayManager
             '%userLastName%'            => $user->getLastname(),
             '%giveawayUrl%'             => $giveawayUrl,
             '%systemTag%'               => $machineCodeEntry->getMachineCode(),
-            '%supportEmailAddress%'     => $appliedSite->getSupportEmailAddress(),
+            '%supportEmailAddress%'     => $appliedSite->getSiteConfig()->getSupportEmailAddress(),
         ), 'messages', $locale);
 
         $subject = $this->translator->trans('email.subject.giveaway_machine_code_deny', array(
@@ -345,5 +461,140 @@ class GiveawayManager
 
         // mark the notification email as sent
         $machineCodeEntry->setNotificationEmailSentAt(new \DateTime());
+    }
+
+    public function save(Giveaway $giveaway)
+    {
+        $this->em->persist($giveaway);
+        $this->em->flush();
+
+        $threadRepo     = $this->em->getRepository('SpoutletBundle:Thread');
+        $commentRepo    = $this->em->getRepository('SpoutletBundle:Comment');
+
+        $unit = $this->em->getUnitOfWork();
+        $unit->computeChangeSets();
+        $changeset = $unit->getEntityChangeSet($giveaway);
+
+        if (array_key_exists('slug', $changeset) && $changeset['slug'][0] != $changeset['slug'][1]) {
+
+            $newThread = new Thread();
+            $thread = $threadRepo->find($changeset['slug'][0]);
+
+            if ($thread) {
+                $newThread->setIsCommentable($thread->isCommentable());
+                $newThread->setLastCommentAt($thread->getLastCommentAt());
+                $newThread->setCommentCount($thread->getCommentCount());
+
+                $permalink = str_replace($changeset['slug'][0], $changeset['slug'][1], $thread->getPermalink());
+
+                $newThread->setPermalink($permalink);
+                $newThread->setId($changeset['slug'][1]);
+                $this->em->persist($newThread);
+
+                $comments = $commentRepo->findByThread($changeset['slug'][0]);
+
+                if ($comments) {
+                    foreach ($comments as $comment) {
+                        $comment->setThread($newThread);
+                        $this->em->persist($comment);
+                    }
+                }
+
+                $this->em->flush();
+                $this->em->remove($thread);
+                $this->em->flush();
+            }
+        }
+
+        // Todo : handle upload to S3
+        $this->updateBannerImage($giveaway);
+        $this->updateGeneralImage($giveaway);
+        $this->updateBackgroundImage($giveaway);
+
+        $this->em->persist($giveaway);
+        $this->em->flush();
+    }
+
+    /**
+     * Update an giveaway's banner image
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     */
+    protected function updateBannerImage(Giveaway $giveaway)
+    {
+        foreach ($giveaway->getTranslations() as $translation) {
+            if ($translation->getRemoveBannerImage()) {
+                $translation->setBannerImage(null);
+            }
+
+            $file = $translation->getBannerImageFile();
+            if (null == $file) {
+                continue;
+            }
+            $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+            // prefix repeated in BannerPathResolver
+            $this->filesystem->write($giveaway::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
+            $translation->setBannerImage($filename);
+        }
+
+
+        $file = $giveaway->getBannerImageFile();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
+        $giveaway->setBannerImage($filename);
+    }
+
+    /**
+     * Update a giveaway's general image
+     *
+     * @param \Platformd\GiveawayBundle\Entity\Giveaway $giveaway
+     */
+    protected function updateGeneralImage(Giveaway $giveaway)
+    {
+        $file = $giveaway->getGeneralImageFile();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_GENERAL .$filename, file_get_contents($file->getPathname()));
+        $giveaway->setGeneralImage($filename);
+    }
+
+    protected function updateBackgroundImage($giveaway)
+    {
+        foreach ($giveaway->getTranslations() as $translation) {
+            if ($translation->getRemoveBackgroundImage()) {
+                $translation->setBackgroundImagePath(null);
+            }
+
+            $file = $translation->getBackgroundImage();
+            if (null == $file) {
+                continue;
+            }
+            $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+            // prefix repeated in BannerPathResolver
+            $this->filesystem->write($giveaway::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+            $translation->setBackgroundImagePath($filename);
+        }
+
+        $file = $giveaway->getBackgroundImage();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($giveaway->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write($giveaway::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+        $giveaway->setBackgroundImagePath($filename);
     }
 }

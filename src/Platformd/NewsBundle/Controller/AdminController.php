@@ -12,24 +12,50 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
+use Knp\MediaBundle\Util\MediaUtil;
+
 class AdminController extends Controller
 {
-
     public function indexAction()
     {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 2));
+            return $this->redirect($url);
+        }
+
         $this->addNewsBreadcrumb();
 
-        $manager = $this
+        return $this->render('NewsBundle:Admin:index.html.twig', array(
+            'sites' => $this->getSiteManager()->getSiteChoices()
+        ));
+    }
+
+    public function listAction($site)
+    {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
+            $site = 2;
+        }
+
+        $this->addNewsBreadcrumb();
+        $this->addSiteBreadcrumbs($site);
+
+        $em = $this
             ->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('NewsBundle:News');
-        $query = $manager->getFindNewsQuery();
+            ->getEntityManager();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
+
+        $repo   = $em->getRepository('NewsBundle:News');
+        $query  = $repo->getFindNewsForSiteQuery($site);
 
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
-        return $this->render('NewsBundle:Admin:index.html.twig', array(
-            'news' => $pager
+        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
+
+        return $this->render('NewsBundle:Admin:list.html.twig', array(
+            'news'  => $pager,
+            'site'  => $site,
         ));
     }
 
@@ -45,7 +71,7 @@ class AdminController extends Controller
 
             $request
                 ->getSession()
-                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.created'));
+                ->setFlash('success', $this->trans('platformd.admin.news.created'));
 
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
@@ -74,7 +100,7 @@ class AdminController extends Controller
         if ($this->processForm($form, $request)) {
             $request
                 ->getSession()
-                ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.modified'));
+                ->setFlash('success', $this->trans('platformd.admin.news.modified'));
 
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
@@ -103,7 +129,7 @@ class AdminController extends Controller
         $this
             ->getRequest()
             ->getSession()
-            ->setFlash('success', $this->get('translator')->trans('platformd.admin.news.deleted'));
+            ->setFlash('success', $this->trans('platformd.admin.news.deleted'));
 
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
     }
@@ -120,9 +146,10 @@ class AdminController extends Controller
                 // either persist the image, or remove it
                 /** @var $news \Platformd\NewsBundle\Entity\News */
                 $news = $form->getData();
-                if ($news->getImage()->getFileObject()) {
-                    $em->persist($news->getImage());
-                } else {
+
+                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+
+                if (!$mUtil->persistRelatedMedia($news->getImage())) {
                     $news->setImage(null);
                 }
 
@@ -144,6 +171,19 @@ class AdminController extends Controller
         $this->getBreadcrumbs()->addChild('News', array(
             'route' => 'NewsBundle_admin_homepage'
         ));
+
+        return $this->getBreadcrumbs();
+    }
+
+    private function addSiteBreadcrumbs($site)
+    {
+        if ($site) {
+
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
+                'route' => 'NewsBundle_admin_siteList',
+                'routeParameters' => array('site' => $site)
+            ));
+        }
 
         return $this->getBreadcrumbs();
     }

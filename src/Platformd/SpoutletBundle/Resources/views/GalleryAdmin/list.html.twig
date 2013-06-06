@@ -1,0 +1,104 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block content %}
+<h1>Image Galleries</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sites</th>
+            <th>Position</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for gallery in imageGalleries %}
+        <tr>
+            <td><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">{{ gallery.name(site) }}</a></td>
+            <td>
+                {% for site in gallery.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
+            <td>
+                <div style="text-align:center;">
+                    {% if gallery.sitesPositions[site] > 0 %}<a href="{{ path('admin_gallery_move', { id : gallery.id, direction: "up", site: site }) }}" class="arrow-button up"></a>{% endif %}
+                    {% if loop.last == false %}<a href="{{ path('admin_gallery_move', { id : gallery.id, direction: "down", site: site }) }}" class="arrow-button down"></a>{% endif %}
+                </div>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-mini" href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}"><i class="icon-th-list icon-white"></i> Edit</a>
+                    <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}"><i class="icon-pencil"></i> Edit</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% else %}
+        <td colspan="4">
+            <div class="alert alert-info"><i class="icon-info-sign"></i> No image galleries found</div>
+        </td>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_gallery_new') }}">
+    Create a new entry
+</a>
+
+<hr class="faded" />
+
+<h1>Video Galleries</h1>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sites</th>
+            <th>Position</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for gallery in videoGalleries %}
+        <tr>
+            <td><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}">{{ gallery.name(site) }}</a></td>
+            <td>
+                {% for site in gallery.sites %}
+                    {{ site.name -}}
+                    {{- loop.last ? '' : ',' }}
+                {% endfor %}
+            </td>
+            <td>
+                <div style="text-align:center;">
+                    {% if gallery.sitesPositions[site] > 0 %}<a href="{{ path('admin_gallery_move', { id : gallery.id, direction: "up", site: site }) }}" class="arrow-button up"></a>{% endif %}
+                    {% if loop.last == false %}<a href="{{ path('admin_gallery_move', { id : gallery.id, direction: "down", site: site }) }}" class="arrow-button down"></a>{% endif %}
+                </div>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-mini" href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}"><i class="icon-th-list icon-white"></i> Edit</a>
+                    <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('admin_gallery_edit', { 'slug': gallery.slug }) }}"><i class="icon-pencil"></i> Edit</a></li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    {% else %}
+        <td colspan="4">
+            <div class="alert alert-info"><i class="icon-info-sign"></i> No video galleries found</div>
+        </td>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-primary" href="{{ path('admin_gallery_new') }}">
+    Create a new entry
+</a>
+
+{% endblock %}

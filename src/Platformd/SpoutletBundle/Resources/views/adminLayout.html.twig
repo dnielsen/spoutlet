@@ -8,6 +8,8 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 
+        {% include 'SpoutletBundle::_favicon.html.twig' ignore missing %}
+
 		<script type="text/javascript">
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
@@ -40,7 +42,7 @@
                 'bundles/spoutlet/js/jquery.multiselect.min.js'
                 'bundles/spoutlet/js/jquery.multiselect.filter.min.js'
 		        'ckeditor/ckeditor.js'
-		        'ckeditor/config.admin.js'
+                'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
 		        'flot/jquery.flot.js'
 		        output='js/packed/admin.js'
@@ -60,7 +62,7 @@
         {% include 'SpoutletBundle::_analytics.html.twig' %}
 
         <script type="text/javascript">
-            CKEDITOR.config.customConfig = 'config.admin.js';
+            CKEDITOR.config.customConfig = 'ckeditor/config.admin.js';
         </script>
 	</head>
 	<body>
@@ -68,11 +70,11 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container-fluid">
-                <a class="brand" href="{{ path('admin_index') }}">Alienware Arena Admin</a>
+                <a class="brand" href="{{ path('admin_index') }}">Admin</a>
                 <ul class="nav">
                     <li><a href="{{ path('admin_index') }}">Admin Home</a></li>
                     <li>
-                        <a href="{{ path('admin_index') }}">
+                        <a href="{{ path('default_index') }}">
                             <i class="icon-home icon-white"></i>
                             Website Frontend
                         </a>
@@ -87,7 +89,7 @@
         </div>
     </div>
 
-    <div class="container-fluid">
+    <div class="admin-container container-fluid">
         <div class="row-fluid">
             <div class="sidebar span3">
                 <div class="well">
@@ -139,25 +141,28 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="{{ path('admin_gallery_index') }}">Gallery Management</a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ path('admin_gallery_new') }}">Add new gallery</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('admin_featured_index') }}">Featured content</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="{{ path('admin_contest_index') }}">Contests</a>
-                                <ul>
-                                    <li>
-                                        <a href="{{ path('admin_contest_new') }}">Add new</a>
-                                    </li>
-                                </ul>
-                            </li>
+
+                            {% if not is_granted('ROLE_JAPAN_ADMIN') %}
+                                <li>
+                                    <a href="{{ path('admin_gallery_index') }}">Gallery Management</a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('admin_gallery_new') }}">Add new gallery</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('admin_featured_index') }}">Featured content</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="{{ path('admin_contest_index') }}">Contests</a>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('admin_contest_new') }}">Add new</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
 
                             {% endif %}
 
@@ -174,7 +179,7 @@
 
                             {% endif %}
 
-                            {% if is_granted('ROLE_ADMIN_GAME') %}
+                            {% if is_granted('ROLE_ADMIN_GAME') and not is_granted('ROLE_JAPAN_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_game') }}">Games</a>
                                 <ul>
@@ -195,7 +200,7 @@
                                 {% endif %}
                             {% endif %}
 
-                            {% if features.hasDeals and is_granted('ROLE_ADMIN_DEAL') %}
+                            {% if features.hasDeals and is_granted('ROLE_ADMIN_DEAL') and not is_granted('ROLE_JAPAN_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_deal') }}">Deals</a>
                                 <ul>
@@ -205,6 +210,15 @@
                                 </ul>
                             </li>
                             {% endif %}
+
+                            <li>
+                                <a href="{{ path('admin_takeover_index') }}">Site Takeovers</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_takeover_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
@@ -221,21 +235,70 @@
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <li><a href="{{ path('admin_upload_media') }}">Manage Media</a></li>
                             {% endif %}
+
+                            <li>
+                                <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_background_ads_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_rsvp_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            {% if features.hasHtmlWidgets %}
+                                <li>
+                                    <a href="{{ path('admin_html_widget_index') }}">Html Widgets</a>
+                                    <ul>
+                                    <li>
+                                        <a href="{{ path('admin_html_widget_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+
+                                </li>
+                            {% endif %}
+
+                            <li>
+                                <a href="{{ path('admin_timeline_index') }}">Timelines</a>
+                            </li>
+
                         </ul>
                     {% endif %}
 
                     {% if is_granted('ROLE_STATS_ADMIN') %}
                         <h5>Stats</h5>
                         <ul>
-                            <li><a href="{{ path('admin_contest_metrics') }}">Contests</a></li>
+                            {% if not is_granted('ROLE_JAPAN_ADMIN') %}
+                                <li><a href="{{ path('admin_contest_metrics') }}">Contests</a></li>
+                            {% endif %}
+
                             <li><a href="{{ path('admin_giveaway_metrics') }}">Giveaway</a></li>
-                            <li><a href="{{ path('admin_deal_metrics') }}">Deals</a></li>
+
+                            {% if not is_granted('ROLE_JAPAN_ADMIN') %}
+                                <li><a href="{{ path('admin_deal_metrics') }}">Deals</a></li>
+                            {% endif %}
+
                             <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
+
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
-                            <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
-                            <li><a href="{{ path('admin_group_discussion_find') }}">Find Discussions</a></li>
-                            <li><a href="{{ path('admin_image_find') }}">Find Images</a></li>
+
+                            {% if not is_granted('ROLE_JAPAN_ADMIN') %}
+                                <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
+
+                                <li><a href="{{ path('admin_group_discussion_find') }}">Find Discussions</a></li>
+
+                                <li><a href="{{ path('admin_image_find') }}">Find Images</a></li>
+                            {% endif %}
+
                             <li><a href="{{ path('admin_event_metrics') }}">Events</a></li>
+                            <li><a href="{{ path('youtube_admin_metrics') }}">Videos</a></li>
                         </ul>
                     {% endif %}
 
@@ -243,7 +306,7 @@
                         <h5>Members</h5>
                         <ul>
                             <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
-                            <li><a href="#">Mass Unsubscribe</a></li>
+                            <li><a href="{{ path('admin_mass_unsubscribe') }}">Mass Unsubscribe</a></li>
                         </ul>
                     {% endif %}
                 </div>
@@ -251,25 +314,26 @@
             <div class="content span9">
 
                 {{ knp_menu_render('admin_breadcrumbs', {}, "breadcrumbs") }}
+                {% block flash %}
+                    {% if app.session.hasFlash('success') %}
+                        <div class="alert alert-success">
+                            <i class="icon-ok"></i>
+                            {{ app.session.getflash('success') | trans }}
+                        </div>
+                    {% endif %}
 
-                {% if app.session.hasFlash('success') %}
-                    <div class="alert alert-success">
-                        <i class="icon-ok"></i>
-                        {{ app.session.getflash('success') | trans }}
-                    </div>
-                {% endif %}
-
-                {% if app.session.hasFlash('error') %}
-                    <div class="alert alert-error">
-                        <i class="icon-ok"></i>
-                        {{ app.session.getflash('error') | trans }}
-                    </div>
-                {% endif %}
+                    {% if app.session.hasFlash('error') %}
+                        <div class="alert alert-error">
+                            <i class="icon-ok"></i>
+                            {{ app.session.getflash('error') | trans }}
+                        </div>
+                    {% endif %}
+                {% endblock %}
 
                 {% block content %}{% endblock %}
 
                 <footer>
-                    <p>&copy; Alienware Arena {{ '' | date('Y') }}</p>
+                    <p>&copy; {{ '' | date('Y') }}</p>
                 </footer>
             </div>
         </div>

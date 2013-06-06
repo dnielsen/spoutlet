@@ -3,21 +3,29 @@
 {% block title %}{{ "platformd.users.user_listings.title" | trans }}{% endblock %}
 
 {% block content %}
-    <h1>Users</h1>
- 
-    <form action="{{  path('Platformd_UserBundle_admin_index') }}" method="get" name="search" >
-    <strong>{{ "platformd.users.user_listings.search" | trans }}:</strong> <input name="search" class="usersearch" type="text" title="{{ "platformd.users.user_listings.search" | trans }}" size="41"> 
+
+    <h1>Members</h1>
+
+    <form action="{{  path('Platformd_UserBundle_admin_index') }}" method="POST" name="search">
+        <strong>{{ "platformd.users.user_listings.search" | trans }}:</strong>
+        <input name="search" class="usersearch" type="text" title="{{ "platformd.users.user_listings.search" | trans }}" size="41" value="{{ search }}" />
+        <select name="type">
+            <option value="text">Username/Email</option>
+            <option value="ip"{% if app.request.get('type') == 'ip' %} selected{%endif%}>IP Address</option>
+        </select>
+        <input type="submit" value="{{ 'Find members' | trans }}" />
     </form>
 
     {% if pager.nbResults > 0 %}
         <table class="table table-striped table-bordered tablesorter">
             <thead>
                 <tr>
-                    <th></th>
+                    <th>{{ 'id' | trans }}</th>
                     <th>{{ "username" | trans }}</th>
                     <th>{{ "fos_user_admin_index_firstname" | trans({}, "FOSUserBundle") }}</th>
                     <th>{{ "fos_user_admin_index_lastname" | trans({}, "FOSUserBundle") }}</th>
                     <th>{{ "email" | trans({}, "admin") }}</th>
+                    <th>Last login</th>
                     <th>Admin level</th>
                     <th>{{ "platformd.help.actions" | trans }}</th>
                 </tr>
@@ -26,24 +34,32 @@
             <tbody>
             {% for index, user in pager %}
                 <tr class="{{ index is odd ? "odd" : "even" }}">
+                    <td>{{ user.id }}</td>
                     <td>
-                        {% if user.avatar %}
-                            <a href="{{ asset(media_path(user)) }}" title="See avatar in real size"><img src="{{ asset(media_path(user)) }}" alt="{{ user.username }}" width="100" /></a>
-                        {% endif %}
+                        <a href="{{ path('Platformd_UserBundle_admin_show', {'id': user.id}) }}">{{ user.username }}</a>
                     </td>
-                    <td>{{ user.username }}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
                     <td>{{ user.email }}</td>
                     <td>
+                        {% if user.loginRecords|length > 0 %}
+                            {{ user.loginRecords.first.ipAddress ~ " (" ~ user.loginRecords.first.country.name ~ ")" }}
+                            <div class="last-login-date" title="{{ user.loginRecords.first.dateTime | date }}Z">{{ user.loginRecords.first.dateTime | date }}</div>
+                        {% else %}
+                            <em>None</em>
+                        {% endif %}
+                    </td>
+                    <td>
                         {{ user.AdminLevelString }}
                     </td>
                     <td>
-                        <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a>
-                        <a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}" data-confirm="Delete this user?">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
+                        {% if auth_type == 'local' %}<a href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}">{{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a>{% endif %}
+                        <a href="{{ path("Platformd_UserBundle_admin_edit", { "id" : user.id }) }}">{{ "fos_user_admin_edit" | trans({}, "FOSUserBundle" ) }}</a> |
+                        <a class="delete_link" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}" data-confirm="Delete this user?">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a> |
                         {% if user.avatar and not user.isAvatarApproved %}
-                            <a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}">{{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a>
+                            <a href=" {{ path("admin_user_approve_avatar", {"id": user.id }) }}">{{ "fos_user_admin_approve_avatar" | trans({}, "FOSUserBundle" ) }}</a> |
                         {% endif %}
+                        {% if user.loginRecords|length > 0 %}<a href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}">Logins</a>{% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -54,7 +70,7 @@
     {% if pager.haveToPaginate %}
         {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
         {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
-        {{ pagerfanta(pager, 'default', {'routeName' : 'Platformd_UserBundle_admin_index'}) }}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', {'routeName' : 'Platformd_UserBundle_admin_index'}) }}
     {% endif %}
 
     <script type="text/javascript">
@@ -79,6 +95,15 @@
 
             return false;
         });
-    </script>
 
-{% endblock %} 
+        $(function () {
+            $('.last-login-date').timeago();
+        });
+
+    </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
+{% endblock %}

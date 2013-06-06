@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="std_1col" style="padding: 0;">
-        <div class="events-sub-nav-wrapper">
-           <div class="events-sub-nav">
+        <div class="sub-nav-wrapper events-sub-nav-wrapper">
+           <div class="sub-nav events-sub-nav">
                 <ul>
                     {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
                         {% if event.registrationOption == "REGISTRATION_ENABLED" %}
@@ -117,5 +117,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+    {% include 'EventBundle::_css_assets.html.twig' %}
 {% endblock %}

@@ -58,6 +58,34 @@ class PoolLoader
         }
     }
 
+    public function loadKeysFromArray($keysArray, $pool, $type = 'GIVEAWAY')
+    {
+        $batchCount     = 250;
+        $formatString   = '(%s, '.$pool->getId().')';
+        $i              = 0;
+        $formattedKeys  = array();
+
+        foreach ($keysArray as $key) {
+
+            if (!$key || empty($key) || trim($key) == "") {
+                continue;
+            }
+
+            $formattedKeys[] = sprintf($formatString, $this->conn->quote(trim($key)));
+            $i++;
+
+            if ($i >= $batchCount) {
+                $this->executeLoadQuery($formattedKeys, $type);
+                $formattedKeys = array();
+                $i = 0;
+            }
+        }
+
+        if (!empty($formattedKeys)) {
+            $this->executeLoadQuery($formattedKeys, $type);
+        }
+    }
+
     private function executeLoadQuery(array $valuesString, $type)
     {
         if (empty($valuesString)) {

@@ -3,31 +3,22 @@
         <div class="widget-title">{{ 'platformd.layout.page_content.videos' | trans}}</div>
     </div>
     <div class="widget-content">
-        {% if videos %}
-            {% for video in videos %}
-                <div class="movie" {% if loop.index > 4 %} style="margin-top: 5px" {% endif %}>
-                    <div class="movie-thumb">
-                        <a href="http://{{ host }}/video/movie/{{ video.id }}/">
-                            {% if app.session.locale == 'ja' %}
-                                <img border="0" src="http://japan.alienwarearena.com{{ video.thumb }}"
-                            {% else %}
-                                <img border="0" src="{{ video.thumb }}">
-                            {% endif %}
-                        </a>
-                    </div>
-                    <p class="movie-title"><a class="ellipse tooltip" title="{{ video.name }}" href="http://{{ host }}/video/movie/{{ video.id }}/">{{ video.name }}</a></p>
-                    <p class="movie-views">{{ 'platformd.layout.page_content.views' | trans }}: {{ video.views }}</p>
-                    <p class="movie-rating">{{ 'platformd.layout.page_content.rating' | trans }}: {{ video.rating }}</p>
+        {% for video in videos %}
+            <div class="tiled{% if loop.index == 1 or loop.index == 2 or loop.index == 3 %} first{% endif %}">
+                <div class="video-thumb-wrapper">
+                    <a href="{{ path('youtube_view', {'slug' : video.slug}) }}"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" /></a>
+                    <span class="video-duration">{{ video.formattedDuration }}</span>
                 </div>
-            {% endfor %}
-        {% endif %}
+                <div class="more-videos-link">{{ video | pd_link_full(video.title) }}</div>
+                <div class="video-details">
+                    <span class="views">{{ video.views}} {{ 'youtube.views' | trans }}</span>
+                    <span class="points">{{ video.votes | length }} {{ 'youtube.points' | trans }}</span>
+                </div>
+            </div>
+        {% endfor %}
     </div>
     <div class="widget-footer">
-        {% if app.session.locale == 'ja' %}
-            <a class="aw-link" href="http://japan.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
-        {% elseif app.session.locale == 'zh' %}
-            <a class="aw-link" href="http://china.alienwarearena.com/video/">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
-        {% endif %}
+            <a class="aw-link" href="{{ path('youtube_index') }}">{{ 'platformd.layout.page_content.view_more' | trans}}</a>
         <div class="clear"></div>
     </div>
 </div>

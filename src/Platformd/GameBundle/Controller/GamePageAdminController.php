@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\GameBundle\Form\Type\GamePageType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 
 /**
  * GamePage admin controller.
@@ -22,8 +21,10 @@ class GamePageAdminController extends Controller
     {
         $this->addGamePagesBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('GameBundle:GamePageAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -36,12 +37,13 @@ class GamePageAdminController extends Controller
         $this->addGamePagesBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $siteName = MultitenancyManager::getSiteName($site);
+        $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($site);
 
-        $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($siteName);
+        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->find($site);
 
         return $this->render('GameBundle:GamePageAdmin:list.html.twig', array(
             'entities' => $gamePages,
+            'site'  => $site,
         ));
     }
 
@@ -196,7 +198,7 @@ class GamePageAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_game_page_site',
                 'routeParameters' => array('site' => $site)
             ));

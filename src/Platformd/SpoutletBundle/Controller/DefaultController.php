@@ -4,9 +4,18 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+    public function _mainUserStripAction() {
+        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
+
+        $this->varnishCache($response, 120);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *
@@ -19,7 +28,19 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasIndex()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:index.html.twig');
+    }
+
+    public function healthCheckAction() {
+        $site      = $this->getCurrentSite();
+        $giveaways = $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
+        $ipAddress = $this->getClientIp($this->getRequest());
+
+        return new Response('OK');
     }
 
     /**
@@ -107,7 +128,7 @@ class DefaultController extends Controller
 
         });
 
-    	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+        return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,
@@ -135,11 +156,19 @@ class DefaultController extends Controller
 
     public function aboutAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasAbout()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:about.html.twig');
     }
 
     public function contactAction()
     {
+        if (!$this->getCurrentSite()->getSiteFeatures()->gethasContact()) {
+            throw $this->createNotFoundException();
+        }
+
         return $this->render('SpoutletBundle:Default:contact.html.twig');
     }
 
@@ -183,27 +212,10 @@ class DefaultController extends Controller
 
     public function videoFeedAction(Request $request)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,$this->getVideoFeedUrl($this->getLocale()));
-        curl_setopt($ch, CURLOPT_FAILONERROR,1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $xml = simplexml_load_string(trim($response));
-
-        $videos = array();
-        foreach ($xml->latest->movie as $video) {
-            $videos[] = $video;
-        }
-
-        $host = $request->getHost();
+        $videos = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry(), 6);
 
         return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
             'videos' => $videos,
-            'host' => $host,
         ));
     }
 
@@ -222,5 +234,43 @@ class DefaultController extends Controller
             default:
                 return 'http://video.alienwarearena.com/ajax/moviexml';
         }
+    }
+
+    public function eventsAction()
+    {
+        $site = $this->getCurrentSite();
+
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
+        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
+        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        uasort($upcomingEvents, array($this->getGlobalEventService(), 'eventCompare'));
+
+        $events = array_slice($upcomingEvents, 0, 6);
+
+        return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
+    }
+
+    public function groupsMapAction()
+    {
+        $site = $this->getCurrentSite();
+
+        $groups = $this->get('platformd.model.group_manager')->getAllLocationGroupsForSite($site);
+
+        $groupsArray = array();
+
+        foreach ($groups as $group) {
+            $groupsArray[] = array(
+                'name' => $group->getName(),
+                'location' => $group->getLocation(),
+                'url' => $this->getLinkableUrl($group),
+            );
+        }
+
+        return $this->render('SpoutletBundle:Default:groupsMap.html.twig', array('groups' => $groupsArray));
+    }
+
+    private function getYoutubeManager()
+    {
+        return $this->get('platformd.model.youtube_manager');
     }
 }

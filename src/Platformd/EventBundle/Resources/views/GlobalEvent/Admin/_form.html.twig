@@ -6,12 +6,15 @@
 
 {% set isOnline = event is defined ? event.online : true %}
 
+<div class="help-inline time-error" style="display:none;">Please select a valid time for your event</div>
+
 <div class="row-fluid">
     <fieldset>
         <legend>a) Event Information</legend>
         <div class="row-fluid first">
             <div class="span8">
                 {{ form_row(form.name) }}
+                {{ form_row(form.registrationOption) }}
                 {{ form_row(form.hostedBy) }}
                 {{ form_row(form.bannerImage) }}
                 {{ form_row(form.slug) }}
@@ -33,21 +36,26 @@
             </div>
         </div>
     </fieldset>
-    <fieldset>
-        <legend id="translations" style="cursor:pointer;">b) Translations (click here to view)</legend>
-        <div class="row-fluid first" id="translations-wrapper" style="display:none;">
-            <div class="span8">
-                {{ form_widget(form.translations) }}
+
+    {% if form.translations is not empty  %}
+        <fieldset>
+            <legend id="translations" style="cursor:pointer;">b) Translations (click here to view)</legend>
+            <div class="row-fluid first" id="translations-wrapper" style="display:none;">
+                <div class="span8">
+                    {{ form_widget(form.translations) }}
+                </div>
             </div>
-        </div>
-    </fieldset>
+        </fieldset>
+    {% endif %}
 </div>
 
-{{ form_rest(form) }}
+<div style="display:none;">
+    {{ form_rest(form) }}
+</div>
 
 {# @TODO put that in a form_theme if possible - could not find that #}
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(function () {
 
         $('.event-date-picker').datepicker({
             minDate: 0,
@@ -57,12 +65,11 @@
         $('#global-event-form').submit(function() {
 
             var errors = 0;
-            var errorString = '<div class="help-inline time-error">Please select a valid time for your event</div>';
 
             if (!$('.start-date .hour-selection select').val() || !$('.start-date .minute-selection select').val()) {
                 $('.start-date .control-group').addClass('error');
                 if ($('.start-date .time-error').length < 1) {
-                    $('.start-date .time-selection').append(errorString);
+                    $('.start-date .time-selection').append($('.time-error').first().clone().css('display', 'inline-block'));
                 }
                 errors++;
             } else {
@@ -73,7 +80,7 @@
             if (!$('.end-date .hour-selection select').val() || !$('.end-date .minute-selection select').val()) {
                 $('.end-date .control-group').addClass('error');
                 if ($('.end-date .time-error').length < 1) {
-                    $('.end-date .time-selection').append(errorString);
+                    $('.end-date .time-selection').append($('.time-error').first().clone().css('display', 'inline-block'));
                 }
                 errors++;
             } else {
@@ -117,5 +124,9 @@
                 $('#location-info').fadeOut();
             }
         });
+
+        if ($('input[name="globalEvent[online]"]:checked').val() == 0) {
+            $('#location-info').show();
+        }
     });
 </script>

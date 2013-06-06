@@ -1,7 +1,7 @@
 {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-<h3>Add Your Comment</h3>
+<h3 class="add-comment">Add Your Comment</h3>
 <form class="comment-form" action="{{ path("comments_new", { "threadId": thread.id }) }}" method="POST">
     {{ form_errors(form) }}
     {{ form_widget(form.body) }}

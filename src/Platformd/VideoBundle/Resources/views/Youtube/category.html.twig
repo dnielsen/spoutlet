@@ -1,0 +1,73 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'youtube.videos' | trans ~ ' - ' ~ category.name(site.id) %}
+
+{% block content %}
+
+<div class="std_2col" style="padding:0;">
+    <div class="left video-breadcrumb"><a href="{{ path('youtube_index') }}">{{ 'youtube.navigation.video_main' | trans }}</a> &gt; <span>{{ category.name(site.id) }}</span></div>
+    <div class="right"><a href="{{ path('youtube_submit') }}" class="btn">{{ 'youtube.submit_video' | trans }}</a></div>
+</div>
+
+<div class="std_2col">
+    <div class="left">
+        <div class="videos-wrapper">
+            <div class="widget-66">
+                <div class="featured-content-header">
+                    <a href="javascript:void(0);" id="videos-popular" class="active" data-tab="popular">{{ 'youtube.popular' | trans }}</a>
+                    <a href="javascript:void(0);" id="videos-watched" data-tab="currently_watched">{{ 'youtube.recently_watched' | trans }}</a>
+                    <div style="clear: left;"></div>
+                </div>
+                <div class="widget-content" id="video-content" style="min-height: 440px;">
+                    {% include 'VideoBundle:Youtube:_tiledList.html.twig' with { 'videos' : videos} %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        <div style="margin-top: 10px;">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('.more-videos-link a').truncate({width: 280});
+            $(".featured-content-header a").click(function() {
+                var tab = $(this).attr("data-tab");
+                $('.videos-wrapper').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+
+                });
+                $(".featured-content-header a.active").removeClass("active");
+                $(this).addClass("active");
+
+                $.ajax({
+                    url: '{{ path('youtube_tabs_category') }}' + '/' + '{{ category.slug }}' + '/' + tab,
+                    success: function (a, b, c) {
+                        $('#video-content').html(a);
+                        $('.more-videos-link a').truncate({width: 280});
+                        $('.videos-wrapper').unblock();
+                    },
+                    error: function (a, b, c) {
+                        $('.videos-wrapper').unblock();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

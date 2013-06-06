@@ -39,7 +39,7 @@ class GlobalEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findUpcomingEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    public function findUpcomingEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
     {
         $qb = $this->createQueryBuilder('gE')
             ->select('gE', 's')
@@ -74,7 +74,7 @@ class GlobalEventRepository extends EventRepository
      * @param bool $published
      * @return array
      */
-    public function findPastEventsForSite(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
+    public function findPastEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
     {
         $qb = $this->createQueryBuilder('gE')
             ->select('gE', 's')
@@ -151,7 +151,7 @@ class GlobalEventRepository extends EventRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('s.defaultLocale IN (:siteList)');
+            $qb->andWhere('s IN (:siteList)');
             $qb->setParameter('siteList', $sites);
 
         }
@@ -183,5 +183,18 @@ class GlobalEventRepository extends EventRepository
         $qb->distinct('gE.id');
 
         return $qb;
+    }
+
+    public function findAllForSite($site)
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->select('gE', 's')
+            ->leftJoin('gE.sites', 's')
+            ->andWhere('s = :site')
+            ->setParameter('site', $site)
+            ->orderBy('gE.createdAt', 'DESC')
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

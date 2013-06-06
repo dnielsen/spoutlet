@@ -1,0 +1,7 @@
+services:
+    platformd.repository.youtube_video:
+        class:           Platformd\VideoBundle\Repository\YoutubeVideoRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'VideoBundle:YoutubeVideo'

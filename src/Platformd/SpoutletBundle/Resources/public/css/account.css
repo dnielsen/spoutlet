@@ -61,6 +61,10 @@ body.site-ja #accountHeader {
 body.site-zh #accountHeader {
     background:url(../images/account/header-bg.zh.jpg) top left no-repeat;
 }
+/* locale-specific overrides */
+body.site-es #accountHeader {
+    background:url(../images/account/header-bg.es.jpg) top left no-repeat;
+}
 
 #accountHeader ul {
     list-style: none outside none;
@@ -331,4 +335,25 @@ table.uploadedFiles td {
 
 .event-owner-actions {
     margin-bottom: 0;
+}
+
+#accountHeader li.more ul {
+    padding: 3px;
+    position: absolute;
+    background: #393939;
+    width: 50px;
+}
+
+#accountHeader li.more > a {
+    background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat;
+    padding-right: 15px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.profileAvatar_big .defaultAvatar {
+    width: 184px;
+    height: 184px;
+    background:url('/images/profile-default.png') top left no-repeat;
+    border: none;
 }

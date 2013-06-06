@@ -224,12 +224,12 @@ class CommentsController extends Controller
             $em->flush();
         }
 
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
+        $comments = null; # this should be null because of caching... ALL comments are loaded DYNAMICALLY now
 
         return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
-            'offset'    => $commentLimit,
+            'offset'    => 0,
             'permalink' => $thread->getPermalink(),
         ));
     }
@@ -346,6 +346,7 @@ class CommentsController extends Controller
         $thread = new Thread();
         $thread->setId($threadId);
         $thread->setPermalink($this->getUrlForObject($object).'#comments');
+        $thread->setSite($this->getCurrentSite());
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($thread);
@@ -428,6 +429,12 @@ class CommentsController extends Controller
             $tag = 'nukeforumreply';
         }
 
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+
+            $tab = 'nukeforumreply';
+
+        }
+
         if($tag) {
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
@@ -448,6 +455,10 @@ class CommentsController extends Controller
 
         if(strlen(stristr($threadId, 'group')) > 0) {
             $tag = 'replytothread';
+        }
+
+        if(strlen(stristr($threadId, 'youtube')) > 0) {
+            $tag = 'videocomment';
         }
 
         if($tag) {

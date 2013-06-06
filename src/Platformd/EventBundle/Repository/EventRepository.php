@@ -257,4 +257,22 @@ class EventRepository extends EntityRepository
         return $qb->getQuery()
             ->getResult();
     }
+
+    public function findUpcomingEventsForSiteLimited($site, $limit, $published)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e', 's')
+            ->leftJoin('e.sites', 's')
+            ->where('e.endsAt >= :now')
+            ->andWhere('e.published = :published')
+            ->andWhere('s = :site')
+            ->orderBy('e.startsAt', 'ASC')
+            ->setParameter('now', new DateTime())
+            ->setParameter('published', $published)
+            ->setParameter('site', $site)
+            ->setMaxResults($limit)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

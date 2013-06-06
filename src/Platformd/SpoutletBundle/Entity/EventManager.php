@@ -6,6 +6,7 @@ use Gaufrette\Filesystem;
 use Doctrine\ORM\EntityManager;
 use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\GiveawayBundle\Entity\Giveaway;
 
 /**
 *
@@ -67,9 +68,18 @@ class EventManager
             }
         }
 
+        // persisting and flushing early to avoid sql errors when adding translation images.
+        $this->manager->persist($event);
+        $this->manager->flush();
+
         // Todo : handle upload to S3
         $this->updateBannerImage($event);
         $this->updateGeneralImage($event);
+
+        if ($event instanceof Giveaway) {
+            $this->updateBackgroundImage($event);
+        }
+
         $this->manager->persist($event);
         $this->manager->flush();
     }
@@ -81,6 +91,23 @@ class EventManager
      */
     protected function updateBannerImage(AbstractEvent $event)
     {
+        if ($event instanceof Giveaway) {
+            foreach ($event->getTranslations() as $translation) {
+                if ($translation->getRemoveBannerImage()) {
+                    $translation->setBannerImage(null);
+                }
+
+                $file = $translation->getBannerImageFile();
+                if (null == $file) {
+                    continue;
+                }
+                $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+                // prefix repeated in BannerPathResolver
+                $this->filesystem->write(AbstractEvent::PREFIX_PATH_BANNER.$filename, file_get_contents($file->getPathname()));
+                $translation->setBannerImage($filename);
+            }
+        }
+
         $file = $event->getBannerImageFile();
 
         if (null == $file) {
@@ -110,5 +137,34 @@ class EventManager
         // prefix repeated in BannerPathResolver
         $this->filesystem->write(AbstractEvent::PREFIX_PATH_GENERAL .$filename, file_get_contents($file->getPathname()));
         $event->setGeneralImage($filename);
+    }
+
+    protected function updateBackgroundImage($event)
+    {
+        foreach ($event->getTranslations() as $translation) {
+            if ($translation->getRemoveBackgroundImage()) {
+                $translation->setBackgroundImagePath(null);
+            }
+
+            $file = $translation->getBackgroundImage();
+            if (null == $file) {
+                continue;
+            }
+            $filename = sha1($translation->getId().'-'.uniqid()).'.'.$file->guessExtension();
+            // prefix repeated in BannerPathResolver
+            $this->filesystem->write(AbstractEvent::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+            $translation->setBackgroundImagePath($filename);
+        }
+
+        $file = $event->getBackgroundImage();
+
+        if (null == $file) {
+            return;
+        }
+
+        $filename = sha1($event->getId().'-'.uniqid()).'.'.$file->guessExtension();
+        // prefix repeated in BannerPathResolver
+        $this->filesystem->write(AbstractEvent::PREFIX_PATH_BACKGROUND.$filename, file_get_contents($file->getPathname()));
+        $event->setBackgroundImagePath($filename);
     }
 }

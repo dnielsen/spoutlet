@@ -7,7 +7,7 @@
         <div style="background: url('{{ asset('bundles/spoutlet/images/military/bannerheader-950x120.jpg') }}') no-repeat; height: 120px;">
         </div>
     </div>
-    <div id="military-sub-nav-wrapper">
+    <div id="sub-nav-wrapper military-sub-nav-wrapper">
         <div id="military-sub-nav">
             <ul>
                 <li class="first"><a href="/groups/military" style="color: #ffffff;">Main</a></li>
@@ -185,13 +185,8 @@
             </div>
         </div>
     </div>
-    <div class="std_2col">
-        <div class="right">&nbsp;</div>
-        <div class="left">
-            {% render "FOSCommentBundle:Thread:showFlatPaged" with {"id": 'custom-military-page', 'page': app.request.query.get('page', 1) } %}
-        </div>
-    </div>
 </div>
+
 {% endblock %}
 
 {% block stylesheets %}

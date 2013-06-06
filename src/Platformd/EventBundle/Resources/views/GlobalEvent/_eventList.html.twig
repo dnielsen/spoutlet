@@ -1,11 +1,11 @@
 <table style="width:100%;" id="events-table" class="tablesorter">
     <thead>
         <tr>
-            <th>{{ 'platformd.events.event_listings.start_date' | trans }}</th>
+            <th>{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
             <th style="width:8px;"></th>
-            <th style="width:47%;">{{ 'platformd.events.event_listings.event' | trans }}</th>
-            <th style="width:20%;">{{ 'platformd.events.event_listings.hosted_by' | trans }}</th>
-            <th style="width:20%;">{{ 'platformd.events.event_listings.location' | trans }}</th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
+            <th style="width:29%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +18,7 @@
                         {{ no_events_pre_message | raw }}
                     </p>
                 {% endif %}
-                <strong>{{ no_events_message | trans | raw }}</strong>
+                <strong>{{ no_events_message | pd_trans | raw }}</strong>
             </td>
         </tr>
         {% else %}
@@ -53,20 +53,20 @@
                     {% if event.group is defined %}
                         <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
                     {% else %}
-                        {{ 'na'|trans }}
+                        {{ 'na'|pd_trans }}
                     {% endif %}
                 {% endif %}
             </td>
             <td style="vertical-align:top">
                 {% if event.online %}
-                    {{ 'platformd.events.event_listings.online' | trans }}
+                    {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
                     {% if event.fullAddress is not null %}
                         <a href="javascript:void(0);" class="qtip-view-map" data-lat="{{ event.latitude }}" data-lng="{{ event.longitude }}" data-address="{{ event.fullAddress | url_encode }}">
                             {{ event.location ? event.location : ('platformd.events.event_listings.show_map'|trans) }}
                         </a>
                     {% else %}
-                        {{ 'na'|trans }}
+                        {{ 'na'|pd_trans }}
                     {% endif %}
                 {% endif %}
             </td>
@@ -75,7 +75,6 @@
         {% endif %}
     </tbody>
 </table>
-
     <script type="text/javascript">
         $(function () {
 
@@ -121,7 +120,7 @@
                 var lat = $(this).attr('data-lat');
                 var lng = $(this).attr('data-lng');
                 var addr = $(this).attr('data-address');
-                var directionsLink = 'http://maps.google.com/maps?saddr=' + addr;
+                var directionsLink = 'http://maps.google.com/maps?daddr=' + addr;
 
                 $(this).qtip({
                     content: {
@@ -135,7 +134,6 @@
                         }
                     },
                     style: {
-                        classes: 'qtip-dark qtip-shadow qtip-rounded',
                         width: 500,
                     },
                     position: {

@@ -17,12 +17,16 @@ class CountryAgeRestrictionRuleset
     const PARENT_TYPE_SWEEPSTAKE    = 'sweepstake';
     const PARENT_TYPE_CONTEST       = 'contest';
     const PARENT_TYPE_GIVEAWAY      = 'giveaway';
+    const PARENT_TYPE_GIVEAWAY_POOL = 'giveaway-pool';
+    const PARENT_TYPE_DEAL_POOL     = 'deal-pool';
 
     private static $validParentTypes = array(
         self::PARENT_TYPE_DEAL,
         self::PARENT_TYPE_SWEEPSTAKE,
         self::PARENT_TYPE_CONTEST,
         self::PARENT_TYPE_GIVEAWAY,
+        self::PARENT_TYPE_GIVEAWAY_POOL,
+        self::PARENT_TYPE_DEAL_POOL,
     );
 
     /**
@@ -124,6 +128,26 @@ class CountryAgeRestrictionRuleset
         $allowed = $isAllowed ? : $this->getDefaultAllow() === null ? true : $this->getDefaultAllow();
 
         return $allowed;
+     }
+
+     public function doesCountryPassRules($country)
+     {
+        $isAllowed      = null;
+        $age            = 0;
+
+        foreach ($this->getRules() as $rule) {
+            $isAllowed = $rule->isAllowed($age, $country) ;
+
+            if ($isAllowed == null) {
+                continue;
+            }
+
+            if ($isAllowed === false) return $isAllowed;
+
+            break;
+        }
+
+        return $isAllowed;
      }
 
      public function getAllowedCountries()

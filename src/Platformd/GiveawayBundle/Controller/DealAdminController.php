@@ -7,7 +7,6 @@ use Platformd\GiveawayBundle\Form\Type\DealType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
@@ -24,8 +23,10 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('GiveawayBundle:DealAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -39,7 +40,7 @@ class DealAdminController extends Controller
 
         $em = $this->getDoctrine()->getEntityManager();
 
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $deals = $this->getDealManager()->findAllForSiteNewestFirst($site);
 
@@ -63,12 +64,13 @@ class DealAdminController extends Controller
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The deal was created!');
 
-            return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $deal->getId())));
+            return $this->redirect($this->generateUrl('admin_deal_pool_new', array('dealId' => $deal->getId())));
         }
 
         return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
             'deal' => $deal,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'group' => null,
         ));
     }
 
@@ -94,6 +96,7 @@ class DealAdminController extends Controller
 
         $editForm   = $this->createForm(new DealType(), $deal);
         $deleteForm = $this->createDeleteForm($id);
+        $group      = $deal->getGroup();
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The deal was saved!');
@@ -105,6 +108,7 @@ class DealAdminController extends Controller
             'deal'      => $deal,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'group' => $group,
         ));
     }
 
@@ -120,14 +124,25 @@ class DealAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Deals');
 
+        $em     = $this->getDoctrine()->getEntityManager();
+        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('deal', 'entity', array(
                 'class' => 'GiveawayBundle:Deal',
                 'property' => 'name',
                 'empty_value' => 'All Deals',
-                'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('d')
+                'query_builder' => function(EntityRepository $er) use ($site) {
+                    $qb = $er->createQueryBuilder('d')
                         ->orderBy('d.name', 'ASC');
+
+                    if ($site) {
+                        $qb->leftJoin('d.sites', 's')
+                            ->andWhere('s = :site')
+                            ->setParameter('site', $site);
+                    }
+
+                    return $qb;
                 },
             ))
             ->getForm()
@@ -151,20 +166,26 @@ class DealAdminController extends Controller
         }
 
         if ($deal == null) {
-            $deals  = $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = $site ? $this->getDealManager()->findAllForSiteNewestFirst($site) : $this->getDealManager()->findAllOrderedByNewest();
         } else {
-            $deals  = $deal ? array($deal) : $this->getDealManager()->findAllOrderedByNewest();
+            $deals  = array($deal);
         }
 
         $dealMetrics = array();
-        /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
+
+        $dealData = $metricManager->getDealRegionData($from, $to);
+
         foreach($deals as $deal) {
-            $dealMetrics[] = $metricManager->createDealReport($deal, $from, $to);
+            $dealMetrics[$deal->getId()] = $metricManager->createDealReport($deal, $from, $to);
+        }
+
+        foreach ($dealData as $dealId => $data) {
+            $dealMetrics[$dealId]['sites'] = $data;
         }
 
         return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(
             'metrics' => $dealMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         ));
     }
@@ -187,6 +208,18 @@ class DealAdminController extends Controller
             if ($form->isValid()) {
                 /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
                 $deal = $form->getData();
+
+                # since we're using jquery autocomplete, have to use hidden field for the group id
+
+                $groupId = $form['group']->getData();
+                if($groupId) {
+                    $group = $em->getRepository('GroupBundle:Group')->find($groupId);
+
+                    if($group) {
+                        $deal->setGroup($group);
+                    }
+                }
+
 
                 $ruleset    = $deal->getRuleset();
                 $rules      = $ruleset->getRules();
@@ -230,7 +263,7 @@ class DealAdminController extends Controller
     {
         if ($site) {
 
-            $this->getBreadcrumbs()->addChild(MultitenancyManager::getSiteName($site), array(
+            $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
                 'route' => 'admin_deal_site',
                 'routeParameters' => array('site' => $site)
             ));

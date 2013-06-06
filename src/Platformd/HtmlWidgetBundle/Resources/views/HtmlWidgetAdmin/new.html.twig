@@ -1,0 +1,20 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'New HTML Widget' %}
+
+{% block content %}
+    <h1>New HTML Widget</h1>
+
+    <form action="{{ path('admin_html_widget_create', {'site': site}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        {% include 'HtmlWidgetBundle:HtmlWidgetAdmin:_form.html.twig' %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+        </div>
+    </form>
+
+    <a href="{{ path('admin_html_widget_index') }}">
+        Back to the list
+    </a>
+{% endblock %}
+

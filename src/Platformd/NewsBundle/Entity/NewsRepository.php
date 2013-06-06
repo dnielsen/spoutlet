@@ -26,6 +26,16 @@ class NewsRepository extends EntityRepository
             ->getQuery();
     }
 
+    public function getFindNewsForSiteQuery($site)
+    {
+        return $this->createQueryBuilder('n')
+            ->leftJoin('n.sites', 's')
+            ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
+            ->setParameter('site', $site)
+            ->orderBy('n.postedAt', 'DESC')
+            ->getQuery();
+    }
+
     /**
      * @return array
      */

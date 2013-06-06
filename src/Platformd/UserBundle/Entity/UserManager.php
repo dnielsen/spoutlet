@@ -39,16 +39,16 @@ class UserManager extends BaseUserManager
         /*
          * Removing this for now. With the big multi-level authentication
          * system with CEVO, we just need to allow everyone to login anywhere
-         * 
-        // don't let a user login if their locale doesn't match the current locale
-        if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
-            throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
-        }
-        */
-
-        return $user; 
+         *
+         // don't let a user login if their locale doesn't match the current locale
+         if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
+             throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
     }
-    
+         */
+
+        return $user;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -61,9 +61,8 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
-    public function getFindUserQuery($sort_by = self::DEFAULT_SORTING_FIELD, $search = null)
+    public function getFindUserQuery($search = null, $type='text', $sort_by = self::DEFAULT_SORTING_FIELD)
     {
-
         $qb = $this
             ->repository
             ->createQueryBuilder('u')
@@ -71,21 +70,22 @@ class UserManager extends BaseUserManager
         ;
 
         if ($search) {
-        	$qb
-        	  ->andWhere('u.username like :user OR   u.email LIKE  :user OR u.firstname LIKE :user OR u.lastname LIKE  :user  ' )
-        	  ->setParameter('user', "%${search}%")
-        	;
+
+            $where = $type == 'ip' ? 'u.ipAddress = :search' : 'u.username like :search OR u.email LIKE :search';
+            $search = $type == 'ip' ? $search : '%'.$search.'%';
+
+            $qb
+                ->andWhere($where)
+                ->setParameter('search', $search)
+            ;
         }
-        
+
         if ($this->getLocale()) {
             $qb
                 ->andWhere('u.locale = :locale OR u.locale IS NULL')
                 ->setParameter('locale', $this->getLocale())
             ;
         }
-        
-        //var_dump($qb);
-        //exit;
 
         return $qb->getQuery();
     }
@@ -116,18 +116,24 @@ class UserManager extends BaseUserManager
         $this->container = $container;
     }
 
+
+    public function setNewPassword(User $user)
+    {
+        $user->setPlainPassword(base_convert(sha1(uniqid(mt_rand(), true)), 16, 36));
+    }
+
     public function setFilesystem(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
 
-    /** 
+    /**
      * Update a user's avatar
      *
      * @param \Platformd\UserBundle\Entity\User $user
      */
     protected function updateAvatar(User $user)
-    {   
+    {
         // User didn't upload a new avatar
         if (is_null($user->file)) {
 

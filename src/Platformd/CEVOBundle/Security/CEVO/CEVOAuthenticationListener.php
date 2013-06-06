@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Platformd\SpoutletBundle\Model\LoginRecordManager;
 
 /**
  * Security Listener "watches" for the CEVO cookie
@@ -33,6 +34,7 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $authenticationManager;
     protected $baseHost;
     protected $debug;
+    protected $loginRecordManager;
 
     /**
      * This will be true in the test environment
@@ -49,13 +51,14 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, $debug = false, $allowFakedAuth = false)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $debug = false, $allowFakedAuth = false)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->baseHost = $baseHost;
         $this->debug = $debug;
         $this->allowFakedAuth = $allowFakedAuth;
+        $this->loginRecordManager = $loginRecordManager;
     }
 
     /**
@@ -157,6 +160,8 @@ class CEVOAuthenticationListener implements ListenerInterface
             } else {
                 throw new AuthenticationException('Expected token, got back '.gettype($returnValue));
             }
+
+            $this->loginRecordManager->recordLogin($returnValue, $request);
 
             return true;
         } catch (AuthenticationException $e) {

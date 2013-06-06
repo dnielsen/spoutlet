@@ -12,13 +12,15 @@ use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\Vote;
+use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
+use DateTime;
+use DateTimezone;
 
 class ContestController extends Controller
 {
@@ -77,10 +79,7 @@ class ContestController extends Controller
 
             $isEntered = $entry ? true : false;
 
-            $countryRepo    = $this->getCountryRepository();
-            $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
                 $isEligible = false;
             }
 
@@ -99,7 +98,7 @@ class ContestController extends Controller
         $isUnlimited        = $contest->getMaxEntries() == 0;
 
         $agreeText = $this->trans('contests.show_page_agree_text');
-        $canVote = $contest->getVotingStartUtc() < new \DateTime('now');
+        $canVote = $contest->getVotingStartTz() < new DateTime('now', new DateTimeZone($contest->getTimezone()));
 
         return $this->render('SpoutletBundle:Contest:show.html.twig', array(
             'contest'       => $contest,
@@ -111,6 +110,7 @@ class ContestController extends Controller
             'entryCount'    => $mediaCount,
             'entriesLeft'   => $entriesLeft,
             'isUnlimited'   => $isUnlimited,
+            'nowInTz'       => new DateTime('now', new DateTimeZone($contest->getTimezone())),
         ));
     }
 
@@ -122,10 +122,7 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $countryRepo    = $this->getCountryRepository();
-        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
             $this->setFlash('error', $this->trans('contests.contest_not_eligible'));
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
@@ -151,7 +148,7 @@ class ContestController extends Controller
             $entry = new ContestEntry();
             $entry->setUser($user);
             $entry->setContest($contest);
-            $entry->setIpAddress($request->getClientIp());
+            $entry->setIpAddress($this->getClientIp($request));
 
             $em->persist($entry);
             $em->flush();
@@ -298,7 +295,7 @@ class ContestController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -400,10 +397,5 @@ class ContestController extends Controller
     private function getContestEntryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:ContestEntry');
-    }
-
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
     }
 }

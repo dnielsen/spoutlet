@@ -78,4 +78,9 @@ class GlobalEventService extends EventService
     {
         return $this->repository->getAllEventsUserIsAttending($user);
     }
+
+    public function findAllForSite($site)
+    {
+        return $this->repository->findAllForSite($site);
+    }
 }

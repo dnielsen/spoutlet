@@ -43,3 +43,7 @@ admin_locale_to_sites_migration:
 admin_upload_media:
     pattern: /admin/manage-media
     defaults: { _controller: SpoutletBundle:Admin:manageMedia }
+
+admin_mass_unsubscribe:
+    pattern: /admin/mass-unsubscribe
+    defaults: { _controller: SpoutletBundle:Admin:massUnsubscribe }

@@ -1,6 +1,6 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}{{ news.title | trans }}{% endblock %}
+{% block title %}{{ news.title | pd_trans }}{% endblock %}
 
 {% block content %}
 {# this whole thing was copied from the homepage template.... #}
@@ -19,8 +19,8 @@
             <h1 class="controlled-spacing">{{ news.title }}</h1>
 
             <h6>
-                {{ 'announced_date' | trans({
-                    '%posted_date%': ('sweepstakes_date_format' | trans(news.postedAtArray))
+                {{ 'announced_date' | pd_trans({
+                    '%posted_date%': ('sweepstakes_date_format' | pd_trans(news.postedAtArray))
                 })}}
             </h6>
 
@@ -29,7 +29,7 @@
             </div>
 
             {% if features.hasComments %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : news.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             {% endif %}
         </div>
     </div>

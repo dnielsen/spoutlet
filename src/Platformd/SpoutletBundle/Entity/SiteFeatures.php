@@ -3,10 +3,6 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\MediaBundle\Entity\Media;
-use Gedmo\Sluggable\Util\Urlizer;
-use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\Site;
 
 /**
@@ -110,9 +106,65 @@ class SiteFeatures
     private $hasComments = false;
 
     /**
+     * @ORM\Column(name="has_giveaways", type="boolean")
+     */
+    private $hasGiveaways = false;
+
+    /**
      * @ORM\Column(name="has_events", type="boolean")
      */
     private $hasEvents = false;
+
+    /**
+     * @ORM\Column(name="has_html_widgets", type="boolean")
+     */
+    private $hasHtmlWidgets = false;
+
+
+    /**
+     * @ORM\Column(name="has_facebook", type="boolean")
+     */
+    private $hasFacebook = false;
+
+    /**
+     * @ORM\Column(name="has_google_analytics", type="boolean")
+     */
+    private $hasGoogleAnalytics = false;
+
+    /**
+     * @ORM\Column(name="has_tournaments", type="boolean")
+     */
+    private $hasTournaments = false;
+
+    /**
+     * @ORM\Column(name="has_match_client", type="boolean")
+     */
+    private $hasMatchClient = false;
+
+    /**
+     * @ORM\Column(name="has_profile", type="boolean")
+     */
+    private $hasProfile = false;
+
+    /**
+     * @ORM\Column(name="has_forward_on_404", type="boolean")
+     */
+    private $hasForwardOn404 = false;
+
+    /**
+     * @ORM\Column(name="has_index", type="boolean")
+     */
+    private $hasIndex = false;
+
+    /**
+     * @ORM\Column(name="has_about", type="boolean")
+     */
+    private $hasAbout = false;
+
+    /**
+     * @ORM\Column(name="has_contact", type="boolean")
+     */
+    private $hasContact = false;
 
     /**
      * Get id
@@ -311,6 +363,17 @@ class SiteFeatures
         return $this;
     }
 
+    public function getHasGiveaways()
+    {
+        return $this->hasGiveaways;
+    }
+
+    public function setHasGiveaways($value = true)
+    {
+        $this->hasGiveaways = $value;
+        return $this;
+    }
+
     public function getHasEvents()
     {
         return $this->hasEvents;
@@ -319,6 +382,116 @@ class SiteFeatures
     public function setHasEvents($value = true)
     {
         $this->hasEvents = $value;
+        return $this;
+    }
+
+    public function getHasHtmlWidgets()
+    {
+        return $this->hasHtmlWidgets;
+    }
+
+    public function setHasHtmlWidgets($value = true)
+    {
+        $this->hasHtmlWidgets = $value;
+        return $this;
+    }
+
+    public function getHasFacebook()
+    {
+        return $this->hasFacebook;
+    }
+
+    public function setHasFacebook($value = true)
+    {
+        $this->hasFacebook = $value;
+        return $this;
+    }
+
+    public function getHasGoogleAnalytics()
+    {
+        return $this->hasGoogleAnalytics;
+    }
+
+    public function setHasGoogleAnalytics($value = true)
+    {
+        $this->hasGoogleAnalytics = $value;
+        return $this;
+    }
+
+    public function getHasTournaments()
+    {
+        return $this->hasTournaments;
+    }
+
+    public function setHasTournaments($value = true)
+    {
+        $this->hasTournaments = $value;
+        return $this;
+    }
+
+    public function getHasMatchClient()
+    {
+        return $this->hasMatchClient;
+    }
+
+    public function setHasMatchClient($value = true)
+    {
+        $this->hasMatchClient = $value;
+        return $this;
+    }
+
+    public function getHasProfile()
+    {
+        return $this->hasProfile;
+    }
+
+    public function setHasProfile($value = true)
+    {
+        $this->hasProfile = $value;
+        return $this;
+    }
+
+    public function getHasForwardOn404()
+    {
+        return $this->hasForwardOn404;
+    }
+
+    public function setHasForwardOn404($value = true)
+    {
+        $this->hasForwardOn404 = $value;
+        return $this;
+    }
+
+    public function getHasIndex()
+    {
+        return $this->hasIndex;
+    }
+
+    public function setHasIndex($value = true)
+    {
+        $this->hasIndex = $value;
+        return $this;
+    }
+
+    public function getHasAbout()
+    {
+        return $this->hasAbout;
+    }
+
+    public function setHasAbout($value = true)
+    {
+        $this->hasAbout = $value;
+        return $this;
+    }
+
+    public function getHasContact()
+    {
+        return $this->hasContact;
+    }
+
+    public function setHasContact($value = true)
+    {
+        $this->hasContact = $value;
         return $this;
     }
 }

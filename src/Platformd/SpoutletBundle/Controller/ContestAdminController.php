@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Entity\ContestRepository;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +19,10 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
 
+        $siteManager = $this->getSiteManager();
+
         return $this->render('SpoutletBundle:ContestAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $siteManager->getSiteChoices()
         ));
     }
 
@@ -29,7 +30,8 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb();
         $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->getCurrentSite();
+
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $imageContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site, Contest::getValidStatuses());
         $groupContests   = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site, Contest::getValidStatuses());
@@ -200,7 +202,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Contests');
 
         $em            = $this->getDoctrine()->getEntityManager();
-        $site          = $this->getCurrentSite();
+        $site          = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : $this->getCurrentSite();
         $imageContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site);
         $groupContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site);
         $voteResult    = $em->getRepository('SpoutletBundle:Vote')->getVotesForContests();

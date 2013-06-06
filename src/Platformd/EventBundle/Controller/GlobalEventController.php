@@ -19,7 +19,6 @@ class GlobalEventController extends Controller
 {
     private $globalEventService;
 
-
     /**
      * Lists all events, upcoming and past
      *
@@ -29,11 +28,12 @@ class GlobalEventController extends Controller
     {
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
+        $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
         $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
         $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 0);
-        $pastGroupEvents      = $this->getGroupEventService()->findPastEventsForSite($site, 0);
+        $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
+        $pastGroupEvents      = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
 
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
@@ -43,13 +43,8 @@ class GlobalEventController extends Controller
 
         $groupsCount = 0;
 
-        $userGlobal = $userGroup = null;
-        $groupsCount = 0;
-
-        if ($this->isGranted('ROLE_USER')) {
+        if ($this->isGranted('ROLE_USER') && $hasGroups) {
             $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
-            $userGlobal = $this->getGlobalEventService()->getAllEventsUserIsAttending($this->getUser());
-            $userGroup  = $this->getGroupEventService()->getAllEventsUserIsAttending($this->getUser());
             $groupsCount = count($groups);
         }
 
@@ -57,8 +52,6 @@ class GlobalEventController extends Controller
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
             'groupsCount'    => $groupsCount,
-            'userGlobal'     => $userGlobal,
-            'userGroup'      => $userGroup,
         ));
     }
 
@@ -72,16 +65,17 @@ class GlobalEventController extends Controller
     {
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
+        $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
         $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
+        $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager) : array();
 
         $events = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         uasort($events, array($this, 'eventCompare'));
 
         $groupsCount = 0;
 
-        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if ($this->isGranted('ROLE_USER') && $hasGroups) {
             $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
             $groupsCount = count($groups);
         }
@@ -103,16 +97,17 @@ class GlobalEventController extends Controller
     {
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
+        $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
         $pastGlobalEvents = $this->getGlobalEventService()->findPastEventsForSite($site, 20, $page, $pager);
-        $pastGroupEvents  = $this->getGroupEventService()->findPastEventsForSite($site, 20, $page, $pager);
+        $pastGroupEvents  = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 20, $page, $pager) : array();
 
         $events = array_merge($pastGlobalEvents, $pastGroupEvents);
         uasort($events, array($this, 'eventCompare'));
 
         $groupsCount = 0;
 
-        if ($this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if ($this->isGranted('ROLE_USER') && $hasGroups) {
             $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
             $groupsCount = count($groups);
         }
@@ -527,22 +522,6 @@ class GlobalEventController extends Controller
         }
         return ($a->getStartsAt() < $b->getStartsAt()) ? 1 : -1;
 
-    }
-
-    /**
-     * @return GlobalEventService
-     */
-    private function getGlobalEventService()
-    {
-        return $this->get('platformd_event.service.global_event');
-    }
-
-    /**
-     * @return GroupEventService
-     */
-    private function getGroupEventService()
-    {
-        return $this->get('platformd_event.service.group_event');
     }
 
     private function getGamePageManager()

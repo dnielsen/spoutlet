@@ -2,13 +2,27 @@ edit: 編集
 date_format: Y年m月d日
 submit: 出品
 cancel: キャンセル
+delete: 消去
+
+recaptcha:
+    visual_challenge: Get a visual challenge
+    audio_challenge: Get an audio challenge
+    refresh_btn: Get a new challenge
+    instructions_visual: Type the two words:
+    instructions_context: Type the words in the boxes:
+    instructions_audio: Type what you hear:
+    help_btn: Help
+    play_again: Play sound again
+    cant_hear_this: Download sound as MP3
+    incorrect_try_again: Incorrect. Try again.
+    image_alt_text: reCAPTCHA challenge image
+
+site_takeover.continue: Alienware Arenaを続行する
 
 platformd:
 
     homepage:
         news_title: ホットニュース
-
-    create_account_or_login: ALIENWARE ARENAアカウントを作成しログインします。
 
     not_found:
         title: ページが見つかりません
@@ -72,7 +86,7 @@ platformd:
             video: ビデオ
             news: ニュース
             microsoft: Microsoft
-            media: Media
+            media: メディア
 
         page_content:
             featured: 新着
@@ -81,7 +95,7 @@ platformd:
             see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
-            competitions: トーナメント・イベント
+            competitions: トーナメント
             hot_stories: Hot Stories
             videos: ビデオ
             view_more: もっと見る
@@ -168,6 +182,7 @@ platformd:
             not_allowed_register: あなたは、このイベントへの参加連絡を許可されていません。
             now_attending: あなたはこのイベントに参加しています。
             group_joined: このイベントに参加するには、%groupName%.に参加する必要があります。これで、あなたはこのグループのメンバーです。
+            group_home: Group Home
         event_contact:
             title: 参加者にEメールで連絡する
             help: ユーザーにすべての出席者に送信したり、特定の受信者を選択させる場合は空白のままにしておきます。
@@ -189,6 +204,7 @@ platformd:
             remove: 除外する
             no_attendees: 参加者はいません。
             remove_confirmation: %username% をイベントからはずしますか？
+            joined: Joined
         # used only in the admin area
         admin:
             title: イベント管理者
@@ -301,6 +317,7 @@ platformd:
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
             underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
+            please_wait: 現在アクセスが集中しているため、作成要求を処理することができませんでした。時間を置いてからもう一度試してください。
 
         login:
             title: アカウントにログイン
@@ -330,6 +347,8 @@ platformd:
             game_ids: ゲームID
             tournaments: トーナメント
             sign_out: ログアウト
+            videos: マイビデオ
+            media: メディア
 
     giveaway:
         giveaway: プレゼント
@@ -358,8 +377,6 @@ platformd:
             inactive:  有効ですがキーがありません
             active:    有効
             blank_value:  ステータスを選択する
-        show:
-            availaible_keys: キー残数: %%count%%
         giveaways_listings:
             giveaways: キャンペーン
         assigned:
@@ -372,7 +389,7 @@ platformd:
     giveaway_pool:
         pool: ギブアウェイプール
         admin:
-            title: "%giveaway_name%" 用のギブアウェイ
+            title: %giveaway_name% 用のギブアウェイ
             create:  新しいプール作成
             edit_pool:  プールを編集
             save_giveaway_pool: ギブアウェイプールを保存
@@ -745,6 +762,7 @@ content_reporting:
     report_type_group_video: Group Video
     report_type_group_discussion: Group Discussion
     report_type_group_discussion_post: Group Discussion Post
+    report_type_youtubevideo: ビデオ
     report_type_unknown: Unknown
     report_success: 内容は一時的に削除されスタッフによって審査されますので、あなたのレポートのための追加情報がある場合は、追加の詳細をEメールでreports@alienwarearena.comまで送付してください。
     reported_email_title: あなたの投稿にフラグが設定されています
@@ -890,3 +908,60 @@ galleries:
     gallery_filter_option_featured: Featured
 
     gallery_see_all: See All
+
+timeline.title: The History of Alienware
+timeline.not_found: No timeline found.
+
+platformd.create_account_or_login: ALIENWARE ARENAアカウントを作成しログインします。
+
+platformd.giveaway.click_for_past_giveaways: <a href="%cevo_user_account_giveaway_page%">ここで</a>をクリックして、過去のプレゼントを確認します。
+platformd.giveaway.get_key:  キー入手
+platformd.giveaway.featured_giveaways: 注目のAlienware Arenaプレゼント
+platformd.giveaway.all_giveaways: 最新のプレゼント
+platformd.giveaway.previous_giveaways: 過去のプレゼント
+platformd.giveaway.latest_comments: 最新のコメント
+platformd.giveaway.in_process: もし、あなたのステータスが「保留」になっている場合、最低でも2週間はお待ち頂くことになります。2週間以上経過しても変化がなかった場合、<a href="mailto:%contact_email%">%contact_email%</a> にメールを送信してください。
+platformd.giveaway.assigned.message: あなたのキーをアクティブにするには、以下の手順に従ってください。また、さらなるサポートが必要な場合は、<a href="mailto:%contact_email%">%contact_email%</a> にメールを送信してください。
+platformd.giveaway.show.availaible_keys: キー残数: %%count%%
+platformd.giveaway.queue.you_are_queued: 現在対応中です。
+platformd.giveaway.queue.queue_explanation: |
+    <p>あなたの待ち時間はおおよそ5分程度です。コードがすでに割り当てられている場合は、メールで通知されます。</p>
+
+        <p>もし、1時間以内にメールが届かない場合、<a href="mailto:%contact_email%">%contact_email%</a> にご連絡をお願いします。</p>
+
+        <p>また、<a href="%events_index_page_link%">イベント</a> では、お住まいの地域でのオンラインイベントや、オフラインイベントをご覧いただけます。</p>
+platformd.giveaway.queue.rejected: 申し訳ありません。キーをあなたに割り当てることができませんでした。
+platformd.giveaway.queue.problem: あなたのキー要求処理に問題が発生しました。
+platformd.giveaway.queue.reason: 理由
+platformd.giveaway.queue.reasons.none: 理由はありません。
+platformd.giveaway.queue.reasons.no_keys: 残念ながら、現在このキーはありません。
+platformd.giveaway.queue.reasons.ip_reached_max: 申し訳ございません。キーは、あなたのIPアドレスに配布できる最大数に達しています。
+platformd.giveaway.queue.reasons.already_assigned: あなたはすでにキーを所有しています。
+platformd.giveaway.queue.reasons.invalid_country_or_age: あなたは対象ではありません（年齢、もしくは国）。
+platformd.giveaway.queue.reasons.invalid_site: 不明なサイトです。
+platformd.giveaway.queue.reasons.client_ip_null: クライアントIPが見つかりません。
+platformd.giveaway.queue.reasons.country_code_null: 不明な国です。
+platformd.giveaway.queue.reasons.invalid_country: 不明な国です。
+platformd.giveaway.queue.reasons.invalid_promotion: プロモーションが見つかりませんでした。
+platformd.giveaway.queue.reasons.inactive_promotion: このプロモーションはアクティブではありません。
+platformd.giveaway.queue.reasons.key_fetch_disallowed: このプロモーションではキー取得が許可されていません。
+platformd.key_request_processor_command.key_assigned_email_subject: あなたの%promotion_title%キー
+platformd.key_request_processor_command.key_assigned_email_body: |
+    <p>
+        おめでとうございます。あなたは、<a href="%promotion_show_page%">%promotion_title%</a>キーを取得しました。:
+        </p>
+        <p>
+        <span style="font-weight:bold;">%promotion_key%</span>
+        </p>
+        <p>
+        キーを受け取るためには、 <a href="%promotion_show_page%">%promotion_title%</a> のページをご覧ください。
+        </p>
+        %group_section%
+        <p>Alienware Arenaチーム</p>
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title%　アップデート
+platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
+    <p>
+            申し訳ありません、<a href="%promotion_show_page%">%promotion_title%</a>のコード配布は終了しております。
+            新たなコードが追加される可能性がありますので、後ほどご確認ください。
+        </p>
+        <p>Alienware Arenaチーム</p>

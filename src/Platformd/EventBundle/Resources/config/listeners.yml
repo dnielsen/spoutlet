@@ -2,8 +2,8 @@ services:
     platformd.event.listener.group_event_listener:
             class: Platformd\EventBundle\EventListener\GroupEventListener
             arguments:
-                - "@translator"
-                - "@platformd.model.site_util"
+                - "@platformd.model.translator"
+                - "@platformd.util.site_util"
                 - "@platformd.model.email_manager"
                 - "@router"
             tags:

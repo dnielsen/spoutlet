@@ -1,0 +1,20 @@
+services:
+    platformd.video.youtube.restriction:
+        class: Platformd\VideoBundle\Validator\YoutubeRestrictionValidator
+        arguments:
+            - "@platformd.model.youtube_manager"
+            - "@platformd.model.ip_lookup_util"
+            - "@service_container"
+        scope: request
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.video.youtube.restriction }
+
+    platformd.video.youtube.gallery_groups:
+        class: Platformd\VideoBundle\Validator\YoutubeGroupCategoryValidator
+        arguments:
+            - "@platformd.model.youtube_manager"
+            - "@platformd.util.site_util"
+            - "@service_container"
+        scope: request
+        tags:
+            - { name: validator.constraint_validator, alias: platformd.video.youtube.gallery_groups }

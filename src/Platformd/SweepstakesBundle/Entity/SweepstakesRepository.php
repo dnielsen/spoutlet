@@ -21,4 +21,14 @@ class SweepstakesRepository extends AbstractEventRepository
 
         return $entry;
     }
+
+    public function findAllForSite($site)
+    {
+        $qb = $this->createQueryBuilder('ss')
+            ->leftJoin('ss.sites', 's')
+            ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->getResult();
+    }
 }

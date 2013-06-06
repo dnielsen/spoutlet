@@ -1,0 +1,13 @@
+<h3>HTML widget not found</h3>
+
+<div class="widget-not-found-content">
+
+    <p>The HTML Widget you requested ({{ slug }}) was not found.</p>
+    <p>You can:</p>
+
+    <ul>
+        <li><a href="{{ path('admin_html_widget_list', { 'site': site.id }) }}">Edit existing widgets</a></li>
+        <li><a href="{{ path('admin_html_widget_new', { 'slug': slug }) }}">Create one for this page</a></li>
+    </ul>
+
+</div>

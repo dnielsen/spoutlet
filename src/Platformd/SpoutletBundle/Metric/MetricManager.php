@@ -15,7 +15,8 @@ use Platformd\GiveawayBundle\Entity\Giveaway,
     Platformd\GroupBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
     Platformd\GroupBundle\Entity\Metric\GroupMetric,
-    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric
+    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric,
+    Platformd\SpoutletBundle\Util\IpLookupUtil
 ;
 
 class MetricManager
@@ -65,6 +66,13 @@ class MetricManager
      */
     private $groupDiscussionMetricRepository;
 
+    private $regionRepo;
+
+    /**
+     * @var \Platformd\SpoutletBundle\Entity\RegionRepository
+     */
+    private $regionRepository;
+
     /**
      * An array of all available site keys and their names
      *
@@ -72,7 +80,16 @@ class MetricManager
      */
     private $sites;
 
-    public function __construct(EntityManager $em, array $sites)
+    /**
+     * An array of all available regions (country groups)
+     *
+     * @var array
+     */
+    private $regions;
+
+    private $ipLookupUtil;
+
+    public function __construct(EntityManager $em, array $sites, IpLookupUtil $ipLookupUtil)
     {
         $this->siteRepository = $em->getRepository('SpoutletBundle:Site');
         $this->userRepo = $em->getRepository('UserBundle:User');
@@ -83,7 +100,10 @@ class MetricManager
         $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
+        $this->regionRepository = $em->getRepository('SpoutletBundle:Region');
         $this->sites = $sites;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->regions = $this->regionRepository->findAll();
     }
 
     /**
@@ -94,6 +114,22 @@ class MetricManager
     public function getSites()
     {
         return $this->sites;
+    }
+
+    /**
+     * Returns an array of the regions that are reported on
+     *
+     * @return array
+     */
+    public function getRegions()
+    {
+        $return = array();
+
+        foreach ($this->regions as $region) {
+            $return[] = $region->getName();
+        }
+
+        return $return;
     }
 
     /**
@@ -125,9 +161,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $from, $to);
+        return $data;
+    }
+
+    public function getGiveawayRegionData($from, $to)
+    {
+        $regionCounts = $this->giveawayKeyRepository->getRegionCountsByDate($from, $to);
+
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['giveawayId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;
@@ -165,9 +209,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->dealCodeRepository->getAssignedForDealAndSite($deal, $key, $from, $to);
+        return $data;
+    }
+
+    public function getDealRegionData($from, $to)
+    {
+        $regionCounts = $this->dealCodeRepository->getRegionCountsByDate($from, $to);
+
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['dealId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;
@@ -178,11 +230,13 @@ class MetricManager
      * in the system. The key to the array is the site key, and each array
      * contains several fields (see below).
      */
-    public function createMembershipByCountryReport(DateTime $since = null)
+    public function createMembershipByCountryReport(DateTime $since = null, $site = null)
     {
         $data = array();
 
-        foreach ($this->sites as $key => $name) {
+        $sites = $site ? array($site->getDefaultLocale() => $site->getName()) : $this->sites;
+
+        foreach ($sites as $key => $name) {
 
             $totalUsers = $this->userRepo->getTotalUsersForSite($key);
 
@@ -196,6 +250,62 @@ class MetricManager
 
             $data[$key] = array(
                 'siteName'             => $name,
+                'count'                => $totalUsers,
+                'arenaOptIn'           => $arenaOptIn,
+                'arenaOptInPercentage' => $arenaPercentage,
+                'dellOptIn'            => $dellOptIn,
+                'dellOptInPercentage'  => $dellPercentage,
+                'newUsers'             => $newUsers
+            );
+        }
+
+        return $data;
+    }
+
+    public function createMembershipByCountryAndRegionReport($countries, $regions, $countryDates, $regionDates)
+    {
+        $data       = array();
+
+        foreach ($countries as $country) {
+            $countryCode = $country->getCode();
+
+            $totalUsers = $this->userRepo->getTotalUsersForCountry($countryCode);
+            $arenaOptIn = $this->userRepo->getArenaOptInForCountry($countryCode);
+            $dellOptIn = $this->userRepo->getDellOptInForCountry($countryCode);
+            $newUsers = $this->userRepo->countNewRegistrantsForCountry($countryCode, $countryDates['from'], $countryDates['to']);
+
+            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
+            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+
+            $data['country'][$country->getId()] = array(
+                'name'                 => $country->getName(),
+                'count'                => $totalUsers,
+                'arenaOptIn'           => $arenaOptIn,
+                'arenaOptInPercentage' => $arenaPercentage,
+                'dellOptIn'            => $dellOptIn,
+                'dellOptInPercentage'  => $dellPercentage,
+                'newUsers'             => $newUsers
+            );
+        }
+
+        foreach ($regions as $region) {
+
+            $countries = array();
+
+            foreach ($region->getCountries() as $country) {
+                $countries[] = $country->getCode();
+            }
+
+            $totalUsers = $this->userRepo->getTotalUsersForCountries($countries);
+            $arenaOptIn = $this->userRepo->getArenaOptInForCountries($countries);
+            $dellOptIn = $this->userRepo->getDellOptInForCountries($countries);
+            $newUsers = $this->userRepo->countNewRegistrantsForCountries($countries, $regionDates['from'], $regionDates['to']);
+
+            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
+            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+
+            $data['region'][$region->getId()] = array(
+                'name'                 => $region->getName(),
                 'count'                => $totalUsers,
                 'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,

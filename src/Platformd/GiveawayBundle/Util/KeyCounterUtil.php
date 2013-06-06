@@ -14,7 +14,7 @@ class KeyCounterUtil
     public function getTrueDisplayCount($totalKeys, $remainingKeys, $lowerLimit, $upperLimit)
     {
         // both really need to be set for this to work
-        if ($lowerLimit <= 0 || $upperLimit <= 0) {
+        if ($lowerLimit < 0 || $upperLimit <= 0) {
             return $remainingKeys;
         }
 
@@ -29,7 +29,7 @@ class KeyCounterUtil
         }
 
         $appearanceNumber = $upperLimit;
-        $totalGone = $totalKeys - $remainingKeys;
+        $totalGone        = $totalKeys - $remainingKeys;
 
         for ($i = 0; $i < $totalGone; $i++) {
             $appearanceNumber--;

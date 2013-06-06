@@ -69,6 +69,19 @@ class GroupRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllLocationGroupsRelevantForSite($site) {
+
+        return $this->getEntityManager()->createQuery('
+            SELECT g FROM GroupBundle:Group g
+            LEFT JOIN g.sites s
+            WHERE g.deleted = false
+            AND g.category = :location
+            AND (g.allLocales = true OR s = :site)')
+            ->setParameter('site', $site)
+            ->setParameter('location', 'location')
+            ->execute();
+    }
+
     public function findGroupsByName($groupName)
     {
         $qb = $this->createQueryBuilder('g')
@@ -101,6 +114,7 @@ class GroupRepository extends EntityRepository
             ->where('g.category = :category')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
+            ->andWhere('g.featured <> 1')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
             ->orderBy('memberCount', 'DESC')
@@ -116,7 +130,7 @@ class GroupRepository extends EntityRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('(s.defaultLocale IN (:siteList) OR g.allLocales = true)');
+            $qb->andWhere('(s IN (:siteList) OR g.allLocales = true)');
             $qb->setParameter('siteList', $sites);
 
         }
@@ -520,6 +534,17 @@ class GroupRepository extends EntityRepository
         $qb  = $this->createQueryBuilder('g');
 
         return $qb->where($qb->expr()->in('g.id', $ids))
+            ->getQuery()
+            ->execute();
+    }
+
+
+    public function getAutoCompleteResultsByGroupName($groupName)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g.id as value, g.name as label')
+            ->where('g.name like :groupName')
+            ->setParameter('groupName', '%' . $groupName . '%')
             ->getQuery()
             ->execute();
     }

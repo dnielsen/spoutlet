@@ -1,0 +1,15 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}New RSVP{% endblock %}
+
+{% block content %}
+
+<h1>New Rsvp</h1>
+
+<form action="{{ path('admin_rsvp_new') }}" method="post" {{ form_enctype(form) }} class="form form-horizontal">
+    {% include 'SpoutletBundle:RsvpAdmin:_form.html.twig' %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>Create</button>
+    </div>
+</form>
+
+{% endblock %}

@@ -1225,7 +1225,7 @@ select:focus:required:invalid:focus {
 
 .help-block,
 .help-inline {
-  color: #555555;
+  color: #b94a48;
 }
 
 .help-block {
@@ -1508,6 +1508,10 @@ table {
   line-height: 18px;
   text-align: left;
   vertical-align: top;
+}
+
+.admin-container .table th,
+.admin-container .table td {
   border-top: 1px solid #dddddd;
 }
 
