@@ -60,6 +60,10 @@ class SweepstakesAdminType extends EventType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
+
+        $builder->add('group', 'hidden', array(
+            'property_path' => false,
+        ));
     }
 
 

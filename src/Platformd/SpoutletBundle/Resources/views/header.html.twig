@@ -29,7 +29,7 @@
                         {%- endif -%}
 
                         <li class="separator">
-                            {% include 'SpoutletBundle::user.html.twig' %}
+                        {% render url('_main_user_strip') with {}, {'standalone': true } %}
                         </li>
                         <li class="separator"><a href="{{ path('about') }}">{{ "platformd.layout.top_menu.about" | trans }}</a></li>
                         <li><a href="{{ path('contact') }}">{{ "platformd.layout.top_menu.contact" | trans }}</a></li>

@@ -29,7 +29,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
         $site->setFullDomain($domain);
         $site->getSiteConfig()
           ->setSupportEmailAddress($supportEmailAddress)
-          ->setAutomatedEmailAddress($supportEmailAddress)
+          ->setAutomatedEmailAddress('noreply@alienwarearena.com')
           ->setEmailFromName($emailFromName)
           ->setForwardBaseUrl($forwardBaseUrl)
           ->setForwardedPaths($forwardedPaths)

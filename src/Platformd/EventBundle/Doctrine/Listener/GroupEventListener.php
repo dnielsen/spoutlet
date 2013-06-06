@@ -42,7 +42,7 @@ class GroupEventListener implements EventSubscriber
 
     private function getCurrentLocale()
     {
-        return $this->container->get('platformd.model.site_util')->getCurrentSite();
+        return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
 
     /**

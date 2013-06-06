@@ -175,16 +175,16 @@
             $(this).css('height', (parseInt($(this).prop('scrollHeight')))+"px");
         });
 
-        $('.options').click(function (event) {
+        $('.options').off('click').on('click', function (event) {
             event.stopPropagation();
             $('.choices').hide();
             $('.report-options').hide();
             var id = $(this).attr('data-id');
             $('#choices-' + id).toggle('fast');
-            window.getSelection().removeAllRanges()
+            window.getSelection().removeAllRanges();
         });
 
-        $('.report-options-link').click(function (event) {
+        $('.report-options-link').off('click').on('click', function (event) {
             event.stopPropagation();
             var id = $(this).attr('data-id');
             $('#report-options-' + id).toggle('fast');

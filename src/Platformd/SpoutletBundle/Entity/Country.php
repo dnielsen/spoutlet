@@ -40,6 +40,15 @@ class Country
      */
     private $name;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Region", mappedBy="countries")
+     */
+    private $regions;
+
+    public function __toString() {
+        return 'Country => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
+    }
+
      /**
      * Get id
      *
@@ -88,5 +97,15 @@ class Country
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setRegions($value)
+    {
+        $this->regions = $value;
+    }
+
+    public function getRegions()
+    {
+        return $this->regions;
     }
 }

@@ -42,7 +42,7 @@
                 'bundles/spoutlet/js/jquery.multiselect.min.js'
                 'bundles/spoutlet/js/jquery.multiselect.filter.min.js'
 		        'ckeditor/ckeditor.js'
-		        'ckeditor/config.admin.js'
+                'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
 		        'flot/jquery.flot.js'
 		        output='js/packed/admin.js'
@@ -237,6 +237,14 @@
                             {% endif %}
 
                             <li>
+                                <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_background_ads_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
                                 <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
                                 <ul>
                                     <li>
@@ -256,6 +264,11 @@
 
                                 </li>
                             {% endif %}
+
+                            <li>
+                                <a href="{{ path('admin_timeline_index') }}">Timelines</a>
+                            </li>
+
                         </ul>
                     {% endif %}
 

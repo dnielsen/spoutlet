@@ -1,3 +1,7 @@
+_main_user_strip:
+    pattern: /esi/USER_SPECIFIC/mainUserStrip
+    defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
@@ -25,6 +29,22 @@ contact:
 microsoft:
     pattern: /microsoft
     defaults: { _controller: SpoutletBundle:Default:microsoft }
+
+banner:
+    pattern: /banner
+    defaults: { _controller: SpoutletBundle:Default:banner }
+
+hot_stories:
+    pattern: /hot-stories
+    defaults: { _controller: SpoutletBundle:Default:hotStories }
+
+featured_content:
+    pattern: /featured-content
+    defaults: { _controller: SpoutletBundle:Default:featuredContent }
+
+video_feed:
+    pattern: /video-feed
+    defaults: { _controller: SpoutletBundle:Default:videoFeed }
 
 content_reporting:
     pattern:  /report
@@ -96,6 +116,10 @@ SpoutletBundle_admin_featured_media:
     resource: "@SpoutletBundle/Resources/config/routing/admin_featured_media.yml"
     prefix:   /admin/featured-media
 
+SpoutletBundle_admin_background_ads:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_background_ads.yml"
+    prefix:   /admin/background-ads
+
 SpoutletBundle_admin_rsvp:
     resource: "@SpoutletBundle/Resources/config/routing/admin_rsvp.yml"
     prefix:   /admin/rsvp
@@ -111,3 +135,11 @@ SpoutletBundle_takeover:
 SpoutletBundle_admin_takeover:
     resource: "@SpoutletBundle/Resources/config/routing/admin_takeover.yml"
     prefix:   /admin/takeover
+
+SpoutletBundle_admin_timeline:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_timeline.yml"
+    prefix:   /admin/timeline
+
+SpoutletBundle_timeline:
+    resource: "@SpoutletBundle/Resources/config/routing/timeline.yml"
+    prefix:   /timeline

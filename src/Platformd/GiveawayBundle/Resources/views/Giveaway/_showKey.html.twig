@@ -1,0 +1,10 @@
+{% extends "SpoutletBundle::_flashMessage.html.twig" %}
+{% block type %}success{% endblock %}
+{% block body %}
+    <p class="notice-data">
+        {{ 'platformd.giveaway.assigned.key' | trans }}: {{ data.promotion_assigned_key }}
+    </p>
+    <p>
+        {{ 'platformd.giveaway.assigned.message' | trans({ '%contact_email%': site.siteConfig.supportEmailAddress }) | raw }}
+    </p>
+{% endblock %}

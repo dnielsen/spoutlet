@@ -2,7 +2,7 @@ services:
     platformd.form.type.youtube:
         class: Platformd\VideoBundle\Form\Type\YoutubeType
         arguments:
-            - '@platformd.model.site_util'
+            - '@platformd.util.site_util'
             - '@platformd.repository.gallery'
             - '@platformd.repository.group'
             - "@security.context"

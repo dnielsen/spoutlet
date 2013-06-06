@@ -13,9 +13,3 @@ $recipient      = '';
 $ftpServer      = '';
 $ftpUser        = '';
 $ftpPassword    = '';
-
-// ssh tunnel is made to thie pldx server on port 33337
-$dsnPldx        = 'mysql:dbname=;host=127.0.0.1;port=33337';
-$userPldx       = '';
-$passwordPldx   = '';
-$videoDb        = '';

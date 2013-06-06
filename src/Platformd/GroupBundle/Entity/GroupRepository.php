@@ -114,6 +114,7 @@ class GroupRepository extends EntityRepository
             ->where('g.category = :category')
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
+            ->andWhere('g.featured <> 1')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
             ->orderBy('memberCount', 'DESC')
@@ -533,6 +534,17 @@ class GroupRepository extends EntityRepository
         $qb  = $this->createQueryBuilder('g');
 
         return $qb->where($qb->expr()->in('g.id', $ids))
+            ->getQuery()
+            ->execute();
+    }
+
+
+    public function getAutoCompleteResultsByGroupName($groupName)
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g.id as value, g.name as label')
+            ->where('g.name like :groupName')
+            ->setParameter('groupName', '%' . $groupName . '%')
             ->getQuery()
             ->execute();
     }

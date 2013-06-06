@@ -22,7 +22,6 @@ services:
             - { name: kernel.event_listener, event: awa.discussion.delete, method: onDiscussionDelete }
             - { name: kernel.event_listener, event: awa.content.report, method: onReportDiscussion }
             - { name: kernel.event_listener, event: awa.discussionPost.create, method: onAddToDiscussion }
-        scope: request
 
     platformd.age.insufficient_age_listener:
         class: Platformd\SpoutletBundle\Age\InsufficientAgeListener
@@ -51,11 +50,18 @@ services:
             - { name: kernel.event_listener, event: awa.event.register, method: onRegister }
         scope: request
 
+    platformd.cache.cache_failure_exception_listener:
+        class: Platformd\SpoutletBundle\EventListener\CacheFailureExceptionListener
+        arguments:
+            - "@templating"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
     platformd.listener.page_not_found_exception_listener:
         class: Platformd\SpoutletBundle\EventListener\PageNotFoundExceptionListener
         arguments:
             - "@router"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 

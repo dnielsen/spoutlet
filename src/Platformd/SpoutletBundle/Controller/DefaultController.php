@@ -8,6 +8,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+    public function _mainUserStripAction() {
+        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
+
+        $this->varnishCache($response, 120);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *
@@ -30,7 +38,7 @@ class DefaultController extends Controller
     public function healthCheckAction() {
         $site      = $this->getCurrentSite();
         $giveaways = $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
-        $ipAddress = $this->getRequest()->getClientIp(true);
+        $ipAddress = $this->getClientIp($this->getRequest());
 
         return new Response('OK');
     }
@@ -120,7 +128,7 @@ class DefaultController extends Controller
 
         });
 
-    	return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+        return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,

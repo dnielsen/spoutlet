@@ -21,6 +21,8 @@ use Symfony\Component\Locale\Locale;
  */
 class Sweepstakes extends AbstractEvent
 {
+    const COMMENT_PREFIX  = 'sweepstake-';
+
     /**
      * A list of countries that *are* eligible for this sweeps
      *
@@ -201,5 +203,17 @@ class Sweepstakes extends AbstractEvent
     public function getLinkableRouteName()
     {
         return 'sweepstakes_show';
+    }
+
+    /**
+     * Used to return the commenting thread id that should be used for this sweepstakes
+     */
+    public function getThreadId()
+    {
+        if (!$this->getId()) {
+            throw new \LogicException('A sweepstakes needs an id before it can have a comment thread');
+        }
+
+        return self::COMMENT_PREFIX.$this->getId();
     }
 }

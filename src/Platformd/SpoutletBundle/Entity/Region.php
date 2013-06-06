@@ -20,16 +20,20 @@ class Region
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", cascade={"persist"})
      */
-    protected $name;
+    private $site;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country")
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Country", inversedBy="regions")
      * @ORM\JoinTable(name="region_country")
      */
-    protected $countries;
+    private $countries;
 
     public function __construct()
     {
@@ -39,6 +43,16 @@ class Region
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setSite($site)
+    {
+        $this->site = $site;
+    }
+
+    public function getSite()
+    {
+        return $this->site;
     }
 
     public function setName($name)

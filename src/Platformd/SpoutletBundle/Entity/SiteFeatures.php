@@ -106,6 +106,11 @@ class SiteFeatures
     private $hasComments = false;
 
     /**
+     * @ORM\Column(name="has_giveaways", type="boolean")
+     */
+    private $hasGiveaways = false;
+
+    /**
      * @ORM\Column(name="has_events", type="boolean")
      */
     private $hasEvents = false;
@@ -355,6 +360,17 @@ class SiteFeatures
     public function setHasComments($value = true)
     {
         $this->hasComments = $value;
+        return $this;
+    }
+
+    public function getHasGiveaways()
+    {
+        return $this->hasGiveaways;
+    }
+
+    public function setHasGiveaways($value = true)
+    {
+        $this->hasGiveaways = $value;
         return $this;
     }
 

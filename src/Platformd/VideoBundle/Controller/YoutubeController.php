@@ -235,7 +235,7 @@ class YoutubeController extends Controller
             ));
         }
 
-        $response->setSharedMaxAge(30);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -258,7 +258,7 @@ class YoutubeController extends Controller
             'videos' => $videos
         ));
 
-        $response->setSharedMaxAge(30)
+        $this->varnishCache($response, 30)
 ;
         return $response;
     }
@@ -309,10 +309,12 @@ class YoutubeController extends Controller
 
         $site = $this->getCurrentSite();
 
-        $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 6);
+        $videos = $this->getYoutubeManager()->findFeaturedVideos($site, 10);
         $results = $this->formatVideosForFeed($videos);
 
         $response->setContent(json_encode(array('success' => true, 'results' => $results)));
+        $this->varnishCache($response, 30);
+
         return $response;
     }
 

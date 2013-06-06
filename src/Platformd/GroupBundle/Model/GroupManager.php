@@ -591,10 +591,6 @@ class GroupManager
             'ApplyToGroup',
         );
 
-        if ($group->getDeleted() && $action != "EditGroup") {
-            return array();
-        }
-
         if (!$group->isVisibleOnSite($site)) {
             return array();
         }
@@ -607,6 +603,10 @@ class GroupManager
             $isOwner        = $group->isOwner($user);
             $isMember       = $this->isMember($user, $group);
             $isApplicant    = $this->isApplicant($user, $group);
+
+            if ($group->getDeleted()) {
+                return $isSuperAdmin ? array('EditGroup') : array();
+            }
 
             if ($isSuperAdmin) {
                 $permissions = self::$superAdminIsAllowedTo;

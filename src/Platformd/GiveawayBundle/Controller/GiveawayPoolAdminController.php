@@ -8,13 +8,13 @@ use Platformd\GiveawayBundle\Form\Type\GiveawayPoolType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
 /**
 *
 */
 class GiveawayPoolAdminController extends Controller
 {
-
     /**
      * Index action for Giveway pools management
      */
@@ -54,14 +54,14 @@ class GiveawayPoolAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->savePool($pool);
+                $result = $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
-                    'giveaway' => $giveaway->getId()
-                )));
+                if ($result) {
+                    return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
+                        'giveaway' => $giveaway->getId()
+                    )));
+                }
             }
-
-            var_dump($form->createView()->get('errors'));die;
         }
 
         return $this->render('GiveawayBundle:GiveawayPoolAdmin:new.html.twig', array(
@@ -93,11 +93,13 @@ class GiveawayPoolAdminController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->savePool($pool);
+                $result = $this->savePool($pool);
 
-                return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
-                    'giveaway' => $giveaway
-                )));
+                if ($result) {
+                    return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
+                        'giveaway' => $giveaway
+                    )));
+                }
             }
         }
 
@@ -138,15 +140,89 @@ class GiveawayPoolAdminController extends Controller
     protected function savePool(GiveawayPool $pool)
     {
         $em = $this->getDoctrine()->getEntityManager();
+
+        $ruleset    = $pool->getRuleset();
+        $rules      = $ruleset->getRules();
+
+        $newRulesArray = array();
+
+        $defaultAllow = true;
+
+        foreach ($rules as $rule) {
+            if ($rule->getCountry()) {
+                $rule->setRuleset($ruleset);
+                $newRulesArray[] = $rule;
+
+                $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+            }
+        }
+
+        $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
+
+        if ($oldRules) {
+            foreach ($oldRules as $oldRule) {
+                if (!in_array($oldRule, $newRulesArray)) {
+                    $oldRule->setRuleset(null);
+                }
+            }
+        }
+
+        $pool->getRuleset()->setParentType('giveaway-pool');
+        $pool->getRuleset()->setDefaultAllow($defaultAllow);
+
         $em->persist($pool);
         $em->flush();
 
-        if ($pool->getKeysfile()) {
-            $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
-            $loader->loadKeysFromFile($pool->getKeysfile(), $pool);
+        $keysFile = $pool->getKeysfile();
+
+        if ($keysFile) {
+
+            if ($keysFile->getSize() > GiveawayPool::POOL_SIZE_QUEUE_THRESHOLD) {
+
+                $s3         = $this->container->get('aws_s3');
+                $bucket     = $this->container->getParameter('s3_private_bucket_name');
+
+                $handle     = fopen($keysFile, 'r');
+                $filename   = trim(GiveawayPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
+
+                $response = $s3->create_object($bucket, $filename, array(
+                    'fileUpload'    => $handle,
+                    'acl'           => \AmazonS3::ACL_PRIVATE,
+                    'encryption'    => 'AES256',
+                    'contentType'   => 'text/plain',
+                ));
+
+                if ($response->isOk()) {
+
+                    $message = new KeyPoolQueueMessage();
+                    $message->bucket    = $bucket;
+                    $message->filename  = $filename;
+                    $message->siteId    = $this->getCurrentSite()->getId();
+                    $message->userId    = $this->getUser()->getId();
+                    $message->poolId    = $pool->getId();
+                    $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
+
+                    $sqs = $this->container->get('aws_sqs');
+                    $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
+                    $queue_response = $sqs->send_message($queue_url, json_encode($message));
+
+                    $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                    return $queue_response->isOk() ? true : false;
+                } else {
+                    $this->setFlash('error', 'platformd.giveaway_pool.adminupload_error');
+                    return false;
+                }
+
+            } else {
+
+                $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
+                $loader->loadKeysFromFile($pool->getKeysfile(), $pool);
+                $this->setFlash('success', 'platformd.giveaway_pool.admin.saved');
+                return true;
+            }
         }
 
-        $this->setFlash('success', 'platformd.giveaway_pool.admin.saved');
+        return true;
     }
 
     /**

@@ -8,15 +8,11 @@ ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
 # awa servers
-set :app1, "ec2-54-224-27-105.compute-1.amazonaws.com"
-set :app2, "ec2-204-236-207-80.compute-1.amazonaws.com"
-set :app3, "ec2-107-22-71-108.compute-1.amazonaws.com"
-set :app4, "ec2-75-101-223-7.compute-1.amazonaws.com"
+set :app1, "ec2-75-101-139-101.compute-1.amazonaws.com"
+set :app2, "ec2-54-224-7-205.compute-1.amazonaws.com"
+set :app3, "ec2-54-224-5-214.compute-1.amazonaws.com"
+set :app4, "ec2-23-20-55-80.compute-1.amazonaws.com"
 set :app5, "ec2-174-129-62-95.compute-1.amazonaws.com"
-set :app6, "ec2-54-242-181-100.compute-1.amazonaws.com"
-set :app7, "ec2-50-16-75-123.compute-1.amazonaws.com"
-set :app8, "ec2-50-16-37-33.compute-1.amazonaws.com"
-set :app9, "ec2-50-16-66-61.compute-1.amazonaws.com"
 
 # campsite servers
 set :camp1, "ec2-54-235-26-82.compute-1.amazonaws.com"
@@ -29,8 +25,8 @@ set :user,        "ubuntu"
 # branch can be overridden in any of the "stage" files (e.g. staging)
 set :branch,      "master"
 
-role :web,        app1, app2, app3, app4, app5, app6, app7, app8, app9, camp1    # Your HTTP server, Apache/etc
-role :app,        app1, app2, app3, app4, app5, app6, app7, app8, app9, camp1    # This may be the same as your `Web` server
+role :web,        app1, app2, app3, app4, app5, camp1    # Your HTTP server, Apache/etc
+role :app,        app1, app2, app3, app4, app5, camp1    # This may be the same as your `Web` server
 
 role :db,         app1, :primary => true       # This is where Rails migrations will run
 

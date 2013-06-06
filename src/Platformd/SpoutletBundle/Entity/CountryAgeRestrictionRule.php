@@ -216,6 +216,8 @@ class CountryAgeRestrictionRule
 
     public function isAllowed($age, $country)
     {
+        $returnTypes = array('allow' => true, 'disallow' => false);
+
         if ($country instanceof Country) {
             $thisCountry = $this->getCountry();
         } else {
@@ -226,11 +228,10 @@ class CountryAgeRestrictionRule
 
             if (!$age || (($age >= $this->getMinAge() || !$this->getMinAge()) && ($age <= $this->getMaxAge() || !$this->getMaxAge()))) {
 
-                return $this->getRuleType() == "allow";
+                return $returnTypes[$this->getRuleType()];
             }
 
-            return !($this->getRuleType() == "allow");
-
+            return !$returnTypes[$this->getRuleType()];
         }
 
         return null;

@@ -5,7 +5,6 @@ namespace Platformd\GiveawayBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GiveawayBundle\Entity\AbstractCode;
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\AbstractEvent;
 
 
 /**
@@ -44,12 +43,13 @@ class DealCode extends AbstractCode
         return $this->pool;
     }
 
-    public function assign(User $user, $ipAddress, $site)
+    public function assign(User $user, $ipAddress, $site, $country)
     {
         $this->user = $user;
         $this->assignedAt = new \DateTime();
         $this->ipAddress = $ipAddress;
         $this->setAssignedSite($site);
+        $this->setCountry($country);
     }
 
     public function setUser(User $user)

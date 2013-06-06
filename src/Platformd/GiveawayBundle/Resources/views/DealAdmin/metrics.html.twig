@@ -38,7 +38,7 @@
                 {% endif %}
 
                 {% if site == 'Singapore' %}
-                    <th>MYSG</th>
+                    <th>MY/SG</th>
                 {% endif %}
 
                 {% if site == 'Australia / New Zealand' %}
@@ -57,6 +57,18 @@
                     <th>Demo</th>
                 {% endif %}
 
+                {% if site == 'Asia Pacific/Japan' %}
+                    <th>APJ</th>
+                {% endif %}
+
+                {% if site == 'Western Europe' %}
+                    <th>EU-WE</th>
+                {% endif %}
+
+                {% if site == 'Central Europe' %}
+                    <th>EU-CE</th>
+                {% endif %}
+
             {% endfor %}
         </tr>
     </thead>
@@ -69,7 +81,7 @@
             <td>{{ metric.remaining }}</td>
             {% for key, site in sites %}
                 <td>
-                    {{ metric.sites[key] }}
+                    {% if site in metric.sites|keys %}{{ metric.sites[site] }}{% else %}0{% endif %}
                 </td>
             {% endfor %}
         </tr>

@@ -185,7 +185,7 @@ class Deal implements LinkableInterface, CommentableInterface
     /**
      * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\DealPool", mappedBy="deal")
      */
-    protected $dealPools;
+    protected $pools;
 
     /**
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
@@ -220,11 +220,34 @@ class Deal implements LinkableInterface, CommentableInterface
      */
     protected $testOnly = false;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $group = null;
+
+    /**
+     * @var boolean $featured
+     * @ORM\Column(name="featured", type="boolean")
+     */
+    protected $featured = false;
+
+    /**
+     * @var \DateTime $featuredAt
+     *
+     * @ORM\Column(name="featured_at", type="datetime", nullable=true)
+     */
+    protected $featuredAt;
+
     public function __construct()
     {
         $this->mediaGalleryMedias = new ArrayCollection();
-        $this->dealPools = new ArrayCollection();
-        $this->sites = new ArrayCollection();
+        $this->pools              = new ArrayCollection();
+        $this->sites              = new ArrayCollection();
+    }
+
+    public function __toString() {
+        return 'Deal => { Id = '.$this->getId().', Name = "'.$this->getName().'", Status = "'.$this->getStatus().'", TestOnly = '.($this->getTestOnly() ? 'True' : 'False').' }';
     }
 
     public function setSitifiedAt($sitifiedAt)
@@ -535,19 +558,19 @@ class Deal implements LinkableInterface, CommentableInterface
         return $this->getStatus() == self::STATUS_PUBLISHED;
     }
 
-    public function setDealPools($pools)
+    public function setPools($pools)
     {
-        $this->dealPools = $pools;
+        $this->pools = $pools;
     }
 
-    public function getDealPools()
+    public function getPools()
     {
-        return $this->dealPools;
+        return $this->pools;
     }
 
     public function getActivePool()
     {
-        foreach($this->getDealPools() as $pool) {
+        foreach($this->getPools() as $pool) {
             if ($pool->getIsActive()) {
                 return $pool;
             }
@@ -667,5 +690,50 @@ class Deal implements LinkableInterface, CommentableInterface
     public function getBottomColor()
     {
         return $this->bottomColor;
+    }
+
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getFeatured()
+    {
+        return $this->featured;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setFeatured($value)
+    {
+        $this->featured = $value;
+        if($value) {
+            $this->featuredAt = new DateTime('now');
+        }
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getFeaturedAt()
+    {
+        return $this->featuredAt;
+    }
+
+    /**
+     * @param DateTime $value
+     */
+    public function setFeaturedAt($value)
+    {
+        $this->featuredAt = $value;
     }
 }

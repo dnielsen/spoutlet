@@ -64,12 +64,13 @@ class DealAdminController extends Controller
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The deal was created!');
 
-            return $this->redirect($this->generateUrl('admin_deal_edit', array('id' => $deal->getId())));
+            return $this->redirect($this->generateUrl('admin_deal_pool_new', array('dealId' => $deal->getId())));
         }
 
         return $this->render('GiveawayBundle:DealAdmin:new.html.twig', array(
             'deal' => $deal,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'group' => null,
         ));
     }
 
@@ -95,6 +96,7 @@ class DealAdminController extends Controller
 
         $editForm   = $this->createForm(new DealType(), $deal);
         $deleteForm = $this->createDeleteForm($id);
+        $group      = $deal->getGroup();
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The deal was saved!');
@@ -106,6 +108,7 @@ class DealAdminController extends Controller
             'deal'      => $deal,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'group' => $group,
         ));
     }
 
@@ -169,14 +172,20 @@ class DealAdminController extends Controller
         }
 
         $dealMetrics = array();
-        /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
+
+        $dealData = $metricManager->getDealRegionData($from, $to);
+
         foreach($deals as $deal) {
-            $dealMetrics[] = $metricManager->createDealReport($deal, $from, $to);
+            $dealMetrics[$deal->getId()] = $metricManager->createDealReport($deal, $from, $to);
+        }
+
+        foreach ($dealData as $dealId => $data) {
+            $dealMetrics[$dealId]['sites'] = $data;
         }
 
         return $this->render('GiveawayBundle:DealAdmin:metrics.html.twig', array(
             'metrics' => $dealMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         ));
     }
@@ -199,6 +208,18 @@ class DealAdminController extends Controller
             if ($form->isValid()) {
                 /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */
                 $deal = $form->getData();
+
+                # since we're using jquery autocomplete, have to use hidden field for the group id
+
+                $groupId = $form['group']->getData();
+                if($groupId) {
+                    $group = $em->getRepository('GroupBundle:Group')->find($groupId);
+
+                    if($group) {
+                        $deal->setGroup($group);
+                    }
+                }
+
 
                 $ruleset    = $deal->getRuleset();
                 $rules      = $ruleset->getRules();

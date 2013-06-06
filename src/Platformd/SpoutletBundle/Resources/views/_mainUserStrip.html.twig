@@ -1,14 +1,27 @@
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 {{ 'platformd.layout.top_menu.logged_in_as' | trans({
-    '%username%': app.user.username,
-    '%route%': account_link(app.user.username)
+    '%username%': user.username,
+    '%route%': account_link(user.username)
 }) | raw }}
 	<li class="separator"><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
     {% if is_granted("ROLE_ADMIN") %}
     <li class="separator"><a href="{{ path('admin_index') }}">{{ "platformd.layout.top_menu.admin" | trans }}</a></li>
     {% endif %}
+    <script type="text/javascript">var user_is_logged_in = true</script>
 {% else %}
-	<li class="separator"><a href="{{ login_link(app.request.uri) }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
+	<li class="separator"><a id="header-login-link" href="{{ login_link(app.request.uri) }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
+
+    <script type="text/javascript">
+        $(function () {
+
+            var newUrl = '{{ login_link() }}' + '?return=' + encodeURIComponent(window.location.href);
+
+            $('#header-login-link').attr('href', newUrl);
+        });
+        var user_is_logged_in = false
+    </script>
 {% endif %}
+
+
