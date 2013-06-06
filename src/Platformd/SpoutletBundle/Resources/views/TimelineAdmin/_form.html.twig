@@ -1,0 +1,18 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{{ form_errors(form) }}
+
+<div class="row-fluid">
+    <fieldset>
+        <legend>Timeline Information</legend>
+        <div class="span8">
+
+            {{ form_row(form.name) }}
+            {{ form_row(form.googleDocUrl) }}
+
+        </div>
+    </fieldset>
+</div>
+
+{{ form_rest(form) }}

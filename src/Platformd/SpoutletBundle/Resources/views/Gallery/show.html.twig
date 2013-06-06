@@ -78,7 +78,7 @@
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
             {% if features.hasComments %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : media.getThreadId, 'object' : media } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : media.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             {% endif %}
 
         </div>

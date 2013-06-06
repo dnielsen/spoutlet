@@ -32,6 +32,26 @@ class DealRepository extends EntityRepository
         ;
     }
 
+    # with eager fetching of pools
+    public function findOneByIdAndSiteId($id, $siteId) {
+        $qb = $this->createQueryBuilder('d');
+
+        $results = $qb->addSelect('p')
+            ->leftJoin('d.pools', 'p')
+            ->leftJoin('d.sites', 's')
+            ->where('s.id = :siteId')
+            ->andWhere('d.id = :dealId')
+            ->setParameter('siteId', (int) $siteId)
+            ->setParameter('dealId', (int) $id)
+            ->getQuery()
+            ->getResult();
+
+        if (!$results) {
+            return null;
+        }
+
+        return $results[0];
+    }
     public function findAllPublishedForSiteNewestFirstForGame($site, Game $game)
     {
         $qb = $this->createSiteQueryBuilder($site, true);
@@ -53,6 +73,40 @@ class DealRepository extends EntityRepository
         ;
     }
 
+    public function findOneBySlugWithOpengraphAndMediaForSiteId($slug, $siteId)
+    {
+        return $this->createSiteIdQueryBuilder($siteId, false)
+            ->leftJoin('d.openGraphOverride', 'o')
+            ->leftJoin('o.thumbnail', 'ot')
+            ->leftJoin('d.banner', 'b')
+            ->leftJoin('d.thumbnailLarge', 't')
+            ->leftJoin('d.claimCodeButton', 'c')
+            ->leftJoin('d.visitWebsiteButton', 'v')
+            ->addSelect('o, b, t, c, v, ot')
+            ->andWhere('d.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findOneByIdWithOpengraphAndMediaForSiteId($dealId, $siteId)
+    {
+        return $this->createSiteIdQueryBuilder($siteId, false)
+            ->leftJoin('d.openGraphOverride', 'o')
+            ->leftJoin('o.thumbnail', 'ot')
+            ->leftJoin('d.banner', 'b')
+            ->leftJoin('d.thumbnailLarge', 't')
+            ->leftJoin('d.claimCodeButton', 'c')
+            ->leftJoin('d.visitWebsiteButton', 'v')
+            ->addSelect('o, b, t, c, v, ot')
+            ->andWhere('d.id = :dealId')
+            ->setParameter('dealId', $dealId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     public function findOneByNameForSite($name, $site)
     {
         return $this->createSiteQueryBuilder($site)
@@ -63,11 +117,16 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    public function findFeaturedDealsForSite($site)
+    public function findFeaturedDealsForSiteId($siteId)
     {
-        $qb = $this->createSiteQueryBuilder($site);
+        $qb = $this->createSiteIdQueryBuilder($siteId);
         $this->addActiveQueryBuilder($qb);
-        $this->addOrderByQuery($qb);
+        $qb->andWhere('d.featured = 1');
+        $qb->orderBy('d.featuredAt', 'DESC');
+
+        $qb->leftJoin('d.banner', 'b')
+            ->leftJoin('d.thumbnailLarge', 't')
+            ->addSelect('b, t');
 
         return $qb
             ->getQuery()
@@ -91,22 +150,31 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    public function findAllActiveDealsForSite($site)
+    public function findAllActiveDealsForSiteId($siteId)
     {
-        $qb = $this->createSiteQueryBuilder($site);
+        $qb = $this->createSiteIdQueryBuilder($siteId);
         $this->addActiveQueryBuilder($qb);
         $this->addOrderByQuery($qb);
+        $qb->andWhere('d.featured <> 1');
+
+        $qb->leftJoin('d.banner', 'b')
+            ->leftJoin('d.thumbnailLarge', 't')
+            ->addSelect('b, t');
 
         return $qb->getQuery()
             ->execute()
         ;
     }
 
-    public function findExpiredDealsForSite($site, $maxResults = 4)
+    public function findExpiredDealsForSiteId($siteId, $maxResults = 4)
     {
-        $qb = $this->createSiteQueryBuilder($site);
+        $qb = $this->createSiteIdQueryBuilder($siteId);
         $this->addExpiredQueryBuilder($qb);
         $this->addOrderByQuery($qb);
+
+        $qb->leftJoin('d.banner', 'b')
+            ->leftJoin('d.thumbnailLarge', 't')
+            ->addSelect('b, t');
 
         return $qb->getQuery()
             ->setMaxResults($maxResults)
@@ -120,12 +188,26 @@ class DealRepository extends EntityRepository
             ->leftJoin('d.sites', 's');
 
         if (is_string($site)) {
-            $qb->andWhere('s.name = :site')
-                ->setParameter('site', $site);
+            $qb->andWhere('s.name = :site');
         } else {
-            $qb->andWhere('s = :site')
-            ->setParameter('site', $site);
+            $qb->andWhere('s = :site');
         }
+
+        $qb->setParameter('site', $site);
+
+        if ($returnOnlyPublished) {
+            $this->addPublishedQueryBuilder($qb);
+        }
+
+        return $qb;
+    }
+
+    private function createSiteIdQueryBuilder($siteId, $returnOnlyPublished = true)
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->leftJoin('d.sites', 's')
+            ->andWhere('s.id = :siteId')
+            ->setParameter('siteId', (int) $siteId);
 
         if ($returnOnlyPublished) {
             $this->addPublishedQueryBuilder($qb);

@@ -3,7 +3,7 @@ services:
             class: Platformd\EventBundle\EventListener\GroupEventListener
             arguments:
                 - "@platformd.model.translator"
-                - "@platformd.model.site_util"
+                - "@platformd.util.site_util"
                 - "@platformd.model.email_manager"
                 - "@router"
             tags:

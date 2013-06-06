@@ -176,4 +176,18 @@ abstract class AbstractCodeRepository extends EntityRepository
     {
         return $qb->andWhere('k.user IS NOT NULL');
     }
+
+    public function getAllAssignedKeysWithoutCountry()
+    {
+        return $this
+            ->createQueryBuilder('k')
+            ->andWhere('k.ipAddress IS NOT NULL')
+            ->andWhere('k.ipAddress <> :unknown')
+            ->andWhere('k.country IS NULL')
+            ->setParameters(array(
+                'unknown'  => 'unknown',
+            ))
+            ->getQuery()
+            ->getResult();
+    }
 }

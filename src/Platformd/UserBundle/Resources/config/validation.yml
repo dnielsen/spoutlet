@@ -2,6 +2,6 @@ services:
     platformd.user.validation.user_validator:
         class: Platformd\UserBundle\Validator\UserValidator
         arguments:
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         tags:
             - { name: validator.constraint_validator, alias: platformd.validator.user.user }

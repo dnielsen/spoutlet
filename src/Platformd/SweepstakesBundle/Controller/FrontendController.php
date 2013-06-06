@@ -6,6 +6,10 @@ use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
 
 class FrontendController extends Controller
 {
@@ -13,7 +17,7 @@ class FrontendController extends Controller
     {
         $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getCurrentSite());
 
-    	return $this->render('SweepstakesBundle:Frontend:index.html.twig', array(
+        return $this->render('SweepstakesBundle:Frontend:index.html.twig', array(
             'sweepstakess' => $sweepstakess
         ));
     }
@@ -40,10 +44,14 @@ class FrontendController extends Controller
             $isEntered = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($sweepstakes);
+
         return array(
-            'sweepstakes' => $sweepstakes,
+            'sweepstakes'   => $sweepstakes,
             'assignedEntry' => $assignedEntry,
-            'isEntered' => $isEntered,
+            'isEntered'     => $isEntered,
+            'groupManager'  => $this->getGroupManager(),
+            'permalink'     => $permalink,
         );
     }
 
@@ -81,12 +89,9 @@ class FrontendController extends Controller
         }
 
         // check that they pass the new style age-country restriction ruleset
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
+        $user = $this->getUser();
 
-        $user           = $this->getUser();
-        $country        = $countryRepo->findOneByCode($user->getCountry());
-
-        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
             $this->setFlash('error', 'not_eligible_sweepstakes');
             return $this->redirectToShow($sweepstakes);
         }
@@ -98,10 +103,47 @@ class FrontendController extends Controller
             return $this->redirectToShow($sweepstakes);
         }
 
+        $joinGroup = $request->get('join_checkbox');
+
+        # if user has elected to join the group associated with this deal, we add them to the list of members
+        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
+            if($sweepstakes->getGroup()) {
+                $groupManager = $this->getGroupManager();
+                $group = $sweepstakes->getGroup();
+
+                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
+                    // TODO This should probably be refactored to use the global activity table
+                    $joinAction = new GroupMembershipAction();
+                    $joinAction->setGroup($group);
+                    $joinAction->setUser($user);
+                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+                    $group->getMembers()->add($user);
+                    $group->getUserMembershipActions()->add($joinAction);
+
+                    // TODO Add a service layer for managing groups and dispatching such events
+                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('event_dispatcher');
+                    $event = new GroupEvent($group, $user);
+                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+                    $groupManager->saveGroup($group);
+
+                    if($group->getIsPublic()) {
+                        try {
+                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
+                        } catch (ApiException $e) {
+
+                        }
+                    }
+                }
+            }
+        }
+
         $entry = $this->getSweepstakesRepo()->createNewEntry(
             $sweepstakes,
             $this->getUser(),
-            $request->getClientIp(true)
+            $this->getClientIp($request)
         );
         $this->getDoctrine()->getEntityManager()->persist($entry);
         $this->getDoctrine()->getEntityManager()->flush();
@@ -152,5 +194,21 @@ class FrontendController extends Controller
             ->getEntityManager()
             ->getRepository('SweepstakesBundle:Entry')
         ;
+    }
+
+    /**
+     * @return \Platformd\GroupBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\Api\ApiManager
+     */
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

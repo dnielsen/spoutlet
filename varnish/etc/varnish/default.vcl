@@ -10,10 +10,6 @@ backend awa2  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "h
 backend awa3  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
 backend awa4  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
 backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awa6  { .host = "ec2-54-242-181-100.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awa7  { .host = "ec2-50-16-75-123.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awa8  { .host = "ec2-50-16-37-33.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
-backend awa9  { .host = "ec2-50-16-66-61.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
 
 director awa random {
     { .backend = awa1; .weight = 1; }
@@ -21,13 +17,11 @@ director awa random {
     { .backend = awa3; .weight = 2; }
     { .backend = awa4; .weight = 2; }
     { .backend = awa5; .weight = 2; }
-    { .backend = awa6; .weight = 2; }
-    { .backend = awa7; .weight = 2; }
-    { .backend = awa8; .weight = 2; }
-    { .backend = awa9; .weight = 2; }
 }
 
 sub vcl_recv {
+
+    #req.http.host ~ "^.*staging.alienwarearena.com"
 
     set req.backend = awa;
 
@@ -99,18 +93,24 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.http.host ~ "^.*staging.alienwarearena.com") {
-        if (req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") {
-            return (lookup);
-        }
+    if (req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") {
+        return (lookup);
+    }
 
-        if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]" && !req.url ~ "/(key|redeem)$") {
-            remove req.http.Cookie;
-            return (lookup);
-        }
+    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]" && !req.url ~ "/(key|redeem)$") {
+        remove req.http.Cookie;
+        return (lookup);
     }
 
     if (req.url ~ "^/video/ajax/apjxml$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/galleries/featured-feed") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
         remove req.http.Cookie;
     }
 
@@ -149,6 +149,14 @@ sub vcl_fetch {
         unset beresp.http.expires;
     }
 
+    if (req.url ~ "^/galleries/featured-feed") {
+        unset beresp.http.set-cookie;
+    }
+
+    if (req.url ~ "^/videos/feed$") {
+        unset beresp.http.set-cookie;
+    }
+
     if (req.url ~ "^/videos/category-tab/") {
         unset beresp.http.set-cookie;
     }
@@ -163,10 +171,8 @@ sub vcl_fetch {
 
     set beresp.grace = 6h;
 
-    if (req.http.host ~ "^.*staging.alienwarearena.com") {
-        if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]"){
-            unset beresp.http.set-cookie;
-        }
+    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]"){
+        unset beresp.http.set-cookie;
     }
 }
 

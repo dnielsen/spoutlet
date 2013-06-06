@@ -72,6 +72,7 @@ class AdminController extends Controller
     	return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
             'form' => $form->createView(),
             'sweepstakes' => $sweepstakes,
+            'group' => null,
         ));
     }
 
@@ -103,8 +104,10 @@ class AdminController extends Controller
         	}
         }
 
+        $group = $sweepstakes->getGroup();
+
     	return $this->render('SweepstakesBundle:Admin:edit.html.twig',
-    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes));
+    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes, 'group' => $group));
     }
 
     public function approveAction($id)
@@ -271,6 +274,15 @@ class AdminController extends Controller
 
         $sweepstakes->getRuleset()->setParentType('sweepstake');
         $sweepstakes->getRuleset()->setDefaultAllow($defaultAllow);
+
+        $groupId = $sweepstakesForm['group']->getData();
+        if($groupId) {
+            $group = $em->getRepository('GroupBundle:Group')->find($groupId);
+
+            if($group) {
+                $sweepstakes->setGroup($group);
+            }
+        }
 
         $this
             ->get('platformd.events_manager')

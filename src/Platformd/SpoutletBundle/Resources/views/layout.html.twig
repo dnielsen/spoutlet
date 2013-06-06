@@ -111,6 +111,12 @@
                 });
                 $('#nav-wrapper').width(width);
 
+                {% if not block('page_background_image') or block('page_background_link') %}
+                    {% if current_background_ad_link(block('page_background_link')) %}
+                        $('#custom_background_bot').css('cursor', 'pointer');
+                    {% endif %}
+                {% endif %}
+
                 // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
                 $.blockUI.defaults.overlayCSS = {};
 
@@ -154,16 +160,16 @@
 
 		<div id="omni">
             {# big line to add a background-image if the page_background_image block has been set #}
-	        <div id="page"{{ (block('page_background_image') ? (' style="background-image: url(%url%);"'|replace({'%url%': block('page_background_image')})) : '') | raw }}>
-	            <div class="background-takeover" id="custom_background_top">
-	                <div class="background-takeover" id="custom_background_bot">
-	                    <div id="header">
-	                    	{% include 'SpoutletBundle::header.html.twig' %}
-	                    </div>
-	                    <div id="mainNav-wrapper">
-	                        {% include 'SpoutletBundle::navigation.html.twig' %}
-	                    </div>
-	                    <div id="content-wrapper">
+            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} {% if not block('page_background_image') or block('page_background_link') %} {{ current_background_ad_link(block('page_background_link')) }}{% endif %}>
+                <div class="background-takeover" id="custom_background_top">
+                    <div id="header">
+                    	{% include 'SpoutletBundle::header.html.twig' %}
+                    </div>
+                    <div id="mainNav-wrapper">
+                        {% include 'SpoutletBundle::navigation.html.twig' %}
+                    </div>
+                    <div class="background-takeover" id="custom_background_bot">
+                        <div id="content-wrapper">
                             <div id="{{ (block('content_background_override_class') ? block('content_background_override_class') : 'content-background') }}">
                                 <div id="content">
 

@@ -75,6 +75,12 @@ class GamePageController extends Controller
             ->findActivesForGame($gamePage->getGame(), $site)
         ;
 
+        $feedGiveaways = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Giveaway')
+            ->findActivesForGame($gamePage->getGame(), $site)
+        ;
+
         $dealRepo = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal');
@@ -105,6 +111,7 @@ class GamePageController extends Controller
             'hasVideos' => $hasVideos,
             'hasFeedItems' => $hasFeedItems,
             'hasFeatures' => $hasFeatures,
+            'feedGiveaways' => $feedGiveaways,
             'events' => $events,
         );
     }

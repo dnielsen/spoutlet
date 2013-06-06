@@ -2,6 +2,8 @@ imports:
     - { resource: config_dev.yml }
 
 parameters:
+    services_queue_util_class: Platformd\SpoutletBundle\Util\Mocks\QueueUtilMock
+
     allow_faked_auth:   true
 
     # This says to use the current host, but prefix the URLs with this
@@ -14,6 +16,8 @@ parameters:
     # of forwarding the user to the CEVO site
     allow_cevo_forwarding: true
 
+    # keep this (allow_caching) off as you can get inconsistent results in a dev/test environment.
+    allow_caching: false
     test_acl_database: %acl_database_name%_test
 
 framework:
@@ -32,6 +36,9 @@ swiftmailer:
 mink:
     base_url:   %mink_base_url%
     goutte: ~
+    selenium: ~
+    javascript_session: selenium
+    show_cmd: firefox %s
 
 doctrine:
     dbal:

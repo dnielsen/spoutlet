@@ -79,10 +79,7 @@ class ContestController extends Controller
 
             $isEntered = $entry ? true : false;
 
-            $countryRepo    = $this->getCountryRepository();
-            $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+            if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
                 $isEligible = false;
             }
 
@@ -125,10 +122,7 @@ class ContestController extends Controller
 
         $this->ensureContestIsValid($contest);
 
-        $countryRepo    = $this->getCountryRepository();
-        $country = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $country)) {
+        if ($contest->getRuleset() && !$contest->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
             $this->setFlash('error', $this->trans('contests.contest_not_eligible'));
             return $this->redirect($this->generateUrl('contest_show', array('slug' => $slug)));
         }
@@ -154,7 +148,7 @@ class ContestController extends Controller
             $entry = new ContestEntry();
             $entry->setUser($user);
             $entry->setContest($contest);
-            $entry->setIpAddress($request->getClientIp());
+            $entry->setIpAddress($this->getClientIp($request));
 
             $em->persist($entry);
             $em->flush();
@@ -301,7 +295,7 @@ class ContestController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -403,10 +397,5 @@ class ContestController extends Controller
     private function getContestEntryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:ContestEntry');
-    }
-
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
     }
 }

@@ -12,4 +12,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class SiteRepository extends EntityRepository
 {
+    public function findOneByFullDomain($fullDomain=null)
+    {
+        if ($fullDomain) {
+            return $this->createQueryBuilder('s')
+                ->andWhere('s.fullDomain = :fullDomain')
+                ->setParameter('fullDomain', $fullDomain)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        // Required for instances where e.g. GiveawayListener asks for current site when a giveaway is loaded.
+        // The default repo function will not work when called from siteUtil when calling from CLI because the current
+        // site has not been set by an onKernelRequest call
+
+        $backupResult = $this->createQueryBuilder('s')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $backupResult;
+    }
 }

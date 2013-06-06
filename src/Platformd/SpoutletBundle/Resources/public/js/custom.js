@@ -63,4 +63,21 @@ jQuery(document).ready(function() {
 
         $(this).text($(this).text() + ' ('+ newHour + ' ' + amPm +')');
     });
+
+    // make background of a giveaway clickable
+    $('#page').click(function(event) {
+        if (event.target.id !== 'custom_background_bot') {
+            return;
+        }
+        var link = $('#page').data('background-link');
+        if (!link) {
+            return;
+        }
+
+        if(link.indexOf("alienwarearena") !== -1) {
+            window.location.href = link;
+        } else {
+            window.open(link, '_blank');
+        }
+    });
 });

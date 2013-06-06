@@ -46,3 +46,9 @@ admin_group_discussion_details_export:
 admin_group_discussion_replies_export:
     pattern: /{id}/metrics/group-discussions-replies-export
     defaults: { _controller: "GroupBundle:GroupAdmin:generateGroupDiscussionRepliesCsv" }
+
+admin_group_autocomplete:
+    pattern: /ajax/auto-complete
+    defaults: { _controller: "GroupBundle:GroupAdmin:groupAutoComplete" }
+    requirements:
+        _format: json

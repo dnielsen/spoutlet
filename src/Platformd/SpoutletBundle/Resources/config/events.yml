@@ -4,7 +4,7 @@ services:
         arguments:
             - @event_filesystem
             - @doctrine.orm.entity_manager
-    
+
     platformd.event_banner_resolver:
         class:  'Platformd\SpoutletBundle\BannerPathResolver'
         arguments:

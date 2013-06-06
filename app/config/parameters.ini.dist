@@ -11,6 +11,8 @@
 
     acl_database_name       = platformd_acl
 
+    allow_caching           = true
+
     mailer_transport        = smtp
     mailer_host             = localhost
     mailer_user             =
@@ -31,6 +33,7 @@
     s3.access_key           =
     s3.secret_key           =
     s3_bucket_name          = platformd-testing
+    s3_private_bucket_name  = platformd-private-testing
 
     ; this is for the "alienware" staging
     facebook_app_id         = 468808186479620
@@ -49,3 +52,5 @@
     liip_enabled_themes[] = test_theme
 
     admin_prod_url_scheme = https
+
+    queue_prefix          = https://sqs.us-east-1.amazonaws.com/042124576429/PD_TESTING_

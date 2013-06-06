@@ -8,10 +8,85 @@ services:
             - "@platformd.model.email_manager"
             - "%sender_email_address%"
             - "%sender_email_name%"
+            - "@platformd.util.cache_util"
+            - "@pd_giveaway.entity.repository.giveaway"
+            - "@platformd.util.site_util"
+            - "@pd_giveaway.util.key_counter_util"
+            - "@pd_giveaway.entity.repository.giveaway_key"
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@media_exposer"
+            - @event_filesystem
+            - "@platformd.repository.country"
+            - "@platformd.model.comment_manager"
 
     platformd.model.deal_manager:
         class: Platformd\GiveawayBundle\Model\DealManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@knp_media.util.media_util"
+            - "@platformd.util.cache_util"
+            - "@pd_giveaway.entity.repository.deal"
+            - "@platformd.util.site_util"
+            - "@pd_giveaway.entity.repository.deal_code"
+            - "@platformd.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@platformd.media_path_resolver"
+            - "@platformd.model.comment_manager"
 
+    pd_giveaway.util.key_counter_util:
+        class: Platformd\GiveawayBundle\Util\KeyCounterUtil
+
+    pd_giveaway.entity.repository.giveaway:
+        class: Platformd\GiveawayBundle\Entity\GiveawayRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:Giveaway'
+
+    pd_giveaway.entity.repository.giveaway_key:
+        class: Platformd\GiveawayBundle\Entity\GiveawayKeyRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:GiveawayKey'
+
+    pd_giveaway.entity.repository.key_request_state:
+        class: Platformd\GiveawayBundle\Entity\Repository\KeyRequestStateRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:KeyRequestState'
+
+    pd_giveaway.entity.repository.deal:
+        class: Platformd\GiveawayBundle\Entity\Repository\DealRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:Deal'
+
+    pd_giveaway.entity.repository.deal_code:
+        class: Platformd\GiveawayBundle\Entity\Repository\DealCodeRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'GiveawayBundle:DealCode'
+
+    platformd.doctrine.listener.giveaway:
+        class: Platformd\GiveawayBundle\Doctrine\Listener\GiveawayListener
+        arguments:
+            - @service_container
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    pd_giveaway.logger.key_request_processor_logger:
+        class:     Symfony\Bridge\Monolog\Logger
+        arguments:
+            - 'key_request_processor'
+        calls:
+            - [pushHandler, [@pd_giveaway.log_handler.key_request]]
+
+    pd_giveaway.log_handler.key_request:
+        class:     Monolog\Handler\StreamHandler
+        arguments: [%kernel.logs_dir%/keypool_request_processor.log, 200] #200 = INFO

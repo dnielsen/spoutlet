@@ -6,9 +6,13 @@
 
     <h1>Members</h1>
 
-    <form action="{{  path('Platformd_UserBundle_admin_filter') }}" method="POST" name="search">
+    <form action="{{  path('Platformd_UserBundle_admin_index') }}" method="POST" name="search">
         <strong>{{ "platformd.users.user_listings.search" | trans }}:</strong>
         <input name="search" class="usersearch" type="text" title="{{ "platformd.users.user_listings.search" | trans }}" size="41" value="{{ search }}" />
+        <select name="type">
+            <option value="text">Username/Email</option>
+            <option value="ip"{% if app.request.get('type') == 'ip' %} selected{%endif%}>IP Address</option>
+        </select>
         <input type="submit" value="{{ 'Find members' | trans }}" />
     </form>
 

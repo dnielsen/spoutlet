@@ -4,8 +4,18 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
+use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\GroupBundle\Event\GroupEvent;
+use Platformd\GroupBundle\GroupEvents;
+use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_main_actions_data;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
+use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
+use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
+use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
 /**
 *
@@ -13,137 +23,263 @@ use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
 class GiveawayController extends Controller
 {
 
+    public function _giveawayFlashMessageAction($giveawayId)
+    {
+        $currentSiteId = $this->getCurrentSiteCached()->getId();
+        $currentUser   = $this->getCurrentUser();
+        $giveaway      = $this->getRepository()->findOneByIdAndSiteId((int) $giveawayId, $currentSiteId);
+        $keyValue      = null;
+        $state         = null;
+
+        if (!$giveaway) {
+            die('No giveaway found');
+        }
+
+        if ($currentUser) {
+            $key       = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
+            $keyValue  = $key ? $key->getValue() : null;
+
+            if (!$keyValue) {
+                $stateRepo = $this->getKeyRequestStateRepo();
+                $state     = $stateRepo->findForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
+            }
+        }
+
+        if ($keyValue) { # the user has a key, so let's display it for them
+
+            $group        = $giveaway->getGroup();
+            $groupManager = $this->get('platformd.model.group_manager');
+
+            $data                               = new giveaway_show_key_data();
+
+            $data->promotion_assigned_key        = $keyValue;
+            $data->promotion_group_slug         = $group ? $group->getSlug() : null;
+            $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
+            $data->promotion_group_name         = $group ? $group->getName() : null;
+
+            $response = $this->render('GiveawayBundle:Giveaway:_showKey.html.twig', array(
+                'data' => $data
+            ));
+
+            $this->varnishCache($response, 60);
+
+            return $response;
+        }
+
+        $statesToNotifyUserOf = array(KeyRequestState::STATE_IN_QUEUE, KeyRequestState::STATE_REJECTED, KeyRequestState::STATE_REQUEST_PROBLEM);
+
+        if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf) && !$state->getUserHasSeenState()) { # they have joined the queue, been rejected or something else
+
+            $data = new giveaway_show_current_queue_state();
+
+            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'success' : 'error';
+            $data->current_state        = $state->getCurrentState();
+            $data->current_state_reason = $state->getStateReason();
+
+            if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
+
+                $state->setUserHasSeenState(true);
+                $em = $this->getDoctrine()->getEntityManager();
+
+                $em->persist($state);
+                $em->flush();
+            }
+
+            $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
+                'data' => $data
+            ));
+
+            $this->varnishCache($response, 1);
+
+            return $response;
+        }
+
+        # at this stage, there are no notifications for the user
+
+        $response = new Response();
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
+    public function _giveawayShowActionsAction($giveawayId)
+    {
+        $giveawayId    = (int) $giveawayId;
+        $currentSiteId = $this->getCurrentSiteCached()->getId();
+        $giveaway      = $this->getRepository()->findOneByIdAndSiteId($giveawayId, $currentSiteId);
+
+        if (!$giveaway) {
+            return $this->generateErrorPage();
+        }
+
+        $currentUser     = $this->getCurrentUser();
+        $giveawayManager = $this->getGiveawayManager();
+        $data            = new giveaway_show_main_actions_data();
+
+        $data->giveaway_available_keys = $giveawayManager->getAvailableKeysForGiveaway($giveawayId, $this->getCurrentCountryCode());
+        $inQueue = false;
+
+        if ($currentUser) {
+            $data->can_user_apply_to_giveaway = !$this->getMachineCodeEntryRepository()->activeOrPendingExistsForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
+
+            $testMode = $giveaway->getTestOnly() && $currentUser->hasRole('ROLE_SUPER_ADMIN');
+
+            if ($giveaway->getStatus() != 'active' && !$testMode) {
+                $data->giveaway_available_keys             = 0;
+                $data->can_user_apply_to_giveaway = true;
+            }
+
+            $stateRepo = $this->getKeyRequestStateRepo();
+            $state     = $stateRepo->findForUserIdAndGiveawayId($currentUser->getId(), $giveaway->getId());
+            $inQueue   = $state ? $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE : false;
+        } elseif ($giveaway->getStatus() != 'active') { #not logged in
+            $data->giveaway_available_keys    = 0;
+            $data->can_user_apply_to_giveaway = true;
+        }
+
+        $group        = $giveaway->getGroup();
+        $groupManager = $this->get('platformd.model.group_manager');
+
+        $data->promotion_group_slug         = $group ? $group->getSlug() : null;
+        $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
+        $data->promotion_group_name         = $group ? $group->getName() : null;
+
+        $assignedKey = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
+
+        $data->giveaway_slug                      = $giveaway->getSlug();
+        $data->giveaway_id                        = $giveaway->getId();
+        $data->giveaway_show_keys                 = $giveaway->getShowKeys();
+        $data->giveaway_allow_key_fetch           = $giveaway->allowKeyFetch();
+        $data->giveaway_allow_machine_code_submit = $giveaway->allowMachineCodeSubmit();
+        $data->giveaway_redemption_steps          = $giveaway->getCleanedRedemptionInstructionsArray();
+        $data->giveaway_show_get_key_button       = $giveaway->allowKeyFetch() && $data->giveaway_available_keys > 0 && !$assignedKey && !$inQueue;
+
+        $response = $this->render('GiveawayBundle:Giveaway:_giveawayShowActions.html.twig', array(
+            'data' => $data
+        ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
     public function indexAction()
     {
+        $active    = array();
+        $expired   = array();
         $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
+        $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
+        $keyRepo   = $this->getKeyRepository();
+        $site      = $this->getCurrentSite();
 
-        return $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
-            'giveaways' => $giveaways
+        foreach ($giveaways as $giveaway) {
+            if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
+                array_push($expired, $giveaway);
+            } else {
+                array_push($active, $giveaway);
+            }
+        }
+
+        $response = $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
+            'giveaways' => $active,
+            'featured'  => $featured,
+            'expired'   => $expired,
+            'headerImage' => $this->getHeaderImage($site),
         ));
+
+        $this->varnishCache($response, 30, 30);
+
+        return $response;
     }
 
-    /**
-     * @param $slug
-     * @param integer $keyId Optional key id that was just assigned
-     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
-     * @throws \Symfony\Bundle\FrameworkBundle\Controller\NotFoundHttpException
-     */
     public function showAction($slug, $keyId)
     {
-        $giveaway = $this->findGiveaway($slug);
+        $data = $this->getGiveawayManager()->getAnonGiveawayShowData($slug);
 
-        $pool = $giveaway->getActivePool();
-
-        if ($keyId) {
-            $assignedKey = $this->getKeyRepository()->findOneByIdAndUser($keyId, $this->getUser());
-        } else {
-            $assignedKey = null;
+        if (!$data) {
+            return $this->generateErrorPage();
         }
 
-        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+        $response = $this->render('GiveawayBundle:Giveaway:show.html.twig', array('data' => $data));
 
-        $availableKeys = ($giveaway->getStatus() == "active" || $canTest) ? $this->getKeyRepository()->getUnassignedForPoolForDisplay($pool) : 0;
+        $this->varnishCache($response, 30);
 
-        $instruction = $giveaway->getCleanedRedemptionInstructionsArray();
-
-        return $this->render('GiveawayBundle:Giveaway:show.html.twig', array(
-            'giveaway'          => $giveaway,
-            'redemptionSteps'   => $instruction,
-            'available_keys'    => $availableKeys,
-            'assignedKey'       => $assignedKey,
-        ));
+        return $response;
     }
 
-    /**
-     * The action that actually assigns a key to a user
-     *
-     * @param $slug
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     */
-    public function keyAction($slug, Request $request)
+    private function getGiveawayManager()
     {
-        if ($slug == 'dota-2') {
-            //return $this->render('GiveawayBundle:Giveaway:dota.html.twig');
-        }
+        return $this->container->get('pd_giveaway.giveaway_manager');
+    }
 
-        // force a valid user
+    private function getKeyRequestStateRepo()
+    {
+        return $this->container->get('pd_giveaway.entity.repository.key_request_state');
+    }
+
+    public function keyAction($giveawayId, $slug, Request $request, $joinGroup=true)
+    {
         $this->basicSecurityCheck(array('ROLE_USER'));
-        $user = $this->getUser();
 
-        $giveaway = $this->findGiveaway($slug);
-        $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
+        $stateRepo   = $this->getKeyRequestStateRepo();
+        $currentUser = $this->getCurrentUser();
+        $userId      = $currentUser->getId();
+        $state       = $stateRepo->findForUserIdAndGiveawayId($userId, $giveawayId);
 
-        $canTest = $giveaway->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
-        if (!$giveaway->getStatus() == "active" && !$canTest) {
-            $this->setFlash('error', 'platformd.giveaway.not_eligible');
+        if ($state) {
 
-            return $this->redirectToShow($giveawayShow);
+            $currentState = $state->getCurrentState();
+
+            if ($currentState == KeyRequestState::STATE_IN_QUEUE) {
+                return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+            }
+
+            if ($currentState == KeyRequestState::STATE_ASSIGNED) {
+                $giveaway    = $this->getRepository()->find($giveawayId);
+                $assignedKey = $this->getKeyRepository()->getUserAssignedCodeForGiveaway($currentUser, $giveaway);
+
+                if ($assignedKey) {
+                    return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+                }
+                # we should let them fall through and get another key... at this stage they seem to have a key, but their keypool / key must have been deleted in the database... so let them get another one.
+            }
         }
 
-        // make sure this is the type of giveaway that actually allows this
-        if (!$giveaway->allowKeyFetch()) {
-            throw new AccessDeniedException('This giveaway does not allow you to fetch keys');
+        $giveawayManager = $this->getGiveawayManager();
+
+        $giveaway                = $this->getRepository()->find($giveawayId);
+        $message                 = new KeyRequestQueueMessage();
+        $message->keyRequestType = KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY;
+        $message->promotionId    = $giveaway->getId();
+        $message->dateTime       = new \DateTime();
+        $message->slug           = $giveaway->getSlug();
+        $message->userId         = $currentUser->getId();
+        $message->siteId         = $this->getCurrentSite()->getId();
+        $message->ipAddress      = $this->getClientIp($request);
+
+        $result = $this->getQueueUtil()->addToQueue($message);
+
+        if (!$result) {
+            die('Could not add you to the queue... please try again shortly.');
         }
 
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
-        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
+        if (!$state) {
+            $state = new KeyRequestState();
 
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($giveawayShow);
+            $state->setGiveaway($giveaway);
+            $state->setUser($currentUser);
+            $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
         }
 
-        // check that they pass the new style age-country restriction ruleset
-        if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
-            $this->setFlash('error', 'platformd.giveaway.not_eligible');
-            return $this->redirect($giveawayShow);
-        }
+        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+        $state->setStateReason(null);
+        $state->setUserHasSeenState(false);
 
-        $pool = $giveaway->getActivePool();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($state);
+        $em->flush();
 
-        if (!$pool) {
-            // repeated below if there is no unassigned keys
-            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        $clientIp = $request->getClientIp(true);
-
-        // check the IP limit
-        if (!$this->getKeyRepository()->canIpHaveMoreKeys($clientIp, $pool)) {
-            $this->setFlash('error', 'platformd.giveaway.max_ip_limit');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        // does this user already have a key?
-        if ($this->getKeyRepository()->doesUserHaveKeyForGiveaway($this->getUser(), $giveaway)) {
-            $this->setFlash('error', 'platformd.giveaway.already_assigned');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        $key = $this->getKeyRepository()
-            ->getUnassignedKey($pool)
-        ;
-
-        if (!$key) {
-            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
-
-            return $this->redirect($giveawayShow);
-        }
-
-        // assign this key to this user - record ip address
-        $key->assign($this->getUser(), $clientIp, $this->getLocale());
-        $this->getDoctrine()->getEntityManager()->flush();
-
-        return $this->redirect($this->generateUrl('giveaway_show', array(
-            'slug' => $slug,
-            'keyId' => $key->getId(),
-        )));
+        return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }
 
     /**
@@ -163,6 +299,7 @@ class GiveawayController extends Controller
         // force a valid user
         $this->basicSecurityCheck(array('ROLE_USER'));
         $user = $this->getUser();
+        $clientIp = $this->getClientIp($request);
 
         $giveaway = $this->findGiveaway($slug);
         $giveawayShow = $this->generateUrl('giveaway_show', array('slug' => $slug));
@@ -183,13 +320,7 @@ class GiveawayController extends Controller
             $this->createNotFoundException('No machine code submitted');
         }
 
-        $countryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country');
-        $country        = $countryRepo->findOneByCode(strtoupper($user->getCountry()));
-
-        if (!$country) {
-            $this->setFlash('error', 'deal_redeem_invalid_country');
-            return $this->redirect($giveawayShow);
-        }
+        $country = $this->getCurrentCountry();
 
         // check that they pass the new style age-country restriction ruleset
         if ($giveaway->getRuleset() && !$giveaway->getRuleset()->doesUserPassRules($user, $country)) {
@@ -197,7 +328,14 @@ class GiveawayController extends Controller
             return $this->redirect($giveawayShow);
         }
 
-        $clientIp = $request->getClientIp(true);
+        $pool = $giveaway->getActivePoolForCountry($country);
+
+        if (!$pool) {
+            // repeated below if there is no unassigned keys
+            $this->setFlash('error', 'platformd.giveaway.no_keys_left');
+
+            return $this->redirect($giveawayShow);
+        }
 
         $machineCode = new MachineCodeEntry($giveaway, $code);
         $machineCode->attachToUser($this->getUser(), $clientIp);
@@ -225,15 +363,6 @@ class GiveawayController extends Controller
             throw $this->createNotFoundException();
         }
 
-        /*
-         * Commented out, because the new functionality calls for this UrL
-         * to be "public" so that demo links can be sent out
-         *
-        if ($giveaway->isDisabled()) {
-            throw $this->createNotFoundException('Giveaway is disabled');
-        }
-        */
-
         return $giveaway;
     }
 
@@ -249,9 +378,11 @@ class GiveawayController extends Controller
             ->getRepository('GiveawayBundle:Giveaway');
     }
 
-    /**
-     * @return \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
-     */
+    protected function getMachineCodeEntryRepository()
+    {
+        return $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
+    }
+
     protected function getKeyRepository()
     {
 
@@ -259,5 +390,49 @@ class GiveawayController extends Controller
             ->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:GiveawayKey');
+    }
+
+    private function getHeaderImage($site)
+    {
+        $defaultLocale = $site->getDefaultLocale();
+        switch ($defaultLocale) {
+            case 'ja':
+                return sprintf('aw-arenakeygiveaways-950x120.%s.jpg', $defaultLocale);
+                break;
+
+            case 'es':
+                return sprintf('aw-arenakeygiveaways-950x120.%s.jpg', $defaultLocale);
+
+            default:
+                return sprintf('aw-arenakeygiveaways-950x120.en.jpg', $defaultLocale);
+                break;
+        }
+    }
+
+    /**
+     * @return \Platformd\GroupBundle\Model\GroupManager
+     */
+    private function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
+    /**
+     * @return \Platformd\CEVOBundle\Api\ApiManager
+     */
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
+    }
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Repository\CommentRepository
+     */
+    protected function getCommentRepository()
+    {
+        return $this
+            ->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Comment');
     }
 }

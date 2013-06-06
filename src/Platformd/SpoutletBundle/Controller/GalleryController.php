@@ -42,7 +42,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -385,7 +385,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -446,12 +446,15 @@ class GalleryController extends Controller
             $crumb = null;
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($media);
+
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
             'media'             => $media,
             'otherMediaPages'   => $otherMediaPages,
             'likes'             => $likes,
             'crumb'             => $crumb,
             'returnType'        => $returnType,
+            'permalink'         => $permalink,
         ));
     }
 
@@ -648,7 +651,7 @@ class GalleryController extends Controller
         $media              = $galleryMediaRepo->find($id);
 
         $contest            = $media->getContestEntry() ? $media->getContestEntry()->getContest() : null;
-        $country            = $countryRepo->findOneByCode($user->getCountry());
+        $country            = $this->getCurrentCountry();
 
         if ($contest && !$contest->isFinished()) {
 
@@ -671,7 +674,7 @@ class GalleryController extends Controller
         $vote->setUser($user);
         $vote->setGalleryMedia($media);
         $vote->setVoteType($voteType);
-        $vote->setIpAddress($request->getClientIp(true));
+        $vote->setIpAddress($this->getClientIp($request));
 
         $em = $this->getEntityManager();
 
@@ -725,7 +728,7 @@ class GalleryController extends Controller
                 $vote->setUser($this->getUser());
                 $vote->setGalleryMedia($media);
                 $vote->setVoteType('up');
-                $vote->setIpAddress($request->getClientIp(true));
+                $vote->setIpAddress($this->getClientIp($request));
 
                 $em = $this->getEntityManager();
 
@@ -929,7 +932,7 @@ class GalleryController extends Controller
                 "media"   => $featuredMedia
             )));
 
-            $response->setSharedMaxAge(30);
+            $this->varnishCache($response, 30);
 
             return $response;
         }
@@ -985,11 +988,6 @@ class GalleryController extends Controller
             }
         }
         return $breadCrumb;
-    }
-
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
     }
 
     private function getCEVOApiManager()

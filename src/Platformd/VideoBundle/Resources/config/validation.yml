@@ -13,7 +13,7 @@ services:
         class: Platformd\VideoBundle\Validator\YoutubeGroupCategoryValidator
         arguments:
             - "@platformd.model.youtube_manager"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
             - "@service_container"
         scope: request
         tags:

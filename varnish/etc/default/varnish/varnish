@@ -50,6 +50,7 @@ DAEMON_OPTS="-a :80 \
              -p thread_pool_min=500 \
              -p thread_pools=2 \
              -p thread_pool_max=2000 \
+             -p syslog_cli_traffic=off \
              -s malloc,2.5G"
 
 
