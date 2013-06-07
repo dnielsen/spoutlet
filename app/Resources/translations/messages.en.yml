@@ -111,6 +111,7 @@ platformd:
             giveaways: Giveaways
             all: All
             see_more: See More
+            read_more: Read More
             photo_gallery: Image Gallery
             view_all: View All
             competitions: Competitions
@@ -417,23 +418,7 @@ platformd:
 
         first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
 
-    # used only in the admin area
     admin:
-        news:
-            heading: Manage news
-            title: Title
-            edit:  Edit
-            delete: Delete
-            delete_confirm: Are you sure you want to delete this news item?
-            create: Create a new item
-            save_news: Save news
-            create_title: Create a news item
-            created: Your news item has been created !
-            modified: Your news item has been modified !
-            deleted: Your news item has been deleted !
-            edit_title: Edit a news item
-            upload_image: Upload an image
-            image_dimensions: (recommended size: 634x400)
         games:
             category:
                 action:     Action
@@ -724,6 +709,28 @@ platformd:
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"
 "User account is disabled.": Your account is disabled - check your email for an activation link
+
+platformd.news.admin.heading: Manage news
+platformd.news.admin.title: Title
+platformd.news.admin.edit:  Edit
+platformd.news.admin.delete: Delete
+platformd.news.admin.delete_confirm: Are you sure you want to delete this news item?
+platformd.news.admin.create: Create a new item
+platformd.news.admin.save_news: Save news
+platformd.news.admin.create_title: Create a news item
+platformd.news.admin.created: Your news item has been created !
+platformd.news.admin.modified: Your news item has been modified !
+platformd.news.admin.deleted: Your news item has been deleted !
+platformd.news.admin.edit_title: Edit a news item
+platformd.news.admin.upload_image: Upload an image
+platformd.news.admin.image_dimensions: Used on news listings page (recommended size: 634x400)
+platformd.news.admin.article_thumbnail: Article Thumbnail
+platformd.news.admin.thumbnail_dimensions: Used in news widgets (recommended size: 300x100)
+platformd.news.announced_date: Announced %posted_date%
+platformd.news.published_date: Published %posted_date%
+platformd.news.comment_count: (%comment_count% comment)|(%comment_count% comments)
+platformd.news.widget.article: Article
+platformd.news.widget.news: Alienware Arena News
 
 # for sources drop-down on registration
 source_alienware: Alienware

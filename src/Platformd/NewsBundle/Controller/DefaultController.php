@@ -15,11 +15,17 @@ class DefaultController extends Controller
     {
         $news = $this->getNewsRepo()->findAllForSite($this->getCurrentSite());
 
-        // allows us to preview how this feature would really work
-        $template = 'index.html.twig';
+        $threadIds = array();
 
-        return $this->render('NewsBundle:Default:'.$template, array(
-            'news' => $news,
+        foreach($news as $post) {
+            $threadIds[] = $post->getCommentThreadId();
+        }
+
+        $commentCounts = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Thread')->findCommentCountsForThreadIds($threadIds);
+
+        return $this->render('NewsBundle:Default:index.html.twig', array(
+            'news'          => $news,
+            'commentCounts' => $commentCounts,
         ));
     }
 

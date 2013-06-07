@@ -5,6 +5,7 @@ namespace Platformd\NewsBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GameBundle\Entity\Game;
+use Platformd\NewsBundle\Entity\News;
 
 /**
  * NewsRepository
@@ -48,14 +49,12 @@ class NewsRepository extends EntityRepository
         ;
     }
 
-    /**
-     * @return \Platformd\NewsBundle\Entity\News;
-     */
-    public function findOneFeaturedForSite($site)
+    public function findMostRecentArticleForSite($site)
     {
-        // todo - this will need to do something smarter - see #68
         return $this->createBaseQueryBuilder($site)
+            ->andWhere('n.type = :article')
             ->orderBy('n.postedAt', 'DESC')
+            ->setParameter('article', News::NEWS_TYPE_ARTICLE)
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult()

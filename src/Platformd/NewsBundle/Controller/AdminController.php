@@ -153,6 +153,10 @@ class AdminController extends Controller
                     $news->setImage(null);
                 }
 
+                if (!$mUtil->persistRelatedMedia($news->getThumbnail())) {
+                    $news->setThumbnail(null);
+                }
+
                 $em->persist($news);
                 $em->flush();
 

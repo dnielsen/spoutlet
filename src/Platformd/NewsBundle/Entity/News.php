@@ -19,6 +19,14 @@ use Platformd\GameBundle\Entity\Game as Game;
  */
 class News implements LinkableInterface
 {
+    CONST NEWS_TYPE_ARTICLE = 'article';
+    CONST NEWS_TYPE_NEWS    = 'news';
+
+    private static $validTypes = array(
+        self::NEWS_TYPE_NEWS,
+        self::NEWS_TYPE_ARTICLE,
+    );
+
     /**
      * @var integer $id
      *
@@ -128,250 +136,148 @@ class News implements LinkableInterface
     protected $game;
 
     /**
-     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\NotNull()
      */
-    protected $sitifiedAt;
+    protected $type = self::NEWS_TYPE_ARTICLE;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    private $thumbnail;
 
     public function __construct()
     {
         $this->sites = new ArrayCollection();
+        $this->postedAt = new \DateTime();
     }
 
-    public function setSitifiedAt($sitifiedAt)
-    {
-        $this->sitifiedAt = $sitifiedAt;
-    }
-
-    public function getSitifiedAt()
-    {
-        return $this->sitifiedAt;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     */
     public function setTitle($title)
     {
         $this->title = $title;
     }
 
-    /**
-     * Get title
-     *
-     * @return string
-     */
     public function getTitle()
     {
         return $this->title;
     }
 
-    /**
-     * Set body
-     *
-     * @param string $body
-     */
     public function setBody($body)
     {
         $this->body = $body;
     }
 
-    /**
-     * Get body
-     *
-     * @return string
-     */
     public function getBody()
     {
         return $this->body;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug()
     {
         return $this->slug;
     }
 
-    /**
-     * @param string $slug
-     */
     public function setSlug($slug)
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return string
-     */
     public function getLocale()
     {
         return $this->locale;
     }
 
-    /**
-     * @param string $locale
-     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
     public function getSites()
     {
         return $this->sites;
     }
 
-    /**
-     * @param \Doctrine\Common\Collections\ArrayCollection $sites
-     */
     public function setSites($sites)
     {
         $this->sites = $sites;
     }
 
-
-    /**
-     * @return boolean
-     */
     public function getPublished()
     {
         return $this->published;
     }
 
-    /**
-     * @param boolean $published
-     */
     public function setPublished($published)
     {
         $this->published = $published;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreated()
     {
         return $this->created;
     }
 
-    /**
-     * @param \DateTime $created
-     */
     public function setCreated($created)
     {
         $this->created = $created;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdated()
     {
         return $this->updated;
     }
 
-    /**
-     * @param \DateTime $updated
-     */
     public function setUpdated($updated)
     {
         $this->updated = $updated;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getPostedAt()
     {
         return $this->postedAt;
     }
 
-    /**
-     * @param \DateTime $postedAt
-     */
     public function setPostedAt($postedAt)
     {
         $this->postedAt = $postedAt;
     }
 
-    public function getPostedAtArray()
-    {
-        return AbstractEvent::convertDateTimeIntoTranslationArray($this->getPostedAt());
-    }
-
-    /**
-     * @return string
-     */
     public function getOverrideUrl()
     {
         return $this->overrideUrl;
     }
 
-    /**
-     * @param string $overrideUrl
-     */
     public function setOverrideUrl($overrideUrl)
     {
         $this->overrideUrl = $overrideUrl;
     }
 
-    /**
-     * @return string
-     */
     public function getBlurb()
     {
         return $this->blurb;
     }
 
-    /**
-     * @param string $blurb
-     */
     public function setBlurb($blurb)
     {
         $this->blurb = $blurb;
     }
 
-    /**
-     * If there is a set URL that should be used without doing anything else, return it here
-     *
-     * @return string
-     */
     public function getLinkableOverrideUrl()
     {
         return $this->getOverrideUrl();
     }
 
-    /**
-     * Returns the name of the route used to link to this object
-     *
-     * @return string
-     */
     public function getLinkableRouteName()
     {
         return 'news_show';
     }
 
-    /**
-     * Returns an array route parameters to link to this object
-     *
-     * @return array
-     */
     public function getLinkableRouteParameters()
     {
         return array(
@@ -379,43 +285,27 @@ class News implements LinkableInterface
         );
     }
 
-    /**
-     * The comment id that will be used to render and identify comments
-     *
-     * @return string
-     */
     public function getCommentThreadId()
     {
+        // requires locale to be kept in for BC - for new posts, this results in the thread ID having two "-", e.g. "news--124"
         return sprintf('news-%s-%s', $this->getLocale(), $this->getId());
     }
 
-    /**
-     * @return \Platformd\MediaBundle\Entity\Media
-     */
     public function getImage()
     {
         return $this->image;
     }
 
-    /**
-     * @param \Platformd\MediaBundle\Entity\Media $image
-     */
     public function setImage(Media $image = null)
     {
         $this->image = $image;
     }
 
-    /**
-     * @param Game $game
-     */
     public function setGame($game)
     {
         $this->game = $game;
     }
 
-    /**
-     * @return Game
-     */
     public function getGame()
     {
         return $this->game;
@@ -424,5 +314,34 @@ class News implements LinkableInterface
     public function getThreadId()
     {
         return $this->getCommentThreadId();
+    }
+
+    public function setType($value)
+    {
+        if ($value && !in_array($value, self::$validTypes)) {
+            throw new \InvalidArgumentException(sprintf('Invalid type "%s" given', $value));
+        }
+
+        $this->type = $value;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public static function getTypes()
+    {
+        return self::$validTypes;
+    }
+
+    public function setThumbnail($value)
+    {
+        $this->thumbnail = $value;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
     }
 }

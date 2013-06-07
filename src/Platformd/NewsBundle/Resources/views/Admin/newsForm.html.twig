@@ -1,29 +1,63 @@
-{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-<form method="post" action="{{ route }}" class="form" {{ form_enctype(form) }}>
+<form method="post" action="{{ route }}" class="form-horizontal" {{ form_enctype(form) }}>
 
     {{ form_errors(form) }}
-    {{ form_row(form.title) }}
 
-    {{ form_row(form.game) }}
+    <legend>Basic Information</legend>
+    <div class="row-fluid first">
+        <div class="span6">
+            {{ form_row(form.title) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.type) }}
+            {{ form_row(form.postedAt) }}
+            {{ form_row(form.overrideUrl) }}
+        </div>
 
-    {{ form_row(form.slug) }}
+        <div class="span6">
+            {{ form_row(form.sites) }}
+            {{ form_row(form.game) }}
+        </div>
+    </div>
 
-    {{ form_row(form.sites) }}
+    <div id="news-images">
+        <legend>Images</legend>
+        <div class="row-fluid">
+            <div class="span6">
+                {{ form_row(form.image) }}
+                {{ form_row(form.thumbnail) }}
+            </div>
+        </div>
+    </div>
 
-    {{ form_row(form.postedAt) }}
-    {{ form_row(form.overrideUrl) }}
-    {{ form_row(form.blurb) }}
-
-    {{ form_row(form.image) }}
-
-    <div class="form_row">
-        {{ form_label(form.body) }}
-        {{ form_errors(form.body) }}
-        {{ form_widget(form.body) }}
+    <legend>Content</legend>
+    <div class="row-fluid">
+        <div class="span10">
+            {{ form_row(form.blurb) }}
+            {{ form_row(form.body) }}
+        </div>
     </div>
 
     {{ form_rest(form) }}
 
-    <input type="submit" class="btn btn-primary" value="{{ "platformd.admin.news.save_news" | trans }}" formnovalidate />
+    <input type="submit" class="btn btn-primary" value="{{ "platformd.news.admin.save_news" | trans }}" formnovalidate />
 </form>
+
+<script type="text/javascript">
+
+    $(function() {
+
+        if ($("select.news-type option:selected").val() == 'news') {
+            $('#news-images').hide();
+        }
+
+        $('select.news-type').change(function() {
+            if ($("select.news-type option:selected").val() == 'article') {
+                $('#news-images').slideDown();
+            } else {
+                $('#news-images').slideUp();
+            }
+        });
+    });
+
+</script>

@@ -470,19 +470,29 @@ ul.list-normal {
 }
 
 .article-image {
-    width: 200px;
     float: left;
     margin-right: 12px;
 }
 .article-image img {
     width: 200px;
 }
-.article-actions a {
-    float: right;
-}
+
 .article-image-large img {
     width: 634px;
 }
+
+.article-comment-count {
+    font-style: italic;
+}
+
+#featured-news-article img {
+    width: 275px;
+}
+
+#featured-news-article a {
+    font-size: 18px;
+}
+
 .age-wrapper {
     text-align: center;
 }

@@ -9,16 +9,28 @@
         </div>
         {# height is a hack for positioning  - see featuredContent.html.twig #}
         <div class="widget-content normalized" id="news-content" style="height: 300px;">
+            {% if featuredArticle %}
+                <div id="featured-news-article" class="widget-item">
+                    <a class="widget-link news-ellipse" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a>
+                    <div class="article-thumbnail">
+                        <a href="{{ featuredArticle | pd_link }}"{{ featuredArticle is external ? ' target="_blank"' : '' }}>
+                            <img src="{{ media_path(featuredArticle.thumbnail) }}" alt="{{ featuredArticle.title }}" />
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+
             {% if news %}
-                {% for news_item in news %}
+                {% for news_item in news if featuredArticle.id is not defined or news_item.id != featuredArticle.id %}
                     <div class="widget-item">
                         <a class="widget-link news-ellipse" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
+                        <div class="article-type">{{ ('platformd.news.widget.' ~ news_item.type) | trans }}</div>
                     </div>
                 {% endfor %}
             {% endif %}
         </div>
         <div class="widget-footer">
-            <a href="{{ path('news') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+            <a href="{{ path('news') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.read_more' | trans }}</a>
         </div>
     </div>
 </div>

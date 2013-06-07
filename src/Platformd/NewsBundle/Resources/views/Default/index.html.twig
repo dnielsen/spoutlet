@@ -3,19 +3,15 @@
 {% block title %}{{ 'news_and_announcements' | pd_trans }}{% endblock %}
 
 {% block content %}
-{# this whole thing was copied from the homepage template.... #}
+
 <div id="row-2" class="std_2col">
     <div class="right">
         <div class="std-item">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         </div>
-
-        <div class="std-item">
-            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
-        </div>
     </div>
     <div class="left">
-        <h1 class="content-title">{{ 'news_and_announcements' | trans }}</h1>
+        <h1 class="content-title">{{ 'news_and_announcements' | pd_trans }}</h1>
         <div>
             {% for newsItem in news %}
                 {% include 'NewsBundle:Default:_news.html.twig' with {

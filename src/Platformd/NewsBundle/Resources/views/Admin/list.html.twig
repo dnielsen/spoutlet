@@ -1,14 +1,14 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "platformd.admin.news.heading" | trans }}{% endblock %}
+{% block title %}{{ "platformd.news.admin.heading" | trans }}{% endblock %}
 
 {% block content %}
 
-<h1>{{ "platformd.admin.news.heading" | trans }}</h1>
+<h1>{{ "platformd.news.admin.heading" | trans }}</h1>
 
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th>{{ "platformd.admin.news.title" | trans }}</th>
+            <th>{{ "platformd.news.admin.title" | trans }}</th>
             <th>{{ "tenant_site" | trans({}, 'admin') }}</th>
             <th>{{ 'url' | trans }}</th>
             <th>{{ "published_status" | trans }}</th>
@@ -29,24 +29,28 @@
                 <a href="{{ url('news_show', {'slug': item.slug, '_locale': site.defaultLocale }) }}">{{ url('news_show', {'slug': item.slug, '_locale': site.defaultLocale }) }}</a>
             </td>
             <td>
-                <i>
                 {% if item.published%}
-                    published
+                    <span class="label label-success">Published</span>
                 {% else %}
-                    unpublished
+                    <span class="label label-warning">Unpublished</span>
                 {% endif %}
-                </i>
             </td>
             <td>
-                <a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}">{{ "platformd.admin.news.edit" | trans }}</a> -
-                <a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link">{{ "platformd.admin.news.delete" | trans }}</a>
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-mini" href="#"><i class="icon-th-list icon-white"></i> Actions</a>
+                    <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('NewsBundle_admin_edit', { "id": item.id }) }}"><i class="icon-pencil"></i> {{ "platformd.news.admin.edit" | trans }}</a></li>
+                        <li><a href="{{ path('NewsBundle_admin_delete', { "id" : item.id }) }}" class="delete_link"><i class="icon-pencil"></i> {{ "platformd.news.admin.delete" | trans }}</a></li>
+                    </ul>
+                </div>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="{{ path('NewsBundle_admin_new') }}">{{ "platformd.admin.news.create" | trans }}</a>
+<a class="btn btn-primary" href="{{ path('NewsBundle_admin_new') }}">{{ "platformd.news.admin.create" | trans }}</a>
 
 {% if news.haveToPaginate %}
     {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
@@ -57,7 +61,7 @@
 <script type="text/javascript">
     jQuery(function($) {
         $("a.delete_link").bind("click", function(event) {
-            if (!confirm("{{ 'platformd.admin.news.delete_confirm' | trans }}")) {
+            if (!confirm("{{ 'platformd.news.admin.delete_confirm' | trans }}")) {
                 event.stopPropagation();
                 event.preventDefault();
 
