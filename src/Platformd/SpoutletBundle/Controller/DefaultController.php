@@ -102,7 +102,7 @@ class DefaultController extends Controller
             }
         }
 
-        $competitions = $this->getGlobalEventService()->findAllForSiteWithLimit($site);
+        $competitions = $this->getGlobalEventService()->findUpcomingEventsForSiteLimited($site);
 
         $competitions_list = array();
         foreach($competitions as $competition) {
