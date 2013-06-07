@@ -14,9 +14,13 @@ class TimelineController extends Controller
             ->getRepository('SpoutletBundle:Timeline')
             ->findOneBy(array('site' => $this->getCurrentSite()->getId()));
 
-        return $this->render('SpoutletBundle:Timeline:index.html.twig', array(
+        $response = $this->render('SpoutletBundle:Timeline:index.html.twig', array(
             'timeline' => $timeline
         ));
+
+        $this->varnishCache($response, 300, 300);
+
+        return $response;
     }
 }
 

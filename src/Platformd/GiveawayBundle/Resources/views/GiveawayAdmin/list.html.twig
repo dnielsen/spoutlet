@@ -28,7 +28,7 @@
                 {% endfor %}
             </td>
             <td>
-                <a href="{{ url('giveaway_show', {'slug': giveaway.slug, '_locale': site.defaultLocale }) }}">{{ url('giveaway_show', {'slug': giveaway.slug, '_locale': site.defaultLocale }) }}</a>
+                <a href="{{ url('giveaway_show', {'slug': giveaway.slug, '_locale': site.defaultLocale }) }}" target="_blank">{{ url('giveaway_show', {'slug': giveaway.slug, '_locale': site.defaultLocale }) }}</a>
             </td>
             <td>
                 {{ giveaway.statusText | trans }}

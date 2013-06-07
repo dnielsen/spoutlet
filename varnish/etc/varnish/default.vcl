@@ -97,7 +97,7 @@ sub vcl_recv {
         return (lookup);
     }
 
-    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]" && !req.url ~ "/(key|redeem)$") {
+    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]?" && !req.url ~ "/(key|redeem)$") {
         remove req.http.Cookie;
         return (lookup);
     }
@@ -115,6 +115,10 @@ sub vcl_recv {
     }
 
     if (req.url ~ "^/videos/category-tab/") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/timeline[/]?$") {
         remove req.http.Cookie;
     }
 
@@ -161,6 +165,10 @@ sub vcl_fetch {
         unset beresp.http.set-cookie;
     }
 
+    if (req.url ~ "^/timeline[/]?$") {
+        unset beresp.http.set-cookie;
+    }
+
     if (req.url ~ "^/videos/tab/") {
         unset beresp.http.set-cookie;
     }
@@ -171,7 +179,7 @@ sub vcl_fetch {
 
     set beresp.grace = 6h;
 
-    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]"){
+    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]?"){
         unset beresp.http.set-cookie;
     }
 }
