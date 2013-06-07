@@ -102,11 +102,7 @@ class DefaultController extends Controller
             }
         }
 
-        $competitions = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentEventsOnly($site)
-        ;
+        $competitions = $this->getGlobalEventService()->findAllForSiteWithLimit($site);
 
         $competitions_list = array();
         foreach($competitions as $competition) {
