@@ -42,6 +42,33 @@ class DealCodeRepository extends AbstractCodeRepository
             ;
     }
 
+    public function getRegionCountsByDate($from, $to)
+    {
+        $qb  = $this->createQueryBuilder('k')
+            ->select('COUNT(k.id) AS keyCount', 'd.id AS dealId', 'd.name AS dealName', 'r.name AS regionName')
+            ->leftJoin('k.pool','p')
+            ->leftJoin('p.deal','d')
+            ->leftJoin('k.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->addGroupBy('r.name')
+            ->addGroupBy('d.name');
+
+        $this->addAssignedQueryBuilder($qb);
+
+        if ($from) {
+            $qb->andWhere('k.assignedAt >= :from')
+                ->setParameter('from', $from);
+        }
+
+        if ($to) {
+            $qb->andWhere('k.assignedAt <= :to')
+                ->setParameter('to', $to);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
     public function getAssignedForDealAndSite(Deal $deal, $site, $from, $to)
     {
         $qb  = $this->createForDealQueryBuilder($deal);

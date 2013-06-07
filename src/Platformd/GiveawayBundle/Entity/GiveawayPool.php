@@ -21,10 +21,16 @@ class GiveawayPool extends AbstractPool
      * Many to one with Giveaway
      *
      * @var Giveaway
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="giveawayPools")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Giveaway", inversedBy="pools", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $giveaway;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Region", cascade={"persist"})
+     * @ORM\JoinTable(name="giveaway_pool_region")
+     */
+    protected $regions;
 
     /**
      * @return \Platformd\GiveawayBundle\Entity\Giveaway
@@ -56,5 +62,8 @@ class GiveawayPool extends AbstractPool
         return $this->getIsActive() && $this->getGiveaway() && ($this->getGiveaway()->isActive() || $this->getGiveaway()->getTestOnly());
     }
 
-
+    public function getParentName()
+    {
+        return $this->getGiveaway()->getName();
+    }
 }

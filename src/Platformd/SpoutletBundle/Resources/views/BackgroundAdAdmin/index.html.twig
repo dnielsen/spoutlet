@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% block title 'Background Ads Regions' %}
+
+{% block content %}
+<h1>Background Ads Regions</h1>
+
+{% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
+    'sites': sites,
+    'route': 'admin_background_ads_list'
+}%}
+
+<a class="btn btn-primary" href="{{ path('admin_background_ads_new') }}">
+    Create a new entry
+</a>
+{% endblock %}

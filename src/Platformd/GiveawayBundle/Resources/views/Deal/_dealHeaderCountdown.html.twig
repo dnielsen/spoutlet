@@ -1,12 +1,12 @@
 <div class="deals-header">
     {% if deal.banner %}
-        <a href="{{ deal | pd_link }}" style="border: none;"><img src="{{ media_path(deal.banner) }}" /></a>
+        <a href="{{ deal.url }}" style="border: none;"><img src="{{ deal.banner }}" /></a>
     {% endif %}
 </div>
 <div class="deals-timeleft" style="display: none;">
-    {% if deal.endsAtUtc is not null %}
-        {% if not deal.hasExpired %}
-            <input id="deal-ends-date" type="hidden" value="{{ deal.endsAtUtc | date('Y/m/d H:i:s') }}" />
+    {% if deal.ends_at_utc is not null %}
+        {% if not deal.has_expired %}
+            <input id="deal-ends-date" type="hidden" value="{{ deal.ends_at_utc | date('Y/m/d H:i:s') }}" />
             <div id="time-left">
                 <span id="deals-timeleft-label">{{ 'deal_timeleft_label' | trans }}</span>
                 <span id="deals-daysleft">{dn}</span>

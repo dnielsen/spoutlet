@@ -4,6 +4,11 @@ services:
         arguments:
             - { key: %s3.access_key%, secret: %s3.secret_key% }
 
+    platformd.sqs:
+        class: AmazonSQS
+        arguments:
+            - { key: %s3.access_key%, secret: %s3.secret_key% }
+
     # adapters for Gaufrette filesystems
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
@@ -57,6 +62,7 @@ services:
             - "@doctrine.orm.entity_manager"
             # TODO this should NOT be hardcoded
             - %platformd_sites%
+            - @platformd.model.ip_lookup_util
 
     # the custom slug constraint for AbstractEvent
     platformd.validation.abstract_event_unique_slug_validator:
@@ -82,11 +88,12 @@ services:
             - "@media_exposer"
             - "@router"
             - "@security.context"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
             - "@platformd.model.translator"
             - "@fos_user.user_manager"
             - "@platformd.repository.content_reporting"
             - "@platformd.repository.site"
+            - "@platformd.repository.background_ads"
             - "%local_auth%"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
@@ -97,6 +104,20 @@ services:
         tags:
             - { name: form.type_extension, alias: field }
 
+    platformd.repository.comment_thread:
+        class: Platformd\SpoutletBundle\Entity\ThreadRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'SpoutletBundle:Thread'
+
+    platformd.repository.site:
+        class: Platformd\SpoutletBundle\Entity\SiteRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments:
+            - 'SpoutletBundle:Site'
+
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
@@ -106,11 +127,33 @@ services:
     platformd.listener.site_translation_listener:
         class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
         arguments:
-            - "@platformd.model.site_util"
+            - "@logger"
         tags:
+            - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentLocale }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 100 }
-        calls:
-            - [ setLogger, [ @logger] ]
+
+    platformd.util.cache_util:
+        class: Platformd\SpoutletBundle\Util\CacheUtil
+        arguments:
+            - "@platformd.cache.memcached"
+            - "@logger"
+            - %allow_caching%
+        tags:
+            - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentSiteId }
+
+    platformd.util.queue_util:
+        class: %services_queue_util_class%
+        arguments:
+            - "@platformd.sqs"
+            - "@logger"
+            - "%queue_prefix%"
+            - "%mock_queue_util_full_filename%"
+
+    platformd.util.varnish_util:
+        class: Platformd\SpoutletBundle\Util\VarnishUtil
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 1 }
 
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
@@ -118,10 +161,12 @@ services:
             - %ip2location_lookup_directory%
             - %ip_lookup_override%
 
-    platformd.model.site_util:
+    platformd.util.site_util:
         class: Platformd\SpoutletBundle\Util\SiteUtil
         arguments:
-            - "@doctrine.orm.entity_manager"
+            - "@platformd.repository.site"
+            - "@platformd.util.cache_util"
+            - "@event_dispatcher"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
 
@@ -138,7 +183,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@session"
             - "@knp_media.util.media_util"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
             - "@pd.cevo.api.api_manager"
             - "@security.context"
             - "@event_dispatcher"
@@ -163,6 +208,8 @@ services:
 
     platformd.cache.memcached:
         class: Memcached
+        calls:
+            - [ addServer, [ "%memcached_server1_ip%", "%memcached_server1_port%" ] ]
 
     pagerfanta.view.spoutlet:
         class: Platformd\SpoutletBundle\Pagerfanta\View\SpoutletView
@@ -197,6 +244,13 @@ services:
         arguments:
             - 'SpoutletBundle:ContentReport'
 
+    platformd.repository.country:
+        class:           Platformd\SpoutletBundle\Entity\CountryRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:Country'
+
     platformd.doctrine.listener.group:
         class: Platformd\SpoutletBundle\Doctrine\Listener\GroupListener
         arguments:
@@ -214,12 +268,26 @@ services:
         tags:
             - { name: form.type, alias: gmtTimezone }
 
+    platformd.validator.unique.background_ad_per_site:
+        class: Platformd\SpoutletBundle\Validator\Constraints\UniqueBackgroundAdPerTimeValidator
+        arguments:
+            - @doctrine
+        tags:
+            - { name: validator.constraint_validator, alias: unique_background_ad_time_per_site }
+
+    platformd.repository.background_ads:
+        class:           Platformd\SpoutletBundle\Entity\BackgroundAdRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method:  getRepository
+        arguments:
+            - 'SpoutletBundle:BackgroundAd'
+
     platformd.model.login_record_manager:
         class: Platformd\SpoutletBundle\Model\LoginRecordManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@platformd.model.ip_lookup_util"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
 
     platformd.form.type.rsvp_code_type:
         class: Platformd\SpoutletBundle\Form\Type\RsvpCodeType
@@ -254,15 +322,8 @@ services:
         class: Platformd\SpoutletBundle\Takeover\SiteTakeoverManager
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@platformd.model.site_util"
+            - "@platformd.util.site_util"
         scope: request
-
-    platformd.repository.site:
-        class:           Platformd\SpoutletBundle\Entity\SiteRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method:  getRepository
-        arguments:
-            - 'SpoutletBundle:Site'
 
     platformd.model.site_manager:
         class: Platformd\SpoutletBundle\Tenant\SiteManager
@@ -273,7 +334,7 @@ services:
         class: Platformd\SpoutletBundle\Model\Translator
         arguments:
             - '@translator'
-            - '@platformd.model.site_util'
+            - '@platformd.util.site_util'
             - '@session'
 
     platformd.repository.gallery:
@@ -282,3 +343,10 @@ services:
         factory_method:  getRepository
         arguments:
             - 'SpoutletBundle:Gallery'
+
+    platformd.model.comment_manager:
+        class: Platformd\SpoutletBundle\Model\CommentManager
+        arguments:
+            - "@platformd.repository.comment_thread"
+            - "@platformd.link.linkable_manager"
+            - "@doctrine.orm.entity_manager"

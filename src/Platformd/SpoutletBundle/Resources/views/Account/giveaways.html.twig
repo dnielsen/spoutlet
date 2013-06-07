@@ -15,6 +15,9 @@
                             {{ "platformd.account_page.giveaway.your_giveaway_keys" | trans }}
                         {% endif %}
                     </h2>
+                    {% if site.subDomain != "ja" %}
+                        {{ "platformd.giveaway.click_for_past_giveaways" | trans({'%cevo_user_account_giveaway_page%': cevo_account_giveaway_link() }) | raw }}
+                    {% endif %}
                 </div>
             </div>
             <div class="widget-content">
@@ -35,7 +38,7 @@
                                         {{ keyRequest.value | nl2br }}
                                     {% else %}
                                         <em>
-                                            {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
+                                             {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
                                         </em>
                                     {% endif %}
                                 </td>
@@ -63,9 +66,7 @@
                     </table>
                 </div>
             </div>
-            <div align="center">{{ 'platformd.giveaway.in_process_1' | trans  | raw }}<br>{{ 'platformd.giveaway.in_process_2' | trans | raw }}<br>{{ 'platformd.giveaway.in_process_3' | trans | raw }}
-                {% if site.subDomain == "mysg" %}<a href="mailto:mysg@alienwarearena.com">mysg@alienwarearena.com</a>{% endif %}
-            </div>
+            <div align="center">{{ 'platformd.giveaway.in_process' | trans | replace({'%contact_email%': site.siteConfig.supportEmailAddress})  | raw }}</div>
             <div class="widget-footer">
                 &nbsp;
             </div>

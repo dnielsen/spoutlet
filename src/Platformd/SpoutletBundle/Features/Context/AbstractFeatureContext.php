@@ -17,6 +17,7 @@ use Behat\Behat\Context\Step\Then;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Behat\Mink\Driver\GoutteDriver;
+
 use Platformd\GameBundle\Entity\Game;
 use Platformd\GameBundle\Entity\GamePage;
 use Platformd\SpoutletBundle\Entity\Contest;
@@ -30,23 +31,39 @@ use Platformd\SpoutletBundle\Entity\Thread;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GlobalEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Platformd\SpoutletBundle\Entity\BackgroundAd;
+use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Base Feature context.
  */
 class AbstractFeatureContext extends MinkContext
 {
-    /**
-     * @var \Platformd\UserBundle\Entity\User
-     */
     protected $currentUser;
-
     protected $currentSite = NULL;
+    protected $entityManager;
+    protected $cacheUtil;
+    protected $purger;
+    protected $dbConnection;
+    protected $queueUtilMock;
 
     public function __construct(HttpKernelInterface $kernel) {
         parent::__construct($kernel);
-        $em = $this->getEntityManager();
-        $this->currentSite = $em->getRepository('SpoutletBundle:Site')->findOneByName('Demo');
+
+        $this->entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
+        $this->currentSite   = $this->entityManager->getRepository('SpoutletBundle:Site')->findOneByName('Demo');
+        $this->cacheUtil     = $this->getContainer()->get('platformd.util.cache_util');
+        $this->purger        = new ORMPurger($this->entityManager);
+        $this->dbConnection  = $this->entityManager->getConnection();
+        $this->queueUtilMock = $this->getContainer()->get('platformd.util.queue_util');
+    }
+
+    /**
+     * @BeforeScenario
+     */
+    public function emptyQueue() {
+        $this->queueUtilMock->emptyWorkingFile();
     }
 
     /**
@@ -54,6 +71,9 @@ class AbstractFeatureContext extends MinkContext
      */
     public function purgeDatabase()
     {
+        $this->purger->purge();
+        $this->entityManager->flush();
+
         $dsn = 'mysql:dbname=;host='.$this->getContainer()->getParameter('database_host');
         $user = $this->getContainer()->getParameter('database_user');
         $password = $this->getContainer()->getParameter('database_password');
@@ -64,20 +84,11 @@ class AbstractFeatureContext extends MinkContext
 
         exec($this->getContainer()->getParameter('kernel.root_dir').'/console init:acl --env=test');
 
-        $em = $this->getEntityManager();
-
-        $purger = new ORMPurger($em);
-        $purger->purge();
-
-        $em->flush();
-
-        $con = $em->getConnection();
-
-        $con
+        $this->dbConnection
             ->prepare("ALTER TABLE `pd_site` AUTO_INCREMENT = 1")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `theme`) VALUES
             ('Demo', 'en', 'demo.alienwarearena.local', 'default'),
             ('Japan', 'ja', 'japan.alienwarearena.local', 'default'),
@@ -90,24 +101,24 @@ class AbstractFeatureContext extends MinkContext
             ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'default')")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("INSERT INTO `pd_site_features` (`id`, `site_id`, `has_video`, `has_steam_xfire_communities`, `has_sweepstakes`,
                 `has_forums`, `has_arp`, `has_news`, `has_deals`, `has_games`, `has_games_nav_drop_down`, `has_messages`, `has_groups`,
-                `has_wallpapers`, `has_microsoft`, `has_photos`, `has_contests`, `has_comments`, `has_events`, `has_html_widgets`,
+                `has_wallpapers`, `has_microsoft`, `has_photos`, `has_contests`, `has_comments`, `has_giveaways`, `has_events`, `has_html_widgets`,
                 `has_facebook`, `has_google_analytics`, `has_tournaments`, `has_match_client`, `has_profile`, `has_forward_on_404`, `has_index`,
                 `has_about`, `has_contact`) VALUES
-            (1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1),
-            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,0,1,0,1,1,1),
-            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,1,1,1,0,1,0,1,1,1),
-            (4,4,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0),
-            (5,5,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0),
-            (6,6,1,1,0,1,1,0,0,1,0,1,0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0),
-            (7,7,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
-            (8,8,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
-            (9,9,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,1,0,1,1,1,1,1,1,0,0,0)")
+            (1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1),
+            (2,2,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,0,1,1,1,0,1,0,1,1,1),
+            (3,3,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,0,1,0,1,1,1),
+            (4,4,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (5,5,1,1,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (6,6,1,1,0,1,1,0,0,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
+            (7,7,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
+            (8,8,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
+            (9,9,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0)")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare('INSERT INTO `pd_site_config` (`id`, `site_id`, `supportEmailAddress`, `automatedEmailAddress`, `emailFromName`, `birthdateRequired`, `forward_base_url`, `forwarded_paths`) VALUES
             (1,1,"demo@alienwarearena.local","demo@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
             (2,2,"japan@alienwarearena.local","japan@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
@@ -120,23 +131,40 @@ class AbstractFeatureContext extends MinkContext
             (9,9,"anz@alienwarearena.local","anz@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\')')
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("ALTER TABLE `pd_gallery_category` AUTO_INCREMENT = 1")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("INSERT INTO `pd_gallery_category` (`id`, `name`) VALUES (2, 'video'), (1, 'image')")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("ALTER TABLE `country` AUTO_INCREMENT = 1")
             ->execute();
 
-        $con
+        $this->dbConnection
             ->prepare("INSERT INTO `country` VALUES (1,'AF','Afghanistan'),(2,'AX','[DO NOT USE] Åland Islands'),(3,'AL','Albania'),(4,'DZ','Algeria'),(5,'AS','American Samoa'),(6,'AD','Andorra'),(7,'AO','Angola'),(8,'AI','Anguilla'),(9,'AQ','Antarctica'),(10,'AG','Antigua and Barbuda'),(11,'AR','Argentina'),(12,'AM','Armenia'),(13,'AW','Aruba'),(14,'AC','[DO NOT USE] Ascension Island'),(15,'AU','Australia'),(16,'AT','Austria'),(17,'AZ','Azerbaijan'),(18,'BS','Bahamas'),(19,'BH','Bahrain'),(20,'BD','Bangladesh'),(21,'BB','Barbados'),(22,'BY','Belarus'),(23,'BE','Belgium'),(24,'BZ','Belize'),(25,'BJ','Benin'),(26,'BM','Bermuda'),(27,'BT','Bhutan'),(28,'BO','Bolivia'),(29,'BA','Bosnia and Herzegovina'),(30,'BW','Botswana'),(31,'BV','Bouvet Island'),(32,'BR','Brazil'),(33,'IO','British Indian Ocean Territory'),(34,'VG','British Virgin Islands'),(35,'BN','Brunei'),(36,'BG','Bulgaria'),(37,'BF','Burkina Faso'),(38,'BI','Burundi'),(39,'KH','Cambodia'),(40,'CM','Cameroon'),(41,'CA','Canada'),(42,'IC','[DO NOT USE] Canary Islands'),(43,'CV','Cape Verde'),(44,'KY','Cayman Islands'),(45,'CF','Central African Republic'),(46,'EA','[DO NOT USE] Ceuta and Melilla'),(47,'TD','Chad'),(48,'CL','Chile'),(49,'CN','China'),(50,'CX','Christmas Island'),(51,'CP','[DO NOT USE] Clipperton Island'),(52,'CC','Cocos [Keeling] Islands'),(53,'CO','Colombia'),(54,'KM','Comoros'),(55,'CG','Congo - Brazzaville'),(56,'CD','Congo - Kinshasa'),(57,'CK','Cook Islands'),(58,'CR','Costa Rica'),(59,'CI','Côte d’Ivoire'),(60,'HR','Croatia'),(61,'CU','Cuba'),(62,'CY','Cyprus'),(63,'CZ','Czech Republic'),(64,'DK','Denmark'),(65,'DG','[DO NOT USE] Diego Garcia'),(66,'DJ','Djibouti'),(67,'DM','Dominica'),(68,'DO','Dominican Republic'),(69,'EC','Ecuador'),(70,'EG','Egypt'),(71,'SV','El Salvador'),(72,'GQ','Equatorial Guinea'),(73,'ER','Eritrea'),(74,'EE','Estonia'),(75,'ET','Ethiopia'),(76,'EU','[DO NOT USE] European Union'),(77,'FK','Falkland Islands'),(78,'FO','Faroe Islands'),(79,'FJ','Fiji'),(80,'FI','Finland'),(81,'FR','France'),(82,'GF','French Guiana'),(83,'PF','French Polynesia'),(84,'TF','French Southern Territories'),(85,'GA','Gabon'),(86,'GM','Gambia'),(87,'GE','Georgia'),(88,'DE','Germany'),(89,'GH','Ghana'),(90,'GI','Gibraltar'),(91,'GR','Greece'),(92,'GL','Greenland'),(93,'GD','Grenada'),(94,'GP','Guadeloupe'),(95,'GU','Guam'),(96,'GT','Guatemala'),(97,'GG','[DO NOT USE] Guernsey'),(98,'GN','Guinea'),(99,'GW','Guinea-Bissau'),(100,'GY','Guyana'),(101,'HT','Haiti'),(102,'HM','Heard Island and McDonald Islands'),(103,'HN','Honduras'),(104,'HK','Hong Kong SAR China'),(105,'HU','Hungary'),(106,'IS','Iceland'),(107,'IN','India'),(108,'ID','Indonesia'),(109,'IR','Iran'),(110,'IQ','Iraq'),(111,'IE','Ireland'),(112,'IM','[DO NOT USE] Isle of Man'),(113,'IL','Israel'),(114,'IT','Italy'),(115,'JM','Jamaica'),(116,'JP','Japan'),(117,'JE','[DO NOT USE] Jersey'),(118,'JO','Jordan'),(119,'KZ','Kazakhstan'),(120,'KE','Kenya'),(121,'KI','Kiribati'),(122,'KW','Kuwait'),
                 (123,'KG','Kyrgyzstan'),(124,'LA','Laos'),(125,'LV','Latvia'),(126,'LB','Lebanon'),(127,'LS','Lesotho'),(128,'LR','Liberia'),(129,'LY','Libya'),(130,'LI','Liechtenstein'),(131,'LT','Lithuania'),(132,'LU','Luxembourg'),(133,'MO','Macau SAR China'),(134,'MK','Macedonia'),(135,'MG','Madagascar'),(136,'MW','Malawi'),(137,'MY','Malaysia'),(138,'MV','Maldives'),(139,'ML','Mali'),(140,'MT','Malta'),(141,'MH','Marshall Islands'),(142,'MQ','Martinique'),(143,'MR','Mauritania'),(144,'MU','Mauritius'),(145,'YT','Mayotte'),(146,'MX','Mexico'),(147,'FM','Micronesia'),(148,'MD','Moldova'),(149,'MC','Monaco'),(150,'MN','Mongolia'),(151,'ME','Montenegro'),(152,'MS','Montserrat'),(153,'MA','Morocco'),(154,'MZ','Mozambique'),(155,'MM','Myanmar [Burma]'),(156,'NA','Namibia'),(157,'NR','Nauru'),(158,'NP','Nepal'),(159,'NL','Netherlands'),(160,'AN','Netherlands Antilles'),(161,'NC','New Caledonia'),(162,'NZ','New Zealand'),(163,'NI','Nicaragua'),(164,'NE','Niger'),(165,'NG','Nigeria'),(166,'NU','Niue'),(167,'NF','Norfolk Island'),(168,'KP','North Korea'),(169,'MP','Northern Mariana Islands'),(170,'NO','Norway'),(171,'OM','Oman'),(172,'QO','[DO NOT USE] Outlying Oceania'),(173,'PK','Pakistan'),(174,'PW','Palau'),(175,'PS','Palestinian Territories'),(176,'PA','Panama'),(177,'PG','Papua New Guinea'),(178,'PY','Paraguay'),(179,'PE','Peru'),(180,'PH','Philippines'),(181,'PN','Pitcairn Islands'),(182,'PL','Poland'),(183,'PT','Portugal'),(184,'PR','Puerto Rico'),(185,'QA','Qatar'),(186,'RE','Réunion'),(187,'RO','Romania'),(188,'RU','Russia'),(189,'RW','Rwanda'),(190,'BL','[DO NOT USE] Saint Barthélemy'),(191,'SH','Saint Helena'),(192,'KN','Saint Kitts and Nevis'),(193,'LC','Saint Lucia'),(194,'MF','[DO NOT USE] Saint Martin'),(195,'PM','Saint Pierre and Miquelon'),(196,'VC','Saint Vincent and the Grenadines'),(197,'WS','Samoa'),(198,'SM','San Marino'),(199,'ST','São Tomé and Príncipe'),(200,'SA','Saudi Arabia'),(201,'SN','Senegal'),(202,'RS','Serbia'),(203,'CS','[DO NOT USE] Serbia and Montenegro'),(204,'SC','Seychelles'),(205,'SL','Sierra Leone'),(206,'SG','Singapore'),(207,'SK','Slovakia'),(208,'SI','Slovenia'),(209,'SB','Solomon Islands'),(210,'SO','Somalia'),(211,'ZA','South Africa'),(212,'GS','South Georgia and the South Sandwich Islands'),(213,'KR','South Korea'),(214,'ES','Spain'),(215,'LK','Sri Lanka'),(216,'SD','Sudan'),(217,'SR','Suriname'),(218,'SJ','Svalbard and Jan Mayen'),(219,'SZ','Swaziland'),(220,'SE','Sweden'),(221,'CH','Switzerland'),(222,'SY','Syria'),(223,'TW','Taiwan'),(224,'TJ','Tajikistan'),(225,'TZ','Tanzania'),(226,'TH','Thailand'),(227,'TL','[DO NOT USE] Timor-Leste'),(228,'TG','Togo'),(229,'TK','Tokelau'),(230,'TO','Tonga'),(231,'TT','Trinidad and Tobago'),(232,'TA','[DO NOT USE] Tristan da Cunha'),(233,'TN','Tunisia'),(234,'TR','Turkey'),(235,'TM','Turkmenistan'),(236,'TC','Turks and Caicos Islands'),(237,'TV','Tuvalu'),(238,'UM','U.S. Minor Outlying Islands'),(239,'VI','U.S. Virgin Islands'),(240,'UG','Uganda'),
                 (241,'UA','Ukraine'),(242,'AE','United Arab Emirates'),(243,'UK','United Kingdom'),(244,'US','United States'),(245,'UY','Uruguay'),(246,'UZ','Uzbekistan'),(247,'VU','Vanuatu'),(248,'VA','Vatican City'),(249,'VE','Venezuela'),(250,'VN','Vietnam'),(251,'WF','Wallis and Futuna'),(252,'EH','Western Sahara'),(253,'YE','Yemen'),(254,'ZM','Zambia'),(255,'ZW','Zimbabwe');")
                 ->execute();
+
+        $this->dbConnection
+            ->prepare('INSERT INTO `region` (`id`,`site_id`,`name`) VALUES (1,"1","Demo"), (2,"2","Japan"), (3,"3","China"), (4,"4","North America"), (5,"5","Europe"), (6,"6","Latin America"), (7,"7","India"), (8,"8","Singapore"), (9,"9","Australia / New Zealand"), (10,null,"Asia Pacific/Japan"), (11,null,"Western Europe"), (12,null,"Central Europe")')
+            ->execute();
+
+        $this->dbConnection
+            ->prepare('INSERT INTO `region_country` (`region_id`, `country_id`) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9), (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15), (1, 16), (1, 17), (1, 18), (1, 19), (1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25), (1, 26), (1, 27), (1, 28), (1, 29), (1, 30), (1, 31), (1, 32), (1, 33), (1, 34), (1, 35), (1, 36), (1, 37), (1, 38), (1, 39), (1, 40), (1, 41), (1, 42), (1, 43), (1, 44), (1, 45), (1, 46), (1, 47), (1, 48), (1, 49), (1, 50), (1, 51), (1, 52), (1, 53), (1, 54), (1, 55), (1, 56), (1, 57), (1, 58), (1, 59), (1, 60), (1, 61), (1, 62), (1, 63), (1, 64), (1, 65), (1, 66), (1, 67), (1, 68), (1, 69), (1, 70), (1, 71), (1, 72), (1, 73), (1, 74), (1, 75), (1, 76), (1, 77), (1, 78), (1, 79), (1, 80), (1, 81), (1, 82), (1, 83), (1, 84), (1, 85), (1, 86), (1, 87), (1, 88), (1, 89), (1, 90), (1, 91), (1, 92), (1, 93), (1, 94), (1, 95), (1, 96), (1, 97), (1, 98), (1, 99), (1, 100), (1, 101), (1, 102), (1, 103), (1, 104), (1, 105), (1, 106), (1, 107), (1, 108), (1, 109), (1, 110), (1, 111), (1, 112), (1, 113), (1, 114), (1, 115), (1, 116), (1, 117), (1, 118), (1, 119), (1, 120), (1, 121), (1, 122), (1, 123), (1, 124), (1, 125), (1, 126), (1, 127), (1, 128), (1, 129), (1, 130), (1, 131), (1, 132), (1, 133), (1, 134), (1, 135), (1, 136), (1, 137), (1, 138), (1, 139), (1, 140), (1, 141), (1, 142), (1, 143), (1, 144), (1, 145), (1, 146), (1, 147), (1, 148), (1, 149), (1, 150), (1, 151), (1, 152), (1, 153), (1, 154), (1, 155), (1, 156), (1, 157), (1, 158), (1, 159), (1, 160), (1, 161), (1, 162), (1, 163), (1, 164), (1, 165), (1, 166), (1, 167), (1, 168), (1, 169), (1, 170), (1, 171), (1, 172), (1, 173), (1, 174), (1, 175), (1, 176), (1, 177), (1, 178), (1, 179), (1, 180), (1, 181), (1, 182), (1, 183), (1, 184), (1, 185), (1, 186), (1, 187), (1, 188), (1, 189), (1, 190), (1, 191), (1, 192), (1, 193), (1, 194), (1, 195), (1, 196), (1, 197), (1, 198), (1, 199), (1, 200), (1, 201), (1, 202), (1, 203), (1, 204), (1, 205), (1, 206), (1, 207), (1, 208), (1, 209), (1, 210), (1, 211), (1, 212), (1, 213), (1, 214), (1, 215), (1, 216), (1, 217), (1, 218), (1, 219), (1, 220), (1, 221), (1, 222), (1, 223), (1, 224), (1, 225), (1, 226), (1, 227), (1, 228), (1, 229), (1, 230), (1, 231), (1, 232), (1, 233), (1, 234), (1, 235), (1, 236), (1, 237), (1, 238), (1, 239), (1, 240), (1, 241), (1, 242), (1, 243), (1, 244), (1, 245), (1, 246), (1, 247), (1, 248), (1, 249), (1, 250), (1, 251), (1, 252), (1, 253), (1, 254), (1, 255), (2, 116), (3, 49), (4, 41), (4, 244), (4, 195), (4, 191), (5, 3), (5, 12), (5, 16), (5, 17), (5, 22), (5, 23), (5, 29), (5, 36), (5, 60), (5, 62), (5, 63), (5, 64), (5, 74), (5, 80), (5, 81), (5, 87), (5, 88), (5, 91), (5, 105), (5, 106), (5, 111), (5, 114), (5, 119), (5, 123), (5, 125), (5, 131), (5, 132), (5, 134), (5, 148), (5, 202), (5, 159), (5, 170), (5, 182), (5, 183), (5, 187), (5, 188), (5, 207), (5, 208), (5, 214), (5, 220), (5, 221), (5, 224), (5, 235), (5, 241), (5, 243), (5, 246), (5, 6), (5, 242), (5, 1), (5, 160), (5, 7), (5, 9), (5, 5), (5, 37), (5, 19), (5, 38), (5, 25), (5, 31), (5, 30), (5, 55), (5, 45), (5, 59), (5, 40), (5, 43), (5, 66), (5, 4), (5, 70), (5, 252), (5, 73), (5, 75), (5, 78), (5, 85), (5, 97), (5, 89), (5, 90), (5, 92), (5, 98), (5, 99), (5, 102), (5, 113), (5, 112), (5, 33), (5, 110), (5, 109), (5, 117), (5, 118), (5, 120), (5, 121), (5, 122), (5, 126), (5, 130), (5, 215), (5, 128), (5, 127), (5, 129), (5, 153), (5, 149), (5, 135), (5, 139), (5, 143), (5, 140), (5, 144), (5, 138), (5, 136), (5, 154), (5, 156), (5, 164), (5, 165), (5, 171), (5, 173), (5, 185), (5, 186), (5, 189), (5, 200), (5, 204), (5, 216), (5, 218), (5, 205), (5, 198), (5, 201), (5, 210), (5, 199), (5, 222), (5, 219), (5, 47), (5, 84), (5, 228), (5, 233), (5, 230), (5, 234), (5, 225), (5, 240), (5, 248), (5, 253), (5, 145), (5, 211), (5, 254), (5, 255), (6, 10), (6, 8), (6, 11), (6, 13), (6, 21), (6, 26), (6, 28), (6, 18), (6, 24), (6, 146), (6, 48), (6, 53), (6, 58), (6, 67), (6, 68), (6, 69), (6, 93), (6, 96), (6, 100), (6, 103), (6, 101), (6, 115), (6, 192), (6, 44), (6, 193), (6, 163), (6, 176), (6, 179), (6, 184), (6, 178), (6, 217), (6, 71), (6, 231), (6, 237), (6, 236), (6, 245), (6, 196), (6, 249), (6, 34), (6, 239), (6, 32), (6, 57), (6, 61), (6, 77), (6, 82), (6, 94), (6, 212), (6, 142), (6, 152), (6, 238), (7, 107), (8, 108), (8, 213), (8, 137), (8, 206), (9, 15), (9, 162), (10, 15), (10, 108), (10, 107), (10, 116), (10, 213), (10, 137), (10, 162), (10, 206), (10, 20), (10, 35), (10, 27), (10, 52), (10, 50), (10, 79), (10, 147), (10, 95), (10, 104), (10, 39), (10, 54), (10, 168), (10, 124), (10, 141), (10, 155), (10, 150), (10, 133), (10, 169), (10, 161), (10, 167), (10, 158), (10, 157), (10, 166), (10, 83), (10, 177), (10, 180), (10, 181), (10, 174), (10, 209), (10, 226), (10, 229), (10, 227), (10, 223), (10, 250), (10, 247), (10, 251), (10, 197), (10, 49), (11, 23), (11, 221), (11, 64), (11, 214), (11, 114), (11, 159), (11, 170), (11, 220), (11, 80), (11, 132), (11, 183), (12, 3), (12, 12), (12, 17), (12, 29), (12, 36), (12, 22), (12, 62), (12, 63), (12, 74), (12, 87), (12, 91), (12, 60), (12, 105), (12, 106), (12, 123), (12, 119), (12, 131), (12, 125), (12, 148), (12, 151), (12, 134), (12, 182), (12, 187), (12, 202), (12, 188), (12, 208), (12, 207), (12, 224), (12, 235), (12, 241), (12, 246)')
+            ->execute();
+    }
+
+    /**
+     * @Given /^I am located in "([^"]*)"$/
+     */
+    public function iAmLocatedIn($countryCode)
+    {
+        $file = $this->getContainer()->getParameter('ip2location_lookup_directory').'overrideCountry';
+        file_put_contents($file, trim($countryCode));
     }
 
     /**
@@ -1111,7 +1139,6 @@ class AbstractFeatureContext extends MinkContext
     public function thereIsADealCalledIn($dealName, $locale)
     {
         $em = $this->getEntityManager();
-        $em = $this->getEntityManager();
 
         if ($deal = $em->getRepository('GiveawayBundle:Deal')->findOneBy(array('name' => $dealName))) {
             $em->remove($deal);
@@ -1588,10 +1615,7 @@ class AbstractFeatureContext extends MinkContext
      */
     protected function getEntityManager()
     {
-        return $this->getContainer()
-            ->get('doctrine')
-            ->getEntityManager()
-            ;
+        return $this->entityManager;
     }
 
     /**
@@ -1716,6 +1740,52 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I attach a background ad image$/
+     */
+    public function iAttachABackgroundAdImage()
+    {
+        $this->attachFileToField('Image', __DIR__.'/image.png');
+    }
+
+    /**
+     * @Given /^I fill in background ad's date with "([^""]*)"$/
+     */
+    public function iFillInDateWith($date)
+    {
+        $dt = new \DateTime($date);
+
+        $this->fillField('admin_background_ad_date_date_month', $dt->format('m'));
+        $this->fillField('admin_background_ad_date_date_day', $dt->format('d'));
+        $this->fillField('admin_background_ad_date_date_year', $dt->format('Y'));
+    }
+
+    /**
+     * @Given /^there is an already existing background ad at date "([^""]*)" - "([^""]*)" for site "([^""]*)"(?: with url "([^""]*)")?$/
+     */
+    public function thereIsAnAlreadyExistingBackgroundAdAtDate($dateStart, $dateEnd, $siteName, $url = null)
+    {
+        $ad = new BackgroundAd('test');
+        $ad->setDateStart(new \DateTime($dateStart));
+        $ad->setDateEnd(new \DateTime($dateEnd));
+        $ad->setTimezone('Europe/Paris');
+
+        $em   = $this->getEntityManager();
+        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('name' => $siteName));
+        $ad->addAdSite(new BackgroundAdSite($site, $url));
+
+        $this->getEntityManager()->persist($ad);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @When /I click background/
+     */
+    public function iClickBackground()
+    {
+        $this->getSession()->getPage()->find('css', '.background-takeover')->click();
+    }
+
+    /**
      * @Given /^I have the following galleries:$/
      */
     public function iHaveTheFollowingGalleries(TableNode $table)
@@ -1754,5 +1824,4 @@ class AbstractFeatureContext extends MinkContext
             $counter++;
         }
     }
-
 }

@@ -190,7 +190,7 @@
             {% if features.hasComments %}
                 {% if isAllowedToViewGroupContent %}
                     <div id="group-comments">
-                        {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : group.threadId, 'object' : group } %}
+                        {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : group.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
                     </div>
                 {% else %}
                     <div id="group-comments">

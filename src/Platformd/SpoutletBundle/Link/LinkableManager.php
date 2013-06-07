@@ -28,7 +28,7 @@ class LinkableManager
      * @param LinkableInterface $linkableObject
      * @return string
      */
-    public function link(LinkableInterface $linkableObject)
+    public function link(LinkableInterface $linkableObject, $absolute=false)
     {
         if ($linkableObject->getLinkableOverrideUrl()) {
             return $linkableObject->getLinkableOverrideUrl();
@@ -37,6 +37,6 @@ class LinkableManager
         $route = $linkableObject->getLinkableRouteName();
         $params = $linkableObject->getLinkableRouteParameters();
 
-        return $this->router->generate($route, $params);
+        return $this->router->generate($route, $params, $absolute);
     }
 }

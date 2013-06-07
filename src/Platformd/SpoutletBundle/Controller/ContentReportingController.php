@@ -17,10 +17,6 @@ use Platformd\UserBundle\Entity\User;
 
 class ContentReportingController extends Controller
 {
-    private function getCurrentUser()
-    {
-        return $this->get('security.context')->getToken()->getUser();
-    }
 
     public function reportContentAction(Request $request)
     {

@@ -15,7 +15,8 @@ use Platformd\GiveawayBundle\Entity\Giveaway,
     Platformd\GroupBundle\Entity\GroupDiscussion,
     Platformd\SpoutletBundle\Entity\SiteRepository,
     Platformd\GroupBundle\Entity\Metric\GroupMetric,
-    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric
+    Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetric,
+    Platformd\SpoutletBundle\Util\IpLookupUtil
 ;
 
 class MetricManager
@@ -68,13 +69,27 @@ class MetricManager
     private $regionRepo;
 
     /**
+     * @var \Platformd\SpoutletBundle\Entity\RegionRepository
+     */
+    private $regionRepository;
+
+    /**
      * An array of all available site keys and their names
      *
      * @var array
      */
     private $sites;
 
-    public function __construct(EntityManager $em, array $sites)
+    /**
+     * An array of all available regions (country groups)
+     *
+     * @var array
+     */
+    private $regions;
+
+    private $ipLookupUtil;
+
+    public function __construct(EntityManager $em, array $sites, IpLookupUtil $ipLookupUtil)
     {
         $this->siteRepository = $em->getRepository('SpoutletBundle:Site');
         $this->userRepo = $em->getRepository('UserBundle:User');
@@ -85,8 +100,10 @@ class MetricManager
         $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
         $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
-        $this->regionRepo = $em->getRepository('SpoutletBundle:Region');
+        $this->regionRepository = $em->getRepository('SpoutletBundle:Region');
         $this->sites = $sites;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->regions = $this->regionRepository->findAll();
     }
 
     /**
@@ -97,6 +114,22 @@ class MetricManager
     public function getSites()
     {
         return $this->sites;
+    }
+
+    /**
+     * Returns an array of the regions that are reported on
+     *
+     * @return array
+     */
+    public function getRegions()
+    {
+        $return = array();
+
+        foreach ($this->regions as $region) {
+            $return[] = $region->getName();
+        }
+
+        return $return;
     }
 
     /**
@@ -128,9 +161,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->giveawayKeyRepository->getAssignedForGiveawayAndSite($giveaway, $key, $from, $to);
+        return $data;
+    }
+
+    public function getGiveawayRegionData($from, $to)
+    {
+        $regionCounts = $this->giveawayKeyRepository->getRegionCountsByDate($from, $to);
+
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['giveawayId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;
@@ -168,9 +209,17 @@ class MetricManager
             'sites' => array(),
         );
 
-        // go through all the sites and populate their data
-        foreach($this->sites as $key => $name) {
-            $data['sites'][$key] = $this->dealCodeRepository->getAssignedForDealAndSite($deal, $key, $from, $to);
+        return $data;
+    }
+
+    public function getDealRegionData($from, $to)
+    {
+        $regionCounts = $this->dealCodeRepository->getRegionCountsByDate($from, $to);
+
+        $data = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['dealId']][$regionCount['regionName']] = $regionCount['keyCount'];
         }
 
         return $data;

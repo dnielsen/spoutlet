@@ -48,6 +48,11 @@ abstract class AbstractCode
      */
     protected $ipAddress;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country")
+     */
+    protected $country;
+
     abstract public function setPool(AbstractPool $pool);
     abstract public function getPool();
     abstract public function setUser(User $user);
@@ -56,6 +61,10 @@ abstract class AbstractCode
     public function __construct($value)
     {
         $this->setValue($value);
+    }
+
+    public function __toString() {
+        return 'Key => { Id = '.$this->getId().', Value = "'.$this->getProtectedValue().'" }';
     }
 
     public function getId()
@@ -73,12 +82,27 @@ abstract class AbstractCode
         return $this->value;
     }
 
-    public function assign(User $user, $ipAddress, $site)
+    public function getProtectedValue() {
+        if (!$this->value || !is_string($this->value)) {
+            return 'BLANK';
+        }
+
+        $length = strlen($this->value);
+
+        if ($length < 8) {
+            return str_repeat('*', $length);
+        }
+
+        return str_repeat('*', $length - 4).substr($this->value,-4,4);
+    }
+
+    public function assign(User $user, $ipAddress, $site, $country)
     {
         $this->setUser($user);
         $this->assignedAt = new \DateTime();
         $this->ipAddress = $ipAddress;
         $this->setAssignedSite($site);
+        $this->setCountry($country);
     }
 
     public function getIpAddress()
@@ -104,5 +128,15 @@ abstract class AbstractCode
     public function setAssignedSite($assignedSite)
     {
         $this->assignedSite = $assignedSite;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    public function setCountry($value)
+    {
+        $this->country = $value;
     }
 }

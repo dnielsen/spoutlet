@@ -68,8 +68,7 @@ class GiveawayAdminController extends Controller
         {
             $form->bindRequest($request);
 
-            if($form->isValid())
-            {
+            if($form->isValid()) {
                 $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
@@ -80,6 +79,7 @@ class GiveawayAdminController extends Controller
         return $this->render('GiveawayBundle:GiveawayAdmin:new.html.twig', array(
             'form' => $form->createView(),
             'giveaway' => $giveaway,
+            'group' => null,
         ));
     }
 
@@ -214,8 +214,10 @@ class GiveawayAdminController extends Controller
             }
         }
 
+        $group = $giveaway->getGroup();
+
         return $this->render('GiveawayBundle:GiveawayAdmin:edit.html.twig',
-            array('form' => $form->createView(), 'giveaway' => $giveaway));
+            array('form' => $form->createView(), 'giveaway' => $giveaway, 'group' => $group));
     }
 
     /**
@@ -266,16 +268,18 @@ class GiveawayAdminController extends Controller
                     }
 
                     // pop up the first one, ideally there's only one
-                    $machineCode = $machineCodes[0];
+                    $machineCode    = $machineCodes[0];
+                    $ipAddress      = $machineCode->getIpAddress();
+                    $country        = $this->getIpLookupUtil()->getCountryCode($ipAddress);
 
                     try {
-                        $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite());
+                        $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite(), $country);
 
                         $successEmails[] = $email;
                     } catch (MissingKeyException $e) {
                         $form->addError(new FormError(
-                            'There are no more unassigned giveaway keys for this giveaway. The following email was not assigned a key: %email%',
-                            array('%email%' => $email)
+                            'There are no more unassigned giveaway keys for %country%. The following email was not assigned a key: %email%',
+                            array('%country%' => ucfirst(strtolower($this->getIpLookupUtil()->getCountryName($ipAddress))), '%email%' => $email)
                         ));
                     }
                 }
@@ -429,13 +433,19 @@ class GiveawayAdminController extends Controller
 
         $giveawayMetrics = array();
 
+        $giveawayData = $metricManager->getGiveawayRegionData($from, $to);
+
         foreach($giveaways as $giveaway) {
-            $giveawayMetrics[] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
+            $giveawayMetrics[$giveaway->getId()] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
+        }
+
+        foreach ($giveawayData as $giveawayId => $data) {
+            $giveawayMetrics[$giveawayId]['sites'] = $data;
         }
 
         return array(
             'metrics' => $giveawayMetrics,
-            'sites'   => $metricManager->getSites(),
+            'sites'   => $metricManager->getRegions(),
             'form'    => $filterForm->createView()
         );
     }
@@ -466,6 +476,14 @@ class GiveawayAdminController extends Controller
         $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
 
+        if ($giveawayForm['removeBannerImage'] && $removeBannerImage = $giveawayForm['removeBannerImage']->getData()) {
+            $giveaway->setBannerImage(null);
+        }
+
+        if ($giveawayForm['removeBackgroundImage'] && $removeBackgroundImage = $giveawayForm['removeBackgroundImage']->getData()) {
+            $giveaway->setBackgroundImagePath(null);
+        }
+
         $ruleset    = $giveaway->getRuleset();
         $rules      = $ruleset->getRules();
 
@@ -495,8 +513,17 @@ class GiveawayAdminController extends Controller
         $giveaway->getRuleset()->setParentType('giveaway');
         $giveaway->getRuleset()->setDefaultAllow($defaultAllow);
 
+        $groupId = $giveawayForm['group']->getData();
+        if($groupId) {
+            $group = $this->getEntityManager()->getRepository('GroupBundle:Group')->find($groupId);
+
+            if($group) {
+                $giveaway->setGroup($group);
+            }
+        }
+
         $this
-            ->get('platformd.events_manager')
+            ->get('pd_giveaway.giveaway_manager')
             ->save($giveaway);
 
         $this->setFlash('success', 'platformd.giveaway.admin.saved');

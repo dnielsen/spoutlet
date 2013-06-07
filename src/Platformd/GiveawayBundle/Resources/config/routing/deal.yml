@@ -7,8 +7,8 @@ deal_show:
     defaults: { _controller: "GiveawayBundle:Deal:show" }
 
 deal_redeem:
-    pattern:  /{slug}/redeem
-    defaults: { _controller: "GiveawayBundle:Deal:redeem" }
+    pattern:  /{slug}/redeem/{joinGroup}
+    defaults: { _controller: "GiveawayBundle:Deal:redeem", joinGroup: true }
 
 deal_repies:
     pattern: /{slug}/replies

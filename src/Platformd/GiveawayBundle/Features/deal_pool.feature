@@ -8,15 +8,10 @@ Feature: Deal Pool
     Background:
         Given I am authenticated as an organizer
             And I have the following users:
-                | username      | email                   | cevo country | cevo id |
-                | William       | William@example.com     | UK           | 1       |
-                | Harry         | Harry@example.com       | UK           | 2       |
-                | Charles       | Charles@example.com     | UK           | 3       |
-                | Peter         | Peter@example.com       | IE           | 4       |
-                | Paul          | Paul@example.com        | IE           | 5       |
-                | CaptAmerica   | CaptAmerica@example.com | US           | 6       |
-                | MrJapan       | MrJapan@example.com     | JP           | 7       |
-                | UnknownMan    | UnknownMan@example.com  | UNKNOWN      | 8       |
+                | username      | email                   |  cevo id |
+                | William       | William@example.com     |  1       |
+                | Harry         | Harry@example.com       |  2       |
+                | Charles       | Charles@example.com     |  3       |
             And I go to "/admin"
             And there is a game called "Diablo 3"
             And I click to add new "Deals"
@@ -31,15 +26,6 @@ Feature: Deal Pool
             And I check the "Demo" option for "Sites"
             And I select "published" from "Status"
             And I press "Create"
-
-            And I go to "/admin/deal/list/1"
-            And I click on "Manage pools"
-            And I click on "Create New Pool"
-            And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/ie_only_sample_keys.csv" to "Keysfile"
-            And I check "Isactive"
-            And I fill in "1" for "Maxkeysperip"
-            And I select "Ireland" from "Eligible Countries"
-            And I press "Save Pool"
 
             And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
@@ -81,51 +67,92 @@ Feature: Deal Pool
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
 
-    Scenario: I am a user from the UK I should get a valid UK key
-        Given I re-login as the user "William"
-        When I go to "/deal/diablo-3-bonus"
+            And I go to "/admin/deal/list/1"
+            And I click on "Manage pools"
+            And I click on "Create New Pool"
+            And I attach the file "/home/ubuntu/sites/alienwarearena.com/dev/sample-keys/ie_only_sample_keys.csv" to "Keysfile"
+            And I check "Isactive"
+            And I fill in "1" for "Maxkeysperip"
+            And I select "Ireland" from "Eligible Countries"
+            And I press "Save Pool"
+
+    Scenario: I should be told that there are no more keys if I join the queue and the keys run out before I get one - but I should only see the message once
+        Given I am authenticated as a user
+            And I am located in "UK"
+            And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+            And the keys run out for the "Buy Diablo 3 and Get a Bonus Upgrade" deal
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "no longer any keys available"
+            And I go to "/deal/diablo-3-bonus"
+            And I should not see "no longer any keys available"
+
+    Scenario: I am a user from the UK I should get a valid UK key
+        Given I am authenticated as a user
+            And I am located in "UK"
+            And I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
         Then I should see "UK_only_1"
 
     Scenario: I am a user from the US I should get a valid US key
-        Given I re-login as the user "CaptAmerica"
-        When I go to "/deal/diablo-3-bonus"
-            And I click "deal-redeem-link"
-        Then I should see "US_only_1"
-
-    Scenario: I am a user from an unknown country
-        Given I re-login as the user "UnknownMan"
-        When I go to "/deal/diablo-3-bonus"
-            And I click "deal-redeem-link"
-        Then I should see "Invalid country selection."
-
-    Scenario: I am a user from a country that doesn't have any keys available to it
-        Given I re-login as the user "MrJapan"
-        When I go to "/deal/diablo-3-bonus"
-            And I click "deal-redeem-link"
-        Then I should see "Sorry! This offer is not available at your location."
-
-    Scenario: I am a user the second user from the UK I should get the second valid UK key
-        Given I re-login as the user "William"
+        Given I am authenticated as a user
+            And I am located in "US"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "US_only_1"
+
+    Scenario: I am a user from a country that doesn't have any keys available to it
+        Given I am authenticated as a user
+            And I am located in "JP"
+            And I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+        When The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "You are not eligible (based on your age and/or country)"
+
+    Scenario: I am the third user from the UK I should get the third valid UK key
+        Given I re-login as the user "William"
+            And I am located in "UK"
+            And I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "UK_only_1"
             And I re-login as the user "Harry"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "UK_only_2"
-            And I re-login as the user "Charles"
+        When I re-login as the user "Charles"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-            And I should see "UK_only_3"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "UK_only_3"
 
-    Scenario: The same IP address should not be able to claim more than 2 IP addresses
-        Given I re-login as the user "Peter"
+    Scenario: The same IP address should not be able to claim more than 1 IP addresses
+        Given I re-login as the user "William"
+            And I am located in "IE"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
             And I should see "IE_only_1"
-            And I re-login as the user "Paul"
+        When I re-login as the user "Harry"
+            And I am located in "IE"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
-            And I should see "Your IP address is not allowed to redeem any more deals."
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed."
 

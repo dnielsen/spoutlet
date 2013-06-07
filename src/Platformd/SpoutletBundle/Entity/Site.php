@@ -76,9 +76,8 @@ class Site
         $this->siteConfig->setSite($this);
     }
 
-    public function __toString()
-    {
-        return $this->name;
+    public function __toString() {
+         return 'Site => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
     }
 
     /**

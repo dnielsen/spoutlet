@@ -4,7 +4,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login' | trans }}
         {% else %}
-            <a href="{{ login_link(url('deal_show', {'slug': deal.slug})) }}">
+            <a href="{{ login_link(url('deal_show', {'slug': slug})) }}">
                 {{ 'platformd.create_account_or_login' | trans }}
             </a>
         {% endif %}

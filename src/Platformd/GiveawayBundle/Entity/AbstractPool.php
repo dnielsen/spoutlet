@@ -2,18 +2,32 @@
 
 namespace Platformd\GiveawayBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping as ORM,
+    Doctrine\Common\Collections\ArrayCollection
+;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile,
-Symfony\Component\Validator\Constraints as Assert;
+    Symfony\Component\Validator\Constraints as Assert
+;
+
+use Platformd\SpoutletBundle\Entity\Country,
+    Platformd\GiveawayBundle\Entity\DealPool,
+    Platformd\GiveawayBundle\Entity\GiveawayPool
+;
+
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * A mapped super class that all other pools inherit from
  *
  * @ORM\MappedSuperclass
+ * @Assert\Callback(methods={"validateFileExtension"})
  */
 abstract class AbstractPool
 {
+    const POOL_SIZE_QUEUE_THRESHOLD = 3145728; // Key files over 3MB in size will be passed to queue for processing
+    const POOL_FILE_S3_PREFIX = 'key_pool';
+
     /**
      * @var integer $id
      *
@@ -73,6 +87,16 @@ abstract class AbstractPool
     protected $keysfile;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset", cascade={"persist"})
+     */
+    protected $ruleset;
+
+    public function __construct()
+    {
+        $this->regions = new ArrayCollection();
+    }
+
+    /**
      * Returns whether or not this pool should be treated as active
      *
      * This goes beyond the normal isActive to check anything else.
@@ -83,6 +107,10 @@ abstract class AbstractPool
      * @return boolean
      */
     abstract public function isTotallyActive();
+
+    public function __toString() {
+        return 'Pool => { Id = '.$this->getId().', MaxKeysPerIP = '.$this->getMaxKeysPerIp().', Description = "'.$this->getDescription().'" }';
+    }
 
     public function getId()
     {
@@ -195,5 +223,96 @@ abstract class AbstractPool
     {
 
         return $this->keysfile;
+    }
+
+    public function getRuleset()
+    {
+        return $this->ruleset;
+    }
+
+    public function setRuleset($ruleset)
+    {
+        $this->ruleset = $ruleset;
+    }
+
+    public function getRegions()
+    {
+        return $this->regions;
+    }
+
+    public function setRegions($regions)
+    {
+        $this->regions = $regions;
+    }
+
+    public function isEnabledForCountry($country)
+    {
+        $allowed    = false;
+
+        if ($country instanceof Country) {
+            $country = $country->getCode();
+        }
+
+        if ($this instanceof GiveawayPool) {
+            $rules      = $this->getRuleset();
+            $regions    = $this->getRegions();
+
+            $allRules = $rules ? $rules->getRules() : array();
+
+            if (count($regions) < 1 && count($allRules) < 1) {
+                return true;
+            }
+
+            foreach ($regions as $region) {
+                foreach ($region->getCountries() as $regionCountry) {
+                    if ($regionCountry->getCode() == $country) {
+                        $allowed = true;
+                        break 2;
+                    }
+                }
+            }
+
+            if ($rules) {
+                $ruleCheck = $rules->doesCountryPassRules($country);
+                $allowed = $ruleCheck === null ? $allowed : $ruleCheck;
+            }
+
+            return $allowed;
+        } else {
+            foreach ($this->getAllowedCountries() as $allowedCountry) {
+                if ($allowedCountry->getCode() == $country) {
+                    return true;
+                }
+            }
+
+            return $allowed;
+        }
+    }
+
+    public function validateFileExtension(ExecutionContext $executionContext)
+    {
+        // error if invalid or no category is specified
+
+        $upload = $this->getKeysfile();
+
+        if ($upload === null) {
+            return;
+        }
+
+        $originalFileName = $upload->getClientOriginalName();
+        $extension        = strtolower(substr(strrchr($originalFileName,'.'),1));
+
+        if ($extension == 'csv') {
+            return;
+        }
+
+        $propertyPath = $executionContext->getPropertyPath() . '.keysfile';
+        $executionContext->setPropertyPath($propertyPath);
+
+        $executionContext->addViolation(
+            "The file must be a CSV.",
+            array(),
+            "keysfile"
+        );
     }
 }

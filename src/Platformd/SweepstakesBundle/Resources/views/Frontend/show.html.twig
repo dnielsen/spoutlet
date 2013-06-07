@@ -17,6 +17,15 @@
         <p>
             {{ 'platformd.sweepstakes.entered.message' | trans }}
         </p>
+        {% if features.hasGroups %}
+            <p>
+                {% if sweepstakes.group is not null %}
+                    {% if groupManager.isMember(user, sweepstakes.group) %}
+                        {{ 'deal_join_group_success' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+                    {% endif %}
+                {% endif %}
+            </p>
+        {% endif %}
     {% endif %}
 {% endblock %}
 
@@ -80,11 +89,21 @@
                                     <input type="submit" value="{{ 'enter' | trans }}" class="button" />
                                 </div>
 
+                                {% if features.hasGroups %}
+                                    {% if sweepstakes.group is not null %}
+                                        {% if not groupManager.isMember(user, sweepstakes.group) %}
+                                        <div class="agree-row">
+                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
+                                        </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
                             {% endif %}
 
                             <div class="clear"></div>
-                        {% endif %}
 
+                        {% endif %}
                     </div>
                 </form>
             </div>
@@ -101,7 +120,6 @@
                     <ul class="sweepstakes-details">
                         <li class="tight">
                             <label style="display:inline;">{{ 'registration_opens' | trans }}</label>
-
                             {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
                         </li>
                         <li>
@@ -126,7 +144,7 @@
             </div><!-- giveaway-info -->
 
             {% if features.hasComments %}
-                {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : sweepstakes.slug, 'object' : sweepstakes } %}
+                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : sweepstakes.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
             {% endif %}
 
         </div><!-- left -->

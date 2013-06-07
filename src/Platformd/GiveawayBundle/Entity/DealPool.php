@@ -19,7 +19,7 @@ class DealPool extends AbstractPool
      * Many to one with Deal
      *
      * @var Deal
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Deal", inversedBy="dealPools")
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\Deal", inversedBy="pools")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $deal;
@@ -38,7 +38,13 @@ class DealPool extends AbstractPool
     protected $allowedCountries;
 
     /**
-     * @return \Platformd\GiveawayBundle\Entity\Deal
+     * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Region")
+     * @ORM\JoinTable(name="deal_pool_region")
+     */
+    protected $regions;
+
+    /**
+     * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function getDeal()
     {
@@ -99,5 +105,10 @@ class DealPool extends AbstractPool
     public function isTotallyActive()
     {
         return $this->getIsActive() && $this->getDeal() && ($this->getDeal()->isActive() || $this->getDeal()->getTestOnly());
+    }
+
+    public function getParentName()
+    {
+        return $this->getDeal()->getName();
     }
 }

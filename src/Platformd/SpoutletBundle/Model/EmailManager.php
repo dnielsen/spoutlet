@@ -63,7 +63,7 @@ class EmailManager
             $emailType = "Not Specified";
         }
 
-        $currentSite = $this->container->get('platformd.model.site_util')->getCurrentSite();
+        $currentSite = $this->container->get('platformd.util.site_util')->getCurrentSite();
 
         if (!$fromName) {
             $fromName = $currentSite ? $currentSite->getSiteConfig()->getEmailFromName() : $this->container->getParameter('sender_email_name');

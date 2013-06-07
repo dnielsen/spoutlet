@@ -420,4 +420,9 @@ class News implements LinkableInterface
     {
         return $this->game;
     }
+
+    public function getThreadId()
+    {
+        return $this->getCommentThreadId();
+    }
 }

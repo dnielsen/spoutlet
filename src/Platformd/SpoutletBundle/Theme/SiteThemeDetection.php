@@ -34,7 +34,7 @@ class SiteThemeDetection
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        if ($theme = $this->siteUtil->getCurrentSite()->getTheme()) {
+        if ($theme = $this->siteUtil->getCurrentSiteCached()->getTheme()) {
             $this->activeTheme->setName($theme);
         }
     }

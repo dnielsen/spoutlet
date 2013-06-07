@@ -39,8 +39,11 @@ class DefaultController extends Controller
             return $this->createLinkableResponse($news);
         }
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($news);
+
         return $this->render('NewsBundle:Default:show.html.twig', array(
-            'news' => $news,
+            'news'          => $news,
+            'permalink'     => $permalink,
         ));
     }
 }
