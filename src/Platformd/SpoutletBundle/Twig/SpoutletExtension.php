@@ -520,6 +520,7 @@ class SpoutletExtension extends Twig_Extension
             case 'CONTESTS_IMAGE':                   return $this->GetContestsLink($locale, 'image');
             case 'CONTESTS_GROUP':                   return $this->GetContestsLink($locale, 'group');
             case 'GIVEAWAYS':                       return $this->GetGiveawaysLink($locale);
+            case 'INSTAGRAM':                       return $this->GetInstagramLink($locale);
 
             default:
                 throw new \InvalidArgumentException(sprintf('Unknown link type "%s"', $linkType));
@@ -655,6 +656,16 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, 'Alienware_JP', $enAltText);
             case 'es':      return sprintf($format, 'AlienwareLatAm', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+
+            default:        return false;
+        }
+    }
+
+    private function GetInstagramLink($locale) {
+        $link = '<a href="http://instagram.com/alienwarelatam/" target="_blank"><img src="/bundles/spoutlet/images/icons/icon-ig-14.png" alt="Instagram" /></a>';
+
+        switch ($locale) {
+            case 'es':      return $link;
 
             default:        return false;
         }
