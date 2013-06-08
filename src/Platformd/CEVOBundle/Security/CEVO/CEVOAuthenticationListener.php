@@ -87,9 +87,6 @@ class CEVOAuthenticationListener implements ListenerInterface
             $request->getSession()->invalidate();
             $this->securityContext->setToken(null);
 
-            $event->setResponse(new RedirectResponse($request->getUri()));
-
-            // return immediately the response is set
             return;
         }
 
