@@ -5,25 +5,23 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awa1  { .host = "ec2-75-101-139-101.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awa2  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awa3  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awa4  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
-backend awa5  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
-director awa random {
-    { .backend = awa1; .weight = 1; }
-    { .backend = awa2; .weight = 2; }
-    { .backend = awa3; .weight = 2; }
-    { .backend = awa4; .weight = 2; }
-    { .backend = awa5; .weight = 2; }
+director awaWeb random {
+    { .backend = awaWeb1; .weight = 1; }
+    { .backend = awaWeb2; .weight = 1; }
+    { .backend = awaWeb3; .weight = 1; }
+    { .backend = awaWeb4; .weight = 1; }
 }
 
 sub vcl_recv {
 
     #req.http.host ~ "^.*staging.alienwarearena.com"
 
-    set req.backend = awa;
+    set req.backend = awaWeb;
 
     if (req.url ~ "^/healthCheck$") {
         error 403 "Access Denied.";
@@ -97,7 +95,7 @@ sub vcl_recv {
         return (lookup);
     }
 
-    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]" && !req.url ~ "/(key|redeem)$") {
+    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]?" && !req.url ~ "/(key|redeem)$") {
         remove req.http.Cookie;
         return (lookup);
     }
@@ -115,6 +113,10 @@ sub vcl_recv {
     }
 
     if (req.url ~ "^/videos/category-tab/") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/timeline[/]?$") {
         remove req.http.Cookie;
     }
 
@@ -161,6 +163,10 @@ sub vcl_fetch {
         unset beresp.http.set-cookie;
     }
 
+    if (req.url ~ "^/timeline[/]?$") {
+        unset beresp.http.set-cookie;
+    }
+
     if (req.url ~ "^/videos/tab/") {
         unset beresp.http.set-cookie;
     }
@@ -171,7 +177,7 @@ sub vcl_fetch {
 
     set beresp.grace = 6h;
 
-    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]"){
+    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]?"){
         unset beresp.http.set-cookie;
     }
 }

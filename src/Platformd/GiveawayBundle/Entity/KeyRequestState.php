@@ -16,8 +16,9 @@ use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 
 /**
  * Platformd\GiveawayBundle\Entity\KeyRequestState
- * @ORM\Table(name="pd_key_request_state")
+ * @ORM\Table(name="pd_key_request_state", uniqueConstraints={@ORM\UniqueConstraint(name="oneStatePerPromotion", columns={"user_id", "deal_id", "giveaway_id"})})
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\KeyRequestStateRepository")
+ * @UniqueEntity(fields={"user", "deal", "giveaway"})
  */
 
 class KeyRequestState
