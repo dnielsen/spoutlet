@@ -20,19 +20,27 @@ director awaWeb random {
 sub vcl_recv {
 
     if (!req.http.host ~ ".*.alienwarearena.com$") {
-        error 404 "Not Found.";
+        error 404 "Page Not Found.";
+    }
+
+    if (req.http.host ~ "china.alienwarearena.com$") {
+        error 404 "Page Not Found.";
     }
 
     if (req.request != "GET" && req.request != "POST" && req.request != "PUT" && req.request != "DELETE") {
-        error 404 "Not Found.";
+        error 404 "Page Not Found.";
+    }
+
+    if (req.url ~ "^/account/register") {
+        error 750 "http://www.alienwarearena.com/account/register";
     }
 
     if (req.url ~ "^/healthCheck$") {
-        error 404 "Not Found.";
+        error 404 "Page Not Found.";
     }
 
     if (req.esi_level == 0 && req.url ~ "^/esi/") { # an external client is requesting an esi
-        error 404 "Not Found.";
+        error 404 "Page Not Found.";
     }
 
     set req.backend = awaWeb;
@@ -44,7 +52,7 @@ sub vcl_recv {
         }
 
         if (!req.url ~ "^/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
-            error 404 "Not Found.";
+            error 404 "Page Not Found.";
         }
 
         if (!req.url ~ "^/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
@@ -173,4 +181,42 @@ sub vcl_hash {
     }
 
     return (hash);
+}
+
+sub vcl_error {
+    
+    set obj.http.Content-Type = "text/html; charset=utf-8";
+
+    if (obj.status == 750) {
+        set obj.http.Location = obj.response;
+        set obj.status = 302;
+        return(deliver);
+    }
+
+    synthetic {"
+    <?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html>
+      <head>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+        <style>
+            body {
+                padding: 30px 60px;
+            }
+        </style>
+
+        <title>Alienware Arena - "} + obj.status + " " + obj.response + {"</title>
+      </head>
+      <body>
+        <h1>Alienware Arena</h1>
+        <h3 class="text-error">Error "} + obj.status + " -  " + obj.response + {"</h3>
+        <hr>
+        <p class="muted">XID: "} + req.xid + {"</p>
+      </body>
+    </html>
+    "};
+
+    return (deliver);
 }
