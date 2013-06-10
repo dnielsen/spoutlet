@@ -19,17 +19,23 @@ director awaWeb random {
 
 sub vcl_recv {
 
-    #req.http.host ~ "^.*staging.alienwarearena.com"
+    if (!req.http.host ~ ".*.alienwarearena.com$") {
+        error 404 "Not Found.";
+    }
 
-    set req.backend = awaWeb;
+    if (req.request != "GET" && req.request != "POST" && req.request != "PUT" && req.request != "DELETE") {
+        error 404 "Not Found.";
+    }
 
     if (req.url ~ "^/healthCheck$") {
-        error 403 "Access Denied.";
+        error 404 "Not Found.";
     }
 
-    if (req.esi_level == 0 && req.url ~ "^(/app_dev.php)?/esi/") { # an external client is requesting an esi
-        error 403 "Access Denied.";
+    if (req.esi_level == 0 && req.url ~ "^/esi/") { # an external client is requesting an esi
+        error 404 "Not Found.";
     }
+
+    set req.backend = awaWeb;
 
     if (req.esi_level > 0) {
 
@@ -37,21 +43,17 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^[/]?.*/https://.*?/", "/");
         }
 
-        if (!req.url ~ "^(/app_dev.php)?/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
-            error 404 "Incorrect ESI path.";
+        if (!req.url ~ "^/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
+            error 404 "Not Found.";
         }
 
-        if (!req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
+        if (!req.url ~ "^/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
             remove req.http.Cookie;
         }
     }
 
     if (!req.backend.healthy) {
         unset req.http.Cookie;
-    }
-
-    if (req.request == "PURGE") {
-        error 405 "Not Allowed.";
     }
 
     set req.http.Surrogate-Capability = "abc=ESI/1.0";
@@ -65,7 +67,7 @@ sub vcl_recv {
     if (req.http.Cookie) {
         set req.http.Cookie = ";" + req.http.Cookie;
         set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
-        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session|pd_session)=", "; \1=");
+        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session)=", "; \1=");
         set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
         set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
 
@@ -74,30 +76,20 @@ sub vcl_recv {
         }
     }
 
-    if (req.request != "GET" && req.request != "HEAD") {
-
-            if (req.request != "PUT" &&
-                    req.request != "POST" &&
-                    req.request != "TRACE" &&
-                    req.request != "OPTIONS" &&
-                    req.request != "DELETE") {
-                return (pipe);
-            }
-
+    if (req.request != "GET") {
         return (pass);
     }
 
-    if (req.url ~ "^(/app_dev.php)?/admin/") {
+    if (req.url ~ "^/admin/") {
         return (pass);
     }
 
-    if (req.url ~ "^(/app_dev.php)?/esi/USER_SPECIFIC/") {
+    if (req.url ~ "^/esi/USER_SPECIFIC/") {
         return (lookup);
     }
 
-    if (req.url ~ "^(/app_dev.php)?/(giveaways|deal)[/]?" && !req.url ~ "/(key|redeem)$") {
+    if (req.url ~ "^/(giveaways|deal)[/]?" && !req.url ~ "/(key|redeem)$") {
         remove req.http.Cookie;
-        return (lookup);
     }
 
     if (req.url ~ "^/video/ajax/apjxml$") {
@@ -132,53 +124,30 @@ sub vcl_recv {
 }
 
 sub vcl_fetch {
+
+    unset beresp.http.set-cookie;
+
+    set beresp.grace = 6h;
+
+    if (beresp.http.content-type ~ "text") {
+        set beresp.do_gzip = true;
+    }
+
     if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
         unset beresp.http.Surrogate-Control;
         set beresp.do_esi = true;
     }
 
     if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
+        unset beresp.http.expires;
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age=900";
-        unset beresp.http.expires;
-        unset beresp.http.set-cookie;
     }
 
     if (req.url ~ "^/video/ajax/apjxml$") {
-        unset beresp.http.set-cookie;
+        unset beresp.http.expires;
         set beresp.ttl = 1m;
         set beresp.http.cache-control = "max-age=60";
-        unset beresp.http.expires;
-    }
-
-    if (req.url ~ "^/galleries/featured-feed") {
-        unset beresp.http.set-cookie;
-    }
-
-    if (req.url ~ "^/videos/feed$") {
-        unset beresp.http.set-cookie;
-    }
-
-    if (req.url ~ "^/videos/category-tab/") {
-        unset beresp.http.set-cookie;
-    }
-
-    if (req.url ~ "^/timeline[/]?$") {
-        unset beresp.http.set-cookie;
-    }
-
-    if (req.url ~ "^/videos/tab/") {
-        unset beresp.http.set-cookie;
-    }
-
-    if (beresp.http.content-type ~ "text") {
-        set beresp.do_gzip = true;
-    }
-
-    set beresp.grace = 6h;
-
-    if (!req.url ~ "^/esi/USER_SPECIFIC/.*$" && req.url ~ "^/(esi|giveaways|deal)[/]?"){
-        unset beresp.http.set-cookie;
     }
 }
 
