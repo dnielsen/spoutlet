@@ -40,10 +40,10 @@
                             </div>
                             <div class="group-image-actions">
                                 {% if canDelete %}
-                                    <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image?');">{{ 'platformd.groups.images.delete' | pd_trans }}</a> |
+                                    <a href="{{ path('gallery_delete_media', { 'id' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image?');">{{ 'platformd.groups.images.delete' | pd_trans }}</a> |
                                 {% endif %}
                                 {% if canEdit %}
-                                    <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">{{ 'platformd.groups.images.edit' | pd_trans }}</a> |
+                                    <a href="{{ path('gallery_edit_media', { id : image.id }) }}">{{ 'platformd.groups.images.edit' | pd_trans }}</a> |
                                 {% endif %}
                                 <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">{{ 'platformd.groups.images.report' | pd_trans }}</a>
                             </div>
