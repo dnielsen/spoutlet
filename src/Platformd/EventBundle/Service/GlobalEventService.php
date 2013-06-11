@@ -83,4 +83,9 @@ class GlobalEventService extends EventService
     {
         return $this->repository->findAllForSite($site);
     }
+
+    public function findAllForSiteWithLimit($site, $limit = 9)
+    {
+        return $this->repository->findAllForSiteWithLimit($site, $limit);
+    }
 }
