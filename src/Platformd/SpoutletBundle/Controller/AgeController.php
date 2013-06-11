@@ -13,6 +13,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class AgeController extends Controller
 {
+
+    protected $returnUrl;
+
     /**
      * Displays and processes the "Confirm" birthday page
      *
@@ -20,11 +23,11 @@ class AgeController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return array
      */
-    public function verifyAgeAction(Request $request)
+    public function verifyAgeAction($returnUrl, Request $request)
     {
+        $this->returnUrl = $returnUrl;
+
         if ($this->getAgeManager()->isUsersAgeVerified()) {
-            // uncomment out to have a nice way to clear birthday when testing
-            //$this->getAgeManager()->clearUsersBirthday();
             $this->onSuccess();
         }
 
@@ -49,6 +52,7 @@ class AgeController extends Controller
 
         return array(
             'form' => $form->createView(),
+            'return_url' => urlencode($returnUrl)
         );
     }
 
@@ -67,15 +71,10 @@ class AgeController extends Controller
             $this->getAgeManager()->setUsersBirthday($form->getData());
         }
 
-        // try to get the path from the session
-        $targetPath = $this->get('session')->get(
-            InsufficientAgeListener::TARGET_PATH_KEY
-        );
-
-        if (!$targetPath) {
-            $targetPath = $this->generateUrl('default_index');
+        if (!$this->returnUrl) {
+            $this->returnUrl = $this->generateUrl('default_index');
         }
 
-        return $this->redirect($targetPath);
+        return $this->redirect($this->returnUrl);
     }
 }
