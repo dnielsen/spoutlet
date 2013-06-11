@@ -184,7 +184,7 @@ class Group implements LinkableInterface, ReportableContentInterface
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User", mappedBy="pdGroups")
      * @ORM\JoinTable(name="pd_groups_members")
      */
     private $members;
