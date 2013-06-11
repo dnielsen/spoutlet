@@ -6,7 +6,7 @@ ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :awaPro1, "ec2-75-101-139-101.compute-1.amazonaws.com"
+set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 
 set :awaWeb1, "ec2-54-224-7-205.compute-1.amazonaws.com"
 set :awaWeb2, "ec2-54-224-5-214.compute-1.amazonaws.com"
@@ -20,8 +20,8 @@ set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaPro1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
-role :app,        awaPro1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
+role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
+role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
 
 role :db,         awaWeb1, :primary => true
 
