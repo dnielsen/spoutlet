@@ -19,11 +19,11 @@ director awaWeb random {
 
 sub vcl_recv {
 
-    if (req.http.host !~ ".*.alienwarearena.(com|local)$") {
+    if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
 
-    if (req.http.host ~ "china.alienwarearena.(com|local)$") {
+    if (req.http.host ~ "china.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
 
@@ -31,7 +31,7 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local)") {
+    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") {
         error 403 "Forbidden (referer).";
     }
 
