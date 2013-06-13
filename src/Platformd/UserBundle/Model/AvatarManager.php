@@ -161,18 +161,16 @@ class AvatarManager
         foreach ($avatars as $avatar) {
             $url = $this->getAvatarUrl($user->getUuid(), 84, $avatar->getUuid());
 
+            $avatarDetails = array(
+                'id'  => $avatar->getId(),
+                'url' => $url,
+                'uuid' => $avatar->getUuid(),
+            );
+
             if ($avatar == $user->getAvatar()) {
-                $data->activeAvatar = array(
-                    'id'  => $avatar->getId(),
-                    'url' => $url,
-                    'uuid' => $avatar->getUuid(),
-                );
+                $data->activeAvatar = $avatarDetails;
             } else {
-                $data->avatars[] = array(
-                    'id'  => $avatar->getId(),
-                    'url' => $url,
-                    'uuid' => $avatar->getUuid(),
-                );
+                $data->avatars[] = $avatarDetails;
             }
         }
 
@@ -231,8 +229,13 @@ class AvatarManager
 
     public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size')
     {
-        $baseUrl = 'http://s3.amazonaws.com/'.$this->publicBucket;
-        return $baseUrl.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
+        if ($this->publicBucket == "platformd") {
+            $cf = "http://media.alienwarearena.com";
+        } else {
+            $cf = "http://mediastaging.alienwarearena.com";
+        }
+
+        return $cf.'/'.Avatar::AVATAR_EXTERNAL_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
     }
 
     private function checkUserUuid($user)
