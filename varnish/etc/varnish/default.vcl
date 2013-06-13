@@ -35,7 +35,7 @@ sub vcl_recv {
         error 403 "Forbidden (referer).";
     }
 
-    if (req.url ~ "^/account/register" && req.http.host ~ ".com$") {
+    if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
         error 750 "https://www.alienwarearena.com/account/register";
     }
 
@@ -133,7 +133,7 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    if (req.url !~ "^/age/verify$") { # the only exception to the "remove all set-cookies rule"
+    if (req.url !~ "^/age/verify") { # the only exception to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
