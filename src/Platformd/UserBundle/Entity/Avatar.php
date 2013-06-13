@@ -11,8 +11,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Avatar
 {
-    const AVATAR_FILE_EXTENSION   = 'png';
-    const AVATAR_DIRECTORY_PREFIX = 'media/images/avatars';
+    const AVATAR_FILE_EXTENSION            = 'png';
+    const AVATAR_DIRECTORY_PREFIX          = 'media/images/avatars'; // This is what follows the bucket name in s3's directory structure
+    const AVATAR_EXTERNAL_DIRECTORY_PREFIX = 'images/avatars'; // This is what follows "http://media.alienwarearena.com"
 
     /**
      * @ORM\Column(name="id", type="integer")
