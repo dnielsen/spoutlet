@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Avatar
 {
     const AVATAR_FILE_EXTENSION   = 'png';
-    const AVATAR_DIRECTORY_PREFIX = 'images/avatars';
+    const AVATAR_DIRECTORY_PREFIX = 'media/images/avatars';
 
     /**
      * @ORM\Column(name="id", type="integer")
