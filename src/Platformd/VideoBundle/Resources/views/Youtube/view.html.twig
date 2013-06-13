@@ -58,7 +58,7 @@
                         {% if get_avatar_url(video.author) != false %}
                             <img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" />
                         {% else %}
-                            <div class="default-avatar"></div>
+                            <div class="default-avatar avatar84"></div>
                         {% endif %}
                     </a>
                     <a class="author-name" href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a>

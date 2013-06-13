@@ -958,11 +958,58 @@ div.blockOverlay {
     background-size: 100%;
 }
 
-/* account avatars */
-.block_allAvatars{background-color:#141414;border:1px solid #878787;text-align:center;padding:5px;}
-.block_allAvatars legend{color:#AAAAAA;text-align:left;margin:0 5px;border-bottom:1px solid #878787;width:auto;}
-.block_allAvatars .form_row{overflow:hidden;margin: 10px 0;}
-.block_allAvatars .avatar-block{float:left;width:280px;height:300px;margin:15px;}
-.block_allAvatars .avatar-block .file-upload{height:250px;border:2px solid #878787;overflow:hidden;}
-.block_allAvatars .file-upload img{margin:0 auto;}
-.block_allAvatars .avatar-block a.button{margin:10px 5px;}
+.avatar26 {
+    background: url('/bundles/spoutlet/images/avatars/26x26.png') center center no-repeat !important;
+    width: 26px !important;
+    height: 26px !important;
+    background-size: 100%;
+}
+
+.avatar32 {
+    background: url('/bundles/spoutlet/images/avatars/32x32.png') center center no-repeat !important;
+    width: 32px !important;
+    height: 32px !important;
+    background-size: 100%;
+}
+
+.avatar48 {
+    background: url('/bundles/spoutlet/images/avatars/48x48.png') center center no-repeat !important;
+    width: 48px !important;
+    height: 48px !important;
+    background-size: 100%;
+}
+
+.avatar62 {
+    background: url('/bundles/spoutlet/images/avatars/62x62.png') center center no-repeat !important;
+    width: 62px !important;
+    height: 62px !important;
+    background-size: 100%;
+}
+
+.avatar84 {
+    background: url('/bundles/spoutlet/images/avatars/84x84.png') center center no-repeat !important;
+    width: 84px !important;
+    height: 84px !important;
+    background-size: 100%;
+}
+
+.avatar100 {
+    background: url('/bundles/spoutlet/images/avatars/100x100.png') center center no-repeat !important;
+    width: 100px !important;
+    height: 100px !important;
+    background-size: 100%;
+}
+
+.avatar184 {
+    background: url('/bundles/spoutlet/images/avatars/184x184.png') center center no-repeat !important;
+    width: 184px !important;
+    height: 184px !important;
+    background-size: 100%;
+}
+
+.avatar500 {
+    background: url('/bundles/spoutlet/images/avatars/500x500.png') center center no-repeat !important;
+    width: 500px !important;
+    height: 500px !important;
+    background-size: 100%;
+}
