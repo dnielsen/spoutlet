@@ -132,14 +132,6 @@ class User extends BaseUser
     protected $termsAccepted;
 
     /**
-     * @var ArrayCollection $userAvatars
-     *
-     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Avatar")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $userAvatars;
-
-    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -584,11 +576,6 @@ class User extends BaseUser
     public function setTermsAccepted($accepted)
     {
         $this->termsAccepted = $accepted;
-    }
-
-    public function getUserAvatars()
-    {
-        return $this->userAvatars;
     }
 
     public function getAvatar()
