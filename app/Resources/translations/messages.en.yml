@@ -19,6 +19,40 @@ recaptcha:
 
 site_takeover.continue: Continue to Alienware Arena
 
+platformd.user.account.account_home: Account Home
+platformd.user.account.edit_account: Edit Account
+platformd.user.account.change_password: Change Pass
+platformd.user.account.profile: Profile
+platformd.user.account.registered_events: Registered Events
+platformd.user.account.my_giveaways: Giveaways
+platformd.user.account.my_videos: Videos
+platformd.user.account.my_events: Events
+platformd.user.account.my_groups: Groups
+platformd.user.account.help: Help
+platformd.user.account.game_ids: Game IDs
+platformd.user.account.tournaments: Tournaments
+platformd.user.account.media: Media
+platformd.user.account.media_upload: Upload
+platformd.user.account.my_media: My Media
+platformd.user.account.sign_out: Sign Out
+platformd.user.account.deals: Deals
+platformd.user.account.messages: Messages
+platformd.user.account.gameids: Game IDs
+platformd.user.account.match_client: Match Client
+platformd.user.account.match_lobby: Match Lobby
+platformd.user.account.gallery: Gallery
+platformd.user.account.images: Images
+platformd.user.account.videos: Videos
+platformd.user.account.avatars: Avatars
+
+platformd.user.avatars.manage: Manage Avatars
+platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
+platformd.user.avatars.file_label: File:
+platformd.user.avatars.file_instructions: |
+    You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
+
+    You will have a chance to crop this image in the next step.
+
 platformd:
 
     homepage:
@@ -190,7 +224,7 @@ platformd:
             organizer: Organizer
             attending: Attending
             registration_closed: Registration is no longer open for this event.
-            im_attending: Yes, I'm attending!
+            im_attending: "Yes, I'm attending!"
             event_details: Event Details
             location: Location
             online_event: This is an online event.
@@ -345,34 +379,9 @@ platformd:
 
         request_reset:
             title: Forgot Your Password?
-            help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
+            help_message: "If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support."
             spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
 
-        account:
-            account_home: Account Home
-            edit_account: Edit Account
-            change_password: Change Pass
-            profile:      Profile
-            registered_events: Registered Events
-            my_giveaways: Giveaways
-            my_videos: Videos
-            my_events: Events
-            my_groups: Groups
-            help: Help
-            game_ids: Game IDs
-            tournaments: Tournaments
-            media: Media
-            media_upload: Upload
-            my_media: My Media
-            sign_out: Sign Out
-            deals: Deals
-            messages: Messages
-            gameids: Game IDs
-            match_client: Match Client
-            match_lobby: Match Lobby
-            gallery: Gallery
-            images: Images
-            videos: Videos
     giveaway:
         admin:
             title: Giveaway admin

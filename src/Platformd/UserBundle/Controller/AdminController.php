@@ -150,19 +150,54 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 
-    public function approveAvatarAction($id)
+    public function unapprovedAvatarsAction(Request $request)
     {
-        $manager = $this->get('fos_user.user_manager');
+        if ($request->getMethod() == 'POST') {
+            $ids = $request->request->get('selected', array());
 
-        if (!$user = $manager->findUserBy(array('id' => $id))) {
+            if (count($ids) == 0) {
+                $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+            }
 
-            throw $this->createNotFoundException();
+            $processType = $request->request->get('process_type', null);
+
+            if ($processType != 'approve' && $processType != 'reject') {
+                $this->setFlash('error', 'platformd.admin.avatars.unapproved.form_error');
+                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+            }
+
+            $selectedIds = array();
+
+            foreach ($ids as $avatarId) {
+                if ($avatarId != '') {
+                    $selectedIds[] = $avatarId;
+                }
+            }
+
+            if (count($selectedIds) == 0) {
+                $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+            }
+
+            $this->getAvatarManager()->processAvatars($selectedIds, $processType);
+
+            $flash = $this->trans('platformd.admin.avatars.unapproved.process_success', array(
+                '%count%' => count($selectedIds),
+                '%processType%' => $this->trans('platformd.admin.avatars.unapproved.flash_type_'.$processType),
+            ));
+
+            $this->setFlash('success', $flash);
+            $this->redirect($this->generateUrl('admin_unapproved_avatars'));
         }
 
-        $user->approveAvatar();
-        $manager->updateUser($user);
+        $page    = $request->query->get('page', 1);
+        $avatars = $this->getAvatarManager()->getUnapprovedAvatars(64, $page, $pager);
 
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+        return $this->render('UserBundle:Admin:unapprovedAvatars.html.twig', array(
+            'avatars' => $avatars,
+            'pager'   => $pager,
+        ));
     }
 
     public function loginsAction($id)

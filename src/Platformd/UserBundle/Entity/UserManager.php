@@ -54,10 +54,6 @@ class UserManager extends BaseUserManager
      */
     public function updateUser(UserInterface $user, $andFlush = true)
     {
-        if ($user instanceof User) {
-            $this->updateAvatar($user);
-        }
-
         parent::updateUser($user, $andFlush);
     }
 

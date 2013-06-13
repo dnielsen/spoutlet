@@ -19,6 +19,25 @@ recaptcha:
 
 site_takeover.continue: Alienware Arenaを続行する
 
+platformd.user.account.account_home: アカウントホーム
+platformd.user.account.edit_account: アカウント編集
+platformd.user.account.change_password: パスワード変更
+platformd.user.account.profile:      プロファイル
+platformd.user.account.registered_events: 参加済みイベント
+platformd.user.account.my_giveaways: 参加済みキャンペーン
+platformd.user.account.my_videos: マイビデオ
+platformd.user.account.my_events: 参加済みイベント
+platformd.user.account.help: お問い合わせ
+platformd.user.account.game_ids: ゲームID
+platformd.user.account.tournaments: トーナメント
+platformd.user.account.sign_out: ログアウト
+platformd.user.account.videos: マイビデオ
+platformd.user.account.media: メディア
+platformd.user.account.avatars: Avatars
+
+platformd.user.avatars.manage: Manage Avatars
+platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
+
 platformd:
 
     homepage:
@@ -333,22 +352,6 @@ platformd:
             title: パスワードをお忘れですか?
             help_message: パスワードを忘れた場合メールにてパスワードを送信します。ユーザー名またはメールアドレスを忘れた方はサポートまでご連絡下さい。
             spam_message: 重要：スパムフォルダをご確認ください。一部のメールフィルタにより、弊社からのメールが「迷惑メール」として分類されることがあります。パスワードがリセットされるまでに、最大30分かかる場合があります。通常は、数秒でリセットされますが、弊社からのリセット通知のメールが遅れることがあります。
-
-        account:
-            account_home: アカウントホーム
-            edit_account: アカウント編集
-            change_password: パスワード変更
-            profile:      プロファイル
-            registered_events: 参加済みイベント
-            my_giveaways: 参加済みキャンペーン
-            my_videos: マイビデオ
-            my_events: 参加済みイベント
-            help: お問い合わせ
-            game_ids: ゲームID
-            tournaments: トーナメント
-            sign_out: ログアウト
-            videos: マイビデオ
-            media: メディア
 
     giveaway:
         giveaway: プレゼント

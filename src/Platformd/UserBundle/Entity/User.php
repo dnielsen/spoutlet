@@ -17,7 +17,7 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
@@ -132,7 +132,8 @@ class User extends BaseUser
     /**
      * @var String $avatar
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Avatar")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $avatar;
 
@@ -235,13 +236,6 @@ class User extends BaseUser
     protected $monitor;
 
     /**
-     * @var Boolean $avatarApproved
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $avatar_approved = false;
-
-    /**
      * @var string The locale in which this user registered
      * @ORM\Column(type="string", length=2, nullable=true)
      */
@@ -277,13 +271,6 @@ class User extends BaseUser
     public $file;
 
     /**
-     * Little flag so we know if the avatar was changed on this request
-     *
-     * @var bool
-     */
-    protected $avatarChanged = false;
-
-    /**
      * The id for this user in CEVO's database
      *
      * @var string
@@ -317,6 +304,16 @@ class User extends BaseUser
     private $ipAddress;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\Avatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $avatars;
+
+    /**
+     * @ORM\Column(type="string", length=36, nullable=true)
+     */
+    protected $uuid;
+
+    /**
      * @Recaptcha\True
      */
     public $recaptcha;
@@ -329,6 +326,7 @@ class User extends BaseUser
         $this->groupMembershipActions   = new ArrayCollection();
         $this->loginRecords             = new ArrayCollection();
         $this->groups                   = new ArrayCollection();
+        $this->avatars                  = new ArrayCollection();
     }
 
     public function __toString() {
@@ -342,38 +340,7 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
-
-        return $this->avatar_approved;
-    }
-
-    public function approveAvatar()
-    {
-        $this->avatar_approved = true;
-    }
-
-    public function disapproveAvatar()
-    {
-        $this->avatar_approved = false;
-    }
-
-    public function getAbsolutePath()
-    {
-        if (!$this->avatar) {
-
-            return null;
-        }
-
-        return $this->getUploadRootDir().'/'.$this->avatar;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
+        return $this->avatar->isApproved();
     }
 
     /**
@@ -619,38 +586,17 @@ class User extends BaseUser
 
     public function getAvatar()
     {
-
-        return $this->avatar;
-    }
-
-    /**
-     * Returns the avatar path, with respect to it being approved or not.
-     *
-     * If the avatar is not approved, false is returned.
-     * This logic here is repeated elsewhere, but should use this.
-     *
-     * @return string
-     */
-    public function getApprovedAvatar()
-    {
-        if (!$this->isAvatarApproved()) {
+        if (!$this->avatar || !$this->isAvatarApproved()) {
             return false;
         }
 
-        return $this->getAvatar();
+        return $this->avatar;
     }
 
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
 
-        // set a flag so we can give the user a message
-        $this->avatarChanged = true;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
     }
 
     public function getType()
@@ -1106,6 +1052,26 @@ class User extends BaseUser
     public function getLoginRecords()
     {
         return $this->loginRecords;
+    }
+
+    public function getAvatars()
+    {
+        return $this->avatars;
+    }
+
+    public function setAvatars($value)
+    {
+        $this->avatars = $value;
+    }
+
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid($value)
+    {
+        $this->uuid = $value;
     }
 
     public function eraseCredentials()

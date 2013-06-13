@@ -49,7 +49,7 @@ services:
         class:  'Platformd\UserBundle\AvatarPathResolver'
         arguments:
             - @avatar_filesystem
-            - avatar
+            - avatars
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
@@ -89,3 +89,21 @@ services:
         arguments:
             - "@pd.cevo.cevo_auth_manager"
             - %base_host%
+
+    platformd.model.avatar_manager:
+        class: Platformd\UserBundle\Model\AvatarManager
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@avatar_filesystem'
+            - '%s3_bucket_name%'
+            - '%s3_private_bucket_name%'
+            - '@platformd.s3'
+            - '@platformd.util.queue_util'
+
+    platformd.avatar.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_private_bucket_name%"
+        calls:
+            - [ "setDirectory", [ "images/avatars"]]

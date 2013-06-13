@@ -96,19 +96,19 @@ class SpoutletExtension extends Twig_Extension
             'cevo_account_link'              => new Twig_Function_Method($this, 'cevoAccountLink'),
             'cevo_account_giveaway_link'     => new Twig_Function_Method($this, 'cevoAccountGiveawayPageLink'),
             'current_user_cevo_account_link' => new Twig_Function_Method($this, 'currentUserCevoAccountLink'),
-            'can_user_apply_to_giveaway'   => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
-            'account_link'                 => new Twig_Function_Method($this, 'accountLink'),
-            'change_link_domain'           => new Twig_Function_Method($this, 'changeLinkDomain'),
-            'ends_with'                    => new Twig_Function_Method($this, 'endsWith'),
-            'get_avatar_url'               => new Twig_Function_Method($this, 'getAvatarUrl'),
-            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
-            'is_admin_page'                => new Twig_Function_Method($this, 'isAdminPage'),
-            'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
-            'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
-            'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
-            'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
-            'login_link'                   => new Twig_Function_Method($this, 'getLoginUrl'),
-            'account_home_link'            => new Twig_Function_Method($this, 'getAccountHomeUrl'),
+            'can_user_apply_to_giveaway'     => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
+            'account_link'                   => new Twig_Function_Method($this, 'accountLink'),
+            'change_link_domain'             => new Twig_Function_Method($this, 'changeLinkDomain'),
+            'ends_with'                      => new Twig_Function_Method($this, 'endsWith'),
+            'get_avatar_url'                 => new Twig_Function_Method($this, 'getAvatarUrl'),
+            'has_user_applied_to_giveaway'   => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
+            'is_admin_page'                  => new Twig_Function_Method($this, 'isAdminPage'),
+            'media_path_nice'                => new Twig_Function_Method($this, 'mediaPathNice'),
+            'site_link'                      => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
+            'target_blank'                   => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
+            'can_user_report'                => new Twig_Function_Method($this, 'canReport'),
+            'login_link'                     => new Twig_Function_Method($this, 'getLoginUrl'),
+            'account_home_link'              => new Twig_Function_Method($this, 'getAccountHomeUrl'),
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
         );
@@ -537,14 +537,14 @@ class SpoutletExtension extends Twig_Extension
      * @param string $default
      * @return string
      */
-    public function getAvatarUrl(User $user)
+    public function getAvatarUrl(User $user, $size = 84)
     {
         if ($user->getCevoAvatarUrl()) {
             return $user->getCevoAvatarUrl();
         }
 
         if ($user->getAvatar() && $user->isAvatarApproved()) {
-            return $this->mediaExposer->getPath($user);
+            return $this->mediaExposer->getPath($user, array('size' => $size));
         }
 
         return false;

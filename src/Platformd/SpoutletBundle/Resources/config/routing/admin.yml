@@ -2,10 +2,6 @@ admin_index:
     pattern: /admin
     defaults: { _controller: SpoutletBundle:Admin:index }
 
-admin_user_approve_avatar:
-    pattern: /admin/user/{id}/avatar/approve
-    defaults: { _controller: UserBundle:Admin:approveAvatar }
-
 # banner admin
 
 admin_homepage_banner_index:
