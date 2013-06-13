@@ -38,3 +38,13 @@ accounts_photos:
 accounts_videos:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
+
+accounts_settings:
+    pattern: /settings
+    defaults: { _controller: SpoutletBundle:Account:settings }
+    requirements: { _method: GET }
+
+accounts_settings_update:
+    pattern: /settings
+    defaults: { _controller: SpoutletBundle:Account:updateSettings }
+    requirements: { _method: PUT }

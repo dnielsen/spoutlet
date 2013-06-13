@@ -1,0 +1,40 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block content %}
+
+<h2>{{ 'platformd.user.account_settings'|trans({}, 'FOSUserBundle') }}</h2>
+
+<form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form">
+    <input type="hidden" name="_method" value="PUT" />
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.avatars'|trans({}, 'FOSUserBundle') }}</legend>
+        {% if get_avatar_url(user, 184) %}
+            <a href ="{{ path('avatars') }}"><img src="{{ get_avatar_url(user, 184) }}" /></a>
+        {% else %}
+            <a class="button btn btn-primary" href="{{ path('avatars') }}">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
+        {% endif %}
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_errors(form) }}
+        {{ form_row(form.currentPassword) }}
+        {{ form_row(form.plainPassword) }}
+    </fieldset>
+    <fieldset>
+        <legend>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</legend>
+        {{ form_row(form.subscribedGamingNews) }}
+    </fieldset>
+    {{ form_rest(form) }}
+
+    <div>
+        <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+</form>
+
+{% endblock content %}
+
+{% block file_label %}
+{% endblock %}
+

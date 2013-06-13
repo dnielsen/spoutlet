@@ -7,6 +7,7 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\UserBundle\Form\Type\AccountSettingsType;
 
 class AccountController extends Controller
 {
@@ -63,10 +64,7 @@ class AccountController extends Controller
                 'user' => $user,
             ));
         }
-
-
 	}
-
 
 	public function accountAction()
 	{
@@ -270,5 +268,37 @@ class AccountController extends Controller
     protected function getYoutubeManager()
     {
         return $this->get('platformd.model.youtube_manager');
+    }
+
+    public function settingsAction()
+    {
+        $form = $this->createForm($this->getFormType(), $this->getUser());
+
+        return $this->render('SpoutletBundle:Account:settings.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    private function getFormType()
+    {
+        return new AccountSettingsType($this->get('security.encoder_factory')->getEncoder($this->getUser()));
+    }
+
+    public function updateSettingsAction(Request $request)
+    {
+        $form = $this->createForm($this->getFormType(), $this->getUser());
+        $form->bindRequest($request);
+
+        if ($form->isValid()) {
+            $this->get('fos_user.user_manager')->updateUser($form->getData());
+
+            $this->get('session')->setFlash('success', 'Profile settings saved');
+
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
+
+        return $this->render('SpoutletBundle:Account:settings.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }

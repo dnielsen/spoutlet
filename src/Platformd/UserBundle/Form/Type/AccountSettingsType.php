@@ -21,6 +21,8 @@ class AccountSettingsType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $encoder = $this->encoder;
+
         $builder
             ->add('currentPassword', 'password', array(
                 'required' => false,
@@ -33,20 +35,14 @@ class AccountSettingsType extends AbstractType
             ->add('subscribedGamingNews', null, array(
                 'label' => 'Subscribe to newsletter',
             ))
-            ->add('userAvatars', 'collection', array(
-                'type'         => new UserAvatarType,
-                'allow_add'    => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-            ))
-            ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) {
+            ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder) {
                 $data = $event->getData();
                 $form = $event->getForm();
                 $plainPassword = $data->getPlainPassword();
                 if (empty($data->currentPassword) && empty($plainPassword)) {
                     return;
                 }
-                if (!$this->encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt())) {
+                if (!$encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt())) {
                     $form->get('currentPassword')->addError(new FormError('Current password doesn\'t match'));
                 }
             });
@@ -57,7 +53,7 @@ class AccountSettingsType extends AbstractType
     {
         return array_merge($options, array(
             'data_class' => 'Platformd\UserBundle\Entity\User',
-            'validation_groups' => array('Default', 'Avatar')
+            'validation_groups' => array('Default')
         ));
     }
 
