@@ -95,6 +95,8 @@ class UserManager extends BaseUserManager
     {
         $user = parent::createUser();
 
+        $user->setUuid($this->uuidGen());
+
         $user->setLocale($this->getLocale());
 
         return $user;
@@ -151,6 +153,11 @@ class UserManager extends BaseUserManager
         }
 
         return $this->container->get('session')->getLocale();
+    }
+
+    private function uuidGen()
+    {
+        return str_replace("\n", '', `uuidgen -r`);
     }
 }
 

@@ -93,6 +93,7 @@ class AvatarManager
     protected function upload(File $file, User $user)
     {
         $fileUuid = $this->uuidGen();
+        $this->checkUserUuid($user);
 
         $rawFilename = 'raw.'.$file->guessExtension();
         $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file));
@@ -109,12 +110,16 @@ class AvatarManager
 
     public function getSignedImageUrl($avatarUuid, $filename, User $user)
     {
+        $this->checkUserUuid($user);
+
         $filePath = $this->filesystem->getAdapter()->getDirectory().'/'.$user->getUuid().'/'.$avatarUuid.'/'.$filename;
         return $this->s3->get_object_url($this->privateBucket, $filePath, '1 hour');
     }
 
     public function addToResizeQueue(User $user, $fileUuid, $extension, $width, $height, $x, $y)
     {
+        $this->checkUserUuid($user);
+
         $message            = new AvatarResizeQueueMessage();
         $message->userUuid  = $user->getUuid();
         $message->fileUuid  = $fileUuid;
@@ -134,6 +139,8 @@ class AvatarManager
     {
         $message  = new AvatarFileSystemActionsQueueMessage();
 
+        $this->checkUserUuid($user);
+
         $message->userUuid = $user->getUuid();
         $message->action   = $action;
         $message->fileUuid = $fileUuid;
@@ -146,6 +153,8 @@ class AvatarManager
 
     public function getAvatarIndexData(User $user)
     {
+        $this->checkUserUuid($user);
+
         $data    = new avatar_index_data();
         $avatars = $this->getAllApprovedForUser($user);
 
@@ -224,5 +233,14 @@ class AvatarManager
     {
         $baseUrl = 'http://s3.amazonaws.com/'.$this->publicBucket;
         return $baseUrl.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
+    }
+
+    private function checkUserUuid($user)
+    {
+        if (!$user->getUuid()) {
+            $user->setUuid($this->uuidGen());
+            $this->em->persist($user);
+            $this->em->flush();
+        }
     }
 }
