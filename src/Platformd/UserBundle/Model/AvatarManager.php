@@ -235,7 +235,7 @@ class AvatarManager
             $cf = "http://mediastaging.alienwarearena.com";
         }
 
-        return $cf.'/'.Avatar::AVATAR_EXTERNAL_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
+        return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
     }
 
     private function checkUserUuid($user)

@@ -35,7 +35,7 @@ class AvatarPathResolver extends PathResolver
         $cf = "http://mediastaging.alienwarearena.com";
     }
 
-    $url = $avatarUsable ? $cf.'/'.Avatar::AVATAR_EXTERNAL_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
+    $url = $avatarUsable ? $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
 
     return $url;
   }
