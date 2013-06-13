@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1>Create Group</h1>
+<h4>Required Fields</h4>
 <form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {% include 'GroupBundle:Group:_form.html.twig' %}
 

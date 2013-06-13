@@ -49,7 +49,8 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
                     Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled',
                     Event::REGISTRATION_3RD_PARTY => 'platformd.event.registration.3rdparty'
                 ),
-                'expanded' => true,
+                'expanded' => false,
+                'multiple' => false,
                 'label' => 'platformd.event.form.event_options'
             )));
 
@@ -97,7 +98,8 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
                     Event::REGISTRATION_ENABLED => 'platformd.event.registration.enabled',
                     Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled'
                 ),
-                'expanded' => true,
+                'expanded' => false,
+                'multiple' => false,
                 'label' => 'platformd.event.form.event_options'
             )));
         }

@@ -19,11 +19,11 @@ director awaWeb random {
 
 sub vcl_recv {
 
-    if (!req.http.host ~ ".*.alienwarearena.com$") {
+    if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
 
-    if (req.http.host ~ "china.alienwarearena.com$") {
+    if (req.http.host ~ "china.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
 
@@ -31,8 +31,12 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.url ~ "^/account/register") {
-        error 750 "http://www.alienwarearena.com/account/register";
+    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") {
+        error 403 "Forbidden (referer).";
+    }
+
+    if (req.url ~ "^/account/register" && req.http.host ~ ".com$") {
+        error 750 "https://www.alienwarearena.com/account/register";
     }
 
     if (req.url ~ "^/healthCheck$") {
@@ -51,11 +55,11 @@ sub vcl_recv {
             set req.url = regsub(req.url, "^[/]?.*/https://.*?/", "/");
         }
 
-        if (!req.url ~ "^/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
+        if (req.url !~ "^/esi/") { # varnish is being asked to process an esi that doesnt have /esi/ in the path
             error 404 "Page Not Found.";
         }
 
-        if (!req.url ~ "^/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
+        if (req.url !~ "^/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
             remove req.http.Cookie;
         }
     }
@@ -96,11 +100,7 @@ sub vcl_recv {
         return (lookup);
     }
 
-    if (req.url ~ "^/(giveaways|deal)[/]?" && !req.url ~ "/(key|redeem)$") {
-        remove req.http.Cookie;
-    }
-
-    if (req.url ~ "^/video/ajax/apjxml$") {
+    if (req.url ~ "^/(giveaways|deal)[/]?" && req.url !~ "/(key|redeem)$") {
         remove req.http.Cookie;
     }
 
@@ -133,7 +133,9 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    unset beresp.http.set-cookie;
+    if (req.url !~ "^/age/verify$") { # the only exception to the "remove all set-cookies rule"
+        unset beresp.http.set-cookie;
+    }
 
     set beresp.grace = 6h;
 
@@ -150,12 +152,6 @@ sub vcl_fetch {
         unset beresp.http.expires;
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age=900";
-    }
-
-    if (req.url ~ "^/video/ajax/apjxml$") {
-        unset beresp.http.expires;
-        set beresp.ttl = 1m;
-        set beresp.http.cache-control = "max-age=60";
     }
 }
 
@@ -213,7 +209,29 @@ sub vcl_error {
         <h1>Alienware Arena</h1>
         <h3 class="text-error">Error "} + obj.status + " -  " + obj.response + {"</h3>
         <hr>
-        <p class="muted">XID: "} + req.xid + {"</p>
+        <h5 class="muted">Information:</h5>
+        <table class="table table-bordered table-condensed">
+            <tr>
+                <th style="width: 100px;">Host</th>
+                <td>"} + req.http.host + {"</td>
+            </tr>
+            <tr>
+                <th>URL</th>
+                <td>"} + req.url + {"</td>
+            </tr>
+            <tr>
+                <th>Request</th>
+                <td>"} + req.request + {"</td>
+            </tr>
+            <tr>
+                <th>Referer</th>
+                <td>"} + req.http.referer + {"</td>
+            </tr>
+            <tr>
+                <th>XID</th>
+                <td>"} + req.xid + {"</td>
+            </tr>
+        </table>
       </body>
     </html>
     "};

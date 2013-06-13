@@ -8,7 +8,7 @@
     </p>
 
     <div class="age-wrapper">
-        <form action="{{ path('age_verification') }}" method="POST">
+        <form action="{{ path('age_verification', {'returnUrl': return_url }) }}" method="POST">
 
             {% if form.get('errors') %}
                 <div class="form-msg-error" style="width: 200px; margin: auto; margin-bottom: 10px;">

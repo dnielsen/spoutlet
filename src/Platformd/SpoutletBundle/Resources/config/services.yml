@@ -10,11 +10,7 @@ services:
             - { key: %s3.access_key%, secret: %s3.secret_key% }
 
     # adapters for Gaufrette filesystems
-    platformd.avatar.s3.adapter:
-        class: Gaufrette\Adapter\AmazonS3
-        arguments:
-            - @platformd.s3
-            - "%s3_bucket_name%"
+
     platformd.event.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
         arguments:

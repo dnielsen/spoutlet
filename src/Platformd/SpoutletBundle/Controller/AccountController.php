@@ -236,6 +236,8 @@ class AccountController extends Controller
 
     public function videosAction(Request $request)
     {
+        $this->checkSecurity();
+
         $page    = $request->query->get('page', 1);
         $user    = $this->getUser();
         $manager = $this->getYoutubeManager();

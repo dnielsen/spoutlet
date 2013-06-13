@@ -38,4 +38,3 @@ accounts_photos:
 accounts_videos:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
-

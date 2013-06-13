@@ -151,7 +151,7 @@
 	<body class="site-{{ app.session.locale }}">
         {% if features.hasFacebook and config.facebookAppId %}
         <div id="fb-root"></div>
-        <script src="http://connect.facebook.net/en_US/all.js"></script>
+        <script src="//connect.facebook.net/en_US/all.js"></script>
         <script>
           // assume we are already logged in
           FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});

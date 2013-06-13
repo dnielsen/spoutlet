@@ -2,69 +2,172 @@
 
 namespace Platformd\UserBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Platformd\UserBundle\Form\Type\EditUserFormType;
-use FOS\UserBundle\Form\Model\ChangePassword;
-use Platformd\UserBundle\Form\Type\AccountSettingsType;
-use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\HttpFoundation\Response
+;
+
+use Platformd\SpoutletBundle\Controller\Controller,
+    Platformd\UserBundle\Entity\User,
+    Platformd\UserBundle\Entity\Avatar,
+    Platformd\UserBundle\Form\Type\AvatarType,
+    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
+;
 
 class AvatarController extends Controller
 {
-    public function editAction()
+    public function avatarAction(Request $request)
     {
-        $form = $this->createForm($this->getFormType(), $this->getUser());
+        $this->checkSecurity();
 
-        return $this->render('FOSUserBundle:Avatar:edit.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
+        $avatarManager = $this->getAvatarManager();
+        $data          = $avatarManager->getAvatarIndexData($this->getUser());
+        $newAvatar     = new Avatar();
 
-    public function updateAction(Request $request)
-    {
-        $form = $this->createForm($this->getFormType(), $this->getUser());
-        $form->bindRequest($request);
+        $newAvatar->setUser($this->getUser());
 
-        if ($form->isValid()) {
-            $this->get('fos_user.user_manager')->updateUser($form->getData());
+        $form = $this->createForm(new AvatarType(), $newAvatar);
 
-            $this->get('session')->setFlash('success', 'Profile settings saved');
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
 
-            return $this->redirect($this->generateUrl('user_avatar_edit'));
+            if ($form->isValid()) {
+
+                $newAvatar = $form->getData();
+                $avatarManager->save($newAvatar);
+
+                return $this->redirect($this->generateUrl('avatar_crop', array(
+                    'uuid' => $newAvatar->getUuid(),
+                )));
+            }
         }
 
-        return $this->render('FOSUserBundle:Avatar:edit.html.twig', array(
+        return $this->render('UserBundle:Avatar:avatars.html.twig', array(
+            'data' => $data,
             'form' => $form->createView(),
         ));
     }
 
-    public function toggleSelectionAction($id)
+    public function cropAvatarAction($uuid)
     {
-        $avatar = $this->findAvatarOr404($id, $this->getUser());
+        $this->checkSecurity();
 
-        $this->getRepository()->toggle($avatar);
-        $this->get('session')->setFlash('success', 'Avatar selection saved');
+        $avatar = $this->findAvatar($uuid);
 
-        return $this->redirect($this->generateUrl('user_avatar_edit'));
+        if ($avatar->isCropped()) {
+            $this->setFlash('error', 'platformd.user.avatars.already_cropped');
+            return $this->redirect($this->generateUrl('avatars'));
+        }
+
+        return $this->render('UserBundle:Avatar:cropAvatar.html.twig', array(
+            'uuid'          => $uuid,
+            'avatarUrl'     => $this->getAvatarManager()->getSignedImageUrl($uuid, 'raw.'.$avatar->getInitialFormat(), $this->getUser()),
+        ));
     }
 
-    private function getFormType()
+    public function processAvatarAction($uuid, $dimensions)
     {
-        return new AccountSettingsType($this->get('security.encoder_factory')->getEncoder($this->getUser()));
+        $this->checkSecurity();
+
+        $avatarManager = $this->getAvatarManager();
+        $avatar        = $this->findAvatar($uuid);
+
+        list($width, $height, $x, $y) = explode(',', $dimensions);
+
+        $queued = $avatarManager->addToResizeQueue($this->getUser(), $uuid, $avatar->getInitialFormat(), $width, $height, $x, $y);
+
+        $avatar->setCropDimensions($dimensions);
+        $avatar->setCropped(true);
+        $avatarManager->save($avatar);
+
+        $flash = $this->getUser()->getAdminLevel() ? 'platformd.user.avatars.admin_submit_success' : 'platformd.user.avatars.submit_success';
+
+        $this->setFlash('success', $flash);
+        return $this->redirect($this->generateUrl('avatars'));
     }
 
-    private function findAvatarOr404($id, User $user)
+    public function deleteAction(Request $request)
     {
-        $avatar = $this->getRepository()->getByUserAndId($user, $id);
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        if (!$this->isGranted('ROLE_USER')) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['id'])) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $avatarManager = $this->getAvatarManager();
+
+        $avatar = $avatarManager->findOneBy(array(
+            'id'   => $params['id'],
+            'user' => $this->getUser()->getId(),
+        ));
+
         if (!$avatar) {
+            $response->setContent(json_encode(array("success" => false)));
+            return $response;
+        }
+
+        $avatar->setDeleted(true);
+        $avatarManager->save($avatar);
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
+
+    public function switchAction($uuid)
+    {
+        $this->checkSecurity();
+
+        $avatar = $this->findAvatar($uuid, false);
+
+        if (!$avatar) {
+            $this->setFlash('error', 'platformd.user.avatars.switch_not_found');
+            return $this->redirect($this->generateUrl('avatars'));
+        }
+
+        if (!$avatar->isApproved() || !$avatar->isProcessed()) {
+            $this->setFlash('error', 'platformd.user.avatars.switch_error');
+            return $this->redirect($this->generateUrl('avatars'));
+        }
+
+        $this->getAvatarManager()->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
+
+        $this->setFlash('success', 'platformd.user.avatars.switch_success');
+        return $this->redirect($this->generateUrl('avatars'));
+    }
+
+    private function findAvatar($uuid, $exceptionOnNotFound = true)
+    {
+        $avatarManager = $this->getAvatarManager();
+        $avatar        = $avatarManager->findOneByUuidAndUser($uuid, $this->getUser());
+
+        if (!$avatar && $exceptionOnNotFound) {
             throw $this->createNotFoundException();
         }
 
         return $avatar;
     }
 
-    private function getRepository()
+    protected function checkSecurity()
     {
-        return $this->get('doctrine')->getRepository('Platformd\UserBundle\Entity\UserAvatar');
+        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            throw new AccessDeniedException();
+        }
     }
 }

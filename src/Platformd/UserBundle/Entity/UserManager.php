@@ -50,13 +50,21 @@ class UserManager extends BaseUserManager
          * Removing this for now. With the big multi-level authentication
          * system with CEVO, we just need to allow everyone to login anywhere
          *
-        // don't let a user login if their locale doesn't match the current locale
-        if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
-            throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
-        }
-        */
+         // don't let a user login if their locale doesn't match the current locale
+         if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
+             throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
+    }
+         */
 
         return $user;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateUser(UserInterface $user, $andFlush = true)
+    {
+        parent::updateUser($user, $andFlush);
     }
 
     public function getFindUserQuery($search = null, $type='text', $sort_by = self::DEFAULT_SORTING_FIELD)

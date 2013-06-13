@@ -307,4 +307,14 @@ class Controller extends BaseController
     {
         return $this->get('platformd.model.site_manager');
     }
+
+    protected function getAvatarManager()
+    {
+        return $this->get('platformd.model.avatar_manager');
+    }
+
+    protected function uuidGen()
+    {
+        return str_replace("\n", '', `uuidgen -r`);
+    }
 }

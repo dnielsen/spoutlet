@@ -18,7 +18,7 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
@@ -134,7 +134,8 @@ class User extends BaseUser
     /**
      * @var ArrayCollection $userAvatars
      *
-     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\UserAvatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Avatar")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $userAvatars;
 
@@ -267,11 +268,9 @@ class User extends BaseUser
     protected $updated;
 
     /**
-     * Little flag so we know if the avatar was changed on this request
-     *
-     * @var bool
+     * @Assert\File(maxSize="6000000", mimeTypes={"image/png", "image/jpeg", "image/jpg"}, groups={"Profile"})
      */
-    protected $avatarChanged = false;
+    public $file;
 
     /**
      * The id for this user in CEVO's database
@@ -281,7 +280,14 @@ class User extends BaseUser
      */
     private $cevoUserId;
 
-     /**
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="members")
+     * @ORM\JoinTable(name="pd_groups_members")
+     */
+    private $pdGroups;
+
+    /**
       * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
       * @ORM\JoinColumn(onDelete="SET NULL")
       */
@@ -300,6 +306,16 @@ class User extends BaseUser
     private $ipAddress;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\Avatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $avatars;
+
+    /**
+     * @ORM\Column(type="string", length=36, nullable=true)
+     */
+    protected $uuid;
+
+    /**
      * @Recaptcha\True
      */
     public $recaptcha;
@@ -307,11 +323,12 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->events = new ArrayCollection();
-        $this->giveawayKeys = new ArrayCollection();
-        $this->groupMembershipActions = new ArrayCollection();
-        $this->loginRecords = new ArrayCollection();
-        $this->userAvatars = new ArrayCollection();
+        $this->events                   = new ArrayCollection();
+        $this->giveawayKeys             = new ArrayCollection();
+        $this->groupMembershipActions   = new ArrayCollection();
+        $this->loginRecords             = new ArrayCollection();
+        $this->groups                   = new ArrayCollection();
+        $this->avatars                  = new ArrayCollection();
     }
 
     public function __toString() {
@@ -325,38 +342,7 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
-
-        return $this->avatar_approved;
-    }
-
-    public function approveAvatar()
-    {
-        $this->avatar_approved = true;
-    }
-
-    public function disapproveAvatar()
-    {
-        $this->avatar_approved = false;
-    }
-
-    public function getAbsolutePath()
-    {
-        if (!$this->getApprovedAvatar()) {
-
-            return null;
-        }
-
-        return $this->getUploadRootDir().'/'.$this->getApprovedAvatar();
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
+        return $this->avatar->isApproved();
     }
 
     /**
@@ -605,45 +591,18 @@ class User extends BaseUser
         return $this->userAvatars;
     }
 
-    public function setUserAvatars($userAvatars)
+    public function getAvatar()
     {
-        foreach ($userAvatars as $userAvatar) {
-            $this->addUserAvatar($userAvatar);
+        if (!$this->avatar || !$this->isAvatarApproved()) {
+            return false;
         }
+
+        return $this->avatar;
     }
 
-    public function addUserAvatar(UserAvatar $userAvatar)
+    public function setAvatar($avatar)
     {
-        $userAvatar->setUser($this);
-        $this->userAvatars->add($userAvatar);
-        if ($userAvatar->getMedia()->getFileObject()) {
-            $userAvatar->setApproved(false);
-        }
-    }
-
-    public function removeUserAvatar(UserAvatar $userAvatar)
-    {
-        $this->userAvatars->remove($userAvatar);
-    }
-
-    /**
-     * Returns the avatar path, with respect to it being approved or not.
-     *
-     * If the avatar is not approved, false is returned.
-     * This logic here is repeated elsewhere, but should use this.
-     *
-     * @return string
-     */
-    public function getApprovedAvatar()
-    {
-        return $this->getUserAvatars()->filter(function($avatar) {
-            return $avatar->isApproved();
-        })->first();
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->getApprovedAvatar() ? null : $this->getUploadDir().'/'.$this->getApprovedAvatar();
+        $this->avatar = $avatar;
     }
 
     public function getType()
@@ -1053,6 +1012,16 @@ class User extends BaseUser
         $this->cevoAvatarUrl = $cevoAvatarUrl;
     }
 
+    public function getPdGroups()
+    {
+        return $this->pdGroups;
+    }
+
+    public function setPdGroups($pdGroups)
+    {
+        $this->pdGroups = $pdGroups;
+    }
+
     public function getGroupMembershipActions()
     {
         return $this->groupMembershipActions;
@@ -1089,6 +1058,26 @@ class User extends BaseUser
     public function getLoginRecords()
     {
         return $this->loginRecords;
+    }
+
+    public function getAvatars()
+    {
+        return $this->avatars;
+    }
+
+    public function setAvatars($value)
+    {
+        $this->avatars = $value;
+    }
+
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid($value)
+    {
+        $this->uuid = $value;
     }
 
     public function eraseCredentials()
