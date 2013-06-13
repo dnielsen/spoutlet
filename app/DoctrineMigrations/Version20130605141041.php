@@ -17,7 +17,7 @@ class Version20130605141041 extends AbstractMigration
 
         $this->addSql("CREATE TABLE pd_avatar (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, uuid VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, approved TINYINT(1) NOT NULL, cropped TINYINT(1) NOT NULL, resized TINYINT(1) NOT NULL, processed TINYINT(1) NOT NULL, reviewed TINYINT(1) NOT NULL, deleted TINYINT(1) NOT NULL, crop_dimensions VARCHAR(40) DEFAULT NULL, initial_format VARCHAR(10) DEFAULT NULL, initial_width INT DEFAULT NULL, initial_height INT DEFAULT NULL, INDEX IDX_302333E8A76ED395 (user_id), PRIMARY KEY(id)) ENGINE = InnoDB");
         $this->addSql("ALTER TABLE pd_avatar ADD CONSTRAINT FK_302333E8A76ED395 FOREIGN KEY (user_id) REFERENCES fos_user(id)");
-        $this->addSql("ALTER TABLE fos_user ADD avatar_id INT DEFAULT NULL, DROP avatar");
+        $this->addSql("ALTER TABLE fos_user ADD avatar_id INT DEFAULT NULL");
         $this->addSql("ALTER TABLE fos_user ADD CONSTRAINT FK_957A647986383B10 FOREIGN KEY (avatar_id) REFERENCES pd_avatar(id) ON DELETE SET NULL");
         $this->addSql("CREATE UNIQUE INDEX UNIQ_957A647986383B10 ON fos_user (avatar_id)");
     }
@@ -30,6 +30,6 @@ class Version20130605141041 extends AbstractMigration
         $this->addSql("ALTER TABLE fos_user DROP FOREIGN KEY FK_957A647986383B10");
         $this->addSql("DROP TABLE pd_avatar");
         $this->addSql("DROP INDEX UNIQ_957A647986383B10 ON fos_user");
-        $this->addSql("ALTER TABLE fos_user ADD avatar VARCHAR(255) DEFAULT NULL, DROP avatar_id");
+        $this->addSql("ALTER TABLE DROP avatar_id");
     }
 }
