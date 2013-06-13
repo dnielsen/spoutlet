@@ -105,6 +105,8 @@ class UserManager extends BaseUserManager
     {
         $user = parent::createUser();
 
+        $user->setUuid($this->uuidGen());
+
         $user->setLocale($this->getLocale());
         $user->setIpAddress($this->getClientIpAddress());
 
@@ -164,6 +166,11 @@ class UserManager extends BaseUserManager
     private function countOtherExpiredUsersByIpAddress($ipAddress, $username)
     {
         return $this->repository->countOtherExpiredUsersByIpAddress($ipAddress, $this->canonicalizeUsername($username));
+    }
+
+    private function uuidGen()
+    {
+        return str_replace("\n", '', `uuidgen -r`);
     }
 }
 
