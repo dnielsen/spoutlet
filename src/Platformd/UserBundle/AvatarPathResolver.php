@@ -28,7 +28,14 @@ class AvatarPathResolver extends PathResolver
     }
 
     $avatarUsable  = $avatar && $avatar->isUsable();
-    $url           = $avatarUsable ? self::AVATAR_BASE_URL.$this->bucketName.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
+
+    if ($this->bucketName == "platformd") {
+        $cf = "http://media.alienwarearena.com";
+    } else {
+        $cf = "http://mediastaging.alienwarearena.com";
+    }
+
+    $url = $avatarUsable ? $cf.'/'.Avatar::AVATAR_EXTERNAL_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
 
     return $url;
   }
