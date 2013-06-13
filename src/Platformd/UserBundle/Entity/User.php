@@ -132,6 +132,14 @@ class User extends BaseUser
     protected $termsAccepted;
 
     /**
+     * @var String $avatar
+     *
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Avatar")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $avatar;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
