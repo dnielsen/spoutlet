@@ -106,4 +106,4 @@ services:
             - @platformd.s3
             - "%s3_private_bucket_name%"
         calls:
-            - [ "setDirectory", [ "images/avatars"]]
+            - [ "setDirectory", [ "media/images/avatars"]]
