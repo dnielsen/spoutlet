@@ -328,7 +328,7 @@ class User extends BaseUser
         $this->giveawayKeys             = new ArrayCollection();
         $this->groupMembershipActions   = new ArrayCollection();
         $this->loginRecords             = new ArrayCollection();
-        $this->groups                   = new ArrayCollection();
+        $this->pdGroups                 = new ArrayCollection();
     }
 
     public function __toString() {
