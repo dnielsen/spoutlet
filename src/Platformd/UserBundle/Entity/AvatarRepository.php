@@ -19,6 +19,7 @@ class AvatarRepository extends EntityRepository
             ->andWhere('a.deleted = 0')
             ->andWhere('a.resized = 1')
             ->andWhere('a.cropped = 1')
+            ->andWhere('a.reviewed = 0')
             ->setParameters(array(
                 'user' => $user,
             ))
@@ -31,11 +32,9 @@ class AvatarRepository extends EntityRepository
         return $this->createQueryBuilder('a')
             ->select('COUNT(a.id)')
             ->andWhere('a.user = :user')
-            ->andWhere('a.approved = 1')
             ->andWhere('a.deleted = 0')
-            ->andWhere('a.resized = 1')
             ->andWhere('a.cropped = 1')
-            ->andWhere('a.processed = 0')
+            ->andWhere('a.processed = 0 OR a.resized = 0')
             ->setParameters(array(
                 'user' => $user,
             ))
