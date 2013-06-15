@@ -41,7 +41,7 @@ sub vcl_recv {
 
     # This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
     if (req.url ~ "^/galleries/featured-feed" && req.http.referer && req.http.referer ~ "alienwarearena.com") {
-        error 750 "http://na.alienwarearena.com/galleries/";
+        error 750 "http://" + req.http.host  + "/galleries/";
     }
 
     if (req.url ~ "^/healthCheck$") {
