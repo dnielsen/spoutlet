@@ -31,12 +31,17 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") {
+    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") { # most notably to stop POST requests from non alienwarearena sources
         error 403 "Forbidden (referer).";
     }
 
     if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
         error 750 "https://www.alienwarearena.com/account/register";
+    }
+
+    # This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
+    if (req.url ~ "^/galleries/featured-feed" && req.http.referer && req.http.referer ~ "alienwarearena.com") {
+        error 750 "http://na.alienwarearena.com/galleries/";
     }
 
     if (req.url ~ "^/healthCheck$") {
