@@ -158,6 +158,10 @@ sub vcl_fetch {
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age=900";
     }
+
+    if (!req.http.Cookie && !beresp.http.set-cookie) {
+        set beresp.http.X-Anon = "1";
+    }
 }
 
 sub vcl_deliver {
