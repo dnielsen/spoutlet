@@ -119,6 +119,22 @@ Feature: Deal Pool
             And I go to "/deal/diablo-3-bonus"
         Then I should see "You are not eligible (based on your age and/or country)"
 
+    Scenario: I am a user who was rejected for a key, but then moved country and successfully got key
+        Given I am authenticated as a user
+            And I am located in "JP"
+            And I go to "/deal/diablo-3-bonus"
+            And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+            And I should see "You are not eligible (based on your age and/or country)"
+        When I am located in "UK"
+            And I click "deal-redeem-link"
+            And I should see "You're in the queue"
+            And The Key Queue Processor is run
+            And I go to "/deal/diablo-3-bonus"
+        Then I should see "UK_only_1"
+
     Scenario: I am the third user from the UK I should get the third valid UK key
         Given I re-login as the user "William"
             And I am located in "UK"

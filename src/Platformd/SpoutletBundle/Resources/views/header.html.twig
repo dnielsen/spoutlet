@@ -1,5 +1,6 @@
 {% set facebookLink = site_link('FACEBOOK') %}
 {% set twitterLink = site_link('TWITTER') %}
+{% set instagramLink    = site_link('INSTAGRAM') %}
 {% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
 <div id="header">
     <div id="topHeader">
@@ -17,6 +18,7 @@
                             <li class="separator">
                                 {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
                                 {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
+                                {% if instagramLink %}{{ instagramLink | raw }}{% endif %}
                             </li>
                         {% endif %}
 
