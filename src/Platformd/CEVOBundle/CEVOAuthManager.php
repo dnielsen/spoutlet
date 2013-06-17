@@ -97,9 +97,7 @@ class CEVOAuthManager
     {
         // allows us to not specificy a host, and it default to the current host
         if (strpos($this->cevoSiteUrl, 'http://') !== 0) {
-            $request = $this->getRequest();
-
-            $this->cevoSiteUrl = $request->getScheme().'://'.$request->getHttpHost().$request->getBaseUrl().$this->cevoSiteUrl;
+            $this->cevoSiteUrl = 'http://demo.alienwarearena.local'.$this->cevoSiteUrl;
         }
 
         return $this->cevoSiteUrl;
