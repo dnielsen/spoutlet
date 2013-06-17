@@ -53,15 +53,13 @@
 
         $('.comment-sorting select').change(function() {
             $('.thread').block({message: null});
-            var data = {
-                'thread' : '{{ thread }}',
-                'method' : $('#comment-sort-method').val(),
-                'commentLimit' : '{{ offset }}'
-            };
+            var thread = '{{ thread }}';
+            var method = $('#comment-sort-method').val();
+            var commentLimit = '{{ offset }}';
+
             $.ajax({
-                url: '{{ path('comments_sort_thread') }}',
-                type: 'post',
-                data: JSON.stringify(data),
+                url: '{{ path('comments_sort_thread') }}?thread=' + thread + '&method=' + method + '&commentLimit=' + commentLimit,
+                type: 'get',
                 contentType: 'application/json',
                 success: function (html, status, req) {
                     $('.thread').html(html);
@@ -131,14 +129,8 @@
         var offset = parseInt($('#more-comments-loader').attr('data-offset'));
         var increment = parseInt($('#more-comments-loader').attr('data-increment'));
         return $.ajax({
-            url: '{{ path('comments_update_thread') }}',
-            type: 'post',
-            data: JSON.stringify({
-                'threadId' : '{{ thread }}',
-                'increment' : increment,
-                'offset' : offset,
-                'sort' : $('#comment-sort-method option:selected').val()
-            }),
+            url: '{{ path('comments_update_thread') }}?threadId=' + '{{ thread }}&increment=' + increment + '&offset=' + offset + '&sort=' + $('#comment-sort-method option:selected').val(),
+            type: 'get',
             contentType: 'json',
             success: function(data)
             {
