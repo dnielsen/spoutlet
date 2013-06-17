@@ -23,7 +23,7 @@ class AgeController extends Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return array
      */
-    public function verifyAgeAction($returnUrl, Request $request)
+    public function verifyAgeAction($returnUrl = null, Request $request)
     {
         $this->returnUrl = $returnUrl;
 
