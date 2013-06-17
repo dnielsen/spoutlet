@@ -164,9 +164,10 @@ Alienware Arena Team
         $joinAction->setUser($user);
         $joinAction->setAction(GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
 
-        $group->getMembers()->add($user);
+        $user->getPdGroups()->add($group);
         $group->getUserMembershipActions()->add($joinAction);
 
+        $this->getUserManager()->updateUser($user);
         $groupManager->saveGroup($group);
 
         if (!$event) {
@@ -350,7 +351,8 @@ Alienware Arena Team
         $leaveAction->setUser($user);
         $leaveAction->setAction(GroupMembershipAction::ACTION_LEFT);
 
-        $group->getMembers()->removeElement($user);
+        $user->getPdGroups()->removeElement($group);
+        //$group->getMembers()->removeElement($user);
         $group->getUserMembershipActions()->add($leaveAction);
 
         // TODO Add a service layer for managing groups and dispatching such events
@@ -359,6 +361,7 @@ Alienware Arena Team
         $event = new GroupEvent($group, $user);
         $dispatcher->dispatch(GroupEvents::GROUP_LEAVE, $event);
 
+        $this->getUserManager()->updateUser($user);
         $this->getGroupManager()->saveGroup($group);
 
         $this->setFlash('success', 'You have successfully left this group!');
@@ -391,7 +394,7 @@ Alienware Arena Team
         $joinAction->setUser($user);
         $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-        $group->getMembers()->add($user);
+        $user->getPdGroups()->add($group);
         $group->getUserMembershipActions()->add($joinAction);
 
         // TODO Add a service layer for managing groups and dispatching such events
@@ -400,6 +403,7 @@ Alienware Arena Team
         $event = new GroupEvent($group, $user);
         $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
 
+        $this->getUserManager()->updateUser($user);
         $this->getGroupManager()->saveGroup($group);
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
@@ -731,8 +735,9 @@ Alienware Arena Team
     {
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
+        $site = $this->getCurrentSite();
 
-        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
@@ -885,7 +890,9 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'DeleteImage');
 
-        $image = $this->getGroupImageRepository()->find($imageId);
+        $em                 = $this->getEntityManager();
+        $galleryMediaRepo   = $this->getGalleryMediaRepository();
+        $image              = $galleryMediaRepo->find($imageId);
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
@@ -894,7 +901,8 @@ Alienware Arena Team
 
         $image->setDeleted(true);
 
-        $this->getGroupManager()->saveGroupImage($image);
+        $em->persist($image);
+        $em->flush();
 
         $this->setFlash('success', 'Image was deleted successfully!');
 
@@ -1671,6 +1679,11 @@ Alienware Arena Team
 
     private function getEntityManager() {
         return $this->getDoctrine()->getEntityManager();
+    }
+
+    private function getGalleryMediaRepository()
+    {
+        return $this->getEntityManager()->getRepository('SpoutletBundle:GalleryMedia');
     }
 
     private function getGroupImageRepository()

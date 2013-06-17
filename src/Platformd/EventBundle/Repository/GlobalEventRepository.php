@@ -197,4 +197,18 @@ class GlobalEventRepository extends EventRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findAllForSiteWithLimit($site, $limit = 9)
+    {
+        $qb = $this->createQueryBuilder('gE')
+            ->select('gE', 's')
+            ->leftJoin('gE.sites', 's')
+            ->andWhere('s = :site')
+            ->setParameter('site', $site)
+            ->setMaxResults($limit)
+            ->orderBy('gE.createdAt', 'DESC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

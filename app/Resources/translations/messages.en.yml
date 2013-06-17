@@ -700,7 +700,7 @@ platformd:
         discussions:
             submit: <a href='%url%'>Submit your topic</a> now.
             non_member_add: Want to add a topic? Become a member of our group.
-            member_no_discussions: No discussions yet... <a href='{{ path('group_add_discussion', {'id' : group.id }) }}'>Submit your topic</a> now.
+            member_no_discussions: No discussions yet... <a href='%url%'>Submit your topic</a> now.
             non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
             replies: Replies
             views: Views

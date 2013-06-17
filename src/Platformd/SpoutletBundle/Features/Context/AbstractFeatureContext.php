@@ -1034,13 +1034,13 @@ class AbstractFeatureContext extends MinkContext
     public function iHaveVerifiedMyAge()
     {
         $currentUrl             = $this->getSession()->getCurrentUrl();
-        $onAgeVerifyPageAlready = strpos($currentUrl, 'age/verify') !== false;
+        $onAgeVerifyPageAlready = strpos($currentUrl, 'age/verify/return') !== false;
 
         if ($onAgeVerifyPageAlready) {
             $currentUrl = null;
         }
 
-        $ra[] = new When('I go to "/age/verify"');
+        $ra[] = new When('I go to "/age/verify/return"');
         $ra[] = new When('I select "1984" from "birthday[year]"');
         $ra[] = new When('I select "6" from "birthday[month]"');
         $ra[] = new When('I select "5" from "birthday[day]"');

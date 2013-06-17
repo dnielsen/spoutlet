@@ -118,11 +118,11 @@ class GroupManager
         }
 
         $owner      = $group->getOwner();
-        $members    = $group->getMembers();
+        $groups     = $owner->getPdGroups();
 
-        if (!in_array($owner, $members->toArray())) {
-            $members[] = $owner;
-            $group->setMembers($members);
+        if (!in_array($group, $groups->toArray())) {
+            $groups[] = $group;
+            $owner->setPdGroups($groups);
         }
 
         if ($group->getId()) {
