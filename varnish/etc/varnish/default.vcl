@@ -31,12 +31,17 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") {
+    if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") { # most notably to stop POST requests from non alienwarearena sources
         error 403 "Forbidden (referer).";
     }
 
-    if (req.url ~ "^/account/register" && req.http.host ~ ".com$") {
+    if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
         error 750 "https://www.alienwarearena.com/account/register";
+    }
+
+    # This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
+    if (req.url ~ "^/galleries/featured-feed" && req.http.referer && req.http.referer ~ "alienwarearena.com") {
+        error 750 "http://" + req.http.host  + "/galleries/";
     }
 
     if (req.url ~ "^/healthCheck$") {
@@ -133,7 +138,7 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    if (req.url !~ "^/age/verify$") { # the only exception to the "remove all set-cookies rule"
+    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -152,6 +157,10 @@ sub vcl_fetch {
         unset beresp.http.expires;
         set beresp.ttl = 15m;
         set beresp.http.cache-control = "max-age=900";
+    }
+
+    if (!req.http.Cookie && !beresp.http.set-cookie) {
+        set beresp.http.X-Anon = "1";
     }
 }
 

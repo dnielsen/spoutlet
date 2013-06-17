@@ -133,6 +133,7 @@ Feature: Groups Frontend
 
     Scenario: Add reply to group discussion
         Given I am on "/group-1"
+        And I am authenticated as a user
         And I add "discussion" for group "Group 1"
         When I fill in the following:
             | Discussion Name   | Test Discussion           |
