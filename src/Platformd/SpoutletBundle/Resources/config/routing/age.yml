@@ -1,3 +1,3 @@
 age_verification:
     pattern:  /verify/{returnUrl}
-    defaults: { _controller: "SpoutletBundle:Age:verifyAge" }
+    defaults: { _controller: "SpoutletBundle:Age:verifyAge", returnUrl: null }

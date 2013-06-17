@@ -24,6 +24,7 @@ use Platformd\SpoutletBundle\Entity\Site;
 class SpoutletExtension extends Twig_Extension
 {
     private $bucketName;
+    private $currentSiteConfig = NULL;
     private $currentSiteFeatures = NULL;
     private $currentSite = NULL;
     private $currentUser = NULL;
