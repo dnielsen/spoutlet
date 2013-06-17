@@ -17,21 +17,21 @@
 </div>
 
 <script type="text/javascript">
-    updatingMainPromotionStatus = false;
+    updatingFlashMessage = false;
 
-    function updateMainPromotionStatus() {
-        updatingMainPromotionStatus = true;
+    function updateFlashMessage() {
+        updatingFlashMessage = true;
 
         return $.ajax({
             url: flashMessageUpdateUrl,
             type: 'html',
             contentType: 'json',
             success: function(data) {
-                $("#mainPromotionStatus").html(data);
-                updatingMainPromotionStatus = false;
+                $(".xnotices").replaceWith(data);
+                updatingFlashMessage = false;
 
                 if (flashMessageUpdateFrequency !== undefined && flashMessageUpdateFrequency > 0) {
-                    window.setTimeout(updateMainPromotionStatus, flashMessageUpdateFrequency);
+                    window.setTimeout(updateFlashMessage, flashMessageUpdateFrequency);
                 }
             }
         });
@@ -43,7 +43,7 @@
             return;
         }
 
-        window.setTimeout(updateMainPromotionStatus, flashMessageUpdateFrequency);
+        window.setTimeout(updateFlashMessage, flashMessageUpdateFrequency);
     });
 
 </script>
