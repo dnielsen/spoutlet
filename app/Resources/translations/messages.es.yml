@@ -263,6 +263,7 @@ platformd:
         date_format: %month%/%day%/%year%
 
     user:
+        login_header: Iniciar Sesión
         register:
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
 
@@ -294,6 +295,17 @@ platformd:
 
         register:
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
+
+        login:
+            username: Nombre de usuario
+            password: Contraseña
+            remember: Acuérdate de mí
+            title: Iniciar Sesión
+            forgot_password: Olvidé mi contraseña
+            need_help: ¿Necesita ayuda?
+            not_a_member_join: ¡Regístrese gratis!
+            password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
+            sign_in: Iniciar
 
     event:
         form:

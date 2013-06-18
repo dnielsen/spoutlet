@@ -1013,3 +1013,16 @@ div.blockOverlay {
     height: 500px !important;
     background-size: 100%;
 }
+
+#loginArea { width: 595px; height: 300px; padding: 5px 20px 0 20px; background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
+#loginArea h2 { color: #e7e7e7; font-family: "verdana"; font-weight: normal; font-size: 24px; margin: 10px 0 10px 0; }
+#loginArea .tbl { margin: 0 auto; vertical-align: middle; padding: 5px 0 0px 0; }
+#loginArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }
+#loginArea .tbl th { padding:0 6px; }
+#loginArea .tbl th, #loginArea .tbl td { padding-top:3px; padding-bottom:3px; }
+#loginArea .info { width:425px; margin:0 auto; padding-top:15px; }
+#loginArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
+#loginArea .error { width:425px; margin:0 auto; padding:0 0 10px 0; }
+#loginArea .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; }
+#loginArea .error .message { border-left:#c62828 4px solid; border-right:#c62828 4px solid; font-size:12px; font-weight:normal; padding:3px 10px; }
+#loginArea .remember-me {margin: 0;}

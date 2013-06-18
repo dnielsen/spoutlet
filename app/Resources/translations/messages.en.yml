@@ -392,11 +392,15 @@ platformd:
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
 
         login:
+            username: Username
+            password: Password
+            remember: Remember Me
             title: Login to your account
             forgot_password: Forgot Password?
             need_help: Need Help?
             not_a_member_join: Not a Member? Join for Free!
-            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used please contact support.
+            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used <a href="%s">please contact support</a>.
+            sign_in: Sign In
 
         reset:
             title:  Forgot Your Password?

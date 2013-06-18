@@ -3,41 +3,68 @@
 {% block title 'platformd.user.login.title' | pd_trans %}
 
 {% block fos_user_content %}
-<h2>{{ 'platformd.user.login_header' | pd_trans }}</h2>
 
-<div class="login_page_interstitial interstitial">
 
-<form action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
-
-    {% if error %}
-        <div class="form-msg-error">{{ error | pd_trans }}</div>
-    {% endif %}
-
-    <div class="form_row">
-        <label for="username">{{ 'security.login.username_or_email'|trans({}, 'FOSUserBundle') }}</label>
-        <input type="text" class="form-txt" id="username" name="_username" value="{{ last_username }}" />
+<div class="std_2col">
+    <div class="left">
+        <div id="loginArea">
+            <h2>{{ 'platformd.user.login_header' | pd_trans }}</h2>
+            <form action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
+                {% if error %}
+                    <div class="form-msg-error">{{ error | pd_trans }}</div>
+                {% endif %}
+                <div class="login">
+                    <table class="tbl">
+                        <tbody>
+                            <tr>
+                                <th align="right">{{ 'platformd.user.login.username' | pd_trans }}</th>
+                                <td>
+                                    <div class="pad" style="width:180px;">
+                                        <input name="_username" type="text" maxlength="255" value="" class="form-txt" required="required">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th align="right">{{ 'platformd.user.login.password' | pd_trans }}</th>
+                                <td>
+                                    <div class="pad" style="width:180px;">
+                                        <input name="_password" type="password" maxlength="255" value="" class="form-txt" required="required">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <div>
+                                        <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">&nbsp;&nbsp;
+                                        <label style="font-weight: bold;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td align="left">
+                                    <input type="submit" id="_submit" class="button btn btn-primary login-button" name="_submit" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="info">
+                        <div class="forgot">
+                            <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{{ path('contact') }}">{{ 'platformd.user.login.need_help' | pd_trans }}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                            <a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.user.login.not_a_member_join' | pd_trans }}</a>
+                        </div>
+                        <p>
+                            {{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="form_row">
-        <label for="password">{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}</label>
-        <input type="password" class="form-txt" id="password" name="_password" />
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
-
-    {#
-        hidden for now - just for simplicity
-        <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-        <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
-    #}
-
-    <input type="submit" id="_submit" class="button btn btn-primary" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" />
-
-    <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>
-
-    <div class="login_page_register">
-        Don't have an account? <a href="{{ path('fos_user_registration_register') }}">Register now!</a>
-    </div>
-
-</form>
-
 </div>
 {% endblock fos_user_content %}
