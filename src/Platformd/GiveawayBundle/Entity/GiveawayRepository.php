@@ -38,6 +38,7 @@ class GiveawayRepository extends EntityRepository
     public function findAllForSite($site)
     {
         return $this->createBaseQueryBuilder($site)
+            ->orderBy('g.created', 'DESC')
             ->getQuery()
             ->getResult()
         ;
