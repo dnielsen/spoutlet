@@ -891,8 +891,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'DeleteImage');
 
         $em                 = $this->getEntityManager();
-        $galleryMediaRepo   = $this->getGalleryMediaRepository();
-        $image              = $galleryMediaRepo->find($imageId);
+        $image = $this->getGroupImageRepository()->find($imageId);
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
