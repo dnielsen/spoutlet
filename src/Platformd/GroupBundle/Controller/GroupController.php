@@ -737,7 +737,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'ViewGroupContent', false);
         $site = $this->getCurrentSite();
 
-        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
