@@ -915,7 +915,9 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupVideos = $this->getYoutubeManager()->findVideosForGroup($group);
+        $hasVideoFeature = $this->getCurrentSite()->getSiteFeatures()->getHasVideo();
+
+        $groupVideos = $hasVideoFeature ? $this->getYoutubeManager()->findVideosForGroup($group) : $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 
         // 3 images per page
         $itemsPerPage = 3;
