@@ -43,3 +43,7 @@ admin_upload_media:
 admin_mass_unsubscribe:
     pattern: /admin/mass-unsubscribe
     defaults: { _controller: SpoutletBundle:Admin:massUnsubscribe }
+
+admin_comment_metrics:
+    pattern: /admin/metrics/comments
+    defaults: { _controller: SpoutletBundle:Comments:metrics }
