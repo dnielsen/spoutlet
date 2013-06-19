@@ -2,6 +2,10 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
+force_logout:
+    pattern: /forceLogout/{returnUrl}
+    defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
