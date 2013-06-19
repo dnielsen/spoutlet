@@ -4,7 +4,6 @@ namespace Platformd\CEVOBundle\Security\CEVO;
 
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
 use Platformd\CEVOBundle\Security\CEVO\CEVOToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
