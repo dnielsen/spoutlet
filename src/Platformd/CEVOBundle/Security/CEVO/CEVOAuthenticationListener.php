@@ -72,6 +72,8 @@ class CEVOAuthenticationListener implements ListenerInterface
     {
         $request = $event->getRequest();
 
+
+
         $sessionString = $request->cookies->get(self::COOKIE_NAME);
 
         // allows us to fake the cookie in in the test environment
@@ -121,6 +123,11 @@ class CEVOAuthenticationListener implements ListenerInterface
         if ($response === true) {
             return;
         }
+
+        if ($response === 'forceLogout') {
+            return;
+        }
+
         $this->logError('CEVO Authentication FAILED on attempt #1');
 
         // if we got a non-true response, let's try one more time
@@ -128,6 +135,10 @@ class CEVOAuthenticationListener implements ListenerInterface
         if ($response === true) {
             $this->logError('CEVO Authentication PASSED on attempt #2');
 
+            return;
+        }
+
+        if ($response === 'forceLogout') {
             return;
         }
 
@@ -151,6 +162,10 @@ class CEVOAuthenticationListener implements ListenerInterface
     private function tryAuthentication(CEVOToken $token, Request $request)
     {
         try {
+
+            if (strpos($request->getPathInfo(), 'forceLogout') === 1) {
+                return 'forceLogout';
+            }
 
             $returnValue = $this->authenticationManager->authenticate($token);
 
