@@ -451,8 +451,8 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #mainNews p { font-size:13px; margin: 0; padding-top:10px; word-spacing:1px;}
 #mainNews .more { font-size:13px; font-weight:bold; padding-top: 4px; margin-bottom: 6px; }
 
-.newsBlurb { margin-bottom:15px; }
 .newsBlurb h1 { font-size:21px; font-weight:normal; }
+.newsBlurb h2 { margin:20px 0 10px 0; }
 .newsBlurb h6 { font-size:9px; }
 
 html body .lastBlurb { margin-bottom:0; }
@@ -464,9 +464,6 @@ html body .lastBlurb { margin-bottom:0; }
 .right_section { padding-top:21px; }
 .twitter { text-align: center; padding-bottom: 12px; }
 #eventOverview h3 { margin: 0; }
-
-
-
 
 /*** Ads ***/
 .ad a img { border:none; }

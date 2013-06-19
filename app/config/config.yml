@@ -517,7 +517,7 @@ exercise_html_purifier:
     editor_basic:
         HTML.Allowed: a[href], p, strong, u, em, ul, ol, li, div, *[style], br
     editor_admin:
-        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br
+        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[alt|src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br
 
 liip_theme:
     themes: %liip_enabled_themes%
