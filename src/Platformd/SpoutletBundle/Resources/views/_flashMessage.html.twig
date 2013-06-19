@@ -24,8 +24,8 @@
 
         return $.ajax({
             url: flashMessageUpdateUrl,
-            type: 'html',
             contentType: 'json',
+            dataType: 'html',
             success: function(data) {
                 $(".xnotices").replaceWith(data);
                 updatingFlashMessage = false;
