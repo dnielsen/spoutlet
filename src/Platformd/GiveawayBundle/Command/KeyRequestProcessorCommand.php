@@ -396,6 +396,14 @@ EOT
             $this->em->flush();
 
             $this->output(5, 'Key assigned successfully.');
+
+            // give user arp for obtaining a key
+            try {
+                $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('keygiveaway', $user->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+
             $this->output(5, 'Sending user email.');
 
             $this->emailUser($user, $promotion->getName(), $key->getValue(), $urlToShowPage, $site, $groupName, $urlToGroupShowPage);

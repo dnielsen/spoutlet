@@ -69,9 +69,7 @@ class YoutubeManager
         $this->em->persist($video);
         $this->em->flush();
 
-        /*if($deletedByAdmin) {
-            $this->arp($video->getAuthor(), self::API_ARP_NUKE_VIDEO);
-        }*/
+        $this->arp($video->getAuthor(), self::API_ARP_NUKE_VIDEO);
     }
 
     public function canVoteOnVideo($video, $user)

@@ -737,7 +737,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'ViewGroupContent', false);
         $site = $this->getCurrentSite();
 
-        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
+        $groupImage         = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
@@ -891,8 +891,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'DeleteImage');
 
         $em                 = $this->getEntityManager();
-        $galleryMediaRepo   = $this->getGalleryMediaRepository();
-        $image              = $galleryMediaRepo->find($imageId);
+        $image = $this->getGroupImageRepository()->find($imageId);
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
@@ -915,7 +914,9 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupVideos = $this->getYoutubeManager()->findVideosForGroup($group);
+        $hasVideoFeature = $this->getCurrentSite()->getSiteFeatures()->getHasVideo();
+
+        $groupVideos = $hasVideoFeature ? $this->getYoutubeManager()->findVideosForGroup($group) : $groupVideos = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
 
         // 3 images per page
         $itemsPerPage = 3;
