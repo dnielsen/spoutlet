@@ -1,4 +1,4 @@
-{% set reportContentType    = 'GroupVideo' %}
+{% set reportContentType    = features.hasVideo ? 'YoutubeVideo' : 'GroupVideo' %}
 {% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddVideo') %}
 {% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditVideo') %}
 {% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteVideo') %}
@@ -37,26 +37,11 @@
                         {% for videoList in page %}
                             {% for video in videoList %}
 
-                                <div class="group-video-item">
-                                    <div class="group-video-video">
-                                        <a href="javascript:void(0);" youtube-data="{{ video.youtubeId }}" style="border: none;" class="youtube-link"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" style="border: 1px solid #4a4a4a" /></a>
-                                    </div>
-                                    <div class="more-videos-link">
-                                        <a href="javascript:void(0);" youtube-data="{{ video.youtubeId }}" class="youtube-link" title="{{ video.title }}">
-                                            {{ video.title }}
-                                        </a>
-                                    </div>
-                                    <div class="group-image-actions">
-                                        {% if canDelete %}
-                                            <a href="{{ path('youtube_delete', {'slug' : video.slug}) }}" onclick="return confirm('Are you sure you want to delete this video?');">{{ 'platformd.groups.videos.delete' | pd_trans }}</a> |
-                                        {% endif %}
-                                        {% if canEdit %}
-                                            <a href="{{ path('youtube_edit', { 'slug' : video.slug }) }}">{{ 'platformd.groups.videos.edit' | pd_trans }}</a> |
-                                        {% endif %}
-
-                                        <a href="javascript:void(0);" class="report-content" report-data="{{ video.id }}">{{ 'platformd.groups.videos.report' | pd_trans }}</a>
-                                    </div>
-                                </div>
+                                {% if features.hasVideo %}
+                                    {% include 'GroupBundle:Group:_youtubeVideoItem.html.twig' with { 'video' : video } %}
+                                {% else %}
+                                    {% include 'GroupBundle:Group:_groupVideoItem.html.twig' with { 'video' : video } %}
+                                {% endif %}
                             {% endfor %}
                         {% endfor %}
                     </div>
