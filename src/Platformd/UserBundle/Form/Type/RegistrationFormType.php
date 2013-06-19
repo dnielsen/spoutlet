@@ -66,7 +66,6 @@ class RegistrationFormType extends BaseType
             ->add('phoneNumber', null, array('required' => false))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
-                'required' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
                 'empty_value' => '',
             ))

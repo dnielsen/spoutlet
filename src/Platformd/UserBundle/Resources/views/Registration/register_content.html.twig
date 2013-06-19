@@ -1,7 +1,7 @@
 {% form_theme form theme %}
 {% form_theme form.recaptcha 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
 
-<h1>{{ 'platformd.user.register_title' | trans }}</h1>
+<h2>{{ 'platformd.user.register_title' | trans }}</h2>
 
 <div class="registration-requirements">
     <p>{{ 'platformd.user.register.requirements' | trans }}</p>
@@ -12,77 +12,106 @@
 
     {{ form_errors(form) }}
 
-    {{ form_row(form.username) }}
+    <table border="0" width="100%" cellpadding="6" spacing="2" class="form-table" align="center">
+        <tbody>
+            <tr id="row_alias">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.username) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.username) }}</td>
+            </tr>
+            <tr id="row_email">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.email) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.email) }}</td>
+            </tr>
+            <tr id="row_password">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.plainPassword) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.plainPassword) }}</td>
+            </tr>
+            <tr id="row_email_repeat">
+                <td class="form-title-cell" width="33%" align="right" valign="top">Confirm Email</td>
+                <td class="form-element-cell" valign="top">Confirm Email Input</td>
+            </tr>
+            <tr id="row_name_first">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.firstname) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.firstname) }}</td>
+            </tr>
+            <tr id="row_name_last">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.lastname) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.lastname) }}</td>
+            </tr>
+            <tr id="row_birthdate">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.birthdate) }}</td>
+                <td class="form-element-cell" valign="top">
+                    {{ form_errors(form.birthdate) }}
 
-    {{ form_row(form.email) }}
+                    {{ form_widget(form.birthdate.year) }}
+                    {{ 'year' | trans({}, 'forms') }}
+                    {{ form_widget(form.birthdate.month) }}
+                    {{ 'month' | trans({}, 'forms') }}
+                    {{ form_widget(form.birthdate.day) }}
+                    {{ 'day' | trans({}, 'forms') }}
+                </td>
+            </tr>
+            <tr id="row_address_country">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.country) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.country) }}</td>
+            </tr>
+            <tr id="row_address_state">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.state) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.state) }}</td>
+            </tr>
+            <tr id="row_recaptcha">
+                <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.recaptcha) }}</td>
+            </tr>
 
-    {{ form_row(form.plainPassword) }}
+            <tr id="row_survey_ownership">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.hasAlienwareSystem) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.hasAlienwareSystem) }}</td>
+            </tr>
 
-    {{ 'platformd.user.name_fields_order' | trans({
-        '%first_name%': form_row(form.firstname),
-        '%last_name%': form_row(form.lastname)
-    }) | raw }}
+            <tr id="row_survey_discover">
+                <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.latestNewsSource) }}</td>
+                <td class="form-element-cell" valign="top">{{ form_widget(form.latestNewsSource) }}</td>
+            </tr>
 
-    <div class="form_row">
-        {{ form_errors(form.birthdate) }}
-        {{ form_label(form.birthdate) }}
+            <tr id="row_agreed_tos_privacy">
+                <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                <td class="form-element-cell" valign="top">
+                    {{ form_errors(form.termsAccepted) }}
+                    {{ form_widget(form.termsAccepted) }}
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_termsAccepted' | trans(
+                        {
+                            '%terms_url%': path('terms_conditions'),
+                            '%privacy_url%': path('privacy')
+                        },
+                        'forms'
+                    ) | raw }}
+                </td>
+            </tr>
 
-        {{ form_widget(form.birthdate.year) }}
-        {{ 'year' | trans({}, 'forms') }}
-        {{ form_widget(form.birthdate.month) }}
-        {{ 'month' | trans({}, 'forms') }}
-        {{ form_widget(form.birthdate.day) }}
-        {{ 'day' | trans({}, 'forms') }}
-    </div>
+            <tr id="row_dell_optin">
+                <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                <td class="form-element-cell" valign="top">
+                    {{ form_errors(form.subscribedAlienwareEvents) }}
+                    {{ form_widget(form.subscribedAlienwareEvents) }}
+                    {{ 'fos_user_registration_form_subscribedAlienwareEvents' | trans({}, 'forms') }}
+                </td>
+            </tr>
 
-    {{ form_row(form.phoneNumber) }}
+            <tr>
+                <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                <td class="form-element-cell" valign="top">
+                    {{ form_errors(form.subscribedGamingNews) }}
+                    {{ form_widget(form.subscribedGamingNews) }}
+                    {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') }}
+                </td>
+            </tr>
 
-    {{ form_row(form.country) }}
 
-    {{ form_row(form.state) }}
-
-    {{ form_row(form.hasAlienwareSystem) }}
-
-    {{ form_row(form.latestNewsSource) }}
-
-    {{ form_widget(form.recaptcha) }}
-
-    <div class="form_row">
-        {{ form_errors(form.termsAccepted) }}
-        <label>&nbsp;</label>
-        {{ form_widget(form.termsAccepted) }}
-        <span class="required">*</span>
-        {{ 'fos_user_registration_form_termsAccepted' | trans(
-            {
-                '%terms_url%': path('terms_conditions'),
-                '%privacy_url%': path('privacy')
-            },
-            'forms'
-        ) | raw }}
-    </div>
-
-    <div class="form_row">
-        {{ form_errors(form.subscribedAlienwareEvents) }}
-        <div class="floating_form_container">
-            {{ form_widget(form.subscribedAlienwareEvents) }}
-            {{ 'fos_user_registration_form_subscribedAlienwareEvents' | trans({}, 'forms') }}
-        </div>
-    </div>
-
-    <div class="form_row">
-        {{ form_errors(form.subscribedGamingNews) }}
-        <label>&nbsp;</label>
-        {{ form_widget(form.subscribedGamingNews) }}
-        {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') }}
-    </div>
-
-    <div>
-        <label>&nbsp;</label>
-        <a href="http://www1.jp.dell.com/content/topics/segtopic.aspx/policy/policy?c=jp&l=ja&s=gen&~section=privacy" target="_blank">{{ 'platformd.user.register.dell_privacy_label' | trans }}</a>
-    </div>
-
-    <div>
-        {{ form_rest(form) }}
-        <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary" formnovalidate />
-    </div>
+            <tr id="row_">
+                <td class="form-title-cell" colspan="2" align="center">Register Button</td>
+            </tr>
+        </tbody>
+    </table>
 </form>

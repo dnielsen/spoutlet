@@ -1026,3 +1026,43 @@ div.blockOverlay {
 #loginArea .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; }
 #loginArea .error .message { border-left:#c62828 4px solid; border-right:#c62828 4px solid; font-size:12px; font-weight:normal; padding:3px 10px; }
 #loginArea .remember-me {margin: 0;}
+
+#registrationArea { width:750px; padding: 8px 20px 0 20px; background:url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
+#registrationArea h2 { margin: 10px 0 25px 0; font-family: "verdana"; color: #e7e7e7; }
+
+#registrationArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }
+#registrationArea .tbl th { padding:0 6px; }
+#registrationArea .tbl th, #loginArea .tbl td { padding-top:3px; padding-bottom:3px; }
+
+#row_birthday .form-element-cell select { width: 100px; }
+
+#registrationArea .info { width:425px; margin:0 auto; padding-top:15px; }
+#registrationArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
+
+#btnSignIn {  padding-top:6px; padding-right:10px; }
+#btnSignIn a { width:136px; background-image:url(../images/account/login/btnSignIn.gif); }
+
+#formId_register {}
+
+#formId_register td { padding:3px 2px; }
+
+
+.registration-underage { width: 400px; font-size: 15px; margin: 20px auto; border: 2px solid #f62929; padding: 10px; background: #5a1212; }
+
+#state { text-transform: capitalize; }
+
+#row_military_status { display: none; }
+#row_military_type { display: none; }
+#row_military_base { display: none; }
+#row_military_unit { display: none; }
+#row_military_affirm { display: none; }
+#row_military_affirm td.form-element-cell { padding: 5px 0 20px 0; }
+#row_icon-wrapper { display: none; }
+
+.icon-wrapper .icon { display: none; float: left; margin: 0 5px; text-align: center; }
+.icon-wrapper .icon-level { display: block; }
+.icon-wrapper .icon-image-wrapper { border: 1px solid #4a4a4a; margin: 0 0 5px 0; }
+.icon-wrapper .icon-image-wrapper:hover, .icon-wrapper img:hover { cursor: pointer; }
+
+.icon-wrapper .icon img, .icon-wrapper .icon-image-wrapper { width: 44px; height: 60px; }
+.icon-wrapper .icon-level img { width: 44px; height: 44px; }
