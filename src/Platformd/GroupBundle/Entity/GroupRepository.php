@@ -128,11 +128,15 @@ class GroupRepository extends EntityRepository
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.sites', 's');
 
+        $siteIds = array();
+
+        foreach ($sites as $site) {
+            array_push($siteIds, $site->getId());
+        }
+
         if (count($sites) > 0) {
-
-            $qb->andWhere('(s IN (:siteList) OR g.allLocales = true)');
-            $qb->setParameter('siteList', $sites);
-
+            $qb->andWhere('(s.id IN (:siteList) OR g.allLocales = true)');
+            $qb->setParameter('siteList', $siteIds);
         }
 
         if ($groupName) {
@@ -140,24 +144,24 @@ class GroupRepository extends EntityRepository
             $qb->setParameter('groupName', '%'.$groupName.'%');
         }
 
-        if ($category != "") {
+        if ($category) {
             $qb->andWhere('g.category = :category');
             $qb->setParameter('category', $category);
         }
 
-        if ($status != "") {
+        if ($status) {
             $qb->andWhere('g.deleted = :status');
             $qb->setParameter('status', $status);
         }
 
-        if ($startDate != "") {
+        if ($startDate) {
 
             $startDate->setTime(0, 0, 0);
             $qb->andWhere('g.createdAt >= :startDate');
             $qb->setParameter('startDate', $startDate);
         }
 
-        if ($endDate != "") {
+        if ($endDate) {
 
             $endDate->setTime(23, 59, 59);
             $qb->andWhere('g.createdAt <= :endDate');

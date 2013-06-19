@@ -18,7 +18,9 @@ class MediaRepository extends EntityRepository
     public function getMediaForAdmin($maxPerPage = 10, $currentPage = 1)
     {
         $qb = $this->createQueryBuilder('m')
-            ->where('m.isAdmin = 1');
+            ->where('m.isAdmin = 1')
+            ->orderBy('m.createdAt', 'DESC');
+
 
         $adapter = new DoctrineORMAdapter($qb);
         $pager = new Pagerfanta($adapter);

@@ -49,11 +49,16 @@
                 {% for group in results %}
                     <tr>
                         <td>
-                            {% if group.deleted %}
-                            <a href="{{ path('group_edit', {'id': group.id}) }}" target="_blank">{{ group.name }}</a></td>
+                        {% if group.deleted %}
+                            <a href="{{ path('group_edit', {'id': group.id}) }}" target="_blank">{{ group.name }}</a>
                         {% else %}
-                            <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
+                            {% if site in group.sites or group.allLocales %}
+                                <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a>
+                            {% else %}
+                                <a href="http://{{ group.sites[0].fullDomain }}{{ path('group_show', {'slug':group.slug}) }}" target="_blank">{{ group.name }}</a>
+                            {% endif %}
                         {% endif %}
+                        </td>
                         <td>{{ group.Category }}</td>
                         <td>{{ group.isPublic() ? 'Public' : 'Private' }}</td>
                         <td>{{ group.region }}</td>
