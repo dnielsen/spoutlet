@@ -35,6 +35,7 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $baseHost;
     protected $debug;
     protected $loginRecordManager;
+    protected $router;
 
     /**
      * This will be true in the test environment
@@ -51,11 +52,12 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $debug = false, $allowFakedAuth = false)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $router, $debug = false, $allowFakedAuth = false)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->baseHost = $baseHost;
+        $this->router = $router;
         $this->debug = $debug;
         $this->allowFakedAuth = $allowFakedAuth;
         $this->loginRecordManager = $loginRecordManager;
@@ -226,10 +228,9 @@ class CEVOAuthenticationListener implements ListenerInterface
         // set a flag that says that this authentication failed
         $request->getSession()->setFlash('cevo_auth_error', true);
 
-        // to prevent things from totally freaking out, getting in a loop on this failure
-        // we need to return a response that removes the cookie
-        $response = new RedirectResponse($request->getUri());
-        $response->headers->clearCookie(self::COOKIE_NAME, '/', $this->baseHost);
+        $forceLogoutUrl = $this->router->generate('force_logout', array('returnUrl' => urlencode($request->getUri())));
+
+        $response = new RedirectResponse($forceLogoutUrl);
 
         return $response;
     }
