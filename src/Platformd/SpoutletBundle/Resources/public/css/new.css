@@ -36,19 +36,6 @@ ul.normal-margin, ol.normal-margin {
     margin: auto;
 }
 
-/* generic form stuff - ugly, but quick */
-.form input.form-txt {
-    border: none;
-    padding: 4px 4px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    font-size: 12px;
-    width: 200px;
-}
-.form div.form_row {
-    margin-bottom: 10px;
-}
 .form label {
     display: -moz-inline-box;
     display: inline-block;
@@ -151,10 +138,7 @@ ul.normal-margin, ol.normal-margin {
     text-align: right;
     margin-right: 10px;
 }
-.fos_user_registration_register input.button {
-    margin-left: 310px;
-    margin-top: 10px;
-}
+
 .fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
 
 }

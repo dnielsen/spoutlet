@@ -6,10 +6,11 @@
 {% block field_label %}
 {% spaceless %}
     <label for="{{ id }}" class="form-lbl{{ required ? ' required' : '' }}">
-        {{ id|trans([], 'FOSUserBundle') }}
         {% if required %}
             <span class="required">*</span>
         {% endif %}
+        {{ id|trans([], 'FOSUserBundle') }}
+
     </label>
 {% endspaceless %}
 {% endblock field_label %}

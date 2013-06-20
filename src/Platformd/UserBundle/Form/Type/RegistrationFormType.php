@@ -63,7 +63,6 @@ class RegistrationFormType extends BaseType
                 'empty_value' => '--', 'required' => true,
                 'years' => range(1940, date('Y')),
             ))
-            ->add('phoneNumber', null, array('required' => false))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),

@@ -572,7 +572,7 @@ html body .lastBlurb { margin-bottom:0; }
 .ad_space { width:122px; overflow:hidden; }
 
 .formErrors .error { width:425px; margin:0 auto; padding:0 0 10px 0; }
-.formErrors .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; }
+.formErrors .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; float: none; width: auto; height: auto;}
 .formErrors .error .message { border-left:#c62828 4px solid; border-right:#c62828 4px solid; font-size:12px; font-weight:normal; padding:3px 10px; }
 
 #intelpoll .question { font-size:12px; font-weight:bold; text-align:left; color: #b3b3b3; }
@@ -1028,7 +1028,7 @@ div.blockOverlay {
 #loginArea .remember-me {margin: 0;}
 
 #registrationArea { width:750px; padding: 8px 20px 0 20px; background:url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
-#registrationArea h2 { margin: 10px 0 25px 0; font-family: "verdana"; color: #e7e7e7; }
+#registrationArea h2 { margin: 10px 0 25px 0; font-family: "verdana"; color: #e7e7e7; font-weight: normal; font-size: 24px; }
 
 #registrationArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }
 #registrationArea .tbl th { padding:0 6px; }
@@ -1039,8 +1039,10 @@ div.blockOverlay {
 #registrationArea .info { width:425px; margin:0 auto; padding-top:15px; }
 #registrationArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
 
-#btnSignIn {  padding-top:6px; padding-right:10px; }
-#btnSignIn a { width:136px; background-image:url(../images/account/login/btnSignIn.gif); }
+#registrationArea .registration-text { background: #ffffff; color: #000000; }
+#registrationArea input[type="checkbox"], #registrationArea input[type="radio"] { margin: 0; }
+#registrationArea .dob-select { width: 80px; }
+#registrationArea .btn-registration { min-width: 150px; }
 
 #formId_register {}
 
@@ -1048,6 +1050,8 @@ div.blockOverlay {
 
 
 .registration-underage { width: 400px; font-size: 15px; margin: 20px auto; border: 2px solid #f62929; padding: 10px; background: #5a1212; }
+
+.recaptcha_input_area input[type="text"] { background: #ffffff; color: #000000; border: none; }
 
 #state { text-transform: capitalize; }
 
