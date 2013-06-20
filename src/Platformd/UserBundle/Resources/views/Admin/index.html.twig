@@ -13,7 +13,7 @@
             <option value="text">Username/Email</option>
             <option value="ip"{% if app.request.get('type') == 'ip' %} selected{%endif%}>IP Address</option>
         </select>
-        <input class="btn btn-primary" type="submit" value="{{ 'Find members' | trans }}" />
+        <input class="btn btn-primary" style="margin-top:-9px;" type="submit" value="{{ 'Find members' | trans }}" />
     </form>
 
     {% if pager.nbResults > 0 %}
@@ -37,14 +37,6 @@
                     <td>{{ user.id }}</td>
                     <td>
                         <a href="{{ path('Platformd_UserBundle_admin_show', {'id': user.id}) }}">{{ user.username }}</a>
-                    </td>
-                    <td>
-                        {% for avatar in user.userAvatars %}
-                            <a href="{{ asset(media_path(avatar.media)) }}" title="See avatar in real size"><img src="{{ asset(media_path(avatar.media)) }}" alt="{{ user.username }}" width="100" /></a>
-                            <a href=" {{ path("admin_user_approve_avatar", {"id": avatar.id }) }}">
-                                {{ (avatar.approved ? "fos_user_admin_disapprove_avatar" : "fos_user_admin_approve_avatar") | trans({}, "FOSUserBundle" ) }}
-                            </a>
-                        {% endfor %}
                     </td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
