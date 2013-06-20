@@ -67,7 +67,7 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
-    public function getFindUserQuery($search = null, $type='text', $sort_by = self::DEFAULT_SORTING_FIELD)
+    public function getFindUserQuery($search = null, $type='text', $locale=null, $sort_by = self::DEFAULT_SORTING_FIELD)
     {
         $qb = $this
             ->repository
@@ -86,7 +86,7 @@ class UserManager extends BaseUserManager
             ;
         }
 
-        if ($this->getLocale()) {
+        if ($locale) {
             $qb
                 ->andWhere('u.locale = :locale OR u.locale IS NULL')
                 ->setParameter('locale', $this->getLocale())
