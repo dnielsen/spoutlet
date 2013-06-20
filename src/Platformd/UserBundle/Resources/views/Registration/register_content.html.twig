@@ -5,25 +5,7 @@
     <div class="left">
         <div id="registrationArea">
             <h2>{{ 'platformd.user.register_title' | trans }}</h2>
-            <div class="formErrors">
-                <div class="error">
-                    <div class="title">Oops!</div>
-                    <div class="message text">We were not able to process your request. If you think this is an error or are still experiencing problems after correcting the following problems, please <a href="/pages/support/">contact technical support.</a><br /><br />We found the following problems:
-
-                        <ul>
-                            <li>You must provide a username</li>
-                            <li>You must provide an e-mail address</li>
-                            <li>Please enter your first name</li>
-                            <li>Please enter your last name</li>
-                            <li>Please enter a valid birthdate</li>
-                            <li>You must provide a state/province</li>
-                            <li>You must fill out how most recently heard about Alienware Arena</li>
-                            <li>You must agree to our Terms &amp; Conditions and Privacy Policy</li>
-                            <li>Your verification code did not match.  Please try again.</li>
-                        </ul>
-                    </div>
-              </div>
-            </div>
+            {{ form_errors(form) }}
             <div class="registration-requirements">
                 <p>{{ 'platformd.user.register.requirements' | trans }}</p>
                 <p>{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}</p>
@@ -31,72 +13,98 @@
 
             <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
 
-
-                {{ form_errors(form) }}
-
                 <table border="0" width="100%" cellpadding="6" spacing="2" class="form-table" align="center">
                     <tbody>
                         <tr id="row_alias">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.username) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.username, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.username, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.username) }}
+                            </td>
                         </tr>
                         {% for email in form.email %}
                         <tr id="row_email">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(email) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(email, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(email, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.email) }}
+                            </td>
                         </tr>
                         {% endfor %}
                         {% for plainPassword in form.plainPassword %}
                         <tr id="row_password">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(plainPassword) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(plainPassword, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(plainPassword, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.plainPassword) }}
+                            </td>
                         </tr>
                         {% endfor %}
                         <tr id="row_name_first">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.firstname) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.firstname, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.firstname, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.firstname) }}
+                            </td>
                         </tr>
                         <tr id="row_name_last">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.lastname) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.lastname, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.lastname, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.lastname) }}
+                            </td>
                         </tr>
                         <tr id="row_birthdate">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.birthdate) }}</td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_errors(form.birthdate) }}
-
                                 {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
                                 <span>{{ 'year' | trans({}, 'forms') }}</span>
                                 {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
                                 <span>{{ 'month' | trans({}, 'forms') }}</span>
                                 {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
                                 <span>{{ 'day' | trans({}, 'forms') }}</span>
+                                {% if form_errors(form.birthdate) %}
+                                    <br /><span class="field-error">Date of Birth is required.</span>
+                                {% endif %}
                             </td>
                         </tr>
                         <tr id="row_address_country">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.country) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.country) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.country) }}
+                                {{ form_errors(form.country) }}
+                            </td>
                         </tr>
                         <tr id="row_address_state">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.state) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.state, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.state, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.state) }}
+                            </td>
                         </tr>
                         <tr id="row_recaptcha">
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_errors(form.recaptcha) }}
+                            </td>
                         </tr>
                         <tr id="row_survey_ownership">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.hasAlienwareSystem) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.hasAlienwareSystem) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.hasAlienwareSystem) }}
+                            </td>
                         </tr>
                         <tr id="row_survey_discover">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.latestNewsSource) }}</td>
-                            <td class="form-element-cell" valign="top">{{ form_widget(form.latestNewsSource) }}</td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.latestNewsSource) }}
+                                {{ form_errors(form.latestNewsSource) }}
+                            </td>
                         </tr>
                         <tr id="row_agreed_tos_privacy">
                             <td class="form-title-cell" width="33%" align="right" valign="top"><span class="required">*</span></td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_errors(form.termsAccepted) }}
                                 {{ form_widget(form.termsAccepted) }}
 
                                 {{ 'fos_user_registration_form_termsAccepted' | trans(
@@ -106,12 +114,12 @@
                                     },
                                     'forms'
                                 ) | raw }}
+                                {{ form_errors(form.termsAccepted) }}
                             </td>
                         </tr>
                         <tr id="row_dell_optin">
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_errors(form.subscribedAlienwareEvents) }}
                                 {{ form_widget(form.subscribedAlienwareEvents) }}
                                 {{ 'fos_user_registration_form_subscribedAlienwareEvents' | trans({}, 'forms') }}
                             </td>
@@ -119,7 +127,6 @@
                         <tr>
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_errors(form.subscribedGamingNews) }}
                                 {{ form_widget(form.subscribedGamingNews) }}
                                 {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') }}
                             </td>

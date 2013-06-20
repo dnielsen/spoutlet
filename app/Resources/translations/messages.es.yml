@@ -295,6 +295,8 @@ platformd:
 
         register:
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
+            cannot_process: We were not able to process your request. If you think this is an error or are still experiencing problems after correcting the following problems, please <a href="%s">contact technical support</a>.
+            problems_found: We found the following problems:
 
         login:
             username: Nombre de usuario

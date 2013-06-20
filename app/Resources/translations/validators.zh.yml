@@ -2,6 +2,7 @@ first_name_not_blank: 请输入您的名字
 last_name_not_blank: 请输入您的姓氏
 birthdate_not_blank: 请输入您的生日
 state_not_blank: 请输入省份
+country_not_blank: Please select a country
 
 "The username is already used": 用户名已被使用
 "The email is already used":  邮件地址已被使用

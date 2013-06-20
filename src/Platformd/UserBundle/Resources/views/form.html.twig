@@ -14,3 +14,36 @@
     </label>
 {% endspaceless %}
 {% endblock field_label %}
+
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+
+    {% for error in errors %}
+        <span class="field-error">{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</span>
+    {% endfor %}
+
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
+{% block form_errors %}
+{% spaceless %}
+
+    {% if errors|length > 0 %}
+    <div class="formErrors">
+        <div class="error">
+            <div class="title">Oops!</div>
+            <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}<br /><br />{{ 'platformd.user.register.problems_found' | pd_trans }}
+                <ul>
+                    {% for error in errors %}
+                    <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endspaceless %}
+{% endblock %}

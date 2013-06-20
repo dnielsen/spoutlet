@@ -1043,6 +1043,7 @@ div.blockOverlay {
 #registrationArea input[type="checkbox"], #registrationArea input[type="radio"] { margin: 0; }
 #registrationArea .dob-select { width: 80px; }
 #registrationArea .btn-registration { min-width: 150px; }
+#registrationArea .field-error { padding-left: 5px; color: #c62828; }
 
 #formId_register {}
 

@@ -56,12 +56,15 @@ class RegistrationFormType extends BaseType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstname', null, array('required' => true))
-            ->add('lastname', null, array('required' => true))
-            ->add('email', 'repeated', array('type' => 'email', 'required' => true))
+            ->add('username', null, array('required' => true, 'error_bubbling' => true))
+            ->add('firstname', null, array('required' => true, 'error_bubbling' => true))
+            ->add('lastname', null, array('required' => true, 'error_bubbling' => true))
+            ->add('email', 'repeated', array('type' => 'email', 'required' => true, 'error_bubbling' => true))
+            ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true, 'error_bubbling' => true))
             ->add('birthdate', 'birthday', array(
                 'empty_value' => '--', 'required' => true,
                 'years' => range(1940, date('Y')),
+                'error_bubbling' => true,
             ))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
@@ -71,11 +74,12 @@ class RegistrationFormType extends BaseType
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
                 'choices' => $this->sources,
-                'required' => false,
+                'required' => true,
+                'error_bubbling' => true,
             ))
             ->add('subscribedGamingNews')
             ->add('subscribedAlienwareEvents')
-            ->add('termsAccepted', 'checkbox', array('required' => false));
+            ->add('termsAccepted', 'checkbox', array('required' => false, 'error_bubbling' => true));
 
         // if we have preferectures we use a choice
         if (sizeof((array)$this->prefectures) > 0) {
@@ -87,13 +91,14 @@ class RegistrationFormType extends BaseType
             $builder->add('state', 'choice', array(
                 'empty_value' => '',
                 'choices' => $prefs,
-                'required' => true
+                'required' => true,
+                'error_bubbling' => true,
             ));
         } else {
-            $builder->add('state', 'text', array('required' => true));
+            $builder->add('state', 'text', array('required' => true, 'error_bubbling' => true));
         }
 
-        $countryOptions = array('required' => true);
+        $countryOptions = array('required' => true, 'error_bubbling' => true);
         if (isset(self::$countries[$this->locale])) {
             $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
         } else {

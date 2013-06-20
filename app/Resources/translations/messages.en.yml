@@ -390,6 +390,8 @@ platformd:
             country_label: Choose a country
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
+            cannot_process: We were not able to process your request. If you think this is an error or are still experiencing problems after correcting the following problems, please <a href="%s">contact technical support</a>.
+            problems_found: We found the following problems:
 
         login:
             username: Username
