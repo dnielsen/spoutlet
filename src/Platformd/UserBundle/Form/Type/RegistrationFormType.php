@@ -5,10 +5,14 @@ namespace Platformd\UserBundle\Form\Type;
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Collection;
+use Platformd\SpoutletBundle\Util\IpLookupUtil;
+use Platformd\SpoutletBundle\Entity\CountryRepository;
+use Doctrine\ORM\EntityManager;
 
 class RegistrationFormType extends BaseType
 {
@@ -29,6 +33,12 @@ class RegistrationFormType extends BaseType
 
     private $translator;
 
+    private $ipLookupUtil;
+
+    private $request;
+
+    private $em;
+
     protected static $countries = array(
         'ja' => 'JP',
         'zh' => 'CN'
@@ -37,13 +47,16 @@ class RegistrationFormType extends BaseType
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator)
+    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request, EntityManager $em)
     {
         parent::__construct($class);
 
-        $this->locale = $session->getLocale();
-        $this->sources = $sources;
-        $this->translator = $translator;
+        $this->locale       = $session->getLocale();
+        $this->sources      = $sources;
+        $this->translator   = $translator;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->request      = $request;
+        $this->em           = $em;
     }
 
     public function setPrefectures(array $list)
@@ -69,6 +82,7 @@ class RegistrationFormType extends BaseType
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
+                'required' => true,
             ))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
@@ -96,11 +110,27 @@ class RegistrationFormType extends BaseType
             $builder->add('state', 'text', array('required' => true, 'error_bubbling' => true));
         }
 
-        $countryOptions = array('required' => true, 'error_bubbling' => true);
-        if (isset(self::$countries[$this->locale])) {
-            $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
-        }
-        $builder->add('country', 'country', $countryOptions);
+/*        $countryOptions = array(
+            'required' => true,
+            'error_bubbling' => true,
+        );
+
+        $builder->add('country', 'country', $countryOptions);*/
+
+        $builder->add('country', 'entity', array(
+            'class'             => 'SpoutletBundle:Country',
+            'property'          => 'name',
+            'required'          => true,
+            'error_bubbling'    => true,
+            'query_builder'     => function(CountryRepository $em) {
+                return $em->createQueryBuilder('c')
+                    ->where('c.name not like :doNotUse')
+                    ->orderBy('c.name', 'ASC')
+                    ->setParameter('doNotUse', '%[DO NOT USE]%');
+            },
+            'data' => $this->getUserCountry(),
+            'property_path' => false,
+        ));
 
         $builder->add('recaptcha', 'ewz_recaptcha', array(
             'attr' => array('options' => array(
@@ -143,5 +173,15 @@ class RegistrationFormType extends BaseType
         // makes it so that the required label doesn't cascade down onto the two option labels
         $view['hasAlienwareSystem'][0]->set('required', false);
         $view['hasAlienwareSystem'][1]->set('required', false);
+    }
+
+    private function getUserCountry()
+    {
+        $ipAddress    = $this->request->getClientIp(true);
+        $code = $this->ipLookupUtil->getCountryCode($ipAddress);
+
+        $country = $this->em->getRepository('SpoutletBundle:Country')->getCountryFromCode($code);
+
+        return $country;
     }
 }

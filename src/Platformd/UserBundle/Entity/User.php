@@ -96,7 +96,7 @@ class User extends BaseUser
      * @var boolean $has_alienware_system
      *
      * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
-     * @Assert\NotNull
+     * @Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
      */
     protected $hasAlienwareSystem;
 

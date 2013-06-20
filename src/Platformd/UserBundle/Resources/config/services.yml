@@ -15,6 +15,10 @@ services:
             - %platformd.news_source%
             - @session
             - @platformd.model.translator
+            - @platformd.model.ip_lookup_util
+            - @request
+            - @doctrine.orm.entity_manager
+        scope: request
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
