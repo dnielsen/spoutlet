@@ -49,6 +49,10 @@ class Controller extends BaseController
         return $user;
     }
 
+    protected function getParameter($parameterName) {
+        return $this->container->getParameter($parameterName);
+    }
+
     protected function getCache() {
 
         if ($this->cache) {

@@ -378,15 +378,14 @@
         function reloadComments()
         {
             $('.thread').block({message: null});
-            var data = {
-                'thread' : '{{ thread }}',
-                'method' : $('#comment-sort-method').val(),
-                'commentLimit' : parseInt($('#more-comments-loader').attr('data-offset'))
-            };
+
+            var thread = '{{ thread }}';
+            var method = $('#comment-sort-method').val();
+            var commentLimit = parseInt($('#more-comments-loader').attr('data-offset'));
+
             $.ajax({
-                url: '{{ path('comments_sort_thread') }}',
-                type: 'post',
-                data: JSON.stringify(data),
+                url: '{{ path('comments_sort_thread') }}?thread=' + thread + '&method=' + method + '&commentLimit=' + commentLimit,
+                type: 'get',
                 contentType: 'application/json',
                 success: function (html, status, req) {
                     $('.thread').html(html);

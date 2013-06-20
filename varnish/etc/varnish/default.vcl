@@ -174,6 +174,10 @@ sub vcl_deliver {
     # before we pass the final response back to the user, make sure that all shared
     set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
     set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "public", "private");
+
+    if (req.url ~ "^/forceLogout/") {
+        set resp.http.set-cookie = "aw_session=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+    }
 }
 
 sub vcl_hash {
