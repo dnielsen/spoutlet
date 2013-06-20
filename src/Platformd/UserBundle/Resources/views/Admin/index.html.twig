@@ -13,7 +13,7 @@
             <option value="text">Username/Email</option>
             <option value="ip"{% if app.request.get('type') == 'ip' %} selected{%endif%}>IP Address</option>
         </select>
-        <input class="btn btn-primary" type="submit" value="{{ 'Find members' | trans }}" />
+        <input class="btn btn-primary" style="margin-top:-9px;" type="submit" value="{{ 'Find members' | trans }}" />
     </form>
 
     {% if pager.nbResults > 0 %}
