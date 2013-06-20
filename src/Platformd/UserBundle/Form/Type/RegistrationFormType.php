@@ -69,7 +69,6 @@ class RegistrationFormType extends BaseType
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
-                'empty_value' => '',
             ))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
@@ -78,7 +77,6 @@ class RegistrationFormType extends BaseType
                 'error_bubbling' => true,
             ))
             ->add('subscribedGamingNews')
-            ->add('subscribedAlienwareEvents')
             ->add('termsAccepted', 'checkbox', array('required' => false, 'error_bubbling' => true));
 
         // if we have preferectures we use a choice
@@ -101,8 +99,6 @@ class RegistrationFormType extends BaseType
         $countryOptions = array('required' => true, 'error_bubbling' => true);
         if (isset(self::$countries[$this->locale])) {
             $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
-        } else {
-            $countryOptions['empty_value'] = 'platformd.user.register.country_label';
         }
         $builder->add('country', 'country', $countryOptions);
 

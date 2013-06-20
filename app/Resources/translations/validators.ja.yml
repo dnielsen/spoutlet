@@ -3,6 +3,7 @@ last_name_not_blank: 名前を入力してください
 birthdate_not_blank: 生年月日を選択してください
 state_not_blank: 都道府県を選択してください
 country_not_blank: Please select a country
+news_source_not_blank: Please select how you heard about Alienware Arena
 
 "The username is already used": ユーザー名が既に使用されています
 "The email is already used": メールアドレスが既に使用されています

@@ -1,8 +1,9 @@
 first_name_not_blank: Please enter your first name
 last_name_not_blank: Please enter your last name
-birthdate_not_blank: Please enter your birthdate
+birthdate_not_blank: Please enter a valid birthdate
 state_not_blank: Please enter a state
 country_not_blank: Please select a country
+news_source_not_blank: Please select how you heard about Alienware Arena
 
 "The username is already used": The username is already used
 "The email is already used":  The email is already used
@@ -22,7 +23,7 @@ country_not_blank: Please select a country
 "Please enter a name":  Please enter a name
 "The name is too short":  The name is too short
 "The name is too long":  The name is too long
-"This value is not a valid captcha":  This value is not a valid captcha
+"This value is not a valid captcha":  Your verification code did not match. Please try again
 
 "You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
 

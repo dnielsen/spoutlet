@@ -236,6 +236,8 @@ parameters:
         youtube: Youtube
         friends: Friends or Family
         blog: Blog
+        search_engine: Search Engine
+        live_event: Live Event
         other: Other
     # this is repeated in routing_dev.yml
     cevo_fake_api_url: /cevo/api/stub

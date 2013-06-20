@@ -117,18 +117,11 @@
                                 {{ form_errors(form.termsAccepted) }}
                             </td>
                         </tr>
-                        <tr id="row_dell_optin">
-                            <td class="form-title-cell" width="33%" align="right" valign="top"></td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.subscribedAlienwareEvents) }}
-                                {{ 'fos_user_registration_form_subscribedAlienwareEvents' | trans({}, 'forms') }}
-                            </td>
-                        </tr>
                         <tr>
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.subscribedGamingNews) }}
-                                {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') }}
+                                {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') | raw }}
                             </td>
                         </tr>
                         <tr>
