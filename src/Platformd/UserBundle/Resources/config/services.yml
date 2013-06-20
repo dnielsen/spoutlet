@@ -64,32 +64,6 @@ services:
             - '%platformd_user.mailer.parameters%'
             - '@platformd.util.site_util'
 
-    platformd_user.awa_video_login_redirect_listener:
-        class: Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener
-        arguments:
-            - "@security.context"
-            - %cevo_fake_api_url%
-# put in place for debugging, removed for now
-#        calls:
-#            - [ setLogger, [ @logger ] ]
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-    platformd_user.awa_video_session_id_cookie_listener:
-        class: Platformd\UserBundle\EventListener\AwaVideoSessionIdCookieListener
-        arguments:
-            - "@security.context"
-            - %base_host%
-            - "%allow_faked_auth%"
-        tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-
-    platformd_user.security_logout_handler:
-        class: Platformd\UserBundle\Security\Logout\SuccessHandler
-        arguments:
-            - "@pd.cevo.cevo_auth_manager"
-            - %base_host%
-
     platformd.model.avatar_manager:
         class: Platformd\UserBundle\Model\AvatarManager
         arguments:

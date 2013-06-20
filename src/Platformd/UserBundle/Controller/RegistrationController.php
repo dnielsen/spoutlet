@@ -54,33 +54,4 @@ class RegistrationController extends BaseRegistrationController
             ->renderResponse('UserBundle:Registration:tooYoung.html.twig')
         ;
     }
-
-    /**
-     * The Alienware video site expects to send us a ?return=, and we'll go
-     * back to that URL afterwards.
-     *
-     * We use this to store it on the session.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string The URL that we've stored that should be returned to
-     */
-    private function processAlienwareVideoReturnUrlParameter(Request $request)
-    {
-        if ($returnUrl = $request->query->get('return')) {
-            $request->getSession()->set(
-                AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
-                $returnUrl
-            );
-
-            return $returnUrl;
-        }
-    }
-
-    /**
-     * @return \Platformd\CEVOBundle\CEVOAuthManager
-     */
-    private function getCevoAuthManager()
-    {
-        return $this->container->get('pd.cevo.cevo_auth_manager');
-    }
 }

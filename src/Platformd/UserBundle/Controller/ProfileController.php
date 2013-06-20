@@ -28,14 +28,6 @@ class ProfileController extends BaseProfileController
            throw new NotFoundHttpException();
        }
 
-       /** @var $user \Platformd\UserBundle\Entity\User */
-
-       /** @var $cevoAuthManager \Platformd\CEVOBundle\CevoAuthManager */
-       $cevoAuthManager = $this->container->get('pd.cevo.cevo_auth_manager');
-       $cevoProfileUrl = $cevoAuthManager->generateCevoUrl('/member/'.$user->getCevoUserId());
-
-       //return new RedirectResponse($cevoProfileUrl);
-
        return $this->container->get('templating')
            ->renderResponse('FOSUserBundle:Profile:show.html.twig', array(
            'user' => $user,
