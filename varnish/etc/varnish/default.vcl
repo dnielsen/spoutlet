@@ -7,10 +7,16 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awaWeb1  { .host = "localhost";   .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
+    { .backend = awaWeb2; .weight = 1; }
+    { .backend = awaWeb3; .weight = 1; }
+    { .backend = awaWeb4; .weight = 1; }
 }
 
 sub vcl_recv {
