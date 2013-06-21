@@ -1,3 +1,5 @@
+import geoip;
+
 probe healthcheck {
     .request = 
         "GET /healthCheck HTTP/1.1"
@@ -19,6 +21,18 @@ director awaWeb random {
 
 sub vcl_recv {
 
+    if (req.restarts == 0) {
+        if (req.http.X-Forwarded-For) {
+            set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
+            set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
+        } else {
+            set req.http.X-Client-IP = client.ip;
+            set req.http.X-Forwarded-For = client.ip;
+        }
+    }
+
+    set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
+
     if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
@@ -33,6 +47,10 @@ sub vcl_recv {
 
     if (req.request != "GET" && req.http.referer && req.http.referer !~ ".*.alienwarearena.(com|local:8080)") { # most notably to stop POST requests from non alienwarearena sources
         error 403 "Forbidden (referer).";
+    }
+
+    if (req.url ~ "^/video(/.*)?$") {
+        error 750 "http://" + req.http.host + "/videos";
     }
 
     if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
@@ -170,6 +188,9 @@ sub vcl_deliver {
     } else {
         set resp.http.X-Cache = "MISS";
     }
+    
+    set resp.http.X-Country-Code = req.http.X-Country-Code;
+    set resp.http.X-Client-IP = req.http.X-Client-IP;
 
     # before we pass the final response back to the user, make sure that all shared
     set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
@@ -185,8 +206,12 @@ sub vcl_hash {
     hash_data(req.url);
     hash_data(req.http.host);
 
-    if(req.url ~ "/esi/USER_SPECIFIC/" && req.http.cookie) {
+    if(req.url ~ "^/esi/USER_SPECIFIC/" && req.http.cookie) {
         hash_data(req.http.cookie);
+    }
+
+    if(req.url ~ "^/esi/COUNTRY_SPECIFIC/") {
+        hash_data(req.http.X-Country-Code);
     }
 
     return (hash);
@@ -239,6 +264,14 @@ sub vcl_error {
             <tr>
                 <th>Referer</th>
                 <td>"} + req.http.referer + {"</td>
+            </tr>
+            <tr>
+                <th>Country Code</th>
+                <td>"} + req.http.X-Country-Code + {"</td>
+            </tr>
+            <tr>
+                <th>Client IP</th>
+                <td>"} + req.http.X-Client-IP + {"</td>
             </tr>
             <tr>
                 <th>XID</th>
