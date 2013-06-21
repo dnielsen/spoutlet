@@ -1,3 +1,5 @@
+import geoip;
+
 probe healthcheck {
     .request = 
         "GET /healthCheck HTTP/1.1"
@@ -5,20 +7,25 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awaWeb1  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awaWeb2  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awaWeb3  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
-backend awaWeb4  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "localhost";   .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
-    { .backend = awaWeb2; .weight = 1; }
-    { .backend = awaWeb3; .weight = 1; }
-    { .backend = awaWeb4; .weight = 1; }
 }
 
 sub vcl_recv {
 
+    if (req.restarts == 0) {
+        if (req.http.X-Forwarded-For) {
+            set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
+            set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
+        } else {
+            set req.http.X-Client-IP = client.ip;
+            set req.http.X-Forwarded-For = client.ip;
+        }
+    }
+
+    set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
     if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
@@ -72,6 +79,18 @@ sub vcl_recv {
     if (!req.backend.healthy) {
         unset req.http.Cookie;
     }
+
+    if (req.restarts == 0) {
+        if (req.http.X-Forwarded-For) {
+            set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
+            set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
+        } else {
+            set req.http.X-Client-IP = client.ip;
+            set req.http.X-Forwarded-For = client.ip;
+        }
+    }
+
+    set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
 
     set req.http.Surrogate-Capability = "abc=ESI/1.0";
 
@@ -170,6 +189,9 @@ sub vcl_deliver {
     } else {
         set resp.http.X-Cache = "MISS";
     }
+    
+    set resp.http.X-Country-Code = req.http.X-Country-Code;
+    set resp.http.X-Client-IP = req.http.X-Client-IP;
 
     # before we pass the final response back to the user, make sure that all shared
     set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
@@ -239,6 +261,14 @@ sub vcl_error {
             <tr>
                 <th>Referer</th>
                 <td>"} + req.http.referer + {"</td>
+            </tr>
+            <tr>
+                <th>Country Code</th>
+                <td>"} + req.http.X-Country-Code + {"</td>
+            </tr>
+            <tr>
+                <th>Client IP</th>
+                <td>"} + req.http.X-Client-IP + {"</td>
             </tr>
             <tr>
                 <th>XID</th>
