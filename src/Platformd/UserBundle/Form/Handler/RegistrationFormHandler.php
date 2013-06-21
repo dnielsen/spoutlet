@@ -11,6 +11,7 @@ use FOS\UserBundle\Mailer\MailerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Util\IpLookupUtil;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -20,20 +21,23 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     protected $mailer;
     protected $em;
     protected $container;
+    protected $ipLookupUtil;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container)
+    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil)
     {
-        $this->form = $form;
-        $this->request = $request;
-        $this->userManager = $userManager;
-        $this->mailer = $mailer;
-        $this->em = $em;
-        $this->container = $container;
+        $this->form         = $form;
+        $this->request      = $request;
+        $this->userManager  = $userManager;
+        $this->mailer       = $mailer;
+        $this->em           = $em;
+        $this->container    = $container;
+        $this->ipLookupUtil = $ipLookupUtil;
     }
 
     public function process($confirmation = false)
     {
         $user = $this->userManager->createUser();
+        $user->setCountry($this->getUserCountry());
         $this->form->setData($user);
 
         if ('POST' == $this->request->getMethod()) {
@@ -76,5 +80,11 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             ->execute();
 
         return $result ? false : true;
+    }
+
+    private function getUserCountry()
+    {
+        $ipAddress  = $this->request->getClientIp(true);
+        return $this->ipLookupUtil->getCountryCode($ipAddress);
     }
 }
