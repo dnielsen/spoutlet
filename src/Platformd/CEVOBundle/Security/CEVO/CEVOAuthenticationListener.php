@@ -35,6 +35,7 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $baseHost;
     protected $debug;
     protected $loginRecordManager;
+    protected $router;
 
     /**
      * This will be true in the test environment
@@ -51,11 +52,12 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $debug = false, $allowFakedAuth = false)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $router, $debug = false, $allowFakedAuth = false)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->baseHost = $baseHost;
+        $this->router = $router;
         $this->debug = $debug;
         $this->allowFakedAuth = $allowFakedAuth;
         $this->loginRecordManager = $loginRecordManager;
@@ -69,6 +71,8 @@ class CEVOAuthenticationListener implements ListenerInterface
     public function handle(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+
 
         $sessionString = $request->cookies->get(self::COOKIE_NAME);
 
@@ -119,6 +123,11 @@ class CEVOAuthenticationListener implements ListenerInterface
         if ($response === true) {
             return;
         }
+
+        if ($response === 'forceLogout') {
+            return;
+        }
+
         $this->logError('CEVO Authentication FAILED on attempt #1');
 
         // if we got a non-true response, let's try one more time
@@ -126,6 +135,10 @@ class CEVOAuthenticationListener implements ListenerInterface
         if ($response === true) {
             $this->logError('CEVO Authentication PASSED on attempt #2');
 
+            return;
+        }
+
+        if ($response === 'forceLogout') {
             return;
         }
 
@@ -149,6 +162,10 @@ class CEVOAuthenticationListener implements ListenerInterface
     private function tryAuthentication(CEVOToken $token, Request $request)
     {
         try {
+
+            if (strpos($request->getPathInfo(), 'forceLogout') === 1) {
+                return 'forceLogout';
+            }
 
             $returnValue = $this->authenticationManager->authenticate($token);
 
@@ -226,10 +243,9 @@ class CEVOAuthenticationListener implements ListenerInterface
         // set a flag that says that this authentication failed
         $request->getSession()->setFlash('cevo_auth_error', true);
 
-        // to prevent things from totally freaking out, getting in a loop on this failure
-        // we need to return a response that removes the cookie
-        $response = new RedirectResponse($request->getUri());
-        $response->headers->clearCookie(self::COOKIE_NAME, '/', $this->baseHost);
+        $forceLogoutUrl = $this->router->generate('force_logout', array('returnUrl' => urlencode($request->getUri())));
+
+        $response = new RedirectResponse($forceLogoutUrl);
 
         return $response;
     }
