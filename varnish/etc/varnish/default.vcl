@@ -42,6 +42,10 @@ sub vcl_recv {
         error 403 "Forbidden (referer).";
     }
 
+    if (req.url ~ "^/video(/.*)?$") {
+        error 750 "http://" + req.http.host + "/videos";
+    }
+
     if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
         error 750 "https://www.alienwarearena.com/account/register";
     }
