@@ -191,6 +191,7 @@ sub vcl_deliver {
     
     set resp.http.X-Country-Code = req.http.X-Country-Code;
     set resp.http.X-Client-IP = req.http.X-Client-IP;
+set resp.http.X-Forwarded-For = req.http.X-Forwarded-For;
 
     # before we pass the final response back to the user, make sure that all shared
     set resp.http.Cache-Control = regsub(resp.http.Cache-Control, "s-maxage=[0-9]+", "s-maxage=0");
